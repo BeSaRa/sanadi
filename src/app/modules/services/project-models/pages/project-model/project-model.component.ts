@@ -58,6 +58,7 @@ import {CollectionItem} from '@models/collection-item';
 import {ServiceDataService} from '@services/service-data.service';
 import {CaseTypes} from '@enums/case-types.enum';
 import {FieldControlAndLabelKey} from '@app/types/types';
+import { ProjectWorkArea } from '@app/enums/project-work-area';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -806,18 +807,21 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     } else {
       this.displayDevGoals = false;
       this.categoryGoalPercentGroup.setValidators(null);
-      this.emptyFieldsAndValidation([
-        'mainUNOCHACategory',
-        'subUNOCHACategory',
-        'mainDACCategory',
-        'subDACCategory',
-        'firstSDGoal',
-        'secondSDGoal',
-        'thirdSDGoal',
-        'firstSDGoalPercentage',
-        'secondSDGoalPercentage',
-        'thirdSDGoalPercentage'
-      ]);
+      if(this.projectWorkArea.value !== ExecutionFields.InsideQatar){
+        this.emptyFieldsAndValidation([
+          'mainUNOCHACategory',
+          'subUNOCHACategory',
+          'mainDACCategory',
+          'subDACCategory',
+          'firstSDGoal',
+          'secondSDGoal',
+          'thirdSDGoal',
+          'firstSDGoalPercentage',
+          'secondSDGoalPercentage',
+          'thirdSDGoalPercentage'
+        ]);
+      }
+
     }
     this.categoryGoalPercentGroup.updateValueAndValidity();
   }
@@ -861,10 +865,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   applyNotOutsideQatarChanges() {
-    this.emptyFieldsAndValidation(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal']);
+    this.emptyFieldsAndValidation(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal','firstSDGoalPercentage','secondSDGoalPercentage','thirdSDGoalPercentage']);
     this.emptyDomainField();
     this.isOutsideQatarWorkArea = false;
     this.setRequiredValidator(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
+    this.setRequiredValidator(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal','firstSDGoalPercentage','secondSDGoalPercentage','thirdSDGoalPercentage']);
 
     this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
     this.displayDevGoals = false;
@@ -990,6 +995,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         if (result instanceof ProjectModel) {
           this.selectedModel = result;
           this.templateSerialControl.setValue(result.templateFullSerial);
+
           //TODO Need to refactor here
           of(null)
             .pipe(
@@ -1007,6 +1013,17 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
             templateId: result.id,
             requestType: this.requestType.value,
           }));
+          console.log(this.projectWorkArea.value);
+          console.log(this.domain.value );
+          if(this.projectWorkArea.value === ExecutionFields.OutsideQatar){
+            this.setRequiredValidator(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal','firstSDGoalPercentage','secondSDGoalPercentage','thirdSDGoalPercentage']);
+            return;
+          }
+          if(this.projectWorkArea.value === ExecutionFields.OutsideQatar && this.domain.value === DomainTypes.DEVELOPMENT ){
+            // this.applyNotOutsideQatarChanges();
+            this.setRequiredValidator(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal','firstSDGoalPercentage','secondSDGoalPercentage','thirdSDGoalPercentage']);
+
+          }
         }
       });
   }
