@@ -458,6 +458,9 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   isEditOrCancel() {
     return this.requestTypeField.value == CollectionRequestType.UPDATE || this.requestTypeField.value == CollectionRequestType.CANCEL;
   }
+  isCancel() {
+    return this.requestTypeField.value == CollectionRequestType.CANCEL;
+  }
 
   get dataOfApplicant(): UntypedFormGroup {
     return this.form.get('dataOfApplicant') as UntypedFormGroup;
