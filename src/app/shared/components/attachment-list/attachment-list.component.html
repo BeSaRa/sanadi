@@ -29,7 +29,7 @@
                        [allowMultiple]="multiUpload"
                        [allowedExtensions]="allowedExtensions"
                        (fileUploadEvent)="setUploadedFiles($event)"
-                       [isRequired]="true"></file-uploader>
+                       [isRequired]="this.isNewAttachment"></file-uploader>
       </div>
     </div>
     <div class="d-flex flex-row align-items-center justify-content-center">

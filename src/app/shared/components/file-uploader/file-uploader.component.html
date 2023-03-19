@@ -6,7 +6,7 @@
   <div class="col-sm-12">
     <button class="btn btn-primary mb-3" [disabled]="readonly"
             (click)="openFileBrowser($event)">{{ lang.map[fileInputKey] }}</button>
-    <div *ngIf="isRequired && !(uploadedFile || uploadedFiles.length > 0)">
+    <div *ngIf="showRequiredFileMsg()">
       <span class="text-danger"> {{lang.map.err_required_field}}</span>
     </div>
     <div *ngIf="showFileName">

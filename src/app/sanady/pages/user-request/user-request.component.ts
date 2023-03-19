@@ -546,11 +546,18 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
-  private _isValidDisclosureFile(): boolean {
+  isDisclosureFileRequired(): boolean {
     if (!!this.currentRequest?.id) {
+      return false;
+    }
+    return !!this.allowDataSharingField?.value;
+  }
+
+  private _isValidDisclosureFile(): boolean {
+    if (!this.isDisclosureFileRequired()) {
       return true;
     }
-    return !this.allowDataSharingField.value ? true : !!this.disclosureFile;
+    return !!this.disclosureFile
   }
 
   private listenToSavePartialRequest() {
