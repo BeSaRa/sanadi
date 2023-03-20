@@ -28,7 +28,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="licenseDurationType"
                    for="licenseDurationType">{{lang.map.license_type}}</label>
-            <ng-select [selectOnTab]="true" labelForId="licenseDurationType" [clearable]="true"
+            <ng-select [selectOnTab]="true" labelForId="" [clearable]="true"
                        placeholder="{{lang.map.select}}" id="licenseDurationType"
                        [notFoundText]="lang.map.msg_not_found"
                        appendTo="body" formControlName="licenseDurationType" validationClasses="licenseDurationType"
@@ -58,7 +58,7 @@
           <selected-license-table (clearLicense)="clearSelectedLicense()" [caseType]="caseTypes.FUNDRAISING_LICENSING"
                                   [caseTypeViewLicense]="caseTypes.FUNDRAISING_LICENSING"
                                   [licenseList]="[selectedLicense]"
-                                  [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
+                                  [columns]="getLicenseSelectPopup()"></selected-license-table>
         </div>
         <!-- channel/media name -->
         <div class="row">

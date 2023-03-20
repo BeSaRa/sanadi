@@ -22,6 +22,7 @@ import {OpenFrom} from '@enums/open-from.enum';
 import {EmployeeService} from '@services/employee.service';
 import {CommonCaseStatus} from '@enums/common-case-status.enum';
 import {UserClickOn} from '@enums/user-click-on.enum';
+import { LicenseDurationType } from '@app/enums/license-duration-type';
 
 @Component({
   selector: 'fundraising',
@@ -159,11 +160,13 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
   }
 
   private openSelectLicense(licenses: Fundraising[]): Observable<undefined | Fundraising> {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectLicenseDisplayColumns)
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null}), true, this.getLicenseSelectPopup())
       .onAfterClose$
       .pipe(map((result: ({ selected: Fundraising, details: Fundraising } | undefined)) => result ? result.details : result));
   }
-
+  getLicenseSelectPopup() {
+    return this.service.selectLicenseDisplayColumns.filter((c) => this.licenseDurationTypeField.value == LicenseDurationType.TEMPORARY || c != 'endDate' )
+  }
   _buildForm(): void {
     const model = new Fundraising();
     this.form = this.fb.group({
