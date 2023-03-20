@@ -339,6 +339,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     if (!model) {
       return;
     }
+    this.selectedLicenses = [model];
     this.model = (new InternalBankAccountApproval()).clone({ ...this.model, ...model });
     this.loadBankAccountsBasedOnCurrencyAndBank(this.model.category, this.model.bankId, this.model.currency);
     this.form.patchValue({
@@ -867,7 +868,6 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       .subscribe((_info) => {
         this.hasSearchedForLicense = true;
         const item = _info.details.convertToItem();
-        this.selectedLicenses = [item];
         this._updateForm(item);
       });
   }
