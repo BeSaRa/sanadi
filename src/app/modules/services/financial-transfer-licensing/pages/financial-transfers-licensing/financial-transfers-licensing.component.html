@@ -244,6 +244,7 @@
         [readonly]="readonly" (readyEvent)="financialTransfersProjectsTabStatus = $event"
         (listUpdated)="updateTransactionAmount($event)" [submissionMechanism]="submissionMechanism"
         [approvedFinancialTransferProjects]="approvedFinancialTransferProjectsList"
+        [requestType]="model?.requestType || 0"
         >
       </financial-transfers-projects>
 

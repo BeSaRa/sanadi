@@ -1,4 +1,4 @@
-import {catchError, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take, takeUntil, tap, debounceTime, exhaustMap } from 'rxjs/operators';
 import {ExternalProjectLicensing} from '@models/external-project-licensing';
 import {FinancialTransferLicensingService} from '@services/financial-transfer-licensing.service';
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
@@ -16,6 +16,7 @@ import {ToastService} from '@services/toast.service';
 import {ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, of, Subject} from 'rxjs';
 import {CustomValidators} from '@app/validators/custom-validators';
+import { FinancialTransferRequestTypes } from '@app/enums/service-request-types';
 
 @Component({
   selector: 'financial-transfers-projects',
@@ -48,10 +49,11 @@ export class FinancialTransfersProjectsComponent implements OnInit {
   @Output() listUpdated = new EventEmitter<number>();
   @Input() submissionMechanism!: number;
   @Input() approvedFinancialTransferProjects: ExternalProjectLicensing[] = [];
+  @Input() requestType:number = FinancialTransferRequestTypes.NEW;
 
   financialTransferProjectControl!: UntypedFormControl;
   totalQatariRiyalTransactions = 0;
-
+  lastQatariTransactionAmountValue:any;
   showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
@@ -91,6 +93,33 @@ export class FinancialTransfersProjectsComponent implements OnInit {
     this._listenToFinancialTransferProjectChange();
     this._calculateQatariTransactionAmount();
     this._setComponentReadiness('READY');
+    this._listenQatariTransactionAmountChange();
+  }
+  private _listenQatariTransactionAmountChange() {
+    this.qatariTransactionAmount.valueChanges
+    .pipe(
+      takeUntil(this.destroy$),
+      filter(_=>this.requestType === FinancialTransferRequestTypes.UPDATE),
+      filter(_=>!!this.financialTransferProjectControl.value),
+      filter(value=> !!value),
+      filter(value =>  this.lastQatariTransactionAmountValue !== value ),
+      debounceTime(500),
+      switchMap(transactionAmount => {
+        this.lastQatariTransactionAmountValue = transactionAmount;
+        return this.financialTransferLicensingService
+        .loadEternalProjectsDetails(this.financialTransferProjectControl.value,transactionAmount)
+        .pipe(
+          catchError(_ => of(null)),
+        )
+      })
+
+
+    ) .subscribe((project: FinancialTransfersProject | null) => {
+      if (!project) {
+        return;
+      }
+     this.selectedProject = project
+    });
   }
 
   ngOnDestroy(): void {
@@ -162,9 +191,11 @@ export class FinancialTransfersProjectsComponent implements OnInit {
         this._setComponentReadiness('NOT_READY');
       }
       this.form.patchValue(record);
+      this.lastQatariTransactionAmountValue = this.qatariTransactionAmount.value
       if (this.readonly || this.viewOnly) {
         this.form.disable();
       }
+
     } else {
       this._setComponentReadiness('READY');
     }
@@ -357,6 +388,9 @@ export class FinancialTransfersProjectsComponent implements OnInit {
   get qatariTransactionAmount(): UntypedFormControl {
     return this.form.get('qatariTransactionAmount') as UntypedFormControl;
   }
+  get transferAmount(): UntypedFormControl {
+    return this.form.get('transferAmount') as UntypedFormControl;
+  }
 
   get notes(): UntypedFormControl {
     return this.form.get('notes') as UntypedFormControl;
@@ -367,7 +401,10 @@ export class FinancialTransfersProjectsComponent implements OnInit {
       .pipe(
         filter(value => !!value),
         switchMap((value: string) => {
-          return this.financialTransferLicensingService.loadEternalProjectsDetails(value)
+
+          const qatariTransactionAmount = this.requestType === FinancialTransferRequestTypes.UPDATE ?
+          this.qatariTransactionAmount.value : undefined;
+          return this.financialTransferLicensingService.loadEternalProjectsDetails(value,qatariTransactionAmount)
             .pipe(
               catchError(_ => of(null)),
             )
@@ -381,9 +418,8 @@ export class FinancialTransfersProjectsComponent implements OnInit {
           return;
         }
 
-        this.form.patchValue(project);
+        this.form.patchValue({...project,qatariTransactionAmount:this.qatariTransactionAmount.value});
         this.selectedProject = project
-
       });
   }
 }
