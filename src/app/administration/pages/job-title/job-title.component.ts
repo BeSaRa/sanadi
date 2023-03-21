@@ -1,26 +1,26 @@
-import { FormBuilder } from '@angular/forms';
-import { Component, ViewChild } from '@angular/core';
-import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { JobTitle } from '@app/models/job-title';
-import { JobTitleService } from '@app/services/job-title.service';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { LangService } from '@app/services/lang.service';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DialogService } from '@app/services/dialog.service';
-import { SharedService } from '@app/services/shared.service';
-import { IGridAction } from '@app/interfaces/i-grid-action';
-import { ToastService } from '@app/services/toast.service';
-import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
-import { of, Subject } from 'rxjs';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { TableComponent } from '@app/shared/components/table/table.component';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { ISearchColumnConfig } from '@app/interfaces/i-search-column-config';
-import { LookupService } from '@app/services/lookup.service';
-import { CustomValidators } from '@app/validators/custom-validators';
+import {FormBuilder} from '@angular/forms';
+import {Component, ViewChild} from '@angular/core';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {JobTitle} from '@app/models/job-title';
+import {JobTitleService} from '@app/services/job-title.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {LangService} from '@app/services/lang.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogService} from '@app/services/dialog.service';
+import {SharedService} from '@app/services/shared.service';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {ToastService} from '@app/services/toast.service';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {SearchColumnConfigMap} from '@app/interfaces/i-search-column-config';
+import {LookupService} from '@app/services/lookup.service';
+import {CustomValidators} from '@app/validators/custom-validators';
 
 @Component({
   selector: 'job-title',
@@ -35,20 +35,20 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
   usePagination = true;
 
   constructor(public lang: LangService,
-    public service: JobTitleService,
-    private dialogService: DialogService,
-    private sharedService: SharedService,
-    private lookupService: LookupService,
-    private fb: FormBuilder,
-    private toast: ToastService) {
+              public service: JobTitleService,
+              private dialogService: DialogService,
+              private sharedService: SharedService,
+              private lookupService: LookupService,
+              private fb: FormBuilder,
+              private toast: ToastService) {
     super();
   }
 
   protected _init(): void {
     this.listenToView();
     this.buildFilterForm();
-    this.listenToFilter();
   }
+
   @ViewChild('table') table!: TableComponent;
   view$: Subject<JobTitle> = new Subject<JobTitle>();
 
@@ -99,19 +99,21 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     }
   ];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
-  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_status', 'clear_filter'];
-  searchColumnInfo: { [key: string]: ISearchColumnConfig } = {
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {
       key: 'arName',
       controlType: 'text',
       property: 'arName',
       label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
     },
     search_enName: {
       key: 'enName',
       controlType: 'text',
       property: 'enName',
       label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
     },
     search_status: {
       key: 'status',
@@ -120,7 +122,7 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       label: 'lbl_status',
       selectOptions: {
         options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
-        lableProperty: 'getName',
+        labelProperty: 'getName',
         optionValueKey: 'lookupKey'
       }
     }
@@ -168,6 +170,7 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
   get selectedRecords(): JobTitle[] {
     return this.table.selection.selected;
   }
+
   listenToView(): void {
     this.view$
       .pipe(takeUntil(this.destroy$))
@@ -178,33 +181,38 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       .pipe(switchMap(dialog => dialog.onAfterClose$))
       .subscribe(() => this.reload$.next(null))
   }
+
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: ['', [
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('AR_ONLY')]],
-      enName: ['', [
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('ENG_ONLY')]],
+      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       status: [null]
     })
   }
+
+  /*getColumnFilterValue(): Partial<JobTitle> {
+    const value: Partial<JobTitle> = this.columnFilterForm.value;
+    if (this.columnFilterFormHasValue(value)) {
+      value.isSystem = false;
+      return value;
+    }
+    return {};
+  }*/
+
   delete(model: JobTitle, event?: MouseEvent): void {
     event?.preventDefault();
-    const message = this.lang.map.msg_confirm_delete_x.change({ x: model.getName() });
+    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
-        if (click === UserClickOn.YES) {
-          const sub = model.delete().subscribe(() => {
-            // @ts-ignore
-            this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
-            this.reload$.next(null);
-            sub.unsubscribe();
-          });
-        }
-      });
+      if (click === UserClickOn.YES) {
+        const sub = model.delete().subscribe(() => {
+          // @ts-ignore
+          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
+          this.reload$.next(null);
+          sub.unsubscribe();
+        });
+      }
+    });
   }
 
   deleteBulk($event: MouseEvent): void {
@@ -213,19 +221,19 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       const message = this.lang.map.msg_confirm_delete_selected;
       this.dialogService.confirm(message)
         .onAfterClose$.subscribe((click: UserClickOn) => {
-          if (click === UserClickOn.YES) {
-            const ids = this.selectedRecords.map((item) => {
-              return item.id;
-            });
-            const sub = this.service.deleteBulk(ids).subscribe((response) => {
-              this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
-                .subscribe(() => {
-                  this.reload$.next(null);
-                  sub.unsubscribe();
-                });
-            });
-          }
-        });
+        if (click === UserClickOn.YES) {
+          const ids = this.selectedRecords.map((item) => {
+            return item.id;
+          });
+          const sub = this.service.deleteBulk(ids).subscribe((response) => {
+            this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
+              .subscribe(() => {
+                this.reload$.next(null);
+                sub.unsubscribe();
+              });
+          });
+        }
+      });
     }
   }
 
@@ -244,7 +252,7 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: model.getName()}));
         this.reload$.next(null);
       }, () => {
         // this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
