@@ -85,7 +85,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       checkTouchedDirty: false,
       isTouchedOrDirty: () => false,
       show: () => true,
-      validStatus: () => this.filteredSelectedOrganizationOfficers.length > 0,
+      validStatus: () => !this.isExternalUser || this.filteredSelectedOrganizationOfficers.length > 0,
     },
     specialExplanations: {
       name: 'special_explanations',
@@ -156,7 +156,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   get filteredSelectedOrganizationOfficers() {
-    return this.selectedOrganizationOfficers.filter((orgOfficer) => this.employeeService.isInternalUser() || orgOfficer.organizationId == this.employeeService?.getProfile()?.id)
+    return this.selectedOrganizationOfficers.filter((orgOfficer) => !this.isExternalUser || orgOfficer.organizationId == this.employeeService?.getProfile()?.id)
   }
 
   _initComponent(): void {
