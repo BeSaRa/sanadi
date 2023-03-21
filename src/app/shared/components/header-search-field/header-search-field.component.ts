@@ -8,8 +8,6 @@ import {
 import {LangService} from '@app/services/lang.service';
 import {CommonUtils} from '@helpers/common-utils';
 import {ILanguageKeys} from '@contracts/i-language-keys';
-import {DateUtils} from '@helpers/date-utils';
-import {IAngularMyDpOptions, IMyDateModel} from 'angular-mydatepicker';
 
 @Component({
   selector: 'header-search-field',
