@@ -5,14 +5,18 @@ import { Lookup } from "@app/models/lookup";
 export interface ISearchColumnConfig {
   key: string;
   label: keyof ILanguageKeys;
-  controlType: ColumnControlType;
+  controlType: SearchColumnControlType;
   property: string;
+  hide?: boolean;
+  maxLength?: number;
   selectOptions?: {
     options: Lookup[] | AdminLookup[] | any[];
     multiple?: boolean;
-    lableProperty: string;
+    labelProperty: string;
     optionValueKey: string;
   }
 }
 
-export type ColumnControlType = 'text' | 'select';
+export type SearchColumnControlType = 'text' | 'select' | 'empty' | 'search_actions';
+export type SearchColumnConfigMap = { [key: string]: ISearchColumnConfig };
+export type SearchColumnEventType = 'filter' | 'clear';
