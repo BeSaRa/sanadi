@@ -11,7 +11,7 @@ import {
   SelectAuthorizedEntityPopupComponent
 } from '@modules/services/financial-transfer-licensing/popups/select-authorized-entity-popup/select-authorized-entity-popup.component';
 import {AdminResult} from '@app/models/admin-result';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {CastResponse, CastResponseContainer,} from '@app/decorators/decorators/cast-response';
@@ -134,12 +134,17 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
     unwrap: 'rs',
     fallback: '$default'
   })
-  private _loadExternalProjectsDetails(licenseId: string): Observable<FinancialTransfersProject> {
+  private _loadExternalProjectsDetails(licenseId: string,qatariTransactionAmount?:number): Observable<FinancialTransfersProject> {
+    let queryParams = new HttpParams();
+    if(!!qatariTransactionAmount){
+      queryParams = queryParams.append('oldLicenseAmount',qatariTransactionAmount)
+    }
     return this.http.get<FinancialTransfersProject>(
-      this._getURLSegment() + '/external-project-details/' + licenseId + '/details');
+      this._getURLSegment() + '/external-project-details/' + licenseId + '/details',
+      {params: queryParams});
   }
-  loadEternalProjectsDetails(licenseId: string) {
-    return this._loadExternalProjectsDetails(licenseId);
+  loadEternalProjectsDetails(licenseId: string,qatariTransactionAmount?:number) {
+    return this._loadExternalProjectsDetails(licenseId,qatariTransactionAmount);
   }
   getSearchCriteriaModel<
     S extends FinancialTransferLicensing

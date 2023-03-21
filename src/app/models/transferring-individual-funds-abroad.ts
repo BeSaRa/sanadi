@@ -195,7 +195,7 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
       city: controls ? [city, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : city,
       detailsAddress: controls ? [detailsAddress, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : detailsAddress,
       postalCode: controls ? [postalCode, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : postalCode,
-      website: controls ? [website, [CustomValidators.required, CustomValidators.maxLength(350)]] : website,
+      website: controls ? [website, [CustomValidators.required, CustomValidators.pattern('WEBSITE')]] : website,
       organizationEmail: controls ? [organizationEmail, [CustomValidators.required, Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : organizationEmail,
       firstSocialMedia: controls ? [firstSocialMedia, [CustomValidators.required, CustomValidators.maxLength(350)]] : firstSocialMedia,
       secondSocialMedia: controls ? [secondSocialMedia, [CustomValidators.required, CustomValidators.maxLength(350)]] : secondSocialMedia,
@@ -233,8 +233,8 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
       transferringEntityName: controls ? [transferringEntityName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : transferringEntityName,
       transferType: controls ? [transferType, [CustomValidators.required]] : transferType,
-      transferFromIBAN: controls ? [transferFromIBAN, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : transferFromIBAN,
-      transfereeIBAN: controls ? [transfereeIBAN, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : transfereeIBAN,
+      transferFromIBAN: controls ? [transferFromIBAN, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : transferFromIBAN,
+      transfereeIBAN: controls ? [transfereeIBAN, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : transfereeIBAN,
       transferCountry: controls ? [transferCountry, [CustomValidators.required]] : transferCountry
     };
   }

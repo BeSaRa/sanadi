@@ -2,7 +2,14 @@ import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChil
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
 import {DialogService} from '@app/services/dialog.service';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import {BehaviorSubject, merge, Observable, of, Subject} from 'rxjs';
 import {
   catchError,
@@ -38,7 +45,13 @@ import {Pair} from '@app/interfaces/pair';
 import {BeneficiarySaveStatus} from '@app/enums/beneficiary-save-status.enum';
 import {formatDate} from '@angular/common';
 import {ReadModeService} from '@app/services/read-mode.service';
-import {CanNavigateOptions, DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus, TabMap} from '@app/types/types';
+import {
+  CanNavigateOptions,
+  DatepickerControlsMap,
+  DatepickerOptionsMap,
+  ReadinessStatus,
+  TabMap
+} from '@app/types/types';
 import {NavigationService} from '@app/services/navigation.service';
 import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
 import {SubventionResponseService} from '@app/services/subvention-response.service';
@@ -55,7 +68,9 @@ import {BuildingPlateComponent} from '@app/shared/components/building-plate/buil
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {BeneficiaryObligationComponent} from '@app/sanady/shared/beneficiary-obligation/beneficiary-obligation.component';
+import {
+  BeneficiaryObligationComponent
+} from '@app/sanady/shared/beneficiary-obligation/beneficiary-obligation.component';
 import {BeneficiaryIncomeComponent} from '@app/sanady/shared/beneficiary-income/beneficiary-income.component';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {AttachmentListComponent} from '@app/shared/components/attachment-list/attachment-list.component';
@@ -246,7 +261,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'personalTab',
       langKey: 'personal_info',
       index: 0,
-      checkTouchedDirty: true,
+      // checkTouchedDirty: true,
       validStatus: () => this.personalInfoTab && this.personalInfoTab.valid,
       isTouchedOrDirty: () => this.personalInfoTab && (this.personalInfoTab.touched || this.personalInfoTab.dirty)
     },
@@ -254,7 +269,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'incomeTab',
       langKey: 'income_obligation',
       index: 2,
-      checkTouchedDirty: true,
+      // checkTouchedDirty: true,
       validStatus: () => {
         return (!this.beneficiaryObligationComponentRef || (this.beneficiaryObligationsStatus === 'READY'))
           && (!this.beneficiaryIncomeComponentRef || (this.beneficiaryIncomesStatus === 'READY'));
@@ -268,7 +283,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'addressTab',
       langKey: 'lbl_address',
       index: 1,
-      checkTouchedDirty: true,
+      // checkTouchedDirty: true,
       validStatus: () => this.addressTab && this.addressTab.valid && !!this.buildingPlate && this.buildingPlate.isValidForm(),
       isTouchedOrDirty: () => (this.addressTab && (this.addressTab.touched || this.addressTab.dirty)) || (this.buildingPlate && this.buildingPlate.isTouchedOrDirty())
     },
@@ -276,15 +291,15 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'requestInfoTab',
       langKey: 'request_info',
       index: 3,
-      checkTouchedDirty: true,
-      validStatus: () => this.requestInfoTab && this.requestInfoTab.valid,
+      // checkTouchedDirty: true,
+      validStatus: () => this.requestInfoTab && this.requestInfoTab.valid && this._isValidDisclosureFile(),
       isTouchedOrDirty: () => this.requestInfoTab && (this.requestInfoTab.touched || this.requestInfoTab.dirty)
     },
     requestStatus: {
       name: 'requestStatusTab',
       langKey: 'request_status',
       index: 5,
-      checkTouchedDirty: true,
+      // checkTouchedDirty: true,
       validStatus: () => this.requestStatusTab && this.requestStatusTab.valid,
       isTouchedOrDirty: () => this.requestStatusTab && (this.requestStatusTab.touched || this.requestStatusTab.dirty)
     },
@@ -292,7 +307,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'aidsTab',
       langKey: 'provided_aid',
       index: 4,
-      checkTouchedDirty: true,
+      // checkTouchedDirty: true,
       validStatus: () => this.aidFormArray && this.aidFormArray.valid,
       isTouchedOrDirty: () => this.aidFormArray && (this.aidFormArray.touched || this.aidFormArray.dirty)
     },
@@ -300,7 +315,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'attachmentsTab',
       langKey: 'attachments',
       index: 6,
-      checkTouchedDirty: true,
+      // checkTouchedDirty: true,
       validStatus: () => this.attachmentsTab && this.attachmentsTab.valid,
       isTouchedOrDirty: () => this.attachmentsTab && (this.attachmentsTab.touched || this.attachmentsTab.dirty)
     }
@@ -531,6 +546,20 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
+  isDisclosureFileRequired(): boolean {
+    if (!!this.currentRequest?.id) {
+      return false;
+    }
+    return !!this.allowDataSharingField?.value;
+  }
+
+  private _isValidDisclosureFile(): boolean {
+    if (!this.isDisclosureFileRequired()) {
+      return true;
+    }
+    return !!this.disclosureFile
+  }
+
   private listenToSavePartialRequest() {
     this.savePartial$.pipe(
       takeUntil(this.destroy$),
@@ -570,7 +599,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       // keep the original path of partial request page to use in case of back
       const previousPath = this.navigationService.previousPath;
       // after adding, open the request as normal
-      this.router.navigate(['/home/sanady/request/', response.request.id]).then(()=> {
+      this.router.navigate(['/home/sanady/request/', response.request.id]).then(() => {
         // update the previous path as partial request page original path
         this.navigationService.previousPath = previousPath;
       });
@@ -599,7 +628,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           if (!!this.currentRequest && this.currentRequest.id) {
             return isValid;
           }
-          isValid = isValid && (!this.allowDataSharingField.value ? true : !!this.disclosureFile);
+          isValid = isValid && (this._isValidDisclosureFile());
 
           if (!isValid) {
             this.checkFormFieldsCallback();
@@ -1513,7 +1542,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     if (value.first === BeneficiarySaveStatus.BENEFICIARY_IS_DEAD_SERVICE_NOT_AVAILABLE) {
       status = 'STOP';
       const msg = this.langService.map[value.first as keyof ILanguageKeys] + '<br>' + this.langService.map.msg_confirm_continue;
-      this.dialogService.confirm(msg, {actionBtn: 'btn_continue', cancelBtn: 'btn_clear', showCloseIcon: true}).onAfterClose$.pipe(take(1))
+      this.dialogService.confirm(msg, {
+        actionBtn: 'btn_continue',
+        cancelBtn: 'btn_clear',
+        showCloseIcon: true
+      }).onAfterClose$.pipe(take(1))
         .subscribe((click: UserClickOn) => {
           if (!CommonUtils.isValidValue(click) || click === UserClickOn.CLOSE) {
             return;

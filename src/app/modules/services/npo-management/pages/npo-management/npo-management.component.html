@@ -10,7 +10,7 @@
          [template]="bankAccountTabTemplate" [title]="lang.map.bank_accounts"></tab>
     <tab [name]="tabsData.realBeneficiary.name" [hasError]="getTabInvalidStatus('realBeneficiary')"
          [template]="realBeneficiaryTabTemplate" [title]="lang.map.lbl_real_beneficiary"></tab>
-    <tab [name]="tabsData.attachments.name" *ngIf="!accordionView" [template]="attachmentsTab"
+    <tab [name]="tabsData.attachments.name" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab"
          [title]="lang.map.attachments" [hasError]="getTabInvalidStatus('attachments')"></tab>
   </tabs-list>
 

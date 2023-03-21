@@ -3,8 +3,8 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content" [ngClass]="isCancelRequestType() ? 'no-fixed-height min-w400px' : 'w800px'">
-  <ng-container *ngIf="!isCancelRequestType()">
+<div class="dialog-content" [ngClass]="(isCancelRequestType() || isOpenedFromDepartment()) ? 'no-fixed-height min-w400px' : 'w800px'">
+  <ng-container *ngIf="!isCancelRequestType() && !isOpenedFromDepartment()">
     <approval-form [license]="data.model"
                    [model]="data.model" [multi]="false"></approval-form>
   </ng-container>

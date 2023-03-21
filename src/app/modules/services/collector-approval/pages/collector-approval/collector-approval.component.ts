@@ -20,6 +20,7 @@ import {UserClickOn} from '@enums/user-click-on.enum';
 import {
   CollectorItemComponent
 } from '@modules/services/collector-approval/shared/collector-item/collector-item.component';
+import {TabMap} from '@app/types/types';
 
 @Component({
   selector: 'collector-approval',
@@ -34,6 +35,42 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
   licenseDurationTypes: Lookup[] = this.lookupService.listByCategory.LicenseDurationType;
   disableSearchField: boolean = true;
   @ViewChild('nested_collector') nestedCollector!: CollectorItemComponent
+
+  tabsData: TabMap = {
+    basicInfo: {
+      name: 'basicInfo',
+      langKey: 'lbl_basic_info',
+      index: 0,
+      validStatus: () => {
+        if (!this.basicInfo || this.basicInfo.disabled) {
+          return true;
+        }
+        return this.basicInfo.valid && this._hasCollectorListItems();
+      },
+      isTouchedOrDirty: () => true
+    },
+    specialExplanation: {
+      name: 'specialExplanation',
+      langKey: 'special_explanations',
+      index: 1,
+      validStatus: () => {
+        return !this.specialExplanation || this.specialExplanation.disabled || this.specialExplanation.valid;
+      },
+      isTouchedOrDirty: () => true
+    }
+  }
+
+  getTabInvalidStatus(tabName: string): boolean {
+    let tab = this.tabsData[tabName];
+    if (!tab) {
+      console.info('tab not found: %s', tabName);
+      return true; // if tab not found, consider it invalid
+    }
+    if (!tab.checkTouchedDirty) {
+      return !tab.validStatus();
+    }
+    return !tab.validStatus() && tab.isTouchedOrDirty();
+  }
 
   formProperties = {
     requestType: () => {
@@ -89,18 +126,30 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
     this.handleReadonly();
   }
 
+  private _hasCollectorListItems(): boolean {
+    return !!(this.model && this.model.collectorItemList.length);
+  }
+
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (!this.requestType.value) {
       this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.request_type}));
       return false;
     }
     if (saveType === SaveTypes.DRAFT) {
-      return true;
+      if (this.requestType.value === CollectionRequestType.NEW) {
+        return true;
+      } else {
+        if (!this._hasCollectorListItems()) {
+          this.invalidItemMessage();
+          return false;
+        }
+        return true;
+      }
     }
     return of(this.form.valid)
       .pipe(tap(valid => !valid && this.invalidFormMessage()))
       .pipe(filter(valid => valid))
-      .pipe(map(_ => !!(this.model && this.model.collectorItemList.length)))
+      .pipe(map(_ => this._hasCollectorListItems()))
       .pipe(tap(hasCollectionItems => !hasCollectionItems && this.invalidItemMessage()))
   }
 

@@ -26,20 +26,20 @@
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div formGroupName="basic">
-        <div class="row mb-4">
-          <div class="col-sm-6 position-relative">
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.arabic_name}}</label>
             <input id="arName" validationClasses="arName" formControlName="arName" class="form-control">
             <app-field-error-message controlName="arName"></app-field-error-message>
           </div>
-          <div class="col-sm-6 position-relative">
+          <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.english_name}}</label>
             <input id="enName" validationClasses="enName" formControlName="enName" class="form-control">
             <app-field-error-message controlName="enName"></app-field-error-message>
           </div>
         </div>
-        <div class="row mb-4">
-          <div class="col-sm-6 position-relative">
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="bawServiceCode" for="bawServiceCode"
                    class="form-label">{{lang.map.baw_service_code}}</label>
             <input id="bawServiceCode" validationClasses="bawServiceCode" formControlName="bawServiceCode"
@@ -51,7 +51,7 @@
           <!--            <input id="caseType" validationClasses="caseType" formControlName="caseType" class="form-control">-->
           <!--            <app-field-error-message controlName="caseType"></app-field-error-message>-->
           <!--          </div>-->
-          <div class="col-sm-6 ng-select-wrapper">
+          <div class="col-sm-6 mb-4 ng-select-wrapper">
             <label for="status" asteriskIfRequired="status" class="form-label">{{lang.map.lbl_status}}</label>
             <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
                        placeholder="{{lang.map.select}}" id="status"
@@ -66,15 +66,15 @@
             <app-field-error-message controlName="status"></app-field-error-message>
           </div>
         </div>
-        <div class="row mb-4">
-          <div class="col-sm-6 position-relative">
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="licenseSerialCode" for="licenseSerialCode"
                    class="form-label">{{lang.map.license_serial_code}}</label>
             <input id="licenseSerialCode" validationClasses="licenseSerialCode" formControlName="licenseSerialCode"
                    class="form-control">
             <app-field-error-message controlName="licenseSerialCode"></app-field-error-message>
           </div>
-          <div class="col-sm-6 position-relative">
+          <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="requestSerialCode" for="requestSerialCode"
                    class="form-label">{{lang.map.request_serial_code}}</label>
             <input id="requestSerialCode" validationClasses="requestSerialCode" formControlName="requestSerialCode"
@@ -82,15 +82,15 @@
             <app-field-error-message controlName="requestSerialCode"></app-field-error-message>
           </div>
         </div>
-        <div class="row mb-4">
-          <div class="col-sm-6 position-relative">
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="serviceTimeLimit" for="serviceTimeLimit"
                    class="form-label">{{lang.map.service_time_limit}}</label>
             <input id="serviceTimeLimit" validationClasses="serviceTimeLimit" formControlName="serviceTimeLimit"
                    class="form-control">
             <app-field-error-message controlName="serviceTimeLimit"></app-field-error-message>
           </div>
-          <div class="col-sm-6 position-relative">
+          <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="fees" for="serviceReviewLimit"
                    class="form-label">{{lang.map.lbl_review_limit}}</label>
             <input id="serviceReviewLimit" validationClasses="serviceReviewLimit" formControlName="serviceReviewLimit"
@@ -99,15 +99,15 @@
             <app-field-error-message controlName="serviceReviewLimit"></app-field-error-message>
           </div>
         </div>
-        <div class="row mb-4">
-          <div class="col-sm-6 position-relative">
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="licenseMinTime" for="licenseMinTime"
                    class="form-label">{{lang.map.license_min_time + ' (' + lang.map.months + ')'}}</label>
             <input id="licenseMinTime" validationClasses="licenseMinTime" formControlName="licenseMinTime"
                    class="form-control">
             <app-field-error-message controlName="licenseMinTime"></app-field-error-message>
           </div>
-          <div class="col-sm-6 position-relative">
+          <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="licenseMaxTime" for="licenseMaxTime"
                    class="form-label">{{lang.map.license_max_time + ' (' + lang.map.months + ')'}}</label>
             <input id="licenseMaxTime" validationClasses="licenseMaxTime" formControlName="licenseMaxTime"
@@ -115,21 +115,52 @@
             <app-field-error-message controlName="licenseMaxTime"></app-field-error-message>
           </div>
         </div>
-        <div class="row mb-4">
-          <div class="col-sm-6 position-relative">
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="fees" for="fees" class="form-label">{{lang.map.fees}}</label>
             <input id="fees" validationClasses="fees" formControlName="fees" class="form-control">
             <app-field-error-message controlName="fees"></app-field-error-message>
           </div>
-          <div class="col-sm-6 position-relative">
+          <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="fees" for="sLA" class="form-label">{{lang.map.lbl_sla}}</label>
             <input id="sLA" validationClasses="sLA" formControlName="sLA" class="form-control"
                    [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message controlName="sLA"></app-field-error-message>
           </div>
         </div>
-        <div class="row mb-4">
-          <div class="col-sm-12 position-relative">
+        <div class="row">
+          <div class="col-sm-12 mb-4 ng-select-wrapper">
+            <label asteriskIfRequired="departmentsIds" for="departmentsIds"
+                   class="form-label">{{lang.map.related_departments}}</label>
+            <ng-select [selectOnTab]="true" [items]="departments" labelForId="departmentsIds"
+                       bindValue="id" [clearable]="true"
+                       [searchFn]="searchNgSelect" appendTo="body"
+                       placeholder="{{lang.map.select}}" id="departmentsIds"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [multiple]="true" [closeOnSelect]="false"
+                       formControlName="departmentsIds" validationClasses="departmentsIds">
+              <ng-template ng-option-tmp let-item="item">
+                <span class="custom-option">{{item.getName()}}</span>
+              </ng-template>
+              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of (items ? items.slice(0,4): [])">
+                  <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 4">
+                  <span class="ng-value-label">{{items.length - 4}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <app-field-error-message controlName="departmentsIds"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="serviceTerms" for="serviceTerms"
                    class="form-label">{{lang.map.service_terms}}</label>
             <textarea id="serviceTerms" validationClasses="serviceTerms" formControlName="serviceTerms"
@@ -137,8 +168,8 @@
             <app-field-error-message controlName="serviceTerms"></app-field-error-message>
           </div>
         </div>
-        <div class="row mb-4">
-          <div class="col-sm-12 position-relative">
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="serviceRequirements" for="serviceRequirements"
                    class="form-label">{{lang.map.service_requirements}}</label>
             <textarea id="serviceRequirements" validationClasses="serviceRequirements"
@@ -147,8 +178,8 @@
             <app-field-error-message controlName="serviceRequirements"></app-field-error-message>
           </div>
         </div>
-        <div class="row mb-4">
-          <div class="col-sm-12 position-relative">
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="serviceDescription" for="serviceDescription"
                    class="form-label">{{lang.map.service_description}}</label>
             <textarea id="serviceDescription" validationClasses="serviceDescription"
@@ -157,8 +188,8 @@
             <app-field-error-message controlName="serviceDescription"></app-field-error-message>
           </div>
         </div>
-        <div class="row mb-4">
-          <div class="col-sm-12 position-relative">
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="serviceStepsArabic" for="serviceStepsArabic"
                    class="form-label">{{lang.map.service_steps_arabic}}</label>
             <textarea id="serviceStepsArabic" validationClasses="serviceStepsArabic"
@@ -167,8 +198,8 @@
             <app-field-error-message controlName="serviceStepsArabic"></app-field-error-message>
           </div>
         </div>
-        <div class="row mb-4">
-          <div class="col-sm-12 position-relative">
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="serviceStepsEnglish" for="serviceStepsEnglish"
                    class="form-label">{{lang.map.service_steps_english}}</label>
             <textarea id="serviceStepsEnglish" validationClasses="serviceStepsEnglish"

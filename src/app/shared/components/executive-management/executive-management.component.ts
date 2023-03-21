@@ -199,7 +199,7 @@ export class ExecutiveManagementComponent implements OnInit {
           let formValue = this.form.getRawValue();
           let nationalityInfo: AdminResult =
             this.nationalities
-              .find((x) => x.id === formValue.country)
+              .find((x) => x.id === formValue.nationality)
               ?.createAdminResult() ?? new AdminResult();
 
           return new ExecutiveManagement().clone({

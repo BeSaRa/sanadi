@@ -8,7 +8,7 @@
     </tab>
     <tab [hasError]="specialExplanation.invalid" name="special_explanations" [template]="specialExplanations"
          [title]="lang.map.special_explanations"></tab>
-    <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+    <tab name="attachments" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
   <ng-container [formGroup]="form">
     <ng-template #basic_info>

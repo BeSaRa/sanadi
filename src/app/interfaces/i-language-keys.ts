@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  related_departments: string;
+  lbl_model: string;
   menu_add: string;
   menu_search: string;
   menu_outputs: string;
@@ -1329,6 +1331,7 @@ export interface ILanguageKeys {
   entity_name: string;
   execution_country: string;
   msg_please_select_x_to_continue: string;
+  msg_please_validate_x_to_continue: string;
   menu_external_project_implementation: string;
   msg_add_intervention_license_first: string;
   integration_moj: string;
@@ -1823,5 +1826,6 @@ export interface ILanguageKeys {
   lbl_edit_training_program_partner:string;
   lbl_add_training_program_partner:string;
   lbl_transfer_operation_date:string;
+  msg_record_is_linked:string;
   previews_replays:string;
 }

@@ -1,5 +1,8 @@
+<ng-template #requiredItemsMsgTemplate>
+  <div class="text-danger" *ngIf="!(!!item || disableAdd) && !model.collectorItemList.length">{{lang.map.err_required_field}}</div>
+</ng-template>
 <app-page-header *ngIf="!approvalMode" [clickOnNew$]="add$" [disableAdd]="!!item || disableAdd"
-                 [pageTitle]="'collector_items'"></app-page-header>
+                 [pageTitle]="'collector_items'" [customTemplate]="requiredItemsMsgTemplate"></app-page-header>
 <app-page-header *ngIf="approvalMode" [pageTitle]="'collector_items'"></app-page-header>
 <form *ngIf="!!item" [formGroup]="form">
   <fieldset class="border border-1 rounded-1 p-3">

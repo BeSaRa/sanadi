@@ -153,7 +153,7 @@ export class EffectiveCoordinationCapabilities extends SearchableCloneable<Effec
             [Validators.required].concat(
               CustomValidators.number,
               CustomValidators.maxLength(
-                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
               )
             ),
           ]
@@ -164,7 +164,7 @@ export class EffectiveCoordinationCapabilities extends SearchableCloneable<Effec
             [Validators.required].concat(
               CustomValidators.number,
               CustomValidators.maxLength(
-                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
               )
             ),
           ]
@@ -190,7 +190,7 @@ export class EffectiveCoordinationCapabilities extends SearchableCloneable<Effec
                 CustomValidators.defaultLengths.DECIMAL_PLACES
               ),
               CustomValidators.maxLength(
-                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
               )
             ),
           ]

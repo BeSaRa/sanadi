@@ -71,4 +71,10 @@ export class AwarenessActivitySuggestionService extends BaseGenericEService<Awar
       action
     });
   }
+  finalApprove(model: AwarenessActivitySuggestion, action: WFResponseType): DialogRef {
+    return this.dialog.show(AwarenessActivitySuggestionApprovalPopupComponent, {
+      model,
+      action
+    });
+  }
 }

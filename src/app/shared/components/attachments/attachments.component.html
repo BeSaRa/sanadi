@@ -1,5 +1,5 @@
 <div>
-  <div class="row pb-3">
+  <!--<div class="row pb-3">
     <app-page-header [customTemplate]="headerTemplate"></app-page-header>
     <ng-template #headerTemplate>
       <div class="align-items-center">
@@ -13,12 +13,31 @@
         </button>
       </div>
     </ng-template>
-  </div>
+  </div>-->
+
+  <ng-template #reloadAttachmentsTemplate>
+    <button [tooltip]="lang.map.btn_reload"
+            (click)="forceReload()"
+            class="btn icon-btn text-white">
+      <i class="mdi {{actionIconsEnum.RELOAD}}"></i>
+    </button>
+  </ng-template>
   <app-table [selectable]="true" #table sortableTable [paginator]="paginator"
              [filter]="filter.value"
              [data]="attachments"
              [columns]="displayedColumns">
     <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header tableTitle="attachments"
+                        [add$]="addOtherAttachments"
+                        [allowAdd]="!disabled"
+                        [skipClearSort]="true"
+                        [skipSearch]="true"
+                        [customTemplate]="reloadAttachmentsTemplate"
+          ></table-header>
+        </th>
+      </ng-container>
       <ng-container cdkColumnDef="rowSelection">
         <th cdk-header-cell class="bg-primary" style="width: 20px;" *cdkHeaderCellDef>
           <input type="checkbox" [disabled]="table.filter"
@@ -34,24 +53,24 @@
                  class="form-check-input"></td>
       </ng-container>
       <ng-container cdkColumnDef="icon">
-        <th cdk-header-cell class="bg-primary text-white" style="width: 20px;" *cdkHeaderCellDef></th>
+        <th cdk-header-cell style="width: 20px;" *cdkHeaderCellDef></th>
         <td cdk-cell *cdkCellDef="let row"><i class="mdi text-primary {{getFileIcon(row)}}"></i></td>
       </ng-container>
       <ng-container cdkColumnDef="type">
-        <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.attachment_type}}</th>
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.attachment_type}}</th>
         <td cdk-cell
             *cdkCellDef="let row"> {{row.attachmentTypeId === -1 ? row.documentTitle : row.attachmentTypeInfo.getName()}} </td>
       </ng-container>
       <ng-container cdkColumnDef="description">
-        <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.lbl_description}}</th>
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_description}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.description}} </td>
       </ng-container>
       <ng-container cdkColumnDef="mandatory">
-        <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.lbl_mandatory}}</th>
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_mandatory}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.getRequiredTranslate()}} </td>
       </ng-container>
       <ng-container cdkColumnDef="isPublished">
-        <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.published}}</th>
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.published}}</th>
         <td cdk-cell *cdkCellDef="let row">
           <span *ngIf="!canChangePublished(row)">{{row.getPublishedTranslate()}}</span>
           <span *ngIf="canChangePublished(row)" class="form-check form-switch switch-action" style="top: auto">
@@ -63,11 +82,11 @@
         </td>
       </ng-container>
       <ng-container cdkColumnDef="date">
-        <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.creation_date}}</th>
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.creation_date}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.createdOn|date: 'mediumDate' }} </td>
       </ng-container>
       <ng-container cdkColumnDef="actions">
-        <th cdk-header-cell style="width: 200px" class="bg-primary text-white"
+        <th cdk-header-cell style="width: 200px"
             *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; index as itemIndex">
           <div class="d-flex gap-2">
@@ -94,7 +113,8 @@
           </div>
         </td>
       </ng-container>
-      <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
       <tr *cdkNoDataRow>
         <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>

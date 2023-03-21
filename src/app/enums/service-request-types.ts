@@ -68,3 +68,16 @@ export enum AffiliationRequestType {
   UPDATE = AllRequestTypesEnum.UPDATE,
   CANCEL = AllRequestTypesEnum.CANCEL
 }
+
+export enum FinancialTransferRequestTypes {
+  NEW = AllRequestTypesEnum.NEW,
+  UPDATE = AllRequestTypesEnum.UPDATE,
+  CANCEL = AllRequestTypesEnum.CANCEL,
+  TRANSFER_STATEMENT_TRANSFERRED = AllRequestTypesEnum.TRANSFER_STATEMENT_TRANSFERRED
+}
+
+export enum GeneralAssociationMeetingRequestTypeEnum {
+  NEW = AllRequestTypesEnum.NEW,
+  UPDATE = AllRequestTypesEnum.UPDATE,
+  CANCEL = AllRequestTypesEnum.CANCEL,
+}

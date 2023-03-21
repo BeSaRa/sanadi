@@ -115,6 +115,9 @@ import {HeadingRowComponent} from './components/heading-row/heading-row.componen
 import { HeaderNotificationsComponent } from './components/header-notifications/header-notifications.component';
 import { FilterInboxRequestPopupComponent } from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 import { HeaderSearchFieldComponent } from './components/header-search-field/header-search-field.component';
+import {
+  UserPreferencesPopupComponent
+} from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
 
 @NgModule({
   declarations: [
@@ -223,7 +226,8 @@ import { HeaderSearchFieldComponent } from './components/header-search-field/hea
     ServiceLogItemLocationComponent,
     HeadingRowComponent,
     HeaderNotificationsComponent,
-    HeaderSearchFieldComponent
+    HeaderSearchFieldComponent,
+    UserPreferencesPopupComponent
   ],
   imports: [
     CommonModule,

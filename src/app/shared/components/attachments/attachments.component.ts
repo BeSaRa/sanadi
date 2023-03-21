@@ -24,6 +24,7 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {CommonUtils} from '@helpers/common-utils';
 import {GlobalSettingsService} from '@app/services/global-settings.service';
 import {GlobalSettings} from '@app/models/global-settings';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -41,6 +42,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   multiAttachments: Map<GridName, Map<ItemId, FileNetDocument[]>> = new Map<GridName, Map<ItemId, FileNetDocument[]>>();
 
   fileIconsEnum = FileIconsEnum;
+  actionIconsEnum = ActionIconsEnum;
   defaultAttachments: FileNetDocument[] = [];
   conditionalAttachments: FileNetDocument[] = [];
   customPropertiesDestroy$: Subject<void> = new Subject<void>();

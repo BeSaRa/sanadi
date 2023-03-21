@@ -23,7 +23,6 @@ export class SDGoal extends BaseModel<SDGoal, SDGoalService> {
   status: number = 1;
   parentId!: number | null;
   statusInfo!: Lookup;
-  childCount!: number;
 
   constructor() {
     super();

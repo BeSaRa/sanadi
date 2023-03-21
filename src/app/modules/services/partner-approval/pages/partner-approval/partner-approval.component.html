@@ -20,7 +20,7 @@
            [title]="lang.map.approval_reasons" [hasError]="getTabInvalidStatus('approvalReasons')"></tab>
       <tab [name]="tabsData.comments.name" [template]="commentsTemplate" [hasError]="getTabInvalidStatus('comments')"
            [title]="lang.map.comments" *ngIf="employeeService.isInternalUser()">{{lang.map.comments}}</tab>
-      <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [template]="attachmentsTemplate"
+      <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name" [template]="attachmentsTemplate"
            [hasError]="getTabInvalidStatus('attachments')" [title]="lang.map.attachments">{{lang.map.attachments}}</tab>
       <tab [name]="tabsData.logs.name" [hasError]="getTabInvalidStatus('logs')" [template]="logsTemplate"
            [title]="lang.map.logs" *ngIf="fromDialog" [disabled]="!model?.id"></tab>
@@ -355,7 +355,7 @@
     </ng-template>
     <!-- Executive Managements -->
     <ng-template #executiveManagementsTemplate>
-      <executive-management #executiveManagementsTab
+      <executive-management #executiveManagementsTab [nationalities]="nationalities"
                             [pageTitleKey]="'executive_management'" [list]="model?.executiveManagementList || []"
                             [readonly]="(isExtendOrCancelRequestType() || readonly)"
                             (readyEvent)="executiveManagementsTabStatus = $event">

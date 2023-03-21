@@ -298,8 +298,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
           if (item.caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
             if (this.model?.caseStatus === CommonCaseStatus.DRAFT ||
-                this.model?.caseStatus === CommonCaseStatus.NEW
-              ){
+              this.model?.caseStatus === CommonCaseStatus.NEW) {
               return true;
             }
             if ((item as ProjectImplementation).isSubmissionMechanismRegistration() || (item as ProjectImplementation).isSubmissionMechanismNotification()) {
@@ -346,10 +345,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             return false;
           }
           if (item.caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
-            if (this.model?.caseStatus === CommonCaseStatus.DRAFT
-            ){
-            return true;
-          }
+            if (this.model?.caseStatus === CommonCaseStatus.DRAFT) {
+              return true;
+            }
             if ((item as ProjectImplementation).isSubmissionMechanismRegistration() || (item as ProjectImplementation).isSubmissionMechanismNotification()) {
               return false;
             }
@@ -375,6 +373,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         label: 'save_as_draft_and_continue',
         show: (item) => {
+          if (this.internal) {
+            return false;
+          }
           if (item.isCancelled() || this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
             return false;
           }
@@ -511,6 +512,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         // icon: 'mdi-rocket-launch-outline',
         label: 'save_as_draft_and_continue',
         show: (item) => {
+          if (this.internal) {
+            return false;
+          }
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
             return false;
           }
@@ -1049,7 +1053,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         label: (item) => this.finalApproveByMatrixServices.includes(item.getCaseType()) ? this.lang.map.final_approve_task_based_on_matrix : this.lang.map.final_approve_task,
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.FINAL_APPROVE) && item.caseState != CommonCaseStatus.CANCELLED;
+          return item.getResponses().includes(WFResponseType.FINAL_APPROVE) && item.getCaseStatus() != CommonCaseStatus.CANCELLED;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.finalApproveAction(item);
@@ -1281,6 +1285,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       openFrom = this.getTheRightOpenForm();
     }
     this.openFrom = openFrom;
+    this.component.openFrom = openFrom;
     switch (openFrom) {
       case OpenFrom.USER_INBOX:
         this.buildUserInboxActions();

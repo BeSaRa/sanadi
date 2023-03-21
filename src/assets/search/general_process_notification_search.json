@@ -72,5 +72,20 @@
         }
       }
     ]
+  },
+  {
+    "fields": [
+       {
+        "key": "organizationId",
+        "type": "selectField",
+        "label": "lbl_organization",
+        "selectOptions": {
+          "options": [],
+          "loader": "organization.loadAsLookups",
+          "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
+        }
+      }
+    ]
   }
 ]

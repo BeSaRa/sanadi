@@ -18,7 +18,7 @@ const routes: Routes = [
     canActivate: [NewServicePermissionGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissionsEnum.CONSULTATION,
+      permissionKey: EServicePermissionsEnum.URGENT_JOINT_RELIEF_CAMPAIGN,
       permissionGroup: null,
       checkAnyPermission: false,
       render: 'UrgentJointReliefCampaignComponent'

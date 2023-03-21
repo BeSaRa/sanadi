@@ -17,7 +17,7 @@
     <tab *ngIf="tabsData.countries.show!()" [name]="tabsData.countries.name" [hasError]="false"
       [template]="countriesTemplate" [title]="lang.map.country_countries">
     </tab>
-    <tab *ngIf="tabsData.attachments.show!()" [name]="tabsData.attachments.name" [hasError]="false"
+    <tab *ngIf="tabsData.attachments.show!()" [hideIcon]="true" [name]="tabsData.attachments.name" [hasError]="false"
       [template]="attachments" [title]="lang.map.attachments">
     </tab>
   </tabs-list>

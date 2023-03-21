@@ -12,7 +12,7 @@
     <tab [name]="tabsData.interventionFields.name" [hasError]="getTabInvalidStatus('interventionFields')"
          [template]="interventionFieldsTabTemplate" [title]="lang.map.intervention_fields"
          [disabled]="!isStartOrUpdateRequestType()"></tab>
-    <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+    <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
          [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>
@@ -61,7 +61,8 @@
       <div *ngIf="selectedLicense">
         <selected-license-table [caseType]="caseTypes.URGENT_INTERVENTION_ANNOUNCEMENT"
                                 [caseTypeViewLicense]="caseTypes.URGENT_INTERVENTION_ANNOUNCEMENT"
-                                [licenseList]="[selectedLicense]"
+                                (clearLicense)="clearLicense()"
+                                [licenseList]="[selectedLicense]" [ignoreDelete]="!isEditLicenseAllowed()"
                                 [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
       </div>
       <div class="row">

@@ -11,7 +11,7 @@ import {switchMap} from 'rxjs/operators';
 import {IDialogData} from '@contracts/i-dialog-data';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogService} from '@services/dialog.service';
-import {UserPreferencesPopupComponent} from '@app/administration/popups/user-preferences-popup/user-preferences-popup.component';
+import {UserPreferencesPopupComponent} from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
 import {HasInterception, InterceptParam} from '@decorators/intercept-model';
 
 @CastResponseContainer({

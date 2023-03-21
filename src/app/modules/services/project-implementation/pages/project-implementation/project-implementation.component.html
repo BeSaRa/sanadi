@@ -9,7 +9,7 @@
          [title]="lang.map.funding_resources"></tab>
     <tab name="special_explanations" [hasError]="specialExplanations.invalid" [template]="special_explanations"
          [title]="lang.map.special_explanations"></tab>
-    <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+    <tab name="attachments" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
   <ng-container [formGroup]="form">
     <ng-template #basic_info>
@@ -172,8 +172,8 @@
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" formControlName="licenseStartDate"
                    id="licenseStartDate" [options]="datepickerOptionsMap.licenseStartDate"
-                   (click)="dpLicenseStartDate.toggleCalendar()"
-                   [ngClass]="{'input-disabled': licenseStartDate.disabled}"
+                   (click)="!isLicenseStartDateDisabled() && dpLicenseStartDate.toggleCalendar()"
+                   [ngClass]="{'input-disabled': isLicenseStartDateDisabled()}"
                    #dpLicenseStartDate="angular-mydatepicker"
                    angular-mydatepicker validationClasses="licenseStartDate"></div>
               <app-field-error-message controlName="licenseStartDate"></app-field-error-message>

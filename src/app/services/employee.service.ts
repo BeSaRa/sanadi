@@ -24,6 +24,9 @@ import {CustomMenuInterceptor} from '@app/model-interceptors/custom-menu-interce
 import {ProfileInterceptor} from '@app/model-interceptors/profile-interceptor';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UserRoleManageUserContract} from '@contracts/user-role-manage-user-contract';
+import {InternalUserInterceptor} from '@model-interceptors/internal-user-interceptor';
+import {ExternalUserInterceptor} from '@model-interceptors/external-user-interceptor';
+import {LangService} from '@services/lang.service';
 
 @Injectable({
   providedIn: 'root'
@@ -99,6 +102,7 @@ export class EmployeeService {
   };
   private customMenuInterceptor = new CustomMenuInterceptor();
   private profileInterceptor = new ProfileInterceptor();
+  public isToggledToDefaultLanguage: boolean = false;
 
   public userRolesManageUser: UserRoleManageUserContract = {
     isSuperAdmin: (operation: OperationTypes) => this._manageUserSuperAdmin(operation),
@@ -112,9 +116,8 @@ export class EmployeeService {
     FactoryService.registerService('EmployeeService', this);
   }
 
-
   setExternalUserData(loginData: ILoginData): void {
-    this.externalUser = (new ExternalUser()).clone(loginData.externalUser);
+    this.externalUser = new ExternalUserInterceptor().receive(new ExternalUser().clone(loginData.externalUser));
     this.profile = this.profileInterceptor.receive((new Profile()).clone(loginData.profile));
   }
 
@@ -128,6 +131,7 @@ export class EmployeeService {
     this.permissionMap.clear();
     this.teams = [];
     this.menuItems = [];
+    this.isToggledToDefaultLanguage = false;
   }
 
   getExternalUser(): ExternalUser | undefined {
@@ -283,7 +287,7 @@ export class EmployeeService {
 
   private setInternalUserData(loginData: ILoginData) {
     loginData.internalDepartment.mainTeam = new Team().clone(loginData.internalDepartment.mainTeam);
-    this.internalUser = (new InternalUser()).clone(loginData.internalUser);
+    this.internalUser = new InternalUserInterceptor().receive((new InternalUser()).clone(loginData.internalUser));
     this.internalDepartment = (new InternalDepartment()).clone(loginData.internalDepartment);
     this.internalDepartments = loginData.internalDepartments.map(item => (new InternalDepartment()).clone(item));
   }

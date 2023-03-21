@@ -13,7 +13,7 @@
       [title]="lang.map.employee_data"
     ></tab>
     <tab
-      [name]="tabsData.attachments.name"
+      [name]="tabsData.attachments.name" [hideIcon]="true"
       *ngIf="!accordionView"
       [template]="attachmentsTab"
       [title]="lang.map.attachments"

@@ -77,7 +77,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       name: 'basic',
       langKey: 'lbl_basic_info',
       index: 0,
-      checkTouchedDirty: true,
+      // checkTouchedDirty: true,
       validStatus: () => {
         if (!this.basicFormTab || this.readonly) {
           return true;
@@ -95,7 +95,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       name: 'permissions',
       langKey: 'lbl_permissions',
       index: 1,
-      checkTouchedDirty: true,
+      // checkTouchedDirty: true,
       validStatus: () => {
         if (!this.permissionsFormTab || this.readonly) {
           return true;

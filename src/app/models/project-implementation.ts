@@ -197,8 +197,10 @@ export class ProjectImplementation
   }
 
   approve(): DialogRef {
-    // return [ServiceRequestTypes.CANCEL, ServiceRequestTypes.UPDATE].includes(this.requestType) ? super.approve() : this.service.approveTask(this, WFResponseType.APPROVE);
-    return this.service.approveTask(this, WFResponseType.APPROVE);
+    if(this._isCustomApprove()){
+      return this.service.approveTask(this, WFResponseType.APPROVE);
+    }
+    return super.approve(WFResponseType.APPROVE)
   }
 
   finalApprove(): DialogRef {
@@ -226,10 +228,20 @@ export class ProjectImplementation
     return this.submissionMechanism === SubmissionMechanisms.REGISTRATION;
   }
   private _isCustomApprove() : boolean{
-    if(this.isSubmissionMechanismRegistration() || this.isSubmissionMechanismSubmission()){
-      if(this.requestType === AllRequestTypesEnum.NEW || this.requestType === AllRequestTypesEnum.EXTEND)
-        return true;
-     }
+
+    if(this.isSubmissionMechanismRegistration()){
+      if(this.employeeService.isSupervisionAndControlUser() || this.employeeService.isDevelopmentalExpert() || this.employeeService.isConstructionExpert()){
+        return false;
+      }
+    }
+    if(this.requestType === AllRequestTypesEnum.NEW || this.requestType === AllRequestTypesEnum.EXTEND){
+      if(this.isSubmissionMechanismNotification() && this.employeeService.isCharityManager()){
+          return true;
+      }
+      if(this.isSubmissionMechanismRegistration() || this.isSubmissionMechanismSubmission()){
+          return true;
+       }
+    }
      return false;
   }
 }

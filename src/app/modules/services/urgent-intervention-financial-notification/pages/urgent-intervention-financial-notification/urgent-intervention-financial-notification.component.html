@@ -14,7 +14,7 @@
     <tab [name]="tabsData.transferData.name" [hasError]="getTabInvalidStatus('transferData')"
          [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense || !requestTypeField.value"
          [template]="transferDataTabTemplate" [title]="lang.map.transfer_data"></tab>
-    <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+    <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
          [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense"
          [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>

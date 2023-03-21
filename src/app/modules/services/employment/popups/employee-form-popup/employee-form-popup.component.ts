@@ -145,7 +145,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.FUNCTIONAL_GROUP).subscribe((data) => {
       this.functionalGroupsList = data;
     })
-    this.JobTitleList = this.data.jobTitleList;
+    this.JobTitleList = this.data.jobTitleList.filter(jobTitle=> jobTitle.isActive());
   }
 
   _buildForm() {

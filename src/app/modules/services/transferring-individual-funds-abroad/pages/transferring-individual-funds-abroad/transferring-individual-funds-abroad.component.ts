@@ -15,7 +15,7 @@ import {CommonCaseStatus} from '@enums/common-case-status.enum';
 import {OpenFrom} from '@enums/open-from.enum';
 import {EmployeeService} from '@services/employee.service';
 import {Lookup} from '@models/lookup';
-import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
+import {DatepickerControlsMap, DatepickerOptionsMap, FieldControlAndLabelKey} from '@app/types/types';
 import {DateUtils} from '@helpers/date-utils';
 import {FormManager} from '@models/form-manager';
 import {CustomValidators} from '@app/validators/custom-validators';
@@ -380,7 +380,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.transferTypeChanged.next(this.transferType.value);
     this.handleRequestTypeChange(this.requestType.value, false);
 
-    if(this.requestType.value !== TransferringIndividualFundsAbroadRequestTypeEnum.NEW && this.model?.oldLicenseId) {
+    if (this.requestType.value !== TransferringIndividualFundsAbroadRequestTypeEnum.NEW && this.model?.oldLicenseId) {
       this.service.getByLicenseId(this.model.oldLicenseId).subscribe(ret => {
         this.selectedLicenses = [ret];
         this.hasSearchedForLicense = true;
@@ -422,37 +422,63 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     return new TransferringIndividualFundsAbroad();
   }
 
-  _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (!this.requestType.value) {
-      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.request_type}));
+  private _isValidDraftData(): boolean {
+    const draftFields: FieldControlAndLabelKey[] = [
+      {control: this.requestType, labelKey: 'request_type'},
+    ];
+    const invalidDraftField = this.getInvalidDraftField(draftFields);
+    if (invalidDraftField) {
+      this.dialog.error(this.lang.map.msg_please_validate_x_to_continue.change({x: this.lang.map[invalidDraftField.labelKey]}));
+      invalidDraftField.control.markAsTouched();
       return false;
     }
-    if (saveType === SaveTypes.DRAFT) {
+    if (this.isNewRequestType()) {
       return true;
-    }
-    if (this.isExternalOrganizationTransferee && this.selectedExecutives.length < 1 && !this.isCancel) {
-      this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_executives_list);
-      return false;
-    }
-
-    if (this.selectedPurposes.length < 1 && !this.isCancel) {
-      this.dialog.error(this.lang.map.you_should_add_at_least_one_purpose_in_purposes);
-      return false;
-    }
-
-    if(this.transferType.value === TransferTypeEnum.PERIODICAL) {
-      if(this.selectedPayments && this.selectedPayments.length === 0 && !this.isCancel) {
-        this.dialog.error(this.lang.map.you_should_add_at_least_one_payment_in_payments);
-        return false;
-      }
-
-      if((this.selectedPayments && this.selectedPayments.length > 0) && this.totalPaymentsAmount > +this.qatariTransactionAmount.value) {
-        this.dialog.error(this.lang.map.total_payments_should_be_less_than_or_equal_to_transfer_amount);
+    } else {
+      if (!this.selectedLicenses.length) {
+        this.dialog.error(this.lang.map.please_select_license_to_complete_save);
         return false;
       }
     }
+    return true;
+  }
 
-    return this.form.valid;
+  isNewRequestType(): boolean {
+    return this.requestType.value === TransferringIndividualFundsAbroadRequestTypeEnum.NEW;
+  }
+
+  _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (!this.selectedLicenses.length && !this.isNewRequestType()) {
+      this.dialog.error(this.lang.map.please_select_license_to_complete_save);
+      return false;
+    } else {
+      if (saveType === SaveTypes.DRAFT) {
+        return this._isValidDraftData();
+      }
+      if (this.isExternalOrganizationTransferee && this.selectedExecutives.length < 1 && !this.isCancel) {
+        this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_executives_list);
+        return false;
+      }
+
+      if (this.selectedPurposes.length < 1 && !this.isCancel) {
+        this.dialog.error(this.lang.map.you_should_add_at_least_one_purpose_in_purposes);
+        return false;
+      }
+
+      if (this.transferType.value === TransferTypeEnum.PERIODICAL) {
+        if (this.selectedPayments && this.selectedPayments.length === 0 && !this.isCancel) {
+          this.dialog.error(this.lang.map.you_should_add_at_least_one_payment_in_payments);
+          return false;
+        }
+
+        if ((this.selectedPayments && this.selectedPayments.length > 0) && this.totalPaymentsAmount > +this.qatariTransactionAmount.value) {
+          this.dialog.error(this.lang.map.total_payments_should_be_less_than_or_equal_to_transfer_amount);
+          return false;
+        }
+      }
+
+      return this.form.valid;
+    }
   }
 
   _afterSave(model: TransferringIndividualFundsAbroad, saveType: SaveTypes, operation: OperationTypes): void {
@@ -552,7 +578,29 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
         filter<null | SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>, SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>>
         ((info): info is SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad> => !!info))
       .subscribe((_info) => {
+        this.selectedLicenses = [_info.details];
+        let value: any = new TransferringIndividualFundsAbroad().clone(_info.details);
+        value.requestType = this.model?.requestType!;
+        value.oldLicenseFullSerial = _info.details.fullSerial;
+        value.oldLicenseSerial = _info.details.serial;
         // set oldLicenseId property from validated object id
+        value.oldLicenseId = _info.details.id
+
+        this.hasSearchedForLicense = true;
+        value.documentTitle = '';
+        value.fullSerial = null;
+
+        // delete id because license details contains old license id, and we are adding new, so no id is needed
+        delete value.id;
+        delete value.vsId;
+        delete value.serial;
+        delete value.followUpDate;
+        delete value.licenseEndDate;
+
+        this._updateForm(value);
+
+
+        /*// set oldLicenseId property from validated object id
         _info.details.oldLicenseId = _info.details.id;
 
         // delete id property
@@ -566,7 +614,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
         this.selectedLicenses = [_info.details];
         _info.details.requestType = this.model?.requestType!;
         this._updateForm(_info.details);
-        this.oldLicenseFullSerialField.patchValue(_info.details.fullSerial);
+        this.oldLicenseFullSerialField.patchValue(_info.details.fullSerial);*/
       });
   }
 
@@ -618,7 +666,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   buildPaymentForm(): void {
     this.paymentForm = this.fb.group({
       paymentNo: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      dueDate: [null, [CustomValidators.required ]],
+      dueDate: [null, [CustomValidators.required]],
       totalCost: [null, [CustomValidators.required]],
       notes: [null, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]]
     });
@@ -674,7 +722,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
           this.resetForm$.next();
           this.requestType.setValue(requestTypeValue);
         }
-        if(!requestTypeValue) {
+        if (!requestTypeValue) {
           requestTypeValue = this.requestType && this.requestType.value;
         }
         if (requestTypeValue) {
@@ -837,7 +885,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.city.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.detailsAddress.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.postalCode.setValidators([CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]);
-    this.website.setValidators([CustomValidators.required, CustomValidators.maxLength(350)]);
+    this.website.setValidators([CustomValidators.required, CustomValidators.pattern('WEBSITE')]);
     this.organizationEmail.setValidators([CustomValidators.required, Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]);
     this.firstSocialMedia.setValidators([CustomValidators.maxLength(350)]);
     this.secondSocialMedia.setValidators([CustomValidators.maxLength(350)]);
@@ -854,7 +902,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.city.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.detailsAddress.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.postalCode.setValidators([CustomValidators.number, CustomValidators.maxLength(15)]);
-    this.website.setValidators([CustomValidators.maxLength(350)]);
+    this.website.setValidators([CustomValidators.pattern('WEBSITE')]);
     this.organizationEmail.setValidators([Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]);
     this.firstSocialMedia.setValidators([CustomValidators.maxLength(350)]);
     this.secondSocialMedia.setValidators([CustomValidators.maxLength(350)]);

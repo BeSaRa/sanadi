@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { LangService } from '@services/lang.service';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { Direction } from '@angular/cdk/bidi';
-import { RequestTypeFollowupService } from "@services/request-type-followup.service";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {LangService} from '@services/lang.service';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {Direction} from '@angular/cdk/bidi';
+import {RequestTypeFollowupService} from "@services/request-type-followup.service";
 
 @Component({
   selector: 'app-home',
@@ -11,7 +11,7 @@ import { RequestTypeFollowupService } from "@services/request-type-followup.serv
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  scrollDirection: Direction = 'ltr';
+  scrollDirection: Direction = 'rtl';
   private destroy$: Subject<any> = new Subject<any>();
 
   constructor(private langService: LangService,

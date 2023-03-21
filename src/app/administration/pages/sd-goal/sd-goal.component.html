@@ -30,10 +30,6 @@
                 [sortCallback]="sortingCallbacks.statusInfo">{{lang.map.lbl_status}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.statusInfo?.getName() || ''}}</td>
           </ng-container>
-          <ng-container cdkColumnDef="childCount">
-            <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.lbl_sub_sd_goal_count}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.childCount || 0}}</td>
-          </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">

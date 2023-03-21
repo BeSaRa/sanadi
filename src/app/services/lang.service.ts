@@ -46,8 +46,8 @@ import {GlobalSettingsService} from '@services/global-settings.service';
 export class LangService extends CrudGenericService<Localization> {
   list: Localization[] = [];
   private languages: IAvailableLanguages = {
-    en: new Language(1, 'English', 'en', 'ltr', Styles.BOOTSTRAP, 'العربية'),
-    ar: new Language(2, 'العربية', 'ar', 'rtl', Styles.BOOTSTRAP_RTL, 'English')
+    en: new Language(2, 'English', 'en', 'ltr', Styles.BOOTSTRAP, 'العربية'),
+    ar: new Language(1, 'العربية', 'ar', 'rtl', Styles.BOOTSTRAP_RTL, 'English')
   };
   private languageSwitcher: { [index: string]: string } = {
     ar: 'en',

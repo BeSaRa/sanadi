@@ -1,3 +1,5 @@
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { ServiceDataService } from '@app/services/service-data.service';
 import { AdminstrationDepartmentCodes } from './../../../enums/department-code.enum';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
@@ -14,10 +16,10 @@ import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
 import { InternalUser } from '@app/models/internal-user';
 import { InternalDepartment } from '@app/models/internal-department';
-import { of, Subject } from 'rxjs';
+import {  of, Subject,forkJoin } from 'rxjs';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
+import { filter, switchMap, take, takeUntil, map } from 'rxjs/operators';
 import { ExpertsEnum } from '@app/enums/experts-enum';
 import { CaseModel } from '@app/models/case-model';
 import {
@@ -49,7 +51,8 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     private intDepService: InternalDepartmentService,
     private fb: UntypedFormBuilder,
     private dialog: DialogService,
-    public lang: LangService
+    private serviceDataService:ServiceDataService,
+    public lang: LangService,
   ) {
     if (this.isSendToDepartments() && this.twoDepartmentsWFResponses.includes(this.data.sendToResponse)) {
       this.maxSelectionCount = 2; // as per business doc
@@ -95,7 +98,10 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     AdminstrationDepartmentCodes.RC,
     AdminstrationDepartmentCodes.SVC,
   ]
-
+  FundraisingLicenseDepartmentApprovalDepartments = [
+    AdminstrationDepartmentCodes.RC,
+    AdminstrationDepartmentCodes.SVC,
+  ]
 
   multiSendToDepartmentWFResponseList = [
     WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
@@ -127,6 +133,21 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     return this.multiSendToUserWFResponseList.includes(this.data.sendToResponse);
   }
 
+  private _loadByServiceData(caseType:CaseTypes){
+  const serviceData = this.serviceDataService.loadByCaseType(caseType)
+    .pipe(
+      filter(result => !!result.concernedDepartmentsIds),
+      map(result=><Number[]>JSON.parse(result.concernedDepartmentsIds!)),
+      );
+
+    const internalDepartments = this.intDepService.loadAsLookups()
+
+
+    forkJoin([serviceData,internalDepartments])
+    .subscribe(([ids,departments])=>{
+       this.departments = departments.filter(dep => dep.id !== this.employee.getInternalDepartment()?.id && ids?.includes(dep.id) );
+    })
+  }
   private _loadInitData(): void {
     if (this.isSendToDepartments()) {
       this.title = 'send_to_multi_departments';
@@ -142,6 +163,10 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
         this.loadAwarenessActivatySuggestionApprovalDepartments()
       } else if (this.data.sendToResponse === WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS) {
         this.loadUrgentInterventionApprovalDepartments()
+      } else if (this.data.sendToResponse === WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS) {
+        this._loadByServiceData(CaseTypes.FUNDRAISING_LICENSING)
+      } else if (this.data.sendToResponse === WFResponseType.ORGANIZATION_ENTITIES_SUPPORT_TO_MULTI_DEPARTMENTS) {
+        this._loadByServiceData(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT)
       } else {
         this.loadDepartments();
       }
@@ -271,6 +296,12 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => this.departments = deps.filter(dep => this.NPOManagmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
+  }
+
+  loadFundraisingLicenseApprovalDepartments(): void {
+    this.intDepService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(deps => this.departments = deps.filter(dep => this.FundraisingLicenseDepartmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
   }
 
   loadGaneralProcessNotificationApprovalDepartments(): void {

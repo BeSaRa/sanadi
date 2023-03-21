@@ -12,7 +12,7 @@ import {DialogService} from '@services/dialog.service';
 import {ToastService} from '@services/toast.service';
 import {LicenseService} from '@services/license.service';
 import {EmployeeService} from '@services/employee.service';
-import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
+import {DatepickerControlsMap, DatepickerOptionsMap, TabMap} from '@app/types/types';
 import {DateUtils} from '@helpers/date-utils';
 import {FormManager} from '@models/form-manager';
 import {CommonStatusEnum} from '@enums/common-status.enum';
@@ -59,7 +59,56 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   requestTypes: Lookup[] = this.lookupService.listByCategory.RequestTypeNewOnly;
   isExternalUser!: boolean;
   organizationStepNames: string[] = [CaseStepName.ORG_REV, CaseStepName.ORG_REW, CaseStepName.ORG_MNGR_REV];
-
+  tabsData: TabMap = {
+    basicInfo: {
+      name: 'basic_info',
+      langKey: 'lbl_basic_info',
+      index: 0,
+      checkTouchedDirty: false,
+      isTouchedOrDirty: () => false,
+      show: () => true,
+      validStatus: () => this.basicInfo && this.basicInfo.valid,
+    },
+    externalUserData: {
+      name: 'participant_organizations',
+      langKey: 'participant_organizations',
+      index: 1,
+      checkTouchedDirty: false,
+      isTouchedOrDirty: () => false,
+      show: () => true,
+      validStatus: () => this.externalUserData && this.externalUserData.valid,
+    },
+    organizationOfficer: {
+      name: 'organization_officers',
+      langKey: 'organization_officers',
+      index: 2,
+      checkTouchedDirty: false,
+      isTouchedOrDirty: () => false,
+      show: () => true,
+      validStatus: () => !this.isExternalUser || this.filteredSelectedOrganizationOfficers.length > 0,
+    },
+    specialExplanations: {
+      name: 'special_explanations',
+      langKey: 'special_explanations',
+      index: 3,
+      isTouchedOrDirty: () => true,
+      show: () => true,
+      validStatus: () =>
+        this.specialExplanation && this.specialExplanation.valid,
+    },
+    attachments: {
+      name: 'attachmentsTab',
+      langKey: 'attachments',
+      index: 4,
+      checkTouchedDirty: false,
+      isTouchedOrDirty: () => false,
+      show: () => true,
+      validStatus: () => true,
+    },
+  };
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
+  }
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
               private cd: ChangeDetectorRef,
@@ -106,6 +155,10 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     return (this.form.get('selectedOrganizations.participatingOrganizaionList')) as UntypedFormControl;
   }
 
+  get filteredSelectedOrganizationOfficers() {
+    return this.selectedOrganizationOfficers.filter((orgOfficer) => !this.isExternalUser || orgOfficer.organizationId == this.employeeService?.getProfile()?.id)
+  }
+
   _initComponent(): void {
     if (this.operation === OperationTypes.UPDATE) {
       this.datepickerOptionsMap.licenseStartDate = DateUtils.removeDisablePeriod(this.datepickerOptionsMap.licenseStartDate, 'past');
@@ -123,14 +176,14 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   mapOrgUnitsToParticipantOrgUnits(org: any): ParticipantOrganization {
-      return new ParticipantOrganization()
-        .clone({
-          organizationId: org.id,
-          arabicName: org.arName,
-          englishName: org.enName,
-          donation: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == org.id)?.donation,
-          workStartDate: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == org.id)?.workStartDate
-        });
+    return new ParticipantOrganization()
+      .clone({
+        organizationId: org.id,
+        arabicName: org.arName,
+        englishName: org.enName,
+        donation: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == org.id)?.donation,
+        workStartDate: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == org.id)?.workStartDate
+      });
   }
 
   // setSelectedOrganizations() {
@@ -235,12 +288,14 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     model.requestType = this.requestTypes[0].lookupKey;
     return model;
   }
-
   _getNewInstance(): UrgentJointReliefCampaign {
     return new UrgentJointReliefCampaign();
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
     if (this.isExternalUser) {
       if (this.externalUserData.invalid) {
         this.dialog.error(this.lang.map.enter_donation_and_start_work_date);
@@ -434,7 +489,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if(this.employeeService.isLicensingChiefManager()) {
+      if (this.employeeService.isLicensingChiefManager()) {
         this.readonly = false;
       } else if (this.employeeService.isLicensingUser()) {
         this.readonly = !this.model.isReturned();
@@ -444,7 +499,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       // after claim, consider it same as user inbox and use same condition
       if (this.model.taskDetails.isClaimed()) {
-        if(this.employeeService.isLicensingChiefManager()) {
+        if (this.employeeService.isLicensingChiefManager()) {
           this.readonly = false;
         } else if (this.employeeService.isLicensingUser()) {
           this.readonly = !this.model.isReturned();

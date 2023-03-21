@@ -338,6 +338,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
           return of([]);
         })
       )
+      .pipe(map(res=>res.filter(jobTitle=>jobTitle.isActive())))
       .subscribe((result) => this.jobTitleList = result);
   }
 

@@ -70,7 +70,7 @@
 </ng-template>
 <ng-template #activityTypeTemplate>
   <admin-lookup-list #activityTypeListComponent [adminLookupTypeId]="adminLookupTypeEnum.ACTIVITY_TYPE"
-    (onReady)="setLookupComponentMap($event, activityTypeListComponent)">
+    (onReady)="setLookupComponentMap($event, activityTypeListComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #templateIndicatorTemplate>
@@ -95,23 +95,23 @@
 </ng-template>
 <ng-template #riskClassificationTemplate>
   <admin-lookup-list #riskClassificationComponent [adminLookupTypeId]="adminLookupTypeEnum.RISK_CLASSIFICATION"
-    (onReady)="setLookupComponentMap($event, riskClassificationComponent)">
+    (onReady)="setLookupComponentMap($event, riskClassificationComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #coordinationAndSupportClassificationTemplate>
   <admin-lookup-list #coordinationAndSupportClassificationComponent
     [adminLookupTypeId]="adminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION"
-    (onReady)="setLookupComponentMap($event, coordinationAndSupportClassificationComponent)">
+    (onReady)="setLookupComponentMap($event, coordinationAndSupportClassificationComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #resolutionsIssuedTemplate>
   <admin-lookup-list #resolutionsIssuedComponent [adminLookupTypeId]="adminLookupTypeEnum.RESOLUTIONS_ISSUED"
-    (onReady)="setLookupComponentMap($event, resolutionsIssuedComponent)">
+    (onReady)="setLookupComponentMap($event, resolutionsIssuedComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #penaltiesDecisionsTemplate>
   <admin-lookup-list #penaltiesDecisionsComponent [adminLookupTypeId]="adminLookupTypeEnum.PENALTIES_DECISION"
-    (onReady)="setLookupComponentMap($event, penaltiesDecisionsComponent)">
+    (onReady)="setLookupComponentMap($event, penaltiesDecisionsComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #generalProcessClassificationTemplate>
