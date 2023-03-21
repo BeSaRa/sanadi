@@ -1,14 +1,13 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {SDGoal} from '@app/models/sdgoal';
 import {SDGoalService} from '@app/services/sdgoal.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {IGridAction} from '@app/interfaces/i-grid-action';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {SharedService} from '@app/services/shared.service';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
-import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {of, Subject} from 'rxjs';
 import {ToastService} from '@app/services/toast.service';
 import {TableComponent} from '@app/shared/components/table/table.component';
@@ -24,8 +23,9 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
   styleUrls: ['./sd-goal.component.scss']
 })
 export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService> implements OnInit {
+  @Input() parentId?: number;
   usePagination = true;
-  displayedColumns = ['arName', 'enName', 'status', 'childCount', 'actions'];
+  displayedColumns = ['arName', 'enName', 'status', 'actions'];
   commonStatusEnum = CommonStatusEnum;
   view$: Subject<SDGoal> = new Subject<SDGoal>();
   actions: IMenuItem<SDGoal>[] = [
@@ -110,64 +110,63 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
       .subscribe(() => this.reload$.next(null))
   }
 
-  /*listenToReload() {
+  private _getSubRecordsRequest(columnFilterCriteria: Partial<SDGoal>) {
+    const paginationOptions = {
+      limit: this.pageEvent.pageSize,
+      offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+    };
+
+    let normalRequest = this.service.loadSubSdGoals(this.parentId!);
+    let pagingRequest = this.service.loadSubSdGoalsPaginate(paginationOptions, this.parentId!);
+
+    return {normalRequest, pagingRequest};
+  }
+
+  private _getMainRecordsRequest(columnFilterCriteria: Partial<SDGoal>) {
+    const paginationOptions = {
+      limit: this.pageEvent.pageSize,
+      offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+    };
+
+    let normalRequest = this.service.loadMainSdGoals();
+    let pagingRequest = this.service.loadMainSdGoalsPaginate(paginationOptions);
+
+    return {normalRequest, pagingRequest};
+  }
+
+  listenToReload() {
     this.reload$
       .pipe(takeUntil((this.destroy$)))
-      .pipe(switchMap(() => {
-        let load: Observable<SDGoal[]>;
-        if (this.usePagination) {
-          const paginationOptions = {
-            limit: this.pageEvent.pageSize,
-            offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
-          }
-          load = this.service.loadMainSdGoalsPaginate(paginationOptions)
-            .pipe(map((res) => {
-              this.count = res.count;
-              return res.rs;
-            }))
-        } else {
-          load = this.service.loadMainSdGoals();
-        }
-        return load.pipe(catchError(_ => {
-          console.log('Error', _);
-          return of([])
-        }));
-      }))
-      .subscribe((list: SDGoal[]) => {
-        list.map(element => {
-          element.childCount = list.filter(e => e.parentId == element.id).length ?? 0;
-        });
-        this.models = list;
-        this.table && this.table.clearSelection();
-      })
-  }*/
+      .pipe(
+        map(() => {
+          let request = this.parentId ? this._getSubRecordsRequest({}) : this._getMainRecordsRequest({});
 
-  // listenToReload() {
-  //   this.reload$
-  //     .pipe(takeUntil((this.destroy$)))
-  //     .pipe(switchMap(() => {
-  //       const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
-  //       return load.pipe(
-  //         map(list => {
-  //           list.map(element => {
-  //             element.childCount = list.filter(e => e.parentId == element.id).length;
-  //           });
-  //           console.log('subs', list);
-  //           return list;
-  //         }),
-  //         map(list => {
-  //           return list.filter(model => {
-  //             return model.status !== CommonStatusEnum.RETIRED && model.parentId == null;
-  //           });
-  //         }),
-  //         catchError(_ => of([]))
-  //       );
-  //     }))
-  //     .subscribe((list: SDGoal[]) => {
-  //       this.models = list;
-  //       this.table && this.table.clearSelection();
-  //     })
-  // }
+          if (this.usePagination) {
+            return request.pagingRequest.pipe(
+              map((res) => {
+                this.count = res.count;
+                return res.rs;
+              }));
+          } else {
+            return request.normalRequest.pipe(map((res) => {
+              this.count = res.length;
+              return res;
+            }));
+          }
+        }),
+        switchMap((finalRequest) => {
+          return finalRequest.pipe(
+            catchError(() => {
+              this.count = 0;
+              return of([]);
+            })
+          );
+        }))
+      .subscribe((list: SDGoal[]) => {
+        this.models = list;
+        this.afterReload();
+      })
+  }
 
   edit(sdGoal: SDGoal, event: MouseEvent) {
     event.preventDefault();
