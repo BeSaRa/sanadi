@@ -93,7 +93,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
       mainAccount: controls ? [mainAccount] : mainAccount,
       accountNumber: controls ? [accountNumber, [CustomValidators.number, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : accountNumber,
       iBan: controls ? [iBan, [CustomValidators.pattern('ENG_NUM_ONLY'), CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : iBan,
-      swiftCode: controls ? [swiftCode, [CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.SWIFT_CODE_MIN)]] : swiftCode,
+      swiftCode: controls ? [swiftCode, CustomValidators.commonValidations.swiftCode] : swiftCode,
       selectedBankAccountToMerge: controls ? [selectedBankAccountToMerge] : selectedBankAccountToMerge,
       ownerOfMergedBankAccounts: controls ? [ownerOfMergedBankAccounts] : ownerOfMergedBankAccounts,
       selectedResponsiblePerson: controls ? [selectedResponsiblePerson] : selectedResponsiblePerson

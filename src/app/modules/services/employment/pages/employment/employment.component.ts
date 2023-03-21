@@ -429,6 +429,7 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
             workStartDate: DateUtils.changeDateToDatepicker(res[0].workStartDate),
             workEndDate: DateUtils.changeDateToDatepicker(res[0].workEndDate),
             updatedOn: DateUtils.changeDateToDatepicker(res[0].updatedOn),
+            expIdPass: DateUtils.changeDateToDatepicker(res[0].expIdPass),
             jobTitleInfo: AdminResult.createInstance({
               id: res[0].jobTitleInfo.id,
               arName: res[0].jobTitleInfo.arName,

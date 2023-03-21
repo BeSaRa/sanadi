@@ -339,6 +339,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     if (!model) {
       return;
     }
+    this.selectedLicenses = [model];
     this.model = (new InternalBankAccountApproval()).clone({ ...this.model, ...model });
     this.loadBankAccountsBasedOnCurrencyAndBank(this.model.category, this.model.bankId, this.model.currency);
     this.form.patchValue({
@@ -572,7 +573,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     if (!this.model?.isUpdatedNewAccount) {
       this.accountNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]);
       this.iban.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]);
-      this.swiftCode.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.SWIFT_CODE_MIN)]);
+      this.swiftCode.setValidators([CustomValidators.required, ...CustomValidators.commonValidations.swiftCode]);
     }
 
     this.setOldLicenseFullSerialRequired();
@@ -867,7 +868,6 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       .subscribe((_info) => {
         this.hasSearchedForLicense = true;
         const item = _info.details.convertToItem();
-        this.selectedLicenses = [item];
         this._updateForm(item);
       });
   }

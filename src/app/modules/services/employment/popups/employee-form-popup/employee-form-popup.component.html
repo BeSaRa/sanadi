@@ -47,7 +47,7 @@
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
           <div class="form-control" formControlName="expIdPass" id="expIdPass"
-            [options]="datepickerOptionsMap.expIdPass" (click)="openDateMenu(dpexpIdPass)"
+            [options]="datepickerOptionsMap.expIdPass" (click)="openDateMenu(dpexpIdPass)" [ngClass]="{ 'input-disabled': !isEditRequestTypeAllowed }"
             #dpexpIdPass="angular-mydatepicker" angular-mydatepicker validationClasses="expIdPass"></div>
           <app-field-error-message controlName="expIdPass"></app-field-error-message>
         </div>
@@ -220,7 +220,7 @@
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
           <div class="form-control" formControlName="workStartDate" id="workStartDate"
-            [options]="datepickerOptionsMap.workStartDate" (click)="openDateMenu(dpworkStartDate)"
+            [options]="datepickerOptionsMap.workStartDate" (click)="openDateMenu(dpworkStartDate)" [ngClass]="{ 'input-disabled': !isEditRequestTypeAllowed }"
             #dpworkStartDate="angular-mydatepicker" angular-mydatepicker validationClasses="workStartDate"
             (inputFieldChanged)="
               onDateChange($event, 'workStartDate', 'workEndDate')
@@ -235,7 +235,7 @@
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
           <div class="form-control" formControlName="workEndDate" id="workEndDate"
-            [options]="datepickerOptionsMap.workEndDate" [ngClass]="{ 'input-disabled': isFinishedContract() }"
+            [options]="datepickerOptionsMap.workEndDate" [ngClass]="{ 'input-disabled': !isEditRequestTypeAllowed || isFinishedContract() }"
             (click)="!isFinishedContract() && openDateMenu(dpworkEndDate)" #dpworkEndDate="angular-mydatepicker"
             angular-mydatepicker validationClasses="workEndDate" (inputFieldChanged)="
               onDateChange($event, 'workStartDate', 'workEndDate')
@@ -249,7 +249,7 @@
           lang.map.contract_expiry_date }}</label>
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
-          <div class="form-control" formControlName="contractExpiryDate" id="contractExpiryDate"
+          <div class="form-control" formControlName="contractExpiryDate" id="contractExpiryDate" [ngClass]="{ 'input-disabled': !isEditRequestTypeAllowed }"
             [options]="datepickerOptionsMap.contractExpiryDate" (click)="openDateMenu(dpcontractExpiryDate)"
             #dpcontractExpiryDate="angular-mydatepicker" angular-mydatepicker validationClasses="contractExpiryDate">
           </div>
