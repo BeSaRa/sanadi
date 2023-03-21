@@ -20,6 +20,10 @@ import {AidLookupStatusEnum} from '@app/enums/status.enum';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {SearchColumnConfigMap} from '@contracts/i-search-column-config';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {LookupService} from '@services/lookup.service';
+import {FormBuilder} from '@angular/forms';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -41,13 +45,17 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
               private dialogService: DialogService,
               public configService: ConfigurationService,
               private sharedService: SharedService,
+              private lookupService: LookupService,
+              private fb: FormBuilder,
               public toast: ToastService) {
     super();
   }
 
   protected _init() {
     this.listenToView();
+    this.buildFilterForm();
   }
+
   getTitleText(): (keyof ILanguageKeys) {
     let title: keyof ILanguageKeys = 'menu_aid_class';
     switch (this.aidType) {
@@ -66,6 +74,42 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
 
   get selectedRecords(): AidLookup[] {
     return this.table.selection.selected;
+  }
+
+  searchColumns: string[] = ['search_aidCode', 'search_arName', 'search_enName', 'search_status', 'search_statusDateModified', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_aidCode: {
+      key: 'aidCode',
+      controlType: 'text',
+      property: 'aidCode',
+      label: 'lbl_aid_code',
+      maxLength: 50
+    },
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'lbl_arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'lbl_english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.AidLookupStatus.filter(status => status.lookupKey !== AidLookupStatusEnum.RETIRED),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
   }
 
   sortingCallbacks = {
@@ -134,9 +178,37 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
     }
   ]
 
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      aidCode: ['', [CustomValidators.number, CustomValidators.maxLength(50)]],
+      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+      status: [null]
+    })
+  }
+
+  getColumnFilterValue(): Partial<AidLookup> {
+    const value: Partial<AidLookup> = this.columnFilterForm.value;
+    if (this.columnFilterFormHasValue(value)) {
+      value.parent = this.parentId ?? null;
+      value.aidType = this.aidType;
+      return value;
+    }
+    return {};
+  }
+
   listenToReload(): void {
     this.reload$
       .pipe(takeUntil((this.destroy$)))
+      .pipe(
+        filter(() => {
+          if (this.columnFilterFormHasValue()) {
+            this.columnFilter$.next('filter');
+            return false;
+          }
+          return true;
+        })
+      )
       .pipe(switchMap(() => {
         const criteria: IAidLookupCriteria = {aidType: this.aidType, parent: this.parentId};
         const load = this.service.loadByCriteria(criteria);
