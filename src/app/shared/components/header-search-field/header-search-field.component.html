@@ -5,7 +5,7 @@
            [formControl]="control" class="form-control" [maxlength]="field.maxLength ?? null">
     <div class="position-absolute top-0 end-0" [tabIndex]="-1">
       <button *ngIf="!!control.value" [tooltip]="lang.map.clear_filter"
-              (click)="clearInputFilter()" class="text-primary btn icon-btn py-2 ps-1">
+              (click)="clearInputFilter()" class="text-primary btn icon-btn py-2 ps-1 btn-clear-filter">
         <i class="mdi mdi-close"></i>
       </button>
     </div>
