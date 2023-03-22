@@ -17,6 +17,10 @@ import {CommonUtils} from '@helpers/common-utils';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { LookupService } from '@app/services/lookup.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'field-assessment',
@@ -30,16 +34,59 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
               public service: FieldAssessmentService,
               private dialogService: DialogService,
               private sharedService: SharedService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private lookupService: LookupService,
+              private fb: FormBuilder) {
     super();
   }
 
   protected _init(): void {
     this.listenToView();
+    this.buildFilterForm();
+
   }
 
   @ViewChild('table') table!: TableComponent;
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'type', 'status', 'statusDateModified', 'actions'];
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_type', 'search_status','search_statusDateModified', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_type:{
+      key: 'type',
+      controlType: 'select',
+      property: 'type',
+      label: 'type',
+      selectOptions:{
+        options:this.lookupService.listByCategory.FieldAssessment,
+        labelProperty:'getName',
+        optionValueKey:'lookupKey'
+      }
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
 
   view$: Subject<FieldAssessment> = new Subject<FieldAssessment>();
   actions: IMenuItem<FieldAssessment>[] = [
@@ -211,6 +258,14 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
         this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
+  }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+      type: [null],
+      status: [null]
+    })
   }
 
 }
