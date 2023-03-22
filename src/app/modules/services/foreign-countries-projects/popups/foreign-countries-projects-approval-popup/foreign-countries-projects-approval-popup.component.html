@@ -5,9 +5,9 @@
   </h1>
   <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content" [ngClass]="isCancelRequestType() || !isNotCreator ? 'no-fixed-height' : 'w800px'">
+<div class="dialog-content no-fixed-height" [ngStyle]="{ width: !canShowApprovalForm()  ? '400px' : '800px' }">
   <div class="row">
-    <form [formGroup]="approvalForm" *ngIf="!isCancelRequestType() && isNotCreator">
+    <form [formGroup]="approvalForm" *ngIf="canShowApprovalForm()">
       <div class="row">
         <!-- nPOList -->
         <div class="col-sm-6 col-md-6 mb-4 ng-select-wrapper">
