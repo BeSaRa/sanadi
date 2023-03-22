@@ -19,6 +19,10 @@ import {Observable, of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {ICustomMenuSearchCriteria} from '@contracts/i-custom-menu-search-criteria';
 import {Pagination} from '@app/models/pagination';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { LookupService } from '@app/services/lookup.service';
+import { FormBuilder } from '@angular/forms';
+import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
   selector: 'app-custom-menu',
@@ -33,12 +37,15 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
               public service: CustomMenuService,
               private dialogService: DialogService,
               private sharedService: SharedService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private lookupService:LookupService,
+              private fb:FormBuilder) {
     super();
   }
 
   protected _init(): void {
     this.listenToView();
+    this.buildFilterForm();
   }
 
   @Input() parent?: CustomMenu;
@@ -48,6 +55,45 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
   @ViewChild('table') table!: TableComponent;
   selectedPopupTabName: string = 'basic';
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'menuType', 'status', 'actions'];
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName','search_menuType', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_menuType:{
+      key: 'menuType',
+      controlType:'select',
+      property:'menuType',
+      label:'menu_type',
+      selectOptions:{
+        options:this.lookupService.listByCategory.MenuType,
+        labelProperty:'getName',
+        optionValueKey:'lookupKey'
+      }
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
   view$: Subject<CustomMenu> = new Subject<CustomMenu>();
 
   actions: IMenuItem<CustomMenu>[] = [
@@ -312,5 +358,14 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
 
   get selectedRecords(): CustomMenu[] {
     return this.table.selection.selected;
+  }
+
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+      menuType:[null],
+      status: [null]
+    })
   }
 }
