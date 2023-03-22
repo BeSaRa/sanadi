@@ -5,7 +5,7 @@ import {Component, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {AttachmentType} from '@app/models/attachment-type';
 import {AttachmentTypeService} from '@app/services/attachment-type.service';
-import {UntypedFormControl} from '@angular/forms';
+import {FormBuilder, UntypedFormControl} from '@angular/forms';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogService} from '@app/services/dialog.service';
 import {SharedService} from '@app/services/shared.service';
@@ -17,6 +17,9 @@ import {TableComponent} from '@app/shared/components/table/table.component';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { LookupService } from '@app/services/lookup.service';
 
 @Component({
   selector: 'attachment-types',
@@ -27,6 +30,35 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
   usePagination = true;
   list: AttachmentType[] = [];
   displayedColumns = ['arName', 'enName', 'status', 'actions'];
+  searchColumns: string[] = ['search_arName', 'search_enName', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
+
   reloadSubscription!: Subscription;
   filterControl: UntypedFormControl = new UntypedFormControl('');
   commonStatus = CommonStatusEnum;
@@ -78,12 +110,15 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
     public service: AttachmentTypeService,
     private dialogService: DialogService,
     private sharedService: SharedService,
-    private toast: ToastService) {
+    private toast: ToastService,
+    private lookupService: LookupService,
+    private fb: FormBuilder) {
     super();
   }
 
   protected _init() {
     this.listenToView();
+    this.buildFilterForm()
   }
   get selectedRecords(): AttachmentType[] {
     return this.table.selection.selected;
@@ -158,5 +193,14 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
         this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
         this.reload$.next(null);
       });
+  }
+  
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+      status: [null],
+      
+    })
   }
 }
