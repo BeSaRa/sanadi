@@ -229,9 +229,7 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
       arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
       enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       empNum: [null], 
-      profileInfo:[null],
       status: [null],
-      
     })
   }
 }
