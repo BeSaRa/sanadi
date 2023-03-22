@@ -2421,7 +2421,7 @@ export const newNavigationMenuList = [
   {
     id: 42,
     langKey: 'menu_sd_goal',
-    path: '/home/administration/sdg',
+    path: '/home/administration/sd-goals',
     icon: 'mdi-bullseye',
     isSvg: false,
     permission: PermissionsEnum.MANAGE_SDG,

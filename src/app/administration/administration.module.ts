@@ -59,7 +59,7 @@ import {SurveyTemplatePopupComponent} from './popups/survey-template-popup/surve
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {SurveySectionPopupComponent} from './popups/survey-section-popup/survey-section-popup.component';
 import {SelectQuestionPopupComponent} from './popups/select-question-popup/select-question-popup.component';
-import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
+import {SdGoalListComponent} from './pages/sd-goal-list/sd-goal-list.component';
 import {SdGoalPopupComponent} from './popups/sd-goal-popup/sd-goal-popup.component';
 import {ServiceDataStepPopupComponent} from './popups/service-data-step-popup/service-data-step-popup.component';
 import {ChecklistPopupComponent} from './popups/checklist-popup/checklist-popup.component';
@@ -125,6 +125,7 @@ import {
 import {
   FormlySelectFieldComponent
 } from '@app/services-search/components/formly-select-field/formly-select-field.component';
+import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
 
 @NgModule({
   declarations: [
@@ -169,6 +170,7 @@ import {
     SurveyTemplatePopupComponent,
     SurveySectionPopupComponent,
     SelectQuestionPopupComponent,
+    SdGoalListComponent,
     SdGoalComponent,
     SdGoalPopupComponent,
     ServiceDataStepPopupComponent,
