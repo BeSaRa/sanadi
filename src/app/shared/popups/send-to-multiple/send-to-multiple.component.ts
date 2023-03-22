@@ -104,7 +104,6 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
 
     forkJoin([serviceData, internalDepartments])
       .subscribe(([ids, departments]) => {
-        console.log(ids, departments)
         this.departments = departments.filter(dep => (!ids.length || ids?.includes(dep.id)) && dep.id !== this.employee.getInternalDepartment()?.id);
       })
   }
