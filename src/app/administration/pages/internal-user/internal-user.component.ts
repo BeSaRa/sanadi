@@ -13,6 +13,10 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {UserPreferencesService} from '@services/user-preferences.service';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { LookupService } from '@app/services/lookup.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'internal-user',
@@ -22,6 +26,41 @@ import {UserPreferencesService} from '@services/user-preferences.service';
 export class InternalUserComponent extends AdminGenericComponent<InternalUser, InternalUserService> {
   usePagination = true;
   displayedColumns: string[] = ['rowSelection', 'username', 'arName', 'enName', 'defaultDepartment', 'status', 'actions'];
+  searchColumns: string[] = ['_','search_username', 'search_arName', 'search_enName','search_defaultDepartment', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_username: {
+      key: 'username',
+      controlType: 'text',
+      property: 'domainName',
+      label: 'lbl_username',
+      maxLength: 50
+    },
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
   commonStatusEnum = CommonStatusEnum;
   view$: Subject<InternalUser> = new Subject<InternalUser>();
   actions: IMenuItem<InternalUser>[] = [
@@ -73,12 +112,15 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
   constructor(public lang: LangService,
               private toast: ToastService,
               public service: InternalUserService,
-              private userPreferencesService: UserPreferencesService) {
+              private userPreferencesService: UserPreferencesService,
+              private lookupService:LookupService,
+              private fb: FormBuilder) {
     super();
   }
 
   protected _init() {
     this.listenToView();
+    this.buildFilterForm();
   }
 
   sortingCallbacks = {
@@ -143,5 +185,14 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
 
   openUserPreferences(item: InternalUser) {
     this.userPreferencesService.openEditDialog(item.generalUserId, false).subscribe();
+  }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      domainName: [''], 
+      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+      status: [null],
+      
+    })
   }
 }
