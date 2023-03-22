@@ -13,6 +13,9 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {exhaustMap, takeUntil} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {of} from 'rxjs';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { FormBuilder } from '@angular/forms';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 
 @Component({
   selector: 'bank',
@@ -23,6 +26,23 @@ export class BankComponent extends AdminGenericComponent<Bank, BankService> impl
   usePagination = true
   actions: IMenuItem<Bank>[] = [];
   displayedColumns: string[] = ['arName', 'enName', 'actions'];
+  searchColumns: string[] = ['search_arName', 'search_enName', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    }
+  }
   commonStatusEnum = CommonStatusEnum;
   @ViewChild('table') table!: TableComponent;
   sortingCallbacks = {
@@ -36,8 +56,13 @@ export class BankComponent extends AdminGenericComponent<Bank, BankService> impl
   constructor(public service: BankService,
               public lang: LangService,
               public dialogService: DialogService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private fb: FormBuilder) {
     super();
+  }
+  
+  _init(){
+    this.buildFilterForm();
   }
 
   edit(bank: Bank, event: MouseEvent) {
@@ -74,5 +99,11 @@ export class BankComponent extends AdminGenericComponent<Bank, BankService> impl
         this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
+  }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+    })
   }
 }
