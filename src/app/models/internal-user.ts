@@ -1,18 +1,20 @@
-import { BaseModel } from './base-model';
-import { UserTypes } from '@enums/user-types.enum';
-import { INames } from '@contracts/i-names';
-import { LangService } from '@services/lang.service';
-import { FactoryService } from '@services/factory.service';
-import { AdminResult } from "@app/models/admin-result";
-import { InternalDepartment } from "@app/models/internal-department";
-import { InternalUserService } from "@app/services/internal-user.service";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { Observable } from "rxjs";
-import { searchFunctionType } from '@app/types/types';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { InternalUserInterceptor } from "@app/model-interceptors/internal-user-interceptor";
-import { InterceptModel } from "@decorators/intercept-model";
+import {BaseModel} from './base-model';
+import {UserTypes} from '@enums/user-types.enum';
+import {INames} from '@contracts/i-names';
+import {LangService} from '@services/lang.service';
+import {FactoryService} from '@services/factory.service';
+import {AdminResult} from "@app/models/admin-result";
+import {InternalDepartment} from "@app/models/internal-department";
+import {InternalUserService} from "@app/services/internal-user.service";
+import {CustomValidators} from "@app/validators/custom-validators";
+import {Observable} from "rxjs";
+import {ISearchFieldsMap} from '@app/types/types';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {InternalUserInterceptor} from "@app/model-interceptors/internal-user-interceptor";
+import {InterceptModel} from "@decorators/intercept-model";
 import {UserPreferences} from '@models/user-preferences';
+import {normalSearchFields} from '@helpers/normal-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
 
 const interceptor = new InternalUserInterceptor()
 
@@ -29,6 +31,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   defaultDepartmentInfo!: AdminResult;
   departmentInfo!: InternalDepartment[];
   domainName!: string;
+  qid!: string;
   email!: string;
   empNum!: string;
   jobTitle!: number;
@@ -46,13 +49,9 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   userPreferences!: UserPreferences;
   langService: LangService;
 
-  searchFields: { [key: string]: searchFunctionType | string } = {
-    userName: 'domainName',
-    arName: 'arName',
-    enName: 'enName',
-    empNum: 'empNum',
-    status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1,
-    defaultDepartment: text => !this.defaultDepartmentInfo ? false : this.defaultDepartmentInfo.getName().toLowerCase().indexOf(text) !== -1
+  searchFields: ISearchFieldsMap<InternalUser> = {
+    ...normalSearchFields(['domainName', 'arName', 'enName', 'empNum', 'qid']),
+    ...infoSearchFields(['statusInfo', 'defaultDepartmentInfo'])
   };
 
   constructor() {
@@ -75,6 +74,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
       enName,
       domainName,
       email,
+      qid,
       empNum,
       phoneNumber,
       status,
@@ -98,6 +98,10 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
         CustomValidators.maxLength(50),
         CustomValidators.pattern('ENG_NUM_ONLY')]
       ] : domainName,
+      qid: controls ? [{
+        value: qid,
+        disabled: !!this.id
+      }, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : qid,
       email: controls ? [email, [
         CustomValidators.required,
         CustomValidators.maxLength(50),
@@ -130,7 +134,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   }
 
   updateDefaultDepartment(): Observable<boolean> {
-    return this.service.updateDefaultDepartment({ id: this.id, defaultDepartmentId: this.defaultDepartmentId });
+    return this.service.updateDefaultDepartment({id: this.id, defaultDepartmentId: this.defaultDepartmentId});
   }
 
   isInactive(): boolean {

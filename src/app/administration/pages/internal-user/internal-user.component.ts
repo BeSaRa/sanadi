@@ -21,7 +21,7 @@ import {UserPreferencesService} from '@services/user-preferences.service';
 })
 export class InternalUserComponent extends AdminGenericComponent<InternalUser, InternalUserService> {
   usePagination = true;
-  displayedColumns: string[] = ['rowSelection', 'username', 'arName', 'enName', 'defaultDepartment', 'status', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'username', 'arName', 'enName', 'qid', 'defaultDepartment', 'status', 'actions'];
   commonStatusEnum = CommonStatusEnum;
   view$: Subject<InternalUser> = new Subject<InternalUser>();
   actions: IMenuItem<InternalUser>[] = [
