@@ -55,8 +55,8 @@ export class CharityOrganization extends BaseModel<
   instagram!: string;
   youTube!: string;
   branchList: CharityBranch[] = [];
-  contactOfficer: OrganizationOfficer[] = [];
-  complianceOfficer: OrganizationOfficer[] = [];
+  contactOfficerList: OrganizationOfficer[] = [];
+  complianceOfficerList: OrganizationOfficer[] = [];
 
   getName(): string {
     return this.langService.map.lang === 'en' ? this.enName : this.arName;
@@ -89,8 +89,8 @@ export class CharityOrganization extends BaseModel<
       instagram,
       youTube,
       branchList,
-      contactOfficer,
-      complianceOfficer,
+      contactOfficerList,
+      complianceOfficerList,
       profileId
     } = this;
     const model = new CharityOrganizationUpdate().clone({
@@ -120,8 +120,8 @@ export class CharityOrganization extends BaseModel<
       instagram,
       youTube,
       charityBranchList: branchList,
-      charityContactOfficerList: contactOfficer,
-      complianceOfficerList: complianceOfficer,
+      charityContactOfficerList: contactOfficerList,
+      complianceOfficerList: complianceOfficerList,
       registrationDate
     });
     return model;
