@@ -51,6 +51,12 @@
         </div>
         <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="qid" for="qid">{{lang.map.lbl_qid}}</label>
+            <input validationClasses="qid" formControlName="qid" type="text" id="qid"
+                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+            <app-field-error-message controlName="qid"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="status" for="status">{{lang.map.lbl_status}}</label>
             <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false" placeholder="{{lang.map.select}}"
               id="status" [notFoundText]="lang.map.msg_not_found" formControlName="status" validationClasses="status">
@@ -62,13 +68,13 @@
             </ng-select>
             <app-field-error-message controlName="status"></app-field-error-message>
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
             <input validationClasses="email" formControlName="email" type="text" id="email" class="form-control">
             <app-field-error-message controlName="email"></app-field-error-message>
           </div>
-        </div>
-        <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="phoneNumber"
               for="phoneNumber">{{lang.map.mobile_number}}</label>
@@ -76,10 +82,12 @@
               class="form-control" trimInput>
             <app-field-error-message controlName="phoneNumber"></app-field-error-message>
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative" *ngIf="!readonly">
             <file-uploader labelKey="signature" [isRequired]="false" [loadedFile]="loadedSignature"
-              [showFilePreview]="true" (fileUploadEvent)="setSignatureFile($event)"
-              [allowedExtensions]="[fileExtensionsEnum.PNG, fileExtensionsEnum.JPEG, fileExtensionsEnum.JPG]">
+                           [showFilePreview]="true" (fileUploadEvent)="setSignatureFile($event)"
+                           [allowedExtensions]="[fileExtensionsEnum.PNG, fileExtensionsEnum.JPEG, fileExtensionsEnum.JPG]">
             </file-uploader>
           </div>
         </div>
