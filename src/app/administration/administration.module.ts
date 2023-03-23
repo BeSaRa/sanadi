@@ -125,6 +125,7 @@ import {
   FormlySelectFieldComponent
 } from '@app/services-search/components/formly-select-field/formly-select-field.component';
 import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
+import { CustomMenusTableComponent } from '@app/administration/pages/custom-menu/components/custom-menus-table/custom-menus-table.component';
 
 @NgModule({
   declarations: [
