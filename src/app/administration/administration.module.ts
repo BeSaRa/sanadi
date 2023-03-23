@@ -216,7 +216,6 @@ import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
     UserSecurityExternalComponent,
     ProfileAttachmentsComponent,
     GlobalSettingsComponent,
-    UserPreferencesPopupComponent,
     AdminLicenseComponent,
     CustomMenuDefaultsPopupComponent,
     CustomMenusTableComponent

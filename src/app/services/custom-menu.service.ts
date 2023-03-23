@@ -291,7 +291,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
       isSvg: false,
       icon: ActionIconsEnum.MENU,
       path: (hasChildren ? this.dynamicMainMenuUrl : this.dynamicMainMenuDetailsUrl).change({parentId: customMenu.id}),
-      customMenu: customMenu
+      customMenu: customMenu,
     }));
   }
 
@@ -314,9 +314,34 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
   private _transformToMenuItems(customMenuList: CustomMenu[]): MenuItem[] {
     let maxId = this.menuItemService.getMaxMenuItemId();
     let finalList: MenuItem[] = [];
-    let parentList = customMenuList.filter(item => !item.parentMenuItemId);
-    let childrenList = customMenuList.filter(item => !!item.parentMenuItemId && !!item.menuURL)
-      .sort((a: CustomMenu, b: CustomMenu) => a.menuOrder - b.menuOrder); // children must have menuUrl
+    let parentList:CustomMenu[] = [];
+    let childrenList:CustomMenu[] = [];
+    let systemChildrenList:CustomMenu[] = [];
+
+    customMenuList.forEach((item:CustomMenu)=>{
+      if(!item.parentMenuItemId && !item.isDefaultItem()){
+        parentList.push(item);
+        return;
+      }
+      if(!!item.parentMenuItemId && !!item.menuURL){
+        if(!item.hasDefaultParent()){
+          childrenList.push(item);
+          return;
+        }
+        if(item.hasDefaultParent()){
+          systemChildrenList.push(item);
+          return;
+        }
+      }
+    });
+    childrenList = childrenList.sort((a: CustomMenu, b: CustomMenu) => a.menuOrder - b.menuOrder)
+    systemChildrenList = systemChildrenList.sort((a: CustomMenu, b: CustomMenu) => a.menuOrder - b.menuOrder)
+
+    // let parentList = customMenuList.filter(item => !item.parentMenuItemId && !item.isDefaultItem());
+    // let childrenList = customMenuList.filter(item => !!item.parentMenuItemId && !!item.menuURL && !item.hasDefaultParent())
+    //   .sort((a: CustomMenu, b: CustomMenu) => a.menuOrder - b.menuOrder); // children must have menuUrl
+    // let systemChildrenList =  customMenuList.filter(item => !!item.parentMenuItemId && !!item.menuURL && item.hasDefaultParent())
+    // .sort((a: CustomMenu, b: CustomMenu) => a.menuOrder - b.menuOrder);
 
     parentList.forEach((parentMenu: CustomMenu) => {
       const hasChildren: boolean = !!childrenList.find(x => x.parentMenuItemId === parentMenu.id);
@@ -341,11 +366,21 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
         finalList.push(this._transformChildMenu(childMenu, maxId, itemOrder, newParent!.id));
       }
     });
+    systemChildrenList.forEach((childMenu: CustomMenu) =>{
+      let systemParent = childMenu.getSystemParent();
+      if(!systemParent){
+        return;
+      }
+      let itemOrder = this._getMaxChildItemOrder(finalList, systemParent.id!) + 2;
+      finalList.push(this._transformChildMenu(childMenu, maxId, itemOrder, systemParent.id!));
+
+    })
     return finalList;
   }
 
   prepareCustomMenuList(): Observable<MenuItem[]> {
     const list = this._transformToMenuItems(this.employeeService.menuItems);
+
     this.menuItemService.menuItems = this.menuItemService.menuItems.concat(list);
     return of(this.menuItemService.menuItems);
   }

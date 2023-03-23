@@ -34,14 +34,13 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
 implements AfterViewInit {
   usePagination = true;
   useCompositeToLoad = false;
-  defaultParents= this.menuItemService.parents.filter(x=>!!x.defaultId).sort((a,b)=> a.defaultId! - b.defaultId! );
+
   constructor(public lang: LangService,
               public service: CustomMenuService,
               private dialogService: DialogService,
               private sharedService: SharedService,
               public toast: ToastService,
-              private cd : ChangeDetectorRef,
-              private menuItemService: MenuItemService) {
+              private cd : ChangeDetectorRef) {
     super();
   }
 
@@ -50,6 +49,7 @@ implements AfterViewInit {
   }
   ngAfterViewInit(){
     this.cd.detectChanges();
+
   }
   @Input() parent?: CustomMenu;
   @Input() readonly: boolean = false;
@@ -57,7 +57,16 @@ implements AfterViewInit {
 
   @ViewChild('table') table!: TableComponent;
   selectedPopupTabName: string = 'basic';
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'menuType', 'status', 'actions'];
+  private _displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'menuType', 'status', 'actions'];
+
+
+  get displayedColumns() : string[] {
+    if(!!this.parent && this.parent.isDefaultItem()){
+      return  ['rowSelection', 'arName', 'enName', 'menuType', 'systemParent' ,'status', 'actions']
+    }
+    return this._displayedColumns;
+  }
+
   defaultParentsColumns: string[] = [ 'arName', 'enName', 'actions'];
   view$: Subject<CustomMenu> = new Subject<CustomMenu>();
 
@@ -68,7 +77,7 @@ implements AfterViewInit {
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
       onClick: (item: CustomMenu) => this.edit(item),
-      show: () => !this.readonly
+      show: (item:CustomMenu) => !this.readonly && ! item.isDefaultItem()
     },
     // view
     {
@@ -83,7 +92,7 @@ implements AfterViewInit {
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
       onClick: (item) => this.delete(item),
-      show: () => !this.readonly,
+      show: (item:CustomMenu) => !this.readonly && ! item.isDefaultItem()
     },
     // children
     {
@@ -100,7 +109,10 @@ implements AfterViewInit {
       label: 'btn_activate',
       onClick: (item: CustomMenu) => this.toggleStatus(item),
       displayInGrid: false,
-      show: (item) => {
+      show: (item: CustomMenu) => {
+        if( item.isDefaultItem()){
+          return false;
+        }
         if (this.parent && !this.parent.isActive()) {
           return false;
         }
@@ -117,7 +129,10 @@ implements AfterViewInit {
       label: 'btn_deactivate',
       onClick: (item: CustomMenu) => this.toggleStatus(item),
       displayInGrid: false,
-      show: (item) => {
+      show: (item : CustomMenu) => {
+        if( item.isDefaultItem()){
+          return false;
+        }
         if (this.parent && !this.parent.isActive()) {
           return false;
         }
@@ -128,16 +143,7 @@ implements AfterViewInit {
       }
     }
   ];
-  defaultParentsActions: IMenuItem<MenuItem>[] = [
-    // children
-    {
-      type: 'action',
-      label: 'sub_lists',
-      icon: ActionIconsEnum.CHILD_ITEMS,
-      onClick: (item) => this.showDefaultsChildren(item),
-      show: () => !this.parent,
-    }
-  ];
+
   bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
@@ -338,36 +344,9 @@ implements AfterViewInit {
       });
   }
 
-  tabChanged(tab: TabComponent) {
-    const tabData = this._findTabByTabName(tab);
-    if (!tabData) {
-      return;
-    }
-    if(tabData.name === 'customMenus'){
-      this.reload$.next(null);
-    }
 
-  }
-  private _findTabByTabName(tab: TabComponent): ITabData | undefined {
-    return Object.values(this.tabsData).find(tabData => tabData.name === tab.name);
-  }
-  tabsData: TabMap = {
-    customMenus: {
-      name: 'customMenus',
-      langKey: 'lbl_custom_menus',
-      index : 0,
-      validStatus: () => true,
-      isTouchedOrDirty: () => true
-    },
-    defaultMenus: {
-      name: 'defaultMenus',
-      langKey: 'lbl_default_menus',
-      index : 0,
-      validStatus: () => true,
-      isTouchedOrDirty: () => true
-    },
-  };
   get selectedRecords(): CustomMenu[] {
     return this.table.selection.selected;
   }
+
 }
