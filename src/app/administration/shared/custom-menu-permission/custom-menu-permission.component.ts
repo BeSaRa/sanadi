@@ -141,8 +141,6 @@ export class CustomMenuPermissionComponent implements OnInit {
         this.permissionGroups.push(new CheckGroup<CustomMenu>(group, itemsInGroup, [], this.chunkSize, true));
       }
     });
-    console.log(this.permissionGroups);
-
   }
 
   private _isAlreadySelected(id?: number): boolean {
