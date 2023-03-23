@@ -141,6 +141,8 @@ export class CustomMenuPermissionComponent implements OnInit {
         this.permissionGroups.push(new CheckGroup<CustomMenu>(group, itemsInGroup, [], this.chunkSize, true));
       }
     });
+    console.log(this.permissionGroups);
+
   }
 
   private _isAlreadySelected(id?: number): boolean {
@@ -201,5 +203,8 @@ export class CustomMenuPermissionComponent implements OnInit {
       .subscribe((data) => {
         this.sharedService.downloadFileToSystem(data, 'UserCustomMenuPermission_' + this.user.getName());
       });
+  }
+  isMainMenu(menu:CustomMenu){
+    return menu.id === 1;
   }
 }

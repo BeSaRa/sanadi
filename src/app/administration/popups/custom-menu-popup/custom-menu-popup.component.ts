@@ -19,6 +19,8 @@ import {CommonUtils} from '@helpers/common-utils';
 import {DialogService} from '@services/dialog.service';
 import {CustomMenuComponent} from '@app/administration/pages/custom-menu/custom-menu.component';
 import {UserTypes} from '@app/enums/user-types.enum';
+import { MenuItemService } from '@app/services/menu-item.service';
+import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
   selector: 'app-custom-menu-popup',
@@ -37,7 +39,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   parentMenu?: CustomMenu;
   defaultParent?:MenuItem;
   icons = iconsList
-
+  defaultParents:MenuItem[] = [];
   selectedTabIndex$: Subject<number> = new Subject<number>();
   defaultSelectedTab: string = 'basic';
 
@@ -47,7 +49,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
       langKey: 'lbl_basic_info',
       index: 0,
       validStatus: () => {
-        if (this.readonly) {
+        if (this.readonly || this.isMainMenu()) {
           return true;
         }
         return this.form && this.form.valid;
@@ -59,7 +61,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
       langKey: 'link_settings',
       index: 1,
       validStatus: () => {
-        if (this.readonly || !this.urlHandlerComponentRef) {
+        if (this.readonly || !this.urlHandlerComponentRef || this.isMainMenu()) {
           return true;
         }
         return this.urlHandlerComponentRef.isValidUrl();
@@ -91,14 +93,19 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<CustomMenu>,
               private toast: ToastService,
               private dialogService: DialogService,
-              private lookupService: LookupService) {
+              private lookupService: LookupService,
+              private menuItemService: MenuItemService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
     this.parentMenu = data.parentMenu;
     this.defaultSelectedTab = data.selectedTab ?? 'basic';
-  }
 
+  }
+  private _updateDefaultParentValidity() {
+    this.systemMenuKeyControl.setValidators([CustomValidators.required])
+    this.systemMenuKeyControl.updateValueAndValidity();
+  }
   initPopup(): void {
   }
 
@@ -109,11 +116,12 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
 
     this.handleDisableFields();
 
-    if (this.readonly) {
+    if (this.readonly || this.isMainMenu()) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
     }
+
   }
 
   handleDisableFields() {
@@ -148,7 +156,9 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
         fields = [this.statusControl];
       }
     }
-
+    if(this.parentMenu?.isDefaultItem()){
+      return fields;
+    }
     return fields.concat([this.menuTypeControl, this.menuViewControl, this.userTypeControl]);
   }
 
@@ -156,10 +166,11 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
     this._setDefaultSelectedTab();
     this._afterViewInit();
     this.cd.detectChanges();
+
   }
 
   get readonly(): boolean {
-    return this.operation === OperationTypes.VIEW;
+    return this.operation === OperationTypes.VIEW ;
   }
 
   get hasChildren(): boolean {
@@ -171,11 +182,18 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
 
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
+    if(this.isDefaultParent() ){
+      this._addDefaultParents();
+      this._updateDefaultParentValidity();
+    }
   }
 
   setDialogButtonsVisibility(tab: any): void {
-    this.saveVisible = (tab.name && tab.name !== this.tabsData.sub.name);
-    this.validateFieldsVisible = (tab.name && tab.name !== this.tabsData.sub.name);
+    if(!this.isMainMenu()){
+      this.saveVisible = (tab.name && tab.name !== this.tabsData.sub.name);
+      this.validateFieldsVisible = (tab.name && tab.name !== this.tabsData.sub.name);
+    }
+
   }
 
   getTabInvalidStatus(tabName: string): boolean {
@@ -211,6 +229,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
     this.model = model;
     this.operation = OperationTypes.UPDATE;
     this.customMenuChildrenRef && this.customMenuChildrenRef.reload$.next(null);
+    dialogRef.close(model);
   }
 
   saveFail(error: Error): void {
@@ -255,7 +274,9 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   get userTypeControl(): UntypedFormControl {
     return this.form.get('userType') as UntypedFormControl;
   }
-
+  get systemMenuKeyControl(): UntypedFormControl {
+    return this.form.get('systemMenuKey') as UntypedFormControl;
+  }
   getTranslatedStatus() {
     return !!this.statusControl.value ? this.lang.map.lbl_active : this.lang.map.lbl_inactive;
   }
@@ -273,5 +294,16 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
       }
     }
     return failedList;
+  }
+  private _addDefaultParents() {
+    this.defaultParents = this.menuItemService.parents
+      .filter((x) => !x.customMenu && !x.excludeFromDefaultParents)
+      .sort((a, b) => a.defaultId! - b.defaultId!);
+  }
+  isDefaultParent(){
+    return this.parentMenu && this.parentMenu.isDefaultItem();
+  }
+  isMainMenu(){
+    return this.model.isDefaultItem();
   }
 }
