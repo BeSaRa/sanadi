@@ -1,3 +1,5 @@
+import { MenuItemService } from '@app/services/menu-item.service';
+import { CommonUtils } from '@app/helpers/common-utils';
 import { MenuItem } from '@app/models/menu-item';
 import {InterceptModel} from '@app/decorators/decorators/intercept-model';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
@@ -44,6 +46,7 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
 
   // extra properties
   service!: CustomMenuService;
+  menuItemService!: MenuItemService;
   langService: LangService;
   urlParamsParsed: MenuUrlValueContract[] = [];
 
@@ -56,10 +59,25 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
     super();
     this.langService = FactoryService.getService('LangService');
     this.service = FactoryService.getService('CustomMenuService');
+    this.menuItemService = FactoryService.getService('MenuItemService');
   }
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+  getNameWithSystemParent(){
+    const systemMenu = this.getSystemParent();
+    if(!!systemMenu){
+      return systemMenu.getName() + ' - ' + this.getName();
+    }
+    return this.getName();
+  }
+
+  getSystemParent() {
+    if(!CommonUtils.isValidValue(this.systemMenuKey)){
+      return undefined;
+    }
+    return this.menuItemService.menuItems.find(x=>x.menuKey === this.systemMenuKey);
   }
 
   updateStatus(newStatus: CommonStatusEnum): any {
@@ -76,7 +94,8 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
       menuView,
       userType,
       parentMenuItemId,
-      icon
+      icon,
+      systemMenuKey
     } = this;
     return {
       arName: controls ? [arName, [CustomValidators.required,
@@ -94,6 +113,7 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
       userType: controls ? [userType, [CustomValidators.required]] : userType,
       icon: controls ? [icon, [CustomValidators.required]] : icon,
       parentMenuItemId: controls ? [parentMenuItemId, []] : parentMenuItemId,
+      systemMenuKey: controls ? [systemMenuKey,[]] : systemMenuKey
     };
   }
 
@@ -118,5 +138,12 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
 
   isInternalUserMenu(): boolean {
     return this.userType === UserTypes.INTERNAL;
+  }
+
+  isDefaultItem(){
+    return this.id === 1
+  }
+  hasDefaultParent(){
+    return this.parentMenuItemId === 1;
   }
 }
