@@ -38,6 +38,9 @@ import {
 } from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
 import {EmployeeService} from '@services/employee.service';
 import {AuthService} from '@services/auth.service';
+import {
+  UserFollowupPermissionNewComponent
+} from '@app/administration/shared/user-followup-permission-new/user-followup-permission-new.component';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -135,6 +138,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     },
   };
   @ViewChild('dialogContent') dialogContent!: ElementRef;
+  @ViewChild('userFollowupPermissionComponent') userFollowupPermissionComponentRef!: UserFollowupPermissionNewComponent;
 
   constructor(public dialogRef: DialogRef,
               public lang: LangService,
@@ -399,6 +403,12 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     const tabsWithSaveAndValidate = [this.tabsData.basic.name, this.tabsData.permissions.name, this.tabsData.menus.name];
     this.displaySaveBtn = tabsWithSaveAndValidate.includes($event.name);
     this.validateFieldsVisible = tabsWithSaveAndValidate.includes($event.name);
+    if ($event.name === this.tabsData.followup.name && !!this.model.id) {
+      if (!this.tabsData.followup.isLoaded) {
+        this.userFollowupPermissionComponentRef.reloadUserFollowupPermissions();
+        this.tabsData.followup.isLoaded = true;
+      }
+    }
   }
 
   addDepartment() {

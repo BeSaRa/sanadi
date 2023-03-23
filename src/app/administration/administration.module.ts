@@ -126,6 +126,7 @@ import {
   FormlySelectFieldComponent
 } from '@app/services-search/components/formly-select-field/formly-select-field.component';
 import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
+import { UserFollowupPermissionNewComponent } from './shared/user-followup-permission-new/user-followup-permission-new.component';
 
 @NgModule({
   declarations: [
@@ -217,7 +218,8 @@ import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
     UserSecurityExternalComponent,
     ProfileAttachmentsComponent,
     GlobalSettingsComponent,
-    AdminLicenseComponent
+    AdminLicenseComponent,
+    UserFollowupPermissionNewComponent
   ],
   imports: [
     SharedModule,
