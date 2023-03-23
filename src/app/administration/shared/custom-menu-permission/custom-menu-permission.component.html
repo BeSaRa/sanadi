@@ -34,7 +34,7 @@
                        (change)="groupHandler.onCheckBoxClicked(permission , $event , checkBoxGroup)"
                        class="form-check-input cursor-pointer">
                 <label for="menu-permission-id-{{permission.id}}" [ngClass]="{'fw-bold': isParentRow(row), 'text-danger': !permission.isActive()}"
-                       class="cursor-pointer">{{permission.getName()}}</label>
+                       class="cursor-pointer">{{permission.getNameWithSystemParent()}}</label>
               </div>
             </div>
           </ng-container>

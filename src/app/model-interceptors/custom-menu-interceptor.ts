@@ -34,7 +34,7 @@ export class CustomMenuInterceptor implements IModelInterceptor<CustomMenu> {
     CustomMenuInterceptor._stringifyUrl(model);
 
     CustomMenuInterceptor._deleteBeforeSend(model);
-    delete model.defaultParent;
+
     return model;
   }
 
@@ -88,5 +88,7 @@ export class CustomMenuInterceptor implements IModelInterceptor<CustomMenu> {
     delete model.userTypeInfo;
     delete model.subMenuItems;
     delete model.urlParamsParsed;
+    delete model.defaultParent;
+    delete model.menuItemService;
   }
 }

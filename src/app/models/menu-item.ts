@@ -53,7 +53,8 @@ export class MenuItem extends Cloneable<MenuItem> {
   configurationService: ConfigurationService;
   data?: IKeyValue;
   defaultId?:number;
-  menuKey? : SystemMenuKeys
+  menuKey? : SystemMenuKeys;
+  excludeFromDefaultParents? : boolean;
 
   constructor() {
     super()
