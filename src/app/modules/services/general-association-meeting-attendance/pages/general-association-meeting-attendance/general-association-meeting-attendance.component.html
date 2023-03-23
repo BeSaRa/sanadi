@@ -391,7 +391,7 @@
                               <div class="row" [formGroupName]="j">
                                 <div class="col-md-3 col-sm-12 position-relative">
                                   <label asteriskIfRequired="enName" class="form-label"
-                                    [for]="'enName' + i + j">{{lang.map.lbl_description}}</label>
+                                    [for]="'enName' + i + j">{{lang.map.sub_meeting_point_name}}</label>
                                   <input class="form-control" [readonly]="!this.canEditMeetingPoints(subItem)"
                                     formControlName="enName" [id]="'enName' + i + j" validationClasses="enName">
                                   <app-field-error-message controlName="enName"></app-field-error-message>

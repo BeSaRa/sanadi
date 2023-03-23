@@ -24,8 +24,8 @@ export class CharityOrganizationInterceptor implements IModelInterceptor<Charity
     model.registrationDate = DateUtils.getDateStringFromDate(model.registrationDate);
     model.establishmentDate = DateUtils.getDateStringFromDate(model.establishmentDate);
     model.branchList = model.branchList?.map(E => charityBranchInterceptor.receive(E));
-    model.complianceOfficer = model.complianceOfficer?.map(e => organizationOfficersInterceptor.receive(e));
-    model.contactOfficer = model.contactOfficer?.map(e => organizationOfficersInterceptor.receive(e));
+    model.complianceOfficerList = model.complianceOfficerList?.map(e => organizationOfficersInterceptor.receive(e));
+    model.contactOfficerList = model.contactOfficerList?.map(e => organizationOfficersInterceptor.receive(e));
     return model;
   }
 }

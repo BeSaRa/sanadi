@@ -16,15 +16,12 @@ import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
 import { InternalUser } from '@app/models/internal-user';
 import { InternalDepartment } from '@app/models/internal-department';
-import {  of, Subject,forkJoin } from 'rxjs';
+import { of, Subject, forkJoin } from 'rxjs';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { filter, switchMap, take, takeUntil, map } from 'rxjs/operators';
 import { ExpertsEnum } from '@app/enums/experts-enum';
 import { CaseModel } from '@app/models/case-model';
-import {
-  InternalBankAccountApprovalReviewDepartments
-} from '@app/enums/internal-bank-account-approval-review-departments';
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Component({
@@ -51,7 +48,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     private intDepService: InternalDepartmentService,
     private fb: UntypedFormBuilder,
     private dialog: DialogService,
-    private serviceDataService:ServiceDataService,
+    private serviceDataService: ServiceDataService,
     public lang: LangService,
   ) {
     if (this.isSendToDepartments() && this.twoDepartmentsWFResponses.includes(this.data.sendToResponse)) {
@@ -66,43 +63,6 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   title: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   maxSelectionCount!: number;
-  internalBankAccountApprovalDepartments = [InternalBankAccountApprovalReviewDepartments.LEGAL_AFFAIRS,
-  InternalBankAccountApprovalReviewDepartments.RISK_AND_COMPLIANCE,
-  InternalBankAccountApprovalReviewDepartments.SUPERVISION_AND_CONTROL];
-  ForeignCountiesProjectsApprovalDepartments = [
-    AdminstrationDepartmentCodes.RC,
-    AdminstrationDepartmentCodes.LCN,
-    AdminstrationDepartmentCodes.SVC
-  ]
-  NPOManagmentApprovalDepartments = [
-    AdminstrationDepartmentCodes.RC,
-    AdminstrationDepartmentCodes.LCN,
-    AdminstrationDepartmentCodes.LA,
-    AdminstrationDepartmentCodes.SVC
-  ]
-  GeneralProcessDepartmentApprovalDepartments = [
-    AdminstrationDepartmentCodes.RC,
-    AdminstrationDepartmentCodes.LCN,
-    AdminstrationDepartmentCodes.SVC
-  ]
-  AwarenessActivatySuggestionDepartmentApprovalDepartments = [
-    AdminstrationDepartmentCodes.SVC,
-    AdminstrationDepartmentCodes.RC,
-    AdminstrationDepartmentCodes.LA,
-    AdminstrationDepartmentCodes.IS,
-    AdminstrationDepartmentCodes.PQ,
-    AdminstrationDepartmentCodes.PR1,
-    AdminstrationDepartmentCodes.IN,
-  ]
-  UrgentInterventionDepartmentApprovalDepartments = [
-    AdminstrationDepartmentCodes.RC,
-    AdminstrationDepartmentCodes.SVC,
-  ]
-  FundraisingLicenseDepartmentApprovalDepartments = [
-    AdminstrationDepartmentCodes.RC,
-    AdminstrationDepartmentCodes.SVC,
-  ]
-
   multiSendToDepartmentWFResponseList = [
     WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
@@ -133,43 +93,24 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     return this.multiSendToUserWFResponseList.includes(this.data.sendToResponse);
   }
 
-  private _loadByServiceData(caseType:CaseTypes){
-  const serviceData = this.serviceDataService.loadByCaseType(caseType)
-    .pipe(
-      filter(result => !!result.concernedDepartmentsIds),
-      map(result=><Number[]>JSON.parse(result.concernedDepartmentsIds!)),
+  private _loadByServiceData(caseType: CaseTypes) {
+    const serviceData = this.serviceDataService.loadByCaseType(caseType)
+      .pipe(
+        filter(result => !!result.concernedDepartmentsIds),
+        map(result => <Number[]>JSON.parse(result.concernedDepartmentsIds!)),
       );
 
     const internalDepartments = this.intDepService.loadAsLookups()
 
-
-    forkJoin([serviceData,internalDepartments])
-    .subscribe(([ids,departments])=>{
-       this.departments = departments.filter(dep => dep.id !== this.employee.getInternalDepartment()?.id && ids?.includes(dep.id) );
-    })
+    forkJoin([serviceData, internalDepartments])
+      .subscribe(([ids, departments]) => {
+        this.departments = departments.filter(dep => (!ids.length || ids?.includes(dep.id)) && dep.id !== this.employee.getInternalDepartment()?.id);
+      })
   }
   private _loadInitData(): void {
     if (this.isSendToDepartments()) {
       this.title = 'send_to_multi_departments';
-      if (this.data.sendToResponse === WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS) {
-        this.loadInternalBankAccountApprovalDepartments();
-      } else if (this.data.sendToResponse === WFResponseType.FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS) {
-        this.loadForeignCountiesProjectsApprovalDepartments();
-      } else if (this.data.sendToResponse === WFResponseType.REVIEW_NPO_MANAGEMENT) {
-        this.loadNPOManagmentApprovalDepartments()
-      } else if (this.data.sendToResponse === WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS) {
-        this.loadGaneralProcessNotificationApprovalDepartments()
-      } else if (this.data.sendToResponse === WFResponseType.AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS) {
-        this.loadAwarenessActivatySuggestionApprovalDepartments()
-      } else if (this.data.sendToResponse === WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS) {
-        this.loadUrgentInterventionApprovalDepartments()
-      } else if (this.data.sendToResponse === WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS) {
-        this._loadByServiceData(CaseTypes.FUNDRAISING_LICENSING)
-      } else if (this.data.sendToResponse === WFResponseType.ORGANIZATION_ENTITIES_SUPPORT_TO_MULTI_DEPARTMENTS) {
-        this._loadByServiceData(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT)
-      } else {
-        this.loadDepartments();
-      }
+      this._loadByServiceData(this.data.task.getCaseType());
     } else if (this.isSendToUsers()) {
       if (this.data.extraInfo && this.data.extraInfo.teamType) {
         if (this.data.extraInfo.teamType === ExpertsEnum.DEVELOPMENTAL) {
@@ -279,63 +220,6 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => this.departments = deps.filter(dep => dep.id !== this.employee.getInternalDepartment()?.id));
   }
-
-  loadInternalBankAccountApprovalDepartments(): void {
-    this.intDepService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => this.departments = deps.filter(dep => this.internalBankAccountApprovalDepartments.includes(dep.mainTeam.authName as InternalBankAccountApprovalReviewDepartments)));
-  }
-
-  loadForeignCountiesProjectsApprovalDepartments(): void {
-    this.intDepService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => this.departments = deps.filter(dep => this.ForeignCountiesProjectsApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
-  }
-
-  loadNPOManagmentApprovalDepartments(): void {
-    this.intDepService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => this.departments = deps.filter(dep => this.NPOManagmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
-  }
-
-  loadFundraisingLicenseApprovalDepartments(): void {
-    this.intDepService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => this.departments = deps.filter(dep => this.FundraisingLicenseDepartmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
-  }
-
-  loadGaneralProcessNotificationApprovalDepartments(): void {
-    this.intDepService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => {
-        const currDepIndex = this.GeneralProcessDepartmentApprovalDepartments.findIndex(dc => dc == this.employee.getInternalDepartment()?.code);
-        this.GeneralProcessDepartmentApprovalDepartments.splice(currDepIndex, 1);
-        this.departments =
-          deps.filter(dep => this.GeneralProcessDepartmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes))
-      });
-  }
-
-  loadUrgentInterventionApprovalDepartments(): void {
-    this.intDepService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => {
-        this.departments =
-          deps.filter(dep => this.UrgentInterventionDepartmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes))
-      });
-  }
-
-
-  loadAwarenessActivatySuggestionApprovalDepartments(): void {
-    this.intDepService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => {
-        const currDepIndex = this.AwarenessActivatySuggestionDepartmentApprovalDepartments.findIndex(dc => dc == this.employee.getInternalDepartment()?.code);
-        this.AwarenessActivatySuggestionDepartmentApprovalDepartments.splice(currDepIndex, 1);
-        this.departments =
-          deps.filter(dep => this.AwarenessActivatySuggestionDepartmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes))
-      });
-  }
-
 
   loadUsersByTeamLookup(teamLookupKey: number): void {
     this.teamService

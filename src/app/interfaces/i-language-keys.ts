@@ -1828,4 +1828,5 @@ export interface ILanguageKeys {
   lbl_transfer_operation_date:string;
   msg_record_is_linked:string;
   previews_replays:string;
+  sub_meeting_point_name:string;
 }
