@@ -278,7 +278,13 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     }
     return Math.max(...(childMenuList.map(item => item.itemOrder)));
   }
-
+  private _getMaxSystemChildItemOrder(systemParentMenuId: number){
+    const childSystemItemList = this.menuItemService.menuItems.filter(x=>x.parent === systemParentMenuId );
+    if (!childSystemItemList || childSystemItemList.length === 0) {
+      return 0;
+    }
+    return Math.max(...(childSystemItemList.map(item => item.itemOrder)));
+  }
   private _transformParentMenu(customMenu: CustomMenu, newId: number, newItemOrder: number, hasChildren: boolean): MenuItem {
     return (new MenuItemInterceptor).receive(new MenuItem().clone({
       id: newId,
@@ -371,7 +377,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
       if(!systemParent){
         return;
       }
-      let itemOrder = this._getMaxChildItemOrder(finalList, systemParent.id!) + 2;
+      let itemOrder = this._getMaxChildItemOrder(finalList, systemParent.id!) + this._getMaxSystemChildItemOrder(systemParent.id);
       finalList.push(this._transformChildMenu(childMenu, maxId, itemOrder, systemParent.id!));
 
     })
