@@ -59,12 +59,17 @@
                 [sortCallback]="sortingCallbacks.statusInfo"> {{lang.map.lbl_status}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{(row.statusInfo ? row.statusInfo.getName() : '')}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="systemParent">
+            <th cdk-header-cell  *cdkHeaderCellDef
+                > {{lang.map.parent}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{(row.getSystemParent()?.getName()?? ''  )}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
               <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
                 <span afterTemplate class="form-check form-switch switch-action"
-                      *ngIf="!readonly && row.status !== commonStatusEnum.RETIRED && (!parent || parent.isActive())"
+                      *ngIf="!readonly && !isDefaultItem(row) && row.status !== commonStatusEnum.RETIRED && (!parent || parent.isActive())"
                       style="top: auto">
                   <input class="form-check-input" type="checkbox"
                           [checked]="row.status == commonStatusEnum.ACTIVATED"

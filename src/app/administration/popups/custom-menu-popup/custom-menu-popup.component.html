@@ -19,12 +19,15 @@
            *ngIf="model.id && !model.parentMenuItemId"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
-      <div class="row" *ngIf="model.defaultParent">
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label for="parentMenu"
-            class="form-label">{{lang.map.lbl_parent_menu}}</label>
-          <span id="parentMenu" class="form-control input-disabled"
-            [innerHTML]="model.defaultParent.getName()"></span>
+      <div class="row" *ngIf="isDefaultParent()">
+        <div class="col-sm-6 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="systemMenuKey" for="systemMenuKey" class="form-label">{{lang.map.menu_type}}</label>
+          <ng-select validationClasses="systemMenuKey" labelForId="systemMenuKey" placeholder="{{lang.map.select}}"
+                     [notFoundText]="lang.map.msg_not_found" formControlName="systemMenuKey" id="systemMenuKey" appendTo="body">
+            <ng-option [value]="option.menuKey?? ''" *ngFor="let option of defaultParents">
+              {{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="systemMenuKey"></app-field-error-message>
         </div>
       </div>
       <div class="row">
