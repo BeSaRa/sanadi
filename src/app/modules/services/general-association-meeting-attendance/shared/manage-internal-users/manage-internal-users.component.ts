@@ -16,6 +16,7 @@ import { GeneralAssociationMeetingStepNameEnum } from '@enums/general-associatio
 import { MeetingMemberTaskStatus } from '@models/meeting-member-task-status';
 import { MeetingAttendanceReport } from '@models/meeting-attendance-report';
 import { GeneralMeetingAttendanceNote } from '@models/general-meeting-attendance-note';
+import { GeneralMeetingsMemberStatus } from '@app/interfaces/general-meetings-member-status';
 
 @Component({
   selector: 'manage-internal-users',
@@ -146,6 +147,9 @@ export class ManageInternalUsersComponent implements OnInit {
     }
   }
 
+  isTerminatedMember(row: GeneralAssociationInternalMember) {
+    return row.name == GeneralMeetingsMemberStatus.terminated
+  }
   saveMember() {
     const boardMember = new GeneralAssociationInternalMember().clone(this.internalMembersForm.getRawValue());
 

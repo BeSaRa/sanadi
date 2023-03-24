@@ -91,6 +91,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   userCommentsDisplayedColumns: string[] = ['index', 'arName', 'enName', 'status', 'actions'];
   meetingUserTaskStatus: MeetingMemberTaskStatus[] = [];
+  oldMeetingUserTaskStatus: MeetingMemberTaskStatus[] = [];
 
   isMemberReview!: boolean;
   isDecisionMakerReview!: boolean;
@@ -345,12 +346,14 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
           this.oldSelectedInternalUsers = license?.internalMembersDTO;
 
           this.service.getMemberTaskStatus(license?.id).subscribe(membersStatus => {
-            this.meetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
+            this.oldMeetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
+            console.log(this.oldMeetingUserTaskStatus)
             this.oldSelectedInternalUsers = this.oldSelectedInternalUsers.map(user => {
-              user.pId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
-              user.name = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
-              user.tkiid = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
-              user.userId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
+              user.pId = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
+              user.name = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
+              user.tkiid = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
+              user.userId = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
+              console.log(user)
               return user;
             });
           });
