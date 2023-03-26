@@ -60,6 +60,7 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
       controlType: 'text',
       property: 'riskLevel',
       label: 'risk_level',
+      mask: CustomValidators.inputMaskPatterns.NUMBER_ONLY
     },
     search_status: {
       key: 'status',
