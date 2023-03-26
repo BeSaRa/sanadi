@@ -79,7 +79,7 @@ export class ManageInternalUsersComponent implements OnInit {
   }
 
   setDisplayedColumns() {
-    if (!this.isExternalUser && this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
+    if (!this.isExternalUser && this.model?.isSentToMember() && (this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep()) || this.model?.isManagerFinalReviewStep()) {
       this.membersDisplayedColumns = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'status', 'actions'];
     } else {
       this.membersDisplayedColumns = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'actions'];
