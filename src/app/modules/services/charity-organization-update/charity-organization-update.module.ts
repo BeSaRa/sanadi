@@ -30,6 +30,7 @@ import {
 import {
   FollowupDateApprovePopupComponent
 } from '@modules/services/charity-organization-update/popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
+import { OrganizationOfficerPopupComponent } from './shared/organization-officers/organization-officer-popup/organization-officer-popup.component';
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import {
     MembersComponent,
     CharityReportsComponent,
     OrganizationOfficersComponent,
+    OrganizationOfficerPopupComponent,
     FollowupDateApprovePopupComponent
   ],
   imports: [
