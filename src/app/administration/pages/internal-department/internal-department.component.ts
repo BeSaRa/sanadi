@@ -91,11 +91,8 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   }
-
-  ngOnInit() {
-    this.listenToReload();
-    this.listenToAdd();
-    this.listenToEdit();
+    
+  protected _init(): void {
     this.listenToView();
     this.buildFilterForm();
   }
