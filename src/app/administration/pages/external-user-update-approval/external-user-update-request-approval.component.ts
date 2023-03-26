@@ -331,7 +331,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
   
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: [''], enName: [''], requestType:[null], updatedOn:[null], requestStatus:[null], updatedBy:[null]
+      arName: [''], enName: [''], requestType:[null], requestStatus:[null]
     })
   }
 }

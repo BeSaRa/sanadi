@@ -51,13 +51,6 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
       label:'code',
       maxLength:50
     },
-    // search_updatedOn:{
-    //   key:'updatedOn',
-    //   controlType:'text',
-    //   property:'updatedOn',
-    //   label:'updated_date',
-    //   hide:true
-    // },
     search_status: {
       key: 'status',
       controlType: 'select',
