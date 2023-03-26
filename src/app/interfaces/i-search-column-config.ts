@@ -9,6 +9,7 @@ export interface ISearchColumnConfig {
   property: string;
   hide?: boolean;
   maxLength?: number;
+  mask?: string;
   selectOptions?: {
     options: Lookup[] | AdminLookup[] | any[];
     multiple?: boolean;
