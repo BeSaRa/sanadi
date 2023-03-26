@@ -49,7 +49,7 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
       controlType:'text',
       property:'authName',
       label:'code',
-      maxLength:50
+      maxLength:CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
     },
     search_status: {
       key: 'status',

@@ -83,7 +83,7 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
       controlType: 'text',
       property: 'aidCode',
       label: 'lbl_aid_code',
-      maxLength: 50
+      maxLength: CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
     },
     search_arName: {
       key: 'arName',

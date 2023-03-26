@@ -33,7 +33,7 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
       controlType: 'text',
       property: 'domainName',
       label: 'lbl_username',
-      maxLength: 50
+      maxLength: CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
     },
     search_arName: {
       key: 'arName',

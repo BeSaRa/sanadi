@@ -83,7 +83,7 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
       controlType:'text',
       property:'empNum',
       label:'lbl_employee_number',
-      maxLength:50
+      maxLength: CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
     },
     search_status: {
       key: 'status',
