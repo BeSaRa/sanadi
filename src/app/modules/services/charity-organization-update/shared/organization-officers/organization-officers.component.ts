@@ -1,10 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {OrganizationOfficer} from '@models/organization-officer';
-import {EmployeeService} from '@services/employee.service';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {CustomValidators} from '@app/validators/custom-validators';
+import { Subject } from 'rxjs';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { Component, Input, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { OrganizationOfficer } from '@models/organization-officer';
+import { EmployeeService } from '@services/employee.service';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { OrganizationOfficerPopupComponent } from './organization-officer-popup/organization-officer-popup.component';
+import { DialogService } from '@app/services/dialog.service';
 
 @Component({
   selector: 'organization-officers',
@@ -16,6 +20,11 @@ export class OrganizationOfficersComponent implements OnInit {
   selectedOrganizationOfficers: OrganizationOfficer[] = [];
   laisonOfficers: OrganizationOfficer[] = [];
   selectedOfficerIndex!: number | null;
+  add$: Subject<null> = new Subject();
+  @Input() label!: string;
+  get _label() {
+    return this.label as keyof ILanguageKeys
+  }
   organizationOfficerDisplayedColumns: string[] = [
     'fullName',
     'identificationNumber',
@@ -30,7 +39,6 @@ export class OrganizationOfficersComponent implements OnInit {
     this.selectedOrganizationOfficers = list || [];
   }
   get list(): OrganizationOfficer[] {
-
     return this.selectedOrganizationOfficers;
   }
 
@@ -38,11 +46,13 @@ export class OrganizationOfficersComponent implements OnInit {
     private fb: UntypedFormBuilder,
     public lang: LangService,
     private employeeService: EmployeeService,
-    private toast: ToastService
+    private toast: ToastService,
+    public dialog: DialogService,
   ) { }
 
   ngOnInit(): void {
     this.buildOfficerForm();
+    this.listenToAdd();
   }
   buildOfficerForm(): void {
     this.officerForm = this.fb.group({
@@ -77,6 +87,24 @@ export class OrganizationOfficersComponent implements OnInit {
       ],
       officerExtraPhone: [null, CustomValidators.commonValidations.phone],
     });
+  }
+  openFormDialog() {
+    this.dialog.show(
+      OrganizationOfficerPopupComponent,
+      {
+        form: this.officerForm,
+        readonly: this.readonly,
+        selectedOfficer: this.selectedOfficer,
+        label: this.label
+      }
+    ).onAfterClose$.subscribe((data) => {
+      if(data) this.saveOfficer()
+    })
+  }
+  listenToAdd() {
+    this.add$.subscribe(() => {
+      this.openFormDialog();
+    })
   }
   mapFormToOrganizationOfficer(form: any): OrganizationOfficer {
     const officer: OrganizationOfficer = new OrganizationOfficer();
@@ -136,6 +164,7 @@ export class OrganizationOfficersComponent implements OnInit {
     this.selectedOfficerIndex = this.selectedOrganizationOfficers
       .map((x) => x.identificationNumber)
       .indexOf(model.identificationNumber);
+    this.openFormDialog();
   }
   mapOrganizationOfficerToForm(officer: OrganizationOfficer): any {
     return {
