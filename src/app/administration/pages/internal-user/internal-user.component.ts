@@ -188,11 +188,7 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
   }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      domainName: [''], 
-      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      status: [null],
-      
+      domainName: [''], arName: [''], enName: [''], status: [null] 
     })
   }
 }

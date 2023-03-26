@@ -147,11 +147,7 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
 
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      updatedOn: [''], 
-      authName: [''], 
-      status: [null],
+      arName: [''], enName: [''], authName: [''], status: [null]
     })
   }
 }

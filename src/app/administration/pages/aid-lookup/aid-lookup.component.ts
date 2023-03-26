@@ -180,10 +180,7 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
 
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      aidCode: ['', [CustomValidators.number, CustomValidators.maxLength(50)]],
-      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      status: [null]
+      aidCode: [''], arName: [''], enName: [''], status: [null]
     })
   }
 

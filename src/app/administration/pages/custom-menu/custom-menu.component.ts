@@ -362,10 +362,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
 
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      menuType:[null],
-      status: [null]
+      arName: [''], enName: [''], menuType:[null], status: [null]
     })
   }
 }

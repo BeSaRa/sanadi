@@ -329,10 +329,7 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
 
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      riskLevel: ['', [CustomValidators.pattern('ENG_NUM')]],
-      status: [null],
+      arName: [''], enName: [''], riskLevel: [''], status: [null]
     })
   }
 }
