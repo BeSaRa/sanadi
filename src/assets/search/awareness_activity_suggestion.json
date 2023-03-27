@@ -53,12 +53,12 @@
   {
     "fields": [
       {
-        "key": "charityId",
+        "key": "organizationId",
         "type": "selectField",
         "label": "lbl_organization",
         "selectOptions": {
           "options": [],
-          "loader": "charity.loadAsLookups",
+          "loader": "organization.loadAsLookups",
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }

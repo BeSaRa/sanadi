@@ -95,7 +95,7 @@
                         class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                   <i class="mdi mdi-close-box"></i>
                 </button>
-                <button *ngIf="!isExternalUser && model?.isSentToMember() && model?.isDecisionMakerReviewStep()"
+                <button *ngIf="!isExternalUser && model?.isSentToMember() && (model?.isDecisionMakerReviewStep() || model?.isDecisionMakerReworkStep()) && !isTerminatedMember(row)"
                         (click)="viewMemberCommentsAndNotes($event, row)"
                         [disabled]="row.pId"
                         class="btn btn-link outline-none" tooltip="{{lang.map.view}}">

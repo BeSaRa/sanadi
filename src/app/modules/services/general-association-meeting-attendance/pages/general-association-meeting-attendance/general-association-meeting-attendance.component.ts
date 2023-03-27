@@ -91,9 +91,11 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   userCommentsDisplayedColumns: string[] = ['index', 'arName', 'enName', 'status', 'actions'];
   meetingUserTaskStatus: MeetingMemberTaskStatus[] = [];
+  oldMeetingUserTaskStatus: MeetingMemberTaskStatus[] = [];
 
   isMemberReview!: boolean;
   isDecisionMakerReview!: boolean;
+  isDecisionMakerRework!: boolean;
   isManagerFinalReview!: boolean;
   memberId!: number;
   hoursList = DateUtils.getHoursList();
@@ -230,13 +232,14 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.setMeetingPointsForm();
 
     this.isMemberReview = this.model?.isMemberReviewStep()!;
-    this.isDecisionMakerReview = this.model?.isDecisionMakerReviewStep()!;
+    this.isDecisionMakerRework = this.model?.isDecisionMakerReworkStep()!;
     this.isManagerFinalReview = this.model?.isManagerFinalReviewStep()!;
+    this.isDecisionMakerReview = this.model?.isDecisionMakerReviewStep()!;
 
-    if (this.isMemberReview || this.isDecisionMakerReview) {
+    if (this.isMemberReview || this.isDecisionMakerReview || this.isDecisionMakerRework) {
       let allGeneralMeetingNotesObs = this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, this.model?.id);
       let specificGeneralMeetingNotesObs = this.service.getMeetingGeneralNotes(this.memberId, this.model?.id);
-      if (this.isDecisionMakerReview && this.model?.isSendToMember) {
+      if ((this.isDecisionMakerReview || this.isDecisionMakerRework) && this.model?.isSendToMember) {
         allGeneralMeetingNotesObs.subscribe(notes => {
           this.membersGeneralNotes = notes;
           this.generalNotes = notes;
@@ -261,14 +264,14 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       //   });
     }
 
-    if (this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
+    if (this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep() || this.model?.isManagerFinalReviewStep()) {
       this.loadMembersTaskStatus();
     }
 
   }
 
   setMeetingPointsForm() {
-    if (this.model?.isDecisionMakerReviewStep() && this.model?.isSendToMember && this.model?.isFinal) {
+    if ((this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep()) && this.model?.isSendToMember && this.model?.isFinal) {
       let without: MeetingAttendanceReport;
       this.service.getFinalMeetingPointsForDecisionMaker(this.model?.id)
         .pipe(switchMap(meetingReportWithoutUserComment => {
@@ -292,8 +295,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         });
     }
 
-    if ((this.model?.isDecisionMakerReviewStep() && !this.model?.isSendToMember) ||
-      (this.model?.isDecisionMakerReviewStep() && this.model?.isSendToMember && !this.model?.isFinal)) {
+    if (((this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep()) && !this.model?.isSendToMember) ||
+      ((this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep()) && this.model?.isSendToMember && !this.model?.isFinal)) {
       this.service.getMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
         if (meetingReport && meetingReport.meetingMainItem.length > 0) {
           // update meeting points form
@@ -323,7 +326,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         }
       });
     }
-    if (this.model?.isDecisionMakerReviewStep()) {
+    if (this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep()) {
       this.licenseService
         .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({
           fullSerial: this.oldFullSerialField.value,
@@ -345,12 +348,12 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
           this.oldSelectedInternalUsers = license?.internalMembersDTO;
 
           this.service.getMemberTaskStatus(license?.id).subscribe(membersStatus => {
-            this.meetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
+            this.oldMeetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
             this.oldSelectedInternalUsers = this.oldSelectedInternalUsers.map(user => {
-              user.pId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
-              user.name = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
-              user.tkiid = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
-              user.userId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
+              user.pId = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
+              user.name = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
+              user.tkiid = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
+              user.userId = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
               return user;
             });
           });
@@ -946,7 +949,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       id: [subItem.id],
       enName: [subItem.enName, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]],
       comment: [subItem.comment, this.isMemberReview || (this.isDecisionMakerReview && this.model?.isSendToMember) ? [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)] : []],
-      respectTerms: [(this.isDecisionMakerReview && this.model?.isSendToMember && !CommonUtils.isValidValue(subItem?.comment)) ? this.autoCheckRespectTerms(subItem.userComments!) : subItem.respectTerms, []],
+      respectTerms: [((this.isDecisionMakerReview || this.isDecisionMakerRework) && this.model?.isSendToMember && !CommonUtils.isValidValue(subItem?.comment)) ? this.autoCheckRespectTerms(subItem.userComments!) : subItem.respectTerms, []],
       mainItemID: [subItem.mainItemID],
       memberID: [subItem.memberID],
       addedByDecisionMaker: [subItem.addedByDecisionMaker],
