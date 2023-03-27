@@ -25,8 +25,8 @@ import { FormBuilder } from '@angular/forms';
 })
 export class InternalUserComponent extends AdminGenericComponent<InternalUser, InternalUserService> {
   usePagination = true;
-  displayedColumns: string[] = ['rowSelection', 'username', 'arName', 'enName', 'defaultDepartment', 'status', 'actions'];
-  searchColumns: string[] = ['_','search_username', 'search_arName', 'search_enName','search_defaultDepartment', 'search_status', 'search_actions'];
+  displayedColumns: string[] = ['rowSelection', 'username', 'arName', 'enName', 'defaultDepartment', 'qid', 'status', 'actions'];
+  searchColumns: string[] = ['_','search_username', 'search_arName', 'search_enName','search_defaultDepartment','search_qid', 'search_status', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_username: {
       key: 'username',
@@ -59,6 +59,13 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
         labelProperty: 'getName',
         optionValueKey: 'lookupKey'
       }
+    },
+    search_qid:{
+      key: 'qid',
+      controlType: 'text',
+      property: 'qid',
+      label: 'lbl_qid',
+      mask:CustomValidators.inputMaskPatterns.NUMBER_ONLY
     }
   }
   commonStatusEnum = CommonStatusEnum;
@@ -188,7 +195,7 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
   }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      domainName: [''], arName: [''], enName: [''], status: [null] 
+      domainName: [''], arName: [''], enName: [''], qid:[null], status: [null] 
     })
   }
 }
