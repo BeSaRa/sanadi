@@ -58,13 +58,15 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   }
 
   logsAll: ActionRegistry[] = [];
-  logsViewed: ActionRegistry[] = [];
-  logsUpdated: ActionRegistry[] = [];
+  // logsViewed: ActionRegistry[] = [];
+  // logsUpdated: ActionRegistry[] = [];
+  logsHistory: ActionRegistry[] = [];
   logsOthers: ActionRegistry[] = [];
 
   displayedColumns: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
-  displayedColumnsViewed: string[] = ['user', 'addedOn', 'time', 'comment'];
-  displayedColumnsUpdated: string[] = ['user', 'addedOn', 'time', 'comment'];
+  // displayedColumnsViewed: string[] = ['user', 'addedOn', 'time', 'action_type' ,'comment'];
+  // displayedColumnsUpdated: string[] = ['user', 'addedOn', 'time', 'comment'];
+  displayedColumnsHistory: string[] = ['user', 'addedOn', 'time', 'action_type' ,'comment'];
   displayedColumnsOthers: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
 
   locations: AssignedTask[] = [];
@@ -107,17 +109,17 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   }
 
   private _categorizeLogsByActionType(logs: any[]) {
-    this.logsViewed = [];
-    this.logsUpdated = [];
+    // this.logsViewed = [];
+    // this.logsUpdated = [];
+    this.logsHistory = [];
     this.logsOthers = [];
     logs.forEach(x => {
-      if (x.actionId === ServiceActionType.Viewed) {
-        this.logsViewed = this.logsViewed.concat(x);
-      } else if (x.actionId === ServiceActionType.Updated) {
-        this.logsUpdated = this.logsUpdated.concat(x);
-      } else {
-        this.logsOthers = this.logsOthers.concat(x);
+      if (x.actionId === ServiceActionType.Viewed || x.actionId === ServiceActionType.Updated ) {
+        this.logsHistory = this.logsHistory.concat(x);
+        return;
       }
+      this.logsOthers = this.logsOthers.concat(x);
+
     });
   }
 }

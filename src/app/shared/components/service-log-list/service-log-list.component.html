@@ -26,6 +26,10 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.comment}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.comment}} </td>
         </ng-container>
+        <ng-container cdkColumnDef="action_type">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.action_type}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.getActionName(row.actionId)}} </td>
+        </ng-container>
         <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
         <!--suppress HtmlUnknownBooleanAttribute -->
