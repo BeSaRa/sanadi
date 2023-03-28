@@ -34,10 +34,24 @@ export class OrganizationOfficerPopupComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  mapFormToOrganizationOfficer(form: any): OrganizationOfficer {
+    const officer: OrganizationOfficer = new OrganizationOfficer();
+    officer.identificationNumber = form.identificationNumber;
+    officer.fullName = form.officerFullName;
+    officer.email = form.email;
+    officer.phone = form.officerPhone;
+    officer.extraPhone = form.officerExtraPhone;
+
+    return officer;
+  }
   cancel() {
     this.dialogRef.close(null)
   }
   saveOfficer() {
-    this.dialogRef.close(true)
+    this.dialogRef.close(
+      this.mapFormToOrganizationOfficer(
+        this.officerForm.getRawValue()
+      ))
   }
 }

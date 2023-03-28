@@ -98,7 +98,7 @@ export class OrganizationOfficersComponent implements OnInit {
         label: this.label
       }
     ).onAfterClose$.subscribe((data) => {
-      if(data) this.saveOfficer()
+      if(data) this.saveOfficer(data)
     })
   }
   listenToAdd() {
@@ -106,20 +106,7 @@ export class OrganizationOfficersComponent implements OnInit {
       this.openFormDialog();
     })
   }
-  mapFormToOrganizationOfficer(form: any): OrganizationOfficer {
-    const officer: OrganizationOfficer = new OrganizationOfficer();
-    officer.identificationNumber = form.identificationNumber;
-    officer.fullName = form.officerFullName;
-    officer.email = form.email;
-    officer.phone = form.officerPhone;
-    officer.extraPhone = form.officerExtraPhone;
-
-    return officer;
-  }
-  saveOfficer() {
-    const officer = this.mapFormToOrganizationOfficer(
-      this.officerForm.getRawValue()
-    );
+  saveOfficer(officer: OrganizationOfficer) {
     officer.organizationId = this.employeeService.getProfile()?.id!;
     if (!this.selectedOfficer) {
       if (
