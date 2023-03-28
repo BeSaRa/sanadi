@@ -809,7 +809,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.categoryGoalPercentGroup.setValidators(null);
       if(this.projectWorkArea.value !== ExecutionFields.InsideQatar){
         this.emptyFieldsAndValidation([
-          'mainUNOCHACategory',
           'subUNOCHACategory',
           'mainDACCategory',
           'subDACCategory',
@@ -821,7 +820,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
           'thirdSDGoalPercentage'
         ]);
       }else{
-        this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
+        this.emptyFieldsAndValidation([ 'subUNOCHACategory']);
       }
 
     }
