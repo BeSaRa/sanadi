@@ -6,7 +6,7 @@ import {ActionRegistry} from '@app/models/action-registry';
 import {concatMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {LangService} from '@app/services/lang.service';
 import {TabComponent} from '../tab/tab.component';
-import {ServiceActionType} from '@app/enums/service-action-type.enum';
+import {ServiceActionTypesEnum} from '@app/enums/service-action-type.enum';
 import {CaseTypes} from '@app/enums/case-types.enum';
 
 @Component({
@@ -64,10 +64,10 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   logsOthers: ActionRegistry[] = [];
 
   displayedColumns: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
-  // displayedColumnsViewed: string[] = ['user', 'addedOn', 'time', 'action_type' ,'comment'];
+  // displayedColumnsViewed: string[] = ['user', 'addedOn', 'time','comment'];
   // displayedColumnsUpdated: string[] = ['user', 'addedOn', 'time', 'comment'];
-  displayedColumnsHistory: string[] = ['user', 'addedOn', 'time', 'action_type' ,'comment'];
-  displayedColumnsOthers: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
+  displayedColumnsHistory: string[] = ['user','action', 'addedOn', 'time','comment'];
+  displayedColumnsOthers: string[] = ['user', 'action', 'toUser', 'addedOn', 'time' ,'comment'];
 
   locations: AssignedTask[] = [];
   displayPrintBtn: boolean = true;
@@ -90,7 +90,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         tap(logs => {
           if (this.hideViewedAction) {
-            logs = logs.filter(x => x.actionId !== ServiceActionType.Viewed);
+            logs = logs.filter(x => x.actionId !== ServiceActionTypesEnum.VIEWED);
           }
           if (this.categorizeLogs) {
             this._categorizeLogsByActionType(logs);
@@ -114,7 +114,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
     this.logsHistory = [];
     this.logsOthers = [];
     logs.forEach(x => {
-      if (x.actionId === ServiceActionType.Viewed || x.actionId === ServiceActionType.Updated ) {
+      if (x.actionId === ServiceActionTypesEnum.VIEWED || x.actionId === ServiceActionTypesEnum.UPDATED ) {
         this.logsHistory = this.logsHistory.concat(x);
         return;
       }

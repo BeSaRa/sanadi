@@ -4,7 +4,7 @@ import { ActionRegistryInterceptor } from "@app/model-interceptors/action-regist
 import { LangService } from '@app/services/lang.service';
 import { FactoryService } from '@app/services/factory.service';
 import { INames } from '@app/interfaces/i-names';
-import { ServiceActionType } from '@app/enums/service-action-type.enum';
+import { ServiceActionTypesEnum } from '@app/enums/service-action-type.enum';
 
 const { send, receive } = new ActionRegistryInterceptor()
 
@@ -36,14 +36,15 @@ export class ActionRegistry {
   constructor() {
     this.langService = FactoryService.getService('LangService');
   }
-  getActionName(actionId: number): string {
-    if(actionId === ServiceActionType.Viewed){
-      return this.langService.map.action_viewed
+
+  getOrganizationName(){
+    if(this.actionId === ServiceActionTypesEnum.REVIEW_BY_DEPARTMENT){
+      return this.ouToInfo.getName()
     }
-    if(actionId === ServiceActionType.Updated){
-      return this.langService.map.action_updated
+    if(this.actionId === ServiceActionTypesEnum.TERMINATE_DEPARTMENT_REVIEW){
+      return this.ouFromInfo.getName()
     }
-    return this.langService.map.action_others
+    return ''
   }
 }
 
