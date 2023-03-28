@@ -6,7 +6,6 @@ import {ActionRegistry} from '@app/models/action-registry';
 import {concatMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {LangService} from '@app/services/lang.service';
 import {TabComponent} from '../tab/tab.component';
-import {ServiceActionTypesEnum} from '@app/enums/service-action-type.enum';
 import {CaseTypes} from '@app/enums/case-types.enum';
 
 @Component({
@@ -58,16 +57,12 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   }
 
   logsAll: ActionRegistry[] = [];
-  // logsViewed: ActionRegistry[] = [];
-  // logsUpdated: ActionRegistry[] = [];
   logsHistory: ActionRegistry[] = [];
   logsOthers: ActionRegistry[] = [];
 
   displayedColumns: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
-  // displayedColumnsViewed: string[] = ['user', 'addedOn', 'time','comment'];
-  // displayedColumnsUpdated: string[] = ['user', 'addedOn', 'time', 'comment'];
-  displayedColumnsHistory: string[] = ['user','action', 'addedOn', 'time','comment'];
-  displayedColumnsOthers: string[] = ['user', 'action', 'toUser', 'addedOn', 'time' ,'comment'];
+  displayedColumnsHistory: string[] = ['user', 'action', 'addedOn', 'time', 'comment'];
+  displayedColumnsOthers: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
 
   locations: AssignedTask[] = [];
   displayPrintBtn: boolean = true;
@@ -88,15 +83,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
       .pipe(switchMap(id => this.service.load(id)))
       .pipe(
         takeUntil(this.destroy$),
-        tap(logs => {
-          if (this.hideViewedAction) {
-            logs = logs.filter(x => x.actionId !== ServiceActionTypesEnum.VIEWED);
-          }
-          if (this.categorizeLogs) {
-            this._categorizeLogsByActionType(logs);
-          }
-          this.logsAll = logs;
-        }),
+        tap(logs => this._categorizeLogsByActionType(logs)),
         concatMap(() => iif(() => this.hideItemLocation, of([]), this.service.loadCaseLocation(this.caseId!)))
       )
       .subscribe(locations => this.locations = locations);
@@ -108,18 +95,25 @@ export class LogViewerComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  private _categorizeLogsByActionType(logs: any[]) {
-    // this.logsViewed = [];
-    // this.logsUpdated = [];
+  private _categorizeLogsByActionType(logs: ActionRegistry[]) {
+    this.logsAll = [];
     this.logsHistory = [];
     this.logsOthers = [];
-    logs.forEach(x => {
-      if (x.actionId === ServiceActionTypesEnum.VIEWED || x.actionId === ServiceActionTypesEnum.UPDATED ) {
-        this.logsHistory = this.logsHistory.concat(x);
-        return;
-      }
-      this.logsOthers = this.logsOthers.concat(x);
 
-    });
+    if (!this.categorizeLogs) {
+      this.logsAll = !this.hideViewedAction ? logs : logs.filter(log => !log.isViewedAction());
+    } else {
+      logs.forEach((log) => {
+        if (log.isUpdatedAction()) {
+          this.logsHistory = this.logsHistory.concat(log);
+        } else if (log.isViewedAction()) {
+          if (!this.hideViewedAction) {
+            this.logsHistory = this.logsHistory.concat(log);
+          }
+        } else {
+          this.logsOthers = this.logsOthers.concat(log);
+        }
+      });
+    }
   }
 }
