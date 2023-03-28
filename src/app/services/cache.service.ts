@@ -22,8 +22,9 @@ export class CacheService {
     }));
   }
 
-  refreshCache(): void {
+  refreshCache(reloadAfterSuccess: boolean = false): void {
     const refreshSub = this._refreshCache().subscribe(() => {
+      reloadAfterSuccess && window.location.reload();
       refreshSub.unsubscribe();
     });
   }
