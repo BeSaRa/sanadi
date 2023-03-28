@@ -11,6 +11,11 @@
             </span>
       </td>
     </ng-container>
+    <ng-container cdkColumnDef="stepSubject">
+      <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.action}}</th>
+      <td cdk-cell *cdkCellDef="let row"> {{row.getActionName()}} </td>
+    </ng-container>
+
     <ng-container cdkColumnDef="actions">
       <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
       <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">

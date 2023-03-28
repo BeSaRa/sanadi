@@ -17,26 +17,31 @@
   </div>
 </ng-template>
 <ng-template #allLogsTemplate>
+  <heading-row [labelKey]="'item_location'"></heading-row>
+  <ng-container *ngIf="!hideItemLocation" [ngTemplateOutlet]="itemLocationTemplate"></ng-container>
   <service-log-list [logsList]="logsAll" [displayedColumns]="displayedColumns"></service-log-list>
 </ng-template>
 <ng-template #otherLogsTemplate>
+  <heading-row [labelKey]="'item_location'"></heading-row>
+  <ng-container [ngTemplateOutlet]="itemLocationTemplate"></ng-container>
   <service-log-list [logsList]="logsOthers" [displayedColumns]="displayedColumnsOthers"></service-log-list>
 </ng-template>
 <ng-template #viewedLogsTemplate>
-  <service-log-list [logsList]="logsViewed" [displayedColumns]="displayedColumnsViewed"></service-log-list>
+  <service-log-list [logsList]="logsHistory" [displayedColumns]="displayedColumnsHistory"></service-log-list>
 </ng-template>
-<ng-template #updatedLogsTemplate>
+<!-- <ng-template #updatedLogsTemplate>
   <service-log-list [logsList]="logsUpdated" [displayedColumns]="displayedColumnsUpdated"></service-log-list>
-</ng-template>
+</ng-template> -->
 <ng-template #onePageCategorizedTemplate>
   <heading-row [labelKey]="'action_others'"></heading-row>
   <ng-container [ngTemplateOutlet]="otherLogsTemplate"></ng-container>
   <ng-container *ngIf="!hideViewedAction">
-    <heading-row [labelKey]="'action_viewed'"></heading-row>
+    <heading-row [labelKey]="'logs_history'"></heading-row>
     <ng-container [ngTemplateOutlet]="viewedLogsTemplate"></ng-container>
   </ng-container>
-  <heading-row [labelKey]="'action_updated'"></heading-row>
-  <ng-container [ngTemplateOutlet]="updatedLogsTemplate"></ng-container>
+
+  <!-- <heading-row [labelKey]="'action_updated'"></heading-row>
+  <ng-container [ngTemplateOutlet]="updatedLogsTemplate"></ng-container> -->
 </ng-template>
 
 <ng-container>
@@ -52,7 +57,7 @@
                 class="btn icon-btn position-absolute top-0 end-0">
           <i class="mdi mdi-reload text-primary"></i></button>
         <tab name="logs" [template]="allLogsTemplate" [title]="lang.map.logs"></tab>
-        <tab name="itemLocation" [template]="itemLocationTemplate" [title]="lang.map.item_location"></tab>
+        <!-- <tab name="itemLocation" [template]="itemLocationTemplate" [title]="lang.map.item_location"></tab> -->
       </tabs-list>
     </ng-container>
   </div>
@@ -71,7 +76,7 @@
                   class="btn icon-btn position-absolute top-0 end-0">
             <i class="mdi mdi-reload text-primary"></i></button>
           <tab name="logs" [template]="onePageCategorizedTemplate" [title]="lang.map.logs"></tab>
-          <tab name="itemLocation" [template]="itemLocationTemplate" [title]="lang.map.item_location"></tab>
+          <!-- <tab name="itemLocation" [template]="itemLocationTemplate" [title]="lang.map.item_location"></tab> -->
         </tabs-list>
       </ng-container>
     </div>
@@ -81,12 +86,12 @@
         <button [tooltip]="lang.map.btn_reload" (click)="reload$.next()"
                 class="btn icon-btn position-absolute top-0 end-0">
           <i class="mdi mdi-reload text-primary"></i></button>
-        <tab name="other_actions" [template]="otherLogsTemplate" [title]="lang.map.logs_history"></tab>
-        <tab name="view_actions" [template]="viewedLogsTemplate" [title]="lang.map.action_viewed"
+        <tab name="other_actions" [template]="otherLogsTemplate" [title]="lang.map.action_others"></tab>
+        <tab name="view_actions" [template]="viewedLogsTemplate" [title]="lang.map.logs_history"
              *ngIf="!hideViewedAction"></tab>
-        <tab name="update_actions" [template]="updatedLogsTemplate" [title]="lang.map.action_updated"></tab>
-        <tab name="itemLocation" *ngIf="!hideItemLocation" [template]="itemLocationTemplate"
-             [title]="lang.map.item_location"></tab>
+        <!-- <tab name="update_actions" [template]="updatedLogsTemplate" [title]="lang.map.action_updated"></tab> -->
+        <!-- <tab name="itemLocation" *ngIf="!hideItemLocation" [template]="itemLocationTemplate"
+             [title]="lang.map.item_location"></tab> -->
       </tabs-list>
     </div>
   </div>
