@@ -445,8 +445,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
-  _prepareModel(): ProjectModel | Observable<ProjectModel> {
-    return new ProjectModel().clone({
+  _prepareModel(): any | Observable<any> {
+    let model:any = new ProjectModel().clone({
       ...this.model,
       ...this.basicInfoTab.getRawValue(),
       ...this.categoryInfoTab.getRawValue(),
@@ -459,6 +459,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       projectAddressList: this.projectAddresses,
       description: this.descriptionTab.value
     });
+    if(model.getCaseStatus() === CommonCaseStatus.DRAFT){
+      delete model.serial
+    }
+    return model;
   }
 
   private _updateModelAfterSave(model: ProjectModel): void {
@@ -809,6 +813,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.categoryGoalPercentGroup.setValidators(null);
       if(this.projectWorkArea.value !== ExecutionFields.InsideQatar){
         this.emptyFieldsAndValidation([
+          'mainUNOCHACategory',
           'subUNOCHACategory',
           'mainDACCategory',
           'subDACCategory',
@@ -820,7 +825,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
           'thirdSDGoalPercentage'
         ]);
       }else{
-        this.emptyFieldsAndValidation([ 'subUNOCHACategory']);
+        this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
       }
 
     }
@@ -829,10 +834,12 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   listenToExecutionFieldChange() {
     this.projectWorkArea.valueChanges.subscribe(val => {
+      this.domain.setValidators([]);
       if (val === ExecutionFields.OutsideQatar) {
         this.showProjectAddressesTab = this.isConstructional.value;
         this.removeQatarFromCountries();
         this.isOutsideQatarWorkArea = true;
+        this.domain.setValidators([CustomValidators.required]);
         this.emptyFieldsAndValidation(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
       } else if (this.projectWorkArea.value === ExecutionFields.InsideQatar) {
         this.hideProjectAddressesTabAndClearProjectAddressesList();
@@ -843,6 +850,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         this.countriesAvailableForSelection = this.countries;
         this.applyNotOutsideQatarChanges();
       }
+      this.domain.updateValueAndValidity();
+
     });
   }
 
