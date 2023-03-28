@@ -17,10 +17,12 @@
   </div>
 </ng-template>
 <ng-template #allLogsTemplate>
+  <heading-row [labelKey]="'item_location'"></heading-row>
   <ng-container *ngIf="!hideItemLocation" [ngTemplateOutlet]="itemLocationTemplate"></ng-container>
   <service-log-list [logsList]="logsAll" [displayedColumns]="displayedColumns"></service-log-list>
 </ng-template>
 <ng-template #otherLogsTemplate>
+  <heading-row [labelKey]="'item_location'"></heading-row>
   <ng-container [ngTemplateOutlet]="itemLocationTemplate"></ng-container>
   <service-log-list [logsList]="logsOthers" [displayedColumns]="displayedColumnsOthers"></service-log-list>
 </ng-template>
