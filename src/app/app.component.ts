@@ -1,10 +1,10 @@
-import { Component, HostListener } from '@angular/core';
-import { LangService } from '@services/lang.service';
-import { LoadingService } from '@services/loading.service';
-import { CacheService } from '@services/cache.service';
-import { NavigationService } from '@services/navigation.service';
-import { take } from "rxjs/operators";
-import { EmployeeService } from "@app/services/employee.service";
+import {Component, HostListener} from '@angular/core';
+import {LangService} from '@services/lang.service';
+import {LoadingService} from '@services/loading.service';
+import {CacheService} from '@services/cache.service';
+import {NavigationService} from '@services/navigation.service';
+import {take} from "rxjs/operators";
+import {EmployeeService} from "@app/services/employee.service";
 
 @Component({
   selector: 'app-root',
@@ -21,7 +21,7 @@ export class AppComponent {
     this.setHeadTitle()
   }
 
-  setHeadTitle(){
+  setHeadTitle() {
     this.langService.changeTitle()
   }
 
@@ -36,11 +36,12 @@ export class AppComponent {
   @HostListener('window:keydown.control.alt.a')
   addLocalization() {
     this.employeeService.loggedIn() && this.langService
-      .openCreateDialog()
-      .onAfterClose$
+      .addDialog().onAfterClose$
       .pipe(take(1))
-      .subscribe(_ => {
-        this.langService.load(true);
+      .subscribe((result) => {
+        if (!!result) {
+          this.langService.load(true).subscribe();
+        }
       })
   }
 
