@@ -152,12 +152,6 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       langKey: 'attachments',
       index: 7,
       validStatus: () => true
-    },
-    logs: {
-      name: 'logs',
-      langKey: 'logs',
-      index: 8,
-      validStatus: () => true
     }
   };
   tabIndex$: Subject<number> = new Subject<number>();

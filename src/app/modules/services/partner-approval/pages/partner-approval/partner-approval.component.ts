@@ -215,12 +215,7 @@ export class PartnerApprovalComponent
       name: 'attachments',
       langKey: 'attachments',
       validStatus: () => true,
-    },
-    logs: {
-      name: 'logs',
-      langKey: 'logs',
-      validStatus: () => true,
-    },
+    }
   };
 
   datepickerOptionsMap: DatepickerOptionsMap = {

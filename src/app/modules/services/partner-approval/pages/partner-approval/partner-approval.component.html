@@ -22,8 +22,6 @@
            [title]="lang.map.comments" *ngIf="employeeService.isInternalUser()">{{lang.map.comments}}</tab>
       <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name" [template]="attachmentsTemplate"
            [hasError]="getTabInvalidStatus('attachments')" [title]="lang.map.attachments">{{lang.map.attachments}}</tab>
-      <tab [name]="tabsData.logs.name" [hasError]="getTabInvalidStatus('logs')" [template]="logsTemplate"
-           [title]="lang.map.logs" *ngIf="fromDialog" [disabled]="!model?.id"></tab>
     </tabs-list>
     <!-- basic -->
     <ng-template formGroupName="basic" #basicTemplate>
@@ -388,11 +386,6 @@
       <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
                    [service]="service.documentService" [load]="loadAttachments" [model]="model"
                    [formProperties]="formProperties"></attachments>
-    </ng-template>
-    <ng-template #logsTemplate>
-      <!--<request-recommendations [record]="model"></request-recommendations>-->
-      <log-viewer [caseId]="model!.getCaseId()" [service]="service.actionLogService" [hideItemLocation]="true"
-                  [hideViewedAction]="true"></log-viewer>
     </ng-template>
   </form>
 </div>
