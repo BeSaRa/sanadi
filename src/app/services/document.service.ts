@@ -1,13 +1,14 @@
-import { HttpClient, HttpEventType, HttpParams } from '@angular/common/http';
-import { FileNetDocument } from '../models/file-net-document';
-import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { BlobModel } from '../models/blob-model';
-import { DialogRef } from '../shared/models/dialog-ref';
-import { DialogService } from './dialog.service';
-import { ViewDocumentPopupComponent } from '../shared/popups/view-document-popup/view-document-popup.component';
-import { DomSanitizer } from '@angular/platform-browser';
-import { CastResponse } from "@decorators/cast-response";
+import {HttpClient, HttpEventType, HttpParams} from '@angular/common/http';
+import {FileNetDocument} from '@models/file-net-document';
+import {Observable} from 'rxjs';
+import {filter, map} from 'rxjs/operators';
+import {BlobModel} from '@models/blob-model';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {DialogService} from './dialog.service';
+import {ViewDocumentPopupComponent} from '../shared/popups/view-document-popup/view-document-popup.component';
+import {DomSanitizer} from '@angular/platform-browser';
+import {CastResponse} from "@decorators/cast-response";
+import {OperationTypes} from '@enums/operation-types.enum';
 
 export class DocumentService {
   constructor(private service: {
@@ -23,16 +24,14 @@ export class DocumentService {
     fallback: '$default',
     unwrap: 'rs'
   })
-  addSingleDocument(caseId: string,
-                    document: FileNetDocument,
-                    progressCallback?: (percentage: number) => void): Observable<FileNetDocument> {
-
+  private _saveDocument(saveType: OperationTypes, caseId: string, document: FileNetDocument, progressCallback?: (percentage: number) => void): Observable<FileNetDocument> {
     const clonedDocument = document.clone() as Partial<FileNetDocument>;
     const content = clonedDocument.files?.item(0);
     const formData = new FormData();
     delete clonedDocument.files;
     delete clonedDocument.dialog;
     delete clonedDocument.searchFields;
+    delete clonedDocument.employeeService;
     delete clonedDocument.attachmentTypeInfo;
     delete clonedDocument.createdOn;
     delete clonedDocument.creatorInfo;
@@ -47,8 +46,12 @@ export class DocumentService {
       delete clonedDocument.description;
     }
     content ? formData.append('content', content) : null;
-    return this.service.http.post<FileNetDocument>(this.service._getURLSegment() + '/' + caseId + '/document', formData, {
-      params: new HttpParams({ fromObject: clonedDocument as any }),
+    let requestUrl = this.service._getURLSegment() + '/' + caseId + '/document';
+    if (saveType === OperationTypes.UPDATE) {
+      requestUrl = this.service._getURLSegment() + '/' + caseId + '/update-document';
+    }
+    return this.service.http.post<FileNetDocument>(requestUrl, formData, {
+      params: new HttpParams({fromObject: clonedDocument as any}),
       reportProgress: true,
       observe: 'events'
     }).pipe(
@@ -62,6 +65,19 @@ export class DocumentService {
         return document.clone(response.body.rs) as FileNetDocument;
       })
     );
+  }
+
+  addSingleDocument(caseId: string,
+                    document: FileNetDocument,
+                    progressCallback?: (percentage: number) => void): Observable<FileNetDocument> {
+
+    return this._saveDocument(OperationTypes.CREATE, caseId, document, progressCallback);
+  }
+
+  updateSingleDocument(caseId: string,
+                       document: FileNetDocument,
+                       progressCallback?: (percentage: number) => void): Observable<FileNetDocument> {
+    return this._saveDocument(OperationTypes.UPDATE, caseId, document, progressCallback);
   }
 
   addBulkDocuments(caseId: string,
@@ -78,9 +94,11 @@ export class DocumentService {
     delete clonedDocument.dialog;
     delete clonedDocument.required;
     delete clonedDocument.langService;
+    delete clonedDocument.employeeService;
+    delete clonedDocument.searchFields;
     clonedDocument.attachmentTypeId = 1;
     return this.service.http.post(this.service._getURLSegment() + '/' + caseId + '/document/bulk', formData, {
-      params: new HttpParams({ fromObject: clonedDocument as any }),
+      params: new HttpParams({fromObject: clonedDocument as any}),
       reportProgress: true,
       observe: 'events'
     }).pipe(

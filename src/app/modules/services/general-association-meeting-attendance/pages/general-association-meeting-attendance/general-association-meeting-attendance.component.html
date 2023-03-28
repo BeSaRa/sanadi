@@ -21,9 +21,9 @@
     <!--         name="manage_members_tasks">-->
     <!--    </tab>-->
     <tab [template]="meeting_points" [title]="lang.map.meeting_points"
-      *ngIf="!isExternalUser && (isDecisionMakerReview || isMemberReview)" name="meeting_points">
+      *ngIf="!isExternalUser && (isDecisionMakerReview || isDecisionMakerRework || isMemberReview)" name="meeting_points">
     </tab>
-    <tab [template]="general_notes" [title]="lang.map.general_notes" *ngIf="isDecisionMakerReview || isMemberReview"
+    <tab [template]="general_notes" [title]="lang.map.general_notes" *ngIf="isDecisionMakerReview || isDecisionMakerRework || isMemberReview"
       name="general_notes">
     </tab>
     <tab [hasError]="specialExplanation.invalid" [template]="special_explanations"
@@ -275,7 +275,7 @@
           [selectedInternalUsers]="selectedInternalUsers" [caseStepName]="model?.taskDetails?.name!"
           [isExternalUser]="isExternalUser" [isCancel]="isCancel" [isClaimed]="model?.taskDetails?.isClaimed()!"
           [model]="model!" [meetingReport]="meetingReport" [generalNotes]="membersGeneralNotes"></manage-internal-users>
-        <div *ngIf="model?.isDecisionMakerReviewStep() && this.isUpdateRequest() && model?.isSendToMember">
+        <div *ngIf="(isDecisionMakerReview || isDecisionMakerRework) && this.isUpdateRequest() && model?.isSendToMember">
           <hr>
           <h5 class="text-primary">{{lang.map.previews_replays}}</h5>
           <manage-prev-internal-users [selectedInternalUsers]="oldSelectedInternalUsers" [model]="oldModel!"
@@ -397,7 +397,7 @@
                                   <app-field-error-message controlName="enName"></app-field-error-message>
                                 </div>
                                 <ng-container
-                                  *ngIf="isMemberReview || (isDecisionMakerReview && model?.isSendToMember)">
+                                  *ngIf="isMemberReview || ((isDecisionMakerReview || isDecisionMakerRework) && model?.isSendToMember)">
                                   <div class="col-md-3 col-sm-12 position-relative">
                                     <label asteriskIfRequired="comment" class="form-label"
                                       [for]="'comment' + i + j">{{lang.map.notes}}</label>
@@ -415,7 +415,7 @@
                                   </div>
                                 </ng-container>
                                 <div class="col-md-3 form-check form-switch" style="margin-top: 40px;"
-                                  *ngIf="isDecisionMakerReview && model?.isSentToMember()">
+                                  *ngIf="(isDecisionMakerReview || isDecisionMakerRework) && model?.isSentToMember()">
                                   <div class="ms-3">
                                     <input class="form-check-input" type="checkbox" [id]="'select' + i + j"
                                       formControlName="selected">
@@ -430,7 +430,7 @@
                                 <i class="mdi mdi-close-circle"></i>
                               </button>
                               <button class="btn btn-link outline-none" (click)="viewMeetingPointMembersComments(i, j)"
-                                *ngIf="(isDecisionMakerReview && model?.isSentToMember()) || isManagerFinalReview"
+                                *ngIf="((isDecisionMakerReview || isDecisionMakerRework) && model?.isSentToMember()) || isManagerFinalReview"
                                 [ngClass]="getViewSubItemClass()" tooltip="{{lang.map.view_members_comments}}">
                                 <i class="mdi mdi-eye"></i>
                               </button>
@@ -451,13 +451,13 @@
                 <button *ngIf="this.model?.canEditMeetingPoints()"
                   [disabled]="!meetingPointsForm?.valid || (mainItems && mainItems.length === 0)"
                   (click)="saveMeetingPoints()" class="btn btn-primary">{{lang.map.save_meeting_points}}</button>
-                <button *ngIf="isDecisionMakerReview && model?.isSendToMember" [disabled]="!meetingPointsForm?.valid"
+                <button *ngIf="(isDecisionMakerReview || isDecisionMakerRework) && model?.isSendToMember" [disabled]="!meetingPointsForm?.valid"
                   (click)="saveFinalMeetingPoints()" class="btn btn-primary">{{lang.map.save_final_comments}}</button>
-                <button *ngIf="this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep()"
+                <button *ngIf="this.model?.isSentToMember() && (this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep())"
                   (click)="generateFinalReport()" class="btn btn-primary">{{lang.map.import_report_summary}}</button>
                 <input class="input-file" type="file" #finalReportUploader [hidden]="true"
                   (change)="onReportSelected($event)" [accept]="finalReportExtensions.join(',')">
-                <button *ngIf="this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep()"
+                <button *ngIf="this.model?.isSentToMember() && (this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep())"
                   class="btn btn-primary" (click)="openFileBrowser($event)">
                   {{lang.map.upload_final_report}}
                 </button>
@@ -478,7 +478,7 @@
     </ng-container>
     <ng-container>
       <ng-template #general_notes [formGroup]="generalNotesForm">
-        <ng-container *ngIf="isMemberReview || (isDecisionMakerReview && model?.isSendToMember)">
+        <ng-container *ngIf="isMemberReview || ((isDecisionMakerReview || isDecisionMakerRework) && model?.isSendToMember)">
           <div class="row">
             <div class="col">
               <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_to_general_notes}}</h1>
@@ -525,12 +525,12 @@
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
                       <button (click)="removeGeneralNote($event, row)"
-                        [disabled]="((readonly && !(isMemberReview || (isDecisionMakerReview && model?.isSendToMember))) || addGeneralNotesFormActive)"
+                        [disabled]="((readonly && !(isMemberReview || ((isDecisionMakerReview || isDecisionMakerRework) && model?.isSendToMember))) || addGeneralNotesFormActive)"
                         class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
                       </button>
                       <button (click)="selectGeneralNote($event, row)"
-                        [disabled]="((readonly && !(isMemberReview || (isDecisionMakerReview && model?.isSendToMember))) || addGeneralNotesFormActive)"
+                        [disabled]="((readonly && !(isMemberReview || ((isDecisionMakerReview || isDecisionMakerRework) && model?.isSendToMember))) || addGeneralNotesFormActive)"
                         class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                         <i class="mdi mdi-pen"></i>
                       </button>
@@ -553,7 +553,7 @@
               class="btn btn-primary">{{lang.map.save_general_notes}}</button>
           </div>
         </div>
-        <div class="row" *ngIf="isDecisionMakerReview && model?.isSendToMember">
+        <div class="row" *ngIf="(isDecisionMakerReview || isDecisionMakerRework) && model?.isSendToMember">
           <div class="col-12 text-center action-container mb-3">
             <button [disabled]="generalNotes.length === 0" (click)="saveFinalGeneralNotes()"
               class="btn btn-primary">{{lang.map.save_final_general_notes}}</button>
