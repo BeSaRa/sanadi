@@ -1,3 +1,4 @@
+import { RequestTypeFollowupService } from '@services/request-type-followup.service';
 import {WorkAreasComponent} from '../../../shared-services/components/work-areas/work-areas.component';
 import {NgSelectComponent} from '@ng-select/ng-select';
 import {CommercialActivityComponent} from '../../shared/commercial-activity/commercial-activity.component';
@@ -40,6 +41,7 @@ import {UserClickOn} from '@enums/user-click-on.enum';
 import {ICoordinates} from '@contracts/ICoordinates';
 import {GoalsListComponent} from '../../shared/goals-list/goals-list.component';
 import {Profile} from '@models/profile';
+import { CaseTypes } from '@app/enums/case-types.enum';
 
 @Component({
   selector: 'partner-approval',
@@ -54,7 +56,7 @@ export class PartnerApprovalComponent
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   countries: Country[] = [];
   requestTypes: Lookup[] =
-    this.lookupService.listByCategory.ServiceRequestType.slice().sort(
+  this.requestTypeFollowupService.serviceRequestTypes[CaseTypes.PARTNER_APPROVAL].slice().sort(
       (a, b) => a.lookupKey - b.lookupKey
     );
   headQuarterTypes: Lookup[] =
@@ -239,7 +241,8 @@ export class PartnerApprovalComponent
               private toast: ToastService,
               private licenseService: LicenseService,
               private cd: ChangeDetectorRef,
-              public employeeService: EmployeeService) {
+              public employeeService: EmployeeService,
+              private requestTypeFollowupService:RequestTypeFollowupService) {
     super();
   }
 

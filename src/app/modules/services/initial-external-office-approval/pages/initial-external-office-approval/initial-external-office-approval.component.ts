@@ -1,3 +1,4 @@
+import { RequestTypeFollowupService } from '@services/request-type-followup.service';
 import {Component} from '@angular/core';
 import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
@@ -28,6 +29,7 @@ import {CommonCaseStatus} from '@enums/common-case-status.enum';
 import {UserClickOn} from '@enums/user-click-on.enum';
 import {Profile} from '@models/profile';
 import {ProfileService} from '@services/profile.service';
+import { CaseTypes } from '@app/enums/case-types.enum';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -37,7 +39,7 @@ import {ProfileService} from '@services/profile.service';
 export class InitialExternalOfficeApprovalComponent extends EServicesGenericComponent<InitialExternalOfficeApproval, InitialExternalOfficeApprovalService> {
 
   form!: UntypedFormGroup;
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypes: Lookup[] = this.requestTypeFollowupService.serviceRequestTypes[CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL].slice().sort((a, b) => a.lookupKey - b.lookupKey);
   countries: Country[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: InitialExternalOfficeApproval;
@@ -76,7 +78,8 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
               private dialog: DialogService,
               public employeeService: EmployeeService,
               private toast: ToastService,
-              public service: InitialExternalOfficeApprovalService) {
+              public service: InitialExternalOfficeApprovalService,
+              private requestTypeFollowupService:RequestTypeFollowupService) {
     super();
 
   }
