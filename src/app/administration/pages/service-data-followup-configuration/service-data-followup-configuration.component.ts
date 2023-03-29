@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
-import {FollowupConfiguration} from '@app/models/followup-configuration';
+import {ServiceDataFollowupConfiguration} from '@models/service-data-followup-configuration';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {FollowupConfigurationService} from '@app/services/followup-configuration.service';
+import {ServiceDataFollowupConfigurationService} from '@services/service-data-followup-configuration.service';
 import {LangService} from '@app/services/lang.service';
 import {ServiceData} from '@app/models/service-data';
 import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
@@ -17,14 +17,14 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
-  selector: 'followup-configuration',
-  templateUrl: './followup-configuration.component.html',
-  styleUrls: ['./followup-configuration.component.scss']
+  selector: 'service-data-followup-configuration',
+  templateUrl: './service-data-followup-configuration.component.html',
+  styleUrls: ['./service-data-followup-configuration.component.scss']
 })
-export class FollowupConfigurationComponent extends AdminGenericComponent<FollowupConfiguration, FollowupConfigurationService> {
+export class ServiceDataFollowupConfigurationComponent extends AdminGenericComponent<ServiceDataFollowupConfiguration, ServiceDataFollowupConfigurationService> {
 
   constructor(public lang: LangService,
-              public service: FollowupConfigurationService,
+              public service: ServiceDataFollowupConfigurationService,
               private dialog: DialogService,
               private toast: ToastService) {
     super();
@@ -37,40 +37,40 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
   @Input() readonly: boolean = false;
 
   sortingCallbacks = {
-    name: (a: FollowupConfiguration, b: FollowupConfiguration, dir: SortEvent): number => {
+    name: (a: ServiceDataFollowupConfiguration, b: ServiceDataFollowupConfiguration, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    followupType: (a: FollowupConfiguration, b: FollowupConfiguration, dir: SortEvent): number => {
+    followupType: (a: ServiceDataFollowupConfiguration, b: ServiceDataFollowupConfiguration, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.followUpTypeInfo.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.followUpTypeInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    requestType: (a: FollowupConfiguration, b: FollowupConfiguration, dir: SortEvent): number => {
+    requestType: (a: ServiceDataFollowupConfiguration, b: ServiceDataFollowupConfiguration, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.requestTypeInfo.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.requestTypeInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    responsibleTeam: (a: FollowupConfiguration, b: FollowupConfiguration, dir: SortEvent): number => {
+    responsibleTeam: (a: ServiceDataFollowupConfiguration, b: ServiceDataFollowupConfiguration, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.responsibleTeamInfo.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.responsibleTeamInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    concernedTeam: (a: FollowupConfiguration, b: FollowupConfiguration, dir: SortEvent): number => {
+    concernedTeam: (a: ServiceDataFollowupConfiguration, b: ServiceDataFollowupConfiguration, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.concernedTeamInfo.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.concernedTeamInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
   };
-  actions: IMenuItem<FollowupConfiguration>[] = [
+  actions: IMenuItem<ServiceDataFollowupConfiguration>[] = [
     // edit
     {
       type: 'action',
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
       show: () => !this.readonly,
-      onClick: (item: FollowupConfiguration) => this.edit$.next(item)
+      onClick: (item: ServiceDataFollowupConfiguration) => this.edit$.next(item)
     },
     // view
     {
@@ -78,7 +78,7 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
       label: 'view',
       icon: ActionIconsEnum.VIEW,
       show: () => this.readonly,
-      onClick: (item: FollowupConfiguration) => this.view$.next(item)
+      onClick: (item: ServiceDataFollowupConfiguration) => this.view$.next(item)
     },
     // delete
     {
@@ -86,7 +86,7 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
       label: 'view',
       icon: ActionIconsEnum.DELETE,
       show: () => !this.readonly,
-      onClick: (item: FollowupConfiguration) => this.delete(item)
+      onClick: (item: ServiceDataFollowupConfiguration) => this.delete(item)
     },
     // activate
     {
@@ -94,7 +94,7 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
       icon: ActionIconsEnum.STATUS,
       label: 'btn_activate',
       displayInGrid: false,
-      onClick: (item: FollowupConfiguration) => this.toggleStatus(item),
+      onClick: (item: ServiceDataFollowupConfiguration) => this.toggleStatus(item),
       show: (item) => {
         return item.status === CommonStatusEnum.DEACTIVATED;
       }
@@ -105,7 +105,7 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
       icon: ActionIconsEnum.STATUS,
       label: 'btn_deactivate',
       displayInGrid: false,
-      onClick: (item: FollowupConfiguration) => this.toggleStatus(item),
+      onClick: (item: ServiceDataFollowupConfiguration) => this.toggleStatus(item),
       show: (item) => {
         return item.status === CommonStatusEnum.ACTIVATED;
       }
@@ -122,7 +122,7 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
       .pipe(switchMap(() => {
         return this.service.getByCaseType(this.serviceData.caseType);
       }))
-      .subscribe((list: FollowupConfiguration[]) => {
+      .subscribe((list: ServiceDataFollowupConfiguration[]) => {
         this.models = list;
       });
   }
@@ -150,7 +150,7 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
       .subscribe(() => this.reload$.next(null));
   }
 
-  delete(model: FollowupConfiguration) {
+  delete(model: ServiceDataFollowupConfiguration) {
     const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
     this.dialog.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
@@ -165,7 +165,7 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
     });
   }
 
-  toggleStatus(model: FollowupConfiguration) {
+  toggleStatus(model: ServiceDataFollowupConfiguration) {
     let message: string, updateObservable: Observable<any>;
     if (model.status == CommonStatusEnum.ACTIVATED) {
       message = this.lang.map.msg_confirm_deactivate_followup_configuration;

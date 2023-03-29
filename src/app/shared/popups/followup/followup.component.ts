@@ -8,9 +8,9 @@ import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {FollowupService} from '@services/followup.service';
 import {Followup} from '@app/models/followup';
 import {CaseModel} from '@app/models/case-model';
-import {FollowupConfigurationService} from '@services/followup-configuration.service';
+import {ServiceDataFollowupConfigurationService} from '@services/service-data-followup-configuration.service';
 import {EmployeeService} from '@services/employee.service';
-import {FollowupConfiguration} from '@app/models/followup-configuration';
+import {ServiceDataFollowupConfiguration} from '@models/service-data-followup-configuration';
 import {DialogService} from '@services/dialog.service';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
@@ -27,7 +27,7 @@ export class FollowupComponent extends AdminGenericComponent<Followup, FollowupS
   addFollowup$: Subject<any> = new Subject<any>();
   case!: CaseModel<any, any>;
   showForm = false;
-  followupConfigurations: FollowupConfiguration[] = [];
+  followupConfigurations: ServiceDataFollowupConfiguration[] = [];
   loadFollowupConfigurations$: Subject<{
     'case-type'?: number
     'request-type'?: number,
@@ -45,7 +45,7 @@ export class FollowupComponent extends AdminGenericComponent<Followup, FollowupS
     public service: FollowupService,
     private employeeService: EmployeeService,
     private dialog: DialogService,
-    private followupConfigService: FollowupConfigurationService,
+    private followupConfigService: ServiceDataFollowupConfigurationService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: CaseModel<any, any>) {
     super();
