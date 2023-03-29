@@ -10,6 +10,7 @@ import { AdminResult } from '@models/admin-result';
 import { Country } from '@models/country';
 import { WorkArea } from '@models/work-area';
 import { LangService } from '@services/lang.service';
+import { ComponentType } from '@angular/cdk/portal';
 
 @Component({
   selector: 'work-areas',
@@ -17,6 +18,9 @@ import { LangService } from '@services/lang.service';
   styleUrls: ['./work-areas.component.scss']
 })
 export class WorkAreasComponent extends ListModelComponent<WorkArea> {
+  protected _getPopupComponent(): ComponentType<any> {
+    throw new Error('Method not implemented.');
+  }
   get list() {
     return this._list;
   }

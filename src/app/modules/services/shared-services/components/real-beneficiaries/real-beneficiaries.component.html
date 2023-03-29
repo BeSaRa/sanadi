@@ -1,4 +1,4 @@
-<form class="row" [formGroup]="form" *ngIf="showForm">
+<form class="row" [formGroup]="form">
   <div *ngFor="let control of controls"
     [class]="control.gridClass ? control.gridClass : 'col-sm-6 col-md-4'"
     [ngSwitch]="control.type">
@@ -71,7 +71,7 @@
   </div>
 </form>
 
-<app-page-header [hidden]="showForm" pageTitle="real_benefeciaries" [clickOnNew$]="add$" [addPermission]="!readonly">
+<app-page-header pageTitle="real_benefeciaries" [clickOnNew$]="add$" [addPermission]="!readonly">
 </app-page-header>
 
 <div class="row">

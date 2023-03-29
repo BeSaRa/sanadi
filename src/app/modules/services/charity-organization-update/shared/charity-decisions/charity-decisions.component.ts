@@ -10,6 +10,7 @@ import {AdminLookupService} from '@services/admin-lookup.service';
 import {LangService} from '@services/lang.service';
 import {DatepickerOptionsMap} from '@app/types/types';
 import {AdminLookup} from '@models/admin-lookup';
+import { ComponentType } from '@angular/cdk/portal';
 
 @Component({
   selector: 'charity-decisions',
@@ -17,6 +18,9 @@ import {AdminLookup} from '@models/admin-lookup';
   styleUrls: ['./charity-decisions.component.scss'],
 })
 export class CharityDecisionsComponent extends ListModelComponent<CharityDecision> {
+  protected _getPopupComponent(): ComponentType<any> {
+    throw new Error('Method not implemented.');
+  }
   get list() {
     return this._list;
   }

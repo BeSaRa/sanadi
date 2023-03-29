@@ -1,4 +1,5 @@
-import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
+import { ComponentType } from '@angular/cdk/portal';
+import { Directive, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
@@ -19,7 +20,6 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
   model!: T;
   form!: UntypedFormGroup;
   public readonly = false;
-  showForm = false;
   editRecordIndex = -1;
   add$: Subject<null> = new Subject<null>();
   save$: Subject<T> = new Subject<T>();
@@ -59,6 +59,7 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
     this.listenToModelChange();
     this._initComponent();
   }
+  protected abstract _getPopupComponent(): ComponentType<any>;
   protected abstract _initComponent(): void;
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -66,10 +67,23 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
     this.destroy$.unsubscribe();
   }
   listenToAdd(): void {
-    this.add$.pipe(takeUntil(this.destroy$)).subscribe((_) => {
-      this.showForm = true;
-      this.model = new this.TCreator();
-    });
+    this.add$
+      .pipe(takeUntil(this.destroy$)).subscribe((_) => {
+        this.model = new this.TCreator();
+        this.dialogService.show(this._getPopupComponent(), {
+          form: this.form,
+          editRecordIndex: this.editRecordIndex,
+          model: this.model,
+          hideSave: this.hideSave,
+          readonly: this.readonly,
+        }).onAfterClose$.subscribe((data) => {
+          console.log(data)
+          if (data) {
+            this.save(data);
+          }
+          this.cancel();
+        })
+      });
   }
   _beforeAdd(model: T): T | null {
     return model;
@@ -87,33 +101,45 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
       else {
         this._list[this.editRecordIndex] = this.model;
         this._list = [...this._list];
-        this.editRecordIndex = -1;
       }
       this.cancel();
     });
   }
-  save(): void {
+  save(model?: T): void {
     const value = this.form.value;
-    const model = new this.TCreator().clone({
+    model = new this.TCreator().clone({
       ...value,
+      ...model,
     });
+    console.log(model)
     this.save$.next(model);
   }
   cancel(model: T | null = null): void {
     this.form.reset();
-    this.showForm = false;
     this.hideSave = false;
+    this.editRecordIndex = -1;
   }
   selectOne(row: T, viewOnly = false) {
     this.hideSave = viewOnly;
     const index = this._list.findIndex(e => e === row);
     this.model = this._list[index];
     this.editRecordIndex = index;
-    this.showForm = true;
     this._selectOne(row);
   }
   _selectOne(row: T) {
     this.form.patchValue(row);
+    this.dialogService.show(this._getPopupComponent(), {
+      form: this.form,
+      editRecordIndex: this.editRecordIndex,
+      model: this.model,
+      hideSave: this.hideSave,
+      readonly: this.readonly,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save(data);
+      }
+      this.cancel();
+    })
   }
   removeOne(row: T) {
     const index = this._list.findIndex(e => e === row);
@@ -122,7 +148,6 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
       .onAfterClose$.subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           this._list = this._list.filter((_, idx) => idx !== index);
-
         }
       });
   }

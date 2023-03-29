@@ -1,4 +1,4 @@
-<form class="row" [formGroup]="form" *ngIf="showForm">
+<form class="row" [formGroup]="form">
   <div
     *ngFor="let control of controls"
     class="col-sm-6 col-md-4 mb-4 position-relative"
@@ -91,7 +91,6 @@
 </form>
 
 <app-page-header
-  [hidden]="showForm"
   pageTitle="bylaws"
   [clickOnNew$]="add$"
   [addPermission]="!readonly"

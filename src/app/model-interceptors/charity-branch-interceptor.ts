@@ -9,12 +9,13 @@ export class CharityBranchInterceptor implements IModelInterceptor<CharityBranch
     delete model.searchFields;
     delete model.branchContactOfficerList;
     const organizationOfficerInterceptor = new OrganizationOfficerInterceptor();
-    model.branchContactOfficer = model.branchContactOfficer?.map(e => organizationOfficerInterceptor.send(e) as OrganizationOfficer);
+    model.branchContactOfficer = (model.branchContactOfficer || model.branchContactOfficerList || []).map(e => organizationOfficerInterceptor.send(e) as OrganizationOfficer);
     return model;
   }
   receive(model: CharityBranch): CharityBranch {
     const organizationOfficerInterceptor = new OrganizationOfficerInterceptor();
-    model.branchContactOfficer = (model.branchContactOfficer || model.branchContactOfficerList || [])?.map(e => organizationOfficerInterceptor.receive(e));
+    model.branchContactOfficer = (model.branchContactOfficer || model.branchContactOfficerList || []).map(e => organizationOfficerInterceptor.receive(e));
+    model.branchContactOfficerList = (model.branchContactOfficer || model.branchContactOfficerList || []).map(e => organizationOfficerInterceptor.receive(e));
     return model;
   }
 }

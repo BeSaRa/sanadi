@@ -18,6 +18,7 @@ import {AdminLookup} from '@models/admin-lookup';
 import {AidLookup} from '@models/aid-lookup';
 import {AidLookupStatusEnum} from '@enums/status.enum';
 import {Lookup} from '@models/lookup';
+import { ComponentType } from '@angular/cdk/portal';
 
 @Component({
   selector: 'foreign-aid-classifications',
@@ -25,6 +26,9 @@ import {Lookup} from '@models/lookup';
   styleUrls: ['./foreign-aid-classifications.component.scss'],
 })
 export class ForeignAidClassificationsComponent extends ListModelComponent<ForeignAidClassification> implements OnChanges {
+  protected _getPopupComponent(): ComponentType<any> {
+    throw new Error('Method not implemented.');
+  }
   get list() {
     return this._list;
   }
