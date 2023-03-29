@@ -24,6 +24,7 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
   add$: Subject<null> = new Subject<null>();
   save$: Subject<T> = new Subject<T>();
   show$: Subject<T> = new Subject<T>();
+  customData: {} = {};
   private destroy$: Subject<any> = new Subject<any>();
   actions: IMenuItem<T>[] = [
     {
@@ -76,8 +77,8 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
           model: this.model,
           hideSave: this.hideSave,
           readonly: this.readonly,
+          customData: this.customData
         }).onAfterClose$.subscribe((data) => {
-          console.log(data)
           if (data) {
             this.save(data);
           }
@@ -95,6 +96,7 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
         return;
       }
       this.model = _model;
+      console.log(_model, this.editRecordIndex)
       if (this.editRecordIndex === -1) {
         this._list = [...this._list, this.model];
       }
@@ -111,7 +113,6 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
       ...value,
       ...model,
     });
-    console.log(model)
     this.save$.next(model);
   }
   cancel(model: T | null = null): void {
@@ -134,6 +135,7 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
       model: this.model,
       hideSave: this.hideSave,
       readonly: this.readonly,
+      customData: this.customData
     }).onAfterClose$.subscribe((data) => {
       if (data) {
         this.save(data);
