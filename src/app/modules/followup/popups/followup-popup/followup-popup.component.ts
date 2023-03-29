@@ -18,6 +18,7 @@ import { TeamService } from "@services/team.service";
 import { takeUntil } from "rxjs/operators";
 import { FollowUpType } from "@app/enums/followUp-type.enum";
 import {RequestTypeFollowupService} from '@services/request-type-followup.service';
+import {ToastService} from '@services/toast.service';
 
 @Component({
   selector: 'followup-popup',
@@ -48,6 +49,7 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
               public dialogRef: DialogRef,
               public service: FollowupService,
               private teamService: TeamService,
+              private toast: ToastService,
               private requestTypeFollowupService: RequestTypeFollowupService,
               public lang: LangService,) {
     super();
@@ -58,6 +60,7 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
   }
 
   afterSave(model: Followup, dialogRef: DialogRef): void {
+    this.toast.success(this.lang.map.msg_save_success);
     this.hideForm.emit();
   }
 
