@@ -49,6 +49,7 @@ const commonValidations = {
   mobileNo: [pattern('PHONE_NUMBER'), maxLength(defaultLengths.PHONE_NUMBER_MAX)],
   fax: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
   swiftCode: [maxLength(defaultLengths.SWIFT_CODE_MAX), minLength(defaultLengths.SWIFT_CODE_MIN), pattern('ENG_NUM_ONLY')],
+  email: [ pattern('EMAIL'), maxLength(defaultLengths.EMAIL_MAX)],
   decimalWithMinValue: (numberOfPlaces: number = 2, minValue?: number): ValidatorFn[] => {
     let minValueToSet = CommonUtils.isValidValue(minValue) ? minValue : _getDecimalMinValue(numberOfPlaces);
     return [decimal(numberOfPlaces), Validators.min(minValueToSet!)];
