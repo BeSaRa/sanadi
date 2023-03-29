@@ -65,7 +65,7 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
   }
 
   beforeSave(model: Followup, form: UntypedFormGroup): Observable<boolean> | boolean {
-    return true;
+    return form.valid;
   }
 
   destroyPopup(): void {
@@ -74,8 +74,7 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
   initPopup(): void {
     this.requestTypes = this.requestTypeFollowupService.serviceRequestTypes[this.case!.caseType] || [this.requestTypeFollowupService.getNewRequestType()];
     this.listenToFollowupTypeChange()
-    this.teamService
-      .load()
+    this.teamService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((teams) => {
         this.teams = teams
