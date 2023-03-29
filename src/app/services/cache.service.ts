@@ -4,6 +4,8 @@ import {UrlService} from './url.service';
 import {tap} from 'rxjs/operators';
 import {ToastService} from './toast.service';
 import {LangService} from './lang.service';
+import {AuthService} from '@services/auth.service';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +15,8 @@ export class CacheService {
   constructor(private http: HttpClient,
               private urlService: UrlService,
               private toastService: ToastService,
+              private router: Router,
+              private authService: AuthService,
               private langService: LangService) {
   }
 
@@ -22,10 +26,15 @@ export class CacheService {
     }));
   }
 
-  refreshCache(reloadAfterSuccess: boolean = false): void {
+  refreshCache(logOutAfterSuccess: boolean = false): void {
     const refreshSub = this._refreshCache().subscribe(() => {
-      reloadAfterSuccess && window.location.reload();
       refreshSub.unsubscribe();
+      if (logOutAfterSuccess) {
+        this.authService.logout()
+          .subscribe(() => {
+            this.router.navigate(['/login']).then();
+          })
+      }
     });
   }
 
