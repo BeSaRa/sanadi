@@ -21,6 +21,7 @@ import {
 import {
   InterventionFieldListComponent
 } from '@modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
+import { ReadBenefucuariesPopupComponent } from './components/real-beneficiaries/read-benefucuaries-popup/read-benefucuaries-popup.component';
 import { SelectCustomServiceTemplatePopupComponent } from './popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
 import { BankAccountNewComponent } from './components/bank-account-new/bank-account-new.component';
 import { BankAccountNewPopupComponent } from './popups/bank-account-new-popup/bank-account-new-popup.component';
@@ -43,6 +44,7 @@ import { AuditPaymentComponent } from '../transferring-individual-funds-abroad/a
     BankAccountComponent,
     WorkAreasComponent,
     RealBeneficiariesComponent,
+    ReadBenefucuariesPopupComponent,
     ApprovalFormComponent,
     InterventionImplementingAgencyListComponent,
     InterventionRegionListComponent,
@@ -71,6 +73,7 @@ import { AuditPaymentComponent } from '../transferring-individual-funds-abroad/a
     BankAccountComponent,
     WorkAreasComponent,
     RealBeneficiariesComponent,
+    ReadBenefucuariesPopupComponent,
     ApprovalFormComponent,
     InterventionImplementingAgencyListComponent,
     InterventionRegionListComponent,
