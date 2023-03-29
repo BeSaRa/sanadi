@@ -83,12 +83,27 @@ export class CharityBranchPopupComponent implements AfterViewInit {
     this.org.list = this.model.branchContactOfficerList || this.model.branchContactOfficer;
   }
 
+  mapFormTo(form: any): CharityBranch {
+    const branch: CharityBranch = new CharityBranch();
+    branch.fullName = form.fullName;
+    branch.category = form.category;
+    branch.branchAdjective = form.branchAdjective;
+    branch.usageAdjective = form.usageAdjective;
+    branch.zoneNumber = form.zoneNumber;
+    branch.streetNumber = form.streetNumber;
+    branch.buildingNumber = form.buildingNumber;
+    branch.address = form.address;
+    branch.tempId = this.model.tempId;
+    branch.branchId = this.model.branchId;
+    branch.branchContactOfficer = this.org.list;
+    branch.branchContactOfficerList = this.org.list;
+
+    return branch;
+  }
   cancel() {
     this.dialogRef.close(null)
   }
   save() {
-    this.model.branchContactOfficer = this.org.list;
-    this.model.branchContactOfficerList = this.org.list;
-    this.dialogRef.close(this.model)
+    this.dialogRef.close(this.mapFormTo(this.form.getRawValue()))
   }
 }

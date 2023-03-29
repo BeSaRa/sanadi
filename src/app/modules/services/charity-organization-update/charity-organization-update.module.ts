@@ -32,6 +32,7 @@ import {
 } from '@modules/services/charity-organization-update/popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
 import { OrganizationOfficerPopupComponent } from '@modules/services/charity-organization-update/shared/organization-officers/organization-officer-popup/organization-officer-popup.component';
 import { CharityBranchPopupComponent } from '@modules/services/charity-organization-update/shared/charity-branch/charity-branch-popup/charity-branch-popup.component';
+import { MembersPopupComponent } from '@modules/services/charity-organization-update/shared/members/members-popup/members-popup.component';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { CharityBranchPopupComponent } from '@modules/services/charity-organizat
     CharityDecisionsComponent,
     ForeignAidClassificationsComponent,
     MembersComponent,
+    MembersPopupComponent,
     CharityReportsComponent,
     OrganizationOfficersComponent,
     OrganizationOfficerPopupComponent,
