@@ -1,4 +1,4 @@
-<ng-container *ngIf="showForm">
+<ng-container>
   <form class="row" [formGroup]="form">
     <div *ngFor="let control of controls" class="col-sm-6 col-md-4 mb-4 position-relative" [ngSwitch]="control.type">
       <ng-container *ngSwitchCase="'dropdown'">
@@ -37,12 +37,12 @@
   </form>
 </ng-container>
 <ng-container>
-  <div class="row" [hidden]="showForm">
-    <app-page-header pageTitle="work_areas" [clickOnNew$]="add$" [addPermission]="!readonly && !showForm">
+  <div class="row">
+    <app-page-header pageTitle="work_areas" [clickOnNew$]="add$" [addPermission]="!readonly">
     </app-page-header>
     <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
   </div>
-  <div class="row  pt-3" *ngIf="!showForm">
+  <div class="row  pt-3">
     <div class="col-12">
       <app-table #table [useSearchToFilter]="true" [selectable]="true" [data]="_list" [columns]="columns"
         [filter]="filterControl.value" sortableTable>

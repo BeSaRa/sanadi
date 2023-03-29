@@ -14,6 +14,7 @@ import {ToastService} from '@services/toast.service';
 import {DatepickerOptionsMap} from '@app/types/types';
 import {Lookup} from '@models/lookup';
 import {AdminLookup} from '@models/admin-lookup';
+import { ComponentType } from '@angular/cdk/portal';
 
 @Component({
   selector: 'charity-reports',
@@ -21,6 +22,9 @@ import {AdminLookup} from '@models/admin-lookup';
   styleUrls: ['./charity-reports.component.scss'],
 })
 export class CharityReportsComponent extends ListModelComponent<CharityReport> {
+  protected _getPopupComponent(): ComponentType<any> {
+    throw new Error('Method not implemented.');
+  }
   get list() {
     return this._list;
   }

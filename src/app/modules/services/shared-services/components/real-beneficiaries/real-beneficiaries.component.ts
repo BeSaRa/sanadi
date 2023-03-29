@@ -10,6 +10,7 @@ import {LookupService} from '@services/lookup.service';
 import {ToastService} from '@services/toast.service';
 import {DatepickerOptionsMap} from '@app/types/types';
 import {Lookup} from '@models/lookup';
+import { ComponentType } from '@angular/cdk/portal';
 
 @Component({
   selector: 'real-beneficiaries',
@@ -17,6 +18,9 @@ import {Lookup} from '@models/lookup';
   styleUrls: ['./real-beneficiaries.component.scss'],
 })
 export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficiary> {
+  protected _getPopupComponent(): ComponentType<any> {
+    throw new Error('Method not implemented.');
+  }
   QATARI_NATIONALITY = Nationalities.QATARI;
   private _handleChangeNationality = (lookupKey: string | number) => {
     const nationality = this.lookupService.listByCategory.Nationality.find(e => e.lookupKey === lookupKey);

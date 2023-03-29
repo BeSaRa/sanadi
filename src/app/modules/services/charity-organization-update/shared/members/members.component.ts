@@ -10,6 +10,7 @@ import {OrgMember} from '@models/org-member';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DatepickerOptionsMap} from '@app/types/types';
+import { ComponentType } from '@angular/cdk/portal';
 
 @Component({
   selector: 'members',
@@ -17,6 +18,9 @@ import {DatepickerOptionsMap} from '@app/types/types';
   styleUrls: ['./members.component.scss'],
 })
 export class MembersComponent extends ListModelComponent<OrgMember> {
+  protected _getPopupComponent(): ComponentType<any> {
+    throw new Error('Method not implemented.');
+  }
   @Input() readonly!: boolean;
 
   @Input() set list(_list: OrgMember[]) {

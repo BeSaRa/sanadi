@@ -11,6 +11,7 @@ import {AdminLookupService} from '@services/admin-lookup.service';
 import {LangService} from '@services/lang.service';
 import {DatepickerOptionsMap} from '@app/types/types';
 import {share} from 'rxjs/operators';
+import { ComponentType } from '@angular/cdk/portal';
 
 @Component({
 
@@ -19,6 +20,9 @@ import {share} from 'rxjs/operators';
   styleUrls: ['./bylaws.component.scss']
 })
 export class BylawsComponent extends ListModelComponent<Bylaw> {
+  protected _getPopupComponent(): ComponentType<any> {
+    throw new Error('Method not implemented.');
+  }
   get list() {
     return this._list;
   }
