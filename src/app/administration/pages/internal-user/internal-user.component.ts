@@ -142,6 +142,6 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
   }
 
   openUserPreferences(item: InternalUser) {
-    this.userPreferencesService.openEditDialog(item.generalUserId, false).subscribe();
+    this.userPreferencesService.openEditDialog(item, false).subscribe();
   }
 }

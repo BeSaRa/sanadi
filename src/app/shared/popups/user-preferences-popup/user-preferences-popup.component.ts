@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {LangService} from '@services/lang.service';
-import {AbstractControl, FormControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@contracts/i-dialog-data';
 import {UserPreferences} from '@models/user-preferences';
@@ -9,6 +9,8 @@ import {Lookup} from '@models/lookup';
 import {CommonUtils} from '@helpers/common-utils';
 import {ToastService} from '@services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {InternalUser} from '@models/internal-user';
+import {ExternalUser} from '@models/external-user';
 
 @Component({
   selector: 'user-preferences-popup',
@@ -21,7 +23,7 @@ export class UserPreferencesPopupComponent implements OnInit {
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   languages: Lookup[] = [];
   alternateUserEmailsForm!: UntypedFormGroup;
-  generalUserId: number;
+  user: InternalUser | ExternalUser;
   isLoggedInUserPreferences!: boolean;
 
   constructor(public lang: LangService,
@@ -30,118 +32,84 @@ export class UserPreferencesPopupComponent implements OnInit {
               private toast: ToastService,
               public dialogRef: DialogRef) {
     this.model = data.model;
-    this.generalUserId = data.generalUserId;
+    this.user = data.user;
     this.isLoggedInUserPreferences = data.isLoggedInUserPreferences;
   }
 
   ngOnInit() {
-    let jsonEmailsArray = this.getEmailsAsArray(this.model.alternateEmailList);
-    if (jsonEmailsArray.length > 0) {
-      this.updateAlternateUserEmailsForm(jsonEmailsArray);
-    } else {
-      this.initAlternateUserEmailsForm();
-    }
-
     this.languages = this.getLanguages();
     this.buildForm();
+    this.buildAlternateUserEmailsForm();
   }
 
-  get defaultLang(): AbstractControl {
-    return this.form.get('defaultLang')!;
+  get emailsFormArray(): UntypedFormArray {
+    return this.alternateUserEmailsForm.controls['emails'] as UntypedFormArray;
   }
 
-  get isMailNotificationEnabled(): AbstractControl {
-    return this.form.get('isMailNotificationEnabled')!;
-  }
-
-  buildForm() {
+  buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(this.isLoggedInUserPreferences, true));
   }
 
-  save() {
-    let availableToBeUpdated = {defaultLang: this.defaultLang.value, isMailNotificationEnabled: this.isMailNotificationEnabled.value};
-    let updatedModel = new UserPreferences().clone({...this.model, ...availableToBeUpdated});
-    this.emails.updateValueAndValidity();
-    updatedModel.alternateEmailList = this.getEmailsAsString(this.emails.value);
+  buildAlternateUserEmailsForm(): void {
+    this.alternateUserEmailsForm = this.fb.group({
+      emails: this.fb.array([])
+    });
 
-    updatedModel.updateUserPreferences(this.generalUserId).subscribe(_ => {
-      this.dialogRef.close();
+    this.model.alternateEmailListParsed.reverse().forEach((email) => {
+      if (CommonUtils.isValidValue(email)) {
+        this.addAlternateUserEmail(email);
+      }
+    })
+  }
+
+  private _hasDuplicateEmail() {
+    return (new Set(this.emailsFormArray.value)).size !== this.emailsFormArray.length;
+  }
+
+  save() {
+    if (this.isInvalidForm()) {
+      return;
+    }
+    if (this._hasDuplicateEmail()) {
+      this.toast.error(this.lang.map.msg_check_x_duplicate.change({x: this.lang.map.alternate_emails}));
+      return;
+    }
+
+    let updatedModel = new UserPreferences().clone({
+      ...this.model,
+      ...this.form.value,
+      alternateEmailListParsed: this.emailsFormArray.value
+    });
+    updatedModel.updateUserPreferences(this.user.generalUserId).subscribe(_ => {
+      this.dialogRef.close(true);
       this.toast.success(this.lang.map.msg_save_success);
     });
   }
 
-  get emails() {
-    return this.alternateUserEmailsForm.controls['emails'] as UntypedFormArray;
+  private _generateEmailControl(email: string): UntypedFormControl {
+    return new UntypedFormControl(email, [CustomValidators.required].concat(CustomValidators.commonValidations.email))
   }
 
-  initAlternateUserEmailsForm(): void {
-    this.alternateUserEmailsForm = this.fb.group({
-      emails: this.fb.array([])
-    });
-  }
-
-  updateAlternateUserEmailsForm(emails: string[]): void {
-    this.alternateUserEmailsForm = this.fb.group({
-      emails: this.fb.array([...emails.map(x => new FormControl(x, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]))])
-    });
-  }
-
-  newAlternateUserEmail(email: string = ''): FormControl {
-    if (CommonUtils.isValidValue(email)) {
-      return new FormControl(email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]);
-    } else {
-      return new FormControl('', [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]);
-    }
-  }
-
-  addAlternateUserEmail(email: string = '') {
-    this.emails.controls.unshift(this.newAlternateUserEmail(email));
-    this.emails.controls[0].markAsTouched();
-    this.emails.updateValueAndValidity();
+  addAlternateUserEmail(email: string = ''): void {
+    this.emailsFormArray.insert(0, this._generateEmailControl(email));
+    this.emailsFormArray.at(0).markAllAsTouched();
+    this.emailsFormArray.updateValueAndValidity();
   }
 
   deleteEmail(emailIndex: number) {
-    this.emails.removeAt(emailIndex);
+    this.emailsFormArray.removeAt(emailIndex);
   }
 
-  getEmailsAsArray(emailsString: string) {
-    let emailsArr: string[];
-    try {
-      emailsArr = JSON.parse(emailsString);
-    } catch (err) {
-      emailsArr = [];
-    }
-    return emailsArr;
-  }
-
-  getEmailsAsString(emailsArray: string[]) {
-    let finalArr = emailsArray.filter(x => CommonUtils.isValidValue(x));
-    return JSON.stringify(finalArr);
-  }
-
-  invalidEmailsForm() {
-    return this.emails.controls.some(control => control.invalid);
+  isInvalidForm() {
+    return !this.form || this.form.invalid || !this.emailsFormArray || this.emailsFormArray.controls.some(control => control.invalid);
   }
 
   displayFormValidity(form?: UntypedFormGroup | null, element?: HTMLElement | string): void {
-    if (!form) {
-      this.form.markAllAsTouched();
-    } else {
-      form.markAllAsTouched();
-    }
-
-    let ele: HTMLElement | false = false;
-    if (!element) {
-      return;
-    }
-    element instanceof HTMLElement && (ele = element);
-    typeof element === 'string' && (ele = document.getElementById(element) as HTMLElement);
-    if (ele) {
-      ele.scrollTo({top: 0, behavior: 'smooth'});
-    }
+    CommonUtils.displayFormValidity(form ?? this.form, element);
+    CommonUtils.displayFormValidity(this.alternateUserEmailsForm, element);
   }
 
-  getLanguages() {
+  getLanguages(): Lookup[] {
     let arabicLang = new Lookup();
     arabicLang.lookupKey = 1;
     arabicLang.arName = 'العربية';
