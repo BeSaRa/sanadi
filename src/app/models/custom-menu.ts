@@ -22,7 +22,6 @@ const interceptor = new CustomMenuInterceptor();
 
 @InterceptModel({
   receive: interceptor.receive,
-  send: interceptor.send
 })
 export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   status!: number;
@@ -43,12 +42,14 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   defaultParent?:MenuItem;
   systemMenuKey?: string;
   icon!:string;
+  isSystem!:boolean;
 
   // extra properties
   service!: CustomMenuService;
   menuItemService!: MenuItemService;
   langService: LangService;
   urlParamsParsed: MenuUrlValueContract[] = [];
+  customParentId!:number;
 
   searchFields: ISearchFieldsMap<CustomMenu> = {
     ...normalSearchFields(['arName', 'enName']),
