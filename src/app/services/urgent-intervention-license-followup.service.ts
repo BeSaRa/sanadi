@@ -101,14 +101,15 @@ export class UrgentInterventionLicenseFollowupService extends BaseGenericEServic
     });
   }
 
-  openAttachmentsDialog(reportId: number, caseId: string, readonly: boolean = false): Observable<DialogRef> {
+  openAttachmentsDialog(reportId: number, caseId: string, readonly: boolean, isCurrentRequestReport:boolean): Observable<DialogRef> {
     return this.loadAttachmentsByReportId(reportId).pipe(
       switchMap((result: UrgentInterventionAttachment[]) => {
         return of(this.dialog.show(UrgentInterventionReportAttachmentPopupComponent, {
           list: result,
           reportId: reportId,
           caseId: caseId,
-          readonly: readonly
+          readonly: readonly,
+          isCurrentRequestReport: isCurrentRequestReport
         }));
       })
     );

@@ -31,6 +31,7 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
   reportId: number;
   caseId: string;
   readonly: boolean = false;
+  isCurrentRequestReport: boolean = false;
   actionIconsEnum = ActionIconsEnum;
 
   constructor(public lang: LangService,
@@ -45,6 +46,7 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
     this.reportId = this.data.reportId;
     this.caseId = this.data.caseId;
     this.readonly = this.data.readonly ?? false;
+    this.isCurrentRequestReport = this.data.isCurrentRequestReport ?? false;
   }
 
   customValidators = CustomValidators;
@@ -87,10 +89,10 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
       label: 'approve',
       icon: ActionIconsEnum.APPROVE,
       show: (item) => {
-        if (this.readonly || this.employeeService.isExternalUser() || !item.creatorInfo || this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser)) {
+        if (this.employeeService.isExternalUser() || !item.creatorInfo || this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser)) {
           return false;
         }
-        return item.isApproved === null;
+        return this.isCurrentRequestReport && item.isApproved === null;
       },
       onClick: (item) => this.approveAttachment(item)
     },
@@ -100,10 +102,10 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
       label: 'lbl_reject',
       icon: ActionIconsEnum.CANCEL,
       show: (item) => {
-        if (this.readonly || this.employeeService.isExternalUser() || !item.creatorInfo || this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser)) {
+        if (this.employeeService.isExternalUser() || !item.creatorInfo || this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser)) {
           return false;
         }
-        return item.isApproved === null;
+        return this.isCurrentRequestReport && item.isApproved === null;
       },
       onClick: (item) => this.rejectAttachment(item)
     }

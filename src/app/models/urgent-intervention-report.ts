@@ -80,8 +80,8 @@ export class UrgentInterventionReport extends BaseModel<UrgentInterventionReport
     }
   }
 
-  showAttachments(readonly: boolean = false): Observable<DialogRef> {
-    return this.urgentInterventionLicenseFollowupService.openAttachmentsDialog(this.id, this.caseId, readonly);
+  showAttachments(readonly: boolean, isCurrentRequestReport: boolean): Observable<DialogRef> {
+    return this.urgentInterventionLicenseFollowupService.openAttachmentsDialog(this.id, this.caseId, readonly, isCurrentRequestReport);
   }
 
   isApproved(): boolean {
