@@ -69,10 +69,10 @@ import {BankComponent} from './pages/bank/bank.component';
 import {BankPopupComponent} from './popups/bank-popup/bank-popup.component';
 import {DonorComponent} from './pages/donor/donor.component';
 import {DonorPopupComponent} from './popups/donor-popup/donor-popup.component';
-import {FollowupConfigurationComponent} from './pages/followup-configuration/followup-configuration.component';
+import {ServiceDataFollowupConfigurationComponent} from './pages/service-data-followup-configuration/service-data-followup-configuration.component';
 import {
-  FollowupConfigurationPopupComponent
-} from './popups/followup-configuration-popup/followup-configuration-popup.component';
+  ServiceDataFollowupConfigurationPopupComponent
+} from './popups/service-data-followup-configuration-popup/service-data-followup-configuration-popup.component';
 import {UserFollowupPermissionComponent} from './shared/user-followup-permission/user-followup-permission.component';
 import {FieldAssessmentPopupComponent} from './popups/field-assessment-popup/field-assessment-popup.component';
 import {FieldAssessmentComponent} from './pages/field-assessment/field-assessment.component';
@@ -126,6 +126,7 @@ import {
   FormlySelectFieldComponent
 } from '@app/services-search/components/formly-select-field/formly-select-field.component';
 import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
+import { UserFollowupPermissionNewComponent } from './shared/user-followup-permission-new/user-followup-permission-new.component';
 
 @NgModule({
   declarations: [
@@ -181,8 +182,8 @@ import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
     BankPopupComponent,
     DonorComponent,
     DonorPopupComponent,
-    FollowupConfigurationComponent,
-    FollowupConfigurationPopupComponent,
+    ServiceDataFollowupConfigurationComponent,
+    ServiceDataFollowupConfigurationPopupComponent,
     UserFollowupPermissionComponent,
     FieldAssessmentPopupComponent,
     FieldAssessmentComponent,
@@ -217,7 +218,8 @@ import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
     UserSecurityExternalComponent,
     ProfileAttachmentsComponent,
     GlobalSettingsComponent,
-    AdminLicenseComponent
+    AdminLicenseComponent,
+    UserFollowupPermissionNewComponent
   ],
   imports: [
     SharedModule,

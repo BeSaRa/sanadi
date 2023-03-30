@@ -88,11 +88,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       name: 'attachmentsTab',
       langKey: 'attachments',
       validStatus: () => true
-    },
-    logs: {
-      name: 'logs',
-      langKey: 'logs',
-      validStatus: () => true
     }
   };
 

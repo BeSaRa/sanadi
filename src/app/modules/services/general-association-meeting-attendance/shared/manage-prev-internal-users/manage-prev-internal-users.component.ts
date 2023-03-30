@@ -6,6 +6,7 @@ import { GeneralAssociationInternalMemberTypeEnum } from '@app/enums/general-ass
 import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
 import { MeetingAttendanceReport } from '@app/models/meeting-attendance-report';
 import { GeneralMeetingAttendanceNote } from '@app/models/general-meeting-attendance-note';
+import { GeneralMeetingsMemberStatus } from '@app/interfaces/general-meetings-member-status';
 
 @Component({
   selector: 'manage-prev-internal-users',
@@ -20,7 +21,7 @@ export class ManagePrevInternalUsersComponent implements OnInit {
 
   selectedInternalUser!: GeneralAssociationInternalMember | null;
 
-  membersDisplayedColumns: string[] = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'actions'];
+  membersDisplayedColumns: string[] = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'status', 'actions'];
   internalUserType = GeneralAssociationInternalMemberTypeEnum;
 
   constructor(
@@ -34,5 +35,8 @@ export class ManagePrevInternalUsersComponent implements OnInit {
   viewMemberCommentsAndNotes(event: MouseEvent, model: GeneralAssociationInternalMember) {
     event.preventDefault();
     this.generalAssociationMeetingService.openViewMemberCommentsAndNotesDialog(model, this.meetingReport, this.generalNotes, model.userId, this.model?.id);
+  }
+  isTerminatedMember(row: GeneralAssociationInternalMember) {
+    return row.name == GeneralMeetingsMemberStatus.terminated
   }
 }

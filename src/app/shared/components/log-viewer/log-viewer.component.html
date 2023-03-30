@@ -6,88 +6,73 @@
     </div>
   </div>
 </ng-template>
-<ng-template #itemLocationTemplate>
-  <div class="row">
-    <div class="col-12">
-      <service-log-item-location [locationsList]="locations" [caseType]="caseType"
-                                 [isMainDeptRequest]="isMainDeptRequest"
-                                 [service]="service" (onReload)="reload$.next()">
-      </service-log-item-location>
-    </div>
-  </div>
+<ng-template #reloadButtonAbsoluteTemplate>
+  <button [tooltip]="lang.map.btn_reload" (click)="reload$.next()"
+          class="btn icon-btn position-absolute top-0 end-0">
+    <i class="mdi mdi-reload text-primary"></i></button>
 </ng-template>
-<ng-template #allLogsTemplate>
+<ng-template #itemLocationTemplate>
+  <service-log-item-location [locationsList]="locations" [caseType]="caseType"
+                             [isMainDeptRequest]="isMainDeptRequest"
+                             [service]="service" (onReload)="reload$.next()">
+  </service-log-item-location>
+</ng-template>
+<ng-template #allLogsListTemplate>
   <service-log-list [logsList]="logsAll" [displayedColumns]="displayedColumns"></service-log-list>
 </ng-template>
-<ng-template #otherLogsTemplate>
+<ng-template #otherLogsListTemplate>
   <service-log-list [logsList]="logsOthers" [displayedColumns]="displayedColumnsOthers"></service-log-list>
 </ng-template>
-<ng-template #viewedLogsTemplate>
-  <service-log-list [logsList]="logsViewed" [displayedColumns]="displayedColumnsViewed"></service-log-list>
-</ng-template>
-<ng-template #updatedLogsTemplate>
-  <service-log-list [logsList]="logsUpdated" [displayedColumns]="displayedColumnsUpdated"></service-log-list>
+<ng-template #historyLogsListTemplate>
+  <service-log-list [logsList]="logsHistory" [displayedColumns]="displayedColumnsHistory"></service-log-list>
 </ng-template>
 <ng-template #onePageCategorizedTemplate>
   <heading-row [labelKey]="'action_others'"></heading-row>
-  <ng-container [ngTemplateOutlet]="otherLogsTemplate"></ng-container>
-  <ng-container *ngIf="!hideViewedAction">
-    <heading-row [labelKey]="'action_viewed'"></heading-row>
-    <ng-container [ngTemplateOutlet]="viewedLogsTemplate"></ng-container>
-  </ng-container>
-  <heading-row [labelKey]="'action_updated'"></heading-row>
-  <ng-container [ngTemplateOutlet]="updatedLogsTemplate"></ng-container>
+  <ng-container [ngTemplateOutlet]="otherLogsWithItemLocation"></ng-container>
+  <heading-row [labelKey]="'logs_history'"></heading-row>
+  <ng-container [ngTemplateOutlet]="historyLogsListTemplate"></ng-container>
 </ng-template>
-
+<ng-template #allLogsWithItemLocation>
+  <ng-container *ngIf="hideItemLocation" [ngTemplateOutlet]="allLogsListTemplate"></ng-container>
+  <ng-container *ngIf="!hideItemLocation">
+    <tabs-list class="position-relative" [accordionView]="true" [collapse]="false">
+      <tab name="itemLocation" [template]="itemLocationTemplate" [title]="lang.map.item_location"></tab>
+      <tab name="logs" [template]="allLogsListTemplate" [title]="lang.map.logs"></tab>
+    </tabs-list>
+  </ng-container>
+</ng-template>
+<ng-template #otherLogsWithItemLocation>
+  <ng-container *ngIf="hideItemLocation" [ngTemplateOutlet]="otherLogsListTemplate"></ng-container>
+  <ng-container *ngIf="!hideItemLocation">
+    <tabs-list class="position-relative" [accordionView]="true" [collapse]="false">
+      <tab name="itemLocation" [template]="itemLocationTemplate" [title]="lang.map.item_location"></tab>
+      <tab name="logs" [template]="otherLogsListTemplate" [title]="lang.map.logs"></tab>
+    </tabs-list>
+  </ng-container>
+</ng-template>
 <ng-container>
   <!-- Not Categorized -->
-  <div *ngIf="!categorizeLogs">
-    <ng-container *ngIf="hideItemLocation">
-      <ng-container [ngTemplateOutlet]="reloadRowTemplate"></ng-container>
-      <ng-container [ngTemplateOutlet]="allLogsTemplate"></ng-container>
-    </ng-container>
-    <ng-container *ngIf="!hideItemLocation">
-      <tabs-list class="position-relative" [accordionView]="accordionView" (onTabChange)="tabChanged($event)">
-        <button [tooltip]="lang.map.btn_reload" (click)="reload$.next()"
-                class="btn icon-btn position-absolute top-0 end-0">
-          <i class="mdi mdi-reload text-primary"></i></button>
-        <tab name="logs" [template]="allLogsTemplate" [title]="lang.map.logs"></tab>
-        <tab name="itemLocation" [template]="itemLocationTemplate" [title]="lang.map.item_location"></tab>
-      </tabs-list>
-    </ng-container>
-  </div>
+  <ng-container *ngIf="!categorizeLogs">
+    <ng-container [ngTemplateOutlet]="reloadRowTemplate"></ng-container>
+    <ng-container [ngTemplateOutlet]="allLogsWithItemLocation"></ng-container>
+  </ng-container>
 
   <!-- Categorized -->
-  <div *ngIf="categorizeLogs">
-    <div *ngIf="displayCategorizedAs === 'one-page'">
-      <ng-container *ngIf="hideItemLocation">
-        <ng-container [ngTemplateOutlet]="reloadRowTemplate"></ng-container>
+  <ng-container *ngIf="categorizeLogs">
+    <ng-container *ngIf="displayCategorizedAs === 'one-page'">
+      <div class="position-relative">
+        <ng-container [ngTemplateOutlet]="reloadButtonAbsoluteTemplate"></ng-container>
         <ng-container [ngTemplateOutlet]="onePageCategorizedTemplate"></ng-container>
-      </ng-container>
+      </div>
+    </ng-container>
 
-      <ng-container *ngIf="!hideItemLocation">
-        <tabs-list class="position-relative" [accordionView]="accordionView" (onTabChange)="tabChanged($event)">
-          <button [tooltip]="lang.map.btn_reload" (click)="reload$.next()"
-                  class="btn icon-btn position-absolute top-0 end-0">
-            <i class="mdi mdi-reload text-primary"></i></button>
-          <tab name="logs" [template]="onePageCategorizedTemplate" [title]="lang.map.logs"></tab>
-          <tab name="itemLocation" [template]="itemLocationTemplate" [title]="lang.map.item_location"></tab>
-        </tabs-list>
-      </ng-container>
-    </div>
-
-    <div *ngIf="displayCategorizedAs === 'tabs'">
+    <ng-container *ngIf="displayCategorizedAs === 'tabs'">
+      <ng-container *ngIf="accordionView" [ngTemplateOutlet]="reloadRowTemplate"></ng-container>
       <tabs-list class="position-relative" [accordionView]="accordionView" (onTabChange)="tabChanged($event)">
-        <button [tooltip]="lang.map.btn_reload" (click)="reload$.next()"
-                class="btn icon-btn position-absolute top-0 end-0">
-          <i class="mdi mdi-reload text-primary"></i></button>
-        <tab name="other_actions" [template]="otherLogsTemplate" [title]="lang.map.logs_history"></tab>
-        <tab name="view_actions" [template]="viewedLogsTemplate" [title]="lang.map.action_viewed"
-             *ngIf="!hideViewedAction"></tab>
-        <tab name="update_actions" [template]="updatedLogsTemplate" [title]="lang.map.action_updated"></tab>
-        <tab name="itemLocation" *ngIf="!hideItemLocation" [template]="itemLocationTemplate"
-             [title]="lang.map.item_location"></tab>
+        <ng-container *ngIf="!accordionView" [ngTemplateOutlet]="reloadButtonAbsoluteTemplate"></ng-container>
+        <tab name="other_actions" [template]="otherLogsWithItemLocation" [title]="lang.map.action_others"></tab>
+        <tab name="history_actions" [template]="historyLogsListTemplate" [title]="lang.map.logs_history"></tab>
       </tabs-list>
-    </div>
-  </div>
+    </ng-container>
+  </ng-container>
 </ng-container>

@@ -17,6 +17,11 @@
             <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.english_name}}</th>
             <td *cdkCellDef="let row" cdk-cell> {{row.englishName}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="status">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.status}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.name}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="isDecisionMaker">
             <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.the_decision_maker}}</th>
             <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
@@ -30,7 +35,7 @@
             <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
             <td *cdkCellDef="let row" cdk-cell class="table-actions">
               <div class="d-flex flex-row">
-                <button (click)="viewMemberCommentsAndNotes($event, row)" [disabled]="row.pId"
+                <button (click)="viewMemberCommentsAndNotes($event, row)" *ngIf="!isTerminatedMember(row)" [disabled]="row.pId"
                   class="btn btn-link outline-none" tooltip="{{lang.map.view}}">
                   <i class="mdi mdi-eye"></i>
                 </button>

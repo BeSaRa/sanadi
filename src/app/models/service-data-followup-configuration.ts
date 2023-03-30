@@ -1,6 +1,6 @@
 import { INames } from '@app/interfaces/i-names';
 import { FactoryService } from '@app/services/factory.service';
-import { FollowupConfigurationService } from '@app/services/followup-configuration.service';
+import { ServiceDataFollowupConfigurationService } from '@services/service-data-followup-configuration.service';
 import { LangService } from '@app/services/lang.service';
 import { ISearchFieldsMap } from '@app/types/types';
 import { BaseModel } from './base-model';
@@ -11,19 +11,19 @@ import { FollowUpType } from '@app/enums/followUp-type.enum';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { normalSearchFields } from '@helpers/normal-search-fields';
 import { infoSearchFields } from '@helpers/info-search-fields';
-import { FollowupConfigurationInterceptor } from '@app/model-interceptors/followup-configuration-interceptor';
+import { ServiceDataFollowupConfigurationInterceptor } from '@model-interceptors/service-data-followup-configuration-interceptor';
 import { InterceptModel } from "@decorators/intercept-model";
 
-const { send, receive } = new FollowupConfigurationInterceptor();
+const { send, receive } = new ServiceDataFollowupConfigurationInterceptor();
 
 @InterceptModel({ send, receive })
-export class FollowupConfiguration extends BaseModel<FollowupConfiguration, FollowupConfigurationService> {
-  service: FollowupConfigurationService;
+export class ServiceDataFollowupConfiguration extends BaseModel<ServiceDataFollowupConfiguration, ServiceDataFollowupConfigurationService> {
+  service: ServiceDataFollowupConfigurationService;
   langService: LangService;
 
   constructor() {
     super();
-    this.service = FactoryService.getService('FollowupConfigurationService');
+    this.service = FactoryService.getService('ServiceDataFollowupConfigurationService');
     this.langService = FactoryService.getService('LangService');
 
   }
@@ -44,7 +44,7 @@ export class FollowupConfiguration extends BaseModel<FollowupConfiguration, Foll
   responsibleTeamInfo!: Team;
   concernedTeamInfo!: Team;
 
-  searchFields: ISearchFieldsMap<FollowupConfiguration> = {
+  searchFields: ISearchFieldsMap<ServiceDataFollowupConfiguration> = {
     ...normalSearchFields(['days']),
     ...infoSearchFields(['requestTypeInfo', 'followUpTypeInfo', 'responsibleTeamInfo', 'concernedTeamInfo']),
     name: text => this.getName().toLowerCase().indexOf(text) !== -1
@@ -59,8 +59,8 @@ export class FollowupConfiguration extends BaseModel<FollowupConfiguration, Foll
     return {
       arName: controls ? [arName, [CustomValidators.required, CustomValidators.pattern('AR_NUM')]] : arName,
       enName: controls ? [enName, [CustomValidators.required, CustomValidators.pattern('ENG_NUM')]] : enName,
-      arDesc: controls ? [arDesc, [CustomValidators.required, CustomValidators.pattern('AR_NUM')]] : arDesc,
-      enDesc: controls ? [enDesc, [CustomValidators.required, CustomValidators.pattern('ENG_NUM')]] : enDesc,
+      arDesc: controls ? [arDesc, [CustomValidators.required, CustomValidators.pattern('AR_NUM'), CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : arDesc,
+      enDesc: controls ? [enDesc, [CustomValidators.required, CustomValidators.pattern('ENG_NUM'), CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : enDesc,
       followUpType: controls ? [followUpType, [CustomValidators.required]] : followUpType,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       responsibleTeamId: controls ? [{value: responsibleTeamId, disabled: followUpType === FollowUpType.INTERNAL}] : responsibleTeamId,

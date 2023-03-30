@@ -2608,11 +2608,24 @@ export const newNavigationMenuList = [
     path: '/home/administration/global-settings',
     icon: 'mdi-cog',
     isSvg: false,
-    permission: '',
+    permission: PermissionsEnum.MANAGE_SYSTEM_PREFERENCES,
     permissionGroup: null,
     parent: 6,
     group: 'administration',
     itemOrder: 26,
+    svg: null
+  },
+  {
+    id: 87,
+    langKey: 'menu_admin_license',
+    path: '/home/administration/admin-license',
+    icon: 'mdi-new-box',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_LICENSES_AND_PERMITS,
+    permissionGroup: null,
+    parent: 6,
+    group: 'administration',
+    itemOrder: 27,
     svg: null
   },
   {
