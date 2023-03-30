@@ -17,6 +17,10 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { TrainingProgramPartner } from '@app/models/training-program-partner';
 import { TrainingProgramPartnerService } from '@app/services/training-program-partner.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { FormBuilder } from '@angular/forms';
+import { LookupService } from '@app/services/lookup.service';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 
 @Component({
   selector: 'training-program-partner',
@@ -34,12 +38,15 @@ export class TrainingProgramPartnerComponent extends AdminGenericComponent<Train
     public service: TrainingProgramPartnerService,
     private dialogService: DialogService,
     private sharedService: SharedService,
-    private toast: ToastService) {
+    private toast: ToastService,
+    private fb: FormBuilder,
+    private lookupService:LookupService) {
     super();
   }
 
   protected _init(): void {
     this.listenToView();
+    this.buildFilterForm();
   }
 
   @ViewChild('table') table!: TableComponent;
@@ -92,7 +99,34 @@ export class TrainingProgramPartnerComponent extends AdminGenericComponent<Train
     }
   ];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
-
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
   bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
@@ -207,5 +241,10 @@ export class TrainingProgramPartnerComponent extends AdminGenericComponent<Train
         // this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
         this.reload$.next(null);
       });
+  }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], status: [null]
+    })
   }
 }

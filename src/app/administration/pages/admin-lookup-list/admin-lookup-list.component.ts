@@ -15,11 +15,13 @@ import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {DateUtils} from '@helpers/date-utils';
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, delay, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {PageEvent} from '@contracts/page-event';
-import {UntypedFormControl} from '@angular/forms';
-import {Pagination} from '@app/models/pagination';
+import {FormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {SearchColumnConfigMap, SearchColumnEventType} from '@contracts/i-search-column-config';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Pagination} from '@models/pagination';
 
 @Component({
   selector: 'admin-lookup-list',
@@ -40,6 +42,7 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
               public adminLookupService: AdminLookupService,
               private dialogService: DialogService,
               private toast: ToastService,
+              private fb: FormBuilder,
               public lookupService: LookupService) {
 
   }
@@ -59,6 +62,8 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
     this.listenToReload();
     this.listenToAdd();
     this.listenToEdit();
+    this.buildFilterForm();
+    this.listenToColumnFilter();
   }
 
   ngAfterViewInit(): void {
@@ -84,6 +89,37 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
   add$: Subject<any> = new Subject<any>();
   edit$: Subject<AdminLookup> = new Subject<AdminLookup>();
   destroy$: Subject<any> = new Subject<any>();
+  columnFilter$: Subject<SearchColumnEventType> = new Subject<any>();
+  searchColumns: string[] = ['search_arName', 'search_enName', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
+  columnFilterForm!: UntypedFormGroup;
+  isColumnFilterApplied: boolean = false;
 
   actions: IMenuItem<AdminLookup>[] = [
     // edit
@@ -163,11 +199,36 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
     return (this.lookupService.listByCategory.AdminLookupType || []).find(classification => classification.lookupKey === lookupType)?.getName() || '';
   }
 
+  resetColumnFilterAndReload(): void {
+    this.isColumnFilterApplied = false;
+    this.columnFilterForm.reset();
+    this.reload$.next(this.reload$.value)
+  }
+
   pageChange($event: PageEvent): void {
     this.pageEvent = $event;
     if (this.usePagination && this.pageEvent.previousPageIndex !== null) {
-      this.reload$.next(this.reload$.value);
+      if (!this.columnFilterFormHasValue()) {
+        this.resetColumnFilterAndReload();
+      } else {
+        this.columnFilter$.next('filter');
+      }
     }
+  }
+
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], status: [null]
+    });
+  }
+
+  getColumnFilterValue(): Partial<AdminLookup> {
+    const value: Partial<AdminLookup> = this.columnFilterForm.value;
+    if (this.columnFilterFormHasValue(value)) {
+      value.parentId = this.parentId ?? undefined;
+      return value;
+    }
+    return {};
   }
 
   addAllowed(): boolean {
@@ -191,50 +252,64 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
     this.filterControl.setValue(this.filterControl.value);
   }
 
-  private _getSubRecordsRequest() {
+  private _getSubRecordsRequest(columnFilterCriteria: Partial<AdminLookup>) {
     const paginationOptions = {
       limit: this.pageEvent.pageSize,
       offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
     };
-    let normalSubRequest = this.adminLookupService.loadByParentId(this.adminLookupTypeId, this.parentId!),
-      pagingSubRequest = this.adminLookupService.loadByParentIdPaging(paginationOptions, this.adminLookupTypeId, this.parentId!);
-
-    return {normalRequest: normalSubRequest, pagingRequest: pagingSubRequest};
+    let normalRequest: Observable<AdminLookup[]> = this.adminLookupService.loadByParentId(this.adminLookupTypeId, this.parentId!);
+    let pagingRequest: Observable<Pagination<AdminLookup[]>> = this.adminLookupService.loadByParentIdPaging(paginationOptions, this.adminLookupTypeId, this.parentId!);
+    let normalColumnFilterRequest: Observable<AdminLookup[]> = this.adminLookupService.loadByFilter(this.adminLookupTypeId, columnFilterCriteria);
+    let pagingColumnFilterRequest: Observable<Pagination<AdminLookup[]>> = this.adminLookupService.loadByFilterPaginate(paginationOptions, this.adminLookupTypeId, columnFilterCriteria);
+    if (this._isWorkField()) {
+      normalColumnFilterRequest = this.dacOchaService.loadByTypeFilter(this.adminLookupTypeId, columnFilterCriteria);
+      pagingColumnFilterRequest = this.dacOchaService.paginateByTypeFilter(paginationOptions, this.adminLookupTypeId, columnFilterCriteria);
+    }
+    return {normalRequest, pagingRequest, normalColumnFilterRequest, pagingColumnFilterRequest};
   }
 
-  private _getMainRecordsRequest() {
+  private _getMainRecordsRequest(columnFilterCriteria: Partial<AdminLookup>) {
     const paginationOptions = {
       limit: this.pageEvent.pageSize,
       offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
     };
 
-    let normalRequest: Observable<AdminLookup[]>,
-      pagingRequest: Observable<Pagination<AdminLookup[]>>;
+    let normalRequest: Observable<AdminLookup[]> = this.adminLookupService.loadComposite(this.adminLookupTypeId);
+    let pagingRequest: Observable<Pagination<AdminLookup[]>> = this.adminLookupService.paginateComposite(paginationOptions, this.adminLookupTypeId);
+    let normalColumnFilterRequest: Observable<AdminLookup[]> = this.adminLookupService.loadByFilter(this.adminLookupTypeId, columnFilterCriteria);
+    let pagingColumnFilterRequest: Observable<Pagination<AdminLookup[]>> = this.adminLookupService.loadByFilterPaginate(paginationOptions, this.adminLookupTypeId, columnFilterCriteria);
 
     if (this._isWorkField()) {
       normalRequest = this.dacOchaService.loadByType(this.adminLookupTypeId);
       pagingRequest = this.dacOchaService.loadParentsByTypePaging(paginationOptions, this.adminLookupTypeId);
-    }
-    else if (this._isGeneralProcessClassification()) {
+      normalColumnFilterRequest = this.dacOchaService.loadByTypeFilter(this.adminLookupTypeId, columnFilterCriteria);
+      pagingColumnFilterRequest = this.dacOchaService.paginateByTypeFilter(paginationOptions, this.adminLookupTypeId, columnFilterCriteria);
+    } else if (this._isGeneralProcessClassification()) {
       normalRequest = this.adminLookupService.loadComposite(this.adminLookupTypeId);
       pagingRequest = this.adminLookupService.loadParentsPaging(paginationOptions, this.adminLookupTypeId);
-    } else {
-      normalRequest = this.adminLookupService.loadComposite(this.adminLookupTypeId);
-      pagingRequest = this.adminLookupService.paginateComposite(paginationOptions, this.adminLookupTypeId);
     }
 
-    return {normalRequest, pagingRequest};
+    return {normalRequest, pagingRequest, normalColumnFilterRequest, pagingColumnFilterRequest};
   }
 
   listenToReload() {
     this.reload$
       .pipe(
         takeUntil(this.destroy$),
-        filter((val) => val !== 'init')
+        filter((val) => val !== 'init'),
+      )
+      .pipe(
+        filter(() => {
+          if (this.columnFilterFormHasValue()) {
+            this.columnFilter$.next('filter');
+            return false;
+          }
+          return true;
+        })
       )
       .pipe(
         map(() => {
-          let request = this.parentId ? this._getSubRecordsRequest() : this._getMainRecordsRequest();
+          let request = this.parentId ? this._getSubRecordsRequest({}) : this._getMainRecordsRequest({});
 
           if (this.usePagination) {
             return request.pagingRequest.pipe(
@@ -259,9 +334,74 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
         })
       )
       .subscribe((list: AdminLookup[]) => {
-        this.models = this.parentId ? list : list.filter(x => !x.parentId);
+        this.models = list; //this.parentId ? list : list.filter(x => !x.parentId);
         this._afterReload();
       });
+  }
+
+  columnFilterFormHasValue(model?: Partial<AdminLookup>) {
+    if (!model) {
+      model = this.columnFilterForm?.value || false;
+    }
+    return CommonUtils.objectHasValue(model);
+  }
+
+  listenToColumnFilter() {
+    this.columnFilter$
+      .pipe(takeUntil((this.destroy$)))
+      .pipe(
+        delay(500),
+        map((eventType: SearchColumnEventType) => {
+          if (eventType === 'clear') {
+            return {};
+          }
+          return this.getColumnFilterValue();
+        }),
+        filter((criteria) => {
+          const hasFilterCriteria = this.columnFilterFormHasValue(criteria);
+          if (!hasFilterCriteria) {
+            if (this.isColumnFilterApplied) {
+              this.reload$.next(null);
+            }
+            this.isColumnFilterApplied = false;
+            return false;
+          } else {
+            this.isColumnFilterApplied = true;
+            return true;
+          }
+        }),
+      )
+      .pipe(
+        map((criteria: Partial<AdminLookup>) => {
+          let request = this.parentId ? this._getSubRecordsRequest(criteria) : this._getMainRecordsRequest(criteria);
+
+          if (this.usePagination) {
+            return request.pagingColumnFilterRequest.pipe(
+              map((res) => {
+                this.count = res.count;
+                return res.rs;
+              }));
+          } else {
+            return request.normalColumnFilterRequest.pipe(map((res) => {
+              this.count = res.length;
+              return res;
+            }));
+          }
+        }),
+        switchMap((finalRequest) => {
+          return finalRequest.pipe(
+            catchError(() => {
+              this.count = 0;
+              return of([]);
+            })
+          );
+        })
+      )
+      .subscribe((list: AdminLookup[]) => {
+        this.count = list.length;
+        this.models = list;
+        this._afterReload();
+      })
   }
 
   listenToAdd(): void {

@@ -26,6 +26,9 @@ import { LookupService } from '@app/services/lookup.service';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { FilterEventTypes } from '@app/types/types';
 import { AdminGenericComponent } from "@app/generics/admin-generic-component";
+import { CustomValidators } from '@app/validators/custom-validators';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'country',
@@ -36,6 +39,41 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
   usePagination = true
   actions: IMenuItem<Country>[] = [];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'riskLevel', 'status', 'statusDateModified', 'actions'];
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName','search_riskLevel', 'search_status','search_statusDateModified', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_riskLevel: {
+      key: 'riskLevel',
+      controlType: 'text',
+      property: 'riskLevel',
+      label: 'risk_level',
+      mask: CustomValidators.inputMaskPatterns.NUMBER_ONLY
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
   @Input() headerTitle: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   bulkActions: IGridAction[] = [];
   commonStatus = CommonStatusEnum;
@@ -48,7 +86,8 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
               private toast: ToastService,
               private dialogService: DialogService,
               private lookupService: LookupService,
-              private sharedService: SharedService) {
+              private sharedService: SharedService,
+              private fb: FormBuilder) {
     super()
   }
 
@@ -87,6 +126,7 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
     this.buildActions();
     this.buildBulkActions();
     this.listenToView();
+    this.buildFilterForm();
   }
 
   ngAfterViewInit(): void {
@@ -288,4 +328,9 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
     ];
   }
 
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], riskLevel: [''], status: [null]
+    })
+  }
 }

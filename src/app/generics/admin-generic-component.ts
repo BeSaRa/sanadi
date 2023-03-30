@@ -1,14 +1,16 @@
-import { BehaviorSubject, Observable, of, Subject } from "rxjs";
-import { IMenuItem } from "@app/modules/context-menu/interfaces/i-menu-item";
-import { catchError, exhaustMap, filter, map, switchMap, takeUntil } from "rxjs/operators";
-import { Directive, OnDestroy, OnInit } from "@angular/core";
-import { UntypedFormControl } from "@angular/forms";
-import { DialogRef } from "@app/shared/models/dialog-ref";
-import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { PageEvent } from "@contracts/page-event";
-import { CrudServiceInterface } from "@contracts/crud-service-interface";
+import {CommonUtils} from '@app/helpers/common-utils';
+import {BehaviorSubject, Observable, of, Subject} from "rxjs";
+import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
+import {catchError, delay, exhaustMap, filter, map, switchMap, takeUntil} from "rxjs/operators";
+import {Directive, OnDestroy, OnInit} from "@angular/core";
+import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {CrudWithDialogGenericService} from "@app/generics/crud-with-dialog-generic-service";
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {PageEvent} from "@contracts/page-event";
+import {CrudServiceInterface} from "@contracts/crud-service-interface";
 import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {SearchColumnConfigMap, SearchColumnEventType} from '@contracts/i-search-column-config';
 
 @Directive()
 export abstract class AdminGenericComponent<M extends { id: number }, S extends CrudWithDialogGenericService<M>> implements OnInit, OnDestroy {
@@ -32,6 +34,21 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   abstract actions: IMenuItem<M>[];
   // grid columns override it in your component to display your custom columns on your grid
   abstract displayedColumns: string[];
+  // subject for emit column filter
+  columnFilter$: Subject<SearchColumnEventType> = new Subject<any>();
+  /**
+   * @description Grid Search Columns
+   * (Must have the same order of displayedColumns).
+   * (Name should not match any displayedColumns).
+   */
+  searchColumns: string[] = [];
+  // abstract searchColumns: string[];
+  searchColumnsConfig: SearchColumnConfigMap = {};
+  // form to filter table header
+  // abstract columnFilterForm: UntypedFormGroup;
+  columnFilterForm!: UntypedFormGroup;
+  isColumnFilterApplied: boolean = false;
+
   //  you can override this property from child class to use load or loadComposite
   useCompositeToLoad: boolean = true;
   //  you can override this property from child class to use editDialog or editDialogComposite
@@ -61,6 +78,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
     this.listenToReload();
     this.listenToAdd();
     this.listenToEdit();
+    this.listenToColumnFilter();
     // this.listenToView();
   }
 
@@ -70,6 +88,15 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   listenToReload() {
     this.reload$
       .pipe(takeUntil((this.destroy$)))
+      .pipe(
+        filter(() => {
+          if (this.columnFilterFormHasValue()) {
+            this.columnFilter$.next('filter');
+            return false;
+          }
+          return true;
+        })
+      )
       .pipe(switchMap(() => {
         let load: Observable<M[]>
         let service = this.service as unknown as CrudServiceInterface<M>
@@ -92,12 +119,6 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
         }));
       }))
       .subscribe((list: M[]) => {
-        /*if (this.filterRetired) {
-          list = list.filter((item) => {
-            const model = item as M & { status: number }
-            return model.status !== CommonStatusEnum.RETIRED
-          })
-        }*/
         if (!this.usePagination) {
           this.count = list.length;
         }
@@ -148,6 +169,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   /**
    * @description listen to view - default implementation you can override it in Child class if you need
    */
+
   /*listenToView(): void {
     this.view$
       .pipe(takeUntil(this.destroy$))
@@ -167,6 +189,71 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
       .subscribe()
   }*/
 
+  /**
+   * @description default implementation to listen to column filter method you can override it if you need custom logic
+   */
+  listenToColumnFilter() {
+    this.columnFilter$
+      .pipe(takeUntil((this.destroy$)))
+      .pipe(
+        delay(500),
+        map((eventType: SearchColumnEventType) => {
+          if (eventType === 'clear') {
+            return {};
+          }
+          return this.getColumnFilterValue();
+        }),
+        filter((criteria) => {
+          const hasFilterCriteria = this.columnFilterFormHasValue(criteria);
+          if (!hasFilterCriteria) {
+            if (this.isColumnFilterApplied) {
+              this.resetColumnFilterAndReload();
+            }
+            this.isColumnFilterApplied = false;
+            return false;
+          } else {
+            this.isColumnFilterApplied = true;
+            return true;
+          }
+        })
+      )
+      .pipe(
+        map((criteria) => {
+          let service = this.service as unknown as CrudServiceInterface<M>
+          const paginationOptions = {
+            limit: this.pageEvent.pageSize,
+            offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+          }
+          if (this.usePagination) {
+            return service.loadByFilterPaginate(paginationOptions, criteria)
+              .pipe(map((res) => {
+                this.count = res.count;
+                return res.rs;
+              }))
+          } else {
+            return service.loadByFilter(criteria)
+              .pipe(map((res) => {
+                this.count = res.length;
+                return res;
+              }))
+          }
+        }),
+        switchMap((finalRequest) => {
+          return finalRequest.pipe(
+            catchError(() => {
+              this.count = 0;
+              return of([]);
+            })
+          );
+        })
+      )
+      .subscribe((list: M[]) => {
+        this.count = list.length;
+        this.models = list;
+        this.afterReload();
+      })
+  }
+
   protected _init(): void {
 
   }
@@ -175,10 +262,35 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
 
   }
 
+  columnFilterFormHasValue(model?: Partial<M>) {
+    if (!model) {
+      model = this.columnFilterForm?.value || false;
+    }
+    return CommonUtils.objectHasValue(model);
+  }
+
+  /**
+   * @description Get the value of column filter form.
+   * Override in your component to return custom values or to add/remove properties
+   */
+  getColumnFilterValue(): Partial<M> {
+    return {...this.columnFilterForm.value};
+  }
+
+  resetColumnFilterAndReload(): void {
+    this.isColumnFilterApplied = false;
+    this.columnFilterForm.reset();
+    this.reload$.next(this.reload$.value)
+  }
+
   pageChange($event: PageEvent): void {
     this.pageEvent = $event
     if (this.usePagination && this.pageEvent.previousPageIndex !== null) {
-      this.reload$.next(this.reload$.value)
+      if (!this.columnFilterFormHasValue()) {
+        this.resetColumnFilterAndReload();
+      } else {
+        this.columnFilter$.next('filter');
+      }
     }
   }
 

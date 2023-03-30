@@ -12,6 +12,10 @@ import { ToastService } from '@app/services/toast.service';
 import { SortEvent } from '@app/interfaces/sort-event';
 import { CommonUtils } from '@app/helpers/common-utils';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { FormBuilder } from '@angular/forms';
+import { LookupService } from '@app/services/lookup.service';
 
 @Component({
   selector: 'internal-department',
@@ -19,6 +23,14 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   styleUrls: ['./internal-department.component.scss']
 })
 export class InternalDepartmentComponent extends AdminGenericComponent<InternalDepartment, InternalDepartmentService> {
+  constructor(
+    public lang: LangService, 
+    public service: InternalDepartmentService,
+    private toast: ToastService,
+    private fb: FormBuilder,
+    private lookupService:LookupService ) {
+    super();
+  }
   usePagination = true
   searchText = '';
   view$: Subject<InternalDepartment> = new Subject<InternalDepartment>();
@@ -40,12 +52,37 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       onClick: (item) => this.view$.next(item)
     }
   ];
+  
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
-
-  constructor(public lang: LangService, public service: InternalDepartmentService,
-              private toast: ToastService) {
-    super();
+  searchColumns: string[] = ['search_arName', 'search_enName', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
   }
+  
 
   sortingCallbacks = {
     statusInfo: (a: InternalDepartment, b: InternalDepartment, dir: SortEvent): number => {
@@ -54,12 +91,10 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   }
-
-  ngOnInit() {
-    this.listenToReload();
-    this.listenToAdd();
-    this.listenToEdit();
+    
+  protected _init(): void {
     this.listenToView();
+    this.buildFilterForm();
   }
 
   listenToView(): void {
@@ -75,5 +110,10 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
 
   filterCallback = (record: any, searchText: string) => {
     return record.search(searchText);
+  }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], status: [null]     
+    })
   }
 }

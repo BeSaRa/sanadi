@@ -14,6 +14,9 @@ import { DialogService } from '@app/services/dialog.service';
 import { SharedService } from '@app/services/shared.service';
 import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { FormBuilder } from '@angular/forms';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 
 @Component({
   selector: 'app-general-process',
@@ -66,7 +69,23 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
     }
   ];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'actions'];
-
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    }
+  }
   bulkActionsList: IGridAction[] = [
     {
       icon: 'mdi-list-status',
@@ -96,12 +115,14 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
     public service: GeneralProcessService,
     private dialogService: DialogService,
     private sharedService: SharedService,
-    private toast: ToastService
+    private toast: ToastService,
+    private fb: FormBuilder,
   ) {
     super();
   }
   protected _init(): void {
     this.listenToView();
+    this.buildFilterForm()
   }
   afterReload(): void {
     this.table && this.table.clearSelection();
@@ -142,5 +163,10 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
         // this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
         this.reload$.next(null);
       });
+  }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: ['']
+    })
   }
 }

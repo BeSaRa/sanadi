@@ -9,7 +9,7 @@ import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
 import {Country} from '@app/models/country';
@@ -39,7 +39,7 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
   validateFieldsVisible = true;
 
   selectedTabName: string;
-
+  CustomValidators = CustomValidators
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Country>,
               private toast: ToastService,
               private dialogRef: DialogRef,
@@ -89,7 +89,7 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
           CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM_ONE_ENG')
         ]],
         status: [this.model.status, [CustomValidators.required]],
-        riskLevel: [this.model.riskLevel, [CustomValidators.decimal(5), CustomValidators.maxLength(10)]]
+        riskLevel: [this.model.riskLevel, [Validators.max(5), Validators.min(0)]]
       },
       validators: string[] = ['arName', 'enName', 'status'];
 
