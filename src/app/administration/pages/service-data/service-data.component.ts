@@ -35,7 +35,7 @@ export class ServiceDataComponent extends AdminGenericComponent<ServiceData, Ser
               public service: ServiceDataService,
               private dialogService: DialogService,
               private sharedService: SharedService,
-              private toast: ToastService, 
+              private toast: ToastService,
               private fb:FormBuilder,
               private lookupService:LookupService) {
     super();
@@ -86,8 +86,14 @@ export class ServiceDataComponent extends AdminGenericComponent<ServiceData, Ser
     }
   ];
   displayedColumns: string[] = ['bawServiceCode', 'arName', 'enName', 'updatedOn', 'updatedBy', 'status', 'actions'];
-  searchColumns: string[] = ['_', 'search_arName', 'search_enName','search_updatedOn', 'search_updatedBy', 'search_status', 'search_actions'];
+  searchColumns: string[] = ['search_bawServiceCode', 'search_arName', 'search_enName','search_updatedOn', 'search_updatedBy', 'search_status', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
+    search_bawServiceCode: {
+      key: 'bawServiceCode',
+      controlType: 'text',
+      property: 'bawServiceCode',
+      label: 'baw_service_code'
+    },
     search_arName: {
       key: 'arName',
       controlType: 'text',
@@ -161,7 +167,7 @@ export class ServiceDataComponent extends AdminGenericComponent<ServiceData, Ser
 
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: [''], enName: [''], status: [null]
+      arName: [''], enName: [''], status: [null], bawServiceCode: ['']
     })
   }
 }

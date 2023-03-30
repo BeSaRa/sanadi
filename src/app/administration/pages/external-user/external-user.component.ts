@@ -62,8 +62,14 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
 
   @ViewChild('table') table!: TableComponent;
   displayedColumns: string[] = ['domainName', 'arName', 'enName', 'empNum', 'organization', 'status', 'statusDateModified', 'actions'];
-  searchColumns: string[] = ['_', 'search_arName', 'search_enName','search_empNum', 'search_organization', 'search_status','search_statusDateModified', 'search_actions'];
+  searchColumns: string[] = ['search_domainName', 'search_arName', 'search_enName','search_empNum', 'search_organization', 'search_status','search_statusDateModified', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
+    search_domainName: {
+      key: 'domainName',
+      controlType: 'text',
+      property: 'domainName',
+      label: 'login_name'
+    },
     search_arName: {
       key: 'arName',
       controlType: 'text',
@@ -79,7 +85,7 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
       maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
     },
     search_empNum: {
-      key:'empNum', 
+      key:'empNum',
       controlType:'text',
       property:'empNum',
       label:'lbl_employee_number',
@@ -227,7 +233,7 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
 
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: [''], enName: [''], empNum: [null], status: [null],
+      arName: [''], enName: [''], empNum: [null], status: [null], domainName: ['']
     })
   }
 }

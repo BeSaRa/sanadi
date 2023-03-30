@@ -48,14 +48,14 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
       key: 'arName',
       controlType: 'text',
       property: 'arName',
-      label: 'arabic_name',
+      label: 'lbl_arabic_name',
       maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
     },
     search_enName: {
       key: 'enName',
       controlType: 'text',
       property: 'enName',
-      label: 'english_name',
+      label: 'lbl_english_name',
       maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
     },
     search_status: {
@@ -193,7 +193,7 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
         this.reload$.next(null);
       });
   }
-  
+
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
       arName: [''], enName: [''], status: [null]

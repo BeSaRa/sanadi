@@ -67,11 +67,18 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
     }
   }
 
-  searchColumns: string[] = !this.service.userRolesManageUser.isApprovalAdmin()? 
+  searchColumns: string[] = !this.service.userRolesManageUser.isApprovalAdmin()?
       ['search_domainName', 'search_arName', 'search_enName','search_requestType', 'search_updatedOn', 'search_requestStatus', 'search_updatedBy', 'search_actions']:
       ['_', 'search_domainName', 'search_arName', 'search_enName','search_requestType', 'search_updatedOn', 'search_requestStatus', 'search_updatedBy', 'search_actions'];
 
   searchColumnsConfig: SearchColumnConfigMap = {
+    search_domainName: {
+      key: 'domainName',
+      controlType: 'text',
+      property: 'domainName',
+      label: 'login_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
     search_arName: {
       key: 'arName',
       controlType: 'text',
@@ -109,7 +116,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       }
     }
   }
-  
+
   sortingCallbacks = {
     updatedOn: (a: ExternalUserUpdateRequest, b: ExternalUserUpdateRequest, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.updatedOn!),
@@ -328,10 +335,10 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       this.profileIdControl.disable();
     }
   }
-  
+
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: [''], enName: [''], requestType:[null], requestStatus:[null]
+      arName: [''], enName: [''], requestType:[null], requestStatus:[null], domainName: ['']
     })
   }
 }
