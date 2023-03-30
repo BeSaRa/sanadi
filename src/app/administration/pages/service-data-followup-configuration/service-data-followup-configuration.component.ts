@@ -83,7 +83,7 @@ export class ServiceDataFollowupConfigurationComponent extends AdminGenericCompo
     // delete
     {
       type: 'action',
-      label: 'view',
+      label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
       show: () => !this.readonly,
       onClick: (item: ServiceDataFollowupConfiguration) => this.delete(item)

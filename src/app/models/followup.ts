@@ -89,7 +89,7 @@ export class Followup extends BaseModel<Followup, FollowupService> {
     }
   };
 
-  followupPopupSearchFields: ISearchFieldsMap<Followup> = {
+  searchFieldsFollowupPopup: ISearchFieldsMap<Followup> = {
     ...normalSearchFields(['fullSerial']),
     ...infoSearchFields(['statusInfo', 'requestTypeInfo', 'serviceInfo', 'orgInfo']),
     ...dateSearchFields(['dueDate']),

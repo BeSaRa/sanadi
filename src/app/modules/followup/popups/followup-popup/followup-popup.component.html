@@ -1,4 +1,9 @@
-<div class="dialog-content" #dialogContent style="min-width: 800px">
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.add_followup}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content w800px" #dialogContent>
   <form [formGroup]="form">
     <div class="row">
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
@@ -103,5 +108,5 @@
   <span class="flex-grow-1"></span>
   <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
-  <button (click)="cancel()" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

@@ -3,21 +3,14 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content w800px" [ngClass]="showForm? 'hide' : 'show'">
-  <div *ngIf="!hasConfiguration" class="row">
-    <div class="col-12">
-      <div class="alert alert-info">
-        {{lang.map.there_is_no_followup_configurations_for_this_service}}
-      </div>
-    </div>
-  </div>
+<div class="dialog-content w800px">
   <div class="row">
     <div class="col-12">
       <div class="table-responsive">
         <app-table #table [paginator]="paginator"
                    [filter]="filterControl.value"
                    [useSearchToFilter]="true"
-                   [searchFieldsName]="'followupPopupSearchFields'"
+                   [searchFieldsName]="'searchFieldsFollowupPopup'"
                    [data]="models"
                    [columns]="displayedColumns"
                    sortableTable>
@@ -25,9 +18,7 @@
             <ng-container cdkColumnDef="extra-header">
               <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
                 <table-header [reload$]="reload$"
-                              [allowReload]="hasConfiguration"
                               [useReloadValue]="true"
-                              [allowAdd]="hasConfiguration"
                               [add$]="addFollowup$"
                               (textChange)="filterControl.setValue($event)">
                 </table-header>
@@ -82,6 +73,9 @@
     </div>
   </div>
 </div>
-<followup-popup *ngIf="showForm" [case]="case" (hideForm)="hideForm()"></followup-popup>
+<div class="dialog-actions">
+  <span class="flex-grow-1"></span>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>
 
 

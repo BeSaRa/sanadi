@@ -24,7 +24,7 @@ export class FollowupInterceptor
     delete model.serviceInfo;
     delete model.statusInfo;
     delete model.orgInfo;
-    delete model.followupPopupSearchFields;
+    delete model.searchFieldsFollowupPopup;
     delete model.searchFieldsExternalFollowup;
     delete model.searchFieldsInternalFollowup;
     delete model.searchFields;
