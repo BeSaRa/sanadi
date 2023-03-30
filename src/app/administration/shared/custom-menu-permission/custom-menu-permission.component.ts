@@ -111,7 +111,12 @@ export class CustomMenuPermissionComponent implements OnInit {
       }))
       .subscribe((selectedMenus: number[]) => {
         this.groupHandler.setSelection(selectedMenus);
+        this.defaultGroupHandler.setSelection(selectedMenus);
+        console.log(this.groupHandler);
+        console.log(this.defaultGroupHandler);
+
       });
+
   }
 
   private _fillParentChunkSpace(menus: CustomMenu[], parent: CustomMenu): CustomMenu[] {
@@ -136,7 +141,7 @@ export class CustomMenuPermissionComponent implements OnInit {
     let result: CustomMenu[] = [];
     let defaultResult:CustomMenu[] = [];
     let parents: CustomMenu[] = [], parentChildrenMap = new Map<number, CustomMenu[]>;
-    let defaultParents: Set<CustomMenu> =new Set<CustomMenu>() ;
+    let defaultParents: CustomMenu[] = [] ;
     let defaultChildrenMap = new Map<string, CustomMenu[]>;
     menus.map((menu) => {
       if (!menu.parentMenuItemId && !menu.isDefaultItem()) {
@@ -146,7 +151,13 @@ export class CustomMenuPermissionComponent implements OnInit {
         parentChildrenMap.set(menu.parentMenuItemId, (parentChildrenMap.get(menu.parentMenuItemId) ?? []).concat(menu));
       }
       if(menu.systemMenuKey && menu.hasDefaultParent()){
-        defaultParents.add(new CustomMenu().clone({systemMenuKey: menu.systemMenuKey}))
+        if(!defaultParents.find(m => m.systemMenuKey === menu.systemMenuKey)){
+          defaultParents.push(new CustomMenu().clone({
+            menuType : menu.menuType,
+            systemMenuKey: menu.systemMenuKey,
+            isSystem:true
+          }))
+        }
         defaultChildrenMap.set(menu.systemMenuKey, (defaultChildrenMap.get(menu.systemMenuKey) ?? []).concat(menu));
 
       }
@@ -162,18 +173,20 @@ export class CustomMenuPermissionComponent implements OnInit {
       }
       result = result.concat(children);
     });
+
     defaultParents.forEach((parent) => {
       defaultResult.push(parent);
       // add empty custom menu to complete the chunk length of parents
       defaultResult = this._fillParentChunkSpace(defaultResult, parent);
       let children = defaultChildrenMap.get(parent.systemMenuKey!) ?? [];
+
       if (children.length > 0) {
         children = this._fillChildrenChunkSpace(children, children[0]);
       }
+      console.log(children);
       defaultResult = defaultResult.concat(children);
     });
     console.log(defaultParents);
-    console.log(defaultChildrenMap);
 
     return {
       result:result,
@@ -247,6 +260,12 @@ export class CustomMenuPermissionComponent implements OnInit {
 
   isParentRow(row: CustomMenu[]): boolean {
     return !row[0].parentMenuItemId;
+  }
+  isDefaultParentRow(row: CustomMenu[]): boolean {
+    return (!!row[0].systemMenuKey && row[0].isSystem)  ||
+          (!!row[1]?.systemMenuKey && row[1]?.isSystem) ||
+          (!!row[2]?.systemMenuKey && row[2]?.isSystem)
+        ;
   }
 
   getOldUserMenuPermissions(): number[] {
