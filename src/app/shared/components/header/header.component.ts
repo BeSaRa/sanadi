@@ -44,6 +44,6 @@ export class HeaderComponent implements OnInit {
   }
 
   openUserPreferences() {
-    this.userPreferencesService.openEditDialog(this.employeeService.getCurrentUser().generalUserId).subscribe();
+    this.userPreferencesService.openEditDialog(this.employeeService.getCurrentUser()).subscribe();
   }
 }

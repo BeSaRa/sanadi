@@ -1,7 +1,13 @@
 import {Injectable} from '@angular/core';
 import {DialogService} from './dialog.service';
 import {HttpErrorResponse, HttpRequest} from '@angular/common/http';
-import {AdminResult} from '../models/admin-result';
+import {AdminResult} from '@models/admin-result';
+import {Router} from '@angular/router';
+import {EmployeeService} from '@services/employee.service';
+import {FactoryService} from '@services/factory.service';
+import {LangService} from '@services/lang.service';
+import {AuthService} from '@services/auth.service';
+import {UrlService} from '@services/url.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +17,32 @@ export class ExceptionHandlerService {
   private excludedCodes: Map<number, number> = new Map<number, number>();
   private excludedMethodWithURL: Map<string, string> = new Map<string, string>();
 
-  constructor(private dialog: DialogService) {
+  constructor(private dialog: DialogService,
+              private router: Router) {
+  }
+
+  private _handle401(): void {
+    const employeeService: EmployeeService = FactoryService.getService('EmployeeService');
+    if (!employeeService.loggedIn()) {
+      return;
+    }
+    const langService: LangService = FactoryService.getService('LangService');
+    const authService: AuthService = FactoryService.getService('AuthService');
+    authService.logout().subscribe(() => {
+      this.dialog.error(langService.map.msg_session_timed_out);
+      this.router.navigate([employeeService.isExternalUser() ? '/login-external' : '/login']).then();
+    });
   }
 
   handle(error: any, req?: HttpRequest<any>): void {
-    // if (error.status === 401) {
-    //   return;
-    // }
+    if (error.status === 401) {
+      const urlService: UrlService = FactoryService.getService('UrlService');
+      // if not login urls request, handle manually and don't proceed to general exception
+      if (!urlService.loginUrlsList.includes(error.url)) {
+        this._handle401();
+        return;
+      }
+    }
     if (!error.error) {
       error.error = {eo: error.eo}
     }

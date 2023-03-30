@@ -10,6 +10,7 @@ import {FileType} from '@models/file-type';
 import {CommonUtils} from '@helpers/common-utils';
 import {ToastService} from '@services/toast.service';
 import {Router} from '@angular/router';
+import {AuthService} from '@services/auth.service';
 
 @Component({
   selector: 'global-settings',
@@ -27,6 +28,7 @@ export class GlobalSettingsComponent implements OnInit {
               public fb: UntypedFormBuilder,
               public service: GlobalSettingsService,
               private toast: ToastService,
+              private authService: AuthService,
               private router: Router) {
   }
 
@@ -122,11 +124,15 @@ export class GlobalSettingsComponent implements OnInit {
     let updatedModel = new GlobalSettings().clone({...this.model, ...this.form.value});
     this.emails.updateValueAndValidity();
     updatedModel.supportEmailList = this.getEmailsAsString(this.emails.value);
-    this.service.update(updatedModel).pipe(
-      switchMap(() => this.loadCurrentGlobalSettings())
-    ).subscribe(_ => {
-      this.toast.success(this.lang.map.msg_save_success);
-    });
+    this.service.update(updatedModel)
+      // .pipe(switchMap(() => this.loadCurrentGlobalSettings()))
+      .subscribe(_ => {
+        this.toast.success(this.lang.map.msg_save_success);
+        this.authService.logout()
+          .subscribe(() => {
+            this.router.navigate(['/login']).then();
+          })
+      });
   }
 
   invalidEmailsForm() {

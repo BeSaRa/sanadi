@@ -2608,7 +2608,7 @@ export const newNavigationMenuList = [
     path: '/home/administration/global-settings',
     icon: 'mdi-cog',
     isSvg: false,
-    permission: '',
+    permission: PermissionsEnum.MANAGE_SYSTEM_PREFERENCES,
     permissionGroup: null,
     parent: 6,
     group: 'administration',

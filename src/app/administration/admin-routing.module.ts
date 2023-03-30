@@ -231,7 +231,7 @@ const routes: Routes = [
   {
     path: 'global-settings', component: GlobalSettingsComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: '', configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: PermissionsEnum.MANAGE_SYSTEM_PREFERENCES, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'admin-license', component: AdminLicenseComponent,

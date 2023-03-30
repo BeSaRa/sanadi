@@ -19,8 +19,6 @@
            *ngIf="employeeService.isInternalUser()"></tab>
       <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
            [template]="attachmentsTabTemplate" [title]="lang.map.attachments"></tab>
-      <tab [name]="tabsData.logs.name" [hasError]="getTabInvalidStatus('logs')"
-           [template]="logsTemplate" [title]="lang.map.logs" *ngIf="fromDialog" [disabled]="!model?.id"></tab>
     </tabs-list>
     <ng-template #basicInfoTabTemplate>
       <div formGroupName="basicInfo">
@@ -764,23 +762,9 @@
     </ng-template>
 
     <ng-template #attachmentsTabTemplate>
-      <!--<div class="d-flex flex-row align-items-center justify-content-start">
-        <button [disabled]="isAttachmentReadonly()" (click)="attachmentsCtrl.openUploadDialog()"
-                class="d-inline-block btn p-0 icon-btn"><i
-          class="mdi mdi-plus-box text-primary"></i></button>
-      </div>
-      <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"
-                     [readonly]="isAttachmentReadonly()"></app-documents>-->
-
       <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
                    [service]="service.documentService" [model]="model"
                    [load]="loadAttachments" [formProperties]="formProperties"></attachments>
-    </ng-template>
-
-    <ng-template #logsTemplate>
-      <!--<request-recommendations [record]="model"></request-recommendations>-->
-      <log-viewer [caseId]="model!.getCaseId()" [service]="service.actionLogService"
-                  [hideItemLocation]="true" [hideViewedAction]="true"></log-viewer>
     </ng-template>
   </form>
 </div>

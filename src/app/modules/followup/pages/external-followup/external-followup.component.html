@@ -4,7 +4,9 @@
       <app-table #table [paginator]="paginator" sortableTable
                  [columns]="displayedColumns"
                  [data]="models"
+                 [searchFieldsName]="'searchFieldsExternalFollowup'"
                  [filter]="searchText"
+                 [useSearchToFilter]="true"
                  [filterCallback]="filterCallback">
         <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
           <ng-container cdkColumnDef="extra-header">

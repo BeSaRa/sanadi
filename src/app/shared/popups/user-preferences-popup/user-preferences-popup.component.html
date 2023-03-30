@@ -4,60 +4,39 @@
     <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
             tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
     <button type="button" class="btn-close btn-close-white"
-            tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+            tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
   </div>
 </div>
 <div class="dialog-content w800px" #content>
   <form [formGroup]="form" novalidate>
     <div class="row mb-3">
       <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="arName" for="arName"
-               class="form-label">{{lang.map.lbl_arabic_name}}</label>
-        <input id="arName"
-               validationClasses="arName"
-               formControlName="arName" class="form-control">
+        <label class="form-label">{{lang.map.lbl_arabic_name}}</label>
+        <span class="form-control input-disabled">{{user.arName || '&nbsp;'}}</span>
       </div>
       <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="enName" for="enName"
-               class="form-label">{{lang.map.lbl_english_name}}</label>
-        <input id="enName"
-               validationClasses="enName"
-               formControlName="enName" class="form-control">
+        <label class="form-label">{{lang.map.lbl_english_name}}</label>
+        <span class="form-control input-disabled">{{user.enName || '&nbsp;'}}</span>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="empNum" for="empNum"
-               class="form-label">{{lang.map.lbl_employee_number}}</label>
-        <input id="empNum"
-               validationClasses="empNum"
-               formControlName="empNum" class="form-control"
-               [mask]="inputMaskPatterns.NUMBER_ONLY">
+        <label class="form-label">{{lang.map.lbl_employee_number}}</label>
+        <span class="form-control input-disabled">{{user.empNum || '&nbsp;'}}</span>
       </div>
       <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="qid" for="qid"
-               class="form-label">{{lang.map.qatari_id_number}}</label>
-        <input id="qid"
-               validationClasses="qid"
-               formControlName="qid" class="form-control"
-               [mask]="inputMaskPatterns.NUMBER_ONLY">
+        <label class="form-label">{{lang.map.qatari_id_number}}</label>
+        <span class="form-control input-disabled">{{user.qid || '&nbsp;'}}</span>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="phoneNumber" for="phoneNumber"
-               class="form-label">{{lang.map.lbl_phone}}</label>
-        <input id="phoneNumber"
-               validationClasses="phoneNumber"
-               formControlName="phoneNumber" class="form-control"
-               [mask]="inputMaskPatterns.NUMBER_ONLY">
+        <label class="form-label">{{lang.map.lbl_phone}}</label>
+        <span class="form-control input-disabled">{{user.phoneNumber || '&nbsp;'}}</span>
       </div>
       <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="email" for="email"
-               class="form-label">{{lang.map.lbl_email}}</label>
-        <input id="email"
-               validationClasses="email"
-               formControlName="email" class="form-control">
+        <label class="form-label">{{lang.map.lbl_email}}</label>
+        <span class="form-control input-disabled">{{user.email || '&nbsp;'}}</span>
       </div>
     </div>
     <div class="row mb-3">
@@ -68,8 +47,7 @@
                    placeholder="{{lang.map.select}}"
                    [notFoundText]="lang.map.msg_not_found"
                    formControlName="defaultLang"
-                   id="defaultLang" appendTo="body"
-                   [multiple]="false">
+                   id="defaultLang" appendTo="body">
           <ng-option [value]="language.lookupKey"
                      *ngFor="let language of languages">{{language.getName()}}</ng-option>
         </ng-select>
@@ -92,7 +70,7 @@
         </button>
         <div class="row" [formGroup]="alternateUserEmailsForm">
           <div formArrayName="emails" class="emails-container">
-            <div class="col-sm-12 position-relative email-wrapper" *ngFor="let email of emails.controls; let i = index">
+            <div class="col-sm-12 position-relative email-wrapper" *ngFor="let email of emailsFormArray.controls; let i = index">
               <div class="input-group">
                 <input [id]="i" class="form-control" [formControlName]="i" validationClasses="{{i}}">
                 <app-field-error-message controlName="{{i}}"></app-field-error-message>
@@ -111,7 +89,7 @@
   <button tabindex="-1" (click)="displayFormValidity(null, content)" tooltip="{{ lang.map.validate_fields }}"
           class="btn btn-link"><i class="mdi mdi-information-outline text-info"></i></button>
   <div class="flex-grow-1"></div>
-  <button (click)="save()" [disabled]="!form || form.invalid || invalidEmailsForm()"
+  <button (click)="save()" [disabled]="isInvalidForm()"
           class="btn btn-primary">{{ lang.map.btn_save }}</button>
-  <button [dialogClose]="model" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
 </div>

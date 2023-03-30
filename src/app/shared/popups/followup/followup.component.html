@@ -3,87 +3,79 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content" [ngClass]="showForm? 'hide' : 'show'" style="min-width: 800px">
-  <div>
-    <div class="row pb-3">
-      <app-page-header
-              [pageTitle]="'followup'"
-              [disableAdd]="!hasConfiguration"
-              [disableReload]="!hasConfiguration"
-              [clickOnReload$]="reload$"
-              [useReloadValue]="true"
-              [clickOnNew$]="addFollowup$">
-      </app-page-header>
-      <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="table-responsive">
-          <app-table #table [paginator]="paginator"
-                     [filter]="filterControl.value"
-                     [useSearchToFilter]="true"
-                     [searchFieldsName]="'followupPopupSearchFields'"
-                     [data]="models"
-                     [columns]="displayedColumns"
-                     sortableTable>
-            <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
-              <ng-container cdkColumnDef="requestNumber">
-                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.requestNumber">{{lang.map.request_number}}</th>
-                <td cdk-cell *cdkCellDef="let row">{{row.fullSerial}}</td>
-              </ng-container>
-              <ng-container cdkColumnDef="requestType">
-                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.requestType">{{lang.map.request_type}}</th>
-                <td cdk-cell *cdkCellDef="let row">{{row.requestTypeInfo?.getName() || ''}}</td>
-              </ng-container>
-              <ng-container cdkColumnDef="name">
-                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.name">{{lang.map.name}}</th>
-                <td cdk-cell *cdkCellDef="let row">{{row.getName()}}</td>
-              </ng-container>
-              <ng-container cdkColumnDef="serviceType">
-                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.serviceInfo">{{lang.map.service_type}}</th>
-                <td cdk-cell *cdkCellDef="let row">{{row.serviceInfo?.getName() || ''}}</td>
-              </ng-container>
-              <ng-container cdkColumnDef="dueDate">
-                <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.dueDate}}</th>
-                <td cdk-cell *cdkCellDef="let row">
-                  <b>{{row.dueDate | date}}</b>
-                </td>
-              </ng-container>
-              <ng-container cdkColumnDef="status">
-                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.statusInfo">{{lang.map.status}}</th>
-                <td cdk-cell *cdkCellDef="let row">{{row.statusInfo?.getName() || ''}}</td>
-              </ng-container>
-              <ng-container cdkColumnDef="orgInfo">
-                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.orgInfo">{{lang.map.lbl_organization}}</th>
-                <td cdk-cell *cdkCellDef="let row">{{row.orgInfo?.getName() || ''}}</td>
-              </ng-container>
-
-              <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
-              <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
-              <tr *cdkNoDataRow>
-                <td colspan="10" class="text-center">{{lang.map.no_records_to_display}}</td>
-              </tr>
-            </table>
-          </app-table>
-          <app-paginator #paginator [pageSize]="10" [length]="table.dataSource.data.length"></app-paginator>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="!hasConfiguration" class="row">
-      <div class="col-12">
-        <div class="alert alert-info">
-          {{lang.map.there_is_no_followup_configurations_for_this_service}}
-        </div>
+<div class="dialog-content w800px">
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive">
+        <app-table #table [paginator]="paginator"
+                   [filter]="filterControl.value"
+                   [useSearchToFilter]="true"
+                   [searchFieldsName]="'searchFieldsFollowupPopup'"
+                   [data]="models"
+                   [columns]="displayedColumns"
+                   sortableTable>
+          <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
+            <ng-container cdkColumnDef="extra-header">
+              <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                <table-header [reload$]="reload$"
+                              [useReloadValue]="true"
+                              [add$]="addFollowup$"
+                              (textChange)="filterControl.setValue($event)">
+                </table-header>
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="requestNumber">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.requestNumber">{{lang.map.request_number}}</th>
+              <td cdk-cell *cdkCellDef="let row">{{row.fullSerial}}</td>
+            </ng-container>
+            <ng-container cdkColumnDef="requestType">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.requestType">{{lang.map.request_type}}</th>
+              <td cdk-cell *cdkCellDef="let row">{{row.requestTypeInfo?.getName() || ''}}</td>
+            </ng-container>
+            <ng-container cdkColumnDef="name">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.name">{{lang.map.name}}</th>
+              <td cdk-cell *cdkCellDef="let row">{{row.getName()}}</td>
+            </ng-container>
+            <ng-container cdkColumnDef="serviceType">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.serviceInfo">{{lang.map.service_type}}</th>
+              <td cdk-cell *cdkCellDef="let row">{{row.serviceInfo?.getName() || ''}}</td>
+            </ng-container>
+            <ng-container cdkColumnDef="dueDate">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.dueDate}}</th>
+              <td cdk-cell *cdkCellDef="let row">
+                <b>{{row.dueDate | date}}</b>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="status">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.statusInfo">{{lang.map.status}}</th>
+              <td cdk-cell *cdkCellDef="let row">{{row.statusInfo?.getName() || ''}}</td>
+            </ng-container>
+            <ng-container cdkColumnDef="orgInfo">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.orgInfo">{{lang.map.lbl_organization}}</th>
+              <td cdk-cell *cdkCellDef="let row">{{row.orgInfo?.getName() || ''}}</td>
+            </ng-container>
+            <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+            <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+            <tr *cdkNoDataRow>
+              <td colspan="10" class="text-center">{{lang.map.no_records_to_display}}</td>
+            </tr>
+          </table>
+        </app-table>
+        <app-paginator #paginator [pageSize]="10" [length]="table.dataSource.data.length"></app-paginator>
       </div>
     </div>
   </div>
 </div>
-<followup-popup *ngIf="showForm" [case]="case" (hideForm)="hideForm()"></followup-popup>
+<div class="dialog-actions">
+  <span class="flex-grow-1"></span>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>
 
 

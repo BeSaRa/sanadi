@@ -1,6 +1,6 @@
-import { IModelInterceptor } from '@contracts/i-model-interceptor';
-import { FileNetDocument } from '../models/file-net-document';
-import { AdminResult } from '../models/admin-result';
+import {IModelInterceptor} from '@contracts/i-model-interceptor';
+import {FileNetDocument} from '@models/file-net-document';
+import {AdminResult} from '@models/admin-result';
 
 export class FileNetDocumentInterceptor implements IModelInterceptor<FileNetDocument> {
   receive(model: FileNetDocument): FileNetDocument {
@@ -17,6 +17,7 @@ export class FileNetDocumentInterceptor implements IModelInterceptor<FileNetDocu
     delete model.attachmentTypeInfo;
     delete model.employeeService;
     delete model.attachmentTypeStatus;
+    delete model.employeeService;
     return model;
   }
 }

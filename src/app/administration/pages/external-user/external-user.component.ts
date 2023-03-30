@@ -222,7 +222,7 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
   }
 
   openUserPreferences(item: ExternalUser) {
-    this.userPreferencesService.openEditDialog(item.generalUserId, false).subscribe();
+    this.userPreferencesService.openEditDialog(item, false).subscribe();
   }
 
   buildFilterForm() {

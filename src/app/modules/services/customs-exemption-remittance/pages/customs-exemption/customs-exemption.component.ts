@@ -38,7 +38,6 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
   documentSearchByOrderNo$: Subject<string> = new Subject<string>();
   documentSearchByDocNo$: Subject<string> = new Subject<string>();
   selectedDocument?: CustomsExemptionRemittance;
-  displayProjectLicenseSearchButton = false;
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -72,6 +71,10 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     return this.form.get('linkedProject')!;
   }
 
+  get projectNameField(): AbstractControl {
+    return this.form.get('projectName')!;
+  }
+
   get receiverTypeField(): AbstractControl {
     return this.form.get('receiverType')!;
   }
@@ -82,10 +85,6 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
 
   get otherReceiverName(): AbstractControl {
     return this.form.get('otherReceiverName')!;
-  }
-
-  get projectLicense(): AbstractControl {
-    return this.form.get('projectLicense')!;
   }
 
   get country(): AbstractControl {
@@ -134,12 +133,12 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
   _buildForm(): void {
     const model = new CustomsExemptionRemittance();
     this.form = this.fb.group(model.buildBasicInfo(true));
-    this.projectLicense.disable();
   }
 
   _afterBuildForm(): void {
     this.listenToLinkedProjectChanges();
     this.handleReadonly();
+    this.linkedProject.updateValueAndValidity();
 
     if (this.fromDialog) {
       this.loadSelectedDocumentByOrderNumber(this.model!.oldFullSerial, () => {
@@ -229,19 +228,20 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     this.linkedProject?.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((linkedProject: LinkedProjectTypes) => {
+
+        this.projectNameField.reset();
+        this.projectNameField.disable();
+        this.projectNameField.removeValidators(CustomValidators.required);
+
         if (linkedProject === LinkedProjectTypes.YES) {
-          if (this.projectLicense.disabled) {
-            this.projectLicense.enable();
+          this.projectNameField.addValidators(CustomValidators.required);
+          if (this.isCancelRequestType() || this.readonly) {
+            this.projectNameField.disable();
+          } else {
+            this.projectNameField.enable();
           }
-          this.projectLicense.addValidators(CustomValidators.required);
-          this.displayProjectLicenseSearchButton = true;
-        } else {
-          this.projectLicense.removeValidators(CustomValidators.required);
-          this.projectLicense.reset();
-          this.projectLicense.disable();
-          this.displayProjectLicenseSearchButton = false;
         }
-        this.projectLicense.updateValueAndValidity();
+        this.projectNameField.updateValueAndValidity();
       });
   }
 
@@ -311,6 +311,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     this.form.patchValue(model?.buildBasicInfo());
     this.handleRequestTypeChange(model.requestType, false);
     this.handleReceiverTypeChange(model.receiverType, false);
+    CommonUtils.displayFormValidity(this.form, 'main-content');
   }
 
   _resetForm(): void {

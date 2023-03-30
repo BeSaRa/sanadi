@@ -1,7 +1,7 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <button type="button" class="btn-close btn-close-white"
-          tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+          tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
 </div>
 <div class="dialog-content" #dialogContent>
   <form class="min-w400px" novalidate autocomplete="off"
@@ -9,7 +9,7 @@
     <div class="row">
       <div class="col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="localizationKey" for="localizationKey"
-               class="form-label">{{langService.map.lbl_localization_key}}</label>
+               class="form-label">{{lang.map.lbl_localization_key}}</label>
         <input localizationKeyExists [operation]="operation"
                id="localizationKey"
                validationClasses="localizationKey"
@@ -19,29 +19,29 @@
     </div>
     <div class="row">
       <div class="col-sm-12 mb-4 position-relative">
-        <label asteriskIfRequired="arName" for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
-        <textarea id="arName" [ngClass]="fm.getStatusClass('arName')" formControlName="arName"
-                  class="form-control"></textarea>
-        <app-field-error-message [control]="fm.getFormField('arName')"></app-field-error-message>
+        <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
+        <textarea id="arName" validationClasses="arName" formControlName="arName"
+                  class="form-control" trimInput></textarea>
+        <app-field-error-message controlName="arName"></app-field-error-message>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-12 mb-4 position-relative">
-        <label asteriskIfRequired="enName" for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
-        <textarea id="enName" [ngClass]="fm.getStatusClass('enName')" formControlName="enName"
-                  class="form-control"></textarea>
-        <app-field-error-message [control]="fm.getFormField('enName')"></app-field-error-message>
+        <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.lbl_english_name}}</label>
+        <textarea id="enName" validationClasses="enName" formControlName="enName"
+                  class="form-control" trimInput></textarea>
+        <app-field-error-message controlName="enName"></app-field-error-message>
       </div>
     </div>
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="fm.displayFormValidity(dialogContent)" tooltip="{{langService.map.validate_fields}}"
-          class="btn btn-link">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid || form.pending" (click)="saveModel()"
-          class="btn btn-primary">{{langService.map.btn_save}}</button>
-  <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
+  <button [disabled]="form.invalid || form.pending" *ngIf="saveVisible" (click)="save$.next(null)"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

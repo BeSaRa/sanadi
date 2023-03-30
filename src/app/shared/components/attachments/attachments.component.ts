@@ -266,20 +266,35 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const deleteFirst$ = this.selectedFile && this.selectedFile.id ? this.service.deleteDocument(this.selectedFile.id) : of(null);
+    of(null)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(_ => {
+          if (this.selectedFile && this.selectedFile.id) {
+            return this._updateAttachmentFile(input.files!);
+          } else {
+            return this._createAttachmentFile(input.files!);
+          }
+        })
+      ).subscribe((attachment) => {
+      input.value = '';
+      this._afterSaveAttachmentFile(attachment, 'update');
+    });
+
+    /*const deleteFirst$ = this.selectedFile && this.selectedFile.id ? this.service.deleteDocument(this.selectedFile.id) : of(null);
     of(null)
       .pipe(switchMap(_ => deleteFirst$))
       .pipe(
-        switchMap(_ => this._saveAttachmentFile(input.files!)),
+        switchMap(_ => this._createAttachmentFile(input.files!)),
         takeUntil(this.destroy$)
       )
       .subscribe((attachment) => {
         input.value = '';
         this._afterSaveAttachmentFile(attachment, 'update');
-      });
+      });*/
   }
 
-  private _saveAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
+  private _createAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
     return this.service
       .addSingleDocument(this.caseId!, (new FileNetDocument()).clone({
         documentTitle: this.selectedFile?.documentTitle,
@@ -289,6 +304,21 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         files: filesList,
         isPublished: this.employeeService.isExternalUser() ? true : this.selectedFile?.isPublished
       }));
+  }
+
+  private _updateAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
+    const newData = (new FileNetDocument()).clone({
+      id: this.selectedFile?.id,
+      vsId: this.selectedFile?.vsId,
+      documentTitle: this.selectedFile?.documentTitle,
+      description: this.selectedFile?.description,
+      attachmentTypeId: this.selectedFile?.attachmentTypeId,
+      required: this.selectedFile?.required,
+      files: filesList,
+      isPublished: this.employeeService.isExternalUser() ? true : this.selectedFile?.isPublished
+    })
+
+    return this.service.updateSingleDocument(this.caseId!, newData);
   }
 
   private _afterSaveAttachmentFile(attachment: FileNetDocument, attachmentOperation: 'add' | 'update') {
@@ -424,7 +454,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
               this.selectedFile = attachment.attachment;
               this.selectedIndex = 0;
             }),
-            switchMap((addedAttachment) => this._saveAttachmentFile(addedAttachment.file))
+            switchMap((addedAttachment) => this._createAttachmentFile(addedAttachment.file))
           )))
       .subscribe((attachment) => {
         attachment.attachmentTypeInfo = this.selectedFile!.attachmentTypeInfo;

@@ -2,18 +2,18 @@ import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {BehaviorSubject, Observable, of, Subject, Subscription} from 'rxjs';
-import {Localization} from '../models/localization';
-import {Language} from '../models/language';
+import {Localization} from '@models/localization';
+import {Language} from '@models/language';
 import {IAvailableLanguages} from '@contracts/i-available-languages';
 import {DOCUMENT} from '@angular/common';
-import {Styles} from '../enums/styles.enum';
-import {delay, exhaustMap, map, switchMap, tap} from 'rxjs/operators';
+import {Styles} from '@enums/styles.enum';
+import {delay, exhaustMap, map, tap} from 'rxjs/operators';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
 import {LocalizationPopupComponent} from '../shared/popups/localization-popup/localization-popup.component';
 import {DialogRef} from '../shared/models/dialog-ref';
-import {OperationTypes} from '../enums/operation-types.enum';
+import {OperationTypes} from '@enums/operation-types.enum';
 import {IDialogData} from '@contracts/i-dialog-data';
 import {LangType, LocalizationMap} from '../types/types';
 import {ECookieService} from './e-cookie.service';
@@ -24,12 +24,13 @@ import {ILoginData} from '@contracts/i-login-data';
 import {IDefaultResponse} from '@contracts/idefault-response';
 import {UserTypes} from "@app/enums/user-types.enum";
 import {CommonService} from "@services/common.service";
-import {CrudGenericService} from "@app/generics/crud-generic-service";
 import {CastResponse, CastResponseContainer} from "@decorators/cast-response";
 import {Pagination} from '@app/models/pagination';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {Title} from '@angular/platform-browser';
 import {GlobalSettingsService} from '@services/global-settings.service';
+import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-generic-service';
+import {ComponentType} from '@angular/cdk/portal';
 
 @CastResponseContainer({
   $default: {
@@ -43,7 +44,7 @@ import {GlobalSettingsService} from '@services/global-settings.service';
 @Injectable({
   providedIn: 'root'
 })
-export class LangService extends CrudGenericService<Localization> {
+export class LangService extends CrudWithDialogGenericService<Localization> {
   list: Localization[] = [];
   private languages: IAvailableLanguages = {
     en: new Language(2, 'English', 'en', 'ltr', Styles.BOOTSTRAP, 'العربية'),
@@ -69,7 +70,7 @@ export class LangService extends CrudGenericService<Localization> {
 
   constructor(@Inject(DOCUMENT) private document: Document,
               public http: HttpClient,
-              private dialogService: DialogService,
+              public dialog: DialogService,
               private eCookieService: ECookieService,
               private configurationService: ConfigurationService,
               private employeeService: EmployeeService,
@@ -90,6 +91,9 @@ export class LangService extends CrudGenericService<Localization> {
     this.listenToChangeTrigger();
   }
 
+  _getDialogComponent(): ComponentType<any> {
+    return LocalizationPopupComponent;
+  }
 
   private getLinkElement(): void {
     this.linkElement = this.document.getElementById('main-style') as HTMLLinkElement;
@@ -233,19 +237,8 @@ export class LangService extends CrudGenericService<Localization> {
     return this.getLocalForSpecificLang(key, 'en');
   }
 
-  openUpdateDialog(modelId: number): Observable<DialogRef> {
-    return this.getById(modelId).pipe(
-      switchMap((localization: Localization) => {
-        return of(this.dialogService.show<IDialogData<Localization>>(LocalizationPopupComponent, {
-          model: localization,
-          operation: OperationTypes.UPDATE
-        }));
-      })
-    );
-  }
-
-  openCreateDialog(): DialogRef {
-    return this.dialogService.show<IDialogData<Localization>>(LocalizationPopupComponent, {
+  addDialog(): DialogRef {
+    return this.dialog.show<IDialogData<Localization>>(LocalizationPopupComponent, {
       model: new Localization(),
       operation: OperationTypes.CREATE
     });
