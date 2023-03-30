@@ -198,11 +198,7 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
   
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      profileType: [null], 
-      status: [null],
-      
+      arName: [''], enName: [''], profileType: [null], status: [null]
     })
   }
 }

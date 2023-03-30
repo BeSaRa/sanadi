@@ -48,7 +48,9 @@
             <label for="riskLevel" asteriskIfRequired="riskLevel"
                    class="form-label">{{langService.map.risk_level}}</label>
             <input id="riskLevel" [ngClass]="fm.getStatusClass('basic.riskLevel')"
-                   formControlName="riskLevel" class="form-control">
+                   formControlName="riskLevel" class="form-control" 
+                   [mask]="CustomValidators.inputMaskPatterns.NUMBER_ONLY"
+                   >
             <app-field-error-message controlName="riskLevel"></app-field-error-message>
           </div>
         </div>

@@ -244,9 +244,7 @@ export class TrainingProgramPartnerComponent extends AdminGenericComponent<Train
   }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      status: [null]
+      arName: [''], enName: [''], status: [null]
     })
   }
 }

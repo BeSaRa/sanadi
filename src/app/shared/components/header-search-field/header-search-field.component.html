@@ -2,7 +2,7 @@
 <ng-container *ngIf="isTextColumn()">
   <div class="position-relative">
     <input [id]="field.key" (input)="handleInputChange()" [placeholder]="lang.map[field.label]"
-           [formControl]="control" class="form-control" [maxlength]="field.maxLength ?? null">
+           [formControl]="control" [mask]="field.mask ?? ''" class="form-control" [maxlength]="field.maxLength ?? null">
     <div class="position-absolute top-0 end-0" [tabIndex]="-1">
       <button *ngIf="!!control.value" [tooltip]="lang.map.clear_filter"
               (click)="clearInputFilter()" class="text-primary btn icon-btn py-2 ps-1 btn-clear-filter">

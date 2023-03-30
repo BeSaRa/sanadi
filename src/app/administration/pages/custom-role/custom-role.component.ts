@@ -193,12 +193,15 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
         this.reload$.next(null);
       });
   }
+  
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      status: [null],
-      
+      arName: [''], enName: [''], status: [null]
     })
+  }
+
+  getColumnFilterValue(): Partial<CustomRole> {
+    const value = this.columnFilterForm.value;
+    return {...value, status: value.status===1 ? true: value.status===0 ? false: null}
   }
 }
