@@ -424,10 +424,11 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         icon: 'mdi-paperclip',
         label: 'manage_attachments',
         data: { hideFromViewer: true },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           let caseStatus = item.getCaseStatus();
           return (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult) => {
           this.actionManageAttachments(item);
         }
@@ -500,9 +501,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_COMPETENT_DEPARTMENT) !== -1;
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToDepartment(item, viewDialogRef);
         }
@@ -518,10 +520,11 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS)
             || item.RESPONSES.includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToMultiDepartments(item, viewDialogRef);
         }
@@ -544,7 +547,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
@@ -554,7 +557,8 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToSingleDepartment(item, viewDialogRef);
         }
@@ -570,9 +574,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_USER) !== -1;
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToUser(item, viewDialogRef);
         }
@@ -588,9 +593,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.includes(WFResponseType.TO_CONSTRUCTION_EXPERT);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToStructureExpert(item, viewDialogRef);
         }
@@ -606,9 +612,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.includes(WFResponseType.TO_DEVELOPMENT_EXPERT);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToDevelopmentExpert(item, viewDialogRef);
         }
@@ -624,9 +631,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_MANAGER) !== -1;
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToManager(item, viewDialogRef);
         }
@@ -642,9 +650,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.SEND_TO_GM) !== -1;
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToGeneralManager(item, viewDialogRef);
         }
@@ -662,9 +671,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           }
 
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return !item.RESPONSES.length || item.RESPONSES.includes(WFResponseType.COMPLETE);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionComplete(item, viewDialogRef);
         }
@@ -680,9 +690,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.includes(WFResponseType.APPROVE);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionApprove(item, viewDialogRef);
         }
@@ -698,9 +709,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.includes(WFResponseType.FINAL_APPROVE);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionFinalApprove(item, viewDialogRef);
         }
@@ -716,9 +728,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.some(x => x.indexOf(WFResponseType.ASK_FOR_CONSULTATION) > -1);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionAskForConsultation(item, viewDialogRef);
         }
@@ -734,9 +747,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.includes(WFResponseType.POSTPONE);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionPostpone(item, viewDialogRef);
         }
@@ -752,9 +766,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.RETURN) !== -1;
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionReturn(item, viewDialogRef);
         }
@@ -770,9 +785,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.REJECT) !== -1;
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionReject(item, viewDialogRef);
         }
@@ -788,9 +804,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.CLOSE) !== -1;
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionClose(item, viewDialogRef);
         }

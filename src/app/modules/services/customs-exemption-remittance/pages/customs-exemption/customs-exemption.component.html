@@ -2,7 +2,8 @@
   <tabs-list [accordionView]="accordionView" [hasForm]="true">
     <tab name="basic_info" [hasError]="form.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
-    <tab name="attachments" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+    <tab name="attachments" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab"
+         [title]="lang.map.attachments"></tab>
   </tabs-list>
   <ng-container [formGroup]="form">
     <ng-template #basic_info>
@@ -140,26 +141,15 @@
           </ng-select>
           <app-field-error-message controlName="linkedProject"></app-field-error-message>
         </div>
-        <!-- Project reference number -->
+        <!-- Project Name -->
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
-          <label asteriskIfRequired="projectLicense" for="projectLicense"
-                 class="form-label">{{lang.map.project_reference_number}}</label>
-          <div class="input-group">
-            <input type="text" id="projectLicense" validationClasses="projectLicense" formControlName="projectLicense"
-                   class="form-control" [readonly]="(isCancelRequestType() || readonly)" trimInput>
-            <button *ngIf="displayProjectLicenseSearchButton" type="button" class="input-group-text"><i
-              class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
-            <app-field-error-message controlName="projectLicense"></app-field-error-message>
-          </div>
+          <label asteriskIfRequired="projectName"  for="projectName" class="form-label">{{lang.map.project_name}}</label>
+          <input type="text" id="projectName" validationClasses="projectName" formControlName="projectName"
+                 class="form-control" [readonly]="(isCancelRequestType() || readonly)" trimInput>
+          <app-field-error-message controlName="projectName"></app-field-error-message>
         </div>
       </div>
       <div class="row">
-        <!-- Project Name -->
-        <div class="col-md-4 col-sm-12 mb-4 position-relative">
-          <label for="projectName" class="form-label">{{lang.map.project_name}}</label>
-          <input type="text" id="projectName" validationClasses="projectName" formControlName="projectName"
-                 class="form-control" readonly>
-        </div>
         <!-- Country -->
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="country" for="country">{{lang.map.country}}</label>
@@ -180,8 +170,6 @@
                  class="form-control" [readonly]="(isCancelRequestType() || readonly)" trimInput>
           <app-field-error-message controlName="zoneNumber"></app-field-error-message>
         </div>
-      </div>
-      <div class="row">
         <!-- Recipient type -->
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="receiverType"
@@ -196,6 +184,8 @@
           </ng-select>
           <app-field-error-message controlName="receiverType"></app-field-error-message>
         </div>
+      </div>
+      <div class="row">
         <!-- Name of the recipient -->
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="receiverName"
@@ -219,8 +209,6 @@
                  class="form-control" trimInput>
           <app-field-error-message controlName="otherReceiverName"></app-field-error-message>
         </div>
-      </div>
-      <div class="row">
         <!--  Estimated value of the shipment in riyals -->
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label asteriskIfRequired="shipmentApproximateValue" for="shipmentApproximateValue"

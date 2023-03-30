@@ -13,6 +13,7 @@ export class ActionRegistryInterceptor implements IModelInterceptor<ActionRegist
   }
 
   send(model: any): any {
+    delete model.langService;
     return model;
   }
 }

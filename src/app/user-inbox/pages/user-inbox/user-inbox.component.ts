@@ -362,10 +362,11 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-paperclip',
         label: 'manage_attachments',
         data: {hideFromViewer: true},
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           let caseStatus = item.getCaseStatus();
           return (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult) => {
           this.actionManageAttachments(item);
         }
@@ -413,9 +414,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-send-circle',
         label: 'send_to_competent_dep',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.TO_COMPETENT_DEPARTMENT);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToDepartment(item, viewDialogRef);
         }
@@ -425,10 +427,11 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-send-circle',
         label: 'send_to_multi_departments',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToMultiDepartments(item, viewDialogRef);
         }
@@ -445,7 +448,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
           return isSendToRiskAndCompliance ? this.lang.map.send_to_risk_and_compliance_department : this.lang.map.send_to_supervision_and_control_department;
         },
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
@@ -455,7 +458,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToSingleDepartment(item, viewDialogRef);
         }
@@ -465,9 +469,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-account-arrow-right',
         label: 'send_to_user',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.TO_USER);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToUser(item, viewDialogRef);
         }
@@ -477,9 +482,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-account-arrow-right',
         label: 'send_to_structure_expert',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.TO_CONSTRUCTION_EXPERT);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToStructureExpert(item, viewDialogRef);
         }
@@ -489,9 +495,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-account-arrow-right',
         label: 'send_to_development_expert',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.TO_DEVELOPMENT_EXPERT);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToDevelopmentExpert(item, viewDialogRef);
         }
@@ -501,9 +508,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-card-account-details-star',
         label: 'send_to_manager',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.TO_MANAGER);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToManager(item, viewDialogRef);
         }
@@ -513,9 +521,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-card-account-details-star',
         label: 'send_to_general_manager',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.SEND_TO_GM);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToGeneralManager(item, viewDialogRef);
         }
@@ -526,9 +535,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-book-check',
         label: 'task_complete',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return !item.getResponses().length || item.getResponses().includes(WFResponseType.COMPLETE);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionComplete(item, viewDialogRef);
         }
@@ -538,9 +548,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-check-bold',
         label: 'approve_task',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.APPROVE);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionApprove(item, viewDialogRef);
         }
@@ -550,9 +561,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-check-underline',
         label: (item) => item.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE ? this.lang.map.final_approve_task_based_on_matrix : this.lang.map.final_approve_task,
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.FINAL_APPROVE);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionFinalApprove(item, viewDialogRef);
         }
@@ -562,9 +574,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-help-rhombus-outline',
         label: 'ask_for_consultation_task',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().some(x => x.indexOf(WFResponseType.ASK_FOR_CONSULTATION) > -1);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionAskForConsultation(item, viewDialogRef);
         }
@@ -574,9 +587,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-calendar-clock',
         label: 'postpone_task',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.POSTPONE);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionPostpone(item, viewDialogRef);
         }
@@ -586,9 +600,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-undo-variant',
         label: 'return_task',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.RETURN);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionReturn(item, viewDialogRef);
         }
@@ -598,9 +613,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-book-remove-outline',
         label: 'reject_task',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.REJECT);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionReject(item, viewDialogRef);
         }
@@ -610,9 +626,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-close-circle-outline',
         label: 'cancel_task',
-        show: (item: QueryResult) => {
+        /*show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.CLOSE);
-        },
+        },*/
+        show: (item: QueryResult) => false,
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionClose(item, viewDialogRef);
         }

@@ -11,8 +11,12 @@ import {switchMap} from 'rxjs/operators';
 import {IDialogData} from '@contracts/i-dialog-data';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogService} from '@services/dialog.service';
-import {UserPreferencesPopupComponent} from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
+import {
+  UserPreferencesPopupComponent
+} from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
 import {HasInterception, InterceptParam} from '@decorators/intercept-model';
+import {InternalUser} from '@models/internal-user';
+import {ExternalUser} from '@models/external-user';
 
 @CastResponseContainer({
   $default: {
@@ -65,13 +69,13 @@ export class UserPreferencesService extends CrudGenericService<UserPreferences> 
     return this._updateUserPreferences(generalUserId, model);
   }
 
-  openEditDialog(generalUserId: number, isLoggedInUserPreferences = true): Observable<DialogRef> {
-    return this.getUserPreferences(generalUserId).pipe(
+  openEditDialog(user: InternalUser | ExternalUser, isLoggedInUserPreferences = true): Observable<DialogRef> {
+    return this.getUserPreferences(user.generalUserId).pipe(
       switchMap((model: UserPreferences) => {
         return of(this.dialog.show<IDialogData<UserPreferences>>(UserPreferencesPopupComponent, {
           model: model,
+          user: user,
           operation: OperationTypes.UPDATE,
-          generalUserId: generalUserId,
           isLoggedInUserPreferences: isLoggedInUserPreferences
         }));
       })

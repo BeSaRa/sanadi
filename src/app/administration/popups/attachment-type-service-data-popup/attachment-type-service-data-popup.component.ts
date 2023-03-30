@@ -50,7 +50,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
               public lang: LangService,
               private fb: UntypedFormBuilder,
               private exceptionHandlerService: ExceptionHandlerService,
-              private servicesService: ServiceDataService,
+              private serviceDataService: ServiceDataService,
               private lookupService: LookupService,
               private toast: ToastService,
               private attachmentTypeServiceDataService: AttachmentTypeServiceDataService,
@@ -110,7 +110,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   }
 
   private loadServices(): void {
-    this.servicesService.load()
+    this.serviceDataService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((services) => {
         this.services = services;

@@ -8,8 +8,6 @@
            *ngIf="employeeService.isInternalUser()"></tab>
       <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
            [template]="attachmentsTabTemplate" [title]="lang.map.attachments"></tab>
-      <tab [name]="tabsData.logs.name" [hasError]="getTabInvalidStatus('logs')"
-           [template]="logsTemplate" [title]="lang.map.logs" *ngIf="fromDialog" [disabled]="!model?.id"></tab>
     </tabs-list>
     <ng-template #basicInfoTabTemplate>
       <form [formGroup]="form">
@@ -118,10 +116,6 @@
       <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
                    [service]="service.documentService" [model]="model"
                    [load]="loadAttachments" [formProperties]="formProperties"></attachments>
-    </ng-template>
-    <ng-template #logsTemplate>
-      <log-viewer [caseId]="model!.getCaseId()" [service]="service.actionLogService"
-                  [hideItemLocation]="true" [hideViewedAction]="true"></log-viewer>
     </ng-template>
   </div>
 </div>

@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  msg_check_x_duplicate: string;
+  msg_session_timed_out: string;
   related_departments: string;
   lbl_model: string;
   menu_add: string;
