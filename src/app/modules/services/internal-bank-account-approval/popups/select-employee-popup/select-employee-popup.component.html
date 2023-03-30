@@ -12,6 +12,10 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.qatari_id_number}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.qId}} </td>
       </ng-container>
+      <ng-container cdkColumnDef="passportNumber">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.passport_number}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.passportNumber}} </td>
+      </ng-container>
       <ng-container cdkColumnDef="arName">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.arabicName}} </td>
