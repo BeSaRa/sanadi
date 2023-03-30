@@ -2616,6 +2616,19 @@ export const newNavigationMenuList = [
     svg: null
   },
   {
+    id: 87,
+    langKey: 'menu_admin_license',
+    path: '/home/administration/admin-license',
+    icon: 'mdi-template',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_LICENSES_AND_PERMITS,
+    permissionGroup: null,
+    parent: 6,
+    group: 'administration',
+    itemOrder: 27,
+    svg: null
+  },
+  {
     id: 88,
     langKey: 'menu_training_program_partner',
     path: '/home/administration/training-program-partner',

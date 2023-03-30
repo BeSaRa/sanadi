@@ -16,6 +16,7 @@ import { GeneralAssociationMeetingStepNameEnum } from '@enums/general-associatio
 import { MeetingMemberTaskStatus } from '@models/meeting-member-task-status';
 import { MeetingAttendanceReport } from '@models/meeting-attendance-report';
 import { GeneralMeetingAttendanceNote } from '@models/general-meeting-attendance-note';
+import { GeneralMeetingsMemberStatus } from '@app/interfaces/general-meetings-member-status';
 
 @Component({
   selector: 'manage-internal-users',
@@ -78,7 +79,7 @@ export class ManageInternalUsersComponent implements OnInit {
   }
 
   setDisplayedColumns() {
-    if (!this.isExternalUser && this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
+    if (!this.isExternalUser && this.model?.isSentToMember() && (this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep()) || this.model?.isManagerFinalReviewStep()) {
       this.membersDisplayedColumns = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'status', 'actions'];
     } else {
       this.membersDisplayedColumns = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'actions'];
@@ -146,6 +147,9 @@ export class ManageInternalUsersComponent implements OnInit {
     }
   }
 
+  isTerminatedMember(row: GeneralAssociationInternalMember) {
+    return row.name == GeneralMeetingsMemberStatus.terminated
+  }
   saveMember() {
     const boardMember = new GeneralAssociationInternalMember().clone(this.internalMembersForm.getRawValue());
 

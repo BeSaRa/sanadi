@@ -448,7 +448,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
           }
         } else {
           this._handleOrderNumberValidators(true);
-          this._handleDocumentNumberValidators(true);
+          this._handleDocumentNumberValidators(false);
         }
       } else {
         this.requestType.setValue(this.requestType$.value);
