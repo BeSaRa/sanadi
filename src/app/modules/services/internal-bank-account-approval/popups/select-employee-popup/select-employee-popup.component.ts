@@ -10,13 +10,12 @@ import {NpoEmployee} from '@models/npo-employee';
   styleUrls: ['./select-employee-popup.component.scss']
 })
 export class SelectEmployeePopupComponent {
-  displayedColumns: string[] = ['qId', 'arName', 'enName', 'jobTitleInfo', 'actions'];
+  displayedColumns: string[] = ['qId', 'passportNumber', 'arName', 'enName', 'jobTitleInfo', 'actions'];
 
   constructor(public lang: LangService, private dialogRef: DialogRef,
               @Inject(DIALOG_DATA_TOKEN) public data: {
                 employees: NpoEmployee[]
               }) {
-    console.log('emps', data.employees);
   }
 
   selectEmployee(employee: NpoEmployee): void {

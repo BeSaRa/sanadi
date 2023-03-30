@@ -164,7 +164,6 @@ export class InternalBankAccountApprovalService extends BaseGenericEService<Inte
         r.jobTitleInfo = (new Lookup()).clone(r.jobTitleInfo);
         result.push((new NpoEmployee()).clone(r));
       });
-      console.log('NPOs', result);
       return result;
     }));
   }
