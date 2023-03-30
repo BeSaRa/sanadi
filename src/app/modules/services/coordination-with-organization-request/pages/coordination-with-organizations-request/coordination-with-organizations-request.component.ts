@@ -57,6 +57,8 @@ import {
 import {
   ParticipantOrganizationComponent
 } from '@modules/services/coordination-with-organization-request/shared/participant-organization/participant-organization.component';
+import { GlobalSettingsService } from '@app/services/global-settings.service';
+import { GlobalSettings } from '@app/models/global-settings';
 
 @Component({
   selector: 'app-coordination-with-organizations-request',
@@ -106,6 +108,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   @ViewChild('participantOrganizations')
   participantOrganizationsComponentRef!: ParticipantOrganizationComponent;
   participantOrganizationsTapStatus: ReadinessStatus = 'READY';
+  globalSettings: GlobalSettings = this.globalSettingsService.getGlobalSettings();
+  allowedFileMaxSize: number = this.globalSettings.fileSize
+
   tabsData: IKeyValue = {
     basicInfo: {
       name: 'basicInfoTab',
@@ -203,7 +208,8 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     private externalUserService: ExternalUserService,
     public service: CoordinationWithOrganizationsRequestService,
     private dynamicModelService: DynamicModelService,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    private globalSettingsService: GlobalSettingsService
   ) {
     super();
     this._buildForm();
@@ -827,59 +833,124 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       .subscribe();
   }
   uploaderFileChange($event: Event): void {
-    const input = $event.target as HTMLInputElement;
+    const input = ($event.target as HTMLInputElement);
     const file = input.files?.item(0);
-    const validFile = file ? file.type === 'application/pdf' : true;
-    !validFile ? (input.value = '') : null;
+    const validFile = file ? (this.allowedExtensions.includes(file.name.getExtension())) : true;
+    !validFile ? input.value = '' : null;
     if (!validFile) {
-      this.dialog.error(
-        this.lang.map.msg_only_those_files_allowed_to_upload.change({
-          files: this.allowedExtensions.join(','),
-        })
-      );
+      this.dialog.error(this.lang.map.msg_only_those_files_allowed_to_upload.change({files: this.allowedExtensions.join(', ')}));
       input.value = '';
       return;
     }
-    const deleteFirst$ = this.model?.coordinationReportId
-      ? this.service.documentService.deleteDocument(
-          this.model.coordinationReportId
-        ).pipe(
-          take(1),
-          catchError(_=>of(null))
-        )
-      : of(null);
+    const validFileSize = file ? (file.size <= this.allowedFileMaxSize * 1000 * 1024) : true;
+    !validFileSize ? input.value = '' : null;
+    if (!validFileSize) {
+      this.dialog.error(this.lang.map.msg_only_this_file_size_or_less_allowed_to_upload.change({size: this.allowedFileMaxSize}));
+      input.value = '';
+      return;
+    }
     of(null)
-      .pipe(switchMap((_) => deleteFirst$))
       .pipe(
-        take(1),
-        switchMap((_) => {
-          return this.service.documentService.addSingleDocument(
-            this.model!.id,
-            new FileNetDocument().clone({
-              documentTitle: this.lang.map.lbl_final_report,
-              description: this.lang.map.lbl_final_report,
-              attachmentTypeId: -1,
-              required: false,
-              files: input.files!,
-              isPublished: false,
-            })
-          );
-        }),
-        concatMap((attachment) => {
-          this.model!.coordinationReportId = attachment.id;
+        takeUntil(this.destroy$),
+        switchMap(_ => {
+          if (this.model && this.model.coordinationReportId) {
+            return this._updateAttachmentFile(input.files!);
+          } else {
+            return this._createAttachmentFile(input.files!);
+          }
+        })
+      ).subscribe((attachment) => {
+      input.value = '';
+      this._afterSaveAttachmentFile(attachment, 'update');
+    });
+    // const input = $event.target as HTMLInputElement;
+    // const file = input.files?.item(0);
+    // const validFile = file ? file.type === 'application/pdf' : true;
+    // !validFile ? (input.value = '') : null;
+    // if (!validFile) {
+    //   this.dialog.error(
+    //     this.lang.map.msg_only_those_files_allowed_to_upload.change({
+    //       files: this.allowedExtensions.join(','),
+    //     })
+    //   );
+    //   input.value = '';
+    //   return;
+    // }
+    // const deleteFirst$ = this.model?.coordinationReportId
+    //   ? this.service.documentService.deleteDocument(
+    //       this.model.coordinationReportId
+    //     ).pipe(
+    //       take(1),
+    //       catchError(_=>of(null))
+    //     )
+    //   : of(null);
+    // of(null)
+    //   .pipe(switchMap((_) => deleteFirst$))
+    //   .pipe(
+    //     take(1),
+    //     switchMap((_) => {
+    //       return this.service.documentService.addSingleDocument(
+    //         this.model!.id,
+    //         new FileNetDocument().clone({
+    //           documentTitle: this.lang.map.lbl_final_report,
+    //           description: this.lang.map.lbl_final_report,
+    //           attachmentTypeId: -1,
+    //           required: false,
+    //           files: input.files!,
+    //           isPublished: false,
+    //         })
+    //       );
+    //     }),
+    //     concatMap((attachment) => {
+    //       this.model!.coordinationReportId = attachment.id;
+    //       return this.model!.save()
+    //       .pipe(tap((model)=>{
+    //         this.model!.participatingOrganizaionList = model.participatingOrganizaionList;
+    //       }))
+
+    //     }),
+
+    //   )
+    //   .subscribe(_ => {
+    //     input.value = '';
+    //     this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
+
+    //   });
+  }
+  private _createAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
+    return this.service.documentService
+      .addSingleDocument(this.model!.getCaseId(), (new FileNetDocument()).clone({
+        documentTitle: this.lang.map.lbl_final_report,
+        description: this.lang.map.lbl_final_report,
+        attachmentTypeId: -1,
+        required: false,
+        isPublished: false,
+        files: filesList
+    }));
+  }
+  private _updateAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
+    const newData = (new FileNetDocument()).clone({
+      id: this.model!.coordinationReportId,
+      documentTitle: this.lang.map.lbl_final_report,
+      description: this.lang.map.lbl_final_report,
+      attachmentTypeId: -1,
+      required: false,
+      isPublished: false,
+      files: filesList,
+    })
+
+    return this.service.documentService.updateSingleDocument(this.model!.getCaseId()!, newData);
+  }
+  private _afterSaveAttachmentFile(attachment: FileNetDocument, attachmentOperation: 'add' | 'update') {
+    this.model!.coordinationReportId = attachment.id;
           return this.model!.save()
           .pipe(tap((model)=>{
             this.model!.participatingOrganizaionList = model.participatingOrganizaionList;
-          }))
+          })).subscribe(()=>{
+            this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
 
-        }),
+          })
 
-      )
-      .subscribe(_ => {
-        input.value = '';
-        this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
-
-      });
   }
 
   private _buildDatepickerControlsMap(): void {
