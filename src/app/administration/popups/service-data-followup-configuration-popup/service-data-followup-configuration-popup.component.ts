@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {FollowupConfiguration} from '@app/models/followup-configuration';
+import {ServiceDataFollowupConfiguration} from '@models/service-data-followup-configuration';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -19,13 +19,13 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 import {ToastService} from '@services/toast.service';
 
 @Component({
-  selector: 'followup-configuration-popup',
-  templateUrl: './followup-configuration-popup.component.html',
-  styleUrls: ['./followup-configuration-popup.component.scss']
+  selector: 'service-data-followup-configuration-popup',
+  templateUrl: './service-data-followup-configuration-popup.component.html',
+  styleUrls: ['./service-data-followup-configuration-popup.component.scss']
 })
-export class FollowupConfigurationPopupComponent extends AdminGenericDialog<FollowupConfiguration> {
+export class ServiceDataFollowupConfigurationPopupComponent extends AdminGenericDialog<ServiceDataFollowupConfiguration> {
 
-  model: FollowupConfiguration;
+  model: ServiceDataFollowupConfiguration;
   form!: UntypedFormGroup;
   operation: OperationTypes;
   requestTypes: Lookup[] = [];
@@ -45,7 +45,7 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
               private toast: ToastService,
               private teamService: TeamService,
               private requestTypeFollowupService: RequestTypeFollowupService,
-              @Inject(DIALOG_DATA_TOKEN) private data: IDialogData<FollowupConfiguration>) {
+              @Inject(DIALOG_DATA_TOKEN) private data: IDialogData<ServiceDataFollowupConfiguration>) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -71,18 +71,18 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
     // throw new Error('Method not implemented.');
   }
 
-  afterSave(model: FollowupConfiguration, dialogRef: DialogRef): void {
+  afterSave(model: ServiceDataFollowupConfiguration, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
     this.toast.success(message.change({x: model.getName()}));
     dialogRef.close();
   }
 
-  beforeSave(model: FollowupConfiguration, form: UntypedFormGroup): boolean | Observable<boolean> {
+  beforeSave(model: ServiceDataFollowupConfiguration, form: UntypedFormGroup): boolean | Observable<boolean> {
     return this.form.valid;
   }
 
-  prepareModel(model: FollowupConfiguration, form: UntypedFormGroup): FollowupConfiguration | Observable<FollowupConfiguration> {
-    const newModel = new FollowupConfiguration().clone({
+  prepareModel(model: ServiceDataFollowupConfiguration, form: UntypedFormGroup): ServiceDataFollowupConfiguration | Observable<ServiceDataFollowupConfiguration> {
+    const newModel = new ServiceDataFollowupConfiguration().clone({
       ...this.model,
       ...this.form.getRawValue()
     });

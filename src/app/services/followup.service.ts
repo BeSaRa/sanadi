@@ -1,25 +1,25 @@
-import { Injectable } from '@angular/core';
-import { Followup } from '@app/models/followup';
-import { DialogService } from '@app/services/dialog.service';
-import { HttpClient } from '@angular/common/http';
-import { UrlService } from '@app/services/url.service';
-import { FactoryService } from '@app/services/factory.service';
+import {Injectable} from '@angular/core';
+import {Followup} from '@app/models/followup';
+import {DialogService} from '@app/services/dialog.service';
+import {HttpClient} from '@angular/common/http';
+import {UrlService} from '@app/services/url.service';
+import {FactoryService} from '@app/services/factory.service';
 import {
   ExternalFollowupPopupComponent
 } from '@app/modules/followup/popups/external-followup-popup/external-followup-popup.component';
-import { ComponentType } from '@angular/cdk/portal';
-import { Observable, of } from 'rxjs';
+import {ComponentType} from '@angular/cdk/portal';
+import {Observable, of} from 'rxjs';
 import {
   FollowupCommentPopupComponent
 } from '@app/modules/followup/popups/followup-comment-popup/followup-comment-popup.component';
-import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
-import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
-import { ReasonPopupComponent } from "@app/shared/popups/reason-popup/reason-popup.component";
-import { ReasonContract } from "@contracts/reason-contract";
-import { LangService } from "@services/lang.service";
-import { map, switchMap } from "rxjs/operators";
-import { UserClickOn } from "@app/enums/user-click-on.enum";
-import { DialogRef } from "@app/shared/models/dialog-ref";
+import {CrudWithDialogGenericService} from "@app/generics/crud-with-dialog-generic-service";
+import {CastResponse, CastResponseContainer} from "@decorators/cast-response";
+import {ReasonPopupComponent} from "@app/shared/popups/reason-popup/reason-popup.component";
+import {ReasonContract} from "@contracts/reason-contract";
+import {LangService} from "@services/lang.service";
+import {catchError, map, switchMap} from "rxjs/operators";
+import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {DialogRef} from "@app/shared/models/dialog-ref";
 import {
   DueDateUpdatePopupComponent
 } from "@app/modules/followup/popups/due-date-update-popup/due-date-update-popup.component";
@@ -75,7 +75,8 @@ export class FollowupService extends CrudWithDialogGenericService<Followup> {
     unwrap: 'rs'
   })
   getByCaseId(caseId: string): Observable<Followup[]> {
-    return this.http.get<Followup[]>(this._getServiceURL() + '/case/' + caseId);
+    return this.http.get<Followup[]>(this._getServiceURL() + '/case/' + caseId)
+      .pipe(catchError(() => of([])));
   }
 
   terminate(followUpId: number): Observable<Followup> {

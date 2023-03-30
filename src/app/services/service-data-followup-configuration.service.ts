@@ -2,9 +2,9 @@ import {ComponentType} from '@angular/cdk/portal';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {
-  FollowupConfigurationPopupComponent
-} from '@app/administration/popups/followup-configuration-popup/followup-configuration-popup.component';
-import {FollowupConfiguration} from '@app/models/followup-configuration';
+  ServiceDataFollowupConfigurationPopupComponent
+} from '@app/administration/popups/service-data-followup-configuration-popup/service-data-followup-configuration-popup.component';
+import {ServiceDataFollowupConfiguration} from '@models/service-data-followup-configuration';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
 import {UrlService} from './url.service';
@@ -21,70 +21,70 @@ import {Pagination} from '@app/models/pagination';
 
 @CastResponseContainer({
   $default: {
-    model: () => FollowupConfiguration
+    model: () => ServiceDataFollowupConfiguration
   },
   $pagination: {
     model: () => Pagination,
-    shape: {'rs.*': () => FollowupConfiguration}
+    shape: {'rs.*': () => ServiceDataFollowupConfiguration}
   }
 })
 
 @Injectable({
   providedIn: 'root',
 })
-export class FollowupConfigurationService extends CrudWithDialogGenericService<FollowupConfiguration> {
-  list: FollowupConfiguration[] = [];
+export class ServiceDataFollowupConfigurationService extends CrudWithDialogGenericService<ServiceDataFollowupConfiguration> {
+  list: ServiceDataFollowupConfiguration[] = [];
 
   constructor(public dialog: DialogService, public http: HttpClient, private urlService: UrlService,
   ) {
     super();
-    FactoryService.registerService('FollowupConfigurationService', this);
+    FactoryService.registerService('ServiceDataFollowupConfigurationService', this);
 
   }
 
   _getDialogComponent(): ComponentType<any> {
-    return FollowupConfigurationPopupComponent;
+    return ServiceDataFollowupConfigurationPopupComponent;
   }
 
   _getModel() {
-    return FollowupConfiguration;
+    return ServiceDataFollowupConfiguration;
   }
 
   _getServiceURL(): string {
     return this.urlService.URLS.FOLLOWUP_CONFIGURATION;
   }
 
-  getByCaseType(caseTypeId: number): Observable<FollowupConfiguration[]> {
+  getByCaseType(caseTypeId: number): Observable<ServiceDataFollowupConfiguration[]> {
     return this.getByCriteria({'case-type': caseTypeId});
   }
 
   @CastResponse(undefined)
-  getByCriteria(criteria: Partial<IFollowupCriteria>): Observable<FollowupConfiguration[]> {
-    return this.http.get<FollowupConfiguration[]>(this._getServiceURL() + '/criteria', {
+  getByCriteria(criteria: Partial<IFollowupCriteria>): Observable<ServiceDataFollowupConfiguration[]> {
+    return this.http.get<ServiceDataFollowupConfiguration[]>(this._getServiceURL() + '/criteria', {
       params: new HttpParams({fromObject: criteria})
     });
   }
 
   openCreateDialog(serviceId: number, caseType: number): DialogRef | Observable<DialogRef> {
-    return this.dialog.show<IDialogData<FollowupConfiguration>>(this._getDialogComponent(), {
+    return this.dialog.show<IDialogData<ServiceDataFollowupConfiguration>>(this._getDialogComponent(), {
       operation: OperationTypes.CREATE,
-      model: new FollowupConfiguration().clone({serviceId: serviceId, caseType: caseType})
+      model: new ServiceDataFollowupConfiguration().clone({serviceId: serviceId, caseType: caseType})
     });
   }
 
-  editDialogComposite(model: FollowupConfiguration): Observable<DialogRef> {
+  editDialogComposite(model: ServiceDataFollowupConfiguration): Observable<DialogRef> {
     return this._openUpdateDialog(model, true);
   }
 
-  editDialog(model: FollowupConfiguration): Observable<DialogRef> {
+  editDialog(model: ServiceDataFollowupConfiguration): Observable<DialogRef> {
     return this._openUpdateDialog(model, false);
   }
 
-  private _openUpdateDialog(model: FollowupConfiguration, isCompositeLoad: boolean): Observable<DialogRef> {
+  private _openUpdateDialog(model: ServiceDataFollowupConfiguration, isCompositeLoad: boolean): Observable<DialogRef> {
     let request = isCompositeLoad ? this.getByIdComposite(model.id) : this.getById(model.id);
     return request.pipe(
-      switchMap((result: FollowupConfiguration) => {
-        return of(this.dialog.show<IDialogData<FollowupConfiguration>>(FollowupConfigurationPopupComponent, {
+      switchMap((result: ServiceDataFollowupConfiguration) => {
+        return of(this.dialog.show<IDialogData<ServiceDataFollowupConfiguration>>(ServiceDataFollowupConfigurationPopupComponent, {
           model: result,
           operation: OperationTypes.UPDATE
         }));
@@ -94,8 +94,8 @@ export class FollowupConfigurationService extends CrudWithDialogGenericService<F
 
   openViewDialog(id: number): Observable<DialogRef> {
     return this.getById(id).pipe(
-      switchMap((result: FollowupConfiguration) => {
-        return of(this.dialog.show<IDialogData<FollowupConfiguration>>(FollowupConfigurationPopupComponent, {
+      switchMap((result: ServiceDataFollowupConfiguration) => {
+        return of(this.dialog.show<IDialogData<ServiceDataFollowupConfiguration>>(ServiceDataFollowupConfigurationPopupComponent, {
           model: result,
           operation: OperationTypes.VIEW
         }));

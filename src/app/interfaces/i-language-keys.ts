@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  add_followup: string;
   msg_check_x_duplicate: string;
   msg_session_timed_out: string;
   related_departments: string;
