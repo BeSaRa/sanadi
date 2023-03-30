@@ -853,7 +853,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       .pipe(
         takeUntil(this.destroy$),
         switchMap(_ => {
-          if (this.model && this.model.coordinationReportId) {
+          if (this.model && this.model.coordinationReportId && this.model.coordinationReportVSId) {
             return this._updateAttachmentFile(input.files!);
           } else {
             return this._createAttachmentFile(input.files!);
@@ -863,6 +863,8 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       input.value = '';
       this._afterSaveAttachmentFile(attachment, 'update');
     });
+
+
     // const input = $event.target as HTMLInputElement;
     // const file = input.files?.item(0);
     // const validFile = file ? file.type === 'application/pdf' : true;
@@ -903,6 +905,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     //     }),
     //     concatMap((attachment) => {
     //       this.model!.coordinationReportId = attachment.id;
+    //       this.model!.coordinationReportVSId = attachment.vsId;
     //       return this.model!.save()
     //       .pipe(tap((model)=>{
     //         this.model!.participatingOrganizaionList = model.participatingOrganizaionList;
@@ -930,7 +933,8 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   }
   private _updateAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
     const newData = (new FileNetDocument()).clone({
-      id: this.model!.coordinationReportId,
+      id: this.model!.coordinationReportId!,
+      vsId: this.model!.coordinationReportVSId,
       documentTitle: this.lang.map.lbl_final_report,
       description: this.lang.map.lbl_final_report,
       attachmentTypeId: -1,
@@ -943,6 +947,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   }
   private _afterSaveAttachmentFile(attachment: FileNetDocument, attachmentOperation: 'add' | 'update') {
     this.model!.coordinationReportId = attachment.id;
+    this.model!.coordinationReportVSId = attachment.vsId;
           return this.model!.save()
           .pipe(tap((model)=>{
             this.model!.participatingOrganizaionList = model.participatingOrganizaionList;
