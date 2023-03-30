@@ -1,5 +1,5 @@
+import { LangService } from '@services/lang.service';
 import {Component, Input, OnInit} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
 import {CustomMenuService} from '@services/custom-menu.service';
 import {CustomMenu} from '@app/models/custom-menu';
 import {map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
@@ -14,6 +14,7 @@ import {UserCustomMenu} from '@app/models/user-custom-menu';
 import {SharedService} from '@services/shared.service';
 import {ExternalUser} from '@app/models/external-user';
 import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
+import { TabMap } from '@app/types/types';
 
 @Component({
   selector: 'custom-menu-permission',
@@ -34,13 +35,34 @@ export class CustomMenuPermissionComponent implements OnInit {
               private lookupService: LookupService,
               private customMenuService: CustomMenuService,
               private userCustomMenuService: UserCustomMenuService,
-              private sharedService: SharedService) {
+              private sharedService: SharedService,
+              public langService:LangService) {
   }
 
   allCustomMenusList: CustomMenu[] = [];
   permissionGroups: CheckGroup<CustomMenu>[] = [];
+  defaultPermissionGroups: CheckGroup<CustomMenu>[] = [];
   groupHandler!: CheckGroupHandler<CustomMenu>;
+  defaultGroupHandler!: CheckGroupHandler<CustomMenu>;
+  tabsData: TabMap = {
 
+    menus: {
+      name: 'menus',
+      langKey: 'menus',
+      index: 0,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    },
+    defaultMenus: {
+      name: 'menus',
+      langKey: 'menus',
+      index: 1,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    },
+
+
+  };
   ngOnInit(): void {
     this._loadCustomMenuPermissions();
   }
@@ -60,8 +82,13 @@ export class CustomMenuPermissionComponent implements OnInit {
       .pipe(map(result => this._sortMenusSetParentAsFirst(result)))
       .pipe(withLatestFrom(of(this.lookupService.listByCategory.MenuType)))
       .pipe(switchMap(([menus, groups]) => {
-        this.buildPermissionGroups(groups, menus);
+        this.buildPermissionGroups(groups, menus.result);
+        this.buildDefaultPermissionGroups(groups, menus.defaultResult);
         this.groupHandler = new CheckGroupHandler<CustomMenu>(this.permissionGroups,
+          undefined,
+          (item: CustomMenu, isChecked: boolean, group: CheckGroup<CustomMenu>) => this.onPermissionChanged(item, isChecked, group)
+        );
+        this.defaultGroupHandler = new CheckGroupHandler<CustomMenu>(this.defaultPermissionGroups,
           undefined,
           (item: CustomMenu, isChecked: boolean, group: CheckGroup<CustomMenu>) => this.onPermissionChanged(item, isChecked, group)
         );
@@ -105,14 +132,23 @@ export class CustomMenuPermissionComponent implements OnInit {
     return childMenus;
   }
 
-  private _sortMenusSetParentAsFirst(menus: CustomMenu[]): CustomMenu[] {
+  private _sortMenusSetParentAsFirst(menus: CustomMenu[]):{result:CustomMenu[],defaultResult:CustomMenu[]} {
     let result: CustomMenu[] = [];
+    let defaultResult:CustomMenu[] = [];
     let parents: CustomMenu[] = [], parentChildrenMap = new Map<number, CustomMenu[]>;
+    let defaultParents: Set<CustomMenu> =new Set<CustomMenu>() ;
+    let defaultChildrenMap = new Map<string, CustomMenu[]>;
     menus.map((menu) => {
-      if (!menu.parentMenuItemId) {
+      if (!menu.parentMenuItemId && !menu.isDefaultItem()) {
         parents.push(menu);
-      } else {
+      }
+      if(menu.parentMenuItemId && !menu.hasDefaultParent()) {
         parentChildrenMap.set(menu.parentMenuItemId, (parentChildrenMap.get(menu.parentMenuItemId) ?? []).concat(menu));
+      }
+      if(menu.systemMenuKey && menu.hasDefaultParent()){
+        defaultParents.add(new CustomMenu().clone({systemMenuKey: menu.systemMenuKey}))
+        defaultChildrenMap.set(menu.systemMenuKey, (defaultChildrenMap.get(menu.systemMenuKey) ?? []).concat(menu));
+
       }
     });
 
@@ -126,7 +162,23 @@ export class CustomMenuPermissionComponent implements OnInit {
       }
       result = result.concat(children);
     });
-    return result;
+    defaultParents.forEach((parent) => {
+      defaultResult.push(parent);
+      // add empty custom menu to complete the chunk length of parents
+      defaultResult = this._fillParentChunkSpace(defaultResult, parent);
+      let children = defaultChildrenMap.get(parent.systemMenuKey!) ?? [];
+      if (children.length > 0) {
+        children = this._fillChildrenChunkSpace(children, children[0]);
+      }
+      defaultResult = defaultResult.concat(children);
+    });
+    console.log(defaultParents);
+    console.log(defaultChildrenMap);
+
+    return {
+      result:result,
+      defaultResult: defaultResult
+    };
   }
 
   private buildPermissionGroups(groups: Lookup[], menus: CustomMenu[]): void {
@@ -143,6 +195,19 @@ export class CustomMenuPermissionComponent implements OnInit {
     });
     console.log(this.permissionGroups);
 
+  }
+  private buildDefaultPermissionGroups(groups: Lookup[], menus: CustomMenu[]): void {
+    const permissionsByGroup = new Map<number, CustomMenu[]>();
+    this.defaultPermissionGroups = [];
+    menus.reduce((record, menu) => {
+      return permissionsByGroup.set(menu.menuType, (permissionsByGroup.get(menu.menuType) || []).concat(menu));
+    }, {} as any);
+    groups.forEach(group => {
+      let itemsInGroup = permissionsByGroup.get(group.lookupKey) || [];
+      if (itemsInGroup.length > 0) {
+        this.defaultPermissionGroups.push(new CheckGroup<CustomMenu>(group, itemsInGroup, [], this.chunkSize, true));
+      }
+    });
   }
 
   private _isAlreadySelected(id?: number): boolean {
