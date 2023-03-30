@@ -17,6 +17,7 @@ import {AdminResult} from '@app/models/admin-result';
 import {dateSearchFields} from '@helpers/date-search-fields';
 import {normalSearchFields} from '@helpers/normal-search-fields';
 import {infoSearchFields} from '@helpers/info-search-fields';
+import {EmployeeService} from '@services/employee.service';
 
 const interceptor = new FollowupInterceptor();
 
@@ -27,11 +28,13 @@ const interceptor = new FollowupInterceptor();
 export class Followup extends BaseModel<Followup, FollowupService> {
   service: FollowupService;
   langService: LangService;
+  employeeService: EmployeeService;
 
   constructor() {
     super();
     this.service = FactoryService.getService('FollowupService');
     this.langService = FactoryService.getService('LangService');
+    this.employeeService = FactoryService.getService('EmployeeService');
   }
 
   orgId!: number;
@@ -58,16 +61,39 @@ export class Followup extends BaseModel<Followup, FollowupService> {
   requestTypeInfo!: AdminResult;
 
   searchFields: ISearchFieldsMap<Followup> = {
-    ...normalSearchFields(['arName', 'enName', 'fullSerial']),
+    ...normalSearchFields(['fullSerial']),
     ...infoSearchFields(['statusInfo', 'requestTypeInfo', 'serviceInfo', 'orgInfo']),
-    ...dateSearchFields(['dueDate'])
+    ...dateSearchFields(['dueDate']),
+    name: text => this.getName().toLowerCase().indexOf(text) !== -1
+  };
+
+  searchFieldsInternalFollowup: ISearchFieldsMap<Followup> = {
+    ...normalSearchFields(['fullSerial']),
+    ...infoSearchFields(['statusInfo', 'requestTypeInfo', 'serviceInfo']),
+    ...dateSearchFields(['dueDate']),
+    name: text => this.getName().toLowerCase().indexOf(text) > -1,
+    createdBy: text => this.getCreatedBy().toLowerCase().indexOf(text) > -1
+  };
+
+  searchFieldsExternalFollowup: ISearchFieldsMap<Followup> = {
+    ...normalSearchFields(['fullSerial']),
+    ...infoSearchFields(['statusInfo', 'requestTypeInfo', 'serviceInfo']),
+    ...dateSearchFields(['dueDate']),
+    name: text => this.getName().toLowerCase().indexOf(text) > -1,
+    createdBy: text => this.getCreatedBy().toLowerCase().indexOf(text) > -1,
+    organization: text => {
+      if (this.employeeService.isInternalUser()) {
+        return !this.orgInfo ? false : this.orgInfo.getName().toLowerCase().indexOf(text) > -1
+      }
+      return false;
+    }
   };
 
   followupPopupSearchFields: ISearchFieldsMap<Followup> = {
     ...normalSearchFields(['fullSerial']),
     ...infoSearchFields(['statusInfo', 'requestTypeInfo', 'serviceInfo', 'orgInfo']),
     ...dateSearchFields(['dueDate']),
-    name: text => this.getName().toLowerCase().indexOf(text) !== -1
+    name: text => this.getName().toLowerCase().indexOf(text) > -1
   };
 
   public getName(): string {
