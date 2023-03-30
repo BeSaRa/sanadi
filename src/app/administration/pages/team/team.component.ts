@@ -49,15 +49,8 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
       controlType:'text',
       property:'authName',
       label:'code',
-      maxLength:50
+      maxLength:CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
     },
-    // search_updatedOn:{
-    //   key:'updatedOn',
-    //   controlType:'text',
-    //   property:'updatedOn',
-    //   label:'updated_date',
-    //   hide:true
-    // },
     search_status: {
       key: 'status',
       controlType: 'select',
@@ -147,11 +140,7 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
 
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      updatedOn: [''], 
-      authName: [''], 
-      status: [null],
+      arName: [''], enName: [''], authName: [''], status: [null]
     })
   }
 }

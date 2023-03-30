@@ -2619,7 +2619,7 @@ export const newNavigationMenuList = [
     id: 87,
     langKey: 'menu_admin_license',
     path: '/home/administration/admin-license',
-    icon: 'mdi-new-box',
+    icon: 'mdi-template',
     isSvg: false,
     permission: PermissionsEnum.MANAGE_LICENSES_AND_PERMITS,
     permissionGroup: null,

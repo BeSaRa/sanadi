@@ -20,6 +20,13 @@
                             ></table-header>
             </th>
           </ng-container>
+          <ng-container *ngFor="let column of searchColumns" [cdkColumnDef]="column">
+            <th cdk-header-cell *cdkHeaderCellDef>
+              <header-search-field (filterChange)="columnFilter$.next($event)" [form]="columnFilterForm"
+                                       [searchConfig]="searchColumnsConfig" [column]="column">
+              </header-search-field>
+            </th>
+          </ng-container>
           <ng-container cdkColumnDef="profileHeader">
             <th cdk-header-cell colspan="100" *cdkHeaderCellDef="let row">
               <ng-container [ngTemplateOutlet]="profileHeaderTemplate"></ng-container>
@@ -65,6 +72,7 @@
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
           <tr cdk-header-row *cdkHeaderRowDef="['profileHeader']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="searchColumns"></tr>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>

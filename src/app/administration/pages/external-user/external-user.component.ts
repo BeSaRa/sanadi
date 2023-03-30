@@ -20,9 +20,12 @@ import {of, Subject} from 'rxjs';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {ExternalUserUpdateRequestService} from '@services/external-user-update-request.service';
 import {ProfileService} from '@services/profile.service';
-import {UntypedFormControl} from '@angular/forms';
+import {FormBuilder, UntypedFormControl} from '@angular/forms';
 import {PaginatorComponent} from '@app/shared/components/paginator/paginator.component';
 import {UserPreferencesService} from '@services/user-preferences.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { LookupService } from '@app/services/lookup.service';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 
 @Component({
   selector: 'app-external-user',
@@ -45,17 +48,56 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
               private sharedService: SharedService,
               private profileService: ProfileService,
               public externalUserUpdateRequestService: ExternalUserUpdateRequestService,
-              private userPreferencesService: UserPreferencesService) {
+              private userPreferencesService: UserPreferencesService,
+              private lookupService:LookupService,
+              private fb: FormBuilder) {
     super();
   }
 
   _init() {
     this._setDefaultProfileId();
     this.listenToView();
+    this.buildFilterForm();
   }
 
   @ViewChild('table') table!: TableComponent;
   displayedColumns: string[] = ['domainName', 'arName', 'enName', 'empNum', 'organization', 'status', 'statusDateModified', 'actions'];
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName','search_empNum', 'search_organization', 'search_status','search_statusDateModified', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_empNum: {
+      key:'empNum', 
+      controlType:'text',
+      property:'empNum',
+      label:'lbl_employee_number',
+      maxLength: CustomValidators.defaultLengths.NUMBERS_MAXLENGTH,
+      mask: CustomValidators.inputMaskPatterns.NUMBER_ONLY
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
   sortingCallbacks = {
     organization: (a: ExternalUser, b: ExternalUser, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.profileInfo?.getName().toLowerCase(),
@@ -181,5 +223,11 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
 
   openUserPreferences(item: ExternalUser) {
     this.userPreferencesService.openEditDialog(item, false).subscribe();
+  }
+
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], empNum: [null], status: [null],
+    })
   }
 }

@@ -83,7 +83,8 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
       controlType: 'text',
       property: 'aidCode',
       label: 'lbl_aid_code',
-      maxLength: 50
+      maxLength: CustomValidators.defaultLengths.NUMBERS_MAXLENGTH,
+      mask: CustomValidators.inputMaskPatterns.NUMBER_ONLY
     },
     search_arName: {
       key: 'arName',
@@ -180,10 +181,7 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
 
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      aidCode: ['', [CustomValidators.number, CustomValidators.maxLength(50)]],
-      arName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: ['', [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      status: [null]
+      aidCode: [''], arName: [''], enName: [''], status: [null]
     })
   }
 
