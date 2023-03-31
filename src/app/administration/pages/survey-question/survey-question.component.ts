@@ -13,6 +13,10 @@ import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { SharedService } from '@app/services/shared.service';
 import { DeleteBulkResult } from '@app/types/types';
 import { ToastService } from '@app/services/toast.service';
+import { FormBuilder } from '@angular/forms';
+import { LookupService } from '@app/services/lookup.service';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
   selector: 'survey-question',
@@ -25,11 +29,32 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
               private dialog: DialogService,
               private sharedService: SharedService,
               private toast: ToastService,
-              public lang: LangService) {
+              public lang: LangService,
+              private fb: FormBuilder) {
     super();
   }
 
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'isFreeText', 'actions'];
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_isFreeText', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    }
+  }
+  protected _init(): void {
+    this.buildFilterForm()
+  }
   useCompositeToLoad = false;
   @ViewChild(TableComponent)
   table!: TableComponent;
@@ -88,5 +113,10 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
         }
         this.table && this.table.clearSelection();
       });
+  }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], isFreeText: [null]
+    })
   }
 }

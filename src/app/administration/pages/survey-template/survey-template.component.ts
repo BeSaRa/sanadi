@@ -10,6 +10,10 @@ import {filter, switchMap} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {ToastService} from '@app/services/toast.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { LookupService } from '@app/services/lookup.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'survey-template',
@@ -28,6 +32,34 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
     },
   ];
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
+  searchColumns: string[] = ['search_arName', 'search_enName', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
   bulkActions: IGridAction[] = [
     {
       icon: 'mdi mdi-delete',
@@ -42,10 +74,14 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
     public lang: LangService,
     private toast: ToastService,
     private dialog: DialogService,
+    private lookupService: LookupService,
+    private fb: FormBuilder
   ) {
     super();
   }
-
+  protected _init(): void {
+    this.buildFilterForm()
+  }
   deleteBulk(): void {
 
   }
@@ -82,5 +118,10 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
         this.toast.error(failMessage.change({x: model.getName()}));
         this.reload$.next(null);
       });
+  }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], status: [null]
+    })
   }
 }
