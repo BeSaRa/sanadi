@@ -138,7 +138,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
           CustomValidators.required,
           CustomValidators.minLength(4),
           CustomValidators.maxLength(100),
-          CustomValidators.pattern('ENG_AR_NUM_ONLY')
+          //CustomValidators.pattern('ENG_AR_NUM_ONLY')
         ]
       ] : projectName,
       projectDescription: controls ? [projectDescription, [
