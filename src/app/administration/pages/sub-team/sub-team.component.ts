@@ -52,7 +52,7 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
       property: 'status',
       label: 'lbl_status',
       selectOptions: {
-        options: this.lookupService.listByCategory.CommonStatus,
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
         labelProperty: 'getName',
         optionValueKey: 'lookupKey'
       }
@@ -156,7 +156,7 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
     public service: SubTeamService,
     private dialogService: DialogService,
     private sharedService: SharedService,
-    private toast: ToastService, 
+    private toast: ToastService,
     private fb: FormBuilder,
     private lookupService:LookupService) {
     super();
