@@ -1,68 +1,49 @@
-<div class="row pb-3">
-  <app-page-header [pageTitle]="'menu_certificate_template'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
-  </app-page-header>
-  <ng-container *ngIf="table">
-    <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
-                      [selectedRecords]="table.selection.selected"
-                      [actionsList]="actionsList"></app-bulk-actions>
-  </ng-container>
-</div>
 <div class="row">
   <div class="col-12">
     <div class="table-responsive">
       <app-table #table [paginator]="paginator" sortableTable
-                 [columns]="displayedColumns"
-                 [data]="models">
+                 [columns]="displayedColumns" [data]="models"
+                 [filter]="filterControl.value" [useSearchToFilter]="true">
         <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
-          <ng-container cdkColumnDef="rowSelection">
-            <th class="select-all-td" cdk-header-cell *cdkHeaderCellDef>
-              <input type="checkbox" [disabled]="table.filter"
-                     [indeterminate]="table.selection.hasValue() && !table.allSelected()"
-                     (change)="$event ? table.toggleAll() : null"
-                     [checked]="table.selection.hasValue() && table.allSelected()"
-                     class="form-check-input"></th>
-            <td cdk-cell *cdkCellDef="let row">
-              <input type="checkbox"
-                     (click)="$event.stopPropagation()"
-                     [checked]="table.selection.isSelected(row)"
-                     (change)="$event ? table.selection.toggle(row) : null"
-                     class="form-check-input"></td>
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header tableTitle="menu_certificate_template" [reload$]="reload$" [add$]="add$"
+                            (textChange)="filterControl.setValue($event)">
+              </table-header>
+            </th>
           </ng-container>
           <ng-container cdkColumnDef="documentTitle">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.certificate_template_name}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.documentTitle}}</td>
           </ng-container>
           <ng-container cdkColumnDef="status">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.certificate_template_status}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.status ? lang.map.lbl_active : lang.map.lbl_inactive}}</td>
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                [sortCallback]="sortingCallbacks.status">{{lang.map.certificate_template_status}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.getStatusText()}}</td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
-              <div class="d-flex flex-row">
-                <a href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
-                  <i class="mdi mdi-close-box"></i>
-                </a>
-                <a href="#" (click)="edit(row , $event)" tooltip="{{lang.map.btn_edit}}" class="icon-btn">
-                  <i class="mdi mdi-pen"></i>
-                </a>
-                <span class="form-check form-switch switch-action" style="top: auto">
-                  <input class="form-check-input" type="checkbox" [checked]="!!row.status"
-                         tooltip="{{row.status ? lang.map.btn_deactivate : lang.map.btn_activate}}"
-                         (change)="toggleStatus(row)">
-                </span>
-              </div>
+            <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+              <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+              <span afterTemplate class="form-check form-switch switch-action"
+                    style="top: auto">
+                <input class="form-check-input" type="checkbox" [checked]="!!row.status"
+                       tooltip="{{row.status ? lang.map.btn_deactivate : lang.map.btn_activate}}"
+                       (change)="toggleStatus(row)">
+              </span>
+              </grid-actions>
             </td>
           </ng-container>
-
-          <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
-          <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
+          <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: displayedColumns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
           </tr>
         </table>
       </app-table>
       <app-paginator #paginator [pageSize]="10" [length]="table.dataSource.data.length"></app-paginator>
+      <context-menu-item #menu [actions]="actions"></context-menu-item>
     </div>
   </div>
 </div>
