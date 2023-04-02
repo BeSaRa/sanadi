@@ -23,6 +23,10 @@ import {IMyDateModel} from 'angular-mydatepicker';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {EmployeeService} from "@app/services/employee.service";
 import {PermissionsEnum} from "@app/enums/permissions-enum";
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { LookupService } from '@app/services/lookup.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'training-program',
@@ -47,6 +51,38 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     }
   ];
   displayedColumns: string[] = ['rowSelection', 'activityName', 'trainingType', 'trainingStatus', 'trainingDate', 'registrationDate', 'actions'];
+  searchColumns: string[] = ['_', 'search_activityName', 'search_trainingType', 'search_trainingStatus','search_trainingDate','search_registrationDate', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_activityName: {
+      key: 'activityName',
+      controlType: 'text',
+      property: 'activityName',
+      label: 'training_program_activity_name',
+    },
+    search_trainingType: {
+      key: 'trainingType',
+      controlType: 'select',
+      property: 'trainingType',
+      label: 'training_type_name',
+      selectOptions:{
+        options: this.lookupService.listByCategory.TRAINING_TYPE,
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    },
+    search_trainingStatus: {
+      key: 'trainingStatus',
+      controlType: 'select',
+      property: 'trainingStatus',
+      label: 'training_program_status',
+      selectOptions:{
+        options: this.lookupService.listByCategory.TRAINING_STATUS,
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
+
   selectedRecords: TrainingProgram[] = [];
   bulkActionsList: IGridAction[] = [
     {
@@ -69,22 +105,19 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
               private dialogService: DialogService,
               private sharedService: SharedService,
               private employeeService: EmployeeService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private lookupService:LookupService,
+              private fb:FormBuilder) {
     super();
   }
 
   hasPermissionTo(permission: string): boolean {
     return this.employeeService.hasPermissionTo(permission);
   }
-
-  ngOnInit(): void {
-    this.listenToReload();
-    super.listenToAdd();
-    super.listenToEdit();
-    this.listenToCertification();
+  protected _init(): void {
+    this.buildFilterForm()
     this.listenToView();
   }
-
   listenToCertification(): void {
     this.certification$
       .pipe(takeUntil(this.destroy$))
@@ -402,5 +435,11 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
       .onAfterClose$
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => this.reload$.next(null));
+  }
+
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      activityName: [''], trainingType: [null], trainingStatus: [null]
+    })
   }
 }
