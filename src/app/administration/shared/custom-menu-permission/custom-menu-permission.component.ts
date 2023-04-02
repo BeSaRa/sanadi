@@ -112,8 +112,7 @@ export class CustomMenuPermissionComponent implements OnInit {
       .subscribe((selectedMenus: number[]) => {
         this.groupHandler.setSelection(selectedMenus);
         this.defaultGroupHandler.setSelection(selectedMenus);
-        console.log(this.groupHandler);
-        console.log(this.defaultGroupHandler);
+
 
       });
 
@@ -151,18 +150,17 @@ export class CustomMenuPermissionComponent implements OnInit {
         parentChildrenMap.set(menu.parentMenuItemId, (parentChildrenMap.get(menu.parentMenuItemId) ?? []).concat(menu));
       }
       if(menu.systemMenuKey && menu.hasDefaultParent()){
-        if(!defaultParents.find(m => m.systemMenuKey === menu.systemMenuKey)){
+        if(!defaultParents.find(m => m.systemMenuKey === menu.systemMenuKey && m.menuType === menu.menuType)){
           defaultParents.push(new CustomMenu().clone({
             menuType : menu.menuType,
             systemMenuKey: menu.systemMenuKey,
-            isSystem:true
+            isSystemParent:true,
           }))
         }
-        defaultChildrenMap.set(menu.systemMenuKey, (defaultChildrenMap.get(menu.systemMenuKey) ?? []).concat(menu));
+        defaultChildrenMap.set(menu.systemMenuKey+'-'+menu.menuType, (defaultChildrenMap.get(menu.systemMenuKey+'-'+menu.menuType) ?? []).concat(menu));
 
       }
     });
-
     parents.forEach((parent) => {
       result.push(parent);
       // add empty custom menu to complete the chunk length of parents
@@ -173,20 +171,17 @@ export class CustomMenuPermissionComponent implements OnInit {
       }
       result = result.concat(children);
     });
-
     defaultParents.forEach((parent) => {
       defaultResult.push(parent);
       // add empty custom menu to complete the chunk length of parents
-      defaultResult = this._fillParentChunkSpace(defaultResult, parent);
-      let children = defaultChildrenMap.get(parent.systemMenuKey!) ?? [];
+      // defaultResult = this._fillParentChunkSpace(defaultResult, parent);
+      let children = defaultChildrenMap.get(parent.systemMenuKey!+'-'+ parent.menuType) ?? [];
 
       if (children.length > 0) {
-        children = this._fillChildrenChunkSpace(children, children[0]);
+        // children = this._fillChildrenChunkSpace(children, children[0]);
       }
-      console.log(children);
       defaultResult = defaultResult.concat(children);
     });
-    console.log(defaultParents);
 
     return {
       result:result,
@@ -202,6 +197,7 @@ export class CustomMenuPermissionComponent implements OnInit {
     }, {} as any);
     groups.forEach(group => {
       let itemsInGroup = permissionsByGroup.get(group.lookupKey) || [];
+
       if (itemsInGroup.length > 0) {
         this.permissionGroups.push(new CheckGroup<CustomMenu>(group, itemsInGroup, [], this.chunkSize, true));
       }
@@ -210,13 +206,29 @@ export class CustomMenuPermissionComponent implements OnInit {
   private buildDefaultPermissionGroups(groups: Lookup[], menus: CustomMenu[]): void {
     const permissionsByGroup = new Map<number, CustomMenu[]>();
     this.defaultPermissionGroups = [];
-    menus.reduce((record, menu) => {
-      return permissionsByGroup.set(menu.menuType, (permissionsByGroup.get(menu.menuType) || []).concat(menu));
-    }, {} as any);
+    menus.forEach(( menu) => {
+       permissionsByGroup.set(menu.menuType, (permissionsByGroup.get(menu.menuType) || []).concat(menu));
+    });
+
     groups.forEach(group => {
+      let items:CustomMenu[] =[];
       let itemsInGroup = permissionsByGroup.get(group.lookupKey) || [];
+      itemsInGroup.forEach(item=>{
+        if(item.isSystemParent){
+          items.push(item);
+          items = this._fillParentChunkSpace(items,item);
+          let children = itemsInGroup.filter(x => x.systemMenuKey === item.systemMenuKey && !x.isSystemParent && x.menuType === item.menuType) ;
+          console.log(children);
+
+          if (children.length > 0) {
+            children = this._fillChildrenChunkSpace(children, children[0]);
+          }
+          items = items.concat(children);
+        }
+
+      })
       if (itemsInGroup.length > 0) {
-        this.defaultPermissionGroups.push(new CheckGroup<CustomMenu>(group, itemsInGroup, [], this.chunkSize, true));
+        this.defaultPermissionGroups.push(new CheckGroup<CustomMenu>(group, items, [], this.chunkSize, true));
       }
     });
   }
@@ -260,9 +272,7 @@ export class CustomMenuPermissionComponent implements OnInit {
     return !row[0].parentMenuItemId;
   }
   isDefaultParentRow(row: CustomMenu[]): boolean {
-    return (!!row[0].systemMenuKey && row[0].isSystem)  ||
-          (!!row[1]?.systemMenuKey && row[1]?.isSystem) ||
-          (!!row[2]?.systemMenuKey && row[2]?.isSystem)
+    return (!!row[0].systemMenuKey && row[0].isSystemParent)
         ;
   }
 
