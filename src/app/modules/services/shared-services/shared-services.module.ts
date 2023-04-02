@@ -22,6 +22,7 @@ import {
   InterventionFieldListComponent
 } from '@modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
 import { ReadBenefucuariesPopupComponent } from './components/real-beneficiaries/read-benefucuaries-popup/read-benefucuaries-popup.component';
+import { WorkAreasPopupComponent } from './components/work-areas/work-areas-popup/work-areas-popup.component';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { ReadBenefucuariesPopupComponent } from './components/real-beneficiaries
     ChooseTemplatePopupComponent,
     BankAccountComponent,
     WorkAreasComponent,
+    WorkAreasPopupComponent,
     RealBeneficiariesComponent,
     ReadBenefucuariesPopupComponent,
     ApprovalFormComponent,
@@ -44,6 +46,7 @@ import { ReadBenefucuariesPopupComponent } from './components/real-beneficiaries
     ChooseTemplatePopupComponent,
     BankAccountComponent,
     WorkAreasComponent,
+    WorkAreasPopupComponent,
     RealBeneficiariesComponent,
     ReadBenefucuariesPopupComponent,
     ApprovalFormComponent,
