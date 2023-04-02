@@ -11,6 +11,9 @@ import {SharedService} from '@app/services/shared.service';
 import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {JobTitle} from '@models/job-title';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'accredited-trainer',
@@ -22,10 +25,13 @@ export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, T
               public service: TrainerService,
               private dialogService: DialogService,
               private sharedService: SharedService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private fb: FormBuilder) {
     super();
   }
-
+  protected _init(): void {
+    this.buildFilterForm()
+  }
   actions: IMenuItem<Trainer>[] = [
     {
       type: 'action',
@@ -35,6 +41,35 @@ export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, T
     }
   ];
   displayedColumns: string[] = ['arName', 'enName', 'specialization', 'jobTitle', 'actions'];
+  searchColumns: string[] = ['search_arName', 'search_enName', 'search_specialization','search_jobTitle', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_specialization:{
+      key: 'specialization',
+      controlType: 'text',
+      property: 'specialization',
+      label: 'trainer_specialization',
+    },
+    search_jobTitle:{
+      key: 'jobTitle',
+      controlType: 'text',
+      property: 'jobTitle',
+      label: 'trainer_job_title',
+    },
+  }
   @ViewChild('table') table!: TableComponent;
 
   afterReload(): void {
@@ -83,5 +118,10 @@ export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, T
         }
       });
     }
+  }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], specialization: [''], jobTitle:['']
+    })
   }
 }
