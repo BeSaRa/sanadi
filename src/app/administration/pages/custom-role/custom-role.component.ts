@@ -14,6 +14,10 @@ import {TableComponent} from '@app/shared/components/table/table.component';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { FormBuilder } from '@angular/forms';
+import { LookupService } from '@app/services/lookup.service';
 
 @Component({
   selector: 'app-custom-role',
@@ -27,7 +31,9 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
               private dialogService: DialogService,
               public service: ExternalUserCustomRoleService,
               private toast: ToastService,
-              private sharedService: SharedService) {
+              private sharedService: SharedService,
+              private fb: FormBuilder,
+              private lookupService: LookupService) {
     super();
   }
 
@@ -36,6 +42,34 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
   @ViewChild('table') table!: TableComponent;
 
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'lbl_arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'lbl_english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
 
   actions: IMenuItem<CustomRole>[] = [
     // edit
@@ -90,6 +124,8 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
 
   _init(): void {
     this.listenToLoadDone();
+    this.buildFilterForm();
+
   }
 
   get selectedRecords(): CustomRole[] {
@@ -156,5 +192,16 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
         this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
+  }
+
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], status: [null]
+    })
+  }
+
+  getColumnFilterValue(): Partial<CustomRole> {
+    const value = this.columnFilterForm.value;
+    return {...value, status: value.status===1 ? true: value.status===0 ? false: null}
   }
 }

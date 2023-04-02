@@ -114,6 +114,7 @@ import {ServiceLogListComponent} from '@app/shared/components/service-log-list/s
 import {HeadingRowComponent} from './components/heading-row/heading-row.component';
 import { HeaderNotificationsComponent } from './components/header-notifications/header-notifications.component';
 import { FilterInboxRequestPopupComponent } from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
+import { HeaderSearchFieldComponent } from './components/header-search-field/header-search-field.component';
 import {
   UserPreferencesPopupComponent
 } from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
@@ -225,6 +226,7 @@ import {
     ServiceLogItemLocationComponent,
     HeadingRowComponent,
     HeaderNotificationsComponent,
+    HeaderSearchFieldComponent,
     UserPreferencesPopupComponent
   ],
   imports: [
@@ -322,7 +324,8 @@ import {
         CustomInputComponent,
         ServiceLogListComponent,
         ServiceLogItemLocationComponent,
-        HeadingRowComponent
+        HeadingRowComponent,
+        HeaderSearchFieldComponent
     ]
 })
 export class SharedModule {

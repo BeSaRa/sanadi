@@ -63,6 +63,7 @@ export class CoordinationWithOrganizationsRequest
   locations: TaskAdminResult[] = [];
 
   coordinationReportId?:string;
+  coordinationReportVSId?:string;
   approved = false;
   domainInfo!: AdminResult;
   searchFields: ISearchFieldsMap<CoordinationWithOrganizationsRequest> = {

@@ -69,10 +69,12 @@ import {BankComponent} from './pages/bank/bank.component';
 import {BankPopupComponent} from './popups/bank-popup/bank-popup.component';
 import {DonorComponent} from './pages/donor/donor.component';
 import {DonorPopupComponent} from './popups/donor-popup/donor-popup.component';
-import {FollowupConfigurationComponent} from './pages/followup-configuration/followup-configuration.component';
 import {
-  FollowupConfigurationPopupComponent
-} from './popups/followup-configuration-popup/followup-configuration-popup.component';
+  ServiceDataFollowupConfigurationComponent
+} from './pages/service-data-followup-configuration/service-data-followup-configuration.component';
+import {
+  ServiceDataFollowupConfigurationPopupComponent
+} from './popups/service-data-followup-configuration-popup/service-data-followup-configuration-popup.component';
 import {UserFollowupPermissionComponent} from './shared/user-followup-permission/user-followup-permission.component';
 import {FieldAssessmentPopupComponent} from './popups/field-assessment-popup/field-assessment-popup.component';
 import {FieldAssessmentComponent} from './pages/field-assessment/field-assessment.component';
@@ -80,10 +82,6 @@ import {AdminLookupPopupComponent} from './popups/admin-lookup-popup/admin-looku
 import {DacOchaNewPopupComponent} from './popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
 import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
 import {VacationDatesPopupComponent} from './popups/vacation-dates-popup/vacation-dates-popup.component';
-import {DacOchaListComponent} from './pages/dac-ocha-list/dac-ocha-list.component';
-import {AdminLookupOldComponent} from './pages/admin-lookup-old/admin-lookup-old.component';
-import {ActivityTypeComponent} from './pages/activity-types/activity-types.component';
-import {ActivityTypesPopupComponent} from './popups/activity-types-popup/activity-types-popup.component';
 import {AdminLookupListComponent} from './pages/admin-lookup-list/admin-lookup-list.component';
 import {AdminLookupComponent} from './pages/admin-lookup/admin-lookup.component';
 import {ProfilePopupComponent} from './popups/profile-popup/profile-popup.component';
@@ -126,7 +124,9 @@ import {
   FormlySelectFieldComponent
 } from '@app/services-search/components/formly-select-field/formly-select-field.component';
 import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
-import { UserFollowupPermissionNewComponent } from './shared/user-followup-permission-new/user-followup-permission-new.component';
+import {
+  UserFollowupPermissionNewComponent
+} from './shared/user-followup-permission-new/user-followup-permission-new.component';
 
 @NgModule({
   declarations: [
@@ -182,8 +182,8 @@ import { UserFollowupPermissionNewComponent } from './shared/user-followup-permi
     BankPopupComponent,
     DonorComponent,
     DonorPopupComponent,
-    FollowupConfigurationComponent,
-    FollowupConfigurationPopupComponent,
+    ServiceDataFollowupConfigurationComponent,
+    ServiceDataFollowupConfigurationPopupComponent,
     UserFollowupPermissionComponent,
     FieldAssessmentPopupComponent,
     FieldAssessmentComponent,
@@ -191,10 +191,6 @@ import { UserFollowupPermissionNewComponent } from './shared/user-followup-permi
     DacOchaNewPopupComponent,
     VactionDatesComponent,
     VacationDatesPopupComponent,
-    DacOchaListComponent,
-    AdminLookupOldComponent,
-    ActivityTypeComponent,
-    ActivityTypesPopupComponent,
     AdminLookupListComponent,
     AdminLookupComponent,
     CustomMenuComponent,

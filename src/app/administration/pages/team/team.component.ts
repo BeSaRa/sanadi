@@ -15,6 +15,10 @@ import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { ToastService } from '@app/services/toast.service';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { LookupService } from '@app/services/lookup.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'team',
@@ -24,6 +28,42 @@ import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
   usePagination = true;
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'authName', 'updatedOn', 'status', 'actions'];
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_authName','search_updatedOn', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_authName: {
+      key:'authName',
+      controlType:'text',
+      property:'authName',
+      label:'code',
+      maxLength:CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
+
   teams: Team[] = [];
   actions: IMenuItem<Team>[] = [];
   bulkActions: IGridAction[] = [];
@@ -35,7 +75,9 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
 
   constructor(public langService: LangService,
               public service: TeamService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private lookupService:LookupService,
+              private fb:FormBuilder) {
     super();
   }
 
@@ -57,6 +99,7 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
   protected _init(): void {
     this.buildActions();
     this.buildBulkActions();
+    this.buildFilterForm()
   }
 
   afterReload(): void {
@@ -93,5 +136,11 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
 
   private buildBulkActions() {
     this.bulkActions = [];
+  }
+
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], authName: [''], status: [null]
+    })
   }
 }

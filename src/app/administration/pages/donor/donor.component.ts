@@ -17,6 +17,10 @@ import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/op
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { LookupService } from '@app/services/lookup.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'donor',
@@ -30,16 +34,47 @@ export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
               public service: DonorService,
               private dialogService: DialogService,
               private sharedService: SharedService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private lookupService:LookupService,
+              private fb:FormBuilder) {
     super();
   }
 
   protected _init(): void {
     this.listenToView();
+    this.buildFilterForm()
   }
 
   @ViewChild('table') table!: TableComponent;
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status','statusDateModified', 'actions'];
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_status','search_statusDateModified', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
 
   view$: Subject<Donor> = new Subject<Donor>();
   actions: IMenuItem<Donor>[] = [
@@ -202,5 +237,11 @@ export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
         this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
+  }
+  
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], status: [null]
+    })
   }
 }

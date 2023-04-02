@@ -18,6 +18,13 @@
                             ></table-header>
             </th>
           </ng-container>
+          <ng-container *ngFor="let column of searchColumns" [cdkColumnDef]="column">
+            <th cdk-header-cell *cdkHeaderCellDef>
+              <header-search-field (filterChange)="columnFilter$.next($event)" [form]="columnFilterForm"
+                                       [searchConfig]="searchColumnsConfig" [column]="column">
+              </header-search-field>
+            </th>
+          </ng-container>
           <ng-container cdkColumnDef="enName">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.english_name}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.enName}}</td>
@@ -48,6 +55,7 @@
 
           
           <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="searchColumns"></tr>
           <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
           <tr *cdkNoDataRow>

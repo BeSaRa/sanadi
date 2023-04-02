@@ -1,0 +1,35 @@
+<!-- Input Column -->
+<ng-container *ngIf="isTextColumn()">
+  <div class="position-relative">
+    <input [id]="field.key" (input)="handleInputChange()" [placeholder]="lang.map[field.label]"
+           [formControl]="control" [mask]="field.mask ?? ''" class="form-control" [maxlength]="field.maxLength ?? null">
+    <div class="position-absolute top-0 end-0" [tabIndex]="-1">
+      <button *ngIf="!!control.value" [tooltip]="lang.map.clear_filter"
+              (click)="clearInputFilter()" class="text-primary btn icon-btn py-2 ps-1 btn-clear-filter">
+        <i class="mdi mdi-close"></i>
+      </button>
+    </div>
+  </div>
+</ng-container>
+<!-- Select Column -->
+<ng-container *ngIf="isSelectColumn()">
+  <div class="position-relative">
+    <ng-select [formControl]="control" [selectOnTab]="true" [clearable]="true"
+               [multiple]="isMultiple" [id]="field.key" appendTo="body"
+               placeholder="{{lang.map.select}} {{lang.map[field.label]}}"
+               [notFoundText]="lang.map.msg_not_found" (change)="handleSelectChange()">
+      <ng-option *ngFor="let option of options" [value]="option[optionValueKey]">
+        {{option.getName()}}
+      </ng-option>
+    </ng-select>
+  </div>
+</ng-container>
+<!-- Search Actions -->
+<ng-container *ngIf="isSearchActionsColumn()">
+  <!-- clear all filter -->
+  <button *ngIf="columnFilterFormHasValue()" [tooltip]="lang.map.clear_filter"
+          (click)="clearAllColumnFilter()" class="text-primary btn icon-btn p-0">
+    <i class="mdi mdi-filter-off-outline"></i>
+  </button>
+</ng-container>
+

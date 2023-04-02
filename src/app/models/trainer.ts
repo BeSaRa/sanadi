@@ -3,7 +3,7 @@ import { TrainerService } from '@app/services/trainer.service';
 import { FactoryService } from '@app/services/factory.service';
 import { INames } from '@app/interfaces/i-names';
 import { LangService } from '@app/services/lang.service';
-import { searchFunctionType } from '@app/types/types';
+import {ISearchFieldsMap, searchFunctionType} from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -12,6 +12,8 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Lookup } from '@app/models/lookup';
 import { InterceptModel } from "@decorators/intercept-model";
 import { TrainerInterceptor } from "@app/model-interceptors/trainer-interceptor";
+import {normalSearchFields} from '@helpers/normal-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
 
 const { receive, send } = new TrainerInterceptor()
 
@@ -34,13 +36,10 @@ export class Trainer extends BaseModel<Trainer, TrainerService> {
 
   service: TrainerService;
   langService: LangService;
-  searchFields: { [key: string]: searchFunctionType | string } = {
-    arName: 'arName',
-    enName: 'enName',
-    specialization: 'specialization',
-    jobTitle: 'jobTitle',
-    nationality: text => !this.nationalityInfo ? false : this.nationalityInfo.getName().toLowerCase().indexOf(text.toLowerCase()) !== -1,
-    trainingLanguages: text => !this.langListInfo || this.langListInfo.length == 0 ? false : this.langListInfo.some(lang => lang.getName().toLowerCase().indexOf(text.toLowerCase()) !== -1)
+  searchFields: ISearchFieldsMap<Trainer> = {
+    ...normalSearchFields(['arName', 'enName', 'specialization', 'jobTitle']),
+    /*...infoSearchFields(['nationalityInfo']),
+    trainingLanguages: text => !this.langListInfo || this.langListInfo.length == 0 ? false : this.langListInfo.some(lang => lang.getName().toLowerCase().indexOf(text.toLowerCase()) !== -1)*/
   };
 
   constructor() {

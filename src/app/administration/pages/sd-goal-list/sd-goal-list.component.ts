@@ -16,6 +16,10 @@ import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { LookupService } from '@app/services/lookup.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'sd-goal-list',
@@ -27,6 +31,35 @@ export class SdGoalListComponent extends AdminGenericComponent<SDGoal, SDGoalSer
   @Input() readonly: boolean = false;
   usePagination = true;
   displayedColumns = ['arName', 'enName', 'status', 'actions'];
+  searchColumns: string[] = ['search_arName', 'search_enName', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
+
   commonStatusEnum = CommonStatusEnum;
   view$: Subject<SDGoal> = new Subject<SDGoal>();
   actions: IMenuItem<SDGoal>[] = [
@@ -91,12 +124,15 @@ export class SdGoalListComponent extends AdminGenericComponent<SDGoal, SDGoalSer
               private sharedService: SharedService,
               public lang: LangService,
               public dialogService: DialogService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private lookupService:LookupService,
+              private fb:FormBuilder) {
     super();
   }
 
   protected _init(): void {
     this.listenToView();
+    this.buildFilterForm();
   }
 
   get selectedRecords(): SDGoal[] {
@@ -263,5 +299,10 @@ export class SdGoalListComponent extends AdminGenericComponent<SDGoal, SDGoalSer
     } else {
       this.edit$.next(item);
     }
+  }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], status: [null]
+    })
   }
 }

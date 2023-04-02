@@ -16,12 +16,14 @@ import {SortEvent} from '@contracts/sort-event';
 import {DateUtils} from '@helpers/date-utils';
 import {BehaviorSubject} from 'rxjs';
 import {exhaustMap, switchMap, takeUntil} from 'rxjs/operators';
-import {UntypedFormControl} from '@angular/forms';
+import {FormBuilder, UntypedFormControl} from '@angular/forms';
 import {ProfileService} from '@services/profile.service';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {ExternalUserUpdateRequestStatusEnum} from '@app/enums/external-user-update-request-status.enum';
 import {LookupService} from '@services/lookup.service';
 import {Lookup} from '@app/models/lookup';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
   selector: 'external-user-update-request-request',
@@ -39,13 +41,15 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
               private dialogService: DialogService,
               private profileService: ProfileService,
               private lookupService: LookupService,
-              private employeeService: EmployeeService) {
+              private employeeService: EmployeeService,
+              private fb: FormBuilder) {
     super();
   }
 
   _init() {
     this._setDefaultProfileId();
     this._setCounters();
+    this.buildFilterForm();
   }
 
   requestStatusList: Lookup[] = this.lookupService.listByCategory.ExternalUserUpdateRequestStatus;
@@ -60,6 +64,56 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       return ['domainName', 'arName', 'enName', 'requestType', 'updatedOn', 'requestStatus', 'updatedBy', 'actions'];// 'empNum', 'organization', 'status', 'statusDateModified',
     } else {
       return ['rowSelection', 'domainName', 'arName', 'enName', 'requestType', 'updatedOn', 'requestStatus', 'updatedBy', 'actions'];// 'empNum', 'organization', 'status', 'statusDateModified',
+    }
+  }
+
+  searchColumns: string[] = !this.service.userRolesManageUser.isApprovalAdmin()?
+      ['search_domainName', 'search_arName', 'search_enName','search_requestType', 'search_updatedOn', 'search_requestStatus', 'search_updatedBy', 'search_actions']:
+      ['_', 'search_domainName', 'search_arName', 'search_enName','search_requestType', 'search_updatedOn', 'search_requestStatus', 'search_updatedBy', 'search_actions'];
+
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_domainName: {
+      key: 'domainName',
+      controlType: 'text',
+      property: 'domainName',
+      label: 'login_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_requestType:{
+      key:'requestType',
+      controlType:'select',
+      property:'requestType',
+      label:'request_type',
+      selectOptions:{
+        options: this.lookupService.listByCategory.AllRequestTypes,
+        labelProperty:'getName',
+        optionValueKey:'lookupKey'
+      }
+    },
+    search_requestStatus:{
+      key: 'requestStatus',
+      controlType: 'select',
+      property: 'requestStatus',
+      label: 'request_status',
+      selectOptions:{
+        options: this.lookupService.listByCategory.ExternalUserUpdateRequestStatus,
+        labelProperty:'getName',
+        optionValueKey:'lookupKey'
+      }
     }
   }
 
@@ -280,5 +334,11 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       this.profileIdControl.setValue(this.employeeService.getProfile()!.id);
       this.profileIdControl.disable();
     }
+  }
+
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], requestType:[null], requestStatus:[null], domainName: ['']
+    })
   }
 }

@@ -1,12 +1,14 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
     <button type="button" class="btn-close btn-close-white"
             tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content" #dialogContent>
-  <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
+<div class="dialog-content w800px" #dialogContent>
+  <form novalidate autocomplete="off" [formGroup]="form">
     <tabs-list [hasForm]="true">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
            [hasError]="fm.getFieldInvalidStatus('basic')"></tab>
@@ -16,109 +18,97 @@
            [disabled]="!validToAddResume"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="arName" for="arName"
                  class="form-label">{{lang.map.lbl_arabic_name}}</label>
-          <input id="arName"
-                 validationClasses="arName"
-                 formControlName="arName" class="form-control">
+          <input id="arName" validationClasses="arName"
+                 formControlName="arName" class="form-control" trimInput>
           <app-field-error-message controlName="arName"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="enName" for="enName"
                  class="form-label">{{lang.map.lbl_english_name}}</label>
-          <input id="enName"
-                 validationClasses="enName"
-                 formControlName="enName" class="form-control">
+          <input id="enName" validationClasses="enName"
+                 formControlName="enName" class="form-control" trimInput>
           <app-field-error-message controlName="enName"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="specialization" for="specialization"
                  class="form-label">{{lang.map.lbl_trainer_specialization}}</label>
-          <input id="specialization"
-                 validationClasses="specialization"
-                 formControlName="specialization" class="form-control">
+          <input id="specialization" validationClasses="specialization"
+                 formControlName="specialization" class="form-control" trimInput>
           <app-field-error-message controlName="specialization"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="jobTitle" for="jobTitle"
                  class="form-label">{{lang.map.lbl_trainer_job_title}}</label>
-          <input id="jobTitle"
-                 validationClasses="jobTitle"
-                 formControlName="jobTitle" class="form-control">
+          <input id="jobTitle" validationClasses="jobTitle"
+                 formControlName="jobTitle" class="form-control" trimInput>
           <app-field-error-message controlName="jobTitle"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="email" for="email"
                  class="form-label">{{lang.map.lbl_email}}</label>
-          <input id="email"
-                 validationClasses="email"
-                 formControlName="email" class="form-control">
+          <input id="email" validationClasses="email"
+                 formControlName="email" class="form-control" trimInput>
           <app-field-error-message controlName="email"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="phoneNumber" for="phoneNumber"
                  class="form-label">{{lang.map.lbl_phone}}</label>
-          <input id="phoneNumber"
-                 validationClasses="phoneNumber"
-                 formControlName="phoneNumber" class="form-control">
+          <input id="phoneNumber" validationClasses="phoneNumber"
+                 formControlName="phoneNumber" class="form-control" trimInput>
           <app-field-error-message controlName="phoneNumber"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
-          <div class="row">
-            <label asteriskIfRequired="nationality" for="nationality"
-                   class="form-label">{{lang.map.lbl_nationality}}</label>
-            <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="nationality"
-                         formControlName="nationality"
-                         id="nationality">
-                <ng-option [value]="nationality.lookupKey" *ngFor="let nationality of nationalities"
-                           [disabled]="nationality.isRetiredCommonStatus()">{{nationality.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="nationality"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="nationality" for="nationality"
+                 class="form-label">{{lang.map.lbl_nationality}}</label>
+          <ng-select [selectOnTab]="true" validationClasses="nationality"
+                     formControlName="nationality" labelForId="nationality"
+                     id="nationality" [clearable]="true"
+                     placeholder="{{lang.map.select}}"
+                     [notFoundText]="lang.map.msg_not_found">
+            <ng-option [value]="nationality.lookupKey" *ngFor="let nationality of nationalities"
+                       [disabled]="nationality.isRetiredCommonStatus()">{{nationality.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="nationality"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
-          <div class="row">
-            <label asteriskIfRequired="langListArr" for="langListArr"
-                   class="form-label">{{lang.map.training_languages}}</label>
-            <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="langListArr"
-                         formControlName="langListArr"
-                         id="langListArr"
-                         [multiple]="true">
-                <ng-option [value]="trainingLanguage.lookupKey" *ngFor="let trainingLanguage of trainingLanguages">{{trainingLanguage.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="langListArr"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="langListArr" for="langListArr"
+                 class="form-label">{{lang.map.training_languages}}</label>
+          <ng-select [selectOnTab]="true" validationClasses="langListArr"
+                     formControlName="langListArr" labelForId="langListArr"
+                     id="langListArr" [clearable]="true"
+                     [multiple]="true" [closeOnSelect]="false"
+                     placeholder="{{lang.map.select}}"
+                     [notFoundText]="lang.map.msg_not_found">
+            <ng-option [value]="trainingLanguage.lookupKey"
+                       *ngFor="let trainingLanguage of trainingLanguages">{{trainingLanguage.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="langListArr"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="organizationUnit" for="organizationUnit"
                  class="form-label">{{lang.map.trainer_organization_unit}}</label>
-          <input id="organizationUnit"
-                 validationClasses="organizationUnit"
-                 formControlName="organizationUnit" class="form-control">
+          <input id="organizationUnit" validationClasses="organizationUnit"
+                 formControlName="organizationUnit" class="form-control" trimInput>
           <app-field-error-message controlName="organizationUnit"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="address" for="address"
                  class="form-label">{{lang.map.lbl_address}}</label>
-          <textarea id="address"
-                    validationClasses="address"
-                    formControlName="address"
-                    class="form-control"
-                    rows="3">
+          <textarea id="address" validationClasses="address"
+                    formControlName="address" class="form-control" rows="3" trimInput
+                    [maxlength]="customValidators.defaultLengths.ADDRESS_MAX">
           </textarea>
           <app-field-error-message controlName="address"></app-field-error-message>
         </div>
@@ -135,7 +125,8 @@
                       (click)="openFileBrowser($event)">
                 {{lang.map.upload_resume}}
               </button>
-              <button class="btn btn-primary" *ngIf="model.trainerCV?.vsId" style="margin-right: 10px; margin-left: 10px"
+              <button class="btn btn-primary" *ngIf="model.trainerCV?.vsId"
+                      style="margin-right: 10px; margin-left: 10px"
                       (click)="viewResume$.next()">
                 {{lang.map.view_resume}}
               </button>

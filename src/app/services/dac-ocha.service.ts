@@ -1,22 +1,22 @@
-import { CastResponse } from '@decorators/cast-response';
-import { Injectable } from '@angular/core';
-import { FactoryService } from '@services/factory.service';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
-import { HttpClient } from '@angular/common/http';
-import { UrlService } from '@services/url.service';
-import { DialogService } from '@services/dialog.service';
-import { AdminLookupService } from '@services/admin-lookup.service';
-import { ComponentType } from '@angular/cdk/portal';
-import { AdminLookup } from '@app/models/admin-lookup';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { IDialogData } from '@contracts/i-dialog-data';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { DacOchaNewPopupComponent } from '@app/administration/popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
-import { PaginationContract } from '@contracts/pagination-contract';
-import { Pagination } from '@app/models/pagination';
-import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import {CastResponse} from '@decorators/cast-response';
+import {Injectable} from '@angular/core';
+import {FactoryService} from '@services/factory.service';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {HttpClient} from '@angular/common/http';
+import {UrlService} from '@services/url.service';
+import {DialogService} from '@services/dialog.service';
+import {AdminLookupService} from '@services/admin-lookup.service';
+import {ComponentType} from '@angular/cdk/portal';
+import {AdminLookup} from '@app/models/admin-lookup';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {IDialogData} from '@contracts/i-dialog-data';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {Observable, of} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
+import {DacOchaNewPopupComponent} from '@app/administration/popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
+import {PaginationContract} from '@contracts/pagination-contract';
+import {Pagination} from '@app/models/pagination';
+import {CrudWithDialogGenericService} from "@app/generics/crud-with-dialog-generic-service";
 
 @Injectable({
   providedIn: 'root'
@@ -25,9 +25,9 @@ export class DacOchaService extends CrudWithDialogGenericService<AdminLookup> {
   list: AdminLookup[] = [];
 
   constructor(public http: HttpClient,
-    private urlService: UrlService,
-    private adminLookupService: AdminLookupService,
-    public dialog: DialogService) {
+              private urlService: UrlService,
+              private adminLookupService: AdminLookupService,
+              public dialog: DialogService) {
     super();
     FactoryService.registerService('DacOchaService', this);
   }
@@ -64,6 +64,14 @@ export class DacOchaService extends CrudWithDialogGenericService<AdminLookup> {
     return this.adminLookupService.loadWorkFieldsByTypePaging(options, dacOchaTypeId);
   }
 
+  paginateByTypeFilter(options: Partial<PaginationContract>, typeId: AdminLookupTypeEnum, filterModel: Partial<AdminLookup>): Observable<Pagination<AdminLookup[]>> {
+    return this.adminLookupService.loadWorkFieldsByFilterPaging(options, typeId, filterModel);
+  }
+
+  loadByTypeFilter(dacOchaTypeId: AdminLookupTypeEnum, filterModel: Partial<AdminLookup>): Observable<AdminLookup[]> {
+    return this.adminLookupService.loadWorkFieldsByFilter(dacOchaTypeId, filterModel);
+  }
+
   loadParentsByTypePaging(options: Partial<PaginationContract>, dacOchaTypeId: AdminLookupTypeEnum): Observable<Pagination<AdminLookup[]>> {
     return this.adminLookupService.loadWorkFieldsParentsByTypePaging(options, dacOchaTypeId);
   }
@@ -81,7 +89,7 @@ export class DacOchaService extends CrudWithDialogGenericService<AdminLookup> {
 
   openCreateDialog(typeId: AdminLookupTypeEnum, parentId?: number): DialogRef {
     return this.dialog.show<IDialogData<AdminLookup>>(DacOchaNewPopupComponent, {
-      model: new AdminLookup().clone({ type: typeId, parentId: parentId }),
+      model: new AdminLookup().clone({type: typeId, parentId: parentId}),
       operation: OperationTypes.CREATE,
       selectedTab: 'basic'
     });
@@ -91,6 +99,7 @@ export class DacOchaService extends CrudWithDialogGenericService<AdminLookup> {
   private _getByIdCasted(modelId: number) {
     return this.getById(modelId);
   }
+
   openViewDialog(modelId: number, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
     return this._getByIdCasted(modelId).pipe(
       switchMap((item: AdminLookup) => {
@@ -102,6 +111,7 @@ export class DacOchaService extends CrudWithDialogGenericService<AdminLookup> {
       })
     );
   }
+
   openUpdateDialog(modelId: number, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
     return this._getByIdCasted(modelId).pipe(
       switchMap((item: AdminLookup) => {

@@ -114,7 +114,7 @@ export class UrgentInterventionReportListComponent extends AdminGenericComponent
   }
 
   showAttachments(item: UrgentInterventionReport): void {
-    item.showAttachments(this.readonly || !this.isCurrentRequestReport(item))
+    item.showAttachments(this.readonly || !this.isCurrentRequestReport(item), this.isCurrentRequestReport(item))
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });

@@ -29,7 +29,6 @@ import {DonorComponent} from '@app/administration/pages/donor/donor.component';
 import {FieldAssessmentComponent} from '@app/administration/pages/field-assessment/field-assessment.component';
 import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
 import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
-import {AdminLookupOldComponent} from './pages/admin-lookup-old/admin-lookup-old.component';
 import {ProfilesComponent} from './pages/profiles/profiles.component';
 import {DynamicModelsComponent} from './pages/dynamic-models/dynamic-models.component';
 import {DeductionRatioComponent} from './pages/deduction-ratio/deduction-ratio.component';
@@ -142,11 +141,6 @@ const routes: Routes = [
   },
   {
     path: 'lookups', component: AdminLookupComponent,
-    canActivate: [PermissionGuard],
-    data: {permissionKey: PermissionsEnum.MANAGE_ADMIN_LOOKUP, configPermissionGroup: null, checkAnyPermission: false}
-  },
-  {
-    path: 'lookups-old', component: AdminLookupOldComponent,
     canActivate: [PermissionGuard],
     data: {permissionKey: PermissionsEnum.MANAGE_ADMIN_LOOKUP, configPermissionGroup: null, checkAnyPermission: false}
   },
