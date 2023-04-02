@@ -50,6 +50,7 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   langService: LangService;
   urlParamsParsed: MenuUrlValueContract[] = [];
   customParentId!:number;
+  isSystemParent:boolean = false;
 
   searchFields: ISearchFieldsMap<CustomMenu> = {
     ...normalSearchFields(['arName', 'enName']),
@@ -68,8 +69,8 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   }
   getNameWithSystemParent(){
     const systemMenu = this.getSystemParent();
-    if(!!systemMenu){
-      return systemMenu.getName() + ' - ' + this.getName();
+    if(!!systemMenu && this.isSystemParent){
+      return systemMenu.getName() ;
     }
     return this.getName();
   }
