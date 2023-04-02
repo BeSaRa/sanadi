@@ -6,9 +6,9 @@
         <button *ngIf="action.icon" class="btn icon-btn text-primary p-0 grid-action bg-transparent"
                 [disabled]="isActionDisabled(action)"
                 [tooltip]="displayLabel(action)" (click)="onClick($event, action)">
-          <i class="mdi {{action.icon}} {{action.class || ''}}"></i>
+          <i class="mdi {{action.icon}} {{actionClass(action)}}"></i>
         </button>
-        <button *ngIf="!action.icon" class="btn btn-primary grid-action {{action.class || ''}}"
+        <button *ngIf="!action.icon" class="btn btn-primary grid-action {{actionClass(action)}}"
                 [disabled]="isActionDisabled(action)" type="button"
                 (click)="onClick($event, action)">{{displayLabel(action)}}</button>
       </ng-container>
