@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {LangService} from '@services/lang.service';
-import {FormControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {FormControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {GlobalSettings} from '@models/global-settings';
 import {GlobalSettingsService} from '@services/global-settings.service';
 import {Observable} from 'rxjs';
-import {switchMap, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {FileType} from '@models/file-type';
 import {CommonUtils} from '@helpers/common-utils';
@@ -20,9 +20,9 @@ import {AuthService} from '@services/auth.service';
 export class GlobalSettingsComponent implements OnInit {
   model!: GlobalSettings;
   form!: UntypedFormGroup;
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  fileTypes: FileType[] = [];
   adminEmailsForm!: UntypedFormGroup;
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  fileTypesList: FileType[] = [];
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -33,16 +33,11 @@ export class GlobalSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initAdminEmailsForm();
     this.loadFileTypes();
 
     this.loadCurrentGlobalSettings().subscribe(() => {
       this.buildForm();
-
-      let jsonEmailsArray = this.getEmailsAsArray(this.model.supportEmailList);
-      if (jsonEmailsArray.length > 0) {
-        this.updateAdminEmailsForm(jsonEmailsArray);
-      }
+      this.buildAdminEmailsForm();
 
       this.displayFormValidity();
     });
@@ -50,82 +45,72 @@ export class GlobalSettingsComponent implements OnInit {
 
   loadCurrentGlobalSettings(): Observable<GlobalSettings> {
     return this.service.loadCurrentGlobalSettings()
-      .pipe(
-        tap((setting) => this.model = setting)
-      )
-  }
-
-  initiateForm() {
-    this.form = this.fb.group({});
+      .pipe(tap((setting) => this.model = setting))
   }
 
   buildForm() {
     this.form = this.fb.group(this.model.buildForm(true));
   }
 
-  loadFileTypes() {
-    this.service.loadAllFileTypes()
-      .subscribe(list => {
-        this.fileTypes = list;
-      });
-  }
-
-  get emails() {
-    return this.adminEmailsForm.controls['emails'] as UntypedFormArray;
-  }
-
-  initAdminEmailsForm(): void {
+  buildAdminEmailsForm(): void {
     this.adminEmailsForm = this.fb.group({
       emails: this.fb.array([])
     });
+
+    this.model.supportEmailListParsed.reverse().forEach((email) => {
+      if (CommonUtils.isValidValue(email)) {
+        this.addSupportEmail(email);
+      }
+    })
   }
 
-  updateAdminEmailsForm(emails: string[]): void {
-    this.adminEmailsForm = this.fb.group({
-      emails: this.fb.array([...emails.map(x => new FormControl(x, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]))])
-    });
+  addSupportEmail(email: string = '', isUserInteraction: boolean = false): void {
+    this.emailsFormArray.insert(0, this._generateEmailControl(email));
+    this.emailsFormArray.at(0).markAllAsTouched();
+    this.emailsFormArray.updateValueAndValidity();
   }
 
-  newAdminEmail(email: string = ''): FormControl {
-    if (CommonUtils.isValidValue(email)) {
-      return new FormControl(email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]);
-    } else {
-      return new FormControl('', [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]);
-    }
+  private _generateEmailControl(email: string): UntypedFormControl {
+    return new UntypedFormControl(email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(50)]);
   }
 
-  addAdminEmail(email: string = '') {
-    this.emails.controls.unshift(this.newAdminEmail(email));
-    this.emails.controls[0].markAsTouched();
-    this.emails.updateValueAndValidity();
-    // this.emails.push(this.newAdminEmail(email));
+  loadFileTypes() {
+    this.service.loadAllFileTypes()
+      .subscribe(list => {
+        this.fileTypesList = list;
+      });
+  }
+
+  get emailsFormArray(): UntypedFormArray {
+    return this.adminEmailsForm.controls['emails'] as UntypedFormArray;
   }
 
   deleteEmail(emailIndex: number) {
-    this.emails.removeAt(emailIndex);
+    this.emailsFormArray.removeAt(emailIndex);
   }
 
-  getEmailsAsArray(emailsString: string) {
-    let emailsArr: string[];
-    try {
-      emailsArr = JSON.parse(emailsString);
-    } catch (err) {
-      emailsArr = [];
-    }
-    return emailsArr;
+  isInvalidForm() {
+    return !this.form || this.form.invalid || !this.emailsFormArray || this.emailsFormArray.controls.some(control => control.invalid);
   }
 
-  getEmailsAsString(emailsArray: string[]) {
-    let finalArr = emailsArray.filter(x => CommonUtils.isValidValue(x));
-    return JSON.stringify(finalArr);
+  private _hasDuplicateEmail() {
+    return (new Set(this.emailsFormArray.value)).size !== this.emailsFormArray.length;
   }
 
   save() {
-    let updatedModel = new GlobalSettings().clone({...this.model, ...this.form.value});
-    this.emails.updateValueAndValidity();
-    updatedModel.supportEmailList = this.getEmailsAsString(this.emails.value);
+    if (this.isInvalidForm()) {
+      return;
+    }
+    if (this._hasDuplicateEmail()) {
+      this.toast.error(this.lang.map.msg_check_x_duplicate.change({x: this.lang.map.admin_emails}));
+      return;
+    }
+    let updatedModel = new GlobalSettings().clone({
+      ...this.model,
+      ...this.form.value,
+      supportEmailListParsed: this.emailsFormArray.value
+    });
     this.service.update(updatedModel)
-      // .pipe(switchMap(() => this.loadCurrentGlobalSettings()))
       .subscribe(_ => {
         this.toast.success(this.lang.map.msg_save_success);
         this.authService.logout()
@@ -133,10 +118,6 @@ export class GlobalSettingsComponent implements OnInit {
             this.router.navigate(['/login']).then();
           })
       });
-  }
-
-  invalidEmailsForm() {
-    return this.emails.controls.some(control => control.invalid);
   }
 
   displayFormValidity(contentId: string = 'main-content'): void {

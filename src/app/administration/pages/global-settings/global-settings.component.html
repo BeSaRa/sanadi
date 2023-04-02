@@ -53,15 +53,17 @@
                  [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="inboxRefreshInterval"></app-field-error-message>
         </div>
+      </div>
+      <div class="row mb-3">
         <div class="col-sm-12 col-md-4 mb-4 ng-select-wrapper">
-          <label asteriskIfRequired="fileTypeArr" for="fileTypeArr" class="form-label">{{lang.map.file_types}}</label>
-          <ng-select [selectOnTab]="true" [items]="fileTypes" labelForId="fileTypeArr"
+          <label asteriskIfRequired="fileTypeParsed" for="fileTypeParsed" class="form-label">{{lang.map.file_types}}</label>
+          <ng-select [selectOnTab]="true" [items]="fileTypesList" labelForId="fileTypeParsed"
                      bindValue="id" [clearable]="true"
                      [searchFn]="searchNgSelect"
-                     placeholder="{{lang.map.select}}" id="fileTypeArr"
+                     placeholder="{{lang.map.select}}" id="fileTypeParsed"
                      [notFoundText]="lang.map.msg_not_found"
                      [multiple]="true" [closeOnSelect]="false"
-                     formControlName="fileTypeArr" validationClasses="fileTypeArr">
+                     formControlName="fileTypeParsed" validationClasses="fileTypeParsed">
             <ng-template ng-option-tmp let-item="item">
               <span class="custom-option">{{item.getName()}}</span>
             </ng-template>
@@ -79,10 +81,8 @@
               </div>
             </ng-template>
           </ng-select>
-          <app-field-error-message controlName="fileTypeArr"></app-field-error-message>
+          <app-field-error-message controlName="fileTypeParsed"></app-field-error-message>
         </div>
-      </div>
-      <div class="row mb-3">
         <div class="col-sm-4 mt-4 form-check form-switch">
           <div class="ms-3">
             <input class="form-check-input" type="checkbox" id="enableMailNotification"
@@ -91,7 +91,7 @@
                    for="enableMailNotification">{{lang.map.mail_notifications}}</label>
           </div>
         </div>
-        <div class="col-sm-6 mt-4 form-check form-switch">
+        <div class="col-sm-4 mt-4 form-check form-switch">
           <div class="ms-3">
             <input class="form-check-input" type="checkbox" id="enableSMSNotification"
                    formControlName="enableSMSNotification">
@@ -103,13 +103,14 @@
       <div class="row">
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label">{{lang.map.admin_emails}}</label>
-          <button (click)="addAdminEmail()" class="btn btn-link outline-none" title="{{lang.map.add_email}}">
+          <button (click)="addSupportEmail('', true)"
+                  class="btn btn-link outline-none" title="{{lang.map.add_email}}">
             <i class="mdi mdi-plus-box"></i>
           </button>
           <div class="row" [formGroup]="adminEmailsForm">
             <div formArrayName="emails" class="emails-container">
               <div class="col-sm-12 position-relative email-wrapper"
-                   *ngFor="let email of emails.controls; let i = index">
+                   *ngFor="let email of emailsFormArray.controls; let i = index">
                 <div class="input-group">
                   <input [id]="i" class="form-control" [formControlName]="i" validationClasses="{{i}}">
                   <app-field-error-message controlName="{{i}}"></app-field-error-message>
@@ -129,7 +130,7 @@
 <div class="row mt-4 mb-2">
   <div class="col-12">
     <div class="d-flex flex-row flex-wrap gap-2 mb-2 justify-content-center">
-      <button  type="button" [disabled]="!form || form.invalid || invalidEmailsForm()"
+      <button type="button" [disabled]="isInvalidForm()"
               (click)="save()" class="btn btn-primary">{{lang.map.btn_save}}</button>
       <button type="button" (click)="cancelSettings()"
               class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
