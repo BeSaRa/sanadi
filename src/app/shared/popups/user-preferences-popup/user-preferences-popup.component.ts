@@ -11,6 +11,7 @@ import {ToastService} from '@services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {InternalUser} from '@models/internal-user';
 import {ExternalUser} from '@models/external-user';
+import {EmployeeService} from '@services/employee.service';
 
 @Component({
   selector: 'user-preferences-popup',
@@ -24,30 +25,40 @@ export class UserPreferencesPopupComponent implements OnInit {
   languages: Lookup[] = [];
   alternateUserEmailsForm!: UntypedFormGroup;
   user: InternalUser | ExternalUser;
-  isLoggedInUserPreferences!: boolean;
+  canEditPreferences: boolean = false;
 
   constructor(public lang: LangService,
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<UserPreferences>,
               public fb: UntypedFormBuilder,
               private toast: ToastService,
-              public dialogRef: DialogRef) {
+              public dialogRef: DialogRef,
+              private employeeService: EmployeeService) {
     this.model = data.model;
     this.user = data.user;
-    this.isLoggedInUserPreferences = data.isLoggedInUserPreferences;
+    this.canEditPreferences = data.isLoggedInUserPreferences ? true : this.employeeService.isInternalUser()
   }
 
   ngOnInit() {
     this.languages = this.getLanguages();
     this.buildForm();
     this.buildAlternateUserEmailsForm();
+
+    if (!this.canEditPreferences) {
+      this.disableForms();
+    }
   }
 
   get emailsFormArray(): UntypedFormArray {
     return this.alternateUserEmailsForm.controls['emails'] as UntypedFormArray;
   }
 
+  private disableForms() {
+    this.form.disable();
+    this.alternateUserEmailsForm.disable();
+  }
+
   buildForm(): void {
-    this.form = this.fb.group(this.model.buildForm(this.isLoggedInUserPreferences, true));
+    this.form = this.fb.group(this.model.buildForm(true));
   }
 
   buildAlternateUserEmailsForm(): void {
@@ -67,7 +78,7 @@ export class UserPreferencesPopupComponent implements OnInit {
   }
 
   save() {
-    if (this.isInvalidForm()) {
+    if (!this.canEditPreferences || this.isInvalidForm()) {
       return;
     }
     if (this._hasDuplicateEmail()) {
@@ -90,13 +101,20 @@ export class UserPreferencesPopupComponent implements OnInit {
     return new UntypedFormControl(email, [CustomValidators.required].concat(CustomValidators.commonValidations.email))
   }
 
-  addAlternateUserEmail(email: string = ''): void {
+  addAlternateUserEmail(email: string = '', isUserInteraction: boolean = false): void {
+    if (isUserInteraction && !this.canEditPreferences) {
+      return;
+    }
+
     this.emailsFormArray.insert(0, this._generateEmailControl(email));
     this.emailsFormArray.at(0).markAllAsTouched();
     this.emailsFormArray.updateValueAndValidity();
   }
 
   deleteEmail(emailIndex: number) {
+    if (!this.canEditPreferences) {
+      return;
+    }
     this.emailsFormArray.removeAt(emailIndex);
   }
 

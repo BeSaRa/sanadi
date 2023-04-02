@@ -65,16 +65,19 @@
     <div class="row mb-3">
       <div class="col-sm-6 position-relative">
         <label class="form-label">{{lang.map.alternate_emails}}</label>
-        <button (click)="addAlternateUserEmail()" class="btn btn-link outline-none" title="{{lang.map.add_email}}">
+        <button *ngIf="canEditPreferences" (click)="addAlternateUserEmail('',true)"
+                class="btn btn-link outline-none" title="{{lang.map.add_email}}">
           <i class="mdi mdi-plus-box"></i>
         </button>
         <div class="row" [formGroup]="alternateUserEmailsForm">
           <div formArrayName="emails" class="emails-container">
-            <div class="col-sm-12 position-relative email-wrapper" *ngFor="let email of emailsFormArray.controls; let i = index">
+            <div class="col-sm-12 position-relative email-wrapper"
+                 *ngFor="let email of emailsFormArray.controls; let i = index">
               <div class="input-group">
                 <input [id]="i" class="form-control" [formControlName]="i" validationClasses="{{i}}">
                 <app-field-error-message controlName="{{i}}"></app-field-error-message>
-                <button (click)="deleteEmail(i)" class="input-group-text" title="{{lang.map.remove_email}}">
+                <button *ngIf="canEditPreferences" (click)="deleteEmail(i)"
+                        class="input-group-text" title="{{lang.map.remove_email}}">
                   <i class="mdi mdi-delete"></i>
                 </button>
               </div>
@@ -86,10 +89,10 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="displayFormValidity(null, content)" tooltip="{{ lang.map.validate_fields }}"
+  <button tabindex="-1" *ngIf="canEditPreferences" (click)="displayFormValidity(null, content)" tooltip="{{ lang.map.validate_fields }}"
           class="btn btn-link"><i class="mdi mdi-information-outline text-info"></i></button>
   <div class="flex-grow-1"></div>
-  <button (click)="save()" [disabled]="isInvalidForm()"
+  <button  *ngIf="canEditPreferences" (click)="save()" [disabled]="isInvalidForm()"
           class="btn btn-primary">{{ lang.map.btn_save }}</button>
   <button [dialogClose]="null" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
 </div>
