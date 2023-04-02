@@ -176,7 +176,7 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
       address: controls ? [address, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : address,
       phone: controls ? [phone, CustomValidators.commonValidations.phone] : phone,
       mobileNo: controls ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
-      email: controls ? [email, [CustomValidators.required, Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : email
+      email: controls ? [email, [CustomValidators.required, ...CustomValidators.commonValidations.email]] : email
     };
   }
 
@@ -196,7 +196,7 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
       detailsAddress: controls ? [detailsAddress, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : detailsAddress,
       postalCode: controls ? [postalCode, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : postalCode,
       website: controls ? [website, [CustomValidators.required, CustomValidators.pattern('WEBSITE')]] : website,
-      organizationEmail: controls ? [organizationEmail, [CustomValidators.required, Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : organizationEmail,
+      organizationEmail: controls ? [organizationEmail, [CustomValidators.required, ...CustomValidators.commonValidations.email]] : organizationEmail,
       firstSocialMedia: controls ? [firstSocialMedia, [CustomValidators.required, CustomValidators.maxLength(350)]] : firstSocialMedia,
       secondSocialMedia: controls ? [secondSocialMedia, [CustomValidators.required, CustomValidators.maxLength(350)]] : secondSocialMedia,
       thirdSocialMedia: controls ? [thirdSocialMedia, [CustomValidators.required, CustomValidators.maxLength(350)]] : thirdSocialMedia,

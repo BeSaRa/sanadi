@@ -88,8 +88,7 @@ export class Trainer extends BaseModel<Trainer, TrainerService> {
       ]] : jobTitle,
       email: controls ? [email, [
         CustomValidators.required,
-        CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX),
-        Validators.email
+        ...CustomValidators.commonValidations.email
       ]] : email,
       phoneNumber: controls ? [phoneNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phoneNumber,
       nationality: controls ? [nationality, [
