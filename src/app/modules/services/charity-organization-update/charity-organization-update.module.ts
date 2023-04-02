@@ -33,6 +33,7 @@ import {
 import { OrganizationOfficerPopupComponent } from '@modules/services/charity-organization-update/shared/organization-officers/organization-officer-popup/organization-officer-popup.component';
 import { CharityBranchPopupComponent } from '@modules/services/charity-organization-update/shared/charity-branch/charity-branch-popup/charity-branch-popup.component';
 import { MembersPopupComponent } from '@modules/services/charity-organization-update/shared/members/members-popup/members-popup.component';
+import { ForeignAidClassificationsPopupComponent } from './shared/foreign-aid-classifications/foreign-aid-classifications-popup/foreign-aid-classifications-popup.component';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { MembersPopupComponent } from '@modules/services/charity-organization-up
     CharityBranchPopupComponent,
     CharityDecisionsComponent,
     ForeignAidClassificationsComponent,
+    ForeignAidClassificationsPopupComponent,
     MembersComponent,
     MembersPopupComponent,
     CharityReportsComponent,
