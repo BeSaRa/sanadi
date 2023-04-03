@@ -41,7 +41,7 @@ export class ActionRegistry {
       return this.ouToInfo.getName()
     }
     if (this.actionId === ServiceActionTypesEnum.TERMINATE_DEPARTMENT_REVIEW) {
-      return this.ouFromInfo.getName()
+      return this.ouToInfo.getName()
     }
     return ''
   }
