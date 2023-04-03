@@ -59,6 +59,8 @@ import {ServiceDataService} from '@services/service-data.service';
 import {CaseTypes} from '@enums/case-types.enum';
 import {FieldControlAndLabelKey} from '@app/types/types';
 import { ProjectWorkArea } from '@app/enums/project-work-area';
+import { ProjectTypes } from '@app/enums/project-types';
+import { ProjectModelProjectTypes } from '@app/enums/project-model-project-types copy';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -308,6 +310,14 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
     this.listenToExecutionFieldChange();
     this.listenToIsConstructionalChange();
+    this.listenToProjectTypeChange();
+
+  }
+  listenToProjectTypeChange() {
+   this.projectType.valueChanges.pipe(
+    takeUntil(this.destroy$),
+    tap(_=>this._handleProjectClassifications())
+   ).subscribe();
   }
 
   handleReadonly(): void {
@@ -877,15 +887,33 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   applyNotOutsideQatarChanges() {
     this.emptyFieldsAndValidation(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal','firstSDGoalPercentage','secondSDGoalPercentage','thirdSDGoalPercentage']);
     this.emptyDomainField();
+    this._handleProjectClassifications();
     this.isOutsideQatarWorkArea = false;
-    this.setRequiredValidator(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
+
     this.setRequiredValidator(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal','firstSDGoalPercentage','secondSDGoalPercentage','thirdSDGoalPercentage']);
 
     this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
     this.displayDevGoals = false;
     this.categoryGoalPercentGroup.setValidators(this.getPercentageSumValidation());
+
   }
 
+  isSoftwareProjectType():boolean{
+    return  this.projectType.value === ProjectModelProjectTypes.SOFTWARE;
+  }
+  isAidsProjectType():boolean{
+    return  this.projectType.value === ProjectModelProjectTypes.AIDS;
+  }
+  private _handleProjectClassifications() {
+    this.emptyFieldsAndValidation(['internalProjectClassification','sanadiDomain','sanadiMainClassification'])
+    if(this.isSoftwareProjectType()){
+      this.setRequiredValidator(['internalProjectClassification']);
+    }
+    if(this.isAidsProjectType()){
+      this.setRequiredValidator(['sanadiDomain', 'sanadiMainClassification']);
+    }
+
+  }
   setQatarAsTheOnlyChoiceInCountries() {
     this.countriesAvailableForSelection = this.countries.filter(x => x.id === this.qatarId);
     this.beneficiaryCountry.patchValue(this.qatarId);
