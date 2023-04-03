@@ -109,12 +109,7 @@ export class MembersPopupComponent implements OnInit {
   }
 
   mapFormToMember(form: any): OrgMember {
-    const member: OrgMember = new OrgMember();
-    member.fullName = form.fullName;
-    member.identificationNumber = form.identificationNumber;
-    member.jobTitleId = form.jobTitleId;
-    member.email = form.email;
-    member.phone = form.phone;
+    const member: OrgMember = new OrgMember().clone(form);
 
     const jobTitle = this.jobTitles.find(e => e.id === form.jobTitleId);
     member.jobTitleInfo = AdminResult.createInstance({ ...jobTitle });

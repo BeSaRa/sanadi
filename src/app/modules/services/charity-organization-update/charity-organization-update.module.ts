@@ -34,6 +34,7 @@ import { OrganizationOfficerPopupComponent } from '@modules/services/charity-org
 import { CharityBranchPopupComponent } from '@modules/services/charity-organization-update/shared/charity-branch/charity-branch-popup/charity-branch-popup.component';
 import { MembersPopupComponent } from '@modules/services/charity-organization-update/shared/members/members-popup/members-popup.component';
 import { ForeignAidClassificationsPopupComponent } from './shared/foreign-aid-classifications/foreign-aid-classifications-popup/foreign-aid-classifications-popup.component';
+import { BylawsPopupComponent } from './shared/bylaws/bylaws-popup/bylaws-popup.component';
 import { AuditCharityOrganizationUpdateComponent } from './audit/audit-charity-organization-update/audit-charity-organization-update.component';
 import { AuditCharityBranchComponent } from './audit/audit-charity-branch/audit-charity-branch.component';
 import { AuditForeignAidClassificationsComponent } from './audit/audit-foreign-aid-classifications/audit-foreign-aid-classifications.component';
@@ -48,6 +49,7 @@ import { AuditOrgMemberComponent } from './audit/audit-org-member/audit-org-memb
     CharityOrganizationUpdateComponent,
     CharityOrganizationUpdateOutputsComponent,
     BylawsComponent,
+    BylawsPopupComponent,
     CharityBranchComponent,
     CharityBranchPopupComponent,
     CharityDecisionsComponent,

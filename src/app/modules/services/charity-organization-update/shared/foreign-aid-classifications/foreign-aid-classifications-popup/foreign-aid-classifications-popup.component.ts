@@ -173,7 +173,6 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
       readonly: boolean,
       hideSave: boolean,
       editRecordIndex: number,
-      charityWorkArea: number,
       customData: any,
       model: ForeignAidClassification
     },

@@ -218,7 +218,7 @@ export class ReadBenefucuariesPopupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const row = {...this.model};
+    const row = { ...this.model };
     row.birthDate = DateUtils.changeDateToDatepicker(row.birthDate);
     row.birthDateString = row.birthDate ? DateUtils.getDateStringFromDate(row.birthDate, 'DEFAULT_DATE_FORMAT') : '';
     row.startDate = DateUtils.changeDateToDatepicker(row.startDate);
