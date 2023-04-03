@@ -846,17 +846,14 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.projectWorkArea.valueChanges.subscribe(val => {
       this.domain.setValidators([]);
       if (val === ExecutionFields.OutsideQatar) {
-        this.showProjectAddressesTab = this.isConstructional.value;
         this.removeQatarFromCountries();
         this.isOutsideQatarWorkArea = true;
         this.domain.setValidators([CustomValidators.required]);
         this.emptyFieldsAndValidation(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
       } else if (this.projectWorkArea.value === ExecutionFields.InsideQatar) {
-        this.hideProjectAddressesTabAndClearProjectAddressesList();
         this.applyNotOutsideQatarChanges();
         this.setQatarAsTheOnlyChoiceInCountries();
       } else {
-        this.hideProjectAddressesTabAndClearProjectAddressesList();
         this.countriesAvailableForSelection = this.countries;
         this.applyNotOutsideQatarChanges();
       }
@@ -868,11 +865,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   listenToIsConstructionalChange() {
     this.isConstructional.valueChanges.subscribe(val => {
       if (val) {
-        if (this.projectWorkArea.value === ExecutionFields.OutsideQatar) {
-          this.showProjectAddressesTab = true;
-        } else {
-          this.hideProjectAddressesTabAndClearProjectAddressesList();
-        }
+        this.showProjectAddressesTab = true;
+        // if (this.projectWorkArea.value === ExecutionFields.OutsideQatar) {
+        // } else {
+        //   this.hideProjectAddressesTabAndClearProjectAddressesList();
+        // }
       } else {
         this.hideProjectAddressesTabAndClearProjectAddressesList();
       }
@@ -905,7 +902,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return  this.projectType.value === ProjectModelProjectTypes.AIDS;
   }
   private _handleProjectClassifications() {
-    this.emptyFieldsAndValidation(['internalProjectClassification','sanadiDomain','sanadiMainClassification'])
+    this.emptyFieldsAndValidation(['internalProjectClassification','sanadiDomain','sanadiMainClassification']);
+    if(this.projectWorkArea.value !== ExecutionFields.InsideQatar){
+      return;
+    }
     if(this.isSoftwareProjectType()){
       this.setRequiredValidator(['internalProjectClassification']);
     }
