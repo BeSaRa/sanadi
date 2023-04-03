@@ -86,7 +86,7 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
       email: controls ? [email, [
         CustomValidators.required,
         CustomValidators.maxLength(50),
-        Validators.email
+        CustomValidators.pattern('EMAIL')
       ]] : email,
       status: controls ? [status, [CustomValidators.required]] : status
     }

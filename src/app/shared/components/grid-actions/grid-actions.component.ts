@@ -49,6 +49,10 @@ export class GridActionsComponent implements OnInit {
     return typeof action.label === 'function' ? action.label(this.record) : this.lang.map[action.label as unknown as keyof ILanguageKeys];
   }
 
+  actionClass(action: IMenuItem<any>): string {
+    return (!action.class ? '' : (typeof action.class === 'function' ? action.class(this.record) : action.class)) || '';
+  }
+
   onClick(event: MouseEvent, action: IMenuItem<any>) {
     event.preventDefault();
     if (this.isActionDisabled(action)) {

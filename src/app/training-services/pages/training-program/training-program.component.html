@@ -1,37 +1,49 @@
-<div class="row pb-3">
-  <app-page-header [pageTitle]="'menu_training_programs'"
-                   [disableAdd]="!hasPermissionTo(permissions.TRAINING_ADD_PUBLISH_PROGRAM)" [clickOnReload$]="reload$"
-                   [clickOnNew$]="add$">
-  </app-page-header>
-  <app-bulk-actions *ngIf="selectedRecords && selectedRecords.length"
-                    [selectedRecords]="selectedRecords"
-                    [actionsList]="bulkActionsList"></app-bulk-actions>
-  <app-grid-search (searchTextEvent)="searchText = $event" *ngIf="!selectedRecords.length"
-                   [filterButton]="true" (filterEvent)="filterCallback($event)"
-                   [filterCriteria]="filterCriteria"></app-grid-search>
-</div>
+<ng-template #bulk>
+  <ng-container *ngIf="table">
+    <app-bulk-actions *ngIf="table.hasSelectedRecords()"
+                      [selectedRecords]="table.selection.selected" [hasTableHeaderContainer]="true"
+                      [reversedColors]="true"
+                      [actionsList]="bulkActionsList"></app-bulk-actions>
+  </ng-container>
+</ng-template>
 <div class="row">
   <div class="col-12">
     <div class="table-responsive">
       <app-table #table [paginator]="paginator" sortableTable
                  [columns]="displayedColumns"
-                 [data]="models"
-                 [filter]="searchText"
-                 [filterCallback]="searchCallback">
+                 [data]="models" [useSearchToFilter]="true"
+                 [selectable]="true"
+                 [filter]="filterControl.value">
         <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
-          <ng-container cdkColumnDef="rowSelection">
-            <th cdk-header-cell *cdkHeaderCellDef class="text-center">
-              <input aria-label="select all" [indeterminate]="isIndeterminateSelection" [checked]="isFullSelection"
-                     type="checkbox" [disabled]="table.filter"
-                     id="select-all" (change)="onSelectAll()"
-                     class="form-check-input cursor-pointer">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header tableTitle="menu_training_programs" [reload$]="reload$" [add$]="add$"
+                            (textChange)="filterControl.setValue($event)"
+                            [allowAdd]="hasPermissionTo(permissions.TRAINING_ADD_PUBLISH_PROGRAM)"
+                            [filterCriteria]="filterCriteria" (filterClicked)="filterCallback($event)">
+                <ng-container *ngTemplateOutlet="bulk"></ng-container>
+              </table-header>
             </th>
-            <td cdk-cell *cdkCellDef="let row" class="text-center">
-              <input [disabled]="disableMultipleSelectionInput(row.status)" aria-label="select" type="checkbox"
-                     [value]="row" id="row-select-{{row.id}}"
-                     [checked]="isSelected(row)"
-                     (change)="onSelect($event , row)" class="form-check-input cursor-pointer">
+          </ng-container>
+          <ng-container cdkColumnDef="rowSelection">
+            <th cdk-header-cell *cdkHeaderCellDef>
+              <input type="checkbox" [disabled]="table.filter"
+                     [indeterminate]="table.selection.hasValue() && !allSelected()"
+                     (change)="$event ? toggleAllSelectable() : null" [checked]="table.selection.hasValue() && allSelected()"
+                     class="form-check-input">
+            </th>
+            <td cdk-cell *cdkCellDef="let row">
+              <input type="checkbox" *ngIf="canSelectProgram(row)"
+                     (click)="$event.stopPropagation()" [checked]="table.selection.isSelected(row)"
+                     (change)="$event ? table.selection.toggle(row) : null" class="form-check-input">
             </td>
+          </ng-container>
+          <ng-container *ngFor="let column of searchColumns" [cdkColumnDef]="column">
+            <th cdk-header-cell *cdkHeaderCellDef>
+              <header-search-field (filterChange)="columnFilter$.next($event)" [form]="columnFilterForm"
+                                   [searchConfig]="searchColumnsConfig" [column]="column">
+              </header-search-field>
+            </th>
           </ng-container>
           <ng-container cdkColumnDef="activityName">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_program_activity_name}}</th>
@@ -61,55 +73,15 @@
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
-              <div class="d-flex flex-row">
-                <a [ngClass]="setIsDisabledClassOnDeleteButton(row.status)" href="#" (click)="delete($event, row)"
-                   tooltip="{{lang.map.btn_delete}}" class="icon-btn">
-                  <i class="mdi mdi-close-box"></i>
-                </a>
-                <a [ngClass]="setIsDisabledClassOnEditButton(row.status)" href="#" (click)="edit(row , $event)"
-                   tooltip="{{lang.map.btn_edit}}" class="icon-btn">
-                  <i class="mdi mdi-pen"></i>
-                </a>
-                <a href="#" (click)="view(row , $event)" tooltip="{{lang.map.view}}" class="icon-btn">
-                  <i class="mdi mdi-eye"></i>
-                </a>
-                <a *ngIf="showBriefcases(row.status) && hasPermissionTo(permissions.TRAINING_BUNDLE)" href="#"
-                   (click)="openTrainingBriefcaseDialog($event, row)"
-                   tooltip="{{lang.map.training_program_briefcase}}" class="icon-btn">
-                  <i class="mdi mdi-bag-checked"></i>
-                </a>
-                <a *ngIf="showAddCandidates(row.status)" href="#" (click)="candidates(row , $event)"
-                   tooltip="{{lang.map.training_program_add_candidates}}"
-                   class="icon-btn">
-                  <i class="mdi mdi-account-plus"></i>
-                </a>
-                <a *ngIf="showEvaluateCandidates(row.status) && hasPermissionTo(permissions.TRAINING_MANAGE_TRAINEE)"
-                   href="#" (click)="evaluateCandidates(row , $event)"
-                   tooltip="{{lang.map.training_program_accept_reject_candidates}}"
-                   class="icon-btn">
-                  <i class="mdi mdi-account-check"></i>
-                </a>
-                <a
-                  *ngIf="showAttendanceOrCertificates(row.status) && hasPermissionTo(permissions.TRAINING_CERTIFICATE_TRAINEE)"
-                  href="#" (click)="certification(row , $event)"
-                  tooltip="{{lang.map.training_program_certification}}" class="icon-btn">
-                  <i class="mdi mdi-certificate"></i>
-                </a>
-                <a *ngIf="showAttendanceOrCertificates(row.status)" href="#" (click)="applyAttendance(row , $event)"
-                   tooltip="{{lang.map.attendance}}" class="icon-btn">
-                  <i class="mdi mdi-account-clock"></i>
-                </a>
-                <button [tooltip]="(!row.surveyPublished ? lang.map.publish_survey : lang.map.menu_surveys)"
-                        (click)="publishSurvey(row)" *ngIf="row.readyForSurvey()"
-                        class="btn icon-btn">
-                  <i class="mdi mdi-poll"
-                     [ngClass]="{'text-info':row.surveyPublished ,'text-primary': !row.surveyPublished}"></i></button>
-              </div>
+            <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+              <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+              </grid-actions>
             </td>
           </ng-container>
 
-          <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="searchColumns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>

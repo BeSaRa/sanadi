@@ -65,7 +65,7 @@ export class GlobalSettingsService extends CrudGenericService<GlobalSettings> {
   getAllowedFileTypes(): Observable<FileType[]> {
     return this.loadAllFileTypes()
       .pipe(
-        map(list => list.filter(ele => this.getGlobalSettings().fileTypeArr.includes(ele.id)))
+        map(list => list.filter(ele => this.getGlobalSettings().fileTypeParsed.includes(ele.id)))
       );
   }
 }

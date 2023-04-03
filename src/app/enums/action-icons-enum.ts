@@ -3,6 +3,7 @@ export enum ActionIconsEnum {
   SERVICE_SEARCH = 'mdi-search',
   SERVICE_OUTPUT = 'mdi-export',
   ADD = 'mdi-plus-box',
+  ADD_USER = 'mdi-account-plus',
   ADD_SIMPLE = 'mdi-plus',
   RELOAD = 'mdi-reload',
   EDIT = 'mdi-pen',
@@ -53,5 +54,10 @@ export enum ActionIconsEnum {
   NOTIFICATION_BELL = 'mdi-bell-outline',
   NOTIFICATION_USER_INBOX = 'mdi-account',
   NOTIFICATION_TEAM_INBOX = 'mdi-account-group',
-  NOTIFICATION_TERMINATED = 'mdi-stop'
+  NOTIFICATION_TERMINATED = 'mdi-stop',
+  BRIEFCASE = 'mdi-bag-checked',
+  USER_CHECK = 'mdi-account-check',
+  CERTIFICATE = 'mdi-certificate',
+  USER_CLOCK = 'mdi-account-clock',
+  POLL = 'mdi-poll'
 }

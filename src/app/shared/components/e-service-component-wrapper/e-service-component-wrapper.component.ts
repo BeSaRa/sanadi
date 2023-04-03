@@ -1880,4 +1880,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     }
     return false;
   }
+
+  actionClass(action: IMenuItem<any>): string {
+    return (!action.class ? '' : (typeof action.class === 'function' ? action.class(this.model) : action.class)) || '';
+  }
 }

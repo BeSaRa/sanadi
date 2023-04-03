@@ -46,7 +46,7 @@ export class ProfileOfficersComponent implements OnInit {
     this.officerForm = this.fb.group({
       qid: [null, [CustomValidators.required, ...CustomValidators.commonValidations.qId]],
       fullName: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      email: [null, [CustomValidators.required, CustomValidators.maxLength(200), Validators.email]],
+      email: [null, [CustomValidators.required, CustomValidators.maxLength(200), CustomValidators.pattern('EMAIL')]],
       phone: [null, [CustomValidators.required, ...CustomValidators.commonValidations.phone]],
       extraPhone: [null, [...CustomValidators.commonValidations.phone]],
     });

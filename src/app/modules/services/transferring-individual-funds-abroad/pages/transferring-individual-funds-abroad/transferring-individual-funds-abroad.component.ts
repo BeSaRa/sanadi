@@ -886,7 +886,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.detailsAddress.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.postalCode.setValidators([CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]);
     this.website.setValidators([CustomValidators.required, CustomValidators.pattern('WEBSITE')]);
-    this.organizationEmail.setValidators([CustomValidators.required, Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]);
+    this.organizationEmail.setValidators([CustomValidators.required, ...CustomValidators.commonValidations.email]);
     this.firstSocialMedia.setValidators([CustomValidators.maxLength(350)]);
     this.secondSocialMedia.setValidators([CustomValidators.maxLength(350)]);
     this.thirdSocialMedia.setValidators([CustomValidators.maxLength(350)]);
@@ -903,7 +903,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.detailsAddress.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.postalCode.setValidators([CustomValidators.number, CustomValidators.maxLength(15)]);
     this.website.setValidators([CustomValidators.pattern('WEBSITE')]);
-    this.organizationEmail.setValidators([Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]);
+    this.organizationEmail.setValidators(CustomValidators.commonValidations.email);
     this.firstSocialMedia.setValidators([CustomValidators.maxLength(350)]);
     this.secondSocialMedia.setValidators([CustomValidators.maxLength(350)]);
     this.thirdSocialMedia.setValidators([CustomValidators.maxLength(350)]);

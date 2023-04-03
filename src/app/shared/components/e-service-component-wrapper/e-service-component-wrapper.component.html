@@ -77,7 +77,7 @@
 </div>
 
 <ng-template #actionButtonTemplate let-action="data">
-  <button [ngClass]="action?.class || ''" [disabled]="isDisabled(action)"
+  <button [ngClass]="actionClass(action)" [disabled]="isDisabled(action)"
           (click)="actionCallback(action)" class="btn btn-primary">
     <div class="d-flex">
       <i class="mdi" *ngIf="action.icon" [ngClass]="action.icon!"></i>

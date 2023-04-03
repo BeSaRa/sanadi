@@ -29,20 +29,14 @@ export class UserPreferences extends Cloneable<UserPreferences> {
     this.service = FactoryService.getService('UserPreferencesService');
   }
 
-  buildForm(isLoggedInUserPreferences: boolean, controls?: boolean): any {
+  buildForm(controls?: boolean): any {
     const {
       isMailNotificationEnabled,
       defaultLang
     } = this;
     return {
-      isMailNotificationEnabled: controls ? [{
-        value: isMailNotificationEnabled,
-        disabled: !isLoggedInUserPreferences
-      }] : isMailNotificationEnabled,
-      defaultLang: controls ? [{
-        value: defaultLang,
-        disabled: !isLoggedInUserPreferences
-      }, CustomValidators.required] : defaultLang
+      isMailNotificationEnabled: controls ? [isMailNotificationEnabled] : isMailNotificationEnabled,
+      defaultLang: controls ? [defaultLang, CustomValidators.required] : defaultLang
     }
   }
 

@@ -104,8 +104,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
       }, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : qid,
       email: controls ? [email, [
         CustomValidators.required,
-        CustomValidators.maxLength(50),
-        CustomValidators.pattern('EMAIL')]
+        ...CustomValidators.commonValidations.email]
       ] : email,
       empNum: controls ? [empNum, [
         CustomValidators.required,
