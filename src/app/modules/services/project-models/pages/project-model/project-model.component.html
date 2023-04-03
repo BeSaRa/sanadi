@@ -169,7 +169,7 @@
               <div class="mb-4 ng-select-wrapper flex-grow-1 ">
                 <label class="form-label" asteriskIfRequired="beneficiaryCountry"
                        for="beneficiaryCountry">{{lang.map.country}}</label>
-                <ng-select [readonly]="readonly" validationClasses="beneficiaryCountry"
+                <ng-select [readonly]="readonly || !isOutsideQatarWorkArea" validationClasses="beneficiaryCountry"
                            (change)="loadForeignCountriesProjectsNeeds()"
                            appendTo="body"
                            labelForId="beneficiaryCountry"
@@ -202,7 +202,7 @@
           <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="executionCountry"
                    for="executionCountry">{{lang.map.country}}</label>
-            <ng-select [readonly]="readonly" validationClasses="executionCountry"
+            <ng-select [readonly]="readonly || !isOutsideQatarWorkArea" validationClasses="executionCountry"
                        appendTo="body"
                        labelForId="executionCountry"
                        placeholder="{{lang.map.select}}"

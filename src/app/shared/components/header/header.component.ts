@@ -24,7 +24,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.toggleToDefaultLanguage();
+    // this.toggleToDefaultLanguage();
   }
 
   toggleToDefaultLanguage(): void {
@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit {
     this.employeeService.isToggledToDefaultLanguage = true;
     const defaultLang = this.employeeService.getCurrentUser().userPreferences.defaultLang;
     if (defaultLang !== this.langService.getCurrentLanguage().id) {
-      this.toggleLang();
+      // this.toggleLang();
     }
   }
 

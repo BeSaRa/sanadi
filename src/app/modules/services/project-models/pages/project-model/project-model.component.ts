@@ -888,8 +888,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   setQatarAsTheOnlyChoiceInCountries() {
     this.countriesAvailableForSelection = this.countries.filter(x => x.id === this.qatarId);
-    this.beneficiaryCountry.patchValue(null);
-    this.executionCountry.patchValue(null);
+    this.beneficiaryCountry.patchValue(this.qatarId);
+    this.executionCountry.patchValue(this.qatarId);
   }
 
   removeQatarFromCountries() {
