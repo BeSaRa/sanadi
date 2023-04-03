@@ -316,7 +316,7 @@
           </ng-container>
         </div>
         <div class="row" *ngIf="projectWorkArea.value && !isOutsideQatarWorkArea">
-          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper" *ngIf="isSoftwareProjectType()">
             <label class="form-label" asteriskIfRequired="internalProjectClassification"
                    for="internalProjectClassification">{{lang.map.internal_project_classification}}</label>
             <ng-select [readonly]="readonly"
@@ -332,7 +332,7 @@
             </ng-select>
             <app-field-error-message controlName="internalProjectClassification"></app-field-error-message>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper" *ngIf="isAidsProjectType()">
             <label class="form-label" asteriskIfRequired="sanadiDomain"
                    for="sanadiDomain">{{lang.map.sanadi_classification}}</label>
             <ng-select (change)="loadSanadiMainClassification($event)" [readonly]="readonly"
@@ -348,7 +348,7 @@
             </ng-select>
             <app-field-error-message controlName="sanadiDomain"></app-field-error-message>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper" *ngIf="isAidsProjectType()">
             <label class="form-label" asteriskIfRequired="sanadiMainClassification"
                    for="sanadiMainClassification">{{lang.map.sanadi_main_classification}}</label>
             <ng-select [readonly]="readonly"
