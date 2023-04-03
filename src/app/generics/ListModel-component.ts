@@ -96,7 +96,6 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
         return;
       }
       this.model = _model;
-      console.log(_model, this.editRecordIndex)
       if (this.editRecordIndex === -1) {
         this._list = [...this._list, this.model];
       }
