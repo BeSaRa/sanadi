@@ -18,7 +18,8 @@
          *ngIf="showProjectAddressesTab"></tab>
     <tab [name]="tabsData.foreignCountriesProjects.name"
          [hasError]="getTabInvalidStatus('foreignCountriesProjects')"
-         [template]="foreignCountriesProjectsTab" [title]="lang.map.project_model_foreign_countries_projects"></tab>
+         [template]="foreignCountriesProjectsTab" [title]="lang.map.project_model_foreign_countries_projects"
+         *ngIf="isOutsideQatarProject()"></tab>
     <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
          [template]="specialExplanationTab" [title]="lang.map.special_explanations"></tab>
     <tab [name]="tabsData.comments.name" [hasError]="getTabInvalidStatus('comments')"
