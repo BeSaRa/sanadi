@@ -10,8 +10,8 @@ import {Bylaw} from '@models/bylaw';
 import {AdminLookupService} from '@services/admin-lookup.service';
 import {LangService} from '@services/lang.service';
 import {DatepickerOptionsMap} from '@app/types/types';
-import {share} from 'rxjs/operators';
 import { ComponentType } from '@angular/cdk/portal';
+import { BylawsPopupComponent } from './bylaws-popup/bylaws-popup.component';
 
 @Component({
 
@@ -21,7 +21,7 @@ import { ComponentType } from '@angular/cdk/portal';
 })
 export class BylawsComponent extends ListModelComponent<Bylaw> {
   protected _getPopupComponent(): ComponentType<any> {
-    throw new Error('Method not implemented.');
+    return BylawsPopupComponent;
   }
   get list() {
     return this._list;
@@ -32,70 +32,15 @@ export class BylawsComponent extends ListModelComponent<Bylaw> {
   }
 
   @Input() readonly!: boolean;
-  classifications!: AdminLookup[];
   form!: UntypedFormGroup;
-  controls: ControlWrapper[] = [];
   columns = ['fullName', 'firstReleaseDate', 'lastUpdateDate', 'category', 'actions'];
-  datepickerOptionsMap: DatepickerOptionsMap = {
-    firstReleaseDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
-    lastUpdateDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'})
-  };
 
-  constructor(private fb: UntypedFormBuilder, public lang: LangService, private adminLookupService: AdminLookupService) {
+  constructor(private fb: UntypedFormBuilder, public lang: LangService) {
     super(Bylaw);
   }
 
   protected _initComponent(): void {
-    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.BYLAWS_CLASSIFICATION)
-      .pipe(share())
-      .subscribe(result => {
-        this.classifications = result;
-        this.controls = [
-          {
-            controlName: 'fullName',
-            label: this.lang.map.bylaw_name,
-            type: 'text'
-          },
-          {
-            controlName: 'firstReleaseDate',
-            label: this.lang.map.first_realase_date,
-            type: 'date'
-          },
-          {
-            controlName: 'lastUpdateDate',
-            label: this.lang.map.date_of_last_update,
-            type: 'date'
-          },
-          {
-            controlName: 'category',
-            label: this.lang.map.classification,
-            type: 'dropdown',
-            load: result,
-            dropdownValue: 'id',
-            dropdownOptionDisabled: (optionItem: AdminLookup) => {
-              return !optionItem.isActive();
-            }
-          }
-
-        ];
-      });
     this.form = this.fb.group(this.model.buildForm());
   }
 
-  _beforeAdd(model: Bylaw): Bylaw | null {
-    model.lastUpdateDate = DateUtils.getDateStringFromDate(model.lastUpdateDate);
-    model.firstReleaseDate = DateUtils.getDateStringFromDate(model.firstReleaseDate);
-    model.categoryInfo = AdminResult.createInstance(({
-      ...this.classifications.find(e => e.id === model.category)
-    }));
-    return model;
-  }
-
-  _selectOne(row: Bylaw): void {
-    const _row = {...row};
-    _row.firstReleaseDate = DateUtils.changeDateToDatepicker(_row.firstReleaseDate);
-
-    _row.lastUpdateDate = DateUtils.changeDateToDatepicker(_row.lastUpdateDate);
-    this.form.patchValue(_row);
-  }
 }
