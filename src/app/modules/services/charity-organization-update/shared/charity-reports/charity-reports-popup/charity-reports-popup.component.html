@@ -1,0 +1,56 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map[pageTitle] }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <form class="row" [formGroup]="form">
+    <div *ngFor="let control of controls" class="col-sm-6 col-md-4 mb-4 position-relative" [ngSwitch]="control.type">
+      <ng-container *ngSwitchCase="'dropdown'">
+        <div>
+          <label [asteriskIfRequired]="control.controlName" [for]="control.controlName" class="form-label">{{
+            control.label }}</label>
+          <ng-select [selectOnTab]="true" [labelForId]="control.controlName" [readonly]="readonly || hideSave"
+            [clearable]="true" placeholder="{{ lang.map.select }}" [id]="control.controlName"
+            [notFoundText]="lang.map.msg_not_found" appendTo="body" [validationClasses]="control.controlName"
+            [formControlName]="control.controlName">
+            <ng-option *ngFor="let type of control.load ? control.load : (control.load$ | async)"
+              [disabled]="(control.dropdownOptionDisabled && control.dropdownOptionDisabled(type)) ?? false"
+              [value]="type[control.dropdownValue!]">{{ type.getName() }}</ng-option>
+          </ng-select>
+          <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'text'">
+        <label [asteriskIfRequired]="control.controlName" [for]="control.controlName" class="form-label"
+          [validationClasses]="control.controlName">{{ control.label }}</label>
+        <input [readonly]="readonly || hideSave" type="text" class="form-control" [id]="control.controlName"
+          [formControlName]="control.controlName" />
+
+        <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'date'">
+        <label [asteriskIfRequired]="control.controlName" [for]="control.controlName" class="form-label"
+          [validationClasses]="control.controlName">{{ control.label }}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" [formControlName]="control.controlName"
+            [ngClass]="{ 'input-disabled': (readonly || hideSave) }" [disabled]="readonly" [id]="control.controlName"
+            [options]="datepickerOptionsMap[control.controlName]"
+            (click)="(!readonly && !hideSave) && dp.toggleCalendar()" #dp="angular-mydatepicker" angular-mydatepicker
+            [validationClasses]="control.controlName"></div>
+          <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
+        </div>
+      </ng-container>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="!form.valid" *ngIf="!hideSave" class="btn btn-primary m-2">
+    {{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }}
+  </button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">
+    {{ lang.map.btn_cancel }}
+  </button>
+</div>
