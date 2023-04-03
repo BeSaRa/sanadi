@@ -26,7 +26,8 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
   maxDeductionRatio!: number;
 
   // extra properties
-  fileTypeArr: number[] = [];
+  fileTypeParsed: number[] = [];
+  supportEmailListParsed: string[] = [];
   service: GlobalSettingsService;
   langService: LangService;
 
@@ -50,7 +51,7 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
       sessionTimeout,
       fileSize,
       inboxRefreshInterval,
-      fileTypeArr,
+      fileTypeParsed,
       enableMailNotification,
       enableSMSNotification,
       maxDeductionRatio
@@ -89,9 +90,9 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
         Validators.max(30),
         Validators.min(5)
       ]] : inboxRefreshInterval,
-      fileTypeArr: controls ? [fileTypeArr, [
+      fileTypeParsed: controls ? [fileTypeParsed, [
         CustomValidators.requiredArray
-      ]] : fileTypeArr,
+      ]] : fileTypeParsed,
       enableMailNotification: controls ? [enableMailNotification] : enableMailNotification,
       enableSMSNotification: controls ? [enableSMSNotification] : enableSMSNotification,
       maxDeductionRatio: controls ? [maxDeductionRatio, [

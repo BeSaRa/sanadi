@@ -226,16 +226,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
       filtrationMethod: controls
         ? [filtrationMethod, [Validators.required]]
         : filtrationMethod,
-      email: controls
-        ? [
-            email,
-            [Validators.email].concat(
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.EMAIL_MAX
-              )
-            ),
-          ]
-        : email,
+      email: controls ? [email, CustomValidators.commonValidations.email] : email,
       otherFiltrationMethod: controls
         ? [
             otherFiltrationMethod,
