@@ -983,12 +983,12 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   }
   isSearchAuthorizedEntityAllowed() {
     return (
-      this.transfereeType.value === FinancialTransfereeTypes.AUTHORIZED_ENTITY
+     !this.readonly && this.transfereeType.value === FinancialTransfereeTypes.AUTHORIZED_ENTITY
     );
   }
   isPreRegisteredEntityAllowed() {
     return (
-      this.transfereeType.value ===
+      !this.readonly && this.transfereeType.value ===
       FinancialTransfereeTypes.PRE_REGISTERED_ENTITY
     );
   }
