@@ -845,12 +845,12 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   listenToExecutionFieldChange() {
     this.projectWorkArea.valueChanges.subscribe(val => {
       this.domain.setValidators([]);
-      if (val === ExecutionFields.OutsideQatar) {
+      if (this.isOutsideQatarProject()) {
         this.removeQatarFromCountries();
         this.isOutsideQatarWorkArea = true;
         this.domain.setValidators([CustomValidators.required]);
         this.emptyFieldsAndValidation(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
-      } else if (this.projectWorkArea.value === ExecutionFields.InsideQatar) {
+      } else if (this.isInsideQatarProject()) {
         this.applyNotOutsideQatarChanges();
         this.setQatarAsTheOnlyChoiceInCountries();
       } else {
@@ -894,7 +894,12 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.categoryGoalPercentGroup.setValidators(this.getPercentageSumValidation());
 
   }
-
+  isInsideQatarProject():boolean{
+    return this.projectWorkArea.value === ExecutionFields.InsideQatar
+  }
+  isOutsideQatarProject():boolean{
+    return this.projectWorkArea.value === ExecutionFields.OutsideQatar
+  }
   isSoftwareProjectType():boolean{
     return  this.projectType.value === ProjectModelProjectTypes.SOFTWARE;
   }
