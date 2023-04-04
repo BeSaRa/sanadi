@@ -19,6 +19,7 @@ import {
 } from '@modules/services/npo-management/popups/npo-management-approve-popup/npo-management-approve-popup.component';
 import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
 import { NpoContactOfficerPopupComponent } from './pages/npo-management/npo-contact-officer/npo-contact-officer-popup/npo-contact-officer-popup.component';
+import { FounderMembersPopupComponent } from './pages/npo-management/founder-members/founder-members-popup/founder-members-popup.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { NpoContactOfficerPopupComponent } from './pages/npo-management/npo-cont
     NpoBankAccountComponent,
     NpoContactOfficerComponent,
     NpoContactOfficerPopupComponent,
-    NpoManagementApprovePopupComponent
+    NpoManagementApprovePopupComponent,
+    FounderMembersPopupComponent
   ],
   imports: [
     CommonModule,
