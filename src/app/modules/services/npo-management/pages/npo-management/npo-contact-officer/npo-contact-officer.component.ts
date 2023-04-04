@@ -10,6 +10,7 @@ import { BehaviorSubject, Subject } from "rxjs";
 import { filter, map, take, takeUntil } from "rxjs/operators";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { NpoContactOfficer } from "@app/models/npo-contact-officer";
+import { NpoContactOfficerPopupComponent } from './npo-contact-officer-popup/npo-contact-officer-popup.component';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 
 @Component({
@@ -44,7 +45,6 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
   dataSource: BehaviorSubject<NpoContactOfficer[]> = new BehaviorSubject<NpoContactOfficer[]>([]);
   columns = ['idNumber', 'fullName', 'email', 'phone', 'extraPhone', 'actions'];
 
-  viewOnly: boolean = false;
   editIndex: number = -1;
   add$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
@@ -59,7 +59,6 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
     this._jb.loadActive().subscribe((data) => {
       this.jobTitleAdminLookup = data;
     })
-    this._handleInitData();
     this.buildForm();
     this.listenToAdd();
     this.listenToChange();
@@ -73,40 +72,44 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  private _handleInitData() {
-  }
-
   private buildForm() {
     this.form = this.fb.group({
       contactOfficers: this.fb.array([])
     })
   }
 
-  get contactOfficersFormArray(): UntypedFormArray {
-    return (this.form.get('contactOfficers')) as UntypedFormArray;
-  }
-
-  addAllowed(): boolean {
-    return !this.readonly;
-  }
-
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.viewOnly = false;
         this.changed$.next(new NpoContactOfficer())
       })
   }
-
+  _getPopupComponent() {
+    return NpoContactOfficerPopupComponent;
+  }
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$))
       .subscribe(contact => {
-
         this.current = contact || undefined;
         this.updateForm(this.current);
       })
   }
-
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form: this.form,
+      readonly: this.readonly,
+      editIndex: this.editIndex,
+      model: this.current,
+      contactOfficersFormArray: this.contactOfficersFormArray,
+      jobTitleAdminLookup: this.jobTitleAdminLookup
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancel();
+      }
+    })
+  }
   private updateForm(record: NpoContactOfficer | undefined) {
     const contactOfficersFormArray = this.contactOfficersFormArray;
     contactOfficersFormArray.clear();
@@ -114,6 +117,7 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
     if (record) {
       this._setComponentReadiness('NOT_READY');
       contactOfficersFormArray.push(this.fb.group((record.getContactOfficerFields(true))));
+      this.openFormPopup();
     } else {
       this._setComponentReadiness('READY');
     }
@@ -127,23 +131,9 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
   }
 
   private listenToSave() {
-    const form$ = this.save$.pipe(map(() => {
+    this.save$.pipe(map(() => {
       return this.form.get('contactOfficers.0') as AbstractControl;
-    }));
-
-    const validForm$ = form$.pipe(filter((form) => form.valid));
-    const invalidForm$ = form$.pipe(filter((form) => form.invalid));
-    invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.dialogService
-        .error(this.lang.map.msg_all_required_fields_are_filled)
-        .onAfterClose$
-        .pipe(take(1))
-        .subscribe(() => {
-          this.form.get('contactOfficers')?.markAllAsTouched();
-        });
-    });
-
-    validForm$.pipe(
+    })).pipe(
       takeUntil(this.destroy$),
       filter((form) => {
         const valid = this._list.findIndex(c => c.identificationNumber == form.value.identificationNumber) == -1;
@@ -153,6 +143,7 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
           .pipe(take(1))
           .subscribe(() => {
             this.form.get('contactOfficers')?.markAllAsTouched();
+            this.openFormPopup();
           });
         return valid || this.editIndex != -1
       }),
@@ -168,7 +159,6 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
       if (!contactOfficer) {
         return;
       }
-
       this._updateList(contactOfficer, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
       this.toastService.success(this.lang.map.msg_save_success);
       this.editIndex = -1;
@@ -241,5 +231,9 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
     this.list = [];
     this._updateList(null, 'NONE');
     this._setComponentReadiness('READY');
+  }
+
+  get contactOfficersFormArray(): UntypedFormArray {
+    return (this.form.get('contactOfficers')) as UntypedFormArray;
   }
 }
