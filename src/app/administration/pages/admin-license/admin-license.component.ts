@@ -32,7 +32,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private selectedService!: BaseGenericEService<any>;
 
-  searchColumns: string[] = ['fullSerial','arName','enName','ouInfo','licenseStartDate', 'licenseEndDate'];
+  searchColumns: string[] = ['fullSerial','arName','enName','subject','ouInfo','licenseStartDate', 'licenseEndDate'];
   headerColumn: string[] = ['extra-header'];
   form!: UntypedFormGroup;
   fields: FormlyFieldConfig[] = [];
