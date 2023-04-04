@@ -100,6 +100,7 @@ export class AppModule {
           let finalConfig: IAppConfig = configurationService.mergeConfigurations(latest.configFile);
           configurationService.setConfigurations(finalConfig);
           urlService.prepareUrls(latest.urls);
+          langService.setLanguageChangeUrls();
           return infoService.load().toPromise().then((infoResult: ILoginInfo) => {
             infoService.setInfoData(infoResult);
             langService.list = infoResult.localizationSet;

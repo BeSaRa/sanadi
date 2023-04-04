@@ -17,7 +17,8 @@ export class UrlService {
   public URLS = {} as IAppUrls;
   public previousPath: string = '';
   public currentPath: string = '';
-  public loginUrlsList: string[] = [];
+  public loginUrlsList: string[] = []; // will set after urls are loaded
+  public languageUrlsList: string[] = []; // langService will set this value after urls are loaded
 
   static hasTrailingSlash(url: string): boolean {
     return ((url + '').indexOf('/')) === ((url + '').length - 1);
