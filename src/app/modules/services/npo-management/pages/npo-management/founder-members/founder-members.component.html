@@ -1,116 +1,11 @@
-<div [formGroup]="form">
-  <div formGroupName="founderMembers">
-    <ng-container *ngFor="let _ of founderMembersFormArray.controls; let i = index">
-      <div [formGroupName]="i">
-        <div class="row">
-          <!-- identification number -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="identificationNumber" for="identificationNumber" class="form-label">{{lang.map.identification_number}}</label>
-            <input formControlName="identificationNumber" type="text"
-                   validationClasses="identificationNumber" trimInput class="form-control" id="identificationNumber">
-            <app-field-error-message controlName="identificationNumber"></app-field-error-message>
-          </div>
-          <!-- Full Name -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.full_name}}</label>
-            <input formControlName="fullName" type="text"
-                   validationClasses="fullName" trimInput class="form-control" id="fullName">
-            <app-field-error-message controlName="fullName"></app-field-error-message>
-          </div>
-          <!-- Email -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.email_address_of_the_employer}}</label>
-            <input formControlName="email" type="text"
-                   validationClasses="email" trimInput class="form-control" id="email">
-            <app-field-error-message controlName="email"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <!-- Phone -->
-          <div class="col-sm-12 col-md-6 mb-4 position-relative">
-            <label asteriskIfRequired="phone" for="phone" class="form-label">{{lang.map.phone_of_the_employer}}</label>
-            <input formControlName="phone" type="text"
-                   validationClasses="phone" trimInput class="form-control" id="phone">
-            <app-field-error-message controlName="phone"></app-field-error-message>
-          </div>
-          <!-- extraPhone -->
-          <div class="col-sm-12 col-md-6 mb-4 position-relative">
-            <label asteriskIfRequired="extraPhone" for="extraPhone" class="form-label">{{lang.map.mobile_number}}</label>
-            <input formControlName="extraPhone" type="text"
-                   validationClasses="extraPhone" trimInput class="form-control" id="extraPhone">
-            <app-field-error-message controlName="extraPhone"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <!-- nationality -->
-          <div class="col-sm-12 col-md-6 mb-4 position-relative">
-            <label for="nationality" asteriskIfRequired="nationality"
-              class="form-label">{{lang.map.lbl_nationality}}</label>
-            <ng-select [selectOnTab]="true" [items]="nationalityList" labelForId="nationality"
-              bindValue="lookupKey" [clearable]="true"
-              [searchFn]="searchNgSelect"
-              placeholder="{{lang.map.select}}" id="nationality"
-              [notFoundText]="lang.map.msg_not_found"
-              formControlName="nationality" validationClasses="nationality">
-              <ng-template ng-option-tmp let-item="item">
-                <span class="custom-option">{{item.getName()}}</span>
-              </ng-template>
-              <ng-template ng-label-tmp let-item="item" let-clear="clear">
-                <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
-                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
-              </ng-template>
-              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
-                <div class="ng-value" *ngFor="let item of (items ? items.slice(0,2): [])">
-                  <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
-                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
-                </div>
-                <div class="ng-value" *ngIf="items.length > 2">
-                  <span class="ng-value-label">{{items.length - 2}} more...</span>
-                </div>
-              </ng-template>
-            </ng-select>
-              <app-field-error-message controlName="nationality"></app-field-error-message>
-          </div>
-          <!-- job title id -->
-          <div class="col-sm-12 col-md-6 mb-4 position-relative">
-           <label
-             for="jobTitleId" asteriskIfRequired="nationality"
-             class="form-label"
-             >{{ lang.map.job_title }}</label
-           >
-           <ng-select
-             [selectOnTab]="true"
-             labelForId="jobTitleId"
-             [clearable]="true"
-             placeholder="{{ lang.map.select }}"
-             id="jobTitleId"
-             [notFoundText]="lang.map.msg_not_found"
-             appendTo="body"
-             formControlName="jobTitleId"
-             validationClasses="nationality"
-           >
-             <ng-option *ngFor="let title of jobTitleAdminLookup" [value]="title.id">{{ title.getName() }}</ng-option>
-           </ng-select>
-           <app-field-error-message controlName="jobTitleId"></app-field-error-message>
-         </div>
-        </div>
-        <div class="d-flex flex-row align-items-center justify-content-center">
-          <button (click)="save()" [disabled]="readonly" *ngIf="!readonly"
-                  class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
-          <button (click)="cancel()"
-                  class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
-        </div>
-      </div>
-    </ng-container>
-  </div>
-</div>
-
-<app-page-header [hidden]="founderMembersFormArray.controls.length" pageTitle="lbl_founder_members"
-                 [clickOnNew$]="add$"
-                 [addPermission]="addAllowed()"></app-page-header>
-
-<table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
+<table class="table mt-3 table-striped table-bordered caption-top" cdk-table
        [dataSource]="dataSource">
+    <ng-container cdkColumnDef="extra-header">
+    <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+      <table-header tableTitle="lbl_founder_members" [add$]="add$" [allowAdd]="!readonly" [skipClearSort]="true" [skipSearch]="true">
+      </table-header>
+    </th>
+  </ng-container>
   <ng-container cdkColumnDef="idNumber">
     <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{lang.map.id_number}}</th>
     <td cdk-cell *cdkCellDef="let row"> {{row.identificationNumber}} </td>
@@ -152,6 +47,7 @@
       </div>
     </td>
   </ng-container>
+  <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
   <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
   <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
   <tr *cdkNoDataRow>

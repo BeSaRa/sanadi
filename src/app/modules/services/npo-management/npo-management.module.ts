@@ -19,6 +19,7 @@ import {
 } from '@modules/services/npo-management/popups/npo-management-approve-popup/npo-management-approve-popup.component';
 import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
 import { NpoContactOfficerPopupComponent } from './pages/npo-management/npo-contact-officer/npo-contact-officer-popup/npo-contact-officer-popup.component';
+import { FounderMembersPopupComponent } from './pages/npo-management/founder-members/founder-members-popup/founder-members-popup.component';
 import { AuditNpoManagementComponent } from './audit/audit-npo-management/audit-npo-management.component';
 import { AuditNpoBankAccountComponent } from './audit/audit-npo-bank-account/audit-npo-bank-account.component';
 import { AuditFounderMembersComponent } from './audit/audit-founder-members/audit-founder-members.component';
@@ -34,6 +35,7 @@ import { AuditNpoContactOfficerComponent } from './audit/audit-npo-contact-offic
     NpoContactOfficerComponent,
     NpoContactOfficerPopupComponent,
     NpoManagementApprovePopupComponent,
+    FounderMembersPopupComponent,
     AuditFounderMembersComponent,
     AuditNpoBankAccountComponent,
     AuditNpoManagementComponent,
