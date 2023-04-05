@@ -118,6 +118,7 @@ import { HeaderSearchFieldComponent } from './components/header-search-field/hea
 import {
   UserPreferencesPopupComponent
 } from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
+import { ExecutiveManagementPopupComponent } from './components/executive-management/executive-management-popup/executive-management-popup.component';
 
 @NgModule({
   declarations: [
@@ -227,7 +228,8 @@ import {
     HeadingRowComponent,
     HeaderNotificationsComponent,
     HeaderSearchFieldComponent,
-    UserPreferencesPopupComponent
+    UserPreferencesPopupComponent,
+    ExecutiveManagementPopupComponent
   ],
   imports: [
     CommonModule,
