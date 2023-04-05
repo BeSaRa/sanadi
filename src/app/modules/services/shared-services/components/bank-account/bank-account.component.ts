@@ -18,6 +18,7 @@ import { CommonUtils } from '@helpers/common-utils';
 import { SortEvent } from '@contracts/sort-event';
 import { AdminResult } from '@models/admin-result';
 import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
+import { BankAccountPopupComponent } from './bank-account-popup/bank-account-popup.component';
 
 @Component({
   selector: 'bank-account',
@@ -147,9 +148,12 @@ export class BankAccountComponent implements OnInit {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
+      this.openFormPopup();
       this.form.patchValue(record);
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable()
       }
     } else {
       this._setComponentReadiness('READY');
@@ -288,5 +292,27 @@ export class BankAccountComponent implements OnInit {
     this.list = [];
     this._updateList(null, 'NONE');
     this._setComponentReadiness('READY');
+  }
+  _getPopupComponent() {
+    return BankAccountPopupComponent;
+  }
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form: this.form,
+      readonly : this.readonly,
+      editItem : this.editItem,
+      model : this.current,
+      countriesList : this.countriesList,
+      currenciesList : this.currenciesList,
+      caseType : this.caseType,
+      bankCategoriesList : this.bankCategoriesList,
+      viewOnly : this.viewOnly,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancel();
+      }
+    })
   }
 }
