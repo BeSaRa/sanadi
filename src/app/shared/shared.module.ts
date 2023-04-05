@@ -118,7 +118,7 @@ import { HeaderSearchFieldComponent } from './components/header-search-field/hea
 import {
   UserPreferencesPopupComponent
 } from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
-import { CountryPopupComponent } from '@app/administration/popups/country-popup/country-popup.component';
+import { CountryPopupComponent } from '@app/shared/popups/country-popup/country-popup.component';
 
 
 @NgModule({
