@@ -14,7 +14,7 @@ import { DatepickerOptionsMap } from '@app/types/types';
 @Component({
   selector: 'app-read-benefucuaries-popup',
   templateUrl: './read-benefucuaries-popup.component.html',
-  styleUrls: ['./read-benefucuaries-popup.component.css']
+  styleUrls: ['./read-benefucuaries-popup.component.scss']
 })
 export class ReadBenefucuariesPopupComponent implements OnInit {
   model!: RealBeneficiary;
