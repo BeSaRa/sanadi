@@ -138,6 +138,7 @@ import {HeaderSearchFieldComponent} from './components/header-search-field/heade
 import {
   UserPreferencesPopupComponent
 } from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
+import { ExecutiveManagementPopupComponent } from './components/executive-management/executive-management-popup/executive-management-popup.component';
 import { CountryPopupComponent } from '@app/shared/popups/country-popup/country-popup.component';
 import {
   EServiceWrapperButtonsComponent
@@ -254,6 +255,7 @@ import {ValueDifferencesListComponent} from './components/value-differences-list
     HeaderNotificationsComponent,
     HeaderSearchFieldComponent,
     UserPreferencesPopupComponent,
+    ExecutiveManagementPopupComponent,
     CountryPopupComponent,
     EServiceWrapperButtonsComponent,
     CaseAuditLogComponent,
