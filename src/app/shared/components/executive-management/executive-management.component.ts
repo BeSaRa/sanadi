@@ -159,6 +159,8 @@ export class ExecutiveManagementComponent implements OnInit {
       this.openFormPopup();
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable();
       }
     } else {
       this._setComponentReadiness('READY');
@@ -216,7 +218,6 @@ export class ExecutiveManagementComponent implements OnInit {
           return;
         }
         this._updateList(record, !!this.editItem ? 'UPDATE' : 'ADD');
-        
         this.toastService.success(this.lang.map.msg_save_success);
         this.changed$.next(null);
         this.cancel();
