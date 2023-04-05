@@ -14,6 +14,7 @@ import {ToastService} from '@app/services/toast.service';
 import {ReadinessStatus} from '@app/types/types';
 import {LookupService} from '@app/services/lookup.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import { NpoBankAccountPopupComponent } from './npo-bank-account-popup/npo-bank-account-popup.component';
 
 @Component({
   selector: 'npo-bank-account',
@@ -101,6 +102,9 @@ export class NpoBankAccountComponent implements OnInit {
         this.recordChanged$.next(modal);
       });
   }
+  _getPopupComponent() {
+    return NpoBankAccountPopupComponent;
+  }
 
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((bankAccount) => {
@@ -110,6 +114,24 @@ export class NpoBankAccountComponent implements OnInit {
       this.currentRecord = bankAccount || undefined;
       this.updateForm(this.currentRecord);
     });
+  }
+
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form: this.form,
+      readonly: this.readonly,
+      editIndex: this.editRecordIndex,
+      model: this.currentRecord,
+      bankAccountsFormArray: this.bankAccountsFormArray,
+      bankList: this.bankList,
+      currenciesList: this.currenciesList,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.saveBankAccount()
+      } else {
+        this.cancelBankAccount();
+      }
+    })
   }
 
   private updateForm(bankAccount: NpoBankAccount | undefined) {
@@ -122,6 +144,7 @@ export class NpoBankAccountComponent implements OnInit {
         this._setComponentReadiness('NOT_READY');
       }
       bankAccountFormArray.push(this.fb.group(bankAccount.getBankAccountFields(true)));
+      this.openFormPopup();
       if (this.readonly || this.viewOnly) {
         this.bankAccountsFormArray.disable();
       }
@@ -138,23 +161,9 @@ export class NpoBankAccountComponent implements OnInit {
   }
 
   private listenToSave() {
-    const bankAccountForm$ = this.save$.pipe(map(() => {
+    this.save$.pipe(map(() => {
       return (this.form.get('bankAccount.0')) as AbstractControl;
-    }));
-
-    const validForm$ = bankAccountForm$.pipe(filter((form) => form.valid));
-    const invalidForm$ = bankAccountForm$.pipe(filter((form) => form.invalid));
-    invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.dialogService
-        .error(this.lang.map.msg_all_required_fields_are_filled)
-        .onAfterClose$
-        .pipe(take(1))
-        .subscribe(() => {
-          this.form.get('bankAccount')?.markAllAsTouched();
-        });
-    });
-
-    validForm$.pipe(
+    })).pipe(
       takeUntil(this.destroy$),
       filter((form) => {
         const valid = this._list.findIndex(f => f.accountNumber == form.value.accountNumber) == -1;
@@ -164,6 +173,7 @@ export class NpoBankAccountComponent implements OnInit {
           .pipe(take(1))
           .subscribe(() => {
             this.form.get('bankAccount')?.markAllAsTouched();
+            this.openFormPopup();
           });
         return valid || this.editRecordIndex != -1
       }),
