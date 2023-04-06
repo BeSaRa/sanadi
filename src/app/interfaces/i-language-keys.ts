@@ -1942,5 +1942,6 @@ export interface ILanguageKeys {
   lbl_default_menus:string;
   lbl_parent_menu:string;
   lbl_icon:string;
+  systemMenus:string
 
 }
