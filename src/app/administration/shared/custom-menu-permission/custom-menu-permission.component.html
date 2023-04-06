@@ -15,7 +15,7 @@
     <tab [name]="tabsData.menus.name" [template]="menusTabTemplate" [title]="langService.map.menus">
 
     </tab>
-    <tab [name]="tabsData.defaultMenus.name" [template]="defaultMenusTapTemplate" [title]="langService.map.menus"></tab>
+    <tab [name]="tabsData.defaultMenus.name" [template]="defaultMenusTapTemplate" [title]="langService.map.systemMenus"></tab>
   </tabs-list>
   <ng-template #menusTabTemplate>
     <div class="row" *ngFor="let checkBoxGroup of permissionGroups">
@@ -55,21 +55,22 @@
         <div class="p-2 border border-1">
           <div class="form-check">
             <input [indeterminate]="defaultCheckBoxGroup.isIndeterminate()" [disabled]="readonly"
-              [checked]="defaultCheckBoxGroup.isFull()" type="checkbox" id="menu-group-id-{{defaultCheckBoxGroup.group.id}}"
-              (change)="groupHandler.onGroupClicked(defaultCheckBoxGroup)" class="form-check-input cursor-pointer">
-            <label for="menu-group-id-{{defaultCheckBoxGroup.group.id}}"
+              [checked]="defaultCheckBoxGroup.isFull()" type="checkbox" id="menu-default-group-id-{{defaultCheckBoxGroup.group.id}}"
+              (change)="defaultGroupHandler.onGroupClicked(defaultCheckBoxGroup)" class="form-check-input cursor-pointer">
+            <label for="menu-default-group-id-{{defaultCheckBoxGroup.group.id}}"
               class="cursor-pointer fw-bold text-primary">{{defaultCheckBoxGroup.group.getName()}}</label>
           </div>
           <hr class="mt-0">
-          <div *ngFor="let row of defaultCheckBoxGroup.rows" class="row mx-2" [ngClass]="{'mx-4': !isDefaultParentRow(row)}">
+          <div *ngFor="let row of defaultCheckBoxGroup.rows;let i=index" class="row mx-2" [ngClass]="{'mx-4': !isDefaultParentRow(row)}">
             <ng-container *ngFor="let permission of row">
               <div *ngIf="!!permission && !!permission.systemMenuKey" class="col-sm-12 col-md-4">
                 <div class="form-check">
-                  <input type="checkbox" [disabled]="readonly" [checked]="defaultCheckBoxGroup.isSelected(permission.id)"
-                    [value]="permission.id" id="menu-permission-id-{{permission.id}}"
-                    (change)="groupHandler.onCheckBoxClicked(permission , $event , defaultCheckBoxGroup)"
+                  <input type="checkbox" [disabled]="readonly"
+                   [checked]="permission.isSystemParent? defaultCheckBoxGroup.isChildrenSelected(permission.getChildrenIds()) : defaultCheckBoxGroup.isSelected(permission.id)"
+                    [value]="permission.id" id="menu-default-permission-id-{{permission.isSystemParent ? i + permission.menuType : permission.id}}"
+                    (change)="defaultGroupHandler.onCheckBoxClicked(permission , $event , defaultCheckBoxGroup)"
                     class="form-check-input cursor-pointer">
-                  <label for="menu-permission-id-{{permission.id}}"
+                  <label for="menu-default-permission-id-{{permission.isSystemParent ? i + permission.menuType : permission.id}}"
                     [ngClass]="{'fw-bold': isDefaultParentRow(row), 'text-danger': !isDefaultParentRow(row) && !permission.isActive()}"
                     class="cursor-pointer">{{permission.getNameWithSystemParent()}}</label>
                 </div>

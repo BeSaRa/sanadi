@@ -148,6 +148,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
       data.menuType = parentMenu.menuType;
       data.userType = parentMenu.userType;
       data.status = parentMenu.status;
+      data.hasSystemParent = parentMenu.isSystem
     }
     return this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
       model: data,
@@ -323,6 +324,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     let parentList:CustomMenu[] = [];
     let childrenList:CustomMenu[] = [];
     let systemChildrenList:CustomMenu[] = [];
+    const systemMenu = customMenuList.find(x=>x.isSystem)!;
 
     customMenuList.forEach((item:CustomMenu)=>{
       if(!item.parentMenuItemId && !item.isDefaultItem()){
@@ -330,11 +332,11 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
         return;
       }
       if(!!item.parentMenuItemId && !!item.menuURL){
-        if(!item.hasDefaultParent()){
+        if(!item.hasDefaultParent(systemMenu)){
           childrenList.push(item);
           return;
         }
-        if(item.hasDefaultParent()){
+        if(item.hasDefaultParent(systemMenu)){
           systemChildrenList.push(item);
           return;
         }
