@@ -1,94 +1,11 @@
-<div [formGroup]="form">
-  <div formGroupName="branches">
-    <ng-container *ngFor="let _ of branchesFormArray.controls; let i = index">
-      <div [formGroupName]="i">
-        <div class="row">
-          <!-- Full Name -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.full_name}}</label>
-            <input formControlName="fullName" type="text"
-                   validationClasses="fullName" trimInput class="form-control" id="fullName">
-            <app-field-error-message controlName="fullName"></app-field-error-message>
-          </div>
-          <!-- Establishment Date -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="establishmentDate" for="establishmentDate"
-                   class="form-label">{{lang.map.establishment_date}}</label>
-            <div class="input-group">
-              <i class="input-group-text mdi mdi-calendar"></i>
-              <div class="form-control" formControlName="establishmentDate"
-                   [ngClass]="{'input-disabled': readonly || viewOnly}"
-                   id="establishmentDate" [options]="datepickerOptionsMap.establishmentDate"
-                   (click)="!readonly && !viewOnly && dpEstablishmentDate.toggleCalendar()"
-                   #dpEstablishmentDate="angular-mydatepicker"
-                   angular-mydatepicker validationClasses="establishmentDate"></div>
-              <app-field-error-message controlName="establishmentDate"></app-field-error-message>
-            </div>
-          </div>
-          <!-- Email -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
-            <input formControlName="email" type="text"
-                   validationClasses="email" trimInput class="form-control" id="email">
-            <app-field-error-message controlName="email"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <!-- Phone -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="phone" for="phone" class="form-label">{{lang.map.lbl_phone}}</label>
-            <input formControlName="phone" type="text"
-                   validationClasses="phone" trimInput class="form-control" id="phone">
-            <app-field-error-message controlName="phone"></app-field-error-message>
-          </div>
-          <!-- Fax Number -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="fax" for="fax" class="form-label">{{lang.map.fax_number}}</label>
-            <input formControlName="fax" type="text"
-                   validationClasses="fax" trimInput class="form-control" id="fax">
-            <app-field-error-message controlName="fax"></app-field-error-message>
-          </div>
-          <!-- Record Number -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="recordNo" for="recordNo" class="form-label">{{lang.map.record_number}}</label>
-            <input formControlName="recordNo" type="text"
-                   validationClasses="recordNo" trimInput class="form-control" id="recordNo">
-            <app-field-error-message controlName="recordNo"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <!-- Address -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="address" for="address" class="form-label">{{lang.map.lbl_address}}</label>
-            <input formControlName="address" type="text"
-                   validationClasses="address" trimInput class="form-control" id="address">
-            <app-field-error-message controlName="address"></app-field-error-message>
-          </div>
-          <!-- Postal Code -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="postalCode" for="postalCode" class="form-label">{{lang.map.postal_code}}</label>
-            <input formControlName="postalCode" type="text"
-                   validationClasses="postalCode" trimInput class="form-control" id="postalCode">
-            <app-field-error-message controlName="postalCode"></app-field-error-message>
-          </div>
-        </div>
-        <div class="d-flex flex-row align-items-center justify-content-center">
-          <button (click)="saveBranch()" [disabled]="readonly" *ngIf="!readonly && !viewOnly"
-                  class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
-          <button (click)="cancelBranch()"
-                  class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
-        </div>
-      </div>
-    </ng-container>
-  </div>
-</div>
-
-<app-page-header [hidden]="branchesFormArray.controls.length || !showHeader" pageTitle="branches"
-                 [clickOnNew$]="add$"
-                 [addPermission]="addBranchAllowed()"></app-page-header>
-
-<table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
+<table class="table mt-3 table-striped table-bordered caption-top" cdk-table
        [dataSource]="listDataSource">
+    <ng-container cdkColumnDef="extra-header">
+    <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+      <table-header [hidden]="branchesFormArray.controls.length || !showHeader" tableTitle="branches" [add$]="add$" [allowAdd]="addBranchAllowed()" [skipClearSort]="true" [skipSearch]="true">
+      </table-header>
+    </th>
+  </ng-container>
   <ng-container cdkColumnDef="fullName">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.full_name}}</th>
     <td cdk-cell *cdkCellDef="let row"> {{row.fullName}} </td>
@@ -130,6 +47,7 @@
       </div>
     </td>
   </ng-container>
+  <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
   <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
   <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
   <tr *cdkNoDataRow>
