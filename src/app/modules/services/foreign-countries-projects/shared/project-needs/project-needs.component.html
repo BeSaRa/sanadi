@@ -1,139 +1,19 @@
-<div [formGroup]="form">
-  <div formGroupName="projectNeeds">
-    <ng-container
-      *ngFor="let account of projectNeedsForm.controls; let i = index"
-    >
-      <div [formGroupName]="i">
-        <div class="row">
-          <!-- ProjectName Name -->
-          <div class="col-sm-12 col-md-8 mb-4 position-relative">
-            <label
-              asteriskIfRequired="projectName"
-              for="projectName"
-              class="form-label"
-            >{{ lang.map.project_name }}</label
-            >
-            <input
-              id="projectName"
-              validationClasses="projectName"
-              formControlName="projectName"
-              trimInput maxlength="300"
-              class="form-control"
-            />
-            <app-field-error-message
-              controlName="projectName"
-            ></app-field-error-message>
-          </div>
-          <!-- Total Cost -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label
-              asteriskIfRequired="totalCost"
-              for="totalCost"
-              class="form-label"
-            >{{ lang.map.total_cost }} ({{lang.map.currency_usd}})</label
-            >
-            <input id="totalCost"
-                   validationClasses="totalCost"
-                   formControlName="totalCost"
-                   trimInput [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
-                   [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                   class="form-control"
-            />
-            <app-field-error-message
-              controlName="totalCost"
-            ></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
-            <label
-              class="form-label"
-              asteriskIfRequired="projectDescription"
-              for="projectDescription"
-            >{{ lang.map.project_description }}</label
-            >
-            <textarea name="projectDescription"
-                      formControlName="projectDescription"
-                      validationClasses="projectDescription"
-                      id="projectDescription"
-                      rows="4" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                      class="form-control"
-            ></textarea>
-            <app-field-error-message
-              controlName="projectDescription"
-            ></app-field-error-message>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="goals" for="goals">{{
-              lang.map.project_goals
-              }}</label>
-            <textarea name="goals"
-                      formControlName="goals"
-                      validationClasses="goals"
-                      id="goals"
-                      rows="4" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                      class="form-control"
-            ></textarea>
-            <app-field-error-message
-              controlName="goals"
-            ></app-field-error-message>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
-            <label
-              class="form-label"
-              asteriskIfRequired="beneficiaries"
-              for="beneficiaries"
-            >{{ lang.map.lbl_beneficiaries_nature }}</label
-            >
-            <textarea name="beneficiaries"
-                      formControlName="beneficiaries"
-                      validationClasses="beneficiaries"
-                      id="beneficiaries"
-                      rows="4" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                      class="form-control"
-            ></textarea>
-            <app-field-error-message
-              controlName="beneficiaries"
-            ></app-field-error-message>
-          </div>
-        </div>
-
-        <div class="d-flex flex-row align-items-center justify-content-center">
-          <button
-            (click)="save()"
-            [disabled]="readonly"
-            *ngIf="!readonly && !viewOnly"
-            class="btn btn-primary m-2"
-          >
-            {{ editRecordIndex > -1 ? lang.map.btn_save : lang.map.btn_add }}
-          </button>
-          <button (click)="cancel()" class="btn btn-secondary m-2">
-            {{ lang.map.btn_cancel }}
-          </button>
-        </div>
-      </div>
-    </ng-container>
-  </div>
-</div>
-
-<app-page-header
-  [hidden]="projectNeedsForm.controls.length"
-  pageTitle="project_needs"
-  [clickOnNew$]="add$"
-  [addPermission]="isAddingAllowed()"
-></app-page-header>
-
 <table
   class="table mt-3 table-striped table-bordered caption-top"
   cdk-table
   [dataSource]="projectNeeds"
 >
+  <ng-container cdkColumnDef="extra-header">
+    <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+      <table-header tableTitle="project_needs"
+       [add$]="add$" 
+       [allowAdd]="isAddingAllowed()" 
+       [skipClearSort]="true" 
+       [hidden]="projectNeedsForm.controls.length"
+       >
+      </table-header>
+    </th>
+  </ng-container>
   <ng-container cdkColumnDef="projectName">
     <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.project_name }}</th>
     <td cdk-cell *cdkCellDef="let row">{{ row.projectName }}</td>
@@ -202,6 +82,7 @@
       <span><b>{{calculateTotalCost() | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR }}</b></span>
     </td>
   </ng-container>
+  <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
   <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
   <tr cdk-row *cdkRowDef="let row; columns: columns"></tr>
   <tr cdk-footer-row *cdkFooterRowDef="footerColumns" [hidden]="!list || list.length === 0"></tr>

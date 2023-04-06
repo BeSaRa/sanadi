@@ -1,0 +1,130 @@
+
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
+      lang.map.project_needs }}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+  </div>
+<div class="dialog-content no-fixed-height">
+<div [formGroup]="form">
+    <div formGroupName="projectNeeds">
+      <ng-container
+        *ngFor="let account of projectNeedsForm.controls; let i = index"
+      >
+        <div [formGroupName]="i">
+          <div class="row">
+            <!-- ProjectName Name -->
+            <div class="col-sm-12 col-md-8 mb-4 position-relative">
+              <label
+                asteriskIfRequired="projectName"
+                for="projectName"
+                class="form-label"
+              >{{ lang.map.project_name }}</label
+              >
+              <input
+                id="projectName"
+                validationClasses="projectName"
+                formControlName="projectName"
+                trimInput maxlength="300"
+                class="form-control"
+              />
+              <app-field-error-message
+                controlName="projectName"
+              ></app-field-error-message>
+            </div>
+            <!-- Total Cost -->
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label
+                asteriskIfRequired="totalCost"
+                for="totalCost"
+                class="form-label"
+              >{{ lang.map.total_cost }} ({{lang.map.currency_usd}})</label
+              >
+              <input id="totalCost"
+                     validationClasses="totalCost"
+                     formControlName="totalCost"
+                     trimInput [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+                     [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                     class="form-control"
+              />
+              <app-field-error-message
+                controlName="totalCost"
+              ></app-field-error-message>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 mb-4 position-relative">
+              <label
+                class="form-label"
+                asteriskIfRequired="projectDescription"
+                for="projectDescription"
+              >{{ lang.map.project_description }}</label
+              >
+              <textarea name="projectDescription"
+                        formControlName="projectDescription"
+                        validationClasses="projectDescription"
+                        id="projectDescription"
+                        rows="4" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                        class="form-control"
+              ></textarea>
+              <app-field-error-message
+                controlName="projectDescription"
+              ></app-field-error-message>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col-sm-12 mb-4 position-relative">
+              <label class="form-label" asteriskIfRequired="goals" for="goals">{{
+                lang.map.project_goals
+                }}</label>
+              <textarea name="goals"
+                        formControlName="goals"
+                        validationClasses="goals"
+                        id="goals"
+                        rows="4" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                        class="form-control"
+              ></textarea>
+              <app-field-error-message
+                controlName="goals"
+              ></app-field-error-message>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col-sm-12 mb-4 position-relative">
+              <label
+                class="form-label"
+                asteriskIfRequired="beneficiaries"
+                for="beneficiaries"
+              >{{ lang.map.lbl_beneficiaries_nature }}</label
+              >
+              <textarea name="beneficiaries"
+                        formControlName="beneficiaries"
+                        validationClasses="beneficiaries"
+                        id="beneficiaries"
+                        rows="4" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                        class="form-control"
+              ></textarea>
+              <app-field-error-message
+                controlName="beneficiaries"
+              ></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+</div>
+
+<div class="dialog-actions">
+    <button
+        (click)="save()"
+        [disabled]="readonly || !form.valid"
+        *ngIf="!readonly && !viewOnly"
+        class="btn btn-primary m-2"
+    >
+        {{ editRecordIndex > -1 ? lang.map.btn_save : lang.map.btn_add }}
+    </button>
+    <button (click)="cancel()" class="btn btn-secondary m-2">
+        {{ lang.map.btn_cancel }}
+    </button>
+</div>
