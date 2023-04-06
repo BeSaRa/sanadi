@@ -132,7 +132,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
     if (!this.model?.isParentMenu()) {
       this._disableDependentFields();
     } else {
-      if (!!this.model.id && this.hasChildren) {
+      if (!!this.model.id && (this.hasChildren || this.model.isSystem)) {
         this._disableDependentFields();
       } else {
         this._enableDependentFields();
@@ -155,9 +155,6 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
       if (this.parentMenu && !this.parentMenu.isActive()) {
         fields = [this.statusControl];
       }
-    }
-    if(this.parentMenu?.isDefaultItem()){
-      return fields;
     }
     return fields.concat([this.menuTypeControl, this.menuViewControl, this.userTypeControl]);
   }

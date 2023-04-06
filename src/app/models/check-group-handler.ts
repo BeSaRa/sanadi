@@ -36,8 +36,10 @@ export class CheckGroupHandler<T extends { id: number }> {
   }
 
   private addToSelection(item: T, group: CheckGroup<T>): void {
-    group.addToSelection(item.id);
-    this.selection = this.selection.concat(item.id);
+    if(!!item.id){
+      group.addToSelection(item.id);
+      this.selection = this.selection.concat(item.id);
+    }
   }
 
   forceSelectCheckbox(item: T, group: CheckGroup<T>): void {
@@ -45,8 +47,11 @@ export class CheckGroupHandler<T extends { id: number }> {
   }
 
   private removeFromSelection(item: T, group: CheckGroup<T>): void {
-    group.removeFromSelection(item.id);
-    this.selection.splice(this.selection.indexOf(item.id), 1);
+    if(!!item.id){
+      group.removeFromSelection(item.id);
+      this.selection.splice(this.selection.indexOf(item.id), 1);
+    }
+
   }
 
   forceRemoveCheckbox(item: T, group: CheckGroup<T>): void {

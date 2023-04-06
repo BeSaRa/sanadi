@@ -69,6 +69,6 @@ export class CustomMenusTableComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
   isDefaultItem(item: CustomMenu){
-    return item.id === 1
+    return item.isDefaultItem()
   }
 }

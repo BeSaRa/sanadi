@@ -79,6 +79,9 @@ export class CheckGroup<T extends { id: number }> {
   isSelected(id: number): boolean {
     return this.selected.indexOf(id) !== -1;
   }
+  isChildrenSelected(childrenIds:number[]): boolean {
+    return childrenIds.every(x=>this.selected.indexOf(x) !== -1)
+  }
 
   toggleSelection(): void {
     if (this.isEmpty() || this.isIndeterminate()) {
