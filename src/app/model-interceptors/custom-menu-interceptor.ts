@@ -91,5 +91,7 @@ export class CustomMenuInterceptor implements IModelInterceptor<CustomMenu> {
     delete model.defaultParent;
     delete model.menuItemService;
     delete model.customParentId;
+    delete model.hasSystemParent;
+    delete model.isSystemParent;
   }
 }

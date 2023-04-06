@@ -21,6 +21,7 @@ import {Validators} from '@angular/forms';
 const interceptor = new CustomMenuInterceptor();
 
 @InterceptModel({
+  send :interceptor.send,
   receive: interceptor.receive,
 })
 export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
@@ -51,6 +52,7 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   urlParamsParsed: MenuUrlValueContract[] = [];
   customParentId!:number;
   isSystemParent:boolean = false;
+  hasSystemParent:boolean = false;
 
   searchFields: ISearchFieldsMap<CustomMenu> = {
     ...normalSearchFields(['arName', 'enName']),
@@ -81,7 +83,6 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
     }
     return this.menuItemService.menuItems.find(x=>x.menuKey === this.systemMenuKey);
   }
-
   updateStatus(newStatus: CommonStatusEnum): any {
     return this.service.updateStatus(this.id, newStatus);
   }
@@ -143,9 +144,16 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   }
 
   isDefaultItem(){
-    return this.id === 1
+    return this.isSystem
   }
-  hasDefaultParent(){
-    return this.parentMenuItemId === 1;
+  hasDefaultParent(parent?:CustomMenu){
+    if(!parent?.isSystem) return false;
+    return this.parentMenuItemId === parent?.id;
+  }
+  isSystemParentItem() : boolean{
+    return !!this.systemMenuKey && this.isSystemParent
+  }
+  getChildrenIds():number[]{
+    return this.subMenuItems.map(x=>x.id);
   }
 }
