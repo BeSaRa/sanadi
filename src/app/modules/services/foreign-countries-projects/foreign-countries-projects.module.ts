@@ -15,6 +15,7 @@ import {
 import {
   ProjectNeedsComponent
 } from '@modules/services/foreign-countries-projects/shared/project-needs/project-needs.component';
+import { ProjectNeedsPopupComponent } from './shared/project-needs/project-needs-popup/project-needs-popup.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {
     ForeignCountriesProjectsComponent,
     ForeignCountriesProjectOutputsComponent,
     ForeignCountriesProjectsApprovalPopupComponent,
-    ProjectNeedsComponent
+    ProjectNeedsComponent,
+    ProjectNeedsPopupComponent
   ],
   imports: [
     CommonModule,

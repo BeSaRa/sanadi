@@ -10,6 +10,7 @@ import { ReadinessStatus } from '@app/types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { ProjectNeedsPopupComponent } from './project-needs-popup/project-needs-popup.component';
 
 @Component({
   selector: 'project-needs',
@@ -143,9 +144,12 @@ export class ProjectNeedsComponent implements OnInit, AfterViewInit {
       } else {
         this.readyEvent.emit('NOT_READY');
       }
+      this.openFormPopup();
       projectNeedsFormArray.push(this.fb.group(projectNeed.buildForm(true)));
       if (this.readonly || this.viewOnly) {
         this.projectNeedsForm.disable();
+      } else {
+        this.projectNeedsForm.enable()
       }
     } else {
       this.readyEvent.emit('READY');
@@ -153,25 +157,10 @@ export class ProjectNeedsComponent implements OnInit, AfterViewInit {
   }
 
   private listenToSave() {
-    const bankAccountForm$ = this.save$.pipe(
+    this.save$.pipe(
       map(() => {
         return this.form.get('projectNeeds.0') as AbstractControl;
-      })
-    );
-
-    const validForm$ = bankAccountForm$.pipe(filter((form) => form.valid));
-    const invalidForm$ = bankAccountForm$.pipe(filter((form) => form.invalid));
-    invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.dialogService
-        .error(this.lang.map.msg_all_required_fields_are_filled)
-        .onAfterClose$.pipe(take(1))
-        .subscribe(() => {
-          this.form.get('projectNeeds')?.markAllAsTouched();
-        });
-    });
-
-    validForm$
-      .pipe(
+    })).pipe(
         takeUntil(this.destroy$),
         map(() => {
           return this.form.get('projectNeeds.0') as UntypedFormArray;
@@ -262,5 +251,24 @@ export class ProjectNeedsComponent implements OnInit, AfterViewInit {
         return Number(Number(x.totalCost).toFixed(2));
       }).reduce((resultSum, a) => resultSum + a, 0);
     }
+  }
+  _getPopupComponent() {
+    return ProjectNeedsPopupComponent;
+  }
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form : this.form,
+      viewOnly : this.viewOnly,
+      readonly : this.readonly,
+      editRecordIndex : this.editRecordIndex,
+      model : this.currentRecord,
+      projectNeedsForm : this.projectNeedsForm,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancel();
+      }
+    })
   }
 }
