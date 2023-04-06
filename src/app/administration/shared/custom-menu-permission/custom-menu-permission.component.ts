@@ -40,6 +40,7 @@ export class CustomMenuPermissionComponent implements OnInit {
   }
 
   allCustomMenusList: CustomMenu[] = [];
+  allDefaultCustomMenusList: CustomMenu[] = [];
   permissionGroups: CheckGroup<CustomMenu>[] = [];
   defaultPermissionGroups: CheckGroup<CustomMenu>[] = [];
   groupHandler!: CheckGroupHandler<CustomMenu>;
@@ -54,8 +55,8 @@ export class CustomMenuPermissionComponent implements OnInit {
       isTouchedOrDirty: () => true
     },
     defaultMenus: {
-      name: 'menus',
-      langKey: 'menus',
+      name: 'systemMenus',
+      langKey: 'systemMenus',
       index: 1,
       validStatus: () => true,
       isTouchedOrDirty: () => true
@@ -74,7 +75,13 @@ export class CustomMenuPermissionComponent implements OnInit {
 
   private _loadPrivateCustomMenus(): Observable<CustomMenu[]> {
     return this.customMenuService.loadPrivateMenusByUserType(this.user.userType)
-      .pipe(tap((result) => this.allCustomMenusList = result));
+      .pipe(tap((result) => {
+        this.allCustomMenusList = result
+        const systemCustomMenu = result.find(x=>x.isDefaultItem());
+        if(systemCustomMenu){
+          this.allDefaultCustomMenusList = systemCustomMenu.subMenuItems
+        }
+      }));
   }
 
   private _loadCustomMenuPermissions(): void {
@@ -90,7 +97,7 @@ export class CustomMenuPermissionComponent implements OnInit {
         );
         this.defaultGroupHandler = new CheckGroupHandler<CustomMenu>(this.defaultPermissionGroups,
           undefined,
-          (item: CustomMenu, isChecked: boolean, group: CheckGroup<CustomMenu>) => this.onPermissionChanged(item, isChecked, group)
+          (item: CustomMenu, isChecked: boolean, group: CheckGroup<CustomMenu>) => this.onDefaultPermissionChanged(item, isChecked, group)
         );
         return of(true);
       }))
@@ -125,13 +132,17 @@ export class CustomMenuPermissionComponent implements OnInit {
     return menus;
   }
 
-  private _fillChildrenChunkSpace(childMenus: CustomMenu[], lastChild: CustomMenu): CustomMenu[] {
+  private _fillChildrenChunkSpace(childMenus: CustomMenu[], lastChild: CustomMenu, hasSystemParent = false): CustomMenu[] {
     const missingChildrenCount = this.chunkSize - (childMenus.length % this.chunkSize);
     if (missingChildrenCount === this.chunkSize) {
       return childMenus;
     }
     for (let i = 0; i < missingChildrenCount; i++) {
-      childMenus = childMenus.concat(new CustomMenu().clone({menuType: lastChild.menuType, parentMenuItemId: lastChild.parentMenuItemId}));
+      childMenus = childMenus.concat(new CustomMenu().clone({
+        menuType: lastChild.menuType,
+         parentMenuItemId: lastChild.parentMenuItemId,
+         hasSystemParent : hasSystemParent
+        }));
     }
     return childMenus;
   }
@@ -142,19 +153,21 @@ export class CustomMenuPermissionComponent implements OnInit {
     let parents: CustomMenu[] = [], parentChildrenMap = new Map<number, CustomMenu[]>;
     let defaultParents: CustomMenu[] = [] ;
     let defaultChildrenMap = new Map<string, CustomMenu[]>;
+    const systemMenu = menus.find(x=>x.isSystem)!;
     menus.map((menu) => {
       if (!menu.parentMenuItemId && !menu.isDefaultItem()) {
         parents.push(menu);
       }
-      if(menu.parentMenuItemId && !menu.hasDefaultParent()) {
+      if(menu.parentMenuItemId && !menu.hasDefaultParent(systemMenu)) {
         parentChildrenMap.set(menu.parentMenuItemId, (parentChildrenMap.get(menu.parentMenuItemId) ?? []).concat(menu));
       }
-      if(menu.systemMenuKey && menu.hasDefaultParent()){
+      if(menu.systemMenuKey && menu.hasDefaultParent(systemMenu)){
         if(!defaultParents.find(m => m.systemMenuKey === menu.systemMenuKey && m.menuType === menu.menuType)){
           defaultParents.push(new CustomMenu().clone({
             menuType : menu.menuType,
             systemMenuKey: menu.systemMenuKey,
             isSystemParent:true,
+            parentMenuItemId : menu.parentMenuItemId
           }))
         }
         defaultChildrenMap.set(menu.systemMenuKey+'-'+menu.menuType, (defaultChildrenMap.get(menu.systemMenuKey+'-'+menu.menuType) ?? []).concat(menu));
@@ -176,10 +189,7 @@ export class CustomMenuPermissionComponent implements OnInit {
       // add empty custom menu to complete the chunk length of parents
       // defaultResult = this._fillParentChunkSpace(defaultResult, parent);
       let children = defaultChildrenMap.get(parent.systemMenuKey!+'-'+ parent.menuType) ?? [];
-
-      if (children.length > 0) {
-        // children = this._fillChildrenChunkSpace(children, children[0]);
-      }
+      parent.subMenuItems = children;
       defaultResult = defaultResult.concat(children);
     });
 
@@ -206,10 +216,9 @@ export class CustomMenuPermissionComponent implements OnInit {
   private buildDefaultPermissionGroups(groups: Lookup[], menus: CustomMenu[]): void {
     const permissionsByGroup = new Map<number, CustomMenu[]>();
     this.defaultPermissionGroups = [];
-    menus.forEach(( menu) => {
-       permissionsByGroup.set(menu.menuType, (permissionsByGroup.get(menu.menuType) || []).concat(menu));
-    });
-
+    menus.reduce((record, menu) => {
+      return permissionsByGroup.set(menu.menuType, (permissionsByGroup.get(menu.menuType) || []).concat(menu));
+    }, {} as any);
     groups.forEach(group => {
       let items:CustomMenu[] =[];
       let itemsInGroup = permissionsByGroup.get(group.lookupKey) || [];
@@ -218,10 +227,8 @@ export class CustomMenuPermissionComponent implements OnInit {
           items.push(item);
           items = this._fillParentChunkSpace(items,item);
           let children = itemsInGroup.filter(x => x.systemMenuKey === item.systemMenuKey && !x.isSystemParent && x.menuType === item.menuType) ;
-          console.log(children);
-
           if (children.length > 0) {
-            children = this._fillChildrenChunkSpace(children, children[0]);
+            children = this._fillChildrenChunkSpace(children, children[0],true);
           }
           items = items.concat(children);
         }
@@ -267,6 +274,28 @@ export class CustomMenuPermissionComponent implements OnInit {
       }
     }
   }
+  private onDefaultPermissionChanged(item: CustomMenu, isChecked: boolean, group: CheckGroup<CustomMenu>): void {
+    if (item.isSystemParentItem()) {
+      // if parent is toggled, toggle all children items accordingly
+      let children = this.allDefaultCustomMenusList
+          .filter((menu) => menu.systemMenuKey === item.systemMenuKey && menu.menuType === item.menuType && !menu.isSystemParent);
+
+      children.forEach((childMenu) => {
+        if (isChecked) {
+          !this._isAlreadySelected(childMenu.id) && this._forceSelectPermission(childMenu, group);
+        } else {
+          this._isAlreadySelected(childMenu.id) && this._forceRemovePermission(childMenu, group);
+        }
+      });
+    }
+    else {
+      // if child is selected and parent is not selected, force select the parent
+      if (isChecked && !this._isAlreadySelected(item.parentMenuItemId)) {
+        let parent = this.allCustomMenusList.find((menu) => menu.id === item.parentMenuItemId);
+        parent && this._forceSelectPermission(parent, group);
+      }
+    }
+  }
 
   isParentRow(row: CustomMenu[]): boolean {
     return !row[0].parentMenuItemId;
@@ -281,7 +310,10 @@ export class CustomMenuPermissionComponent implements OnInit {
   }
 
   getFinalUserMenuPermissions(): number[] {
-    return this.groupHandler.getSelection().filter((item, index, list) => list.indexOf(item) === index);
+    let selection:number[] = [];
+    selection = selection.concat(this.groupHandler.getSelection().filter((item, index, list) => list.indexOf(item) === index));
+    selection = selection.concat(this.defaultGroupHandler.getSelection().filter((item, index, list) => list.indexOf(item) === index));
+    return selection;
   }
 
   saveUserCustomMenuPermissions(): Observable<UserCustomMenu[]> {
