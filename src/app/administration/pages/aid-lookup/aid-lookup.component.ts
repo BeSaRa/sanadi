@@ -302,7 +302,6 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
         this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: aidLookup.getName()}));
         this.reload$.next(null);
       }, () => {
-        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: aidLookup.getName()}));
         this.reload$.next(null);
       });
   }
