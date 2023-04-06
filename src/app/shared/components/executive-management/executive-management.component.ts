@@ -16,6 +16,7 @@ import { ToastService } from '@services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import { ExecutiveManagementPopupComponent } from './executive-management-popup/executive-management-popup.component';
 
 @Component({
   selector: 'executive-management',
@@ -155,8 +156,11 @@ export class ExecutiveManagementComponent implements OnInit {
         this._setComponentReadiness('NOT_READY');
       }
       this.form.patchValue(record);
+      this.openFormPopup();
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable();
       }
     } else {
       this._setComponentReadiness('READY');
@@ -302,5 +306,27 @@ export class ExecutiveManagementComponent implements OnInit {
 
   get nationalitiyField(): UntypedFormControl {
     return (this.form.get('nationality')) as UntypedFormControl;
+  }
+  _getPopupComponent() {
+    return ExecutiveManagementPopupComponent;
+  }
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form: this.form,
+      readonly: this.readonly,
+      editItem: this.editItem,
+      model: this.current,
+      pageTitleKey: this.pageTitleKey,
+      countriesList: this.countriesList,
+      nationalities: this.nationalities,
+      hidePassport: this.hidePassport,
+      viewOnly :this.viewOnly
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancel();
+      }
+    })
   }
 }

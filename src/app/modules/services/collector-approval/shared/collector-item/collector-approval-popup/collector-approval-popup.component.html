@@ -1,0 +1,117 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ editIndex > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map.collector_items }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <form *ngIf="!!item" [formGroup]="form">
+    <div class="row">
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="" [control]="oldLicenseFullSerialControl"
+          for="oldLicenseFullSerial">{{lang.map.serial_number}}</label>
+        <div class="input-group">
+          <input (keydown.enter)="isSearchAllowed() && searchForLicense()" id="oldLicenseFullSerial"
+            validationClasses="" [control]="oldLicenseFullSerialControl" formControlName="oldLicenseFullSerial"
+            class="form-control">
+          <button *ngIf="isSearchAllowed()" (click)="searchForLicense()" class="input-group-text">
+            <i class="mdi mdi-magnify text-primary"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="identificationNumber"
+          for="identificationNumber">{{lang.map.identification_number}}</label>
+        <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber"
+          class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
+        <app-field-error-message controlName="identificationNumber"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="collectorType"
+          for="collectorType">{{lang.map.collector_type}}</label>
+        <ng-select validationClasses="collectorType" appendTo="body" [clearable]="true"
+          placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found" id="collectorType"
+          [readonly]="(isCancelRequestType() || readOnly || viewOnly)" formControlName="collectorType">
+          <ng-option [value]="option.lookupKey" *ngFor="let option of collectorTypes">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="collectorType"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="arabicName" for="arabicName">{{lang.map.arabic_name}}</label>
+        <input id="arabicName" validationClasses="arabicName" formControlName="arabicName" class="form-control"
+          [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
+        <app-field-error-message controlName="arabicName"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="collectorNumber"
+          for="collectorNumber">{{lang.map.collector_number}}</label>
+        <input id="collectorNumber" validationClasses="collectorNumber" formControlName="collectorNumber"
+          class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
+        <app-field-error-message controlName="collectorNumber"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="gender" for="gender">{{lang.map.gender}}</label>
+        <ng-select validationClasses="gender" appendTo="body" [clearable]="true" placeholder="{{lang.map.select}}"
+          [notFoundText]="lang.map.msg_not_found" id="gender"
+          [readonly]="(isCancelRequestType() || readOnly || viewOnly)" formControlName="gender">
+          <ng-option [value]="option.lookupKey" *ngFor="let option of genders">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="gender"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="nationality"
+          for="nationality">{{lang.map.lbl_nationality}}</label>
+        <ng-select validationClasses="nationality" appendTo="body" [clearable]="true" placeholder="{{lang.map.select}}"
+          [notFoundText]="lang.map.msg_not_found" id="nationality"
+          [readonly]="(isCancelRequestType() || readOnly || viewOnly)" formControlName="nationality">
+          <ng-option [value]="option.lookupKey" *ngFor="let option of nationalities">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="nationality"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="jobTitle" for="jobTitle">{{lang.map.job_title}}</label>
+        <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" class="form-control"
+          [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
+        <app-field-error-message controlName="jobTitle"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="relationship" for="relationship">{{lang.map.relationship}}</label>
+        <ng-select validationClasses="relationship" appendTo="body" [clearable]="true" placeholder="{{lang.map.select}}"
+          [notFoundText]="lang.map.msg_not_found" id="relationship"
+          [readonly]="(isCancelRequestType() || readOnly || viewOnly)" formControlName="relationship">
+          <ng-option [value]="option.lookupKey" *ngFor="let option of relationships">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="relationship"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="phone" for="phone">{{lang.map.lbl_phone}}</label>
+        <input id="phone" validationClasses="phone" formControlName="phone" class="form-control"
+          [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
+        <app-field-error-message controlName="phone"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+        <label for="licenseEndDate" asteriskIfRequired="licenseEndDate"
+          class="form-label">{{lang.map.license_end_date}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="licenseEndDate"
+            [ngClass]="{'input-disabled': isEditLicenseEndDateDisabled()}" id="licenseEndDate"
+            [options]="datepickerOptionsMap.licenseEndDate"
+            (click)="!isEditLicenseEndDateDisabled() && dpLicenseEndDate.toggleCalendar()"
+            #dpLicenseEndDate="angular-mydatepicker" angular-mydatepicker></div>
+          <app-field-error-message controlName="licenseEndDate"></app-field-error-message>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" *ngIf="!readOnly && !viewOnly" class="btn btn-primary">{{editIndex ? lang.map.btn_save :
+    lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

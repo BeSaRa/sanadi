@@ -1,35 +1,33 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {LangService} from '@services/lang.service';
-import {DialogService} from '@services/dialog.service';
-import {exhaustMap, filter, map, skip, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {AppEvents} from '@enums/app-events';
-import {CollectorApproval} from '@models/collector-approval';
-import {CollectorItem} from '@models/collector-item';
-import {Lookup} from '@models/lookup';
-import {LookupService} from '@services/lookup.service';
-import {IKeyValue} from '@contracts/i-key-value';
-import {DateUtils} from '@helpers/date-utils';
-import {LicenseDurationType} from '@enums/license-duration-type';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {AdminResult} from '@models/admin-result';
-import {CollectorApprovalService} from '@services/collector-approval.service';
-import {LicenseService} from '@services/license.service';
-import {SelectedLicenseInfo} from '@contracts/selected-license-info';
-import {CollectorLicense} from '@app/license-models/collector-license';
-import {CollectionRequestType} from '@enums/service-request-types';
-import {ServiceDataService} from '@services/service-data.service';
-import {CaseTypes} from '@enums/case-types.enum';
-import {ServiceCustomSettings} from '@models/service-custom-settings';
-import {SharedService} from '@services/shared.service';
-import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@enums/action-icons-enum';
-import {CollectionItem} from '@models/collection-item';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {HasAttachmentHandlerDirective} from '@app/shared/directives/has-attachment-handler.directive';
-import {AttachmentHandlerDirective} from '@app/shared/directives/attachment-handler.directive';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { LangService } from '@services/lang.service';
+import { DialogService } from '@services/dialog.service';
+import { filter, map, skip, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { AppEvents } from '@enums/app-events';
+import { CollectorApproval } from '@models/collector-approval';
+import { CollectorItem } from '@models/collector-item';
+import { Lookup } from '@models/lookup';
+import { LookupService } from '@services/lookup.service';
+import { IKeyValue } from '@contracts/i-key-value';
+import { DateUtils } from '@helpers/date-utils';
+import { LicenseDurationType } from '@enums/license-duration-type';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { AdminResult } from '@models/admin-result';
+import { LicenseService } from '@services/license.service';
+import { CollectionRequestType } from '@enums/service-request-types';
+import { ServiceDataService } from '@services/service-data.service';
+import { CaseTypes } from '@enums/case-types.enum';
+import { ServiceCustomSettings } from '@models/service-custom-settings';
+import { SharedService } from '@services/shared.service';
+import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@enums/action-icons-enum';
+import { CollectionItem } from '@models/collection-item';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { HasAttachmentHandlerDirective } from '@app/shared/directives/has-attachment-handler.directive';
+import { AttachmentHandlerDirective } from '@app/shared/directives/attachment-handler.directive';
+import { CollectorApprovalPopupComponent } from './collector-approval-popup/collector-approval-popup.component';
 
 @Component({
   selector: 'collector-item',
@@ -39,8 +37,6 @@ import {AttachmentHandlerDirective} from '@app/shared/directives/attachment-hand
 export class CollectorItemComponent extends HasAttachmentHandlerDirective implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(AttachmentHandlerDirective) attachmentHandlerDirective?: AttachmentHandlerDirective;
   @Output() attachmentHandlerEmitter: EventEmitter<AttachmentHandlerDirective> = new EventEmitter<AttachmentHandlerDirective>();
-
-  private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'licenseDurationTypeInfo', 'actions'];
 
   @Input()
   model!: CollectorApproval;
@@ -56,19 +52,9 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
   editIndex: number | undefined = undefined;
   item?: CollectorItem;
   form!: UntypedFormGroup;
-  oldLicenseFullSerialControl: UntypedFormControl = new UntypedFormControl();
   collectorTypes: Lookup[] = this.lookupService.listByCategory.CollectorType;
-  genders: Lookup[] = this.lookupService.listByCategory.Gender;
-  nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
-  relationships: Lookup[] = this.lookupService.listByCategory.CollectorRelation;
   isPermanent!: boolean;
-  licenseSearch$: Subject<string> = new Subject<string>();
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-
-  datepickerOptionsMap: IKeyValue = {
-    licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
-  };
-  viewOnly: boolean = false;
 
   actions: IMenuItem<CollectorItem>[] = [
     // view
@@ -76,7 +62,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
       type: 'action',
       label: 'view',
       icon: ActionIconsEnum.VIEW,
-      onClick: (item: CollectorItem, index: number) => this.view$.next({item: item, index: index}),
+      onClick: (item: CollectorItem, index: number) => this.view$.next({ item: item, index: index }),
       show: () => !this.approvalMode && this.readOnly
     },
     // edit
@@ -84,7 +70,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
       type: 'action',
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
-      onClick: (item: CollectorItem, index: number) => this.edit$.next({item: item, index: index}),
+      onClick: (item: CollectorItem, index: number) => this.edit$.next({ item: item, index: index }),
       show: () => !this.approvalMode,
       disabled: () => this.readOnly
     },
@@ -93,7 +79,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
       type: 'action',
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE_TRASH,
-      onClick: (item: CollectorItem, index: number) => this.remove$.next({item: item, index: index}),
+      onClick: (item: CollectorItem, index: number) => this.remove$.next({ item: item, index: index }),
       show: () => !this.approvalMode,
       disabled: () => this.readOnly
     },
@@ -102,7 +88,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
       type: 'action',
       label: 'edit_approval_info',
       icon: ActionIconsEnum.EDIT,
-      onClick: (item: CollectorItem, index: number) => this.approval.emit({item: item, index: index}),
+      onClick: (item: CollectorItem, index: number) => this.approval.emit({ item: item, index: index }),
       show: () => this.approvalMode,
       disabled: () => this.readOnly
     },
@@ -160,13 +146,12 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
   formProperties: Record<string, () => Observable<any>> = {}
 
   constructor(private fb: UntypedFormBuilder,
-              public lang: LangService,
-              private dialog: DialogService,
-              private lookupService: LookupService,
-              private collectorApprovalService: CollectorApprovalService,
-              private licenseService: LicenseService,
-              private serviceDataService: ServiceDataService,
-              private sharedService: SharedService) {
+    public lang: LangService,
+    private dialog: DialogService,
+    private lookupService: LookupService,
+    private licenseService: LicenseService,
+    private serviceDataService: ServiceDataService,
+    private sharedService: SharedService) {
     super();
   }
 
@@ -186,10 +171,8 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
     this.listenToView();
     this.listenToRemove();
     this.listenToSave();
-    // this.listenToDisableSearchField();
     this.listenToLicenseDurationTypeChanges();
     this.loadCustomSettings();
-    this.listenToLicenseSearch();
   }
 
   loadCustomSettings() {
@@ -211,10 +194,6 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
     this.toggleLicenseEndDate();
   }
 
-  private updateForm(model: CollectorItem): void {
-    this.form.patchValue(model.buildForm(false));
-  }
-
   private resetForm(): void {
     this.form.reset();
   }
@@ -223,11 +202,26 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
     this.add$
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(_ => {
-          this.item = new CollectorItem().clone<CollectorItem>({
-            licenseDurationType: this.model.licenseDurationType
-          });
-          this.viewOnly = false;
-        }
+        this.item = new CollectorItem().clone<CollectorItem>({
+          licenseDurationType: this.model.licenseDurationType
+        });
+        this.dialog.show(this._getFormDialog(), {
+          viewOnly: false,
+          form: this.form,
+          readOnly: this.readOnly,
+          editIndex: this.editIndex,
+          item: this.item,
+          model: this.model,
+          licenseDurationType: this.licenseDurationType,
+          isPermanent: this.isPermanent
+        }).onAfterClose$.subscribe((data) => {
+          if (data) {
+            this.save$.next();
+          } else {
+            this.cancel();
+          }
+        })
+      }
       ))
       .subscribe(() => this.formOpenedStatus.emit(true));
   }
@@ -239,19 +233,45 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
         // always add one here to the selected index to avoid the if condition while process save
         this.editIndex = (++info.index);
         this.item = info.item;
-        this.viewOnly = false;
-        this.updateForm(this.item);
+        this.dialog.show(this._getFormDialog(), {
+          viewOnly: false,
+          form: this.form,
+          readOnly: this.readOnly,
+          editIndex: this.editIndex,
+          item: this.item,
+          model: this.model,
+          licenseDurationType: this.licenseDurationType,
+          isPermanent: this.isPermanent
+        }).onAfterClose$.subscribe((data) => {
+          if (data) {
+            this.save$.next();
+          } else {
+            this.cancel();
+          }
+        })
       }))
       .subscribe(() => this.formOpenedStatus.emit(true));
   }
 
+  _getFormDialog() {
+    return CollectorApprovalPopupComponent;
+  }
   private listenToView() {
     this.view$
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(info => {
-        this.item = info.item;
-        this.viewOnly = true;
-        this.updateForm(this.item);
+        this.item = info.item; this.dialog.show(this._getFormDialog(), {
+          viewOnly: true,
+          form: this.form,
+          readOnly: this.readOnly,
+          editIndex: this.editIndex,
+          item: this.item,
+          model: this.model,
+          licenseDurationType: this.licenseDurationType,
+          isPermanent: this.isPermanent
+        }).onAfterClose$.subscribe(() => {
+          this.cancel()
+        })
       }))
       .subscribe(() => this.formOpenedStatus.emit(true));
   }
@@ -261,7 +281,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap(info => {
         return this.dialog
-          .confirm(this.lang.map.msg_confirm_delete_x.change({x: info.item.identificationNumber}))
+          .confirm(this.lang.map.msg_confirm_delete_x.change({ x: info.item.identificationNumber }))
           .onAfterClose$.pipe(map((click: UserClickOn) => {
             return {
               index: info.index,
@@ -299,7 +319,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
       this.model.collectorItemList = this.model.collectorItemList.concat([item]);
       this.eventHappened.emit(AppEvents.ADD);
     } else {
-      this.dialog.error(this.lang.map.collectors_max_items_count.change({x: this.maxElementsCount}));
+      this.dialog.error(this.lang.map.collectors_max_items_count.change({ x: this.maxElementsCount }));
     }
   }
 
@@ -323,7 +343,6 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
   cancel(): void {
     this.item = undefined;
     this.editIndex = undefined;
-    this.viewOnly = false;
     this.resetForm();
     this.formOpenedStatus.emit(false);
   }
@@ -338,10 +357,6 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
 
   get licenseEndDate() {
     return this.form?.get('licenseEndDate');
-  }
-
-  get oldLicenseFullSerialField(): UntypedFormControl {
-    return (this.form.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
 
   ngOnDestroy(): void {
@@ -359,61 +374,8 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
       });
   }
 
-  private validateSingleLicense(license: CollectorLicense): Observable<null | SelectedLicenseInfo<CollectorLicense, CollectorLicense>> {
-    return this.licenseService.validateLicenseByRequestType<CollectorLicense>(this.model.caseType, this.model.requestType, license.id)
-      .pipe(map(validated => {
-        return (validated ? {
-          selected: validated,
-          details: validated
-        } : null) as (null | SelectedLicenseInfo<CollectorLicense, CollectorLicense>);
-      }));
-  }
-
-  private openSelectLicense(licenses: CollectorLicense[]) {
-    const licensesByDurationType = licenses.filter(l => l.licenseDurationTypeInfo.lookupKey == this.licenseDurationType);
-    return this.licenseService.openSelectLicenseDialog(licensesByDurationType, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: CollectorLicense, details: CollectorLicense }>;
-  }
-
-  searchForLicense() {
-    this.licenseSearch$.next(this.oldLicenseFullSerialField.value);
-  }
-
-  private listenToLicenseSearch(): void {
-    this.licenseSearch$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap((serial) => {
-        return this.licenseService
-          .collectorSearch<CollectorApproval>({
-            fullSerial: serial,
-            licenseDurationType: this.model.licenseDurationType
-          });
-      }))
-      .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
-      .pipe(filter(licenses => !!licenses.length))
-      .pipe(exhaustMap((licenses) => {
-        return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
-      }))
-      .pipe(
-        filter<null | SelectedLicenseInfo<CollectorLicense, CollectorLicense>, SelectedLicenseInfo<CollectorLicense, CollectorLicense>>
-        ((info): info is SelectedLicenseInfo<CollectorLicense, CollectorLicense> => !!info))
-      .pipe(filter((license) => {
-        let isAlreadyAdded = this.isLicenseAlreadyAdded(license.details);
-        if (isAlreadyAdded) {
-          this.dialog.info(this.lang.map.x_already_exists.change({x: this.lang.map.license}));
-        }
-        return !isAlreadyAdded;
-      }))
-      .subscribe((_info) => {
-        this.updateForm(this.item = _info.details.convertToItem());
-      });
-  }
-
   isNewRequestType(): boolean {
     return !!this.model && !!this.model.requestType && (this.model.requestType === CollectionRequestType.NEW);
-  }
-
-  isCancelRequestType(): boolean {
-    return !!this.model && !!this.model.requestType && (this.model.requestType === CollectionRequestType.CANCEL);
   }
 
   viewOldLicense(item: CollectionItem): void {
@@ -446,26 +408,4 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
       });
   }
 
-  isLicenseAlreadyAdded(selectedLicense: any): boolean {
-    return this.model.collectorItemList.some(x => x.oldLicenseFullSerial === selectedLicense.fullSerial);
-  }
-
-  isEditLicenseEndDateDisabled(): boolean {
-    return (this.isPermanent || !this.isNewRequestType() || this.readOnly || this.viewOnly);
-  }
-
-  isSearchAllowed(): boolean {
-    // if readonly or no request type or request type = new, edit is not allowed
-    // if new or draft record, edit is allowed
-    // if collection item is new, edit is allowed
-    let isAllowed = false;
-    if (this.readOnly || this.viewOnly || !this.model.requestType || this.model.requestType === CollectionRequestType.NEW) {
-      isAllowed = false;
-    } else if (!this.model?.id || (!!this.model?.id && this.model.canCommit()) || !this.item!.itemId) {
-      isAllowed=  true;
-    }
-    !isAllowed ? this.oldLicenseFullSerialField.disable() : this.oldLicenseFullSerialField.enable()
-    /*this.oldLicenseFullSerialField.updateValueAndValidity();*/
-    return isAllowed;
-  }
 }
