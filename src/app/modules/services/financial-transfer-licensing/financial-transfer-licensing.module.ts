@@ -19,6 +19,7 @@ import {
 import {
   SelectAuthorizedEntityPopupComponent
 } from '@modules/services/financial-transfer-licensing/popups/select-authorized-entity-popup/select-authorized-entity-popup.component';
+import { FinancialTransfersProjectsPopupComponent } from './shared/financial-transfers-projects/financial-transfers-projects-popup/financial-transfers-projects-popup.component';
 import { AuditFinancialTransfersLicensingComponent } from './audit/audit-financial-transfers-licensing/audit-financial-transfers-licensing.component';
 import { AuditFinancialTransfersProjectsComponent } from './audit/audit-financial-transfers-projects/audit-financial-transfers-projects.component';
 
@@ -31,6 +32,7 @@ import { AuditFinancialTransfersProjectsComponent } from './audit/audit-financia
     FinancialTransfersProjectsComponent,
     SelectPreRegisteredPopupComponent,
     SelectAuthorizedEntityPopupComponent,
+    FinancialTransfersProjectsPopupComponent,
     AuditFinancialTransfersLicensingComponent,
     AuditFinancialTransfersProjectsComponent
   ],

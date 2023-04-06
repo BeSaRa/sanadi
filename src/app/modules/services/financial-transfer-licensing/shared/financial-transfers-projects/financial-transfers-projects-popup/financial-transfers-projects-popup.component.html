@@ -1,0 +1,79 @@
+
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{ editItem > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
+      lang.map.lbl_projects }}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+  </div>
+<div class="dialog-content no-fixed-height">
+    <div [formGroup]="form">
+        <div class="row">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label for="financialTransferProjectControl" asteriskIfRequired [control]="financialTransferProjectControl"
+            class="form-label">{{lang.map.lbl_projects}}</label>
+            <ng-select [selectOnTab]="true" labelForId="financialTransferProjectControl" [clearable]="true"
+            [formControl]="financialTransferProjectControl" placeholder="{{lang.map.select}}"
+            id="financialTransferProjectControl" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly"
+            appendTo="body" validationClasses [control]="financialTransferProjectControl">
+            <ng-option *ngFor="let option of approvedFinancialTransferProjects" [value]="option.id">
+                {{option.getName()}}
+            </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="financialTransferProjectControl"></app-field-error-message>
+        </div>
+
+        <!-- qatariTransactionAmount -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="qatariTransactionAmount" for="qatariTransactionAmount"
+            class="form-label">{{lang.map.qatari_riyal_transaction_amount}}</label>
+            <input id="qatariTransactionAmount" validationClasses="qatariTransactionAmount"
+            formControlName="qatariTransactionAmount" trimInput class="form-control">
+            <app-field-error-message controlName="qatariTransactionAmount"></app-field-error-message>
+        </div>
+        <!-- notes -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="notes" for="notes" class="form-label">{{lang.map.notes}}</label>
+            <input id="notes" validationClasses="notes" formControlName="notes" trimInput class="form-control">
+            <app-field-error-message controlName="notes"></app-field-error-message>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="fullSerial" for="fullSerial" class="form-label">{{lang.map.serial_number}}</label>
+            <input id="fullSerial" validationClasses="fullSerial" formControlName="fullSerial" trimInput readonly
+            class="form-control">
+            <app-field-error-message controlName="fullSerial"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label for="projectTotalCost" asteriskIfRequired="projectTotalCost"
+            class="form-label">{{lang.map.project_total_cost}}</label>
+            <span id="projectTotalCost" class="form-control input-disabled"
+            [innerHTML]="(selectedProject && selectedProject.projectTotalCost || '0') | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR"></span>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label for="transferAmount" asteriskIfRequired="transferAmount"
+            class="form-label">{{lang.map.transferred_amount}}</label>
+            <span id="transferAmount" class="form-control input-disabled"
+            [innerHTML]="(selectedProject && selectedProject.transferAmount || '0') | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR "></span>
+        </div>
+
+        </div>
+        <div class="row">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label for="remainingAmount" asteriskIfRequired="remainingAmount"
+            class="form-label">{{lang.map.remaining_amount}}</label>
+            <span id="remainingAmount" class="form-control input-disabled"
+            [innerHTML]="(selectedProject && selectedProject.remainingAmount || '0') | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR"></span>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label for="dueAmount" asteriskIfRequired="dueAmount" class="form-label">{{lang.map.due_amount}}</label>
+            <span id="dueAmount" class="form-control input-disabled"
+            [innerHTML]="(selectedProject && selectedProject.dueAmount || '0') | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR"></span>
+        </div>
+        </div>
+    </div>
+</div>    
+<div class="dialog-actions">
+    <button (click)="save()" [disabled]="!form.valid" *ngIf="!readonly" class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save :
+        lang.map.btn_add}}</button>
+    <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>
