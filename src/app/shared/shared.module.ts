@@ -139,6 +139,7 @@ import {
   UserPreferencesPopupComponent
 } from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
 import { ExecutiveManagementPopupComponent } from './components/executive-management/executive-management-popup/executive-management-popup.component';
+import { BankBranchPopupComponent } from './components/bank-branch/bank-branch-popup/bank-branch-popup.component';
 import { CountryPopupComponent } from '@app/shared/popups/country-popup/country-popup.component';
 import {
   EServiceWrapperButtonsComponent
@@ -256,6 +257,7 @@ import {ValueDifferencesListComponent} from './components/value-differences-list
     HeaderSearchFieldComponent,
     UserPreferencesPopupComponent,
     ExecutiveManagementPopupComponent,
+    BankBranchPopupComponent,
     CountryPopupComponent,
     EServiceWrapperButtonsComponent,
     CaseAuditLogComponent,
