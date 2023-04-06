@@ -35,7 +35,6 @@ import {ServiceDataPopupComponent} from './popups/service-data-popup/service-dat
 import {TeamComponent} from './pages/team/team.component';
 import {TeamPopupComponent} from './popups/team-popup/team-popup.component';
 import {CountryComponent} from './pages/country/country.component';
-import {CountryPopupComponent} from './popups/country-popup/country-popup.component';
 import {
   ChangeCountryParentPopupComponent,
 } from './popups/change-country-parent-popup/change-country-parent-popup.component';
@@ -147,7 +146,6 @@ import {
     ServiceDataComponent,
     ServiceDataPopupComponent,
     CountryComponent,
-    CountryPopupComponent,
     ChangeCountryParentPopupComponent,
     AttachmentTypeServiceDataPopupComponent,
     InternalUserComponent,
