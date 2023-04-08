@@ -130,15 +130,16 @@
         </div>
         <div class="row">
           <div class="col-sm-12 mb-4 ng-select-wrapper">
-            <label asteriskIfRequired="departmentsIds" for="departmentsIds"
+            <label asteriskIfRequired="concernedDepartmentsIdsParsed" for="concernedDepartmentsIdsParsed"
                    class="form-label">{{lang.map.related_departments}}</label>
-            <ng-select [selectOnTab]="true" [items]="departments" labelForId="departmentsIds"
-                       bindValue="id" [clearable]="true"
+            <ng-select [selectOnTab]="true" [items]="departments" labelForId="concernedDepartmentsIdsParsed"
+                       bindValue="id" [clearable]="true" [readonly]="true"
                        [searchFn]="searchNgSelect" appendTo="body"
-                       placeholder="{{lang.map.select}}" id="departmentsIds"
+                       placeholder="{{lang.map.select}}" id="concernedDepartmentsIdsParsed"
                        [notFoundText]="lang.map.msg_not_found"
                        [multiple]="true" [closeOnSelect]="false"
-                       formControlName="departmentsIds" validationClasses="departmentsIds">
+                       formControlName="concernedDepartmentsIdsParsed"
+                       validationClasses="concernedDepartmentsIdsParsed">
               <ng-template ng-option-tmp let-item="item">
                 <span class="custom-option">{{item.getName()}}</span>
               </ng-template>
@@ -146,7 +147,7 @@
                 <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
                 <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
               </ng-template>
-              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <!--<ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
                 <div class="ng-value" *ngFor="let item of (items ? items.slice(0,4): [])">
                   <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
                   <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
@@ -154,9 +155,9 @@
                 <div class="ng-value" *ngIf="items.length > 4">
                   <span class="ng-value-label">{{items.length - 4}} more...</span>
                 </div>
-              </ng-template>
+              </ng-template>-->
             </ng-select>
-            <app-field-error-message controlName="departmentsIds"></app-field-error-message>
+            <app-field-error-message controlName="concernedDepartmentsIdsParsed"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -304,7 +305,8 @@
       </div>
     </ng-template>
     <ng-template #followupTabTemplate>
-      <service-data-followup-configuration [serviceData]="model" [readonly]="readonly"></service-data-followup-configuration>
+      <service-data-followup-configuration [serviceData]="model"
+                                           [readonly]="readonly"></service-data-followup-configuration>
     </ng-template>
   </form>
 </div>
