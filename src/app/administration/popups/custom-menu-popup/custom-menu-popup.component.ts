@@ -156,6 +156,10 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
         fields = [this.statusControl];
       }
     }
+    if(this.parentMenu?.isSystem){
+      return fields;
+    }
+
     return fields.concat([this.menuTypeControl, this.menuViewControl, this.userTypeControl]);
   }
 
