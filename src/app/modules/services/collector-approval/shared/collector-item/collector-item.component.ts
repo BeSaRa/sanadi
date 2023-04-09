@@ -55,6 +55,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
   collectorTypes: Lookup[] = this.lookupService.listByCategory.CollectorType;
   isPermanent!: boolean;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   actions: IMenuItem<CollectorItem>[] = [
     // view

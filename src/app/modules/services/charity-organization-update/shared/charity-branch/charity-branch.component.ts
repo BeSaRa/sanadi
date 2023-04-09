@@ -1,6 +1,6 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { Component, Input } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { ListModelComponent } from '@app/generics/ListModel-component';
 import { CharityBranch } from '@models/charity-branch';
 import { LangService } from '@services/lang.service';
@@ -19,6 +19,7 @@ export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
   get list(): CharityBranch[] {
     return [...this._list];
   }
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   columns = [
     'fullName',
     'address',

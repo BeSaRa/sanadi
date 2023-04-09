@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {UntypedFormBuilder} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl} from '@angular/forms';
 import {ListModelComponent} from '@app/generics/ListModel-component';
 import {DateUtils} from '@helpers/date-utils';
 import {ILanguageKeys} from '@contracts/i-language-keys';
@@ -29,6 +29,7 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
   @Input() pageTitle!: keyof ILanguageKeys;
   @Input() jobTitles: JobTitle[] = [];
   columns = ['fullName', 'identificationNumber', 'jobTitleId'];
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
 
   get list() {

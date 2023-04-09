@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ListModelComponent} from '@app/generics/ListModel-component';
 import {Bylaw} from '@models/bylaw';
 import {LangService} from '@services/lang.service';
@@ -19,6 +19,7 @@ export class BylawsComponent extends ListModelComponent<Bylaw> {
   get list() {
     return this._list;
   }
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   @Input() set list(_list: Bylaw[]) {
     this._list = _list;

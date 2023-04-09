@@ -163,7 +163,7 @@ export class CollectorApprovalPopupComponent implements OnInit {
     this.dialogRef.close(null)
   }
   save() {
-    this.dialogRef.close({});
+    this.dialogRef.close(true);
   }
   ngOnDestroy(): void {
     this.destroy$.next();

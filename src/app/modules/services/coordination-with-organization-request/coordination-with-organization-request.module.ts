@@ -42,6 +42,7 @@ import {
 import {
   ResearchAndStudiesComponent
 } from '@modules/services/coordination-with-organization-request/shared/research-and-studies/research-and-studies.component';
+import { BuildingAbilityPopupComponent } from './shared/building-ability/building-ability-popup/building-ability-popup.component';
 
 
 @NgModule({
@@ -53,6 +54,7 @@ import {
     ParticipantOrganizationsPopupComponent,
     ParticipantOrganizationComponent,
     BuildingAbilityComponent,
+    BuildingAbilityPopupComponent,
     EffectiveCoordinationCapabilitiesComponent,
     OrganizationOfficerComponent,
     ResearchAndStudiesComponent
