@@ -124,6 +124,26 @@ export class UrgentInterventionLicenseFollowupService extends BaseGenericEServic
     })
       .pipe(catchError(() => of(null)));
   }
+  @HasInterception
+  updateAttachment(caseId: string, @InterceptParam() attachment: UrgentInterventionAttachment, file: File): Observable<any> {
+    const formData = new FormData();
+    file ? formData.append('content', file) : null;
+    let model = new UrgentInterventionAttachment().clone({
+      isPublished:attachment.isPublished,
+      required:attachment.required,
+      documentTitle:attachment.documentTitle,
+      description:attachment.description,
+      reportId :attachment.reportId
+    });
+    return this.http.post<any>(this._getURLSegment()  + caseId + '/update-document/', formData, {
+      params: new HttpParams({fromObject: model as any}),
+    })
+      .pipe(catchError(() => of(null)));
+  }
+  deleteAttachment(attachmentId: string): Observable<any> {
+    return this.http.delete<any>(this._getURLSegment() + '/document/' + attachmentId )
+      .pipe(catchError(() => of(null)));
+  }
 
   loadAttachmentAsBlob(attachmentId: string): Observable<BlobModel> {
     return this.http.get(this._getURLSegment() + '/document/' + attachmentId + '/download', {responseType: 'blob'})
