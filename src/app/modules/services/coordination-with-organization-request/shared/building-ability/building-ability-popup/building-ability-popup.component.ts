@@ -88,6 +88,7 @@ export class BuildingAbilityPopupComponent implements OnInit {
   ngOnInit() {
     const formArray = this.formArray;
     formArray.clear();
+    console.log(this.model)
     if (this.model) {
       formArray.push(
         this.fb.group(new BuildingAbility().clone(this.model).formBuilder(true))
@@ -98,11 +99,6 @@ export class BuildingAbilityPopupComponent implements OnInit {
     }
   }
 
-  mapForm(form: any): BuildingAbility {
-    const beneficiary: BuildingAbility = new BuildingAbility().clone(form);
-
-    return beneficiary;
-  }
   onFilterationMethodChange(recommendedWay: RecommendedWay) {
     if (recommendedWay === RecommendedWay.EMAIL) {
       this.otherFiltrationMethodRef.nativeElement.value = '';
@@ -184,13 +180,12 @@ export class BuildingAbilityPopupComponent implements OnInit {
     const h=arr? Number(arr[0]) + addition :0;
     const m =arr? Number(arr[1]):0;
 
-    console.log(arr);
-
-    console.log(addition);
-    console.log(h);
-    console.log(m);
-
     return new Date(new Date().setUTCHours(h,m)).toISOString();
+  }
+  mapForm(form: any): BuildingAbility {
+    const beneficiary: BuildingAbility = new BuildingAbility().clone(form);
+
+    return beneficiary;
   }
   cancel() {
     this.dialogRef.close(null)

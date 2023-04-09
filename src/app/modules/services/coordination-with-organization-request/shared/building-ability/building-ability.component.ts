@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -8,23 +8,23 @@ import {
   UntypedFormControl,
   UntypedFormGroup,
 } from '@angular/forms';
-import {TrainingWay} from '@enums/training-way.enum';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {DateUtils} from '@helpers/date-utils';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {Lookup} from '@models/lookup';
-import {DialogService} from '@services/dialog.service';
-import {LangService} from '@services/lang.service';
-import {LookupService} from '@services/lookup.service';
-import {ToastService} from '@services/toast.service';
-import {DatepickerOptionsMap} from '@app/types/types';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {filter, map, take, takeUntil} from 'rxjs/operators';
-import {RecommendedWay} from '@enums/recommended-way.enum';
-import {TrainingLanguage} from '@enums/training-language-enum';
-import {BuildingAbility} from '@models/building-ability';
-import {Profile} from '@models/profile';
+import { TrainingWay } from '@enums/training-way.enum';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { DateUtils } from '@helpers/date-utils';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { Lookup } from '@models/lookup';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { LookupService } from '@services/lookup.service';
+import { ToastService } from '@services/toast.service';
+import { DatepickerOptionsMap } from '@app/types/types';
+import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, map, take, takeUntil } from 'rxjs/operators';
+import { RecommendedWay } from '@enums/recommended-way.enum';
+import { TrainingLanguage } from '@enums/training-language-enum';
+import { BuildingAbility } from '@models/building-ability';
+import { Profile } from '@models/profile';
 import { BuildingAbilityPopupComponent } from './building-ability-popup/building-ability-popup.component';
 
 @Component({
@@ -34,10 +34,10 @@ import { BuildingAbilityPopupComponent } from './building-ability-popup/building
 })
 export class BuildingAbilityComponent implements OnInit {
   constructor(public lang: LangService,
-              private toastService: ToastService,
-              private dialogService: DialogService,
-              private fb: FormBuilder,
-              private lookup: LookupService) {
+    private toastService: ToastService,
+    private dialogService: DialogService,
+    private fb: FormBuilder,
+    private lookup: LookupService) {
   }
 
   @Input() formArrayName: string = 'buildingAbilitiesList';
@@ -119,33 +119,35 @@ export class BuildingAbilityComponent implements OnInit {
         record.organizationId = this.orgId;
       }
       this.currentRecord = record || undefined;
-      if(this.currentRecord) {
-        this.dialogService.show(this._getFormPopup(), {
-          form: this.form,
-          editIndex: this.editIndex,
-          model: this.model,
-          readonly: this.readonly,
-          viewOnly: this.viewOnly,
-          recommendedWays: this.recommendedWays,
-          organizationUnits: this.organizationUnits,
-          trainingTypes: this.trainingTypes,
-          trainingLanguages: this.trainingLanguages,
-          trainingWays: this.trainingWays,
-          formArrayName: this.formArrayName
-        }).onAfterClose$.subscribe((data) => {
-          if(data) {
-            this.onSave();
-          } else {
-            this.onCancel();
-          }
-        })
+      if (this.currentRecord) {
+        this.openFormDialog();
       }
     });
   }
   _getFormPopup() {
     return BuildingAbilityPopupComponent;
   }
-
+  openFormDialog() {
+    this.dialogService.show(this._getFormPopup(), {
+      form: this.form,
+      editIndex: this.editIndex,
+      model: this.currentRecord,
+      readonly: this.readonly,
+      viewOnly: this.viewOnly,
+      recommendedWays: this.recommendedWays,
+      organizationUnits: this.organizationUnits,
+      trainingTypes: this.trainingTypes,
+      trainingLanguages: this.trainingLanguages,
+      trainingWays: this.trainingWays,
+      formArrayName: this.formArrayName
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.onSave();
+      } else {
+        this.onCancel();
+      }
+    })
+  }
   private listenToSave() {
     const form$ = this.save$.pipe(
       map(() => {
@@ -161,6 +163,7 @@ export class BuildingAbilityComponent implements OnInit {
         .onAfterClose$.pipe(take(1))
         .subscribe(() => {
           this.form.get(this.formArrayName)?.markAllAsTouched();
+          this.openFormDialog();
         });
     });
 

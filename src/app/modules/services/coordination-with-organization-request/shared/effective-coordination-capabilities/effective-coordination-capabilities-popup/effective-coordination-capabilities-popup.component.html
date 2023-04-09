@@ -1,0 +1,133 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ editIndex > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map.effective_coordination_capabilities }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <div [formGroup]="form">
+    <div formGroupName="effectiveCoordinationCapabilities">
+      <ng-container *ngFor="let control of formArray.controls; let i = index">
+        <div [formGroupName]="i">
+          <div class="row">
+            <!-- Event Topic -->
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label asteriskIfRequired="eventTopic" for="eventTopic"
+                class="form-label">{{lang.map.lbl_event_topic}}</label>
+              <input id="eventTopic" validationClasses="eventTopic" formControlName="eventTopic" trimInput
+                class="form-control">
+              <app-field-error-message controlName="eventTopic"></app-field-error-message>
+            </div>
+            <!-- Motives And Rationale -->
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label asteriskIfRequired="motivesAndRationale" for="motivesAndRationale"
+                class="form-label">{{lang.map.lbl_motives_and_rationale}}</label>
+              <input id="motivesAndRationale" validationClasses="motivesAndRationale"
+                formControlName="motivesAndRationale" trimInput class="form-control">
+              <app-field-error-message controlName="motivesAndRationale"></app-field-error-message>
+            </div>
+            <!-- Organization Way -->
+            <div class="col-12 col-md-4 mb-4 position-relative">
+              <label asteriskIfRequired="organizationWay" for="organizationWay" class="form-label">{{
+                lang.map.lbl_organization_way }}</label>
+              <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
+                [notFoundText]="lang.map.msg_not_found" appendTo="body" id="organizationWay"
+                labelForId="organizationWay" validationClasses="organizationWay" formControlName="organizationWay">
+                <ng-option *ngFor="let option of organizationWays" [value]="option.lookupKey">{{ option.getName() }}
+                </ng-option>
+              </ng-select>
+              <app-field-error-message controlName="organizationWay"></app-field-error-message>
+            </div>
+          </div>
+          <div class="row">
+            <!-- Event Objectives -->
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label asteriskIfRequired="eventObjectives" for="eventObjectives"
+                class="form-label">{{lang.map.lbl_event_objectivese}}</label>
+              <input id="eventObjectives" validationClasses="eventObjectives" formControlName="eventObjectives"
+                trimInput class="form-control">
+              <app-field-error-message controlName="eventObjectives"></app-field-error-message>
+            </div>
+            <!-- Expected Outcomes -->
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label asteriskIfRequired="expectedOutcomes" for="expectedOutcomes"
+                class="form-label">{{lang.map.lbl_expected_outcomes}}</label>
+              <input id="expectedOutcomes" validationClasses="expectedOutcomes" formControlName="expectedOutcomes"
+                trimInput class="form-control">
+              <app-field-error-message controlName="expectedOutcomes"></app-field-error-message>
+            </div>
+            <!-- Axes -->
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label asteriskIfRequired="axes" for="axes" class="form-label">{{lang.map.lbl_axes}}</label>
+              <input id="axes" validationClasses="axes" formControlName="axes" trimInput class="form-control">
+              <app-field-error-message controlName="axes"></app-field-error-message>
+            </div>
+          </div>
+          <div class="row">
+            <!-- Event Start Date -->
+            <div class="col-12 col-md-4 mb-4 position-relative">
+              <label for="eventStartDate" asteriskIfRequired="eventStartDate"
+                class="form-label">{{lang.map.lbl_event_start_date}}</label>
+              <div class="input-group">
+                <i class="input-group-text mdi mdi-calendar"></i>
+                <div class="form-control" formControlName="eventStartDate" id="eventStartDate"
+                  [options]="datepickerOptionsMap.eventStartDate" (click)="dpeventStartDate.toggleCalendar()"
+                  [ngClass]="{'input-disabled': viewOnly}" #dpeventStartDate="angular-mydatepicker" angular-mydatepicker
+                  validationClasses="eventStartDate">
+                </div>
+                <app-field-error-message controlName="eventStartDate"></app-field-error-message>
+              </div>
+            </div>
+            <!-- Days Number -->
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label asteriskIfRequired="daysNumber" for="daysNumber"
+                class="form-label">{{lang.map.lbl_days_number_for_event}}</label>
+              <input id="daysNumber" validationClasses="daysNumber" formControlName="daysNumber" trimInput
+                class="form-control">
+              <app-field-error-message controlName="daysNumber"></app-field-error-message>
+            </div>
+            <!-- Hours Number -->
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label asteriskIfRequired="hoursNumber" for="hoursNumber"
+                class="form-label">{{lang.map.lbl_hours_number_for_event}}</label>
+              <input id="hoursNumber" validationClasses="hoursNumber" formControlName="hoursNumber" trimInput
+                class="form-control">
+              <app-field-error-message controlName="hoursNumber"></app-field-error-message>
+            </div>
+          </div>
+          <div class="row">
+            <!-- Sponsors And Organizing Partners -->
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label asteriskIfRequired="sponsorsAndOrganizingPartners" for="sponsorsAndOrganizingPartners"
+                class="form-label">{{lang.map.lbl_sponsors_and_organizing_partners}}</label>
+              <input id="sponsorsAndOrganizingPartners" validationClasses="sponsorsAndOrganizingPartners"
+                formControlName="sponsorsAndOrganizingPartners" trimInput class="form-control">
+              <app-field-error-message controlName="sponsorsAndOrganizingPartners"></app-field-error-message>
+            </div>
+            <!-- Financial Allotment -->
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label asteriskIfRequired="financialAllotment" for="financialAllotment"
+                class="form-label">{{lang.map.lbl_financial_allotment}}</label>
+              <input id="financialAllotment" validationClasses="financialAllotment" formControlName="financialAllotment"
+                trimInput class="form-control">
+              <app-field-error-message controlName="financialAllotment"></app-field-error-message>
+            </div>
+            <!-- Organization Required Role -->
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label asteriskIfRequired="organizationRequiredRole" for="organizationRequiredRole"
+                class="form-label">{{lang.map.lbl_organization_required_role}}</label>
+              <input id="organizationRequiredRole" validationClasses="organizationRequiredRole"
+                formControlName="organizationRequiredRole" trimInput class="form-control">
+              <app-field-error-message controlName="organizationRequiredRole"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="!form.valid" *ngIf="!readonly && !viewOnly"
+    class="btn btn-primary m-2">{{(editIndex
+    > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>
