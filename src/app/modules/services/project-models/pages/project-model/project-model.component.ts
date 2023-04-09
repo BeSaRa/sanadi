@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormArray,
@@ -8,57 +8,56 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {SaveTypes} from '@enums/save-types';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {ProjectModel} from '@models/project-model';
-import {LangService} from '@services/lang.service';
-import {ProjectModelService} from '@services/project-model.service';
-import {Observable, of, Subject} from 'rxjs';
-import {CountryService} from '@services/country.service';
-import {Country} from '@models/country';
-import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {LookupService} from '@services/lookup.service';
-import {Lookup} from '@models/lookup';
-import {SDGoalService} from '@services/sdgoal.service';
-import {SDGoal} from '@models/sdgoal';
-import {ProjectComponent} from '@models/project-component';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {DomainTypes} from '@enums/domain-types';
-import {IDacOchaFields} from '@contracts/idac-ocha-fields';
-import {ToastService} from '@services/toast.service';
-import {DialogService} from '@services/dialog.service';
-import {EmployeeService} from '@services/employee.service';
-import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
-import {ProjectModelRequestType} from '@enums/service-request-types';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {OpenFrom} from '@enums/open-from.enum';
-import {IKeyValue} from '@contracts/i-key-value';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {CommonUtils} from '@helpers/common-utils';
-import {FileIconsEnum} from '@enums/file-extension-mime-types-icons.enum';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {DacOchaService} from '@services/dac-ocha.service';
-import {AdminLookup} from '@models/admin-lookup';
-import {AidLookupService} from '@services/aid-lookup.service';
-import {AidLookup} from '@models/aid-lookup';
-import {ExecutionFields} from '@enums/execution-fields';
-import {IInternalExternalExecutionFields} from '@contracts/iinternal-external-execution-fields';
-import {AdminLookupService} from '@services/admin-lookup.service';
-import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
-import {EvaluationIndicator} from '@models/evaluation-indicator';
-import {AdminResult} from '@models/admin-result';
-import {ProjectModelForeignCountriesProject} from '@models/project-model-foreign-countries-project';
-import {ForeignCountriesProjectsNeed} from '@models/foreign-countries-projects-need';
-import {ForeignCountriesProjectsService} from '@services/foreign-countries-projects.service';
-import {ProjectAddress} from '@models/project-address';
-import {ICoordinates} from '@contracts/ICoordinates';
-import {CollectionItem} from '@models/collection-item';
-import {ServiceDataService} from '@services/service-data.service';
-import {CaseTypes} from '@enums/case-types.enum';
-import {FieldControlAndLabelKey} from '@app/types/types';
-import { ProjectWorkArea } from '@app/enums/project-work-area';
+import { ProjectModelProjectTypes } from '@app/enums/project-model-project-types';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { FieldControlAndLabelKey } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { IKeyValue } from '@contracts/i-key-value';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { ICoordinates } from '@contracts/ICoordinates';
+import { IDacOchaFields } from '@contracts/idac-ocha-fields';
+import { IInternalExternalExecutionFields } from '@contracts/iinternal-external-execution-fields';
+import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
+import { CaseTypes } from '@enums/case-types.enum';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { DomainTypes } from '@enums/domain-types';
+import { ExecutionFields } from '@enums/execution-fields';
+import { FileIconsEnum } from '@enums/file-extension-mime-types-icons.enum';
+import { OpenFrom } from '@enums/open-from.enum';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { SaveTypes } from '@enums/save-types';
+import { ProjectModelRequestType } from '@enums/service-request-types';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { CommonUtils } from '@helpers/common-utils';
+import { AdminLookup } from '@models/admin-lookup';
+import { AidLookup } from '@models/aid-lookup';
+import { CollectionItem } from '@models/collection-item';
+import { Country } from '@models/country';
+import { EvaluationIndicator } from '@models/evaluation-indicator';
+import { ForeignCountriesProjectsNeed } from '@models/foreign-countries-projects-need';
+import { Lookup } from '@models/lookup';
+import { ProjectAddress } from '@models/project-address';
+import { ProjectComponent } from '@models/project-component';
+import { ProjectModel } from '@models/project-model';
+import { ProjectModelForeignCountriesProject } from '@models/project-model-foreign-countries-project';
+import { SDGoal } from '@models/sdgoal';
+import { AdminLookupService } from '@services/admin-lookup.service';
+import { AidLookupService } from '@services/aid-lookup.service';
+import { CountryService } from '@services/country.service';
+import { DacOchaService } from '@services/dac-ocha.service';
+import { DialogService } from '@services/dialog.service';
+import { EmployeeService } from '@services/employee.service';
+import { ForeignCountriesProjectsService } from '@services/foreign-countries-projects.service';
+import { LangService } from '@services/lang.service';
+import { LookupService } from '@services/lookup.service';
+import { ProjectModelService } from '@services/project-model.service';
+import { SDGoalService } from '@services/sdgoal.service';
+import { ServiceDataService } from '@services/service-data.service';
+import { ToastService } from '@services/toast.service';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -308,6 +307,14 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
     this.listenToExecutionFieldChange();
     this.listenToIsConstructionalChange();
+    this.listenToProjectTypeChange();
+
+  }
+  listenToProjectTypeChange() {
+   this.projectType.valueChanges.pipe(
+    takeUntil(this.destroy$),
+    tap(_=>this._handleProjectClassifications())
+   ).subscribe();
   }
 
   handleReadonly(): void {
@@ -835,18 +842,15 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   listenToExecutionFieldChange() {
     this.projectWorkArea.valueChanges.subscribe(val => {
       this.domain.setValidators([]);
-      if (val === ExecutionFields.OutsideQatar) {
-        this.showProjectAddressesTab = this.isConstructional.value;
+      if (this.isOutsideQatarProject()) {
         this.removeQatarFromCountries();
         this.isOutsideQatarWorkArea = true;
         this.domain.setValidators([CustomValidators.required]);
         this.emptyFieldsAndValidation(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
-      } else if (this.projectWorkArea.value === ExecutionFields.InsideQatar) {
-        this.hideProjectAddressesTabAndClearProjectAddressesList();
+      } else if (this.isInsideQatarProject()) {
         this.applyNotOutsideQatarChanges();
         this.setQatarAsTheOnlyChoiceInCountries();
       } else {
-        this.hideProjectAddressesTabAndClearProjectAddressesList();
         this.countriesAvailableForSelection = this.countries;
         this.applyNotOutsideQatarChanges();
       }
@@ -858,11 +862,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   listenToIsConstructionalChange() {
     this.isConstructional.valueChanges.subscribe(val => {
       if (val) {
-        if (this.projectWorkArea.value === ExecutionFields.OutsideQatar) {
-          this.showProjectAddressesTab = true;
-        } else {
-          this.hideProjectAddressesTabAndClearProjectAddressesList();
-        }
+        this.showProjectAddressesTab = true;
+        // if (this.projectWorkArea.value === ExecutionFields.OutsideQatar) {
+        // } else {
+        //   this.hideProjectAddressesTabAndClearProjectAddressesList();
+        // }
       } else {
         this.hideProjectAddressesTabAndClearProjectAddressesList();
       }
@@ -877,19 +881,45 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   applyNotOutsideQatarChanges() {
     this.emptyFieldsAndValidation(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal','firstSDGoalPercentage','secondSDGoalPercentage','thirdSDGoalPercentage']);
     this.emptyDomainField();
+    this._handleProjectClassifications();
     this.isOutsideQatarWorkArea = false;
-    this.setRequiredValidator(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
+
     this.setRequiredValidator(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal','firstSDGoalPercentage','secondSDGoalPercentage','thirdSDGoalPercentage']);
 
     this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
     this.displayDevGoals = false;
     this.categoryGoalPercentGroup.setValidators(this.getPercentageSumValidation());
-  }
 
+  }
+  isInsideQatarProject():boolean{
+    return this.projectWorkArea.value === ExecutionFields.InsideQatar
+  }
+  isOutsideQatarProject():boolean{
+    return this.projectWorkArea.value === ExecutionFields.OutsideQatar
+  }
+  isSoftwareProjectType():boolean{
+    return  this.projectType.value === ProjectModelProjectTypes.SOFTWARE;
+  }
+  isAidsProjectType():boolean{
+    return  this.projectType.value === ProjectModelProjectTypes.AIDS;
+  }
+  private _handleProjectClassifications() {
+    this.emptyFieldsAndValidation(['internalProjectClassification','sanadiDomain','sanadiMainClassification']);
+    if(this.projectWorkArea.value !== ExecutionFields.InsideQatar){
+      return;
+    }
+    if(this.isSoftwareProjectType()){
+      this.setRequiredValidator(['internalProjectClassification']);
+    }
+    if(this.isAidsProjectType()){
+      this.setRequiredValidator(['sanadiDomain', 'sanadiMainClassification']);
+    }
+
+  }
   setQatarAsTheOnlyChoiceInCountries() {
     this.countriesAvailableForSelection = this.countries.filter(x => x.id === this.qatarId);
-    this.beneficiaryCountry.patchValue(null);
-    this.executionCountry.patchValue(null);
+    this.beneficiaryCountry.patchValue(this.qatarId);
+    this.executionCountry.patchValue(this.qatarId);
   }
 
   removeQatarFromCountries() {

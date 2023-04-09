@@ -80,7 +80,7 @@
 </ng-template>
 <ng-template #exitMechanismTemplate>
   <admin-lookup-list #exitMechanismListComponent [adminLookupTypeId]="adminLookupTypeEnum.EXIT_MECHANISM"
-    (onReady)="setLookupComponentMap($event, exitMechanismListComponent)">
+    (onReady)="setLookupComponentMap($event, exitMechanismListComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #byLawsClassificationTemplate>

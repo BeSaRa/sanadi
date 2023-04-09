@@ -2,316 +2,289 @@
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
     <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
-      aria-label="Close"></button>
+            aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content" #dialogContent>
-  <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+<div class="dialog-content w800px" #dialogContent>
+  <form novalidate autocomplete="off" [formGroup]="form">
     <tabs-list [tabByIndex$]="tabIndex$" [hasForm]="true">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
-        [hasError]="form.invalid"></tab>
+           [hasError]="form.invalid"></tab>
       <tab [name]="tabsData.organizations.name" [template]="organizationsTabTemplate"
-        [title]="lang.map.training_program_organizations" [hasError]="model.targetOrganizationListIds.length < 1"
-        *ngIf="!isCertification"></tab>
+           [title]="lang.map.training_program_organizations" [hasError]="model.targetOrganizationListIds.length < 1"
+           *ngIf="!isCertification"></tab>
       <tab [name]="tabsData.trainers.name" [template]="trainersTabTemplate" [title]="lang.map.training_program_trainers"
-        [hasError]="model.trainerListIds.length < 1" *ngIf="!isCertification"></tab>
+           [hasError]="model.trainerListIds.length < 1" *ngIf="!isCertification"></tab>
       <tab [name]="tabsData.attendingTrainees.name" [template]="attendingTraineesTabTemplate"
-        [title]="lang.map.attendance" *ngIf="operation == operationTypes.VIEW"></tab>
+           [title]="lang.map.attendance" *ngIf="operation == operationTypes.VIEW"></tab>
       <tab [name]="tabsData.briefcase.name" [template]="trainingBriefcaseTabTemplate"
-        *ngIf="model.id && !isCertification" [title]="lang.map.training_program_briefcase"></tab>
+           *ngIf="model.id && !isCertification" [title]="lang.map.training_program_briefcase"></tab>
       <tab [name]="tabsData.passedTrainees.name" [template]="passedTraineesTabTemplate"
-        [title]="lang.map.lbl_passed_trainees" *ngIf="isCertification"></tab>
+           [title]="lang.map.lbl_passed_trainees" *ngIf="isCertification"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
-      <div class="row mb-3" *ngIf="model.id">
-        <div class="col-sm-6 position-relative">
+      <div class="row" *ngIf="model.id">
+        <div class="col-sm-12 mb-4 position-relative">
           <label class="form-label">{{lang.map.training_program_serial_number}}</label>
           <input disabled id="trainingProgramFullSerial" [value]="model.trainingProgramFullSerial" class="form-control">
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="activityName" for="activityName"
-            class="form-label">{{lang.map.training_program_activity_name}}</label>
-          <input id="activityName" validationClasses="activityName" formControlName="activityName" class="form-control">
+                 class="form-label">{{lang.map.training_program_activity_name}}</label>
+          <input id="activityName" validationClasses="activityName" formControlName="activityName" class="form-control"
+                 trimInput>
           <app-field-error-message controlName="activityName"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
-          <div class="row">
-            <label asteriskIfRequired="trainingType" for="trainingType"
-              class="form-label">{{lang.map.training_type_name}}</label>
-            <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="trainingType" labelForId="trainingType" placeholder="{{lang.map.select}}"
-                [notFoundText]="lang.map.msg_not_found" formControlName="trainingType" id="trainingType"
-                appendTo="body">
-                <ng-option [value]="trainingType.lookupKey" *ngFor="let trainingType of trainingTypes"
-                  [disabled]="!trainingType.status">{{trainingType.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="trainingType"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-sm-12 col-md-6 ng-select-wrapper">
+          <label asteriskIfRequired="trainingType" for="trainingType"
+                 class="form-label">{{lang.map.training_type_name}}</label>
+          <ng-select validationClasses="trainingType" labelForId="trainingType" placeholder="{{lang.map.select}}"
+                     [notFoundText]="lang.map.msg_not_found" formControlName="trainingType" id="trainingType"
+                     appendTo="body">
+            <ng-option [value]="trainingType.lookupKey" *ngFor="let trainingType of trainingTypes"
+                       [disabled]="!trainingType.status">{{trainingType.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="trainingType"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
-          <div class="row">
-            <label asteriskIfRequired="trainingDomain" for="trainingDomain"
-              class="form-label">{{lang.map.training_domain_name}}</label>
-            <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="trainingDomain" labelForId="trainingDomain"
-                placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
-                formControlName="trainingDomain" id="trainingDomain" appendTo="body">
-                <ng-option [value]="trainingDomain.lookupKey" *ngFor="let trainingDomain of trainingDomains"
-                  [disabled]="!trainingDomain.status">{{trainingDomain.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="trainingDomain"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="trainingDomain" for="trainingDomain"
+                 class="form-label">{{lang.map.training_domain_name}}</label>
+          <ng-select validationClasses="trainingDomain" labelForId="trainingDomain"
+                     placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
+                     formControlName="trainingDomain" id="trainingDomain" appendTo="body">
+            <ng-option [value]="trainingDomain.lookupKey" *ngFor="let trainingDomain of trainingDomains"
+                       [disabled]="!trainingDomain.status">{{trainingDomain.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="trainingDomain"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
-          <div class="row">
-            <label asteriskIfRequired="trainingPartner" for="trainingPartner"
-              class="form-label">{{lang.map.training_partner_name}}</label>
-            <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="trainingPartner" labelForId="trainingPartner"
-                placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
-                formControlName="trainingPartner" id="trainingPartner" appendTo="body">
-                <ng-option [value]="trainingPartner.id" *ngFor="let trainingPartner of trainingPartnersList"
-                  [disabled]="!trainingPartner.status">{{trainingPartner.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="trainingPartner"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="trainingPartner" for="trainingPartner"
+                 class="form-label">{{lang.map.training_partner_name}}</label>
+          <ng-select validationClasses="trainingPartner" labelForId="trainingPartner"
+                     placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
+                     formControlName="trainingPartner" id="trainingPartner" appendTo="body">
+            <ng-option [value]="trainingPartner.id" *ngFor="let trainingPartner of trainingPartnersList"
+                       [disabled]="!trainingPartner.status">{{trainingPartner.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="trainingPartner"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-12 position-relative">
+      <div class="row">
+        <div class="col-sm-12 mb-4 position-relative">
           <label asteriskIfRequired="trainingObjective" for="trainingObjective"
-            class="form-label">{{lang.map.training_objective}}</label>
+                 class="form-label">{{lang.map.training_objective}}</label>
           <textarea id="trainingObjective" validationClasses="trainingObjective" formControlName="trainingObjective"
-            class="form-control" rows="3">
+                    class="form-control" rows="3" trimInput>
             </textarea>
           <app-field-error-message controlName="trainingObjective"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3" *ngIf="isInternalUser">
-        <div class="col-sm-12 position-relative">
+      <div class="row" *ngIf="isInternalUser">
+        <div class="col-sm-12 mb-4 position-relative">
           <label asteriskIfRequired="trainingTopics" for="trainingTopics"
-            class="form-label">{{lang.map.training_topics}}</label>
+                 class="form-label">{{lang.map.training_topics}}</label>
           <textarea id="trainingTopics" validationClasses="trainingTopics" formControlName="trainingTopics"
-            class="form-control" rows="3">
+                    class="form-control" rows="3" trimInput>
             </textarea>
           <app-field-error-message controlName="trainingTopics"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3" *ngIf="isInternalUser">
-        <div class="col-sm-6 position-relative">
+      <div class="row" *ngIf="isInternalUser">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="durationInDays" for="durationInDays"
-            class="form-label">{{lang.map.duration_in_days}}</label>
+                 class="form-label">{{lang.map.duration_in_days}}</label>
           <input id="durationInDays" validationClasses="durationInDays" formControlName="durationInDays"
-            class="form-control" maxlength="3" type="number">
+                 class="form-control" maxlength="3" type="number" trimInput>
           <app-field-error-message controlName="durationInDays"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="durationInHours" for="durationInHours"
-            class="form-label">{{lang.map.duration_in_hours}}</label>
+                 class="form-label">{{lang.map.duration_in_hours}}</label>
           <input id="durationInHours" validationClasses="durationInHours" formControlName="durationInHours"
-            class="form-control" maxlength="3" type="number">
+                 class="form-control" maxlength="3" type="number" trimInput>
           <app-field-error-message controlName="durationInHours"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3" *ngIf="isInternalUser">
-        <div class="col-sm-6 position-relative">
+      <div class="row" *ngIf="isInternalUser">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="averageDurationInHours" for="averageDurationInHours"
-            class="form-label">{{lang.map.average_duration_in_hours}}</label>
+                 class="form-label">{{lang.map.average_duration_in_hours}}</label>
           <input id="averageDurationInHours" validationClasses="averageDurationInHours"
-            formControlName="averageDurationInHours" class="form-control" maxlength="2"
-            [mask]="inputMaskPatterns.NUMBER_ONLY">
+                 formControlName="averageDurationInHours" class="form-control" maxlength="2"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="averageDurationInHours"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
-          <div class="row">
-            <label asteriskIfRequired="trainingLang" for="trainingLang"
-              class="form-label">{{lang.map.training_languages}}</label>
-            <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="trainingLang" labelForId="trainingLang" placeholder="{{lang.map.select}}"
-                [notFoundText]="lang.map.msg_not_found" formControlName="trainingLang" id="trainingLang"
-                appendTo="body">
-                <ng-option [value]="trainingLanguage.lookupKey" *ngFor="let trainingLanguage of trainingLanguages"
-                  [disabled]="!trainingLanguage.status">{{trainingLanguage.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="trainingLang"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="trainingLang" for="trainingLang"
+                 class="form-label">{{lang.map.training_languages}}</label>
+          <ng-select validationClasses="trainingLang" labelForId="trainingLang" placeholder="{{lang.map.select}}"
+                     [notFoundText]="lang.map.msg_not_found" formControlName="trainingLang" id="trainingLang"
+                     appendTo="body">
+            <ng-option [value]="trainingLanguage.lookupKey" *ngFor="let trainingLanguage of trainingLanguages"
+                       [disabled]="!trainingLanguage.status">{{trainingLanguage.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="trainingLang"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label for="registerationStartDate" asteriskIfRequired="registerationStartDate"
-            class="form-label">{{lang.map.registration_start_date}}</label>
+                 class="form-label">{{lang.map.registration_start_date}}</label>
           <div class="reg-start-date-container">
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" formControlName="registerationStartDate" id="registerationStartDate"
-                (click)="dpregisterationStartDate.toggleCalendar()" #dpregisterationStartDate="angular-mydatepicker"
-                [options]="datepickerOptionsMap.registerationStartDate"
-                (inputFieldChanged)="registrationStartDateChange($event, 'registerationStartDate', 'registerationClosureDate')"
-                angular-mydatepicker [ngClass]="getRegistrationStartDateClasses()"></div>
+                   (click)="dpregisterationStartDate.toggleCalendar()" #dpregisterationStartDate="angular-mydatepicker"
+                   [options]="datepickerOptionsMap.registerationStartDate"
+                   (inputFieldChanged)="registrationStartDateChange($event, 'registerationStartDate', 'registerationClosureDate')"
+                   angular-mydatepicker [ngClass]="getRegistrationStartDateClasses()"></div>
               <app-field-error-message [control]="fm.getFormField('registerationStartDate')"></app-field-error-message>
             </div>
             <div></div>
           </div>
         </div>
-        <div class="col-sm-6 position-relative">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label for="registerationClosureDate" asteriskIfRequired="registerationClosureDate"
-            class="form-label">{{lang.map.registration_end_date}}</label>
+                 class="form-label">{{lang.map.registration_end_date}}</label>
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="registerationClosureDate" id="registerationClosureDate"
-              (click)="dpregisterationClosureDate.toggleCalendar()" #dpregisterationClosureDate="angular-mydatepicker"
-              [options]="datepickerOptionsMap.registerationClosureDate"
-              (inputFieldChanged)="registrationEndDateChange($event, 'registerationStartDate', 'registerationClosureDate')"
-              angular-mydatepicker
-              [ngClass]="getRegistrationEndTrainingStartTrainingEndDatesClasses('registerationClosureDate')"></div>
+                 (click)="dpregisterationClosureDate.toggleCalendar()"
+                 #dpregisterationClosureDate="angular-mydatepicker"
+                 [options]="datepickerOptionsMap.registerationClosureDate"
+                 (inputFieldChanged)="registrationEndDateChange($event, 'registerationStartDate', 'registerationClosureDate')"
+                 angular-mydatepicker
+                 [ngClass]="getRegistrationEndTrainingStartTrainingEndDatesClasses('registerationClosureDate')"></div>
             <app-field-error-message [control]="fm.getFormField('registerationClosureDate')"></app-field-error-message>
           </div>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label for="startDate" asteriskIfRequired="startDate"
-            class="form-label">{{lang.map.training_start_date}}</label>
+                 class="form-label">{{lang.map.training_start_date}}</label>
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="startDate" id="startDate" (click)="dpStartDate.toggleCalendar()"
-              #dpStartDate="angular-mydatepicker" [options]="datepickerOptionsMap.startDate"
-              (inputFieldChanged)="trainingStartDateChange($event, 'startDate', 'endDate')" angular-mydatepicker
-              [ngClass]="getRegistrationEndTrainingStartTrainingEndDatesClasses('startDate')"></div>
+                 #dpStartDate="angular-mydatepicker" [options]="datepickerOptionsMap.startDate"
+                 (inputFieldChanged)="trainingStartDateChange($event, 'startDate', 'endDate')" angular-mydatepicker
+                 [ngClass]="getRegistrationEndTrainingStartTrainingEndDatesClasses('startDate')"></div>
             <app-field-error-message [control]="fm.getFormField('startDate')"></app-field-error-message>
           </div>
         </div>
-        <div class="col-sm-6 position-relative">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label for="endDate" asteriskIfRequired="endDate" class="form-label">{{lang.map.training_end_date}}</label>
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="endDate" id="endDate" (click)="dpendDate.toggleCalendar()"
-              #dpendDate="angular-mydatepicker" [options]="datepickerOptionsMap.endDate"
-              (inputFieldChanged)="trainingEndDateChange($event, 'startDate', 'endDate')" angular-mydatepicker
-              [ngClass]="getRegistrationEndTrainingStartTrainingEndDatesClasses('endDate')"></div>
+                 #dpendDate="angular-mydatepicker" [options]="datepickerOptionsMap.endDate"
+                 (inputFieldChanged)="trainingEndDateChange($event, 'startDate', 'endDate')" angular-mydatepicker
+                 [ngClass]="getRegistrationEndTrainingStartTrainingEndDatesClasses('endDate')"></div>
             <app-field-error-message [control]="fm.getFormField('endDate')"></app-field-error-message>
           </div>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
-          <div class="row">
-            <label asteriskIfRequired="sessionStartTime" for="sessionStartTime"
-              class="form-label">{{lang.map.session_start_time}}</label>
-            <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="sessionStartTime" labelForId="sessionStartTime"
-                placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
-                formControlName="sessionStartTime" id="sessionStartTime" appendTo="body"
-                (change)="trainingStartTimeChange()">
-                <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="sessionStartTime"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="sessionStartTime" for="sessionStartTime"
+                 class="form-label">{{lang.map.session_start_time}}</label>
+          <ng-select validationClasses="sessionStartTime" labelForId="sessionStartTime"
+                     placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
+                     formControlName="sessionStartTime" id="sessionStartTime" appendTo="body"
+                     (change)="trainingStartTimeChange()">
+            <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="sessionStartTime"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
-          <div class="row">
-            <label asteriskIfRequired="sessionEndTime" for="sessionEndTime"
-              class="form-label">{{lang.map.session_end_time}}</label>
-            <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="sessionEndTime" labelForId="sessionEndTime"
-                placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
-                formControlName="sessionEndTime" id="sessionEndTime" appendTo="body" (change)="trainingEndTimeChange()">
-                <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="sessionEndTime"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="sessionEndTime" for="sessionEndTime"
+                 class="form-label">{{lang.map.session_end_time}}</label>
+          <ng-select validationClasses="sessionEndTime" labelForId="sessionEndTime"
+                     placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
+                     formControlName="sessionEndTime" id="sessionEndTime" appendTo="body"
+                     (change)="trainingEndTimeChange()">
+            <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="sessionEndTime"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="trainingLocation" for="trainingLocation"
-            class="form-label">{{lang.map.training_location}}</label>
+                 class="form-label">{{lang.map.training_location}}</label>
           <input id="trainingLocation" validationClasses="trainingLocation" formControlName="trainingLocation"
-            class="form-control">
+                 class="form-control" trimInput>
           <app-field-error-message controlName="trainingLocation"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="contactPerson" for="contactPerson"
-            class="form-label">{{lang.map.contact_person}}</label>
+                 class="form-label">{{lang.map.contact_person}}</label>
           <input id="contactPerson" validationClasses="contactPerson" formControlName="contactPerson"
-            class="form-control">
+                 class="form-control" trimInput>
           <app-field-error-message controlName="contactPerson"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
-          <div class="row">
-            <label asteriskIfRequired="attendenceMethod" for="attendenceMethod"
-              class="form-label">{{lang.map.attendance_method}}</label>
-            <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="attendenceMethod" labelForId="attendenceMethod"
-                placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
-                formControlName="attendenceMethod" id="attendenceMethod" appendTo="body">
-                <ng-option [value]="attendanceMethod.lookupKey" *ngFor="let attendanceMethod of attendanceMethods"
-                  [disabled]="!attendanceMethod.status">{{attendanceMethod.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="attendenceMethod"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="attendenceMethod" for="attendenceMethod"
+                 class="form-label">{{lang.map.attendance_method}}</label>
+          <ng-select validationClasses="attendenceMethod" labelForId="attendenceMethod"
+                     placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
+                     formControlName="attendenceMethod" id="attendenceMethod" appendTo="body">
+            <ng-option [value]="attendanceMethod.lookupKey" *ngFor="let attendanceMethod of attendanceMethods"
+                       [disabled]="!attendanceMethod.status">{{attendanceMethod.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="attendenceMethod"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
-          <div class="row">
-            <label asteriskIfRequired="targetAudienceListIds" for="targetAudienceListIds"
-              class="form-label">{{lang.map.target_audience}}</label>
-            <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="targetAudienceListIds" labelForId="targetAudienceListIds"
-                placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
-                formControlName="targetAudienceListIds" id="targetAudienceListIds" [multiple]="true" appendTo="body">
-                <ng-option [value]="targetAudience.lookupKey" *ngFor="let targetAudience of targetAudienceList"
-                  [disabled]="!targetAudience.status">{{targetAudience.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="targetAudienceListIds"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="targetAudienceListIds" for="targetAudienceListIds"
+                 class="form-label">{{lang.map.target_audience}}</label>
+          <ng-select validationClasses="targetAudienceListIds" labelForId="targetAudienceListIds"
+                     placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
+                     formControlName="targetAudienceListIds" id="targetAudienceListIds" [multiple]="true"
+                     appendTo="body">
+            <ng-option [value]="targetAudience.lookupKey" *ngFor="let targetAudience of targetAudienceList"
+                       [disabled]="!targetAudience.status">{{targetAudience.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="targetAudienceListIds"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3" *ngIf="model.id && isInternalUser">
-        <div class="col-sm-6 position-relative">
+      <div class="row" *ngIf="model.id && isInternalUser">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label class="form-label">{{lang.map.registered_trainee_number}}</label>
           <input disabled id="registeredTraineeNumber" [value]="model.registeredTraineeNumber" class="form-control">
         </div>
-        <div class="col-sm-6 position-relative">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label class="form-label">{{lang.map.accepted_trainee_number}}</label>
           <input disabled id="acceptedTraineeNumber" [value]="model.acceptedTraineeNumber" class="form-control">
         </div>
       </div>
-      <div class="row mb-3" *ngIf="isInternalUser">
-        <div class="col-sm-6 position-relative">
+      <div class="row" *ngIf="isInternalUser">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="numberOfSeats" for="numberOfSeats"
-            class="form-label">{{lang.map.training_program_number_of_seats}}</label>
+                 class="form-label">{{lang.map.training_program_number_of_seats}}</label>
           <input id="numberOfSeats" validationClasses="numberOfSeats" formControlName="numberOfSeats"
-            class="form-control" maxlength="3" [mask]="inputMaskPatterns.NUMBER_ONLY">
+                 class="form-control" maxlength="3" [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="numberOfSeats"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="totalTrainingCost" for="totalTrainingCost"
-            class="form-label">{{lang.map.total_training_cost}}</label>
+                 class="form-label">{{lang.map.total_training_cost}}</label>
           <input id="totalTrainingCost" validationClasses="totalTrainingCost" formControlName="totalTrainingCost"
-            class="form-control" maxlength="10" [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
-            [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+                 class="form-control" maxlength="10" [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+                 [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
           <app-field-error-message controlName="totalTrainingCost"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3" *ngIf="isInternalUser">
-        <div class="col-sm-12 position-relative">
+      <div class="row" *ngIf="isInternalUser">
+        <div class="col-sm-12 mb-4 position-relative">
           <label asteriskIfRequired="comments" for="comments" class="form-label">{{lang.map.training_notes}}</label>
-          <textarea id="comments" validationClasses="comments" formControlName="comments" class="form-control" rows="3">
+          <textarea id="comments" validationClasses="comments" formControlName="comments" class="form-control" rows="3"
+                    trimInput>
           </textarea>
           <app-field-error-message controlName="comments"></app-field-error-message>
         </div>
@@ -322,7 +295,8 @@
         <div>
           <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.lbl_organization}}</h1>
           <button *ngIf="operation != operationTypes.VIEW" (click)="openAddOrganizations()"
-            class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i class="mdi mdi-plus-box"></i></button>
+                  class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i class="mdi mdi-plus-box"></i>
+          </button>
         </div>
       </div>
       <div class="row mb-3 add-to-list-container" *ngIf="showAddOrganizationForm">
@@ -331,14 +305,14 @@
           <div class="row">
             <div class="col-sm-6">
               <label for="organizationTypeId"
-                class="form-label">{{lang.map.training_program_organization_types}}</label>
+                     class="form-label">{{lang.map.training_program_organization_types}}</label>
               <div class="mb-3 position-relative ng-select-wrapper">
                 <ng-select labelForId="organizationTypeId" placeholder="{{lang.map.select}}"
-                  [notFoundText]="lang.map.msg_not_found" [(ngModel)]="selectedOrganizationType"
-                  [ngModelOptions]="{standalone: true}" id="organizationTypeId" appendTo="body"
-                  (change)="onOrganizationTypeChange()">
+                           [notFoundText]="lang.map.msg_not_found" [(ngModel)]="selectedOrganizationType"
+                           [ngModelOptions]="{standalone: true}" id="organizationTypeId" appendTo="body"
+                           (change)="onOrganizationTypeChange()">
                   <ng-option [value]="organizationType.lookupKey" [disabled]="!organizationType.status"
-                    *ngFor="let organizationType of organizationTypes">{{organizationType.getName()}}</ng-option>
+                             *ngFor="let organizationType of organizationTypes">{{organizationType.getName()}}</ng-option>
                 </ng-select>
               </div>
             </div>
@@ -346,11 +320,11 @@
               <label for="organizationId" class="form-label">{{lang.map.training_program_organizations}}</label>
               <div class="mb-3 position-relative ng-select-wrapper">
                 <ng-select labelForId="organizationId" placeholder="{{lang.map.select}}"
-                  [notFoundText]="lang.map.msg_not_found" [(ngModel)]="selectedOrganization"
-                  [ngModelOptions]="{standalone: true}" id="organizationId" appendTo="body">
+                           [notFoundText]="lang.map.msg_not_found" [(ngModel)]="selectedOrganization"
+                           [ngModelOptions]="{standalone: true}" id="organizationId" appendTo="body">
                   <ng-option [value]="-1">{{lang.map.select_all}}</ng-option>
                   <ng-option [value]="organization.id" [disabled]="!organization.isActive()"
-                    *ngFor="let organization of organizations">{{organization.getName()}}</ng-option>
+                             *ngFor="let organization of organizations">{{organization.getName()}}</ng-option>
                 </ng-select>
               </div>
             </div>
@@ -359,7 +333,7 @@
             <div style="display: flex">
               <span class="flex-grow-1"></span>
               <button [disabled]="!selectedOrganization" *ngIf="saveVisible" (click)="onAddOrganization()"
-                class="btn btn-primary right mb-3">{{lang.map.btn_add}}</button>
+                      class="btn btn-primary right mb-3">{{lang.map.btn_add}}</button>
             </div>
           </div>
         </div>
@@ -369,7 +343,7 @@
         <div class="col-12">
           <div class="table-responsive">
             <app-table #table sortableTable style="margin-bottom: 0" [columns]="organizationColumns"
-              [data]="selectedOrganizations">
+                       [data]="selectedOrganizations">
               <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
                 <ng-container cdkColumnDef="arName">
                   <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>
@@ -384,14 +358,14 @@
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
                       <a *ngIf="operation != operationTypes.VIEW" href="#" (click)="removeOrganization($event, row)"
-                        tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                         tooltip="{{lang.map.btn_delete}}" class="icon-btn">
                         <i class="mdi mdi-close-box"></i>
                       </a>
                     </div>
                   </td>
                 </ng-container>
 
-                <tr cdk-header-row *cdkHeaderRowDef="organizationColumns"></tr>
+                <tr cdk-header-row *cdkHeaderRowDef="organizationColumns" class="table-row-header"></tr>
                 <tr cdk-row *cdkRowDef="let row; columns: organizationColumns;"></tr>
                 <tr *cdkNoDataRow>
                   <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -407,7 +381,7 @@
         <div>
           <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.lbl_trainer}}</h1>
           <button *ngIf="operation != operationTypes.VIEW" (click)="openAddTrainers()" class="btn icon-btn text-primary"
-            [tooltip]="lang.map.btn_add"><i class="mdi mdi-plus-box"></i></button>
+                  [tooltip]="lang.map.btn_add"><i class="mdi mdi-plus-box"></i></button>
         </div>
       </div>
       <div class="row mb-3 add-to-list-container" *ngIf="showAddTrainerForm">
@@ -418,8 +392,8 @@
               <label for="trainerId" class="form-label">{{lang.map.training_program_trainers}}</label>
               <div class="mb-3 position-relative ng-select-wrapper">
                 <ng-select labelForId="trainerId" placeholder="{{lang.map.select}}"
-                  [notFoundText]="lang.map.msg_not_found" [(ngModel)]="selectedTrainer"
-                  [ngModelOptions]="{standalone: true}" id="trainerId" appendTo="body">
+                           [notFoundText]="lang.map.msg_not_found" [(ngModel)]="selectedTrainer"
+                           [ngModelOptions]="{standalone: true}" id="trainerId" appendTo="body">
                   <ng-option [value]="trainer.id" *ngFor="let trainer of trainers">{{trainer.getName()}}</ng-option>
                 </ng-select>
               </div>
@@ -429,7 +403,7 @@
             <div style="display: flex">
               <span class="flex-grow-1"></span>
               <button [disabled]="!selectedTrainer" *ngIf="saveVisible" (click)="addTrainer()"
-                class="btn btn-primary right mb-3">{{lang.map.btn_add}}</button>
+                      class="btn btn-primary right mb-3">{{lang.map.btn_add}}</button>
             </div>
           </div>
         </div>
@@ -439,7 +413,7 @@
         <div class="col-12">
           <div class="table-responsive">
             <app-table #table sortableTable style="margin-bottom: 0" [columns]="trainerColumns"
-              [data]="selectedTrainers">
+                       [data]="selectedTrainers">
               <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
                 <ng-container cdkColumnDef="arName">
                   <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>
@@ -462,14 +436,14 @@
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
                       <a *ngIf="operation != operationTypes.VIEW" href="#" (click)="removeTrainer($event, row)"
-                        tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                         tooltip="{{lang.map.btn_delete}}" class="icon-btn">
                         <i class="mdi mdi-close-box"></i>
                       </a>
                     </div>
                   </td>
                 </ng-container>
 
-                <tr cdk-header-row *cdkHeaderRowDef="trainerColumns"></tr>
+                <tr cdk-header-row *cdkHeaderRowDef="trainerColumns" class="table-row-header"></tr>
                 <tr cdk-row *cdkRowDef="let row; columns: trainerColumns;"></tr>
                 <tr *cdkNoDataRow>
                   <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -485,7 +459,7 @@
     </ng-template>
     <ng-template #trainingBriefcaseTabTemplate>
       <training-program-briefcase [trainingProgramId]="model.id" [bundlesList]="model.trainingBundleList"
-        [operation]="operation"></training-program-briefcase>
+                                  [operation]="operation"></training-program-briefcase>
     </ng-template>
     <ng-template #passedTraineesTabTemplate>
       <trainee-list [trainingProgram]="model"></trainee-list>
@@ -494,24 +468,24 @@
 </div>
 <div class="dialog-actions">
   <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
-    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
   <button [disabled]="saveDisabled()" *ngIf="showSaveButton()" (click)="onSaveClicked()"
-    class="btn btn-primary">{{lang.map.btn_save}}</button>
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
   <!--  <button [disabled]="saveDisabled()" *ngIf="showApproveButton()" (click)="approve$.next()" class="btn btn-primary">{{lang.map.training_program_approve}}</button>-->
   <button [disabled]="saveDisabled()" *ngIf="showSaveAndApproveButton()" (click)="saveAndApprove()"
-    class="btn btn-primary">{{lang.map.training_program_save_and_approve}}</button>
+          class="btn btn-primary">{{lang.map.training_program_save_and_approve}}</button>
   <!--  <button [disabled]="saveDisabled()" *ngIf="showPublishButton()" (click)="publish$.next()" class="btn btn-primary">{{lang.map.training_program_publish}}</button>-->
   <button [disabled]="saveDisabled()" *ngIf="showSaveAndPublishButton()" (click)="saveAndPublish()"
-    class="btn btn-primary">{{lang.map.training_program_save_and_advertise}}</button>
+          class="btn btn-primary">{{lang.map.training_program_save_and_advertise}}</button>
   <button [disabled]="saveDisabled()" *ngIf="showSaveAndRePublishButton()" (click)="saveAndRePublish()"
-    class="btn btn-primary">{{lang.map.training_program_save_and_republish}}</button>
+          class="btn btn-primary">{{lang.map.training_program_save_and_republish}}</button>
   <button *ngIf="showCancelTrainingProgramButton()" (click)="cancelProgram($event)"
-    class="btn btn-warning">{{lang.map.cancel_training_program}}</button>
+          class="btn btn-warning">{{lang.map.cancel_training_program}}</button>
   <button [disabled]="disabledShowCertificateButton()" *ngIf="showCertificateButton()"
-    (click)="onSelectCertificateTemplateClicked()"
-    class="btn btn-primary">{{lang.map.choose_certificates_template}}</button>
+          (click)="onSelectCertificateTemplateClicked()"
+          class="btn btn-primary">{{lang.map.choose_certificates_template}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

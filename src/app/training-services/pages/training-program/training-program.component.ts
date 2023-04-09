@@ -70,9 +70,9 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
       }
     },
     search_trainingStatus: {
-      key: 'trainingStatus',
+      key: 'status',
       controlType: 'select',
-      property: 'trainingStatus',
+      property: 'status',
       label: 'training_program_status',
       selectOptions: {
         options: this.lookupService.listByCategory.TRAINING_STATUS,
@@ -431,7 +431,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
 
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      activityName: [''], trainingType: [null], trainingStatus: [null]
+      activityName: [''], trainingType: [null], status: [null]
     })
   }
 

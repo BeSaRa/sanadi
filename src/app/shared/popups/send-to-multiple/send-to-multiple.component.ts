@@ -96,15 +96,14 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
   private _loadByServiceData(caseType: CaseTypes) {
     const serviceData = this.serviceDataService.loadByCaseType(caseType)
       .pipe(
-        filter(result => !!result.concernedDepartmentsIds),
-        map(result => <Number[]>JSON.parse(result.concernedDepartmentsIds!)),
+        map(result => result.concernedDepartmentsIdsParsed ?? []),
       );
 
     const internalDepartments = this.intDepService.loadAsLookups()
 
     forkJoin([serviceData, internalDepartments])
-      .subscribe(([ids, departments]) => {
-        this.departments = departments.filter(dep => (!ids.length || ids?.includes(dep.id)) && dep.id !== this.employee.getInternalDepartment()?.id);
+      .subscribe(([relatedDepartments, allDepartments]) => {
+        this.departments = allDepartments.filter(dep => relatedDepartments.includes(dep.id) && dep.id !== this.employee.getInternalDepartment()?.id);
       })
   }
   private _loadInitData(): void {

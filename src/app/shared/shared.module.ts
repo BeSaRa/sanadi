@@ -119,6 +119,7 @@ import {
   UserPreferencesPopupComponent
 } from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
 import { ExecutiveManagementPopupComponent } from './components/executive-management/executive-management-popup/executive-management-popup.component';
+import { CountryPopupComponent } from '@app/shared/popups/country-popup/country-popup.component';
 
 @NgModule({
   declarations: [
@@ -218,6 +219,7 @@ import { ExecutiveManagementPopupComponent } from './components/executive-manage
     ExternalOfficeListComponent,
     ExternalOfficesPopupComponent,
     ExecutiveManagementComponent,
+    ExecutiveManagementPopupComponent,
     BankBranchComponent,
     ProfileCodeExistsDirective,
     ReturnToOrganizationWithCommentPopupComponent,
@@ -229,7 +231,7 @@ import { ExecutiveManagementPopupComponent } from './components/executive-manage
     HeaderNotificationsComponent,
     HeaderSearchFieldComponent,
     UserPreferencesPopupComponent,
-    ExecutiveManagementPopupComponent
+    CountryPopupComponent
   ],
   imports: [
     CommonModule,
@@ -327,7 +329,8 @@ import { ExecutiveManagementPopupComponent } from './components/executive-manage
         ServiceLogListComponent,
         ServiceLogItemLocationComponent,
         HeadingRowComponent,
-        HeaderSearchFieldComponent
+        HeaderSearchFieldComponent,
+        CountryPopupComponent
     ]
 })
 export class SharedModule {

@@ -4,7 +4,6 @@ import { customValidationTypes } from '../types/types';
 import * as dayjs from 'dayjs';
 import { FactoryService } from '@services/factory.service';
 import { ConfigurationService } from '@services/configuration.service';
-import { some as _some } from 'lodash';
 import { CommonUtils } from '@app/helpers/common-utils';
 
 export const validationPatterns: any = {
@@ -226,7 +225,7 @@ export function uniqueValidator<T>(data: T[], property: keyof T, editObj: T): Va
       return null;
     }
 
-    const unique = _some(data, function (row) {
+    const unique = data.some(function (row) {
       if (editObj) {
         return (editObj[property] + '').toLowerCase() !== (row[property] + '').toLowerCase() &&
           (row[property] + '').toLowerCase() === control.value.toLowerCase();

@@ -9,7 +9,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { IDialogData } from '@contracts/i-dialog-data';
 import { OperationTypes } from '../enums/operation-types.enum';
 import { DialogService } from './dialog.service';
-import { CountryPopupComponent } from '../administration/popups/country-popup/country-popup.component';
+import { CountryPopupComponent } from '../shared/popups/country-popup/country-popup.component';
 import {
   ChangeCountryParentPopupComponent
 } from '../administration/popups/change-country-parent-popup/change-country-parent-popup.component';
