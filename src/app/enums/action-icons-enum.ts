@@ -59,5 +59,6 @@ export enum ActionIconsEnum {
   USER_CHECK = 'mdi-account-check',
   CERTIFICATE = 'mdi-certificate',
   USER_CLOCK = 'mdi-account-clock',
-  POLL = 'mdi-poll'
+  POLL = 'mdi-poll',
+  BLOCK = 'mdi-block-helper'
 }
