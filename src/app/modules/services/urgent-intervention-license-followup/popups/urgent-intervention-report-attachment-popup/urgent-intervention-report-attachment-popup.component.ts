@@ -121,7 +121,7 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
       type: 'action',
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
-      show: (item) => this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser),
+      show: (item) => !this.readonly && this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser),
       onClick: (item) => this.deleteAttachmentFile(item)
     },
   ];

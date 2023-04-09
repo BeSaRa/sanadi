@@ -63,7 +63,7 @@ export class UrgentInterventionReportAttachmentApprovalPopupComponent implements
     this.done$
       .pipe(
         takeUntil(this.destroy$),
-        filter(_ => CommonUtils.isValidValue(this.comment.value)),
+        filter(_ => this.comment.valid),
         switchMap(() => this.urgentInterventionLicenseFollowupService.updateAttachmentApproval(this.attachmentId, this.isApproved, this.comment.value)),
         filter((result) => !!result)
       )
