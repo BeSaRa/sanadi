@@ -44,6 +44,7 @@ import {
 import {
   ResearchAndStudiesComponent
 } from '@modules/services/coordination-with-organization-request/shared/research-and-studies/research-and-studies.component';
+import { BuildingAbilityPopupComponent } from './shared/building-ability/building-ability-popup/building-ability-popup.component';
 import { AuditCoordinationWithOrganizationRequestComponent } from './audit/audit-coordination-with-organization-request/audit-coordination-with-organization-request.component';
 import { AuditBuildingAbilityComponent } from './audit/audit-building-ability/audit-building-ability.component';
 import { AuditEffectiveCoordinationCapabilitiesComponent } from './audit/audit-effective-coordination-capabilities/audit-effective-coordination-capabilities.component';
@@ -61,6 +62,7 @@ import { SharedServicesModule } from '../shared-services/shared-services.module'
     ParticipantOrganizationsPopupComponent,
     ParticipantOrganizationComponent,
     BuildingAbilityComponent,
+    BuildingAbilityPopupComponent,
     EffectiveCoordinationCapabilitiesComponent,
     OrganizationOfficerComponent,
     ResearchAndStudiesComponent,

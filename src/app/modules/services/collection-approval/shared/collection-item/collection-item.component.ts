@@ -96,7 +96,7 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
       disabled: (_item: CollectionItem) => this.readOnly
     },
   ];
-
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   @Output()
   approval: EventEmitter<{ item: CollectionItem, index: number }> = new EventEmitter<{ item: CollectionItem; index: number }>();
 

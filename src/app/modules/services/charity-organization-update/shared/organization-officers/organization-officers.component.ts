@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { ILanguageKeys } from '@contracts/i-language-keys';
 import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { OrganizationOfficer } from '@models/organization-officer';
 import { EmployeeService } from '@services/employee.service';
 import { LangService } from '@services/lang.service';
@@ -25,6 +25,7 @@ export class OrganizationOfficersComponent implements OnInit {
   get _label() {
     return this.label as keyof ILanguageKeys
   }
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   organizationOfficerDisplayedColumns: string[] = [
     'fullName',
     'identificationNumber',

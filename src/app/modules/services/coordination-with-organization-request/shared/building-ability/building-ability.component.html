@@ -1,348 +1,72 @@
-<div [formGroup]="form">
-  <div formGroupName="{{formArrayName}}">
-    <ng-container *ngFor="let control of formArray.controls; let i = index">
-      <div [formGroupName]="i">
-        <div class="row">
-          <!-- Activity Name -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="activityName" for="activityName"
-              class="form-label">{{lang.map.activity_name}}</label>
-            <input id="activityName" validationClasses="activityName" formControlName="activityName" trimInput
-              class="form-control">
-            <app-field-error-message controlName="activityName"></app-field-error-message>
+<div class="table-responsive">
+  <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
+    [filter]="filterControl.value" [useSearchToFilter]="true">
+    <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header *ngIf="canUpdate && isClaimed" (textChange)="filterControl.setValue($event)"
+            tableTitle="building_abilities" [add$]="add$" [allowAdd]="addAllowed()" [skipClearSort]="true">
+          </table-header>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="activityName">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.activity_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.activityName}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="trainingActivityType">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.training_activity_type}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.trainingActivityTypeInfo?.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="activityGoal">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.activity_goal}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.activityGoal}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="trainingActivityMainAxes">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_training_activit_main_axes}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.trainingActivityMainAxes}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="trainingLanguage">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.training_language}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.trainingLanguageInfo?.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="targetGroupNature">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_target_group_nature}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.targetGroupNature}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="participantsMaximumNumber">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_participants_maximum_number}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.participantsMaximumNumber}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="trainingWay">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_training_way}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.trainingWayInfo?.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+          <div class="d-flex flex-row">
+            <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
+              [hidden]="!canUpdate" [disabled]="!isClaimed || formOpened" tooltip="{{lang.map.btn_delete}}">
+              <i class="mdi mdi-close-box"></i>
+            </button>
+            <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
+              [hidden]="!canUpdate" [disabled]="!isClaimed || formOpened" tooltip="{{lang.map.btn_edit}}">
+              <i class="mdi mdi-pen"></i>
+            </button>
+            <button (click)="view($event, row, i)" [disabled]="formOpened" class="icon-btn text-primary"
+              tooltip="{{lang.map.view}}">
+              <i class="mdi mdi-eye"></i>
+            </button>
           </div>
-          <!-- Training Activity Type -->
-          <div class="col-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="trainingActivityType" for="trainingActivityType" class="form-label">{{
-              lang.map.training_activity_type }}</label>
-            <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
-              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="trainingActivityType"
-              labelForId="trainingActivityType"
-              validationClasses="trainingActivityType" formControlName="trainingActivityType">
-              <ng-option *ngFor="let option of trainingTypes" [value]="option.lookupKey">{{ option.getName() }}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="trainingActivityType"></app-field-error-message>
-          </div>
-          <!-- Activity Goal -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="activityGoal" for="activityGoal"
-              class="form-label">{{lang.map.activity_goal}}</label>
-            <input id="activityGoal" validationClasses="activityGoal" formControlName="activityGoal" trimInput
-              class="form-control">
-            <app-field-error-message controlName="activityGoal"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-
-          <!-- Training Language -->
-          <div class="col-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="trainingLanguage" for="trainingLanguage" class="form-label">{{
-              lang.map.training_languages }}</label>
-            <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
-              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="trainingLanguage"
-              labelForId="trainingLanguage"
-              validationClasses="trainingLanguage" formControlName="trainingLanguage"
-              (change)="onTranaingLangaugeChange($event)">
-              <ng-option *ngFor="let option of trainingLanguages" [value]="option.lookupKey">{{ option.getName() }}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="trainingLanguage"></app-field-error-message>
-          </div>
-          <!-- Other Language -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="otherLanguage" for="otherLanguage"
-              class="form-label">{{lang.map.lbl_other_language}}</label>
-            <input #otherLanguage id="otherLanguage" validationClasses="otherLanguage" formControlName="otherLanguage"
-              trimInput class="form-control" [readonly]="isOtherLanguageAllowed">
-            <app-field-error-message controlName="otherLanguage"></app-field-error-message>
-          </div>
-          <!-- Target Group Nature -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="targetGroupNature" for="targetGroupNature"
-              class="form-label">{{lang.map.lbl_target_group_nature}}</label>
-            <input id="targetGroupNature" validationClasses="targetGroupNature" formControlName="targetGroupNature"
-              trimInput class="form-control">
-            <app-field-error-message controlName="targetGroupNature"></app-field-error-message>
-          </div>
-
-        </div>
-        <div class="row">
-
-
-          <!-- Participants Maximum Number -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="participantsMaximumNumber" for="participantsMaximumNumber"
-              class="form-label">{{lang.map.lbl_participants_maximum_number}}</label>
-            <input id="participantsMaximumNumber" validationClasses="participantsMaximumNumber"
-              formControlName="participantsMaximumNumber" trimInput class="form-control">
-            <app-field-error-message controlName="participantsMaximumNumber"></app-field-error-message>
-          </div>
-          <!-- Suggested Activity Date From -->
-          <div class="col-12 col-md-4 mb-4 position-relative">
-            <label for="suggestedActivityDateFrom" asteriskIfRequired="suggestedActivityDateFrom"
-              class="form-label">{{lang.map.lbl_suggested_activity_date_from}}</label>
-            <div class="input-group">
-              <i class="input-group-text mdi mdi-calendar"></i>
-              <div class="form-control" formControlName="suggestedActivityDateFrom" id="suggestedActivityDateFrom"
-                [options]="datepickerOptionsMap.suggestedActivityDateFrom"
-                (click)="dpsuggestedActivityDateFrom.toggleCalendar()"
-                [ngClass]="{'input-disabled': viewOnly}"
-                (inputFieldChanged)="onDateChange($event, 'suggestedActivityDateFrom', 'suggestedActivityDateTo')"
-                #dpsuggestedActivityDateFrom="angular-mydatepicker" angular-mydatepicker
-                validationClasses="suggestedActivityDateFrom">
-              </div>
-              <app-field-error-message controlName="suggestedActivityDateFrom"></app-field-error-message>
-            </div>
-          </div>
-          <!-- Suggested Activity Date To -->
-          <div class="col-12 col-md-4 mb-4 position-relative">
-            <label for="suggestedActivityDateTo" asteriskIfRequired="suggestedActivityDateTo"
-              class="form-label">{{lang.map.lbl_suggested_activity_date_to}}</label>
-            <div class="input-group">
-              <i class="input-group-text mdi mdi-calendar"></i>
-              <div class="form-control" formControlName="suggestedActivityDateTo" id="suggestedActivityDateTo"
-                [options]="datepickerOptionsMap.suggestedActivityDateTo"
-                (click)="dpsuggestedActivityDateTo.toggleCalendar()"
-                [ngClass]="{'input-disabled': viewOnly}"
-                (inputFieldChanged)="onDateChange($event, 'suggestedActivityDateFrom', 'suggestedActivityDateTo')"
-                #dpsuggestedActivityDateTo="angular-mydatepicker" angular-mydatepicker
-                validationClasses="suggestedActivityDateTo">
-              </div>
-              <app-field-error-message controlName="suggestedActivityDateTo"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-
-          <!-- Time From -->
-          <div class="col-12 col-md-4 mb-4 position-relative">
-
-            <label asteriskIfRequired="timeFrom" for="timeFrom" class="form-label">{{lang.map.lbl_time_from}}</label>
-            <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
-              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="timeFrom" validationClasses="timeFrom"
-              labelForId="timeFrom"
-              formControlName="timeFrom">
-              <ng-option *ngFor="let option of times" [value]="option.key">{{ option.key }}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="timeFrom"></app-field-error-message>
-          </div>
-          <!-- Time To -->
-          <div class="col-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="timeTo" for="timeTo" class="form-label">{{lang.map.lbl_time_to}}</label>
-            <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
-              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="timeTo" validationClasses="timeTo"
-              formControlName="timeTo"
-              labelForId="timeTo">
-              <ng-option *ngFor="let option of times" [value]="option.key">{{ option.key }}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="timeTo"></app-field-error-message>
-          </div>
-          <!-- Training Way -->
-          <div class="col-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="trainingWay" for="trainingWay" class="form-label">{{
-              lang.map.lbl_training_wayes }}</label>
-            <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
-              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="trainingWay"
-              labelForId="trainingWay"
-              validationClasses="trainingWay"
-              formControlName="trainingWay" (change)="onTranaingWayChange($event)">
-              <ng-option *ngFor="let option of trainingWays" [value]="option.lookupKey">{{ option.getName() }}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="trainingWay"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-
-          <!-- Platform -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="platform" for="platform" class="form-label">{{lang.map.lbl_platform}}</label>
-            <input id="platform" validationClasses="platform" #platform [readonly]="isRemoteTraining"
-              formControlName="platform" trimInput class="form-control">
-            <app-field-error-message controlName="platform"></app-field-error-message>
-          </div>
-          <!-- Buildings Name -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="buildingsName" for="buildingsName"
-              class="form-label">{{lang.map.building_name}}</label>
-            <input id="buildingsName" #buildingsName [readonly]="isLiveTraining" validationClasses="buildingsName"
-              formControlName="buildingsName" trimInput class="form-control">
-            <app-field-error-message controlName="buildingsName"></app-field-error-message>
-          </div>
-          <!-- Floor No -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="floorNo" for="floorNo" class="form-label">{{lang.map.lbl_floor_No}}</label>
-            <input id="floorNo" validationClasses="floorNo" #floorNo [readonly]="isLiveTraining"
-              formControlName="floorNo" trimInput class="form-control">
-            <app-field-error-message controlName="floorNo"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-
-          <!-- Hall Name -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="hallName" for="hallName" class="form-label">{{lang.map.lbl_hall_name}}</label>
-            <input id="hallName" validationClasses="hallName" #hallName [readonly]="isLiveTraining"
-              formControlName="hallName" trimInput class="form-control">
-            <app-field-error-message controlName="hallName"></app-field-error-message>
-          </div>
-          <!-- Street Name -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="streetName" for="streetName"
-              class="form-label">{{lang.map.lbl_street_name}}</label>
-            <input id="streetName" validationClasses="streetName" #streetName [readonly]="isLiveTraining"
-              formControlName="streetName" trimInput class="form-control">
-            <app-field-error-message controlName="streetName"></app-field-error-message>
-          </div>
-
-          <!-- Filtration Method -->
-          <div class="col-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="filtrationMethod" for="filtrationMethod" class="form-label">{{
-              lang.map.lbl_filtration_method }}</label>
-            <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
-              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="filtrationMethod"
-              validationClasses="filtrationMethod" formControlName="filtrationMethod"
-              (change)="onFilterationMethodChange($event)"
-              labelForId="filtrationMethod">
-              <ng-option *ngFor="let option of recommendedWays" [value]="option.lookupKey">{{ option.getName() }}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="filtrationMethod"></app-field-error-message>
-          </div>
-
-        </div>
-        <div class="row">
-          <!-- Email -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
-            <input id="email"
-            #email
-            [readonly]="isEmailFiltrationMethod"
-            validationClasses="email" formControlName="email" trimInput class="form-control">
-            <app-field-error-message controlName="email"></app-field-error-message>
-          </div>
-
-          <!-- Other Filtration Method -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="otherFiltrationMethod" for="otherFiltrationMethod"
-              class="form-label">{{lang.map.lbl_other_filtration_method}}</label>
-            <input id="otherFiltrationMethod"
-            #otherFiltrationMethod
-            [readonly]="isOtherFiltrationMethod"
-            validationClasses="otherFiltrationMethod"
-              formControlName="otherFiltrationMethod" trimInput class="form-control">
-            <app-field-error-message controlName="otherFiltrationMethod"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <!-- Training Activity Main Axes -->
-          <div class="col-12 mb-4 position-relative">
-            <label asteriskIfRequired="trainingActivityMainAxes" for="trainingActivityMainAxes" class="form-label">{{
-              lang.map.lbl_training_activit_main_axes }}</label>
-            <textarea rows="5" id="trainingActivityMainAxes" validationClasses="trainingActivityMainAxes"
-              formControlName="trainingActivityMainAxes" class="form-control" trimInput></textarea>
-            <app-field-error-message controlName="trainingActivityMainAxes"></app-field-error-message>
-          </div>
-        </div>
-        <div class="d-flex flex-row align-items-center justify-content-center">
-          <button (click)="onSave()" [disabled]="readonly" *ngIf="!readonly && !viewOnly"
-            class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
-          <button (click)="onCancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
-        </div>
-      </div>
-    </ng-container>
-  </div>
+        </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+      <tr *cdkNoDataRow>
+        <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+      </tr>
+    </table>
+    <app-paginator #paginator></app-paginator>
+  </app-table>
 </div>
-
-
-<ng-container>
-  <div class="row" [hidden]="showForm" >
-    <div class="col-md-6" >
-      <app-page-header [hidden]="!canUpdate || !isClaimed" pageTitle="building_abilities" [clickOnNew$]="add$"
-      [addPermission]="addAllowed() "
-      ></app-page-header>
-    </div>
-
-    <app-grid-search class="search-grid" (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
-  </div>
-  <div class="row pt-3" *ngIf="!showForm">
-    <div class="col-12">
-      <div class="table-responsive">
-        <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
-          [filter]="filterControl.value" [useSearchToFilter]="true">
-          <table  class="table mt-3 table-striped table-bordered caption-top" cdk-table
-          [dataSource]="table.dataSource">
-          <ng-container cdkColumnDef="activityName">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.activity_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.activityName}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="trainingActivityType">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.training_activity_type}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.trainingActivityTypeInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="activityGoal">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.activity_goal}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.activityGoal}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="trainingActivityMainAxes">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_training_activit_main_axes}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.trainingActivityMainAxes}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="trainingLanguage">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.training_language}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.trainingLanguageInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="targetGroupNature">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_target_group_nature}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.targetGroupNature}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="participantsMaximumNumber">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_participants_maximum_number}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.participantsMaximumNumber}} </td>
-          </ng-container>
-
-          <ng-container cdkColumnDef="trainingWay">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_training_way}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.trainingWayInfo?.getName()}} </td>
-          </ng-container>
-
-
-
-          <ng-container cdkColumnDef="actions">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-            <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-              <div class="d-flex flex-row">
-                <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-                        [hidden]="!canUpdate"
-                        [disabled]="!isClaimed || formOpened" tooltip="{{lang.map.btn_delete}}">
-                  <i class="mdi mdi-close-box"></i>
-                </button>
-                <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-                        [hidden]="!canUpdate"
-                        [disabled]="!isClaimed || formOpened" tooltip="{{lang.map.btn_edit}}">
-                  <i class="mdi mdi-pen"></i>
-                </button>
-                <button (click)="view($event, row, i)"
-                [disabled]="formOpened"
-                 class="icon-btn text-primary"
-                  tooltip="{{lang.map.view}}">
-                  <i class="mdi mdi-eye"></i>
-                </button>
-              </div>
-            </td>
-          </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
-          <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
-          <tr *cdkNoDataRow>
-            <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-          </tr>
-        </table>
-          <app-paginator #paginator></app-paginator>
-        </app-table>
-      </div>
-    </div>
-  </div>
-</ng-container>
