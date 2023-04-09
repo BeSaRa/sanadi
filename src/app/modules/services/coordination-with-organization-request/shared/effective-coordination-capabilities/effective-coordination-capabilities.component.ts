@@ -109,7 +109,9 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
           record.organizationId = this.orgId;
         }
         this.currentRecord = record || undefined;
-        this.openFormDialog();
+        if(this.currentRecord) {
+          this.openFormDialog();
+        }
       });
   }
 
