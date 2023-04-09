@@ -119,15 +119,15 @@
           <app-field-error-message controlName="averageDurationInHours"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
-          <label asteriskIfRequired="trainingLang" for="trainingLang"
+          <label asteriskIfRequired="trainingLangParsed" for="trainingLangParsed"
                  class="form-label">{{lang.map.training_languages}}</label>
-          <ng-select validationClasses="trainingLang" labelForId="trainingLang" placeholder="{{lang.map.select}}"
-                     [notFoundText]="lang.map.msg_not_found" formControlName="trainingLang" id="trainingLang"
-                     appendTo="body">
+          <ng-select validationClasses="trainingLangParsed" labelForId="trainingLangParsed" placeholder="{{lang.map.select}}"
+                     [notFoundText]="lang.map.msg_not_found" formControlName="trainingLangParsed" id="trainingLangParsed"
+                     appendTo="body" [multiple]="true">
             <ng-option [value]="trainingLanguage.lookupKey" *ngFor="let trainingLanguage of trainingLanguages"
                        [disabled]="!trainingLanguage.status">{{trainingLanguage.getName()}}</ng-option>
           </ng-select>
-          <app-field-error-message controlName="trainingLang"></app-field-error-message>
+          <app-field-error-message controlName="trainingLangParsed"></app-field-error-message>
         </div>
       </div>
       <div class="row">
