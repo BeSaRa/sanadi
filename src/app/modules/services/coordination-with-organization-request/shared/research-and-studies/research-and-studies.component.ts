@@ -19,6 +19,7 @@ import { DatepickerOptionsMap } from '@app/types/types';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
+import { ResearchAndStudiesPopupComponent } from './research-and-studies-popup/research-and-studies-popup.component';
 
 @Component({
   selector: 'app-research-and-studies',
@@ -31,14 +32,14 @@ export class ResearchAndStudiesComponent implements OnInit {
     private toastService: ToastService,
     private dialogService: DialogService,
     private fb: FormBuilder
-  ) {}
+  ) { }
   @Input() formArrayName: string = 'researchAndStudies';
-  @Input() orgId!:number|undefined;
+  @Input() orgId!: number | undefined;
 
-  allowListUpdate:boolean=true;
+  allowListUpdate: boolean = true;
   private _list: ResearchAndStudies[] = [];
   @Input() set list(list: ResearchAndStudies[]) {
-    if( this.allowListUpdate === true){
+    if (this.allowListUpdate === true) {
       this._list = list;
       this.listDataSource.next(this._list);
     }
@@ -49,8 +50,8 @@ export class ResearchAndStudiesComponent implements OnInit {
   }
   @Input() readonly: boolean = false;
   @Input() pageTitleKey: keyof ILanguageKeys = 'research_and_studies';
-  @Input() canUpdate:boolean=true;
-  @Input() isClaimed:boolean=false;
+  @Input() canUpdate: boolean = true;
+  @Input() isClaimed: boolean = false;
 
   listDataSource: BehaviorSubject<ResearchAndStudies[]> = new BehaviorSubject<
     ResearchAndStudies[]
@@ -67,21 +68,10 @@ export class ResearchAndStudiesComponent implements OnInit {
   private currentRecord?: ResearchAndStudies;
 
   private destroy$: Subject<any> = new Subject<any>();
-  formOpend=false;
+  formOpend = false;
   form!: FormGroup;
 
-  datepickerOptionsMap: DatepickerOptionsMap = {
-    searchStartDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
-    searchSubmissionDeadline: DateUtils.getDatepickerOptions({
-      disablePeriod: 'past',
-    }),
-  };
-
-  get formArray(): FormArray {
-    return this.form.get(this.formArrayName) as FormArray;
-  }
   filterControl: UntypedFormControl = new UntypedFormControl('');
-  showForm: boolean = false;
   ngOnInit(): void {
     this.buildForm();
     this.listenToAdd();
@@ -102,28 +92,38 @@ export class ResearchAndStudiesComponent implements OnInit {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.viewOnly = false;
-      this.formOpend=true;
+      this.formOpend = true;
       this.recordChanged$.next(new ResearchAndStudies());
     });
   }
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
-      if(record && this.orgId)record.organizationId=this.orgId;
+      if (record && this.orgId) record.organizationId = this.orgId;
       this.currentRecord = record || undefined;
-      this.showForm = !!this.currentRecord;
-      this.updateForm(this.currentRecord);
+      if (this.currentRecord) {
+        this.openFormDialog();
+      }
     });
   }
-  private updateForm(model: ResearchAndStudies | undefined) {
-    const formArray = this.formArray;
-    formArray.clear();
-    if (model) {
 
-      formArray.push(this.fb.group(new ResearchAndStudies().clone(model).BuildForm(true)));
-      if (this.readonly || this.viewOnly) {
-        this.formArray.disable();
+  _getFormPopup() {
+    return ResearchAndStudiesPopupComponent;
+  }
+  openFormDialog() {
+    this.dialogService.show(this._getFormPopup(), {
+      form: this.form,
+      editIndex: this.editIndex,
+      model: this.currentRecord,
+      readonly: this.readonly,
+      viewOnly: this.viewOnly,
+      formArrayName: this.formArrayName
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.onSave();
+      } else {
+        this.onCancel();
       }
-    }
+    })
   }
 
   private listenToSave() {
@@ -141,6 +141,7 @@ export class ResearchAndStudiesComponent implements OnInit {
         .onAfterClose$.pipe(take(1))
         .subscribe(() => {
           this.form.get(this.formArrayName)?.markAllAsTouched();
+          this.openFormDialog();
         });
     });
 
@@ -151,11 +152,11 @@ export class ResearchAndStudiesComponent implements OnInit {
           return this.form.get(`${this.formArrayName}.0`) as FormArray;
         }),
         map((form) => {
-          const model= new ResearchAndStudies().clone({
+          const model = new ResearchAndStudies().clone({
             ...this.currentRecord,
             ...form.getRawValue(),
           });
-          this.formOpend=false;
+          this.formOpend = false;
           return model;
         })
       )
@@ -191,7 +192,7 @@ export class ResearchAndStudiesComponent implements OnInit {
     this.listDataSource.next(this.list);
   }
   addAllowed(): boolean {
-    return !this.readonly && !this.showForm;
+    return !this.readonly;
   }
   onSave() {
     if (this.readonly || this.viewOnly) {
@@ -201,18 +202,14 @@ export class ResearchAndStudiesComponent implements OnInit {
   }
   onCancel() {
     this.resetForm();
-    this.showForm=false;
     this.editIndex = -1;
   }
   private resetForm() {
-    this.formOpend=false;
-    this.formArray.clear();
-    this.formArray.markAsUntouched();
-    this.formArray.markAsPristine();
+    this.formOpend = false;
   }
   view($event: MouseEvent, record: ResearchAndStudies, index: number) {
     $event.preventDefault();
-    this.formOpend=true;
+    this.formOpend = true;
     this.editIndex = index;
     this.viewOnly = true;
     this.recordChanged$.next(record);
@@ -238,38 +235,9 @@ export class ResearchAndStudiesComponent implements OnInit {
     if (this.readonly) {
       return;
     }
-    this.formOpend=true;
+    this.formOpend = true;
     this.editIndex = index;
     this.viewOnly = false;
     this.recordChanged$.next(record);
-  }
-  get researchAndStudiesForm() {
-    return this.form.controls.researchAndStudies as UntypedFormArray;
-  }
-  get researchAndStudiesFormArray() {
-    return this.researchAndStudiesForm.controls['0'] as UntypedFormGroup;
-  }
-  get searchStartDate() {
-    return this.researchAndStudiesFormArray.controls
-      .searchStartDate as UntypedFormControl;
-  }
-  get searchSubmissionDeadline() {
-    return this.researchAndStudiesFormArray.controls
-      .searchSubmissionDeadline as UntypedFormControl;
-  }
-  onDateChange(
-    event: IMyInputFieldChanged,
-    fromFieldName: string,
-    toFieldName: string
-  ): void {
-    DateUtils.setRelatedMinMaxDate({
-      fromFieldName,
-      toFieldName,
-      controlOptionsMap: this.datepickerOptionsMap,
-      controlsMap: {
-        searchStartDate: this.searchStartDate,
-        searchSubmissionDeadline: this.searchSubmissionDeadline,
-      },
-    });
   }
 }

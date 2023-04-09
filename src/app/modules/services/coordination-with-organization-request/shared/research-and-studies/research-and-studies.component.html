@@ -1,196 +1,65 @@
-<div [formGroup]="form">
-  <div formGroupName="{{formArrayName}}">
-    <ng-container *ngFor="let control of formArray.controls; let i = index">
-      <div [formGroupName]="i">
-        <div class="row">
-          <!-- Research Topic -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="researchTopic" for="researchTopic"
-              class="form-label">{{lang.map.lbl_research_topic}}</label>
-            <input id="researchTopic" validationClasses="researchTopic" formControlName="researchTopic" trimInput
-              class="form-control">
-            <app-field-error-message controlName="researchTopic"></app-field-error-message>
+<div class="table-responsive">
+  <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
+    [filter]="filterControl.value" [useSearchToFilter]="true">
+    <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header *ngIf="canUpdate && isClaimed" (textChange)="filterControl.setValue($event)"
+            tableTitle="research_and_studies" [add$]="add$" [allowAdd]="addAllowed()"
+            [skipClearSort]="true">
+          </table-header>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="researchTopic">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_research_topic}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.researchTopic}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="researchAndStudyObjectives">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_research_and_study_objectives}}</th>
+        <td cdk-cell *cdkCellDef="let row">{{row.researchAndStudyObjectives}}</td>
+      </ng-container>
+      <ng-container cdkColumnDef="expectedResearchResults">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_expected_research_results}}</th>
+        <td cdk-cell *cdkCellDef="let row">{{row.expectedResearchResults}}</td>
+      </ng-container>
+      <ng-container cdkColumnDef="generalLandmarks">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_general_landmarks}}</th>
+        <td cdk-cell *cdkCellDef="let row">{{row.generalLandmarks}}</td>
+      </ng-container>
+      <ng-container cdkColumnDef="requiredRole">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_required_role}}</th>
+        <td cdk-cell *cdkCellDef="let row">{{row.requiredRole}}</td>
+      </ng-container>
+      <ng-container cdkColumnDef="financialCost">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_financial_cost}}</th>
+        <td cdk-cell *cdkCellDef="let row">{{row.financialCost}}</td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+          <div class="d-flex flex-row">
+            <button (click)="delete($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
+              [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
+              <i class="mdi mdi-close-box"></i>
+            </button>
+            <button (click)="edit($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
+              [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
+              <i class="mdi mdi-pen"></i>
+            </button>
+            <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="formOpend"
+              tooltip="{{lang.map.view}}">
+              <i class="mdi mdi-eye"></i>
+            </button>
           </div>
-
-
-
-          <!-- Search Start Date -->
-          <div class="col-12 col-md-4 mb-4 position-relative">
-            <label for="searchStartDate" asteriskIfRequired="searchStartDate"
-              class="form-label">{{lang.map.lbl_search_start_date}}</label>
-            <div class="input-group">
-              <i class="input-group-text mdi mdi-calendar"></i>
-              <div class="form-control" formControlName="searchStartDate" id="searchStartDate"
-                [options]="datepickerOptionsMap.searchStartDate" (click)="dpsearchStartDate.toggleCalendar()"
-                (inputFieldChanged)="onDateChange($event, 'searchStartDate', 'searchSubmissionDeadline')"
-                [ngClass]="{'input-disabled': viewOnly}"
-                #dpsearchStartDate="angular-mydatepicker" angular-mydatepicker validationClasses="searchStartDate">
-              </div>
-              <app-field-error-message controlName="searchStartDate"></app-field-error-message>
-            </div>
-          </div>
-
-           <!-- Search Submission Deadline -->
-           <div class="col-12 col-md-4 mb-4 position-relative">
-            <label for="searchSubmissionDeadline" asteriskIfRequired="searchSubmissionDeadline"
-              class="form-label">{{lang.map.lbl_search_submission_deadline}}</label>
-            <div class="input-group">
-              <i class="input-group-text mdi mdi-calendar"></i>
-              <div class="form-control" formControlName="searchSubmissionDeadline" id="searchSubmissionDeadline"
-                [options]="datepickerOptionsMap.searchSubmissionDeadline"
-                (click)="dpsearchSubmissionDeadline.toggleCalendar()"
-                (inputFieldChanged)="onDateChange($event, 'searchStartDate', 'searchSubmissionDeadline')"
-                [ngClass]="{'input-disabled': viewOnly}"
-                #dpsearchSubmissionDeadline="angular-mydatepicker" angular-mydatepicker
-                validationClasses="searchSubmissionDeadline">
-              </div>
-              <app-field-error-message controlName="searchSubmissionDeadline"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-
-          <!-- Required Role -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="requiredRole" for="requiredRole"
-              class="form-label">{{lang.map.lbl_required_role}}</label>
-            <input id="requiredRole" validationClasses="requiredRole" formControlName="requiredRole" trimInput
-              class="form-control">
-            <app-field-error-message controlName="requiredRole"></app-field-error-message>
-          </div>
-          <!-- Financial Cost -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="financialCost" for="financialCost"
-              class="form-label">{{lang.map.lbl_financial_cost}}</label>
-            <input id="financialCost" validationClasses="financialCost" formControlName="financialCost" trimInput
-              class="form-control">
-            <app-field-error-message controlName="financialCost"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-
-           <!-- Research And Study Objectives -->
-          <div class="col-12 mb-4 position-relative">
-            <label asteriskIfRequired="researchAndStudyObjectives" for="researchAndStudyObjectives" class="form-label">{{
-              lang.map.lbl_research_and_study_objectives }}</label>
-            <textarea rows="5" id="researchAndStudyObjectives" validationClasses="researchAndStudyObjectives"
-              formControlName="researchAndStudyObjectives" class="form-control" trimInput></textarea>
-            <app-field-error-message controlName="researchAndStudyObjectives"></app-field-error-message>
-          </div>
-
-          <!-- Motives And Reasons -->
-          <div class="col-12 mb-4 position-relative">
-            <label asteriskIfRequired="motivesAndReasons" for="motivesAndReasons" class="form-label">{{
-              lang.map.lbl_motives_and_reasons }}</label>
-            <textarea rows="5" id="motivesAndReasons" validationClasses="motivesAndReasons"
-              formControlName="motivesAndReasons" class="form-control" trimInput></textarea>
-            <app-field-error-message controlName="motivesAndReasons"></app-field-error-message>
-          </div>
-          <!-- Expected Research Results -->
-          <div class="col-12 mb-4 position-relative">
-            <label asteriskIfRequired="expectedResearchResults" for="expectedResearchResults"
-              class="form-label">{{lang.map.lbl_expected_research_results}}</label>
-            <textarea rows="5" id="expectedResearchResults" validationClasses="expectedResearchResults"
-              formControlName="expectedResearchResults" class="form-control" trimInput></textarea>
-            <app-field-error-message controlName="expectedResearchResults"></app-field-error-message>
-          </div>
-          <!-- Researcher Definition -->
-          <div class="col-12 mb-4 position-relative">
-            <label asteriskIfRequired="researcherDefinition" for="researcherDefinition" class="form-label">{{
-              lang.map.lbl_researcher_definition }}</label>
-            <textarea rows="5" id="researcherDefinition" validationClasses="researcherDefinition"
-              formControlName="researcherDefinition" class="form-control" trimInput></textarea>
-            <app-field-error-message controlName="researcherDefinition"></app-field-error-message>
-          </div>
-          <!-- General Landmarks -->
-          <div class="col-12 mb-4 position-relative">
-            <label asteriskIfRequired="generalLandmarks" for="generalLandmarks"
-              class="form-label">{{lang.map.lbl_general_landmarks}}</label>
-
-            <textarea rows="5" id="generalLandmarks" validationClasses="generalLandmarks"
-              formControlName="generalLandmarks" class="form-control" trimInput></textarea>
-            <app-field-error-message controlName="generalLandmarks"></app-field-error-message>
-          </div>
-        </div>
-        <div class="d-flex flex-row align-items-center justify-content-center">
-          <button (click)="onSave()" [disabled]="readonly" *ngIf="!readonly && !viewOnly"
-            class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
-          <button (click)="onCancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
-        </div>
-      </div>
-    </ng-container>
-  </div>
+        </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+      <tr *cdkNoDataRow>
+        <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+      </tr>
+    </table>
+    <app-paginator #paginator></app-paginator>
+  </app-table>
 </div>
-
-<ng-container>
-  <div class="row" [hidden]="showForm">
-    <div class="col-md-6">
-      <app-page-header [hidden]="!canUpdate || !isClaimed" pageTitle="research_and_studies" [clickOnNew$]="add$"
-      ></app-page-header>
-    </div>
-
-    <app-grid-search class="search-grid" (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
-  </div>
-  <div class="row pt-3" *ngIf="!showForm">
-    <div class="col-12">
-      <div class="table-responsive">
-        <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
-          [filter]="filterControl.value" [useSearchToFilter]="true">
-          <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
-            <ng-container cdkColumnDef="researchTopic">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_research_topic}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.researchTopic}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="researchAndStudyObjectives">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_research_and_study_objectives}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.researchAndStudyObjectives}}</td>
-            </ng-container>
-            <ng-container cdkColumnDef="expectedResearchResults">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_expected_research_results}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.expectedResearchResults}}</td>
-            </ng-container>
-            <ng-container cdkColumnDef="generalLandmarks">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_general_landmarks}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.generalLandmarks}}</td>
-            </ng-container>
-            <ng-container cdkColumnDef="requiredRole">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_required_role}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.requiredRole}}</td>
-            </ng-container>
-            <ng-container cdkColumnDef="financialCost">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_financial_cost}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.financialCost}}</td>
-            </ng-container>
-
-
-            <ng-container cdkColumnDef="actions">
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-              <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-                <div class="d-flex flex-row">
-                  <button (click)="delete($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
-                    [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
-                    <i class="mdi mdi-close-box"></i>
-                  </button>
-                  <button (click)="edit($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
-                    [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
-                    <i class="mdi mdi-pen"></i>
-                  </button>
-                  <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="formOpend"
-                    tooltip="{{lang.map.view}}">
-                    <i class="mdi mdi-eye"></i>
-                  </button>
-                </div>
-              </td>
-            </ng-container>
-            <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
-            <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
-            <tr *cdkNoDataRow>
-              <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-            </tr>
-          </table>
-          <app-paginator #paginator></app-paginator>
-        </app-table>
-      </div>
-    </div>
-  </div>
-</ng-container>
