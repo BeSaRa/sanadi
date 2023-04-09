@@ -1,225 +1,89 @@
-<div [formGroup]="form">
-  <div formGroupName="effectiveCoordinationCapabilities">
-    <ng-container *ngFor="let control of formArray.controls; let i = index">
-      <div [formGroupName]="i">
-        <div class="row">
+<div class="table-responsive">
+  <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
+    [filter]="filterControl.value" [useSearchToFilter]="true">
+    <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header *ngIf="canUpdate && isClaimed" (textChange)="filterControl.setValue($event)"
+            tableTitle="effective_coordination_capabilities" [add$]="add$" [allowAdd]="addAllowed()"
+            [skipClearSort]="true">
+          </table-header>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="eventTopic">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_event_topic}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.eventTopic}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="motivesAndRationale">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_motives_and_rationale}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.motivesAndRationale}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="eventObjectives">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_event_objectivese}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.eventObjectives}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="expectedOutcomes">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_expected_outcomes}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.expectedOutcomes}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="axes">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_axes}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.axes}} </td>
+      </ng-container>
 
-          <!-- Event Topic -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="eventTopic" for="eventTopic"
-              class="form-label">{{lang.map.lbl_event_topic}}</label>
-            <input id="eventTopic" validationClasses="eventTopic" formControlName="eventTopic" trimInput
-              class="form-control">
-            <app-field-error-message controlName="eventTopic"></app-field-error-message>
-          </div>
-          <!-- Motives And Rationale -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="motivesAndRationale" for="motivesAndRationale"
-              class="form-label">{{lang.map.lbl_motives_and_rationale}}</label>
-            <input id="motivesAndRationale" validationClasses="motivesAndRationale"
-              formControlName="motivesAndRationale" trimInput class="form-control">
-            <app-field-error-message controlName="motivesAndRationale"></app-field-error-message>
-          </div>
-          <!-- Organization Way -->
-          <div class="col-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="organizationWay" for="organizationWay" class="form-label">{{
-              lang.map.lbl_organization_way }}</label>
-            <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
-              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="organizationWay" labelForId="organizationWay"
-              validationClasses="organizationWay" formControlName="organizationWay">
-              <ng-option *ngFor="let option of organizationWays" [value]="option.lookupKey">{{ option.getName() }}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="organizationWay"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <!-- Event Objectives -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="eventObjectives" for="eventObjectives"
-              class="form-label">{{lang.map.lbl_event_objectivese}}</label>
-            <input id="eventObjectives" validationClasses="eventObjectives" formControlName="eventObjectives" trimInput
-              class="form-control">
-            <app-field-error-message controlName="eventObjectives"></app-field-error-message>
-          </div>
-          <!-- Expected Outcomes -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="expectedOutcomes" for="expectedOutcomes"
-              class="form-label">{{lang.map.lbl_expected_outcomes}}</label>
-            <input id="expectedOutcomes" validationClasses="expectedOutcomes" formControlName="expectedOutcomes"
-              trimInput class="form-control">
-            <app-field-error-message controlName="expectedOutcomes"></app-field-error-message>
-          </div>
-          <!-- Axes -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="axes" for="axes" class="form-label">{{lang.map.lbl_axes}}</label>
-            <input id="axes" validationClasses="axes" formControlName="axes" trimInput class="form-control">
-            <app-field-error-message controlName="axes"></app-field-error-message>
-          </div>
+      <ng-container cdkColumnDef="daysNumber">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_days_number_for_event}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.daysNumber}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="hoursNumber">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_hours_number_for_event}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.hoursNumber}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="organizationWay">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_organization_way}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.organizationWayInfo?.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="sponsorsAndOrganizingPartners">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_sponsors_and_organizing_partners}}
+        </th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.sponsorsAndOrganizingPartners}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="financialAllotment">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_financial_allotment}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.financialAllotment}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="organizationRequiredRole">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_organization_required_role}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.organizationRequiredRole}} </td>
+      </ng-container>
 
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+          <div class="d-flex flex-row">
+            <button (click)="delete($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
+              [disabled]="!isClaimed || formOpened" tooltip="{{lang.map.btn_delete}}">
+              <i class="mdi mdi-close-box"></i>
+            </button>
+            <button (click)="edit($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
+              [disabled]="!isClaimed || formOpened" tooltip="{{lang.map.btn_edit}}">
+              <i class="mdi mdi-pen"></i>
+            </button>
+            <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="formOpened"
+              tooltip="{{lang.map.view}}">
 
-        </div>
-        <div class="row">
-          <!-- Event Start Date -->
-          <div class="col-12 col-md-4 mb-4 position-relative">
-            <label for="eventStartDate" asteriskIfRequired="eventStartDate"
-              class="form-label">{{lang.map.lbl_event_start_date}}</label>
-            <div class="input-group">
-              <i class="input-group-text mdi mdi-calendar"></i>
-              <div class="form-control" formControlName="eventStartDate" id="eventStartDate"
-                [options]="datepickerOptionsMap.eventStartDate" (click)="dpeventStartDate.toggleCalendar()"
-                [ngClass]="{'input-disabled': viewOnly}" #dpeventStartDate="angular-mydatepicker" angular-mydatepicker
-                validationClasses="eventStartDate">
-              </div>
-              <app-field-error-message controlName="eventStartDate"></app-field-error-message>
-            </div>
+              <i class="mdi mdi-eye"></i>
+            </button>
           </div>
-          <!-- Days Number -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="daysNumber" for="daysNumber"
-              class="form-label">{{lang.map.lbl_days_number_for_event}}</label>
-            <input id="daysNumber" validationClasses="daysNumber" formControlName="daysNumber" trimInput
-              class="form-control">
-            <app-field-error-message controlName="daysNumber"></app-field-error-message>
-          </div>
-          <!-- Hours Number -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="hoursNumber" for="hoursNumber"
-              class="form-label">{{lang.map.lbl_hours_number_for_event}}</label>
-            <input id="hoursNumber" validationClasses="hoursNumber" formControlName="hoursNumber" trimInput
-              class="form-control">
-            <app-field-error-message controlName="hoursNumber"></app-field-error-message>
-          </div>
-
-        </div>
-        <div class="row">
-
-          <!-- Sponsors And Organizing Partners -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="sponsorsAndOrganizingPartners" for="sponsorsAndOrganizingPartners"
-              class="form-label">{{lang.map.lbl_sponsors_and_organizing_partners}}</label>
-            <input id="sponsorsAndOrganizingPartners" validationClasses="sponsorsAndOrganizingPartners"
-              formControlName="sponsorsAndOrganizingPartners" trimInput class="form-control">
-            <app-field-error-message controlName="sponsorsAndOrganizingPartners"></app-field-error-message>
-          </div>
-          <!-- Financial Allotment -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="financialAllotment" for="financialAllotment"
-              class="form-label">{{lang.map.lbl_financial_allotment}}</label>
-            <input id="financialAllotment" validationClasses="financialAllotment" formControlName="financialAllotment"
-              trimInput class="form-control">
-            <app-field-error-message controlName="financialAllotment"></app-field-error-message>
-          </div>
-          <!-- Organization Required Role -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="organizationRequiredRole" for="organizationRequiredRole"
-              class="form-label">{{lang.map.lbl_organization_required_role}}</label>
-            <input id="organizationRequiredRole" validationClasses="organizationRequiredRole"
-              formControlName="organizationRequiredRole" trimInput class="form-control">
-            <app-field-error-message controlName="organizationRequiredRole"></app-field-error-message>
-          </div>
-        </div>
-
-        <div class="d-flex flex-row align-items-center justify-content-center">
-          <button (click)="onSave()" [disabled]="readonly" *ngIf="!readonly && !viewOnly"
-            class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
-          <button (click)="onCancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
-        </div>
-      </div>
-    </ng-container>
-  </div>
+        </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+      <tr *cdkNoDataRow>
+        <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+      </tr>
+    </table>
+    <app-paginator #paginator></app-paginator>
+  </app-table>
 </div>
-
-<ng-container>
-  <div class="row" [hidden]="showForm">
-    <div class="col-md-6">
-      <app-page-header [hidden]="!canUpdate || !isClaimed" pageTitle="effective_coordination_capabilities"
-        [clickOnNew$]="add$" [addPermission]="addAllowed()"></app-page-header>
-    </div>
-
-    <app-grid-search class="search-grid" (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
-  </div>
-  <div class="row pt-3" *ngIf="!showForm">
-    <div class="col-12">
-      <div class="table-responsive">
-        <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
-          [filter]="filterControl.value" [useSearchToFilter]="true">
-          <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
-            <ng-container cdkColumnDef="eventTopic">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_event_topic}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.eventTopic}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="motivesAndRationale">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_motives_and_rationale}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.motivesAndRationale}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="eventObjectives">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_event_objectivese}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.eventObjectives}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="expectedOutcomes">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_expected_outcomes}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.expectedOutcomes}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="axes">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_axes}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.axes}} </td>
-            </ng-container>
-
-            <ng-container cdkColumnDef="daysNumber">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_days_number_for_event}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.daysNumber}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="hoursNumber">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_hours_number_for_event}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.hoursNumber}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="organizationWay">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_organization_way}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.organizationWayInfo?.getName()}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="sponsorsAndOrganizingPartners">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_sponsors_and_organizing_partners}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.sponsorsAndOrganizingPartners}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="financialAllotment">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_financial_allotment}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.financialAllotment}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="organizationRequiredRole">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_organization_required_role}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.organizationRequiredRole}} </td>
-            </ng-container>
-
-            <ng-container cdkColumnDef="actions">
-              <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.lbl_actions}}</th>
-              <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-                <div class="d-flex flex-row">
-                  <button (click)="delete($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
-                          [disabled]="!isClaimed || formOpened" tooltip="{{lang.map.btn_delete}}">
-                    <i class="mdi mdi-close-box"></i>
-                  </button>
-                  <button (click)="edit($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
-                          [disabled]="!isClaimed || formOpened" tooltip="{{lang.map.btn_edit}}">
-                    <i class="mdi mdi-pen"></i>
-                  </button>
-                  <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="formOpened"
-                    tooltip="{{lang.map.view}}">
-
-                    <i class="mdi mdi-eye"></i>
-                  </button>
-                </div>
-              </td>
-            </ng-container>
-            <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
-            <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
-            <tr *cdkNoDataRow>
-              <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-            </tr>
-          </table>
-          <app-paginator #paginator></app-paginator>
-        </app-table>
-      </div>
-    </div>
-  </div>
-</ng-container>

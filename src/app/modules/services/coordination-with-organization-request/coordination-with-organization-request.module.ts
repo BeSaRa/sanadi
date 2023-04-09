@@ -43,6 +43,7 @@ import {
   ResearchAndStudiesComponent
 } from '@modules/services/coordination-with-organization-request/shared/research-and-studies/research-and-studies.component';
 import { BuildingAbilityPopupComponent } from './shared/building-ability/building-ability-popup/building-ability-popup.component';
+import { EffectiveCoordinationCapabilitiesPopupComponent } from './shared/effective-coordination-capabilities/effective-coordination-capabilities-popup/effective-coordination-capabilities-popup.component';
 
 
 @NgModule({
@@ -56,6 +57,7 @@ import { BuildingAbilityPopupComponent } from './shared/building-ability/buildin
     BuildingAbilityComponent,
     BuildingAbilityPopupComponent,
     EffectiveCoordinationCapabilitiesComponent,
+    EffectiveCoordinationCapabilitiesPopupComponent,
     OrganizationOfficerComponent,
     ResearchAndStudiesComponent
   ],
