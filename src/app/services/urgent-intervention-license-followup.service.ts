@@ -119,6 +119,7 @@ export class UrgentInterventionLicenseFollowupService extends BaseGenericEServic
   saveAttachment(caseId: string, @InterceptParam() attachment: UrgentInterventionAttachment, file: File): Observable<any> {
     const formData = new FormData();
     file ? formData.append('content', file) : null;
+    attachment.description = attachment.description?? '';
     return this.http.post<any>(this._getURLSegment() + '/report/' + caseId + '/attachment/', formData, {
       params: new HttpParams({fromObject: attachment as any}),
     })
@@ -128,14 +129,17 @@ export class UrgentInterventionLicenseFollowupService extends BaseGenericEServic
   updateAttachment(caseId: string, @InterceptParam() attachment: UrgentInterventionAttachment, file: File): Observable<any> {
     const formData = new FormData();
     file ? formData.append('content', file) : null;
-    let model = new UrgentInterventionAttachment().clone({
-      isPublished:attachment.isPublished,
-      required:attachment.required,
-      documentTitle:attachment.documentTitle,
-      description:attachment.description,
-      reportId :attachment.reportId
-    });
-    return this.http.post<any>(this._getURLSegment()  + caseId + '/update-document/', formData, {
+    console.log(attachment);
+
+    const model ={
+      id: attachment.id,
+      documentTitle: attachment.documentTitle,
+      vsId:attachment.vsId,
+      description: attachment.description?? '',
+      reportId: attachment.reportId
+    }
+    ;
+    return this.http.post<any>(this._getURLSegment() +'/report/' + caseId + '/update-attachment/', formData, {
       params: new HttpParams({fromObject: model as any}),
     })
       .pipe(catchError(() => of(null)));

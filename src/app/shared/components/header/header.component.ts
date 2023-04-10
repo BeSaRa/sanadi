@@ -24,7 +24,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-     this.toggleToDefaultLanguage();
+    //  this.toggleToDefaultLanguage();
   }
 
   toggleToDefaultLanguage(): void {
