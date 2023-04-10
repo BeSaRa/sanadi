@@ -1,40 +1,41 @@
-import { Component, Inject } from '@angular/core';
-import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
-import { TrainingProgram } from '@app/models/training-program';
-import { FormManager } from '@app/models/form-manager';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { IDialogData } from '@app/interfaces/i-dialog-data';
-import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { ToastService } from '@app/services/toast.service';
-import { DialogService } from '@app/services/dialog.service';
-import { Lookup } from '@app/models/lookup';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { DateUtils } from '@app/helpers/date-utils';
-import { IMyDateModel, IMyInputFieldChanged } from 'angular-mydatepicker';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { exhaustMap, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { Trainer } from '@app/models/trainer';
-import { TrainerService } from '@app/services/trainer.service';
-import { TrainingStatus } from '@app/enums/training-status';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { EmployeeService } from '@app/services/employee.service';
-import { DatepickerControlsMap, DatepickerOptionsMap } from '@app/types/types';
-import { ProfileService } from '@services/profile.service';
-import { Profile } from '@app/models/profile';
-import { TrainingProgramPartner } from '@app/models/training-program-partner';
-import { TrainingProgramPartnerService } from '@app/services/training-program-partner.service';
+import {AfterViewInit, Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
+import {TrainingProgram} from '@app/models/training-program';
+import {FormManager} from '@app/models/form-manager';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {ToastService} from '@app/services/toast.service';
+import {DialogService} from '@app/services/dialog.service';
+import {Lookup} from '@app/models/lookup';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {DateUtils} from '@app/helpers/date-utils';
+import {IMyDateModel, IMyInputFieldChanged} from 'angular-mydatepicker';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {exhaustMap, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {Trainer} from '@app/models/trainer';
+import {TrainerService} from '@app/services/trainer.service';
+import {TrainingStatus} from '@app/enums/training-status';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {EmployeeService} from '@app/services/employee.service';
+import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
+import {ProfileService} from '@services/profile.service';
+import {Profile} from '@app/models/profile';
+import {TrainingProgramPartner} from '@app/models/training-program-partner';
+import {TrainingProgramPartnerService} from '@app/services/training-program-partner.service';
+import {CommonUtils} from '@helpers/common-utils';
 
 @Component({
   selector: 'training-program-popup',
   templateUrl: './training-program-popup.component.html',
   styleUrls: ['./training-program-popup.component.scss']
 })
-export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingProgram> {
+export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingProgram> implements AfterViewInit {
   approve$ = new Subject<any>();
   saveAndApproveClicked = false;
   saveAndPublishClicked = false;
@@ -77,10 +78,10 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   tabIndex$: Subject<number> = new Subject<number>();
   datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap: DatepickerOptionsMap = {
-    startDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
-    endDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
-    registerationStartDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
-    registerationClosureDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
+    startDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    endDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    registerationStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    registerationClosureDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
   };
   hoursList = DateUtils.getHoursList();
   trainingDomains: Lookup[] = this.lookupService.listByCategory.TRAINING_DOMAIN;
@@ -113,22 +114,31 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   isValidPastTrainingStartDate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isValidPastRegistrationEndDate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   internalUserControls: UntypedFormControl[] = [];
+  @ViewChild('dialogContent') dialogContent!: ElementRef;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
-    public lang: LangService,
-    public fb: UntypedFormBuilder,
-    public lookupService: LookupService,
-    public toast: ToastService,
-    public dialogRef: DialogRef,
-    public dialogService: DialogService,
-    private profileService: ProfileService,
-    private trainerService: TrainerService,
-    private trainingProgramPartnerService: TrainingProgramPartnerService,
-    private employeeService: EmployeeService) {
+              public lang: LangService,
+              public fb: UntypedFormBuilder,
+              public lookupService: LookupService,
+              public toast: ToastService,
+              public dialogRef: DialogRef,
+              public dialogService: DialogService,
+              private profileService: ProfileService,
+              private trainerService: TrainerService,
+              private trainingProgramPartnerService: TrainingProgramPartnerService,
+              private employeeService: EmployeeService) {
     super();
     this.operation = data.operation;
     this.model = data.model;
     this.isCertification = !!data.isCertification;
+  }
+
+  ngAfterViewInit() {
+    Promise.resolve().then(() => {
+      if (this.operation !== OperationTypes.VIEW) {
+        CommonUtils.displayFormValidity(this.form, this.dialogContent.nativeElement);
+      }
+    })
   }
 
   initPopup(): void {
@@ -165,7 +175,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     let classes
     classes = this.fm.getStatusClass('registerationStartDate');
     if (this.model.status && this.model.status != this.trainingStatus.DATA_ENTERED) {
-      classes = { ...classes, 'input-disabled': true };
+      classes = {...classes, 'input-disabled': true};
     }
     return classes;
   }
@@ -174,7 +184,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     let classes
     classes = this.fm.getStatusClass(controlName);
     if (this.isCertification || this.operation == OperationTypes.VIEW) {
-      classes = { ...classes, 'input-disabled': true };
+      classes = {...classes, 'input-disabled': true};
     }
     return classes;
   }
@@ -189,7 +199,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
         return this.model.approve();
       }))
       .subscribe(() => {
-        const message = this.lang.map.training_x_approved_successfully.change({ x: this.model.activityName });
+        const message = this.lang.map.training_x_approved_successfully.change({x: this.model.activityName});
         this.toast.success(message);
         this.dialogRef.close(this.model);
       });
@@ -302,7 +312,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       }))
       .pipe(take(1),
         exhaustMap((click: UserClickOn) => {
-          let model = new TrainingProgram().clone({ ...this.model, ...this.form.value });
+          let model = new TrainingProgram().clone({...this.model, ...this.form.value});
           if (click === UserClickOn.NO) {
             return of(null);
           } else if (click === UserClickOn.YES && isValidTrainingStart && isValidRegistrationEnd) {
@@ -338,7 +348,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
         return this.model.publish();
       }))
       .subscribe(() => {
-        const message = this.lang.map.training_x_published_successfully.change({ x: this.model.activityName });
+        const message = this.lang.map.training_x_published_successfully.change({x: this.model.activityName});
         this.toast.success(message);
         this.dialogRef.close(this.model);
       });
@@ -347,19 +357,19 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   cancelProgram(event: MouseEvent): void {
     event.preventDefault();
     // @ts-ignore
-    const confirmMessage = this.lang.map.msg_confirm_cancel_x.change({ x: this.model.activityName });
+    const confirmMessage = this.lang.map.msg_confirm_cancel_x.change({x: this.model.activityName});
     this.dialogService.confirm(confirmMessage)
       .onAfterClose$.subscribe((click: UserClickOn) => {
-        if (click === UserClickOn.YES) {
-          const sub = this.model.cancel().subscribe(() => {
-            // @ts-ignore
-            const message = this.lang.map.training_x_canceled_successfully.change({ x: this.model.activityName });
-            this.toast.success(message);
-            this.dialogRef.close(this.model);
-            sub.unsubscribe();
-          });
-        }
-      });
+      if (click === UserClickOn.YES) {
+        const sub = this.model.cancel().subscribe(() => {
+          // @ts-ignore
+          const message = this.lang.map.training_x_canceled_successfully.change({x: this.model.activityName});
+          this.toast.success(message);
+          this.dialogRef.close(this.model);
+          sub.unsubscribe();
+        });
+      }
+    });
   }
 
   trainingStartDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
@@ -450,7 +460,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   get trainingLangControl(): UntypedFormControl {
-    return this.form.get('trainingLang') as UntypedFormControl;
+    return this.form.get('trainingLangParsed') as UntypedFormControl;
   }
 
   get numberOfSeatsControl(): UntypedFormControl {
@@ -521,7 +531,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   prepareModel(model: TrainingProgram, form: UntypedFormGroup): Observable<TrainingProgram> | TrainingProgram {
-    return (new TrainingProgram()).clone({ ...model, ...form.value });
+    return (new TrainingProgram()).clone({...model, ...form.value});
   }
 
   afterSave(model: TrainingProgram, dialogRef: DialogRef): void {
@@ -533,7 +543,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     } else {
       const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
       // @ts-ignore
-      this.toast.success(message.change({ x: model.activityName }));
+      this.toast.success(message.change({x: model.activityName}));
       this.dialogRef.close(this.model);
     }
   }
@@ -576,7 +586,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
         this.selectedOrganizations = [...this.selectedOrganizations, org];
         this.model.targetOrganizationListIds = this.selectedOrganizations.map(org => org.id);
         this.selectedOrganization = undefined;
-        this.toast.success(this.lang.map.msg_added_x_success.change({ x: org.getName() }));
+        this.toast.success(this.lang.map.msg_added_x_success.change({x: org.getName()}));
         return;
       }
 
@@ -620,7 +630,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       this.selectedTrainers = [...this.selectedTrainers, trainer];
       this.model.trainerListIds = this.selectedTrainers.map(trainer => trainer.id);
       this.selectedTrainer = undefined;
-      this.toast.success(this.lang.map.msg_added_x_success.change({ x: trainer.getName() }));
+      this.toast.success(this.lang.map.msg_added_x_success.change({x: trainer.getName()}));
       return;
     }
 
@@ -639,6 +649,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
         this.trainingPartnersList = partners;
       });
   }
+
   private loadTrainers(): void {
     this.loadTrainers$.subscribe(() => {
       this.trainerService.loadAsLookups()
