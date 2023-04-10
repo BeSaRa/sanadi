@@ -60,9 +60,6 @@ export class ResearchAndStudiesPopupComponent implements OnInit {
         this.formArray.disable();
       }
     }
-    this.form.valueChanges.subscribe(() => {
-      console.log(this.form)
-    })
   }
 
   get researchAndStudiesForm() {

@@ -1,58 +1,45 @@
-<div [formGroup]="form" *ngIf="formOpend">
-  <formly-form [form]="form" [fields]="fieldBuilder.fieldsGroups"></formly-form>
-  <div class="d-flex flex-row align-items-center justify-content-center">
-    <button (click)="onSave()" [disabled]="readonly" *ngIf="!readonly && !viewOnly"
-      class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
-    <button (click)="onCancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
-  </div>
+<div class="table-responsive">
+  <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
+    [filter]="filterControl.value" [useSearchToFilter]="true">
+    <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header *ngIf="canUpdate && isClaimed" (textChange)="filterControl.setValue($event)"
+            tableTitle="effective_coordination_capabilities" [add$]="add$" [allowAdd]="addAllowed()"
+            [skipClearSort]="true">
+          </table-header>
+        </th>
+      </ng-container>
+      <ng-container *ngFor="let column of columns.slice(0, -1)" [cdkColumnDef]="column">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{ getHeaderName(column) }}</th>
+        <td cdk-cell *cdkCellDef="let row">{{ getCellValue(row, column) }}</td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+          <div class="d-flex flex-row">
+            <button (click)="delete($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
+              [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
+              <i class="mdi mdi-close-box"></i>
+            </button>
+            <button (click)="edit($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
+              [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
+              <i class="mdi mdi-pen"></i>
+            </button>
+            <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="formOpend"
+              tooltip="{{lang.map.view}}">
+              <i class="mdi mdi-eye"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+      <tr *cdkNoDataRow>
+        <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+      </tr>
+    </table>
+    <app-paginator #paginator></app-paginator>
+  </app-table>
 </div>
-
-<ng-container>
-  <div class="row" [hidden]="showForm">
-    <div class="col-md-6">
-      <app-page-header [hidden]="!canUpdate || !isClaimed" [pageTitle]="pageTitleKey" [clickOnNew$]="add$">
-      </app-page-header>
-    </div>
-    <app-grid-search class="search-grid" (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
-  </div>
-  <div class="row pt-3" *ngIf="!showForm">
-    <div class="col-12">
-      <div class="table-responsive">
-        <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
-          [filter]="filterControl.value" [useSearchToFilter]="true">
-          <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
-            <ng-container *ngFor="let column of columns.slice(0, -1)" [cdkColumnDef]="column">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{ getHeaderName(column) }}</th>
-              <td cdk-cell *cdkCellDef="let row">{{ getCellValue(row, column) }}</td>
-            </ng-container>
-            <ng-container cdkColumnDef="actions">
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-              <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-                <div class="d-flex flex-row">
-                  <button (click)="delete($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
-                    [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
-                    <i class="mdi mdi-close-box"></i>
-                  </button>
-                  <button (click)="edit($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
-                    [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
-                    <i class="mdi mdi-pen"></i>
-                  </button>
-                  <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="formOpend"
-                    tooltip="{{lang.map.view}}">
-                    <i class="mdi mdi-eye"></i>
-                  </button>
-                </div>
-              </td>
-            </ng-container>
-            <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
-            <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
-            <tr *cdkNoDataRow>
-              <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-            </tr>
-          </table>
-          <app-paginator #paginator></app-paginator>
-        </app-table>
-      </div>
-    </div>
-  </div>
-</ng-container>
