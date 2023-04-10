@@ -565,7 +565,8 @@ export class PartnerApprovalComponent
   loadLicencesByCriteria(
     criteria: Partial<PartnerApprovalSearchCriteria>
   ): Observable<PartnerApproval[]> {
-    return this.service.licenseSearch(criteria);
+    const hasOrgId = this.requestType.value !== ServiceRequestTypes.UPDATE
+    return this.service.licenseSearch(criteria,hasOrgId);
   }
 
   openDateMenu(ref: any) {

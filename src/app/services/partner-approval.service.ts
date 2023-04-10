@@ -111,8 +111,9 @@ implements ILicenseSearch<PartnerApproval> {
     return new PartnerApprovalSearchCriteria();
   }
 
-  licenseSearch(criteria: Partial<PartnerApprovalSearchCriteria> = {}): Observable<PartnerApproval[]> {
-    return this.licenseService.partnerApprovalLicenseSearch(criteria);
+  licenseSearch(criteria: Partial<PartnerApprovalSearchCriteria> = {},hasOrgId:boolean =false): Observable<PartnerApproval[]> {
+    return hasOrgId? this.licenseService.partnerApprovalLicenseSearchByOrgId(criteria):
+                     this.licenseService.partnerApprovalLicenseSearch(criteria);
   }
   licenseSearchById(licenseId:string): Observable<PartnerApproval>{
     return this.licenseService.loadPartnerLicenseByLicenseId(licenseId)
