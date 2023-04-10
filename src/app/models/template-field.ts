@@ -145,7 +145,7 @@ export class TemplateField extends Cloneable<TemplateField> implements IAuditMod
       note,
       className: classes,
       templateOptions: {
-        required: required,
+        required: required && status == CommonStatusEnum.ACTIVATED,
         pattern: pattern,
         rows: 3,
         options: of(options),

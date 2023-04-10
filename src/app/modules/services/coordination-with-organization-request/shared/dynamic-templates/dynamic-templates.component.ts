@@ -8,7 +8,6 @@ import {
   FormBuilder, UntypedFormControl, UntypedFormGroup
 } from '@angular/forms';
 import { UserClickOn } from '@enums/user-click-on.enum';
-import { ILanguageKeys } from '@contracts/i-language-keys';
 import { DialogService } from '@services/dialog.service';
 import { LangService } from '@services/lang.service';
 import { ToastService } from '@services/toast.service';
@@ -18,6 +17,7 @@ import { TemplateFieldTypes } from '@enums/template-field-types.enum';
 import { CoordinationWithOrganizationTemplate } from '@models/corrdination-with-organization-template';
 import { ProcessFieldBuilder } from '@app/administration/popups/general-process-popup/process-formly-components/process-fields-builder';
 import { DynamicModelService } from '@services/dynamic-models.service';
+import { DynamicTemplatesPopupComponent } from './dynamic-templates-popup/dynamic-templates-popup.component';
 
 @Component({
   selector: 'app-dynamic-templates',
@@ -42,7 +42,6 @@ export class DynamicTemplatesComponent implements OnInit {
     return this._list;
   }
   @Input() readonly: boolean = false;
-  @Input() pageTitleKey: keyof ILanguageKeys = 'lbl_template';
   @Input() canUpdate: boolean = true;
   @Input() isClaimed: boolean = false;
   fieldBuilder: ProcessFieldBuilder;
@@ -66,7 +65,6 @@ export class DynamicTemplatesComponent implements OnInit {
   form!: UntypedFormGroup;
 
   filterControl: UntypedFormControl = new UntypedFormControl('');
-  showForm: boolean = false;
   usedModel!: DynamicModel;
   constructor(
     public lang: LangService,
@@ -131,23 +129,32 @@ export class DynamicTemplatesComponent implements OnInit {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       if (record && this.profileId) record.profileId = this.profileId;
       this.currentRecord = record || undefined;
-      this.showForm = !!this.currentRecord;
-      this.updateForm(this.currentRecord);
+      if(this.currentRecord) {
+        this.openFormDialog();
+      }
     });
   }
-  private updateForm(model: CoordinationWithOrganizationTemplate | undefined) {
-    if (model) {
-      this.fieldBuilder.buildMode = 'use';
-      if (model?.template) {
-        this.fieldBuilder.generateFromString(model?.template);
-        if (this.readonly || this.viewOnly) {
-          this.fieldBuilder.buildMode = 'view'
-        }
-      } else {
-        this.fieldBuilder.generateFromString(this.usedModel?.template);
-      }
-    }
+  _getFormPopup() {
+    return DynamicTemplatesPopupComponent;
   }
+  openFormDialog() {
+    this.dialogService.show(this._getFormPopup(), {
+      form: this.form,
+      editIndex: this.editIndex,
+      model: this.currentRecord,
+      readonly: this.readonly,
+      viewOnly: this.viewOnly,
+      usedModel: this.usedModel,
+      fieldBuilder: this.fieldBuilder,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.onSave();
+      } else {
+        this.onCancel();
+      }
+    })
+  }
+
 
   private listenToSave() {
     const form$ = this.save$.pipe(
@@ -164,6 +171,7 @@ export class DynamicTemplatesComponent implements OnInit {
         .onAfterClose$.pipe(take(1))
         .subscribe(() => {
           this.form?.markAllAsTouched();
+          this.openFormDialog();
         });
     });
 
@@ -219,7 +227,7 @@ export class DynamicTemplatesComponent implements OnInit {
     this.listDataSource.next(this.list);
   }
   addAllowed(): boolean {
-    return !this.readonly && !this.showForm;
+    return !this.readonly;
   }
   onSave() {
     if (this.readonly || this.viewOnly) {
@@ -229,7 +237,6 @@ export class DynamicTemplatesComponent implements OnInit {
   }
   onCancel() {
     this.resetForm();
-    this.showForm = false;
     this.editIndex = -1;
   }
   private resetForm() {

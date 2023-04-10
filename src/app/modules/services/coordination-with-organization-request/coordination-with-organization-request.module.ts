@@ -47,6 +47,7 @@ import {
 import { BuildingAbilityPopupComponent } from './shared/building-ability/building-ability-popup/building-ability-popup.component';
 import { EffectiveCoordinationCapabilitiesPopupComponent } from './shared/effective-coordination-capabilities/effective-coordination-capabilities-popup/effective-coordination-capabilities-popup.component';
 import { ResearchAndStudiesPopupComponent } from './shared/research-and-studies/research-and-studies-popup/research-and-studies-popup.component';
+import { DynamicTemplatesPopupComponent } from './shared/dynamic-templates/dynamic-templates-popup/dynamic-templates-popup.component';
 import { AuditCoordinationWithOrganizationRequestComponent } from './audit/audit-coordination-with-organization-request/audit-coordination-with-organization-request.component';
 import { AuditBuildingAbilityComponent } from './audit/audit-building-ability/audit-building-ability.component';
 import { AuditEffectiveCoordinationCapabilitiesComponent } from './audit/audit-effective-coordination-capabilities/audit-effective-coordination-capabilities.component';
@@ -61,6 +62,7 @@ import { SharedServicesModule } from '../shared-services/shared-services.module'
     CoordinationWithOrganizationRequestOutputComponent,
     CoordinationWithOrgPopupComponent,
     DynamicTemplatesComponent,
+    DynamicTemplatesPopupComponent,
     ParticipantOrganizationsPopupComponent,
     ParticipantOrganizationComponent,
     BuildingAbilityComponent,
