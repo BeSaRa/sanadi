@@ -16,32 +16,32 @@
           </ng-container>
           
           <ng-container cdkColumnDef="studentQID">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header
                 > {{lang.map.student_QID}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.studentQID}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="gradeLevelEN">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header
                 > {{lang.map.grade_level_english}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.gradeLevelEN}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="gradeLevelAR">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header
                 > {{lang.map.grade_level_arabic}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.gradeLevelAR}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="studentNameEN">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header
                 > {{lang.map.student_name_english}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.studentNameEN}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="schoolNameAR">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header
                 > {{lang.map.school_name_arabic}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.schoolNameAR}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="schoolNameEN">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header
                 > {{lang.map.school_name_english}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.schoolNameEN}}</span></td>
           </ng-container>
@@ -57,7 +57,7 @@
           <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: table.columns;"
               (contextmenu)="menu.open($event , row)"
-              [ngClass]="{'selected-row': selectedMoeStudentInfo && selectedMoeStudentInfo.installments === row.installments && selectedMoeStudentInfo.privateSchoolPendingPayment === row.privateSchoolPendingPayment}"></tr>
+              [ngClass]="{'selected-row': selectedMoeStudentInfo && selectedMoeStudentInfo.studentQID === row.studentQID}"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
           </tr>

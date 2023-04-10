@@ -41,6 +41,7 @@ import {GdxKahramaaResponse} from '@app/models/gdx-kahramaa-response';
 import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
 import {GdxSjcMaritalStatusResponse} from '@models/gdx-sjc-marital-status-response';
 import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
+import { GdxMmeResponse } from '@app/models/gdx-mme-leased-contract';
 
 const beneficiarySearchLogCriteriaInterceptor = new BeneficiarySearchLogCriteriaInterceptor();
 
@@ -243,5 +244,13 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   })
   addMOEPendingInstallments(criteria: IGdxCriteria) {
     return this.http.post<GdxMoeResponse[]>(this._getGDXServiceURL() + '/moe-pending-installments', criteria);
+  }
+
+  @CastResponse(() => GdxMmeResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addMMELeasedContract(criteria: IGdxCriteria) {
+    return this.http.post<GdxMoeResponse[]>(this._getGDXServiceURL() + '/mme-leased-contracts', criteria);
   }
 }

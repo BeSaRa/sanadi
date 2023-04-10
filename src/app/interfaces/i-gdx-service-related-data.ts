@@ -11,6 +11,7 @@ import {GdxSjcMaritalStatusResponse} from '@models/gdx-sjc-marital-status-respon
 import { GdxMoeInstallment } from '@app/models/gdx-moe-Installment';
 import { GdxMoePrivateSchoolPendingPayment } from '@app/models/gdx-moe-private-school-pending-payment';
 import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
+import { GdxMmeResponse } from '@app/models/gdx-mme-leased-contract';
 
 export interface IGdxServiceRelatedData {
   [GdxServiceRelatedTypesEnum.MOJ_FLATS]: GdxFlatInfo[],
@@ -25,4 +26,5 @@ export interface IGdxServiceRelatedData {
   [GdxServiceRelatedTypesEnum.MOE_STUDENT_INFO]: GdxMoeResponse[],
   [GdxServiceRelatedTypesEnum.MOE_INSTALLMENTS]: GdxMoeInstallment[],
   [GdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS]: GdxMoePrivateSchoolPendingPayment[],
+  [GdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT]: GdxMmeResponse[],
 }

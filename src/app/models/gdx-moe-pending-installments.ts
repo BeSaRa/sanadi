@@ -21,6 +21,8 @@ export class GdxMoeResponse extends SearchableCloneable<GdxMoeResponse>{
   installments!: GdxMoeInstallment[];
   privateSchoolPendingPayment!:GdxMoePrivateSchoolPendingPayment[];
   
+  //extra properties
+  dummyIdentifier!: number;
   searchFields: ISearchFieldsMap<GdxMoeResponse> = {
     ...normalSearchFields(['studentQID', 'gradeLevelEN', 'gradeLevelAR', 'studentNameEN', 'schoolNameAR', 'schoolNameEN'])
   }

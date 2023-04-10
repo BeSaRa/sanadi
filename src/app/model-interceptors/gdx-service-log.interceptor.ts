@@ -15,6 +15,8 @@ import {GdxMolPayrollResponseInterceptor} from '@app/model-interceptors/gdx-mol-
 import {GdxSjcResponseInterceptor} from '@model-interceptors/gdx-sjc-response-interceptor';
 import { GdxMoeResponseInterceptor } from './gdx-moe-response-interceptor';
 import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
+import { GdxMmeResponseInterceptor } from './gdx-mme-response-interceptor';
+import { GdxMmeResponse } from '@app/models/gdx-mme-leased-contract';
 
 const gdxMojResponseInterceptor = new GdxMojResponseInterceptor();
 const gdxMociResponseInterceptor = new GdxMociResponseInterceptor();
@@ -24,6 +26,7 @@ const gdxKahramaaResponseInterceptor = new GdxKahramaaResponseInterceptor();
 const gdxMolPayrollResponseInterceptor = new GdxMolPayrollResponseInterceptor();
 const gdxSjcResponseInterceptor = new GdxSjcResponseInterceptor();
 const gdxMoeResponseInterceptor = new GdxMoeResponseInterceptor();
+const gdxMmeResponseInterceptor = new GdxMmeResponseInterceptor();
 
 export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog> {
   receive(model: GdxServiceLog): GdxServiceLog {
@@ -91,6 +94,11 @@ export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog
       case GdxServicesEnum.MOE:
         model.gdxServiceResponseList = model.gdxServiceResponseList.map((x) => {
           return gdxMoeResponseInterceptor.receive(new GdxMoeResponse().clone(x));
+        });
+        break;
+      case GdxServicesEnum.MME:
+        model.gdxServiceResponseList = model.gdxServiceResponseList.map((x) => {
+          return gdxMmeResponseInterceptor.receive(new GdxMmeResponse().clone(x));
         });
         break;
       default:

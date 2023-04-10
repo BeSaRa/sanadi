@@ -28,13 +28,13 @@ export class MoeStudentInfoComponent {
       type: 'action',
       label: 'select_item',
       show: () => true,
-      onClick: (item: GdxMoeResponse) => this.setSelectedPendingInstallment(item)
+      onClick: (item: GdxMoeResponse) => this.setSelectedStudentInfo(item)
     }
   ];
 
   selectedMoeStudentInfo?: GdxMoeResponse;
   
-  setSelectedPendingInstallment(item?: GdxMoeResponse) {
+  setSelectedStudentInfo(item?: GdxMoeResponse) {
     this.selectedMoeStudentInfo = item;
     this.onSelectStudentInfo.emit(item);
   }

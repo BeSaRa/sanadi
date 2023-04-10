@@ -150,6 +150,15 @@ export class IntegrationInquiriesComponent {
       isTouchedOrDirty: () => true,
       serviceId: GdxServicesEnum.MOE,
       isLoaded: false
+    },
+    mme:{
+      name:'mme',
+      index:9,
+      langKey:'integration_mme',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.MME,
+      isLoaded: false
     }
   };
   charityTabsData: TabMap = {
@@ -225,6 +234,7 @@ export class IntegrationInquiriesComponent {
     [GdxServiceRelatedTypesEnum.MOE_STUDENT_INFO]: [],
     [GdxServiceRelatedTypesEnum.MOE_INSTALLMENTS]: [],
     [GdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS]: [],
+    [GdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT]: [],
   };
 
   onMainTabChange($event: TabComponent): void {
@@ -276,6 +286,12 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.MOE:
         this.relatedData[this.gdxServiceRelatedTypesEnum.MOE_STUDENT_INFO] = log.gdxServiceResponseList;
+        this.moeStudentInfoComponentRef.setSelectedStudentInfo(undefined);
+        break;
+      case GdxServicesEnum.MME:
+        // console.log(log)
+        this.relatedData[this.gdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT] = log.gdxServiceResponseList;
+        // console.log(this.relatedData)
         break;
       default:
         break;
@@ -353,7 +369,7 @@ export class IntegrationInquiriesComponent {
       case GdxServicesEnum.MOE:
         this.relatedData[GdxServiceRelatedTypesEnum.MOE_INSTALLMENTS] = [];
         this.relatedData[GdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS] = [];
-        this.moeStudentInfoComponentRef?.setSelectedPendingInstallment(undefined)
+        this.moeStudentInfoComponentRef?.setSelectedStudentInfo(undefined)
         break;
       default:
         break;

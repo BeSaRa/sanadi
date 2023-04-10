@@ -11,5 +11,6 @@ export enum GdxServiceRelatedTypesEnum {
   SJC_RELATED_DATA = 'sjc_related_data',
   MOE_STUDENT_INFO = 'moe_student_info',
   MOE_INSTALLMENTS ='moe_installments',
-  MOE_PENDING_PAYMENTS = 'moe_pending_payments'
+  MOE_PENDING_PAYMENTS = 'moe_pending_payments',
+  MME_LEASED_CONTRACT = 'mme_leased_contract',
 }

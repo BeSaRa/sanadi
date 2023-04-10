@@ -16,17 +16,17 @@
           </ng-container>
           
           <ng-container cdkColumnDef="schoolNameEN">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header
                 > {{lang.map.school_name_english}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.schoolNameEN}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="schoolNameAR">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header
                 > {{lang.map.school_name_arabic}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.schoolNameAR}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="schoolYear">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header
                 > {{lang.map.school_year}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.schoolYear}}</span></td>
           </ng-container>

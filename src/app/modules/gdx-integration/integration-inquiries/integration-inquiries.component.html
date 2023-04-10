@@ -24,6 +24,8 @@
          (onExpand)="onGovTabChange($event)"></tab>
     <tab [name]="govTabsData.moe.name" [template]="MOETemplate" [title]="lang.map[govTabsData.moe.langKey]"
          (onExpand)="onGovTabChange($event)"></tab>
+    <tab [name]="govTabsData.mme.name" [template]="MMETemplate" [title]="lang.map[govTabsData.mme.langKey]"
+         (onExpand)="onGovTabChange($event)"></tab>
   </tabs-list>
   <ng-template #MOJTemplate>
     <integration-inquiry-log-list #mojLogsComponent [gdxServiceId]="gdxServicesEnum.MOJ" [beneficiary]="beneficiary"
@@ -124,7 +126,17 @@
         [list]="relatedData[gdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS]"></moe-pending-payment>
     </div>
   </ng-template>
+  <ng-template #MMETemplate>
+    <integration-inquiry-log-list #mmeLogsComponent [gdxServiceId]="gdxServicesEnum.MME" [beneficiary]="beneficiary"
+      (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
+      (onReady)="setLookupComponentMap($event, mmeLogsComponent)"></integration-inquiry-log-list>
+    <div id="mmeLeasedContract">
+      <hr class="mt-0">
+      <mme-leased-contract [list]="relatedData[gdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT]"></mme-leased-contract>
+    </div>
+  </ng-template>
 </ng-template>
+
 <ng-template #CharitableEntitiesTemplate>
   <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="charityTabIndex$">
     <tab [name]="charityTabsData.qatarZakatFund.name" [template]="QatarZakatFundTemplate"
