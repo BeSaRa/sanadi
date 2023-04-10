@@ -1352,6 +1352,7 @@ export interface ILanguageKeys {
   integration_jasim_hamad_bin_jasim_charity_fund: string;
   integration_qatar_cancer_society: string;
   integration_raf: string;
+  integration_moe:string;
   date_of_death: string;
   company_info: string;
   garsia_pensions: string;
@@ -1832,4 +1833,16 @@ export interface ILanguageKeys {
   msg_record_is_linked:string;
   previews_replays:string;
   sub_meeting_point_name:string;
+  student_info_lbl:string;
+  student_QID:string;
+  grade_level_english:string;
+  grade_level_arabic:string;
+  student_name_english:string;
+  school_name_arabic:string;
+  school_name_english:string;
+  fee_head_type_english:string;
+  fee_head_type_arabic:string;
+  school_year:string;
+  moe_installment_lbl:string;
+  moe_pending_payment_lbl:string;
 }

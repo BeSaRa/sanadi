@@ -22,6 +22,8 @@
          (onExpand)="onGovTabChange($event)"></tab>
     <tab [name]="govTabsData.sjc.name" [template]="SJCTemplate" [title]="lang.map[govTabsData.sjc.langKey]"
          (onExpand)="onGovTabChange($event)"></tab>
+    <tab [name]="govTabsData.moe.name" [template]="MOETemplate" [title]="lang.map[govTabsData.moe.langKey]"
+         (onExpand)="onGovTabChange($event)"></tab>
   </tabs-list>
   <ng-template #MOJTemplate>
     <integration-inquiry-log-list #mojLogsComponent [gdxServiceId]="gdxServicesEnum.MOJ" [beneficiary]="beneficiary"
@@ -100,6 +102,26 @@
     <div id="sjcRelatedDataContainer">
       <hr class="mt-0">
       <sjc-related-data-list [list]="relatedData[gdxServiceRelatedTypesEnum.SJC_RELATED_DATA]"></sjc-related-data-list>
+    </div>
+  </ng-template>
+  <ng-template #MOETemplate>
+    <integration-inquiry-log-list #moeLogsComponent [gdxServiceId]="gdxServicesEnum.MOE"
+      [beneficiary]="beneficiary" (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
+      (onReady)="setLookupComponentMap($event, moeLogsComponent)"></integration-inquiry-log-list>
+    <div id="moeStudentInfoContainer">
+      <hr class="mt-0">
+      <moe-student-info #moeStudentInfoList [list]="relatedData[gdxServiceRelatedTypesEnum.MOE_STUDENT_INFO]"
+        (onSelectStudentInfo)="setStudentInfo($event)"></moe-student-info>
+    </div>
+    <div id="moeInstallments">
+      <hr class="mt-0">
+      <moe-installments #moeInstallmentsList
+        [list]="relatedData[gdxServiceRelatedTypesEnum.MOE_INSTALLMENTS]"></moe-installments>
+    </div>
+    <div id="moePendingPayment">
+      <hr class="mt-0">
+      <moe-pending-payment #moePendingPaymentList
+        [list]="relatedData[gdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS]"></moe-pending-payment>
     </div>
   </ng-template>
 </ng-template>

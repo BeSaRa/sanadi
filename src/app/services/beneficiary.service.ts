@@ -40,6 +40,7 @@ import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response'
 import {GdxKahramaaResponse} from '@app/models/gdx-kahramaa-response';
 import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
 import {GdxSjcMaritalStatusResponse} from '@models/gdx-sjc-marital-status-response';
+import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
 
 const beneficiarySearchLogCriteriaInterceptor = new BeneficiarySearchLogCriteriaInterceptor();
 
@@ -234,5 +235,13 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   })
   addSJCInquiry(criteria: IGdxCriteria) {
     return this.http.post<GdxSjcMaritalStatusResponse[]>(this._getGDXServiceURL() + '/sjc/marital-status', criteria);
+  }
+
+  @CastResponse(() => GdxMoeResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addMOEPendingInstallments(criteria: IGdxCriteria) {
+    return this.http.post<GdxMoeResponse[]>(this._getGDXServiceURL() + '/moe-pending-installments', criteria);
   }
 }

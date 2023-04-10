@@ -8,4 +8,5 @@ export enum GdxServicesEnum {
   KAHRAMAA = '7',
   MOL = '8',
   SJC = '9',
+  MOE = '10'
 }

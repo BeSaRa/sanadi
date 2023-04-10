@@ -8,5 +8,8 @@ export enum GdxServiceRelatedTypesEnum {
   IZZAB_RELATED = 'izzab_related',
   KAHRAMAA_OUTSTANDING_PAYMENTS = 'kahramaa_outstanding_payments',
   MOL_RELATED_DATA = 'mol_related_data',
-  SJC_RELATED_DATA = 'sjc_related_data'
+  SJC_RELATED_DATA = 'sjc_related_data',
+  MOE_STUDENT_INFO = 'moe_student_info',
+  MOE_INSTALLMENTS ='moe_installments',
+  MOE_PENDING_PAYMENTS = 'moe_pending_payments'
 }
