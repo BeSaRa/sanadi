@@ -1,0 +1,62 @@
+<div class="dropdown" id="notificationsDropdownContainer">
+  <button class="btn btn-notification shadow-none" [ngClass]="{'text-white': notificationService.unreadCount > 0}"
+          (click)="toggleNotifications($event)">
+    <div class="position-relative" [tooltip]="langService.map.notifications" [placement]="'bottom'">
+      <ng-container *ngIf="notificationService.unreadCount > 0">
+        {{notificationService.unreadCount < notificationService.maxUnreadToShow ? notificationService.unreadCount : notificationService.maxUnreadToShow + '+' }}
+        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-warning rounded-circle">
+              <span class="visually-hidden">New notifications</span>
+            </span>
+      </ng-container>
+      <i class="mdi {{actionIconsEnum.NOTIFICATION_BELL}}"></i>
+    </div>
+  </button>
+  <button [hidden]="true" type="button" class="btn btn-sm dropdown-toggle"
+          data-bs-toggle="dropdown" #notificationsTrigger aria-expanded="false"
+          data-bs-reference="parent">
+  </button>
+  <ul #dropdownMenu class="dropdown-menu dropdown-menu-end p-0 shadow" aria-labelledby="notificationsDropdown">
+    <ng-container *ngIf="notificationService.notificationsList.length > 0">
+      <ng-container *ngFor="let notification of notificationService.notificationsList; let last = last">
+        <li>
+          <ng-container *ngIf="!notification.isInformationTypeNotification(); else infoNotificationTemplate">
+            <button class="dropdown-item p-2 text-primary" type="button" (click)="notification.open()">
+              <ng-container [ngTemplateOutlet]="notificationTemplate"
+                            [ngTemplateOutletContext]="{data: notification}"></ng-container>
+            </button>
+          </ng-container>
+          <ng-template #infoNotificationTemplate>
+            <div class="p-2 text-decoration-none text-secondary" (click)="notification.openInfoNotification()">
+              <ng-container [ngTemplateOutlet]="notificationTemplate"
+                            [ngTemplateOutletContext]="{data: notification}"></ng-container>
+            </div>
+          </ng-template>
+        </li>
+        <li *ngIf="!last">
+          <hr class="dropdown-divider m-0">
+        </li>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="notificationService.notificationsList.length === 0">
+      <li class="text-center">{{langService.map.no_notifications}}</li>
+    </ng-container>
+  </ul>
+</div>
+<ng-template #notificationTemplate let-notification="data">
+  <div [ngClass]="{'fw-bold': !notification.read}">
+    <div class="d-flex justify-content-between">
+      <span class="text-truncate" [tooltip]="notification.title">{{notification.title}}</span>
+      <ng-container [ngTemplateOutlet]="notificationIconTemplate"
+                    [ngTemplateOutletContext]="{data: notification}"></ng-container>
+    </div>
+    <div class="text-end">{{notification.actionDate}}</div>
+  </div>
+</ng-template>
+<ng-template #notificationIconTemplate let-notification="data">
+  <i class="mdi {{actionIconsEnum.NOTIFICATION_USER_INBOX}} ms-2"
+     *ngIf="notification.isInboxNotification()"
+     tooltip="{{langService.map.notification_user_inbox}}"></i>
+  <i class="mdi {{actionIconsEnum.NOTIFICATION_TERMINATED}} ms-2"
+     *ngIf="notification.isTerminatedNotification()"
+     tooltip="{{langService.map.notification_terminated}}"></i>
+</ng-template>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {TrainingProgram} from '@app/models/training-program';
 import {TrainingProgramService} from '@app/services/training-program.service';
@@ -23,30 +23,66 @@ import {IMyDateModel} from 'angular-mydatepicker';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {EmployeeService} from "@app/services/employee.service";
 import {PermissionsEnum} from "@app/enums/permissions-enum";
+import {SearchColumnConfigMap} from '@app/interfaces/i-search-column-config';
+import {LookupService} from '@app/services/lookup.service';
+import {FormBuilder} from '@angular/forms';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {TableComponent} from '@app/shared/components/table/table.component';
 
 @Component({
   selector: 'training-program',
   templateUrl: './training-program.component.html',
   styleUrls: ['./training-program.component.scss']
 })
-export class TrainingProgramComponent extends AdminGenericComponent<TrainingProgram, TrainingProgramService> implements OnInit {
+export class TrainingProgramComponent extends AdminGenericComponent<TrainingProgram, TrainingProgramService> {
+
+  constructor(public lang: LangService,
+              public service: TrainingProgramService,
+              private trainingProgramBriefcaseService: TrainingProgramBriefcaseService,
+              private dialogService: DialogService,
+              private sharedService: SharedService,
+              private employeeService: EmployeeService,
+              private toast: ToastService,
+              private lookupService: LookupService,
+              private fb: FormBuilder) {
+    super();
+  }
+
   view$: Subject<TrainingProgram> = new Subject<TrainingProgram>();
-  searchText = '';
-  actions: IMenuItem<TrainingProgram>[] = [
-    {
-      type: 'action',
-      label: 'btn_reload',
-      icon: 'mdi-reload',
-      onClick: _ => this.reload$.next(null),
-    },
-    {
-      type: 'action',
-      label: 'btn_edit',
-      icon: 'mdi-pen',
-      onClick: (trainingProgram) => this.edit$.next(trainingProgram)
-    }
-  ];
   displayedColumns: string[] = ['rowSelection', 'activityName', 'trainingType', 'trainingStatus', 'trainingDate', 'registrationDate', 'actions'];
+  searchColumns: string[] = ['_', 'search_activityName', 'search_trainingType', 'search_trainingStatus', 'search_trainingDate', 'search_registrationDate', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_activityName: {
+      key: 'activityName',
+      controlType: 'text',
+      property: 'activityName',
+      label: 'training_program_activity_name',
+    },
+    search_trainingType: {
+      key: 'trainingType',
+      controlType: 'select',
+      property: 'trainingType',
+      label: 'training_type_name',
+      selectOptions: {
+        options: this.lookupService.listByCategory.TRAINING_TYPE,
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    },
+    search_trainingStatus: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'training_program_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.TRAINING_STATUS,
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
+  @ViewChild('table') table!: TableComponent;
+
   selectedRecords: TrainingProgram[] = [];
   bulkActionsList: IGridAction[] = [
     {
@@ -63,27 +99,93 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   certification$: Subject<TrainingProgram> = new Subject<TrainingProgram>();
   permissions: typeof PermissionsEnum = PermissionsEnum;
 
-  constructor(public lang: LangService,
-              public service: TrainingProgramService,
-              private trainingProgramBriefcaseService: TrainingProgramBriefcaseService,
-              private dialogService: DialogService,
-              private sharedService: SharedService,
-              private employeeService: EmployeeService,
-              private toast: ToastService) {
-    super();
-  }
-
   hasPermissionTo(permission: string): boolean {
     return this.employeeService.hasPermissionTo(permission);
   }
 
-  ngOnInit(): void {
-    this.listenToReload();
-    super.listenToAdd();
-    super.listenToEdit();
-    this.listenToCertification();
+  protected _init(): void {
+    this.buildFilterForm()
     this.listenToView();
+    this.listenToCertification();
   }
+
+  actions: IMenuItem<TrainingProgram>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      disabled: (item) => !this.canEditTrainingProgram(item),
+      onClick: (item) => this.canEditTrainingProgram(item) && this.edit$.next(item)
+    },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      disabled: (item) => !this.canDeleteTrainingProgram(item),
+      onClick: (item) => this.canDeleteTrainingProgram(item) && this.delete(item)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: (item) => this.view$.next(item)
+    },
+    // Training Program Briefcase
+    {
+      type: 'action',
+      label: 'training_program_briefcase',
+      icon: ActionIconsEnum.BRIEFCASE,
+      show: (item) => this.canShowBriefcases(item.status),
+      onClick: (item) => this.openTrainingBriefcaseDialog(item)
+    },
+    // Training Add Candidates
+    {
+      type: 'action',
+      label: 'training_program_add_candidates',
+      icon: ActionIconsEnum.ADD_USER,
+      show: (item) => this.canShowAddCandidates(item.status),
+      onClick: (item) => this.candidates(item)
+    },
+    // Accept/Reject candidates
+    {
+      type: 'action',
+      label: 'training_program_accept_reject_candidates',
+      icon: ActionIconsEnum.USER_CHECK,
+      show: (item) => this.canShowEvaluateCandidates(item.status),
+      onClick: (item) => this.evaluateCandidates(item)
+    },
+    // Training Program Certification
+    {
+      type: 'action',
+      label: 'training_program_certification',
+      icon: ActionIconsEnum.CERTIFICATE,
+      show: (item) => this.canShowCertificate(item),
+      onClick: (item) => this.certification$.next(item)
+    },
+    // Attendance
+    {
+      type: 'action',
+      label: 'attendance',
+      icon: ActionIconsEnum.USER_CLOCK,
+      show: (item) => this.isTrainingFinished(item.status),
+      onClick: (item) => this.applyAttendance(item)
+    },
+    // Survey
+    {
+      type: 'action',
+      label: (item) => {
+        return !item.surveyPublished ? this.lang.map.publish_survey : this.lang.map.menu_surveys
+      },
+      class: (item) => (item.surveyPublished ? 'text-info' : 'text-primary'),
+      icon: ActionIconsEnum.POLL,
+      show: (item) => item.readyForSurvey(),
+      onClick: (item) => this.publishSurvey(item)
+    },
+
+  ];
 
   listenToCertification(): void {
     this.certification$
@@ -107,25 +209,25 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
       .subscribe(() => this.reload$.next(null))
   }
 
-  applyAttendance(trainingProgram: TrainingProgram, event: MouseEvent) {
-    event.preventDefault();
+  applyAttendance(trainingProgram: TrainingProgram, event?: MouseEvent) {
+    event?.preventDefault();
     this.service.openAttendanceDialog(trainingProgram)
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap(ref => ref.onAfterClose$))
       .subscribe(() => this.reload$.next(null));
   }
 
-  candidates(trainingProgram: TrainingProgram, event: MouseEvent) {
-    event.preventDefault();
-    const sub = this.service.openOrganizationCandidatesDialog(trainingProgram.id).subscribe((dialog: DialogRef) => {
+  candidates(trainingProgram: TrainingProgram, event?: MouseEvent) {
+    event?.preventDefault();
+    const sub = this.service.openOrganizationCandidatesDialog(trainingProgram).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         sub.unsubscribe();
       });
     });
   }
 
-  openTrainingBriefcaseDialog($event: MouseEvent, record: TrainingProgram): void {
-    $event.preventDefault();
+  openTrainingBriefcaseDialog(record: TrainingProgram, $event?: MouseEvent): void {
+    $event?.preventDefault();
     let operationType = record.status == this.trainingStatus.TRAINING_FINISHED ? OperationTypes.VIEW : OperationTypes.CREATE
     const sub = this.trainingProgramBriefcaseService.openTrainingBriefcaseDialog(record, operationType).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
@@ -134,8 +236,8 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     });
   }
 
-  evaluateCandidates(trainingProgram: TrainingProgram, event: MouseEvent) {
-    event.preventDefault();
+  evaluateCandidates(trainingProgram: TrainingProgram, event?: MouseEvent) {
+    event?.preventDefault();
     const sub = this.service.openEvaluateOrganizationCandidatesDialog(trainingProgram.id).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         sub.unsubscribe();
@@ -143,40 +245,30 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     });
   }
 
-  edit(trainingProgram: TrainingProgram, event: MouseEvent) {
-    event.preventDefault();
-    if (trainingProgram.status == this.trainingStatus.TRAINING_CANCELED || trainingProgram.status == this.trainingStatus.TRAINING_FINISHED) {
-      return;
-    }
-    this.edit$.next(trainingProgram);
+  private canEditTrainingProgram(trainingProgram: TrainingProgram): boolean {
+    return !(trainingProgram.status == this.trainingStatus.TRAINING_CANCELED || trainingProgram.status == this.trainingStatus.TRAINING_FINISHED);
   }
 
-  view(trainingProgram: TrainingProgram, event: MouseEvent) {
-    event.preventDefault();
-    this.view$.next(trainingProgram);
-  }
-
-  certification(trainingProgram: TrainingProgram, event: MouseEvent) {
-    event.preventDefault();
-    this.certification$.next(trainingProgram);
-  }
-
-  showAttendanceOrCertificates(status: number) {
+  isTrainingFinished(status: number): boolean {
     return status == this.trainingStatus.TRAINING_FINISHED;
   }
 
-  showAddCandidates(status: number) {
+  canShowCertificate(trainingProgram: TrainingProgram): boolean {
+    return this.isTrainingFinished(trainingProgram.status) && this.employeeService.hasPermissionTo(PermissionsEnum.TRAINING_CERTIFICATE_TRAINEE)
+  }
+
+  canShowAddCandidates(status: number): boolean {
     return status == this.trainingStatus.REGISTRATION_OPEN ||
       status == this.trainingStatus.TRAINING_PUBLISHED ||
       status == this.trainingStatus.EDITING_AFTER_PUBLISHING;
   }
 
-  showEvaluateCandidates(status: number) {
-    return status == this.trainingStatus.REGISTRATION_CLOSED;
+  canShowEvaluateCandidates(status: number): boolean {
+    return status == this.trainingStatus.REGISTRATION_CLOSED && this.employeeService.hasPermissionTo(PermissionsEnum.TRAINING_MANAGE_TRAINEE);
   }
 
-  showBriefcases(status: number) {
-    return status != this.trainingStatus.TRAINING_CANCELED;
+  canShowBriefcases(status: number): boolean {
+    return status != this.trainingStatus.TRAINING_CANCELED && this.employeeService.hasPermissionTo(PermissionsEnum.TRAINING_BUNDLE);
   }
 
   setStatusColumnClass(status: number) {
@@ -194,26 +286,16 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     }
   }
 
-  setIsDisabledClassOnDeleteButton(status: number) {
-    if (status != this.trainingStatus.DATA_ENTERED && status != this.trainingStatus.PROGRAM_APPROVED) {
-      return {'isDisabled': true};
-    }
-    return {};
+  canSelectProgram(item: TrainingProgram): boolean {
+    return !(item.status != this.trainingStatus.DATA_ENTERED && item.status != this.trainingStatus.PROGRAM_APPROVED)
   }
 
-  setIsDisabledClassOnEditButton(status: number) {
-    if (status == this.trainingStatus.TRAINING_FINISHED || status == this.trainingStatus.TRAINING_CANCELED) {
-      return {'isDisabled': true};
-    }
-    return {};
+  private canDeleteTrainingProgram(trainingProgram: TrainingProgram): boolean {
+    return !(trainingProgram.status != this.trainingStatus.DATA_ENTERED && trainingProgram.status != this.trainingStatus.PROGRAM_APPROVED)
   }
 
-  disableMultipleSelectionInput(status: number) {
-    return status != this.trainingStatus.DATA_ENTERED && status != this.trainingStatus.PROGRAM_APPROVED;
-  }
-
-  delete(event: MouseEvent, model: TrainingProgram): void {
-    event.preventDefault();
+  delete(model: TrainingProgram, event?: MouseEvent): void {
+    event?.preventDefault();
     if (model.status != this.trainingStatus.DATA_ENTERED && model.status != this.trainingStatus.PROGRAM_APPROVED) {
       return;
     }
@@ -254,10 +336,6 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
       });
     }
   }
-
-  searchCallback = (record: any, searchText: string) => {
-    return record.search(searchText);
-  };
 
   filterCallback = (type: FilterEventTypes = 'OPEN') => {
     if (type === 'CLEAR') {
@@ -331,61 +409,8 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
           element.trainingDate = this.getDateFromTo(element.startDate, element.endDate);
         });
         this.models = list;
+        this.afterReload();
       });
-  }
-
-  private _addSelected(record: TrainingProgram): void {
-    if (record.status != this.trainingStatus.DATA_ENTERED && record.status != this.trainingStatus.PROGRAM_APPROVED) {
-      return;
-    }
-    this.selectedRecords.push(_deepClone(record));
-  }
-
-  private _removeSelected(record: TrainingProgram): void {
-    const index = this.selectedRecords.findIndex((item) => {
-      return item.id === record.id;
-    });
-    this.selectedRecords.splice(index, 1);
-  }
-
-  get isIndeterminateSelection(): boolean {
-    return this.selectedRecords.length > 0 &&
-      this.selectedRecords.length < this.models
-        .filter(element => element.status == this.trainingStatus.DATA_ENTERED || element.status == this.trainingStatus.PROGRAM_APPROVED)
-        .length;
-  }
-
-  get isFullSelection(): boolean {
-    return this.selectedRecords.length > 0 &&
-      this.selectedRecords.length === this.models
-        .filter(element => element.status == this.trainingStatus.DATA_ENTERED || element.status == this.trainingStatus.PROGRAM_APPROVED)
-        .length;
-  }
-
-  isSelected(record: TrainingProgram): boolean {
-    return !!this.selectedRecords.find((item) => {
-      return item.id === record.id;
-    });
-  }
-
-  onSelect($event: Event, record: TrainingProgram): void {
-    const checkBox = $event.target as HTMLInputElement;
-    if (checkBox.checked) {
-      this._addSelected(record);
-    } else {
-      this._removeSelected(record);
-    }
-  }
-
-  onSelectAll(): void {
-    if (this.selectedRecords.length === this.models
-      .filter(element => element.status == this.trainingStatus.DATA_ENTERED || element.status == this.trainingStatus.PROGRAM_APPROVED)
-      .length) {
-      this.selectedRecords = [];
-    } else {
-      this.selectedRecords = _deepClone(this.models
-        .filter(element => element.status == this.trainingStatus.DATA_ENTERED || element.status == this.trainingStatus.PROGRAM_APPROVED));
-    }
   }
 
   getDateFromTo(dateFrom: string | IMyDateModel, dateTo: string | IMyDateModel) {
@@ -402,5 +427,28 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
       .onAfterClose$
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => this.reload$.next(null));
+  }
+
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      activityName: [''], trainingType: [null], status: [null]
+    })
+  }
+
+  allSelected() {
+    return this.table.selection.selected.length === this.table.dataSource.data.filter(item => this.canSelectProgram(item)).length;
+  }
+
+  toggleAllSelectable(): void {
+    const allSelected = this.allSelected();
+    if (allSelected) {
+      this.table.clearSelection();
+    } else {
+      this.table.dataSource.data.forEach((item: TrainingProgram) => this.canSelectProgram(item) && this.table.selection.select(item));
+    }
+  }
+
+  afterReload(): void {
+    this.table && this.table.clearSelection();
   }
 }

@@ -1,0 +1,123 @@
+<ng-container [formGroup]="internalMembersForm">
+  <ng-container *ngIf="!isExternalUser">
+    <div class="row"
+         *ngIf="isSupervisionAndControlReview() || isSupervisionAndControlRework() || isSupervisionManagerReview()">
+      <div class="col">
+        <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_internal_member}}</h1>
+        <button class="btn btn-link outline-none"
+                [disabled]="(readonly)"
+                tooltip="{{lang.map.btn_add}}" (click)="openAddAdministrativeBoardMemberForm()">
+          <i class="mdi mdi-plus-box"></i></button>
+      </div>
+    </div>
+    <ng-container *ngIf="addMemberFormActive">
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="arabicName" class="form-label"
+                 for="arabicName">{{lang.map.arabic_name}}</label>
+          <input class="form-control"
+                 formControlName="arabicName"
+                 id="arabicName" validationClasses="arabicName">
+          <app-field-error-message controlName="arabicName"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="englishName" class="form-label"
+                 for="englishName">{{lang.map.english_name}}</label>
+          <input class="form-control" formControlName="englishName"
+                 id="englishName" validationClasses="englishName">
+          <app-field-error-message controlName="englishName"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="qid" class="form-label"
+                 for="qid">{{lang.map.identification_number}}</label>
+          <input [readonly]="(readonly)" class="form-control" formControlName="qid"
+                 id="qid" validationClasses="qid">
+          <app-field-error-message controlName="qid"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 text-center action-container mb-3">
+          <button (click)="searchMembers()"
+                  class="btn btn-primary">{{lang.map.lbl_search}}</button>
+          <button class="btn btn-secondary"
+                  (click)="cancelAddMember()">{{lang.map.btn_cancel}}</button>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+  <div class="row">
+    <div class="col-12">
+      <app-table #table [columns]="membersDisplayedColumns"
+                 [data]="selectedInternalUsers" [selectable]="true"
+                 [useSearchToFilter]="true"
+                 sortableTable>
+        <table [dataSource]="table.dataSource" cdk-table
+               class="table table-striped table-bordered caption-top">
+          <ng-container cdkColumnDef="index">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> #
+            </th>
+            <td *cdkCellDef="let row; let i = index;" cdk-cell> {{i + 1}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="arabicName">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.arabic_name}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.arabicName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="englishName">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.english_name}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.englishName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="isDecisionMaker">
+            <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.the_decision_maker}}</th>
+            <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+                <span afterTemplate class="form-check form-switch switch-action"
+                      style="top: auto">
+                    <input class="form-check-input" type="checkbox"
+                           [disabled]="row?.memberType == internalUserType.IS_DECISION_MAKER || readonly || addMemberFormActive"
+                           [checked]="row?.memberType == internalUserType.IS_DECISION_MAKER"
+                           (change)="makeDecisionMaker(row)">
+                  </span>
+            </td>
+          </ng-container>
+          <ng-container cdkColumnDef="status">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.status}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.name}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="actions">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
+            <td *cdkCellDef="let row" cdk-cell class="table-actions">
+              <div class="d-flex flex-row">
+                <button (click)="removeMember($event, row)"
+                        [disabled]="(readonly || addMemberFormActive)"
+                        class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
+                  <i class="mdi mdi-close-box"></i>
+                </button>
+                <button *ngIf="!isExternalUser && model?.isSentToMember() && (model?.isDecisionMakerReviewStep() || model?.isDecisionMakerReworkStep()) && !isTerminatedMember(row)"
+                        (click)="viewMemberCommentsAndNotes($event, row)"
+                        [disabled]="row.pId"
+                        class="btn btn-link outline-none" tooltip="{{lang.map.view}}">
+                  <i class="mdi mdi-eye"></i>
+                </button>
+                <button *ngIf="!isExternalUser && model?.isSentToMember() && model?.isDecisionMakerReviewStep()"
+                        (click)="terminateUserTask($event, row)"
+                        [disabled]="!row.pId"
+                        class="btn btn-link outline-none" tooltip="{{lang.map.terminate_task}}">
+                  <i class="mdi mdi-stop-circle-outline"></i>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+          <tr *cdkHeaderRowDef="membersDisplayedColumns" cdk-header-row></tr>
+          <tr *cdkRowDef="let row; columns: membersDisplayedColumns;" cdk-row></tr>
+          <!--suppress HtmlUnknownBooleanAttribute -->
+          <tr *cdkNoDataRow>
+            <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
+          </tr>
+        </table>
+      </app-table>
+    </div>
+  </div>
+</ng-container>

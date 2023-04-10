@@ -1,8 +1,8 @@
 <ng-container *ngFor="let action of actions; let isLast = last">
   <ng-container *ngIf="canShow(action)">
-    <button (click)="onActionClicked(action)" class="btn btn-link d-flex">
-      <i class="mdi {{action.icon}}"></i>
-      <span class="ms-1">{{getLabel(action)}}</span>
+    <button [tooltip]="getLabel(action)" (click)="onActionClicked(action)" class="btn btn-link d-flex">
+      <i *ngIf="action.icon" class="mdi {{action.icon}}"></i>
+      <span *ngIf="!action.hideLabel" class="ms-1">{{getLabel(action)}}</span>
     </button>
     <div *ngIf="!isLast" class="vr"></div>
   </ng-container>

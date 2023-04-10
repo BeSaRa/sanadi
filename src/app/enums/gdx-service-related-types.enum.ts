@@ -7,5 +7,6 @@ export enum GdxServiceRelatedTypesEnum {
   GARSIA_PENSION_PAYMENT = 'garsia_pension_payments',
   IZZAB_RELATED = 'izzab_related',
   KAHRAMAA_OUTSTANDING_PAYMENTS = 'kahramaa_outstanding_payments',
-  MOL_RELATED_DATA = 'mol_related_data'
+  MOL_RELATED_DATA = 'mol_related_data',
+  SJC_RELATED_DATA = 'sjc_related_data'
 }

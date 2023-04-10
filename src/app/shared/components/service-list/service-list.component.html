@@ -1,20 +1,46 @@
 <ul [@homeRouterAnimation]="list.length" class="services-list d-flex flex-row flex-wrap justify-content-center">
   <ng-container *ngFor="let item of list">
-    <li *ngIf="empService.checkPermissions(item.getPermissions(), true) && hasCustomPermissions(item)"
+    <li *ngIf="item.isAvailableToShow" mouseEnterLeave="shadow-lg" [targetElementRef]="serviceItemIcon"
         class="service-item p-2 m-2 flex-shrink-0 d-flex flex-column align-items-center">
-      <div (click)="navigateToPath(item)" mouseEnterLeave="shadow-lg"
+      <div (click)="item.isEServiceMainMenu ? false : navigateToPath(item)" #serviceItemIcon
            [style.background-image]="iconBackground"
            class="service-item-icon shadow-sm border border-1
             flex-grow-1 d-flex align-self-stretch justify-content-center align-items-center d-flex">
-        <div [style.background-image]="starsImage" class="service-list-pattern flex-grow-1 align-self-stretch">
+        <div [style.background-image]="starsImage"
+             class="service-list-pattern flex-grow-1 align-self-stretch position-relative">
           <div *ngIf="item.isSVGIcon()" [innerHTML]="item.safeSVG"
                class="service-svg-icon text-primary flex-grow-1"></div>
           <div *ngIf="item.isFontIcon()" class="service-font-icon flex-grow-1">
             <i class="text-primary mdi {{item.icon}}"></i>
           </div>
+          <div *ngIf="item.isEServiceMainMenu"
+               class="instant-action position-absolute w-100 h-100 top-0 justify-content-center align-items-end flex-row">
+            <div class="row">
+              <div class="col-12">
+                <button *ngIf="item.hasServicePagePermission"
+                        (click)="navigateToEServiceItemPath(item, 'service')"
+                        class="btn icon-btn m-1 p-1 shadow-none rounded-circle"
+                        [tooltip]="langService.map.menu_service">
+                  <i class="mdi mdi-plus"></i>
+                </button>
+                <button *ngIf="item.hasServiceSearchPermission"
+                        (click)="navigateToEServiceItemPath(item, 'search')"
+                        class="btn icon-btn m-1 p-1 shadow-none rounded-circle" [tooltip]="langService.map.menu_search">
+                  <i class="mdi mdi-text-box-search-outline"></i>
+                </button>
+                <button *ngIf="item.hasServiceOutputsPermission"
+                        (click)="navigateToEServiceItemPath(item, 'output')"
+                        class="btn icon-btn m-1 p-1 shadow-none rounded-circle"
+                        [tooltip]="langService.map.menu_outputs">
+                  <i class="mdi mdi-export"></i>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <a class="service-title my-2" [routerLink]="item.path">{{item|translateName:langService.map.lang}}</a>
+      <a class="service-title my-2 cursor-pointer"
+         (click)="item.isEServiceMainMenu ? false : navigateToPath(item)">{{item|translateName:langService.map.lang}}</a>
     </li>
   </ng-container>
 </ul>

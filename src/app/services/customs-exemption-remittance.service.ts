@@ -19,7 +19,7 @@ import { CaseTypes } from '@app/enums/case-types.enum';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import {
   SelectDocumentPopUpComponent
-} from '@app/modules/remittances/popups/select-document-pop-up/select-document-pop-up.component';
+} from '@app/modules/services/customs-exemption-remittance/popups/select-document-pop-up/select-document-pop-up.component';
 import { AdminResult } from '@app/models/admin-result';
 import { CustomsExemptionRequestTypes } from '@app/enums/service-request-types';
 import { CommonService } from '@services/common.service';
@@ -80,9 +80,9 @@ export class CustomsExemptionRemittanceService extends BaseGenericEService<Custo
   private _customExemptionDocumentSearch(criteria: Partial<CustomsExemptionSearchCriteria>): Observable<CustomsExemptionRemittance[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined};
     let url = this._getURLSegment() + '/search';
-    if (criteria.requestType === CustomsExemptionRequestTypes.CANCEL) {
-      url += '/approved';
-    }
+    // if (criteria.requestType === CustomsExemptionRequestTypes.CANCEL) {
+    //   url += '/approved';
+    // }
     delete criteria.requestType; // it was added to check the request type to distinguish between requests
     return this.http.post<CustomsExemptionRemittance[]>(url, {...criteria, ...orgId});
   }

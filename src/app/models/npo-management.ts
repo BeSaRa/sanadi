@@ -165,7 +165,7 @@ export class NpoManagement
         buildingNumber: controls ? [buildingNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : buildingNumber,
         fax: controls ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
         address: controls ? [address, [CustomValidators.required, CustomValidators.maxLength(100)]] : address,
-        website: controls ? [website, [CustomValidators.required, CustomValidators.maxLength(350)]] : website,
+        website: controls ? [website, [CustomValidators.required, CustomValidators.pattern('WEBSITE')]] : website,
         facebook: controls ? [facebook, [CustomValidators.maxLength(350)]] : facebook,
         twitter: controls ? [twitter, [CustomValidators.maxLength(350)]] : twitter,
         instagram: controls ? [instagram, [CustomValidators.maxLength(350)]] : instagram,

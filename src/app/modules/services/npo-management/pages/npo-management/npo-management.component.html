@@ -1,0 +1,379 @@
+<div class="d-flex flex-column">
+  <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)" [hasForm]="true">
+    <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
+         [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [name]="tabsData.contectInfo.name" [hasError]="getTabInvalidStatus('contectInfo')"
+         [template]="contectInfoTabTemplate" [title]="lang.map.lbl_contact_info"></tab>
+    <tab [name]="tabsData.founderMember.name" [hasError]="getTabInvalidStatus('founderMember')"
+         [template]="founderMemberTabTemplate" [title]="lang.map.lbl_founder_members"></tab>
+    <tab [name]="tabsData.bankAccount.name" [hasError]="getTabInvalidStatus('bankAccount')"
+         [template]="bankAccountTabTemplate" [title]="lang.map.bank_accounts"></tab>
+    <tab [name]="tabsData.realBeneficiary.name" [hasError]="getTabInvalidStatus('realBeneficiary')"
+         [template]="realBeneficiaryTabTemplate" [title]="lang.map.lbl_real_beneficiary"></tab>
+    <tab [name]="tabsData.attachments.name" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab"
+         [title]="lang.map.attachments" [hasError]="getTabInvalidStatus('attachments')"></tab>
+  </tabs-list>
+
+  <ng-template #basicInfoTabTemplate>
+    <form [formGroup]="basicInfo" autocomplete="off">
+      <div class="row">
+        <!-- Request Type -->
+        <div class="col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{ lang.map.request_type
+            }}</label>
+          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
+                     [readonly]="criticalOnTask || readonly" placeholder="{{ lang.map.select }}" id="requestType"
+                     (change)="handleRequestTypeChange($event, true)" [notFoundText]="lang.map.msg_not_found"
+                     appendTo="body"
+                     validationClasses="requestType" formControlName="requestType">
+            <ng-option *ngFor="let type of NPORequestTypesList" [value]="type.lookupKey"
+                       [disabled]="type.lookupKey == NPORequestTypes.NEW && nonProfitOrg">{{ type.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requestType"></app-field-error-message>
+        </div>
+
+        <div class="col-md-4 mb-4 position-relative"
+             *ngIf="(isLicensingUser || isRegistrationAuthority) && !isNew && !readonly && !criticalOnTask">
+          <label class="form-label">{{ lang.map.lbl_organization }}</label>
+          <ng-select [selectOnTab]="true" labelForId="orgIdField" [clearable]="true" placeholder="{{ lang.map.select }}"
+                     id="orgIdField" [notFoundText]="lang.map.msg_not_found" (change)="loadOrganizationData()"
+                     appendTo="body"
+                     [formControl]="npoIdField">
+            <ng-option *ngFor="let org of NpoList" [value]="org.id">{{ org.getName() }}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="orgIdField"></app-field-error-message>
+        </div>
+
+        <!-- ar name -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="arabicName" for="arabicName" class="form-label">{{
+            lang.map.lbl_arabic_name
+            }}</label>
+          <input id="arabicName" formControlName="arabicName" [readonly]="readonly || isViewOnly"
+                 validationClasses="arabicName" class="form-control"/>
+          <app-field-error-message controlName="arabicName"></app-field-error-message>
+        </div>
+        <!-- en name -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="englishName" for="englishName" class="form-label">{{
+            lang.map.lbl_english_name
+            }}</label>
+          <input id="englishName" [readonly]="readonly || isViewOnly" formControlName="englishName"
+                 validationClasses="englishName" class="form-control"/>
+          <app-field-error-message controlName="englishName"></app-field-error-message>
+        </div>
+
+        <!-- registration authorities -->
+        <ng-container>
+          <div class="col-sm-6 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="registrationAuthority" for="registrationAuthority" class="form-label">{{
+              lang.map.registration_authority }}</label>
+            <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="isRegistrationAuthority || !isNew || readonly" appendTo="body"
+                       id="registrationAuthority"
+                       validationClasses="registrationAuthority" formControlName="registrationAuthority">
+              <ng-option *ngFor="let option of registrationAuthoritiesList" [value]="option.id">{{ option.getName() }}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="registrationAuthority"></app-field-error-message>
+          </div>
+        </ng-container>
+        <!-- registration date -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label for="registrationDate" asteriskIfRequired="registrationDate" class="form-label">{{
+            lang.map.first_registration_date }}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="registrationDate" id="registrationDate"
+                 [options]="datepickerOptionsMap.registrationDate" [ngClass]="{'input-disabled': (!isNew || readonly)}"
+                 (click)="isNew && !readonly && openDateMenu(dpregistrationDate)"
+                 #dpregistrationDate="angular-mydatepicker" angular-mydatepicker validationClasses="registrationDate">
+            </div>
+            <app-field-error-message controlName="registrationDate"></app-field-error-message>
+          </div>
+        </div>
+        <!-- registration number -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="registrationNumber" for="registrationNumber" class="form-label">{{
+            lang.map.lbl_registration_number
+            }}</label>
+          <input id="registrationNumber" formControlName="registrationNumber" [readonly]="!isNew || readonly"
+                 validationClasses="registrationNumber" class="form-control"/>
+          <app-field-error-message controlName="registrationNumber"></app-field-error-message>
+        </div>
+
+        <!-- unified economic record -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="unifiedEconomicRecord" for="unifiedEconomicRecord" class="form-label">{{
+            lang.map.unified_economic_record
+            }}</label>
+          <input id="unifiedEconomicRecord" formControlName="unifiedEconomicRecord" [readonly]="readonly || isViewOnly"
+                 validationClasses="unifiedEconomicRecord" class="form-control"/>
+          <app-field-error-message controlName="unifiedEconomicRecord"></app-field-error-message>
+        </div>
+        <!-- Activity Type -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="activityType" for="activityType" class="form-label">{{
+            lang.map.activity_type }}</label>
+          <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="readonly || isViewOnly"
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" id="activityType"
+                     validationClasses="activityType"
+                     formControlName="activityType">
+            <ng-option *ngFor="let option of activityTypesList" [value]="option.id">{{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="activityType"></app-field-error-message>
+        </div>
+        <!-- establishment date -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label for="establishmentDate" asteriskIfRequired="establishmentDate" class="form-label">{{
+            lang.map.establishment_date }}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="establishmentDate" id="establishmentDate"
+                 [options]="datepickerOptionsMap.establishmentDate" [ngClass]="{'input-disabled': (!isNew || readonly)}"
+                 (click)="isNew && !readonly && openDateMenu(dpestablishmentDate)"
+                 (inputFieldChanged)="onDateChange($event)" #dpestablishmentDate="angular-mydatepicker"
+                 angular-mydatepicker validationClasses="establishmentDate"></div>
+            <app-field-error-message controlName="establishmentDate"></app-field-error-message>
+          </div>
+        </div>
+
+        <!-- Disbandment Type -->
+        <div *ngIf="isDisbandment" class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="disbandmentType" for="disbandmentType" class="form-label">{{
+            lang.map.lbl_disbandment_type }}</label>
+          <ng-select [readonly]="readonly" [selectOnTab]="true" placeholder="{{ lang.map.select }}"
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" id="disbandmentType"
+                     validationClasses="disbandmentType" formControlName="disbandmentType">
+            <ng-option *ngFor="let option of NPODecisionsList" [value]="option.lookupKey">{{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="disbandmentType"></app-field-error-message>
+        </div>
+        <!-- disbandment date -->
+        <div *ngIf="isDisbandment" class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label for="disbandmentDate" asteriskIfRequired="disbandmentDate" class="form-label">{{
+            lang.map.disbandment_date }}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="disbandmentDate" id="disbandmentDate"
+                 [ngClass]="{'input-disabled': readonly}" [options]="datepickerOptionsMap.disbandmentDate"
+                 (click)="!readonly && openDateMenu(dpdisbandmentDate)" #dpdisbandmentDate="angular-mydatepicker"
+                 angular-mydatepicker validationClasses="disbandmentDate">
+            </div>
+            <app-field-error-message controlName="disbandmentDate"></app-field-error-message>
+          </div>
+        </div>
+
+        <!-- Clearance Type -->
+        <div *ngIf="isClearance" class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="clearanceType" for="clearanceType" class="form-label">{{
+            lang.map.lbl_clearance_type }}</label>
+          <ng-select [readonly]="readonly" [selectOnTab]="true" placeholder="{{ lang.map.select }}"
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" id="clearanceType"
+                     validationClasses="clearanceType"
+                     formControlName="clearanceType">
+            <ng-option *ngFor="let option of NPODecisionsList" [value]="option.lookupKey">{{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="clearanceType"></app-field-error-message>
+        </div>
+        <!-- clearance Name -->
+        <div *ngIf="isClearance" class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="clearanceName" for="clearanceName" class="form-label">{{
+            lang.map.lbl_clearance_name
+            }}</label>
+          <input id="clearanceName" [readonly]="readonly" formControlName="clearanceName"
+                 validationClasses="clearanceName" class="form-control"/>
+          <app-field-error-message controlName="clearanceName"></app-field-error-message>
+        </div>
+        <!-- clearance date -->
+        <div *ngIf="isClearance" class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label for="clearanceDate" asteriskIfRequired="clearanceDate" class="form-label">{{ lang.map.clearance_date
+            }}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="clearanceDate" id="clearanceDate"
+                 [ngClass]="{'input-disabled': readonly}" [options]="datepickerOptionsMap.clearanceDate"
+                 (click)="!readonly && openDateMenu(dpclearanceDate)" #dpclearanceDate="angular-mydatepicker"
+                 angular-mydatepicker validationClasses="clearanceDate"></div>
+            <app-field-error-message controlName="clearanceDate"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #contectInfoTabTemplate>
+    <form [formGroup]="contectInfo" autocomplete="off">
+      <div class="row">
+        <div>
+          <h6>{{lang.map.lbl_contact_info}}</h6>
+        </div>
+        <!-- Email -->
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
+          <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
+          <input id="email" validationClasses="email" [readonly]="readonly || isViewOnly" formControlName="email"
+                 trimInput class="form-control">
+          <app-field-error-message controlName="email"></app-field-error-message>
+        </div>
+        <!-- phone -->
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="phone" for="phone">{{lang.map.lbl_phone}}</label>
+          <input id="phone" validationClasses="phone" [readonly]="readonly || isViewOnly" formControlName="phone"
+                 class="form-control">
+          <app-field-error-message controlName="phone"></app-field-error-message>
+        </div>
+        <!-- fax -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="fax" for="fax" class="form-label">{{
+            lang.map.fax_number
+            }}</label>
+          <input id="fax" [readonly]="readonly || isViewOnly" formControlName="fax" validationClasses="fax"
+                 class="form-control"/>
+          <app-field-error-message controlName="fax"></app-field-error-message>
+        </div>
+        <!-- hotline -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="hotline" for="hotline" class="form-label">{{
+            lang.map.hotline
+            }}</label>
+          <input id="hotline" [readonly]="readonly || isViewOnly" formControlName="hotline" validationClasses="hotline"
+                 class="form-control"/>
+          <app-field-error-message controlName="hotline"></app-field-error-message>
+        </div>
+        <!-- website -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="website" for="website" class="form-label">{{
+            lang.map.website
+            }}</label>
+          <input id="website" [readonly]="readonly || isViewOnly" formControlName="website" validationClasses="website"
+                 class="form-control"/>
+          <app-field-error-message controlName="website"></app-field-error-message>
+        </div>
+        <div class="mt-2">
+          <h6>{{lang.map.lbl_national_address}}</h6>
+        </div>
+        <!-- zone number -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="zoneNumber" for="zoneNumber" class="form-label">{{
+            lang.map.lbl_zone
+            }}</label>
+          <input id="zoneNumber" [readonly]="readonly || isViewOnly" formControlName="zoneNumber"
+                 validationClasses="zoneNumber" class="form-control"/>
+          <app-field-error-message controlName="zoneNumber"></app-field-error-message>
+        </div>
+        <!-- street number -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="streetNumber" for="streetNumber" class="form-label">{{
+            lang.map.lbl_street
+            }}</label>
+          <input id="streetNumber" [readonly]="readonly || isViewOnly" formControlName="streetNumber"
+                 validationClasses="streetNumber" class="form-control"/>
+          <app-field-error-message controlName="streetNumber"></app-field-error-message>
+        </div>
+        <!-- building number -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="buildingNumber" for="buildingNumber" class="form-label">{{
+            lang.map.building_number
+            }}</label>
+          <input id="buildingNumber" [readonly]="readonly || isViewOnly" formControlName="buildingNumber"
+                 validationClasses="buildingNumber" class="form-control"/>
+          <app-field-error-message controlName="buildingNumber"></app-field-error-message>
+        </div>
+        <!-- address -->
+        <div class="col-12 mb-4 position-relative">
+          <label asteriskIfRequired="address" for="address" class="form-label">{{
+            lang.map.lbl_address
+            }}</label>
+          <textarea id="address" [readonly]="readonly || isViewOnly" validationClasses="address" trimInput
+                    formControlName="address" class="form-control">
+          </textarea>
+          <app-field-error-message controlName="address"></app-field-error-message>
+        </div>
+        <div class="mt-2">
+          <h6>{{lang.map.social_media_1.slice(0, -1)}}</h6>
+        </div>
+        <!-- facebook -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="facebook" for="facebook" class="form-label">{{
+            lang.map.lbl_facebook
+            }}</label>
+          <input id="facebook" [readonly]="readonly || isViewOnly" formControlName="facebook"
+                 validationClasses="facebook" class="form-control"/>
+          <app-field-error-message controlName="facebook"></app-field-error-message>
+        </div>
+        <!-- twitter -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="twitter" for="twitter" class="form-label">{{
+            lang.map.lbl_twitter
+            }}</label>
+          <input id="twitter" [readonly]="readonly || isViewOnly" formControlName="twitter" validationClasses="twitter"
+                 class="form-control"/>
+          <app-field-error-message controlName="twitter"></app-field-error-message>
+        </div>
+        <!-- instagram -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="instagram" for="instagram" class="form-label">{{
+            lang.map.lbl_instagram
+            }}</label>
+          <input id="instagram" [readonly]="readonly || isViewOnly" formControlName="instagram"
+                 validationClasses="instagram" class="form-control"/>
+          <app-field-error-message controlName="instagram"></app-field-error-message>
+        </div>
+        <!-- snapChat -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="snapChat" for="snapChat" class="form-label">{{
+            lang.map.lbl_snapchat
+            }}</label>
+          <input id="snapChat" [readonly]="readonly || isViewOnly" formControlName="snapChat"
+                 validationClasses="snapChat" class="form-control"/>
+          <app-field-error-message controlName="snapChat"></app-field-error-message>
+        </div>
+        <!-- youTube -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="youTube" for="youTube" class="form-label">{{
+            lang.map.lbl_youtube
+            }}</label>
+          <input id="youTube" [readonly]="readonly || isViewOnly" formControlName="youTube" validationClasses="youTube"
+                 class="form-control"/>
+          <app-field-error-message controlName="youTube"></app-field-error-message>
+        </div>
+        <div class="col-12">
+          <h6>{{lang.map.contact_officers}}</h6>
+          <npo-contact-officer #contactOfficersTab [readonly]="readonly || isViewOnly"
+                               [list]="model?.contactOfficerList || []"
+                               (readyEvent)="contactOfficersTabStatus = $event">
+          </npo-contact-officer>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #founderMemberTabTemplate>
+    <founder-members [readonly]="readonly || isViewOnly" #founderMemberTab [list]="model?.founderMemberList || []"
+                     (readyEvent)="founderMemberTabStatus = $event">
+    </founder-members>
+  </ng-template>
+
+  <ng-template #bankAccountTabTemplate>
+    <npo-bank-account #bankAccountsTab [caseType]="model?.caseType" [readonly]="readonly || isViewOnly"
+                      [list]="model?.bankAccountList || []" [bankList]="bankList"
+                      (readyEvent)="bankDetailsTabStatus = $event">
+    </npo-bank-account>
+  </ng-template>
+
+  <ng-template #realBeneficiaryTabTemplate>
+    <real-beneficiaries #realBeneficiaryTab [list]="model?.realBeneficiaryList || []"
+                        [readonly]="readonly || isViewOnly">
+    </real-beneficiaries>
+  </ng-template>
+  <ng-template #attachmentsTab>
+    <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
+                 [service]="service.documentService" [load]="loadAttachments" [model]="model"
+                 [formProperties]="formProperties"></attachments>
+  </ng-template>
+
+</div>

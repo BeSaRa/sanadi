@@ -9,12 +9,18 @@ import {CommonUtils} from '@app/helpers/common-utils';
   styleUrls: ['./bulk-actions.component.scss']
 })
 export class BulkActionsComponent implements OnInit {
-  @HostBinding('class') containerClass = 'col-md-6 col-sm-12';
+  // @HostBinding('class') containerClass = 'col-md-6 col-sm-12'
+  @HostBinding('class.col-md-6')
+  @HostBinding('class.col-sm-12')
+  public get isParentTableHeader(): boolean {
+    return !this.hasTableHeaderContainer;
+  }
 
   @Input() actionsList!: IGridAction[];
   @Input() selectedRecords!: any[];
   @Input() hideSelectCount: boolean = false;
-
+  @Input() reversedColors :boolean = false;
+  @Input() hasTableHeaderContainer: boolean = false;
   actions: IGridAction[] = [];
 
   constructor(public langService: LangService) {

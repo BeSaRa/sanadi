@@ -1,0 +1,328 @@
+<div class="d-flex flex-column">
+  <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)" [hasForm]="true">
+    <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
+      [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [name]="tabsData.contactOfficer.name" [hasError]="getTabInvalidStatus('contactOfficer')"
+      [template]="contactOfficerTabTemplate" [title]="lang.map.contact_officer"></tab>
+    <tab [name]="tabsData.beneficiariesNature.name" [hasError]="getTabInvalidStatus('beneficiariesNature')"
+      [template]="beneficiariesNatureTabTemplate" [title]="lang.map.lbl_beneficiaries_nature"></tab>
+    <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
+         [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
+    <tab [name]="tabsData.attachments.name" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab"
+         [title]="lang.map.attachments" [hasError]="getTabInvalidStatus('attachments')"></tab>
+  </tabs-list>
+
+  <ng-template #basicInfoTabTemplate>
+    <form [formGroup]="form" autocomplete="off">
+      <h6 class="text-primary">{{ lang.map.request_info }}</h6>
+      <div class="row">
+        <!-- Request Type -->
+        <div class="col-md-6 mb-4 position-relative">
+          <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{ lang.map.request_type
+            }}</label>
+          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
+            placeholder="{{ lang.map.select }}" id="requestType" [readonly]="readonly"
+            (change)="handleRequestTypeChange($event, true)" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+            validationClasses="requestType" formControlName="requestType">
+            <ng-option *ngFor="let type of collectionRequestType" [value]="type.lookupKey">{{ type.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requestType"></app-field-error-message>
+        </div>
+        <!-- License Number -->
+        <div class="col-md-6 mb-4 position-relative">
+          <label asteriskIfRequired="oldLicenseFullSerial" for="oldLicenseFullSerial"
+            class="form-label">{{lang.map.license_number}}</label>
+          <div class="input-group">
+            <input (keydown.enter)="isEditOrCancel()" formControlName="oldLicenseFullSerial"
+              [readonly]="!isEditOrCancel() || readonly" type="text" validationClasses="oldLicenseFullSerial"
+              class="form-control" id="oldLicenseFullSerial" trimInput>
+            <button *ngIf="isEditOrCancel() && !readonly" type="button" (click)="licenseSearch($event)"
+              class="input-group-text">
+              <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+          </div>
+        </div>
+<<<<<<< HEAD:src/app/modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+=======
+      </div>
+    </form>
+    <hr/>
+    <h6 class="text-primary">{{ lang.map.lbl_activity_data }}</h6>
+    <form [formGroup]="activity" autocomplete="off">
+      <div class="row">
+        <!-- agreementWithRACA -->
+        <!-- organization -->
+        <div class="col-md-6 mb-4 position-relative">
+          <label for="organization" class="form-label">{{
+            lang.map.lbl_organization
+            }}</label>
+          <input id="organization" readonly class="form-control" [value]="userOrgName"/>
+        </div>
+        <!-- activity Name -->
+        <div class="col-md-6 mb-4 position-relative">
+          <label asteriskIfRequired="activityName" for="activityName" class="form-label">{{
+            lang.map.activity_name
+            }}</label>
+          <input id="activityName" [readonly]="isCancel() || readonly" formControlName="activityName" validationClasses="activityName"
+                 class="form-control"/>
+          <app-field-error-message controlName="activityName"></app-field-error-message>
+        </div>
+        <!-- expected Date -->
+        <div class="col-md-6 mb-4 position-relative">
+          <label for="expectedDate" asteriskIfRequired="expectedDate" class="form-label">{{ lang.map.expected_date
+            }}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="expectedDate" id="expectedDate"
+                 [ngClass]="{'input-disabled': isCancel() || (readonly && !employeeService.isLicensingUser())}"
+                 [options]="datepickerOptionsMap.expectedDate"
+                 (click)="(isCancel() || (!readonly || employeeService.isLicensingUser())) && openDateMenu(dpexpectedDate)"
+                 #dpexpectedDate="angular-mydatepicker" angular-mydatepicker validationClasses="expectedDate"></div>
+            <app-field-error-message controlName="expectedDate"></app-field-error-message>
+          </div>
+        </div>
+        <!-- organization have agreement with RACA -->
+        <div class="col-md-6 mb-4 position-relative">
+          <label for="agreementWithRACA" asteriskIfRequired="agreementWithRACA" class="form-label">{{
+            lang.map.does_organization_have_agreement_with_RACA }}</label>
+          <ng-select [selectOnTab]="true" labelForId="agreementWithRACA" [clearable]="true"
+                     placeholder="{{ lang.map.select }}" id="agreementWithRACA" [readonly]="isCancel() || readonly"
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="agreementWithRACA"
+                     formControlName="agreementWithRACA">
+            <ng-option *ngFor="let type of linkedProject" [value]="type.lookupKey">{{ type.getName() }}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="agreementWithRACA"></app-field-error-message>
+        </div>
+>>>>>>> 85017170e2f448716403075526d55091807c9641:src/app/modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+        <!-- goal -->
+        <div class="mb-4 position-relative">
+          <label for="goal" asteriskIfRequired="goal" class="form-label">{{lang.map.goal}}</label>
+          <textarea rows="5" id="goal" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+<<<<<<< HEAD:src/app/modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+            validationClasses="goal" [readonly]="readonly" formControlName="goal" trimInput
+            class="form-control"></textarea>
+=======
+                    validationClasses="goal" [readonly]="isCancel() || readonly" formControlName="goal" trimInput
+                    class="form-control"></textarea>
+>>>>>>> 85017170e2f448716403075526d55091807c9641:src/app/modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+          <app-field-error-message controlName="goal"></app-field-error-message>
+        </div>
+        <!-- subject -->
+        <div class="mb-4 position-relative">
+          <label for="subject" asteriskIfRequired="subject" class="form-label">{{lang.map.subject}}</label>
+          <textarea rows="5" id="subject" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+<<<<<<< HEAD:src/app/modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+            validationClasses="subject" [readonly]="readonly" formControlName="subject" trimInput
+            class="form-control"></textarea>
+=======
+                    validationClasses="subject" [readonly]="isCancel() || readonly" formControlName="subject" trimInput
+                    class="form-control"></textarea>
+>>>>>>> 85017170e2f448716403075526d55091807c9641:src/app/modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+          <app-field-error-message controlName="subject"></app-field-error-message>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+<<<<<<< HEAD:src/app/modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+=======
+  <ng-template #dataOfApplicantTabTemplate>
+    <form [formGroup]="dataOfApplicant" autocomplete="off">
+      <div class="row">
+        <!-- identificationNumber -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="identificationNumber" for="identificationNumber" class="form-label">{{
+            lang.map.identification_number
+            }}</label>
+          <input id="identificationNumber" formControlName="identificationNumber" [readonly]="isCancel() || readonly"
+                 validationClasses="identificationNumber" class="form-control"/>
+          <app-field-error-message controlName="identificationNumber"></app-field-error-message>
+        </div>
+        <!-- en name -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="enName" for="enName" class="form-label">{{
+            lang.map.name
+            }}</label>
+          <input id="enName" [readonly]="isCancel() || readonly" formControlName="enName" validationClasses="enName"
+                 class="form-control"/>
+          <app-field-error-message controlName="enName"></app-field-error-message>
+        </div>
+        <!-- jobTitle -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="jobTitle" for="jobTitle" class="form-label">{{
+            lang.map.lbl_job_title
+            }}</label>
+          <input id="jobTitle" [readonly]="isCancel() || readonly" formControlName="jobTitle" validationClasses="jobTitle"
+                 class="form-control"/>
+          <app-field-error-message controlName="jobTitle"></app-field-error-message>
+        </div>
+        <!-- email -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
+          <input validationClasses="email" [readonly]="isCancel() || readonly" formControlName="email" type="text" id="email"
+                 class="form-control">
+          <app-field-error-message controlName="email"></app-field-error-message>
+        </div>
+        <!-- Phone -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="phone" for="phone" class="form-label">{{
+            lang.map.lbl_phone
+            }}</label>
+          <input type="text" validationClasses="phone" formControlName="phone" [readonly]="isCancel() || readonly" trimInput
+                 class="form-control" id="phone"/>
+          <app-field-error-message controlName="phone"></app-field-error-message>
+        </div>
+        <!-- Mobile Number -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="mobileNo" for="mobileNo" class="form-label">{{ lang.map.lbl_extra_phone_number
+            }}</label>
+          <input type="text" validationClasses="mobileNo" formControlName="mobileNo" [readonly]="isCancel() || readonly" trimInput
+                 class="form-control" id="mobileNo"/>
+          <app-field-error-message controlName="mobileNo"></app-field-error-message>
+        </div>
+        <!-- address -->
+        <div class="mb-4 position-relative">
+          <label asteriskIfRequired="address" for="address" class="form-label">{{ lang.map.lbl_address }}</label>
+          <textarea rows="5" id="address" validationClasses="address" formControlName="address" class="form-control"
+                    [readonly]="isCancel() || readonly" trimInput></textarea>
+          <app-field-error-message controlName="address"></app-field-error-message>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+>>>>>>> 85017170e2f448716403075526d55091807c9641:src/app/modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+  <ng-template #contactOfficerTabTemplate>
+    <form [formGroup]="contactOfficer" autocomplete="off">
+      <div class="row">
+        <!-- contact QID -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="contactQID" for="contactQID" class="form-label">{{
+            lang.map.identification_number
+            }}</label>
+<<<<<<< HEAD:src/app/modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+          <input id="contactQID" formControlName="contactQID" [readonly]="readonly || isSameAsApplican"
+            validationClasses="contactQID" class="form-control" />
+          <app-field-error-message controlName="contactQID"></app-field-error-message>
+=======
+          <div class="input-group">
+            <input id="contactQID" formControlName="contactQID" [readonly]="isCancel() || readonly || isSameAsApplican"
+                   validationClasses="contactQID" class="form-control"/>
+            <app-field-error-message controlName="contactQID"></app-field-error-message>
+            <button *ngIf="!isCancel() && !readonly && isNonProfitProfile()" [tooltip]="lang.map.same_as_applicant"
+                    (click)="toggleContactOffecorInfo($event)" type="button"
+                    class="input-group-text bg-primary text-white">
+              <i class="mdi mdi-equal"></i>
+            </button>
+          </div>
+>>>>>>> 85017170e2f448716403075526d55091807c9641:src/app/modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+        </div>
+        <!-- contact Name -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="contactName" for="contactName" class="form-label">{{
+            lang.map.full_name
+            }}</label>
+<<<<<<< HEAD:src/app/modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+          <input id="contactName" formControlName="contactName" [readonly]="readonly || isSameAsApplican"
+            validationClasses="contactName" class="form-control" />
+=======
+          <input id="contactName" formControlName="contactName" [readonly]="isCancel() || readonly || isSameAsApplican"
+                 validationClasses="contactName" class="form-control"/>
+>>>>>>> 85017170e2f448716403075526d55091807c9641:src/app/modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+          <app-field-error-message controlName="contactName"></app-field-error-message>
+        </div>
+        <!-- contactEmail -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="contactEmail" for="contactEmail">{{lang.map.lbl_email}}</label>
+<<<<<<< HEAD:src/app/modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+          <input validationClasses="contactEmail" [readonly]="readonly || isSameAsApplican"
+            formControlName="contactEmail" type="text" id="contactEmail" class="form-control">
+=======
+          <input validationClasses="contactEmail" [readonly]="isCancel() || readonly || isSameAsApplican"
+                 formControlName="contactEmail" type="text" id="contactEmail" class="form-control">
+>>>>>>> 85017170e2f448716403075526d55091807c9641:src/app/modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+          <app-field-error-message controlName="contactEmail"></app-field-error-message>
+        </div>
+        <!-- contact Phone -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="contactPhone" for="contactPhone" class="form-label">{{
+            lang.map.lbl_phone
+            }}</label>
+          <input type="text" validationClasses="contactPhone" formControlName="contactPhone"
+<<<<<<< HEAD:src/app/modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+            [readonly]="readonly || isSameAsApplican" trimInput class="form-control" id="contactPhone" />
+=======
+                 [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control" id="contactPhone"/>
+>>>>>>> 85017170e2f448716403075526d55091807c9641:src/app/modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+          <app-field-error-message controlName="contactPhone"></app-field-error-message>
+        </div>
+        <!-- contact Extra Phone -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="contactExtraPhone" for="contactExtraPhone" class="form-label">{{
+            lang.map.lbl_mobile_number }}</label>
+          <input type="text" validationClasses="contactExtraPhone" formControlName="contactExtraPhone"
+<<<<<<< HEAD:src/app/modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+            [readonly]="readonly || isSameAsApplican" trimInput class="form-control" id="contactExtraPhone" />
+=======
+                 [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control" id="contactExtraPhone"/>
+>>>>>>> 85017170e2f448716403075526d55091807c9641:src/app/modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+          <app-field-error-message controlName="contactExtraPhone"></app-field-error-message>
+        </div>
+        <!-- Job Title -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="jobTitle" for="jobTitle" class="form-label">{{lang.map.job_title}}</label>
+          <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" trimInput class="form-control">
+          <app-field-error-message controlName="jobTitle"></app-field-error-message>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template #beneficiariesNatureTabTemplate>
+    <form [formGroup]="beneficiariesNature" autocomplete="off">
+      <div class="row">
+        <!-- Beneficiaries count -->
+        <!-- <div class="col-sm-4 position-relative">
+          <label asteriskIfRequired="sessionTimeout" for="sessionTimeout"
+            class="form-label">{{lang.map.session_timeout_in_minutes}}</label>
+          <input id="sessionTimeout" validationClasses="sessionTimeout" formControlName="sessionTimeout"
+            class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+          <app-field-error-message controlName="sessionTimeout"></app-field-error-message>
+        </div> -->
+        <!-- Beneficiaries desc -->
+        <!-- <div class="mb-4 position-relative">
+          <label for="goal" asteriskIfRequired="goal" class="form-label">{{lang.map.goal}}</label>
+          <textarea rows="5" id="goal" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+            validationClasses="goal" [readonly]="readonly" formControlName="goal" trimInput
+            class="form-control"></textarea>
+          <app-field-error-message controlName="goal"></app-field-error-message>
+        </div> -->
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #specialExplanationsTabTemplate>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 mb-4 position-relative">
+          <label for="description" asteriskIfRequired="description"
+            class="form-label">{{lang.map.special_explanations}}</label>
+          <textarea rows="5" id="description" validationClasses="description"
+<<<<<<< HEAD:src/app/modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+            [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
+            formControlName="description" trimInput class="form-control"></textarea>
+=======
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="isCancel() || readonly"
+                    formControlName="description" trimInput class="form-control"></textarea>
+>>>>>>> 85017170e2f448716403075526d55091807c9641:src/app/modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component.html
+          <app-field-error-message controlName="description"></app-field-error-message>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #attachmentsTab>
+    <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
+      [service]="service.documentService" [model]="model" [load]="loadAttachments" [formProperties]="formProperties">
+    </attachments>
+  </ng-template>
+
+</div>

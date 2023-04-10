@@ -5,7 +5,7 @@
 </div>
 <div class="dialog-content w800px" #dialogContent>
   <form novalidate autocomplete="off" [formGroup]="form">
-    <tabs-list (onTabChange)="setDialogButtonsVisibility($event)">
+    <tabs-list (onTabChange)="setDialogButtonsVisibility($event)" [hasForm]="true">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
            [hasError]="getTabInvalidStatus('basic')"></tab>
       <tab [name]="tabsData.permissions.name" [template]="permissionsTabTemplate"

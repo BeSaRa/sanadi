@@ -35,6 +35,7 @@ export type customValidationTypes =
   | 'PHONE_NUMBER'
   | 'WEBSITE'
   | 'URL'
+  | 'HAS_LETTERS'
   ;
 
 export type searchFunctionType<T = any> = (text: string, model: T) => boolean;
@@ -70,3 +71,5 @@ export type GridName = string
 export type ItemId = string
 
 export type FollowUpDateModels = ForeignCountriesProjects | CharityOrganizationUpdate;
+
+export type FieldControlAndLabelKey = { control: AbstractControl, labelKey: keyof ILanguageKeys };

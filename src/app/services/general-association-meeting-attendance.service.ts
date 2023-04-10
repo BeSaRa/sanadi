@@ -17,15 +17,15 @@ import {GeneralAssociationExternalMember} from '@app/models/general-association-
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {GeneralAssociationExternalMemberInterceptor} from '@app/model-interceptors/general-association-external-member-interceptor';
 import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
-import {SelectMemberPopupComponent} from '@app/modules/projects/popups/select-member-popup-component/select-member-popup.component';
+import {SelectMemberPopupComponent} from '@app/modules/services/general-association-meeting-attendance/popups/select-member-popup-component/select-member-popup.component';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {UntypedFormGroup} from '@angular/forms';
 import {
   GeneralAssociationMeetingCompleteTaskPopupComponent
-} from '@app/modules/projects/popups/general-association-meeting-complete-task-popup/general-association-meeting-complete-task-popup.component';
+} from '@app/modules/services/general-association-meeting-attendance/popups/general-association-meeting-complete-task-popup/general-association-meeting-complete-task-popup.component';
 import {
   GeneralAssociationMeetingApproveTaskPopupComponent
-} from '@app/modules/projects/popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
+} from '@app/modules/services/general-association-meeting-attendance/popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
 import {GeneralAssociationInternalMemberInterceptor} from '@app/model-interceptors/general-association-internal-member-interceptor';
 import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
 import {IGeneralAssociationMeetingProceedSendToMembers} from '@contracts/i-general-association-meeting-proceed-send-to-members';
@@ -34,14 +34,14 @@ import {MeetingMemberTaskStatus} from '@app/models/meeting-member-task-status';
 import {MeetingPointMemberComment} from '@app/models/meeting-point-member-comment';
 import {
   MeetingPointMembersCommentsPopupComponent
-} from '@app/modules/projects/popups/meeting-point-members-comments-popup/meeting-point-members-comments-popup.component';
+} from '@app/modules/services/general-association-meeting-attendance/popups/meeting-point-members-comments-popup/meeting-point-members-comments-popup.component';
 import {BlobModel} from '@app/models/blob-model';
 import {map} from 'rxjs/operators';
 import {CommonUtils} from '@helpers/common-utils';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {
   SpecificMemberCommentsAndNotesComponent
-} from '@app/modules/projects/popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
+} from '@app/modules/services/general-association-meeting-attendance/popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
 
 @CastResponseContainer({
   $default: {

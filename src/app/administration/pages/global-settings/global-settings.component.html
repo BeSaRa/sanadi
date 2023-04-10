@@ -1,98 +1,116 @@
 <div class="row pb-3">
-  <app-page-header [pageTitle]="'menu_global_settings'">
-  </app-page-header>
+  <app-page-header [pageTitle]="'menu_global_settings'"></app-page-header>
 </div>
 <div class="row">
   <div class="col-12">
     <form *ngIf="form" novalidate autocomplete="off" [formGroup]="form">
-      <div class="row mb-3">
-        <div class="col-sm-4 position-relative">
+      <div class="row">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="systemArabicName" for="systemArabicName"
                  class="form-label">{{lang.map.lbl_arabic_name}}</label>
-          <input id="systemArabicName"
-                 validationClasses="systemArabicName"
+          <input id="systemArabicName" validationClasses="systemArabicName"
                  formControlName="systemArabicName" class="form-control">
           <app-field-error-message controlName="systemArabicName"></app-field-error-message>
         </div>
-        <div class="col-sm-4 position-relative">
-          <label asteriskIfRequired="systemEnName" for="systemEnName"
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="systemEnglishName" for="systemEnglishName"
                  class="form-label">{{lang.map.lbl_english_name}}</label>
-          <input id="systemEnName"
-                 validationClasses="systemEnName"
-                 formControlName="systemEnName" class="form-control">
-          <app-field-error-message controlName="systemEnName"></app-field-error-message>
+          <input id="systemEnglishName" validationClasses="systemEnglishName"
+                 formControlName="systemEnglishName" class="form-control">
+          <app-field-error-message controlName="systemEnglishName"></app-field-error-message>
         </div>
-        <div class="col-sm-4 position-relative">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="sessionTimeout" for="sessionTimeout"
                  class="form-label">{{lang.map.session_timeout_in_minutes}}</label>
-          <input id="sessionTimeout"
-                 validationClasses="sessionTimeout"
+          <input id="sessionTimeout" validationClasses="sessionTimeout"
                  formControlName="sessionTimeout" class="form-control"
                  [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="sessionTimeout"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-4 position-relative">
+      <div class="row">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="fileSize" for="fileSize"
                  class="form-label">{{lang.map.file_size}}</label>
-          <input id="fileSize"
-                 validationClasses="fileSize"
+          <input id="fileSize" validationClasses="fileSize"
                  formControlName="fileSize" class="form-control"
                  [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="fileSize"></app-field-error-message>
         </div>
-        <div class="col-sm-4 position-relative">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="maxDeductionRatio" for="maxDeductionRatio"
+                 class="form-label">{{lang.map.lbl_maximum_deduction_ratio}}</label>
+          <input id="maxDeductionRatio" validationClasses="maxDeductionRatio"
+                 formControlName="maxDeductionRatio" class="form-control"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY">
+          <app-field-error-message controlName="maxDeductionRatio"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="inboxRefreshInterval" for="inboxRefreshInterval"
                  class="form-label">{{lang.map.inbox_refresh_interval}}</label>
-          <input id="inboxRefreshInterval"
-                 validationClasses="inboxRefreshInterval"
+          <input id="inboxRefreshInterval" validationClasses="inboxRefreshInterval"
                  formControlName="inboxRefreshInterval" class="form-control"
                  [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="inboxRefreshInterval"></app-field-error-message>
         </div>
-        <div class="col-sm-4 position-relative">
-          <label asteriskIfRequired="fileTypeArr" for="fileTypeArr"
-                 class="form-label">{{lang.map.file_types}}</label>
-          <div class="position-relative ng-select-wrapper">
-            <ng-select validationClasses="fileTypeArr" labelForId="fileTypeArr"
-                       placeholder="{{lang.map.select}}"
-                       [notFoundText]="lang.map.msg_not_found"
-                       formControlName="fileTypeArr"
-                       id="fileTypeArr" appendTo="body"
-                       [multiple]="true">
-              <ng-option [value]="fileType.id"
-                         *ngFor="let fileType of fileTypes">{{fileType.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="fileTypeArr"></app-field-error-message>
-          </div>
-        </div>
       </div>
       <div class="row mb-3">
+        <div class="col-sm-12 col-md-4 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="fileTypeParsed" for="fileTypeParsed" class="form-label">{{lang.map.file_types}}</label>
+          <ng-select [selectOnTab]="true" [items]="fileTypesList" labelForId="fileTypeParsed"
+                     bindValue="id" [clearable]="true"
+                     [searchFn]="searchNgSelect"
+                     placeholder="{{lang.map.select}}" id="fileTypeParsed"
+                     [notFoundText]="lang.map.msg_not_found"
+                     [multiple]="true" [closeOnSelect]="false"
+                     formControlName="fileTypeParsed" validationClasses="fileTypeParsed">
+            <ng-template ng-option-tmp let-item="item">
+              <span class="custom-option">{{item.getName()}}</span>
+            </ng-template>
+            <ng-template ng-label-tmp let-item="item" let-clear="clear">
+              <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
+              <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+            </ng-template>
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of (items ? items.slice(0,2): [])">
+                <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 2">
+                <span class="ng-value-label">{{items.length - 2}} more...</span>
+              </div>
+            </ng-template>
+          </ng-select>
+          <app-field-error-message controlName="fileTypeParsed"></app-field-error-message>
+        </div>
         <div class="col-sm-4 mt-4 form-check form-switch">
           <div class="ms-3">
-            <input class="form-check-input" type="checkbox" id="enableMailNotification" formControlName="enableMailNotification">
+            <input class="form-check-input" type="checkbox" id="enableMailNotification"
+                   formControlName="enableMailNotification">
             <label class="form-check-label"
-                   for="status">{{lang.map.mail_notifications}}</label>
+                   for="enableMailNotification">{{lang.map.mail_notifications}}</label>
           </div>
         </div>
-        <div class="col-sm-6 mt-4 form-check form-switch">
+        <div class="col-sm-4 mt-4 form-check form-switch">
           <div class="ms-3">
-            <input class="form-check-input" type="checkbox" id="enableSMSNotification" formControlName="enableSMSNotification">
+            <input class="form-check-input" type="checkbox" id="enableSMSNotification"
+                   formControlName="enableSMSNotification">
             <label class="form-check-label"
-                   for="global">{{lang.map.sms_notifications}}</label>
+                   for="enableSMSNotification">{{lang.map.sms_notifications}}</label>
           </div>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-sm-4 position-relative">
+      <div class="row">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label">{{lang.map.admin_emails}}</label>
-          <button (click)="addAdminEmail()" class="btn btn-link outline-none" title="{{lang.map.add_email}}">
+          <button (click)="addSupportEmail('', true)"
+                  class="btn btn-link outline-none" title="{{lang.map.add_email}}">
             <i class="mdi mdi-plus-box"></i>
           </button>
           <div class="row" [formGroup]="adminEmailsForm">
             <div formArrayName="emails" class="emails-container">
-              <div class="col-sm-12 position-relative email-wrapper" *ngFor="let email of emails.controls; let i = index">
+              <div class="col-sm-12 position-relative email-wrapper"
+                   *ngFor="let email of emailsFormArray.controls; let i = index">
                 <div class="input-group">
                   <input [id]="i" class="form-control" [formControlName]="i" validationClasses="{{i}}">
                   <app-field-error-message controlName="{{i}}"></app-field-error-message>
@@ -111,9 +129,15 @@
 
 <div class="row mt-4 mb-2">
   <div class="col-12">
-    <div class="d-flex flex-row flex-wrap gap-2 justify-content-center">
-      <button [disabled]="!form || form.invalid || invalidEmailsForm()"
+    <div class="d-flex flex-row flex-wrap gap-2 mb-2 justify-content-center">
+      <button type="button" [disabled]="isInvalidForm()"
               (click)="save()" class="btn btn-primary">{{lang.map.btn_save}}</button>
+      <button type="button" (click)="cancelSettings()"
+              class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+      <button tabindex="-1" (click)="displayFormValidity()"
+              tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+        <i class="mdi mdi-information-outline text-info"></i>
+      </button>
     </div>
   </div>
 </div>

@@ -11,7 +11,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {ToastService} from '@app/services/toast.service';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
-import {FileExtensionsEnum, FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileIconsEnum, FileMimeTypesEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {AdminResult} from '@app/models/admin-result';
 import {GridName, ItemId} from '@app/types/types';
 import {EmployeeService} from '@services/employee.service';
@@ -22,6 +22,9 @@ import {
 } from '@app/shared/popups/other-attachment-details-popup/other-attachment-details-popup.component';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {CommonUtils} from '@helpers/common-utils';
+import {GlobalSettingsService} from '@app/services/global-settings.service';
+import {GlobalSettings} from '@app/models/global-settings';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -39,6 +42,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   multiAttachments: Map<GridName, Map<ItemId, FileNetDocument[]>> = new Map<GridName, Map<ItemId, FileNetDocument[]>>();
 
   fileIconsEnum = FileIconsEnum;
+  actionIconsEnum = ActionIconsEnum;
   defaultAttachments: FileNetDocument[] = [];
   conditionalAttachments: FileNetDocument[] = [];
   customPropertiesDestroy$: Subject<void> = new Subject<void>();
@@ -75,7 +79,10 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   selectedFile?: FileNetDocument;
 
   loadedAttachments: Record<number, FileNetDocument> = {};
-  allowedExtensions: string[] = [FileExtensionsEnum.PDF];
+
+  globalSettings: GlobalSettings = this.globalSettingsService.getGlobalSettings();
+  allowedExtensions: string[] = [];
+  allowedFileMaxSize: number = this.globalSettings.fileSize;
 
   private selectedIndex!: number;
 
@@ -88,7 +95,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   formProperties: Record<string, () => Observable<any>> = {};
 
   destroy$: Subject<any> = new Subject<any>();
-  displayedColumns: string[] = [/*'rowSelection',*/ 'title', 'type', 'description', 'mandatory', 'isPublished', 'date', 'actions'];
+  displayedColumns: string[] = [/*'rowSelection',*/ 'icon', 'type', 'description', 'mandatory', 'isPublished', 'date', 'actions'];
 
   filter: UntypedFormControl = new UntypedFormControl();
 
@@ -100,7 +107,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
               private dialog: DialogService,
               private toast: ToastService,
               private employeeService: EmployeeService,
-              private attachmentTypeService: AttachmentTypeService) {
+              private attachmentTypeService: AttachmentTypeService,
+              private globalSettingsService: GlobalSettingsService) {
     this.attachmentTypeService.attachmentsComponent = this;
   }
 
@@ -114,10 +122,38 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.setAllowedFiles();
     this.listenToReload();
     this.listenToCaseIdChanges();
     this.listenToAddOtherAttachment();
     this.loadingStatus.next(true);
+  }
+
+  private _getFileIconsEnumKey(mimeType: string) {
+    try {
+      const fileTypeKey = Object.keys(FileMimeTypesEnum)[Object.values(FileMimeTypesEnum).indexOf(mimeType as FileMimeTypesEnum)];
+      return !fileTypeKey ? FileIconsEnum.HIDDEN : FileIconsEnum[fileTypeKey as keyof typeof FileIconsEnum];
+    } catch (_) {
+      return FileIconsEnum.HIDDEN;
+    }
+  }
+
+  getFileIcon(attachment: FileNetDocument): string {
+    if (!attachment.id) {
+      return FileIconsEnum.HIDDEN;
+    } else {
+      return this._getFileIconsEnumKey(attachment.mimeType);
+    }
+  }
+
+  setAllowedFiles() {
+    this.globalSettingsService.getAllowedFileTypes()
+      .pipe(
+        map(fileTypes => fileTypes.map(fileType => '.' + (fileType.extension ?? '').toLowerCase()))
+      )
+      .subscribe(list => {
+        this.allowedExtensions = list;
+      })
   }
 
   private loadDocumentsByCaseId(types: FileNetDocument[]): Observable<FileNetDocument[]> {
@@ -171,9 +207,10 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         attachment.attachmentTypeInfo = this.createOtherLookup();
         attachment.attachmentTypeStatus = true;
       } else {
-        const type = this.allAttachmentTypesByCase.find(x => x.attachmentTypeId === attachment.attachmentTypeId);
+        const type = this.allAttachmentTypesByCase.find(x => x.attachmentTypeInfo.id === attachment.attachmentTypeId);
         attachment.attachmentTypeStatus = type ? type.attachmentTypeInfo.isActive() : false;
         attachment.required = type ? type.isRequired : false;
+        !!type && attachment.setAttachmentTypeServiceData(type);
       }
       return attachment;
     }).filter((attachment) => {
@@ -214,27 +251,50 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   uploaderFileChange($event: Event): void {
     const input = ($event.target as HTMLInputElement);
     const file = input.files?.item(0);
-    const validFile = file ? (file.type === 'application/pdf') : true;
+    const validFile = file ? (this.allowedExtensions.includes(file.name.getExtension())) : true;
     !validFile ? input.value = '' : null;
     if (!validFile) {
-      this.dialog.error(this.lang.map.msg_only_those_files_allowed_to_upload.change({files: this.allowedExtensions.join(',')}));
+      this.dialog.error(this.lang.map.msg_only_those_files_allowed_to_upload.change({files: this.allowedExtensions.join(', ')}));
       input.value = '';
       return;
     }
-    const deleteFirst$ = this.selectedFile && this.selectedFile.id ? this.service.deleteDocument(this.selectedFile.id) : of(null);
+    const validFileSize = file ? (file.size <= this.allowedFileMaxSize * 1000 * 1024) : true;
+    !validFileSize ? input.value = '' : null;
+    if (!validFileSize) {
+      this.dialog.error(this.lang.map.msg_only_this_file_size_or_less_allowed_to_upload.change({size: this.allowedFileMaxSize}));
+      input.value = '';
+      return;
+    }
+
+    of(null)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(_ => {
+          if (this.selectedFile && this.selectedFile.id) {
+            return this._updateAttachmentFile(input.files!);
+          } else {
+            return this._createAttachmentFile(input.files!);
+          }
+        })
+      ).subscribe((attachment) => {
+      input.value = '';
+      this._afterSaveAttachmentFile(attachment, 'update');
+    });
+
+    /*const deleteFirst$ = this.selectedFile && this.selectedFile.id ? this.service.deleteDocument(this.selectedFile.id) : of(null);
     of(null)
       .pipe(switchMap(_ => deleteFirst$))
       .pipe(
-        switchMap(_ => this._saveAttachmentFile(input.files!)),
+        switchMap(_ => this._createAttachmentFile(input.files!)),
         takeUntil(this.destroy$)
       )
       .subscribe((attachment) => {
         input.value = '';
         this._afterSaveAttachmentFile(attachment, 'update');
-      });
+      });*/
   }
 
-  private _saveAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
+  private _createAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
     return this.service
       .addSingleDocument(this.caseId!, (new FileNetDocument()).clone({
         documentTitle: this.selectedFile?.documentTitle,
@@ -246,6 +306,21 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       }));
   }
 
+  private _updateAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
+    const newData = (new FileNetDocument()).clone({
+      id: this.selectedFile?.id,
+      vsId: this.selectedFile?.vsId,
+      documentTitle: this.selectedFile?.documentTitle,
+      description: this.selectedFile?.description,
+      attachmentTypeId: this.selectedFile?.attachmentTypeId,
+      required: this.selectedFile?.required,
+      files: filesList,
+      isPublished: this.employeeService.isExternalUser() ? true : this.selectedFile?.isPublished
+    })
+
+    return this.service.updateSingleDocument(this.caseId!, newData);
+  }
+
   private _afterSaveAttachmentFile(attachment: FileNetDocument, attachmentOperation: 'add' | 'update') {
     this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
     attachment.attachmentTypeStatus = this.selectedFile?.attachmentTypeStatus!;
@@ -253,7 +328,10 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     if (attachmentOperation === 'add') {
       this.attachments = ([] as FileNetDocument[]).concat([attachment, ...this.attachments]);
     } else {
-      this.attachments.splice(this.selectedIndex, 1, attachment.clone({attachmentTypeInfo: this.selectedFile?.attachmentTypeInfo}));
+      this.attachments.splice(this.selectedIndex, 1, attachment.clone({
+        attachmentTypeInfo: this.selectedFile?.attachmentTypeInfo,
+        attachmentTypeServiceData: this.selectedFile?.attachmentTypeServiceData
+      }));
     }
     this.attachments = this.attachments.slice();
     this.separateConditionalAttachments();
@@ -376,7 +454,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
               this.selectedFile = attachment.attachment;
               this.selectedIndex = 0;
             }),
-            switchMap((addedAttachment) => this._saveAttachmentFile(addedAttachment.file))
+            switchMap((addedAttachment) => this._createAttachmentFile(addedAttachment.file))
           )))
       .subscribe((attachment) => {
         attachment.attachmentTypeInfo = this.selectedFile!.attachmentTypeInfo;
@@ -457,10 +535,15 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   }
 
   private removeAttachment(attachment: FileNetDocument): void {
-    this.attachments = this.attachments.filter(item => item.attachmentTypeId !== attachment.attachmentTypeId);
+    this.attachments = this.attachments.filter(item => item.attachmentTypeServiceData!.id !== attachment.attachmentTypeServiceData?.id);
   }
 
   private addAttachment(attachment: FileNetDocument): void {
-    this.attachments = this.attachments.concat(attachment);
+    const existingIndex = this.attachments.findIndex(x => x.attachmentTypeServiceData?.id === attachment.attachmentTypeServiceData?.id);
+    if (existingIndex === -1) {
+      this.attachments = this.attachments.concat(attachment);
+    } else {
+      this.attachments.splice(existingIndex, 1, attachment);
+    }
   }
 }

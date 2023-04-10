@@ -1,21 +1,22 @@
-import { DynamicModel } from '@app/models/dynamic-model';
 import { GeneralProcess } from '@app/models/genral-process';
-import { UserClickOn } from './../../../enums/user-click-on.enum';
-import { ToastService } from './../../../services/toast.service';
-import { SharedService } from './../../../services/shared.service';
-import { DialogService } from './../../../services/dialog.service';
-import { LangService } from './../../../services/lang.service';
-import { GeneralProcessService } from './../../../services/general-process.service';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { DialogRef } from './../../../shared/models/dialog-ref';
 import { takeUntil, exhaustMap, catchError, filter, switchMap } from 'rxjs/operators';
-import { TableComponent } from './../../../shared/components/table/table.component';
-import { IMenuItem } from './../../../modules/context-menu/interfaces/i-menu-item';
-import { ActionIconsEnum } from './../../../enums/action-icons-enum';
-import { IGridAction } from './../../../interfaces/i-grid-action';
-import { CommonStatusEnum } from './../../../enums/common-status.enum';
 import { Component, ViewChild } from '@angular/core';
 import { Subject, of } from 'rxjs';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { GeneralProcessService } from '@app/services/general-process.service';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { LangService } from '@app/services/lang.service';
+import { DialogService } from '@app/services/dialog.service';
+import { SharedService } from '@app/services/shared.service';
+import { ToastService } from '@app/services/toast.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { FormBuilder } from '@angular/forms';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 
 @Component({
   selector: 'app-general-process',
@@ -68,7 +69,23 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
     }
   ];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'actions'];
-
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    }
+  }
   bulkActionsList: IGridAction[] = [
     {
       icon: 'mdi-list-status',
@@ -98,12 +115,14 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
     public service: GeneralProcessService,
     private dialogService: DialogService,
     private sharedService: SharedService,
-    private toast: ToastService
+    private toast: ToastService,
+    private fb: FormBuilder,
   ) {
     super();
   }
   protected _init(): void {
     this.listenToView();
+    this.buildFilterForm()
   }
   afterReload(): void {
     this.table && this.table.clearSelection();
@@ -144,5 +163,10 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
         // this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
         this.reload$.next(null);
       });
+  }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: ['']
+    })
   }
 }

@@ -130,7 +130,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
       employementPosition: [this.model?.employementPosition, [CustomValidators.required, CustomValidators.maxLength(200)]],
       email: [this.model?.email, [CustomValidators.required,
         CustomValidators.maxLength(200),
-        Validators.email]],
+        CustomValidators.pattern('EMAIL')]],
       phoneNumber: [this.model?.phoneNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
       gender: [this.model?.gender, [CustomValidators.required]],
       nationality: [this.model?.nationality, [CustomValidators.required]]

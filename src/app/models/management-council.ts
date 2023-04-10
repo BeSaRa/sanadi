@@ -1,9 +1,9 @@
-import { normalSearchFields } from '@helpers/normal-search-fields';
-import { AdminResult } from './admin-result';
+import {normalSearchFields} from '@helpers/normal-search-fields';
+import {AdminResult} from './admin-result';
 import {CustomValidators} from "@app/validators/custom-validators";
 import {SearchableCloneable} from "@app/models/searchable-cloneable";
-import { infoSearchFields } from '@app/helpers/info-search-fields';
-import { ISearchFieldsMap } from '@app/types/types';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
+import {ISearchFieldsMap} from '@app/types/types';
 
 export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> {
   arabicName!: string;
@@ -12,15 +12,17 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> {
   jobTitle!: string;
   phone!: string;
   // mobileNo!: string;
-  country!: number;
-  countryInfo!:AdminResult
+  nationality!: number;
+  passportNumber!: string;
+  nationalityInfo!: AdminResult
 
   searchFields: ISearchFieldsMap<ManagementCouncil> = {
-    ...infoSearchFields(['countryInfo']),
-    ...normalSearchFields(['arabicName','englishName','jobTitle','email','phone'])
+    ...infoSearchFields(['nationalityInfo']),
+    ...normalSearchFields(['arabicName', 'englishName', 'jobTitle', 'email', 'passportNumber', 'phone'])
   };
+
   getManagementCouncilFields(control: boolean): any {
-    const {arabicName, englishName, email, jobTitle, phone, country} = this;
+    const {arabicName, englishName, email, jobTitle, phone, nationality, passportNumber} = this;
 
     return {
       arabicName: control ? [arabicName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
@@ -33,7 +35,8 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> {
       jobTitle: control ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitle,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       // mobileNo: control ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
-      country: control ? [country, CustomValidators.required] : country
+      nationality: control ? [nationality, CustomValidators.required] : nationality,
+      passportNumber: control ? [passportNumber, [...CustomValidators.commonValidations.passport]] : passportNumber
     };
   }
 }

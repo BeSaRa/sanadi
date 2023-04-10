@@ -1,11 +1,10 @@
-import { GeneralProcessService } from './../../../../../services/general-process.service';
-import { LangService } from './../../../../../services/lang.service';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FieldWrapper } from '@ngx-formly/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CustomFormlyFieldConfig } from '@app/interfaces/custom-formly-field-config';
-import { ProcessFieldBuilder } from '../process-fields-builder';
+import { LangService } from '@app/services/lang.service';
+import { ProcessFieldBuilder } from '@app/administration/popups/general-process-popup//process-formly-components/process-fields-builder';
 
 @Component({
   selector: 'process-field-wrapper',
@@ -20,8 +19,7 @@ export class ProcessFieldWrapperComponent extends FieldWrapper<CustomFormlyField
   constructor(
     public lang: LangService,
     private cd: ChangeDetectorRef,
-    private generalProcessService: GeneralProcessService
-    ) {
+  ) {
     super();
   }
   get isInitMode() {

@@ -23,6 +23,14 @@ import {ImplementingAgencyInterceptor} from "@model-interceptors/implementing-ag
 import {DateUtils} from "@helpers/date-utils";
 import {IMyDateModel} from "angular-mydatepicker";
 import {ImplementationFundraisingInterceptor} from "@model-interceptors/implementation-fundraising-interceptor";
+import {ISearchFieldsMap} from '@app/types/types';
+import {dateSearchFields} from '@helpers/date-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
+import {normalSearchFields} from '@helpers/normal-search-fields';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {SubmissionMechanisms} from '@app/enums/submission-mechanisms.enum';
+import { AllRequestTypesEnum } from "@app/enums/all-request-types-enum";
 
 const _Approval = mixinApprovalLicenseWithMonthly(mixinRequestType(CaseModel))
 const {send, receive} = new ProjectImplementationInterceptor()
@@ -72,9 +80,24 @@ export class ProjectImplementation
   licenseClassName!: string;
   projectTotalCost: number = 0
 
+  searchFields: ISearchFieldsMap<ProjectImplementation> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo', 'ouInfo', 'creatorInfo']),
+    ...normalSearchFields(['fullSerial', 'subject'])
+  };
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
+  }
+
   constructor() {
     super();
-    this.service = FactoryService.getService('ProjectImplementationService')
+    this.service = FactoryService.getService('ProjectImplementationService');
+    this.finalizeSearchFields();
   }
 
   buildBasicInfo(controls: boolean = false) {
@@ -89,7 +112,7 @@ export class ProjectImplementation
       subDACCategory,
       subUNOCHACategory,
       internalProjectClassification,
-      projectTotalCost
+
     } = this;
 
     return {
@@ -103,7 +126,6 @@ export class ProjectImplementation
       subDACCategory: controls ? [subDACCategory] : subDACCategory,
       subUNOCHACategory: controls ? [subUNOCHACategory] : subUNOCHACategory,
       internalProjectClassification: controls ? [internalProjectClassification] : internalProjectClassification,
-      projectTotalCost: controls ? [projectTotalCost, [CustomValidators.required, Validators.min(1)]] : projectTotalCost
     }
   }
 
@@ -114,15 +136,17 @@ export class ProjectImplementation
       licenseStartDate,
       projectEvaluationSLA,
       licenseDuration,
-      implementingAgencyList
+      implementingAgencyList,
+      projectTotalCost
     } = this
     return {
       licenseStartDate: controls ? [licenseStartDate, CustomValidators.required] : licenseStartDate,
-      licenseDuration: controls ? [licenseDuration, CustomValidators.required] : licenseDuration,
-      projectEvaluationSLA: controls ? [projectEvaluationSLA, CustomValidators.required] : projectEvaluationSLA,
+      licenseDuration: controls ? [licenseDuration, [CustomValidators.required,CustomValidators.number,CustomValidators.maxLength(3)]] : licenseDuration,
+      projectEvaluationSLA: controls ? [projectEvaluationSLA,[ CustomValidators.required, CustomValidators.number,CustomValidators.maxLength(3)]] : projectEvaluationSLA,
       implementingAgencyType: controls ? [implementingAgencyType, CustomValidators.required] : implementingAgencyType,
       implementationTemplate: controls ? [implementationTemplate, CustomValidators.requiredArray] : implementationTemplate,
-      implementingAgencyList: controls ? [implementingAgencyList, CustomValidators.requiredArray] : implementingAgencyList
+      implementingAgencyList: controls ? [implementingAgencyList, CustomValidators.requiredArray] : implementingAgencyList,
+      projectTotalCost: controls ? [projectTotalCost, [CustomValidators.required, Validators.min(1)]] : projectTotalCost
     }
   }
 
@@ -172,4 +196,52 @@ export class ProjectImplementation
     this.licenseStartDate = !this.licenseStartDate ? this.licenseStartDate : DateUtils.changeDateFromDatepicker(this.licenseStartDate as unknown as IMyDateModel)?.toISOString()!
   }
 
+  approve(): DialogRef {
+    if(this._isCustomApprove()){
+      return this.service.approveTask(this, WFResponseType.APPROVE);
+    }
+    return super.approve(WFResponseType.APPROVE)
+  }
+
+  finalApprove(): DialogRef {
+    if(this._isCustomApprove()){
+       return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+     }
+   return super.approve(WFResponseType.FINAL_APPROVE)
+  }
+  validateApprove(): DialogRef {
+   if(this._isCustomApprove()){
+    return this.service.approveTask(this, WFResponseType.VALIDATE_APPROVE);
+   }
+    return super.approve(WFResponseType.VALIDATE_APPROVE)
+
+  }
+  isSubmissionMechanismNotification(): boolean {
+    return this.submissionMechanism === SubmissionMechanisms.NOTIFICATION;
+  }
+
+  isSubmissionMechanismSubmission(): boolean {
+    return this.submissionMechanism === SubmissionMechanisms.SUBMISSION;
+  }
+
+  isSubmissionMechanismRegistration(): boolean {
+    return this.submissionMechanism === SubmissionMechanisms.REGISTRATION;
+  }
+  private _isCustomApprove() : boolean{
+
+    if(this.isSubmissionMechanismRegistration()){
+      if(this.employeeService.isSupervisionAndControlUser() || this.employeeService.isDevelopmentalExpert() || this.employeeService.isConstructionExpert()){
+        return false;
+      }
+    }
+    if(this.requestType === AllRequestTypesEnum.NEW || this.requestType === AllRequestTypesEnum.EXTEND){
+      if(this.isSubmissionMechanismNotification() && this.employeeService.isCharityManager()){
+          return true;
+      }
+      if(this.isSubmissionMechanismRegistration() || this.isSubmissionMechanismSubmission()){
+          return true;
+       }
+    }
+     return false;
+  }
 }

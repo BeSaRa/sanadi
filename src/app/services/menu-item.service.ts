@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {MenuItem} from '../models/menu-item';
+import {MenuItem} from '@models/menu-item';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
 import {switchMap, tap} from 'rxjs/operators';
@@ -9,7 +9,6 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CastResponse} from '@decorators/cast-response';
 import {StaticAppResourcesService} from '@services/static-app-resources.service';
 import {CustomMenuService} from '@services/custom-menu.service';
-import {ReportService} from '@services/report.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,10 +30,10 @@ export class MenuItemService {
    */
   loadAllMenus() {
     let customMenuService: CustomMenuService = FactoryService.getService('CustomMenuService');
-    let reportService: ReportService = FactoryService.getService('ReportService');
+    // let reportService: ReportService = FactoryService.getService('ReportService');
     return this.load(false)
-      .pipe(switchMap(() => reportService.loadReportsMenu()))
-      .pipe(tap((reportsMenuList) => reportService.prepareReportsMenu(reportsMenuList)))
+      // .pipe(switchMap(() => reportService.loadReportsMenu()))
+      // .pipe(tap((reportsMenuList) => reportService.prepareReportsMenu(reportsMenuList)))
       .pipe(switchMap(() => customMenuService.prepareCustomMenuList()))
       .pipe(tap(() => this.prepareMenuItems()))
       .pipe(tap(() => this.resetMenuItems$.next(true)));

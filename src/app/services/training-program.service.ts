@@ -168,9 +168,10 @@ export class TrainingProgramService extends CrudWithDialogGenericService<Trainin
     );
   }
 
-  openOrganizationCandidatesDialog(trainingProgramId: number): Observable<DialogRef> {
+  openOrganizationCandidatesDialog(trainingProgram: TrainingProgram): Observable<DialogRef> {
     return of(this.dialog.show<IDialogData<number>>(TrainingProgramCandidatesPopupComponent, {
-      model: trainingProgramId,
+      model: trainingProgram.id,
+      status: trainingProgram.status,
       operation: OperationTypes.CREATE,
       candidatesListType: CandidatesListTypeEnum.ADD
     }));

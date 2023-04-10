@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {LangService} from './lang.service';
 import {DialogService} from './dialog.service';
-import {generateHtmlList} from '../helpers/utils';
+import {generateHtmlList} from '@helpers/utils';
 import {ToastService} from './toast.service';
 import {BulkOperationTypes, DeleteBulkResult} from '../types/types';
 import {Observable, of} from 'rxjs';
@@ -34,7 +34,7 @@ export class SharedService {
     UPDATE_FAIL: this.langService.map.msg_update_fail
   };
 
-  mapBulkResponseMessages<T = any>(selectedRecords: T[], key: string, resultMap: { [p: number]: boolean } | { [p: string]: boolean }, operation: BulkOperationTypes = 'DELETE'): Observable<DeleteBulkResult<T>> {
+  mapBulkResponseMessages<T = any>(selectedRecords: T[], key: string, resultMap: { [p: number]: boolean } | { [p: string]: boolean }, operation: BulkOperationTypes = 'DELETE', skipMessage: boolean = false): Observable<DeleteBulkResult<T>> {
     const failedRecords: any[] = [];
     // @ts-ignore
     resultMap = resultMap.hasOwnProperty('rs') ? resultMap.rs : resultMap;
@@ -45,23 +45,27 @@ export class SharedService {
       }
     }
     if (failedRecords.length === 0) {
-      this.toast.success(this.bulkMessagesMap[operation]);
+      !skipMessage && this.toast.success(this.bulkMessagesMap[operation]);
       return of({result: 'SUCCESS', success: selectedRecords, fails: []});
     } else if (failedRecords.length === selectedRecords.length) {
       // @ts-ignore
-      this.toast.error(this.bulkMessagesMap[operation.toString() + '_FAIL']);
+      !skipMessage && this.toast.error(this.bulkMessagesMap[operation.toString() + '_FAIL']);
       return of({result: 'FAIL', fails: selectedRecords, success: []});
     } else {
+      const failsIds = failedRecords.map(item => item[key]);
+      const finalResult: DeleteBulkResult<T> = {
+        result: 'PARTIAL_SUCCESS',
+        fails: failedRecords,
+        success: selectedRecords.filter(item => !failsIds.includes(item[key as keyof T]))
+      };
+      if (skipMessage) {
+        return of(finalResult);
+      }
       // @ts-ignore
       const listHtml = generateHtmlList(this.bulkMessagesMap[operation + '_PARTIAL'], failedRecords.map((item) => item.getName()));
-      const failsIds = failedRecords.map(item => item[key]);
       return this.dialogService.info(listHtml.outerHTML).onAfterClose$.pipe(
         map(res => {
-          return {
-            result: 'PARTIAL_SUCCESS',
-            fails: failedRecords,
-            success: selectedRecords.filter(item => !failsIds.includes(item[key as keyof T]))
-          };
+          return finalResult;
         })
       );
     }

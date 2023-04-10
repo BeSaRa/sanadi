@@ -54,7 +54,7 @@
       <!-- main cat -->
       <div class="col-sm-6 col-md-3 mb-4 position-relative">
         <label for="mainClass" asteriskIfRequired="mainClass" class="form-label">{{lang.map.classification}}</label>
-        <ng-select validationClasses="type" [readonly]="isViewForm" (change)="loadSubClasses($event)" labelForId="mainClass"
+        <ng-select validationClasses="type" [readonly]="isViewForm" (change)="handleMainCatChange($event)" labelForId="mainClass"
           placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found" formControlName="mainClass"
           id="mainClass" appendTo="body">
           <ng-option *ngFor="let option of mainClassificationsList" [value]="option.id">

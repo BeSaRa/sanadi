@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MenuItem } from '@app/models/menu-item';
-import { EmployeeService } from '@app/services/employee.service';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Router } from '@angular/router';
-import { CustomEmployeePermission } from "@app/helpers/custom-employee-permission";
-import { LangService } from "@services/lang.service";
-import { CommonService } from "@services/common.service";
-import { Common } from "@app/models/common";
+import {Component, Input, OnInit} from '@angular/core';
+import {MenuItem} from '@app/models/menu-item';
+import {EmployeeService} from '@app/services/employee.service';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {Router} from '@angular/router';
+import {CustomEmployeePermission} from "@app/helpers/custom-employee-permission";
+import {LangService} from "@services/lang.service";
+import {CommonService} from "@services/common.service";
+import {Common} from "@app/models/common";
 
 @Component({
   selector: 'app-sidebar-menu-item-list',

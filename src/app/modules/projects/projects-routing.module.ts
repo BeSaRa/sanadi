@@ -1,10 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {ProjectsComponent} from './projects.component';
-import {
-  InternalProjectLicenseComponent
-} from '@app/modules/projects/pages/internal-project-license/internal-project-license.component';
-import {ProjectModelComponent} from '@app/modules/projects/pages/project-model/project-model.component';
 import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 import {ServicesGuard} from '@app/guards/services.guard';
 import {ServiceItemResolver} from '@app/resolvers/service-item.resolver';
@@ -12,6 +8,7 @@ import {
   EServiceComponentWrapperComponent
 } from '@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component';
 import {CountryResolver} from "@app/resolvers/country.resolver";
+import {ErrorPageComponent} from '@app/shared/components/error-page/error-page.component';
 
 const routes: Routes = [
   {path: '', component: ProjectsComponent},
@@ -26,7 +23,7 @@ const routes: Routes = [
       render: 'ProjectModelComponent'
     },
   },
-  {
+  /*{
     path: 'internal-project-license', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
@@ -36,7 +33,7 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'InternalProjectLicenseComponent'
     }
-  },
+  },*/
   {
     path: 'internal-bank-account', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard],
@@ -102,6 +99,10 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'ProjectImplementationComponent'
     }
+  },
+  {
+    path: '**',
+    component: ErrorPageComponent
   }
 ];
 

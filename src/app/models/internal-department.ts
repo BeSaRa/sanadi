@@ -1,18 +1,19 @@
-import { Team } from './team';
-import { BaseModel } from './base-model';
-import { INames } from '@contracts/i-names';
-import { LangService } from '@services/lang.service';
-import { FactoryService } from '@services/factory.service';
-import { InternalDepartmentService } from '@services/internal-department.service';
-import { Lookup } from '@app/models/lookup';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { Validators } from '@angular/forms';
-import { searchFunctionType } from '@app/types/types';
-import { Observable } from 'rxjs';
-import { BlobModel } from '@app/models/blob-model';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { InternalDepartmentInterceptor } from "@app/model-interceptors/internal-department-interceptor";
-import { InterceptModel } from "@decorators/intercept-model";
+import {Team} from './team';
+import {BaseModel} from './base-model';
+import {INames} from '@contracts/i-names';
+import {LangService} from '@services/lang.service';
+import {FactoryService} from '@services/factory.service';
+import {InternalDepartmentService} from '@services/internal-department.service';
+import {Lookup} from '@app/models/lookup';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {ISearchFieldsMap} from '@app/types/types';
+import {Observable} from 'rxjs';
+import {BlobModel} from '@app/models/blob-model';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {InternalDepartmentInterceptor} from "@app/model-interceptors/internal-department-interceptor";
+import {InterceptModel} from "@decorators/intercept-model";
+import {normalSearchFields} from '@helpers/normal-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
 
 const interceptor = new InternalDepartmentInterceptor();
 
@@ -22,14 +23,11 @@ const interceptor = new InternalDepartmentInterceptor();
 })
 export class InternalDepartment extends BaseModel<InternalDepartment, InternalDepartmentService> {
   service!: InternalDepartmentService;
-  arName!: string;
   mainTeam!: Team;
   code!: string;
   createdBy!: any;
   createdOn!: any;
   email!: string;
-  enName!: string;
-  id!: number;
   ldapPrefix!: string;
   parent!: number;
   status!: number;
@@ -41,10 +39,9 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
 
   langService: LangService;
 
-  searchFields: { [key: string]: searchFunctionType | string } = {
-    arName: 'arName',
-    enName: 'enName',
-    status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1
+  searchFields: ISearchFieldsMap<InternalDepartment> = {
+    ...normalSearchFields(['arName', 'enName']),
+    ...infoSearchFields(['statusInfo'])
   };
 
   constructor() {
@@ -86,7 +83,7 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
       email: controls ? [email, [
         CustomValidators.required,
         CustomValidators.maxLength(50),
-        Validators.email
+        CustomValidators.pattern('EMAIL')
       ]] : email,
       status: controls ? [status, [CustomValidators.required]] : status
     }

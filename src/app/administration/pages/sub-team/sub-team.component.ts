@@ -1,9 +1,6 @@
 import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DialogRef } from './../../../shared/models/dialog-ref';
-import { TableComponent } from './../../../shared/components/table/table.component';
 import { ToastService } from '@app/services/toast.service';
 import { SharedService } from '@app/services/shared.service';
-import { DialogService } from './../../../services/dialog.service';
 import { LangService } from '@app/services/lang.service';
 import { takeUntil, exhaustMap, catchError, filter, switchMap } from 'rxjs/operators';
 import { SortEvent } from '@app/interfaces/sort-event';
@@ -12,11 +9,18 @@ import { IGridAction } from '@app/interfaces/i-grid-action';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { SubTeamService } from './../../../services/sub-team.service';
-import { SubTeam } from './../../../models/sub-team';
 import { Component, ViewChild } from '@angular/core';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { Subject, of } from 'rxjs';
+import { SubTeam } from '@app/models/sub-team';
+import { SubTeamService } from '@app/services/sub-team.service';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { DialogService } from '@app/services/dialog.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { FormBuilder } from '@angular/forms';
+import { LookupService } from '@app/services/lookup.service';
 
 @Component({
   selector: 'app-sub-team',
@@ -26,7 +30,34 @@ import { Subject, of } from 'rxjs';
 export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamService> {
   usePagination = true;
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions']; //, 'parent'
-
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
   afterReload(): void {
     this.table && this.table.clearSelection();
   }
@@ -125,12 +156,15 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
     public service: SubTeamService,
     private dialogService: DialogService,
     private sharedService: SharedService,
-    private toast: ToastService) {
+    private toast: ToastService,
+    private fb: FormBuilder,
+    private lookupService:LookupService) {
     super();
   }
 
   protected _init(): void {
     this.listenToView();
+    this.buildFilterForm()
   }
 
   get selectedRecords(): SubTeam[] {
@@ -207,5 +241,10 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
         // this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
         this.reload$.next(null);
       });
+  }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], status: [null]
+    })
   }
 }

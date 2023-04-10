@@ -1,3 +1,5 @@
+import {TrainingProgramPartnerComponent} from './pages/training-program-partner/training-program-partner.component';
+import {AdminLicenseComponent} from './pages/admin-license/admin-license.component';
 import {CustomMenuComponent} from './pages/custom-menu/custom-menu.component';
 import {GeneralProcessComponent} from './pages/general-process/general-process.component';
 import {SubTeamComponent} from './pages/sub-team/sub-team.component';
@@ -14,7 +16,9 @@ import {ServiceDataComponent} from './pages/service-data/service-data.component'
 import {TeamComponent} from './pages/team/team.component';
 import {CountryComponent} from './pages/country/country.component';
 import {InternalUserComponent} from './pages/internal-user/internal-user.component';
-import {InternalDepartmentComponent,} from '@app/administration/pages/internal-department/internal-department.component';
+import {
+  InternalDepartmentComponent,
+} from '@app/administration/pages/internal-department/internal-department.component';
 import {JobTitleComponent} from '@app/administration/pages/job-title/job-title.component';
 import {SurveyQuestionComponent} from '@app/administration/pages/survey-question/survey-question.component';
 import {SurveyTemplateComponent} from '@app/administration/pages/survey-template/survey-template.component';
@@ -25,7 +29,6 @@ import {DonorComponent} from '@app/administration/pages/donor/donor.component';
 import {FieldAssessmentComponent} from '@app/administration/pages/field-assessment/field-assessment.component';
 import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
 import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
-import {AdminLookupOldComponent} from './pages/admin-lookup-old/admin-lookup-old.component';
 import {ProfilesComponent} from './pages/profiles/profiles.component';
 import {DynamicModelsComponent} from './pages/dynamic-models/dynamic-models.component';
 import {DeductionRatioComponent} from './pages/deduction-ratio/deduction-ratio.component';
@@ -33,6 +36,7 @@ import {
   ExternalUserUpdateRequestApprovalComponent
 } from '@app/administration/pages/external-user-update-approval/external-user-update-request-approval.component';
 import {GlobalSettingsComponent} from '@app/administration/pages/global-settings/global-settings.component';
+import {ErrorPageComponent} from '@app/shared/components/error-page/error-page.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -63,7 +67,11 @@ const routes: Routes = [
   {
     path: 'external-user-request-approval', component: ExternalUserUpdateRequestApprovalComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: PermissionsEnum.MANAGE_EXTERNAL_USER_REQUEST_APPROVALS_DYNAMIC, configPermissionGroup: null, checkAnyPermission: false},
+    data: {
+      permissionKey: PermissionsEnum.MANAGE_EXTERNAL_USER_REQUEST_APPROVALS_DYNAMIC,
+      configPermissionGroup: null,
+      checkAnyPermission: false
+    },
   },
   {
     path: 'services', component: ServiceDataComponent,
@@ -73,7 +81,11 @@ const routes: Routes = [
   {
     path: 'attachment-types', component: AttachmentTypesComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: PermissionsEnum.MANAGE_ATTACHMENT_TYPES, configPermissionGroup: null, checkAnyPermission: false},
+    data: {
+      permissionKey: PermissionsEnum.MANAGE_ATTACHMENT_TYPES,
+      configPermissionGroup: null,
+      checkAnyPermission: false
+    },
   },
   {
     path: 'teams', component: TeamComponent,
@@ -93,7 +105,11 @@ const routes: Routes = [
   {
     path: 'internal-departments', component: InternalDepartmentComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: PermissionsEnum.MANAGE_INTERNAL_DEPARTMENTS, configPermissionGroup: null, checkAnyPermission: false}
+    data: {
+      permissionKey: PermissionsEnum.MANAGE_INTERNAL_DEPARTMENTS,
+      configPermissionGroup: null,
+      checkAnyPermission: false
+    }
   },
   {
     path: 'job-titles', component: JobTitleComponent,
@@ -101,9 +117,22 @@ const routes: Routes = [
     data: {permissionKey: PermissionsEnum.MANAGE_JOB_TITLES, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
+    path: 'training-program-partner', component: TrainingProgramPartnerComponent,
+    canActivate: [PermissionGuard],
+    data: {
+      permissionKey: PermissionsEnum.TRAINING_PROGRAM_PARTNER,
+      configPermissionGroup: null,
+      checkAnyPermission: false
+    }
+  },
+  {
     path: 'general-process-template', component: GeneralProcessComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: PermissionsEnum.MANAGE_PROCESS_TEMPLATE, configPermissionGroup: null, checkAnyPermission: false}
+    data: {
+      permissionKey: PermissionsEnum.MANAGE_PROCESS_TEMPLATE,
+      configPermissionGroup: null,
+      checkAnyPermission: false
+    }
   },
   {
     path: 'sub-team', component: SubTeamComponent,
@@ -112,11 +141,6 @@ const routes: Routes = [
   },
   {
     path: 'lookups', component: AdminLookupComponent,
-    canActivate: [PermissionGuard],
-    data: {permissionKey: PermissionsEnum.MANAGE_ADMIN_LOOKUP, configPermissionGroup: null, checkAnyPermission: false}
-  },
-  {
-    path: 'lookups-old', component: AdminLookupOldComponent,
     canActivate: [PermissionGuard],
     data: {permissionKey: PermissionsEnum.MANAGE_ADMIN_LOOKUP, configPermissionGroup: null, checkAnyPermission: false}
   },
@@ -132,10 +156,14 @@ const routes: Routes = [
   {
     path: 'survey-templates',
     canActivate: [PermissionGuard], component: SurveyTemplateComponent,
-    data: {permissionKey: PermissionsEnum.TRAINING_SURVEY_TEMPLATE, configPermissionGroup: null, checkAnyPermission: false},
+    data: {
+      permissionKey: PermissionsEnum.TRAINING_SURVEY_TEMPLATE,
+      configPermissionGroup: null,
+      checkAnyPermission: false
+    },
   },
   {
-    path: 'sdg', component: SdGoalComponent,
+    path: 'sd-goals', component: SdGoalComponent,
     canActivate: [PermissionGuard],
     data: {permissionKey: PermissionsEnum.MANAGE_SDG, configPermissionGroup: null, checkAnyPermission: false}
   },
@@ -152,7 +180,11 @@ const routes: Routes = [
   {
     path: 'field-assessment', component: FieldAssessmentComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: PermissionsEnum.MANAGE_FIELD_ASSESSMENT, configPermissionGroup: null, checkAnyPermission: false}
+    data: {
+      permissionKey: PermissionsEnum.MANAGE_FIELD_ASSESSMENT,
+      configPermissionGroup: null,
+      checkAnyPermission: false
+    }
   },
   {
     path: 'vacation-dates', component: VactionDatesComponent,
@@ -184,13 +216,23 @@ const routes: Routes = [
   {
     path: 'deduction-ratio', component: DeductionRatioComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: PermissionsEnum.MANAGE_DEDUCTION_RATIO_ITEM, configPermissionGroup: null, checkAnyPermission: false}
+    data: {
+      permissionKey: PermissionsEnum.MANAGE_DEDUCTION_RATIO_ITEM,
+      configPermissionGroup: null,
+      checkAnyPermission: false
+    }
   },
   {
     path: 'global-settings', component: GlobalSettingsComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: PermissionsEnum.MANAGE_DEDUCTION_RATIO_ITEM, configPermissionGroup: null, checkAnyPermission: false}
-  }
+    data: {permissionKey: PermissionsEnum.MANAGE_SYSTEM_PREFERENCES, configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'admin-license', component: AdminLicenseComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: '', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {path: '**', component: ErrorPageComponent}
 ];
 
 

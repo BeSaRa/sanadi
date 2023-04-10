@@ -13,5 +13,5 @@
 <div class="dialog-actions">
   <div class="flex-grow-1"></div>
   <button (click)="close()" class="btn btn-secondary">{{lang.map.btn_close}}</button>
-  <button (click)="sendReason()" [disabled]="control.invalid" class="btn btn-primary">{{data.saveBtn}}</button>
+  <button *ngIf="!data.view" (click)="sendReason()" [disabled]="control.invalid" class="btn btn-primary">{{data.saveBtn}}</button>
 </div>

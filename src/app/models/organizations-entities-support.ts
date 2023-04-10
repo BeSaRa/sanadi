@@ -146,7 +146,7 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
         ? [
             beneficiariesNumber,
             [CustomValidators.required, CustomValidators.number,CustomValidators.maxLength(
-              CustomValidators.defaultLengths.SWIFT_CODE_MAX
+              CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
             )],
           ]
         : beneficiariesNumber,

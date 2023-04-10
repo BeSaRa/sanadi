@@ -26,7 +26,7 @@
       <tab [title]="lang.map.request_info" name="request_info">
         <ng-template #internalContainer></ng-template>
       </tab>
-      <tab [title]="lang.map.attachments" [template]="attachment" name="attachments">{{lang.map.attachments}}</tab>
+      <tab [title]="lang.map.attachments" [hideIcon]="true" [template]="attachment" name="attachments">{{lang.map.attachments}}</tab>
       <tab [title]="lang.map.logs" [template]="logsTemplate" name="logs">{{lang.map.logs}}</tab>
       <!--      <tab [title]="lang.map.outputs" [template]="outputs" name="outputs">{{lang.map.outputs}}</tab>-->
       <tab [title]="lang.map.supporting_information" name="supporting_information">
@@ -36,7 +36,8 @@
     </tabs-list>
     <ng-template #attachment>
       <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [model]="model" [caseType]="model?.caseType"
-                   [service]="service.documentService" [load]="loadAttachments" [formProperties]="component?.formProperties ?? {}"></attachments>
+                   [service]="service.documentService" [load]="loadAttachments"
+                   [formProperties]="component?.formProperties ?? {}"></attachments>
     </ng-template>
   </ng-container>
   <ng-container *ngIf="!internal">
@@ -53,21 +54,40 @@
   <!--  <ng-template #outputs>-->
 
   <!--  </ng-template>-->
-  <div class="row mt-4 mb-2">
-    <div class="col-12">
-      <div class="d-flex flex-row flex-wrap gap-2 justify-content-center">
-        <button [ngClass]="action?.class || ''" [disabled]="isDisabled(action)" *ngFor="let action of actions"
-                (click)="actionCallback(action)" class="btn btn-primary">
-          <div class="d-flex">
-            <i class="mdi" *ngIf="action.icon" [ngClass]="action.icon!"></i>
-            <span [ngClass]="{'ms-2': action.icon}" class="ms-2">{{action.translatedLabel}}</span>
-          </div>
-        </button>
-        <button class="btn btn-link" [tooltip]="lang.map.validate_fields"
-                *ngIf="component.formValidity$"
-                (click)="component.formValidity$.next('main-content')"><i
-          class="mdi mdi-information-outline text-info"></i></button>
+  <div class="mt-4 mb-2">
+    <div *ngIf="!internal" class="row">
+      <div class="col-sm-12 col-md-4" *ngFor="let group of groupedActions | keyvalue">
+        <div class="d-flex flex-row flex-wrap gap-2">
+          <ng-container *ngFor="let action of group.value">
+            <ng-container [ngTemplateOutlet]="actionButtonTemplate"
+                          [ngTemplateOutletContext]="{data: action}"></ng-container>
+          </ng-container>
+          <ng-container *ngIf="group.key === charityViewButtonsGroupEnum.CENTER" [ngTemplateOutlet]="validateButtonTemplate"></ng-container>
+        </div>
       </div>
+    </div>
+    <div *ngIf="internal" class="d-flex flex-row flex-wrap gap-2 justify-content-center">
+      <ng-container *ngFor="let action of actions">
+        <ng-container [ngTemplateOutlet]="actionButtonTemplate"
+                      [ngTemplateOutletContext]="{data: action}"></ng-container>
+      </ng-container>
+      <ng-container [ngTemplateOutlet]="validateButtonTemplate"></ng-container>
     </div>
   </div>
 </div>
+
+<ng-template #actionButtonTemplate let-action="data">
+  <button [ngClass]="actionClass(action)" [disabled]="isDisabled(action)"
+          (click)="actionCallback(action)" class="btn btn-primary">
+    <div class="d-flex">
+      <i class="mdi" *ngIf="action.icon" [ngClass]="action.icon!"></i>
+      <span [ngClass]="{'ms-2': action.icon}" class="ms-2">{{action.translatedLabel}}</span>
+    </div>
+  </button>
+</ng-template>
+<ng-template #validateButtonTemplate>
+  <button class="btn btn-link" [tooltip]="lang.map.validate_fields"
+          *ngIf="component.formValidity$"
+          (click)="component.formValidity$.next('main-content')"><i
+    class="mdi mdi-information-outline text-info"></i></button>
+</ng-template>

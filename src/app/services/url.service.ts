@@ -17,6 +17,8 @@ export class UrlService {
   public URLS = {} as IAppUrls;
   public previousPath: string = '';
   public currentPath: string = '';
+  public loginUrlsList: string[] = []; // will set after urls are loaded
+  public languageUrlsList: string[] = []; // langService will set this value after urls are loaded
 
   static hasTrailingSlash(url: string): boolean {
     return ((url + '').indexOf('/')) === ((url + '').length - 1);
@@ -45,6 +47,7 @@ export class UrlService {
         this.URLS[key] = this.addBaseUrl(urls[key]);
       }
     }
+    this._setLoginUrlsList();
     return this.URLS;
   }
 
@@ -55,4 +58,11 @@ export class UrlService {
     return external ? url : this.URLS.BASE_URL + '/' + UrlService.removePrefixSlash(url);
   }
 
+  private _setLoginUrlsList(): void {
+    this.loginUrlsList = [
+      this.URLS.AUTHENTICATE,
+      this.URLS.INTERNAL_AUTHENTICATE,
+      this.URLS.VALIDATE_TOKEN
+    ];
+  }
 }

@@ -39,6 +39,7 @@ export class TaskDetails extends Cloneable<TaskDetails> {
   parentCaseId!: string;
   responses!: string[];
   actions!: string[];
+  activityProperties!: any;
 
   fromUserInfo!: AdminResult;
 

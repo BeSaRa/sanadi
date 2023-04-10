@@ -125,7 +125,7 @@ export class InternalUserService extends CrudWithDialogGenericService<InternalUs
     fallback: '$default'
   })
   private _searchByArabicOrEnglishName(options?: any): Observable<InternalUser[]> {
-    return this.http.get<InternalUser[]>(this._getServiceURL() + '/search/criteria?arName=' + (options.arabicName ? options.arabicName : '') + '&enName=' + (options.englishName ? options.englishName : '') + (options.identificationNumber ? '&qID=' + options.identificationNumber : ''));
+    return this.http.get<InternalUser[]>(this._getServiceURL() + '/search/security/criteria?arName=' + (options.arabicName ? options.arabicName : '') + '&enName=' + (options.englishName ? options.englishName : '') + (options.identificationNumber ? '&qID=' + options.identificationNumber : ''));
   }
 
   searchByArabicOrEnglishName(options?: any): Observable<InternalUser[]> {

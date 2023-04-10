@@ -6,4 +6,5 @@ export interface ImplementationCriteriaContract {
   countries?: number[]
   country?: number
   internalProjectClassification?: number
+  implCaseId?:string
 }

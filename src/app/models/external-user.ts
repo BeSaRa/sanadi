@@ -15,9 +15,8 @@ import {infoSearchFields} from '@helpers/info-search-fields';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
 import {ILanguageKeys} from '@contracts/i-language-keys';
-import {IKeyValue} from '@contracts/i-key-value';
-import {keys} from 'lodash';
 import {UserTypes} from '@app/enums/user-types.enum';
+import {UserPreferences} from '@models/user-preferences';
 
 const interceptor = new ExternalUserInterceptor();
 
@@ -50,6 +49,7 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
   statusInfo!: AdminResult;
   userTypeInfo!: AdminResult;
   jobTitleInfo!: AdminResult;
+  userPreferences!: UserPreferences;
 
   service: ExternalUserService;
   private langService: LangService;
@@ -126,7 +126,7 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
     return this.qid?.toString() ?? '';
   }
 
-  getBasicInfoValuesWithLabels(): {[key: string]: {langKey: keyof ILanguageKeys, value: any}} {
+  getBasicInfoValuesWithLabels(): { [key: string]: { langKey: keyof ILanguageKeys, value: any } } {
     return {
       arName: {langKey: 'lbl_arabic_name', value: this.arName},
       enName: {langKey: 'lbl_english_name', value: this.enName},
@@ -162,8 +162,8 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
     return values;
   }
 
-  getBasicControlLabels(): {[key: string]: keyof ILanguageKeys} {
-    let values: {[key: string]: keyof ILanguageKeys} = {};
+  getBasicControlLabels(): { [key: string]: keyof ILanguageKeys } {
+    let values: { [key: string]: keyof ILanguageKeys } = {};
     const valuesWithLabels = this.getBasicInfoValuesWithLabels();
     for (const [controlKey, valueObj] of Object.entries(valuesWithLabels)) {
       values[controlKey] = valueObj.langKey;
@@ -191,7 +191,7 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
       phoneExtension: controls ? [values.phoneExtension, [CustomValidators.number, Validators.maxLength(10)]] : values.phoneExtension,
       officialPhoneNumber: controls ? [values.officialPhoneNumber, CustomValidators.commonValidations.phone] : values.officialPhoneNumber,
       email: controls ? [values.email, [
-        CustomValidators.required, Validators.email, Validators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : values.email,
+        CustomValidators.required, ...CustomValidators.commonValidations.email]] : values.email,
       jobTitle: controls ? [values.jobTitle, [CustomValidators.required]] : values.jobTitle,
       status: controls ? [values.status, CustomValidators.required] : values.status,
       profileId: controls ? [values.profileId, CustomValidators.required] : values.profileId,

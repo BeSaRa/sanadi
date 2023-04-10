@@ -23,7 +23,6 @@ export class SdGoalInterceptor implements IModelInterceptor<SDGoal> {
     delete model.langService;
     delete model.service;
     delete model.statusInfo;
-    delete model.childCount;
     return model;
   }
 }

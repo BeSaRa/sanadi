@@ -4,7 +4,6 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { LicenseService } from '@app/services/license.service';
-import { SharedService } from '@app/services/shared.service';
 import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { InboxService } from '@app/services/inbox.service';
 import { CaseTypes } from '@app/enums/case-types.enum';
@@ -32,7 +31,6 @@ export class SelectLicensePopupComponent {
   constructor(public lang: LangService, private dialogRef: DialogRef,
     private licenseService: LicenseService,
     private inboxService: InboxService,
-    private _sharedService: SharedService,
     @Inject(DIALOG_DATA_TOKEN) public data: {
       licenses: any[],
       caseRecord: any | undefined,

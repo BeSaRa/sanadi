@@ -11,7 +11,7 @@ import { LangService } from "@app/services/lang.service";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import {
   CollectionApprovalApproveTaskPopupComponent
-} from "@app/modules/collection/popups/collection-approval-approve-task-poup/collection-approval-approve-task-popup.component";
+} from "@app/modules/services/collection-approval/popups/collection-approval-approve-task-poup/collection-approval-approve-task-popup.component";
 import { WFResponseType } from "@app/enums/wfresponse-type.enum";
 import { CollectionApprovalSearchCriteria } from "@app/models/collection-approval-search-criteria";
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";

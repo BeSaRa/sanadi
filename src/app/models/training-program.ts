@@ -32,6 +32,8 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   trainingDate!: string;
   registrationDate!: string;
   trainingObjective!: string;
+  trainingDomain!: number;
+  trainingPartner!: number;
   trainingTopics!: string;
   targetOrganizationList!: string;
   targetOrganizationListIds: number[] = [];
@@ -51,7 +53,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   trainerListIds: number[] = [];
   contactPerson!: string;
   attendenceMethod!: number;
-  trainingLang!: number;
+  trainingLang!: string;
   numberOfSeats!: number;
   comments!: string;
   status!: number;
@@ -70,6 +72,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   // to be removed
   registeredTraineeNumber: number = 0;
   acceptedTraineeNumber: number = 0;
+  trainingLangParsed: number[] = [];
 
   // unused properties
   trainerInfoList: any;
@@ -93,6 +96,8 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       targetAudienceListIds,
       durationInDays,
       durationInHours,
+      trainingDomain,
+      trainingPartner,
       averageDurationInHours,
       startDate,
       endDate,
@@ -101,7 +106,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       trainingLocation,
       contactPerson,
       attendenceMethod,
-      trainingLang,
+      trainingLangParsed,
       numberOfSeats,
       comments,
       registerationStartDate,
@@ -126,16 +131,22 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
       ]] : trainingTopics,
+      trainingDomain: controls ? [trainingDomain, [
+        CustomValidators.required
+      ]] : trainingDomain,
+      trainingPartner: controls ? [trainingPartner, [
+        CustomValidators.required
+      ]] : trainingPartner,
       targetAudienceListIds: controls ? [targetAudienceListIds, [
         CustomValidators.requiredArray
       ]] : targetAudienceListIds,
       durationInDays: controls ? [durationInDays, [
         CustomValidators.required,
-        CustomValidators.pattern('ENG_NUM_ONLY')
+        CustomValidators.pattern('NUM_HYPHEN_COMMA')
       ]] : durationInDays,
       durationInHours: controls ? [durationInHours, [
         CustomValidators.required,
-        CustomValidators.pattern('ENG_NUM_ONLY')
+        CustomValidators.pattern('NUM_HYPHEN_COMMA')
       ]] : durationInHours,
       averageDurationInHours: controls ? [averageDurationInHours, [
         CustomValidators.required,
@@ -165,9 +176,9 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       attendenceMethod: controls ? [attendenceMethod, [
         CustomValidators.required
       ]] : attendenceMethod,
-      trainingLang: controls ? [trainingLang, [
-        CustomValidators.required
-      ]] : trainingLang,
+      trainingLangParsed: controls ? [trainingLangParsed, [
+        CustomValidators.requiredArray
+      ]] : trainingLangParsed,
       numberOfSeats: controls ? [numberOfSeats, [
         CustomValidators.pattern('ENG_NUM_ONLY')
       ]] : numberOfSeats,

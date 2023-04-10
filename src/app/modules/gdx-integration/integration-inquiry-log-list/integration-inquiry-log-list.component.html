@@ -7,7 +7,7 @@
         <ng-container cdkColumnDef="extra-header">
           <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
             <table-header tableTitle="inquiries" [add$]="add$" [reload$]="reload$" [sort]="table.dataSource.sort"
-              (textChange)="filterControl.setValue($event)">
+              (textChange)="filterControl.setValue($event)" [headerClass]="'bg-secondary'">
             </table-header>
           </th>
         </ng-container>

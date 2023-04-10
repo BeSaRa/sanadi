@@ -7,6 +7,7 @@ import {FactoryService} from '@services/factory.service';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import {Observable} from 'rxjs';
 import {FileType} from '@models/file-type';
+import {map, tap} from 'rxjs/operators';
 
 @CastResponseContainer({
   $default: {
@@ -18,6 +19,7 @@ import {FileType} from '@models/file-type';
 })
 export class GlobalSettingsService extends CrudGenericService<GlobalSettings> {
   list: GlobalSettings[] = [];
+  private _currentGlobalSetting!: GlobalSettings;
 
   constructor(public http: HttpClient,
               private urlService: UrlService) {
@@ -33,15 +35,37 @@ export class GlobalSettingsService extends CrudGenericService<GlobalSettings> {
     return this.urlService.URLS.GLOBAL_SETTINGS;
   }
 
+  setGlobalSettings(globalSettings: GlobalSettings): void {
+    this._currentGlobalSetting = globalSettings;
+  }
+
+  getGlobalSettings(): GlobalSettings {
+    return this._currentGlobalSetting;
+  }
+
+  @CastResponse(() => GlobalSettings, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  loadCurrentGlobalSettings(): Observable<GlobalSettings> {
+    return this.load().pipe(
+      map(settings => settings[0]),
+      tap(settings => this.setGlobalSettings(settings))
+    );
+  }
+
   @CastResponse(() => FileType, {
     unwrap: 'rs',
     fallback: '$default'
   })
-  _getFileTypes(): Observable<FileType[]> {
+  loadAllFileTypes(): Observable<FileType[]> {
     return this.http.get<FileType[]>(this._getServiceURL() + '/file-types');
   }
 
-  getFileTypes(): Observable<FileType[]> {
-    return this._getFileTypes();
+  getAllowedFileTypes(): Observable<FileType[]> {
+    return this.loadAllFileTypes()
+      .pipe(
+        map(list => list.filter(ele => this.getGlobalSettings().fileTypeParsed.includes(ele.id)))
+      );
   }
 }

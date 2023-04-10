@@ -1,16 +1,16 @@
-import { BaseModel } from '@app/models/base-model';
-import { SurveyTemplateService } from '@app/services/survey-template.service';
-import { FactoryService } from '@app/services/factory.service';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { SurveySection } from '@app/models/survey-section';
-import { LangService } from "@app/services/lang.service";
-import { INames } from "@app/interfaces/i-names";
-import { SurveyQuestion } from "@app/models/survey-question";
-import { SurveyAnswer } from "@app/models/survey-answer";
-import { ILanguageKeys } from "@app/interfaces/i-language-keys";
-import { DialogRef } from "@app/shared/models/dialog-ref";
-import { InterceptModel } from "@decorators/intercept-model";
-import { SurveyTemplateInterceptor } from "@app/model-interceptors/survey-template-interceptor";
+import {BaseModel} from '@app/models/base-model';
+import {SurveyTemplateService} from '@app/services/survey-template.service';
+import {FactoryService} from '@app/services/factory.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {SurveySection} from '@app/models/survey-section';
+import {LangService} from "@app/services/lang.service";
+import {INames} from "@app/interfaces/i-names";
+import {SurveyQuestion} from "@app/models/survey-question";
+import {SurveyAnswer} from "@app/models/survey-answer";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {InterceptModel} from "@decorators/intercept-model";
+import {SurveyTemplateInterceptor} from "@app/model-interceptors/survey-template-interceptor";
+import {LookupService} from '@services/lookup.service';
 
 const interceptor = new SurveyTemplateInterceptor()
 
@@ -23,24 +23,26 @@ export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateServ
   status: boolean = true;
   sectionSet: SurveySection[] = [];
   langService: LangService;
+  lookupService: LookupService;
   usedBefore: boolean = false;
 
   constructor() {
     super();
     this.service = FactoryService.getService('SurveyTemplateService');
+    this.lookupService = FactoryService.getService('LookupService');
 
     this.langService = FactoryService.getService('LangService');
   }
 
   buildForm(controls: boolean = false) {
-    const { arName, enName, status } = this;
+    const {arName, enName, status} = this;
     return {
-      arName: controls ? [{ value: arName, disabled: this.usedBefore }, [
+      arName: controls ? [{value: arName, disabled: this.usedBefore}, [
         CustomValidators.required,
         CustomValidators.pattern('AR_NUM'),
         CustomValidators.maxLength(200)
       ]] : arName,
-      enName: controls ? [{ value: enName, disabled: this.usedBefore }, [
+      enName: controls ? [{value: enName, disabled: this.usedBefore}, [
         CustomValidators.required,
         CustomValidators.pattern('ENG_NUM'),
         CustomValidators.maxLength(200)
@@ -105,7 +107,8 @@ export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateServ
   }
 
   getStatusValue(): string {
-    return this.langService.map[(this.status ? 'lbl_active' : 'lbl_inactive') as keyof ILanguageKeys]
+    return this.lookupService.listByCategory.CommonStatus.find(item => item.lookupKey === (this.status ? 1 : 0))?.getName() ?? '';
+    //return this.langService.map[(this.status ? 'lbl_active' : 'lbl_inactive') as keyof ILanguageKeys]
   }
 
   view(): DialogRef {

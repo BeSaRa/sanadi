@@ -1,9 +1,7 @@
-import { DynamicModel } from './../../../models/dynamic-model';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { DynamicModelService } from '@app/services/dynamic-models.service';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { IGridAction } from '@app/interfaces/i-grid-action';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
@@ -15,6 +13,10 @@ import { TableComponent } from '@app/shared/components/table/table.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Subject, of } from 'rxjs';
 import { takeUntil, exhaustMap, catchError, switchMap, filter } from 'rxjs/operators';
+import { DynamicModel } from '@app/models/dynamic-model';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-dynamic-models',
@@ -67,7 +69,23 @@ export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, 
     }
   ];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'actions'];
-
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    }
+  }
   bulkActionsList: IGridAction[] = [
     {
       icon: 'mdi-list-status',
@@ -98,7 +116,8 @@ export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, 
     public service: DynamicModelService,
     private dialogService: DialogService,
     private sharedService: SharedService,
-    private toast: ToastService
+    private toast: ToastService,
+    private fb: FormBuilder
   ) {
     super();
   }
@@ -115,6 +134,7 @@ export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, 
 
   protected _init(): void {
     this.listenToView();
+    this.buildFilterForm();
   }
   afterReload(): void {
     this.table && this.table.clearSelection();
@@ -144,5 +164,11 @@ export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, 
         // this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
         this.reload$.next(null);
       });
+  }
+  
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], status: [null]
+    })
   }
 }

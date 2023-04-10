@@ -29,6 +29,7 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {TabMap} from '@app/types/types';
 import {EmployeeService} from '@services/employee.service';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {CustomValidators} from '@app/validators/custom-validators';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -88,8 +89,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       show: () => {
-        return false;
-        // return (this.operation !== OperationTypes.CREATE && this.employeeService.checkPermissions(PermissionsEnum.MANAGE_PROFILE_COUNTRIES_DATA));
+        return (this.operation !== OperationTypes.CREATE && this.employeeService.checkPermissions(PermissionsEnum.MANAGE_PROFILE_COUNTRIES_DATA));
       }
     },
     attachments: {
@@ -134,6 +134,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
         this._filterExistingCountries();
       });
   }
+
   private _filterExistingServices() {
     this.services = this.services.filter(service => !this.profileServices.find((profileService) => profileService.serviceId === service.id));
   }
@@ -163,19 +164,19 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   }
 
   constructor(private lookupService: LookupService,
-    public fb: UntypedFormBuilder,
-    public dialogRef: DialogRef,
-    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<Profile>,
-    private toast: ToastService,
-    public lang: LangService,
-    private cd: ChangeDetectorRef,
-    private profileServiceRelationService: ProfileServiceRelationService,
-    private profileCountryService: ProfileCountryService,
-    private employeeService: EmployeeService,
-    private countryService: CountryService,
-    private service: ProfileService,
-    private serviceDataService: ServiceDataService,
-    private dialogService: DialogService) {
+              public fb: UntypedFormBuilder,
+              public dialogRef: DialogRef,
+              @Inject(DIALOG_DATA_TOKEN) data: IDialogData<Profile>,
+              private toast: ToastService,
+              public lang: LangService,
+              private cd: ChangeDetectorRef,
+              private profileServiceRelationService: ProfileServiceRelationService,
+              private profileCountryService: ProfileCountryService,
+              private employeeService: EmployeeService,
+              private countryService: CountryService,
+              private service: ProfileService,
+              private serviceDataService: ServiceDataService,
+              private dialogService: DialogService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -194,6 +195,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
 
   onTabChange(_$event: TabComponent) {
   }
+
   initPopup(): void {
     this.service.getByProfileType(ProfileTypes.REGISTERED_ENTITIES)
       .subscribe((e) => {
@@ -203,9 +205,9 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (this.operation !== OperationTypes.CREATE) {
       this.profileTypeField.disable();
       this.loadLinkedServices(this.model.id);
-      // this.loadLinkedCountries(this.model.id);
+      this.loadLinkedCountries(this.model.id);
       this._loadServices();
-      // this.loadCountries();
+      this.loadCountries();
     }
   }
 
@@ -221,6 +223,11 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       }
       this.registrationAuthorityField?.enable();
     }
+    if (profileType === ProfileTypes.NON_PROFIT_ORGANIZATIONS) {
+      this.registrationAuthorityField.addValidators([CustomValidators.required]);
+    } else {
+      this.registrationAuthorityField.removeValidators([CustomValidators.required]);
+    }
   }
 
   destroyPopup(): void {
@@ -229,12 +236,12 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   afterSave(model: Profile, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
     this.operation === this.operationTypes.CREATE
-      ? this.toast.success(message.change({ x: this.basicInfoForm?.get(this.lang.map.lang + 'Name')?.value || '' }))
-      : this.toast.success(message.change({ x: model.getName() }));
+      ? this.toast.success(message.change({x: this.basicInfoForm?.get(this.lang.map.lang + 'Name')?.value || ''}))
+      : this.toast.success(message.change({x: model.getName()}));
     this.model = model;
     this.operation = OperationTypes.UPDATE;
     this.loadLinkedServices(model.id);
-    // this.loadLinkedCountries(model.id);
+    this.loadLinkedCountries(model.id);
   }
 
   loadLinkedServices(id: number) {
@@ -262,7 +269,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
 
   prepareModel(model: Profile, form: UntypedFormGroup): Profile | Observable<Profile> {
     const basicInfo = form.get('basicInfo')?.value;
-    return new Profile().clone({ ...model, ...basicInfo });
+    return new Profile().clone({...model, ...basicInfo});
   }
 
   saveFail(error: Error): void {
@@ -275,7 +282,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (this.readonly) {
       this.form.disable();
       this.servicesControl.disable();
-      // this.countryControl.disable();
+      this.countryControl.disable();
     }
     if (this.model?.profileType) {
       this.handleProfileType(this.model.profileType, true);
@@ -304,29 +311,32 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
           this.loadLinkedServices(this.model.id);
           // @ts-ignore
           this.toast.success(
-            this.lang.map.msg_delete_x_success.change({ x: model.serviceDataInfo.getName() })
+            this.lang.map.msg_delete_x_success.change({x: model.serviceDataInfo.getName()})
           );
           sub.unsubscribe();
         });
       }
     });
   }
+
   // createBulk
   addCountries() {
-    const _countries = this.countryControl.value!.map((e) =>
-      new ProfileCountry().clone({
+    const _countries = this.countryControl.value!.map((e) => {
+      return {
         profileId: this.model.id,
         countryId: +e,
-      })
-    );
+      } as ProfileCountry
+    });
+    console.log(_countries)
     this.profileCountryService.createBulk(_countries).subscribe((_e) => {
       this.loadLinkedCountries(this.model.id);
       this.toast.success(this.lang.map.countries_add_successfully);
       this.countryControl.reset();
     });
   }
+
   deleteCountry(model: ProfileCountry): void {
-    const message = this.lang.map.remove_countries_messages;
+    const message = this.lang.map.remove_profile_country_link_messages;
     this.dialogService.confirm(message).onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
         const sub = model.delete().subscribe(() => {
@@ -334,13 +344,14 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
           // @ts-ignore
           this.toast.success(
             this.lang.map.msg_delete_x_success
-            // .change({ x: model.serviceDataInfo.getName() })
+              .change({x: model.countryInfo.getName()})
           );
           sub.unsubscribe();
         });
       }
     });
   }
+
   searchNgSelect(searchText: string, item: any): boolean {
     return item.ngSelectSearch(searchText);
   }

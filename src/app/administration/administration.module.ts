@@ -1,14 +1,12 @@
+import {
+  TrainingProgramPartnerPopupComponent
+} from '@app/administration/popups/training-program-partner-popup/training-program-partner-popup.component';
+import {TrainingProgramPartnerComponent} from './pages/training-program-partner/training-program-partner.component';
+import {AdminLicenseComponent} from './pages/admin-license/admin-license.component';
 import {UserSubTeamComponent} from './shared/user-sub-team/user-sub-team.component';
 import {
   ProcessFieldWrapperComponent
 } from './popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
-import {
-  FormlyMaskInputFieldComponent
-} from './../services-search/components/formly-mask-input-field/formly-mask-input-field.component';
-import {
-  FormlySelectFieldComponent
-} from './../services-search/components/formly-select-field/formly-select-field.component';
-import {FormlyDateFieldComponent} from './../services-search/components/formly-date-field/formly-date-field.component';
 import {GeneralProcessPopupComponent} from './popups/general-process-popup/general-process-popup.component';
 import {GeneralProcessComponent} from './pages/general-process/general-process.component';
 import {SubTeamPopupComponent} from './popups/sub-team-popup/sub-team-popup.component';
@@ -37,7 +35,6 @@ import {ServiceDataPopupComponent} from './popups/service-data-popup/service-dat
 import {TeamComponent} from './pages/team/team.component';
 import {TeamPopupComponent} from './popups/team-popup/team-popup.component';
 import {CountryComponent} from './pages/country/country.component';
-import {CountryPopupComponent} from './popups/country-popup/country-popup.component';
 import {
   ChangeCountryParentPopupComponent,
 } from './popups/change-country-parent-popup/change-country-parent-popup.component';
@@ -61,7 +58,7 @@ import {SurveyTemplatePopupComponent} from './popups/survey-template-popup/surve
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {SurveySectionPopupComponent} from './popups/survey-section-popup/survey-section-popup.component';
 import {SelectQuestionPopupComponent} from './popups/select-question-popup/select-question-popup.component';
-import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
+import {SdGoalListComponent} from './pages/sd-goal-list/sd-goal-list.component';
 import {SdGoalPopupComponent} from './popups/sd-goal-popup/sd-goal-popup.component';
 import {ServiceDataStepPopupComponent} from './popups/service-data-step-popup/service-data-step-popup.component';
 import {ChecklistPopupComponent} from './popups/checklist-popup/checklist-popup.component';
@@ -71,10 +68,12 @@ import {BankComponent} from './pages/bank/bank.component';
 import {BankPopupComponent} from './popups/bank-popup/bank-popup.component';
 import {DonorComponent} from './pages/donor/donor.component';
 import {DonorPopupComponent} from './popups/donor-popup/donor-popup.component';
-import {FollowupConfigurationComponent} from './pages/followup-configuration/followup-configuration.component';
 import {
-  FollowupConfigurationPopupComponent
-} from './popups/followup-configuration-popup/followup-configuration-popup.component';
+  ServiceDataFollowupConfigurationComponent
+} from './pages/service-data-followup-configuration/service-data-followup-configuration.component';
+import {
+  ServiceDataFollowupConfigurationPopupComponent
+} from './popups/service-data-followup-configuration-popup/service-data-followup-configuration-popup.component';
 import {UserFollowupPermissionComponent} from './shared/user-followup-permission/user-followup-permission.component';
 import {FieldAssessmentPopupComponent} from './popups/field-assessment-popup/field-assessment-popup.component';
 import {FieldAssessmentComponent} from './pages/field-assessment/field-assessment.component';
@@ -82,10 +81,6 @@ import {AdminLookupPopupComponent} from './popups/admin-lookup-popup/admin-looku
 import {DacOchaNewPopupComponent} from './popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
 import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
 import {VacationDatesPopupComponent} from './popups/vacation-dates-popup/vacation-dates-popup.component';
-import {DacOchaListComponent} from './pages/dac-ocha-list/dac-ocha-list.component';
-import {AdminLookupOldComponent} from './pages/admin-lookup-old/admin-lookup-old.component';
-import {ActivityTypeComponent} from './pages/activity-types/activity-types.component';
-import {ActivityTypesPopupComponent} from './popups/activity-types-popup/activity-types-popup.component';
 import {AdminLookupListComponent} from './pages/admin-lookup-list/admin-lookup-list.component';
 import {AdminLookupComponent} from './pages/admin-lookup/admin-lookup.component';
 import {ProfilePopupComponent} from './popups/profile-popup/profile-popup.component';
@@ -112,9 +107,25 @@ import {
   ExternalUserUpdateChangesPopupComponent
 } from './popups/external-user-update-changes-popup/external-user-update-changes-popup.component';
 import {UserSecurityExternalComponent} from './shared/user-security-external/user-security-external.component';
-import { ProfileAttachmentsComponent } from './shared/profile-attachments/profile-attachments.component';
-import { GlobalSettingsComponent } from './pages/global-settings/global-settings.component';
-import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/user-preferences-popup.component';
+import {ProfileAttachmentsComponent} from './shared/profile-attachments/profile-attachments.component';
+import {GlobalSettingsComponent} from './pages/global-settings/global-settings.component';
+import {FormlyDateFieldComponent} from '@app/services-search/components/formly-date-field/formly-date-field.component';
+import {
+  FormlyFieldFullWrapperComponent
+} from '@app/services-search/components/formly-field-full-wrapper/formly-field-full-wrapper.component';
+import {
+  FormlyFieldWrapperComponent
+} from '@app/services-search/components/formly-field-wrapper/formly-field-wrapper.component';
+import {
+  FormlyMaskInputFieldComponent
+} from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
+import {
+  FormlySelectFieldComponent
+} from '@app/services-search/components/formly-select-field/formly-select-field.component';
+import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
+import {
+  UserFollowupPermissionNewComponent
+} from './shared/user-followup-permission-new/user-followup-permission-new.component';
 
 @NgModule({
   declarations: [
@@ -135,7 +146,6 @@ import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/u
     ServiceDataComponent,
     ServiceDataPopupComponent,
     CountryComponent,
-    CountryPopupComponent,
     ChangeCountryParentPopupComponent,
     AttachmentTypeServiceDataPopupComponent,
     InternalUserComponent,
@@ -144,6 +154,8 @@ import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/u
     InternalDepartmentPopupComponent,
     JobTitleComponent,
     JobTitlePopupComponent,
+    TrainingProgramPartnerComponent,
+    TrainingProgramPartnerPopupComponent,
     GeneralProcessComponent,
     GeneralProcessPopupComponent,
     SubTeamComponent,
@@ -157,6 +169,7 @@ import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/u
     SurveyTemplatePopupComponent,
     SurveySectionPopupComponent,
     SelectQuestionPopupComponent,
+    SdGoalListComponent,
     SdGoalComponent,
     SdGoalPopupComponent,
     ServiceDataStepPopupComponent,
@@ -167,8 +180,8 @@ import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/u
     BankPopupComponent,
     DonorComponent,
     DonorPopupComponent,
-    FollowupConfigurationComponent,
-    FollowupConfigurationPopupComponent,
+    ServiceDataFollowupConfigurationComponent,
+    ServiceDataFollowupConfigurationPopupComponent,
     UserFollowupPermissionComponent,
     FieldAssessmentPopupComponent,
     FieldAssessmentComponent,
@@ -176,10 +189,6 @@ import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/u
     DacOchaNewPopupComponent,
     VactionDatesComponent,
     VacationDatesPopupComponent,
-    DacOchaListComponent,
-    AdminLookupOldComponent,
-    ActivityTypeComponent,
-    ActivityTypesPopupComponent,
     AdminLookupListComponent,
     AdminLookupComponent,
     CustomMenuComponent,
@@ -203,7 +212,8 @@ import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/u
     UserSecurityExternalComponent,
     ProfileAttachmentsComponent,
     GlobalSettingsComponent,
-    UserPreferencesPopupComponent
+    AdminLicenseComponent,
+    UserFollowupPermissionNewComponent
   ],
   imports: [
     SharedModule,
@@ -212,15 +222,17 @@ import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/u
     FormlyBootstrapModule,
     FormlyModule.forChild({
       types: [
-        {name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['custom-wrapper']},
-        {name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper']},
-        {name: 'yesOrNo', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper']},
-        {name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper']},
-        {name: 'number', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper']},
-        {name: 'textarea', wrappers: ['custom-wrapper']},
+        {name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['custom-wrapper','col-md-4-8']},
+        {name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper','col-md-4-8']},
+        {name: 'yesOrNo', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper','col-md-4-8']},
+        {name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper','col-md-4-8']},
+        {name: 'number', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper','col-md-4-8']},
+        {name: 'textarea', wrappers: ['custom-wrapper','col-md-4-8']},
       ],
       wrappers: [
-        {name: 'custom-wrapper', component: ProcessFieldWrapperComponent}
+        {name: 'custom-wrapper', component: ProcessFieldWrapperComponent},
+        {name: 'col-md-4-8', component: FormlyFieldWrapperComponent},
+        {name: 'col-md-2-10', component: FormlyFieldFullWrapperComponent}
       ]
     }),
   ],

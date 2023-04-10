@@ -1,33 +1,36 @@
-import { Inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { UrlService } from './url.service';
-import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
-import { Localization } from '../models/localization';
-import { Language } from '../models/language';
-import { IAvailableLanguages } from '@contracts/i-available-languages';
-import { DOCUMENT } from '@angular/common';
-import { Styles } from '../enums/styles.enum';
-import { delay, exhaustMap, map, switchMap, tap } from 'rxjs/operators';
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { DialogService } from './dialog.service';
-import { FactoryService } from './factory.service';
-import { LocalizationPopupComponent } from '../shared/popups/localization-popup/localization-popup.component';
-import { DialogRef } from '../shared/models/dialog-ref';
-import { OperationTypes } from '../enums/operation-types.enum';
-import { IDialogData } from '@contracts/i-dialog-data';
-import { LangType, LocalizationMap } from '../types/types';
-import { ECookieService } from './e-cookie.service';
-import { ConfigurationService } from './configuration.service';
-import { EmployeeService } from './employee.service';
-import { AuthService } from './auth.service';
-import { ILoginData } from '@contracts/i-login-data';
-import { IDefaultResponse } from '@contracts/idefault-response';
-import { UserTypes } from "@app/enums/user-types.enum";
-import { CommonService } from "@services/common.service";
-import { CrudGenericService } from "@app/generics/crud-generic-service";
-import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
-import { Pagination } from '@app/models/pagination';
+import {Inject, Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {UrlService} from './url.service';
+import {BehaviorSubject, Observable, of, Subject, Subscription} from 'rxjs';
+import {Localization} from '@models/localization';
+import {Language} from '@models/language';
+import {IAvailableLanguages} from '@contracts/i-available-languages';
+import {DOCUMENT} from '@angular/common';
+import {Styles} from '@enums/styles.enum';
+import {delay, exhaustMap, map, tap} from 'rxjs/operators';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {DialogService} from './dialog.service';
+import {FactoryService} from './factory.service';
+import {LocalizationPopupComponent} from '../shared/popups/localization-popup/localization-popup.component';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {IDialogData} from '@contracts/i-dialog-data';
+import {LangType, LocalizationMap} from '../types/types';
+import {ECookieService} from './e-cookie.service';
+import {ConfigurationService} from './configuration.service';
+import {EmployeeService} from './employee.service';
+import {AuthService} from './auth.service';
+import {ILoginData} from '@contracts/i-login-data';
+import {IDefaultResponse} from '@contracts/idefault-response';
+import {UserTypes} from "@app/enums/user-types.enum";
+import {CommonService} from "@services/common.service";
+import {CastResponse, CastResponseContainer} from "@decorators/cast-response";
+import {Pagination} from '@app/models/pagination';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {Title} from '@angular/platform-browser';
+import {GlobalSettingsService} from '@services/global-settings.service';
+import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-generic-service';
+import {ComponentType} from '@angular/cdk/portal';
 
 @CastResponseContainer({
   $default: {
@@ -35,22 +38,23 @@ import {PermissionsEnum} from '@app/enums/permissions-enum';
   },
   $pagination: {
     model: () => Pagination,
-    shape: { 'rs.*': () => Localization }
+    shape: {'rs.*': () => Localization}
   }
 })
 @Injectable({
   providedIn: 'root'
 })
-export class LangService extends CrudGenericService<Localization> {
+export class LangService extends CrudWithDialogGenericService<Localization> {
   list: Localization[] = [];
   private languages: IAvailableLanguages = {
-    en: new Language(1, 'English', 'en', 'ltr', Styles.BOOTSTRAP, 'العربية'),
-    ar: new Language(2, 'العربية', 'ar', 'rtl', Styles.BOOTSTRAP_RTL, 'English')
+    en: new Language(2, 'English', 'en', 'ltr', Styles.BOOTSTRAP, 'العربية'),
+    ar: new Language(1, 'العربية', 'ar', 'rtl', Styles.BOOTSTRAP_RTL, 'English')
   };
   private languageSwitcher: { [index: string]: string } = {
     ar: 'en',
     en: 'ar'
   };
+  private languageChangeUrls: { [key: string]: string } = {};
   private languageChange: BehaviorSubject<Language> = new BehaviorSubject<Language>(this.languages.ar);
   public onLanguageChange$: Observable<Language> = this.languageChange.asObservable().pipe(delay(0));
   protected firstTime = true;
@@ -67,13 +71,14 @@ export class LangService extends CrudGenericService<Localization> {
 
   constructor(@Inject(DOCUMENT) private document: Document,
               public http: HttpClient,
-              private dialogService: DialogService,
+              public dialog: DialogService,
               private eCookieService: ECookieService,
               private configurationService: ConfigurationService,
               private employeeService: EmployeeService,
               private authService: AuthService,
               private commonService: CommonService,
-              private urlService: UrlService) {
+              private urlService: UrlService,
+              private titleService: Title) {
     super();
     FactoryService.registerService('LangService', this);
     this.getLinkElement();
@@ -87,6 +92,17 @@ export class LangService extends CrudGenericService<Localization> {
     this.listenToChangeTrigger();
   }
 
+  setLanguageChangeUrls(): void {
+    this.languageChangeUrls = {
+      en: this.urlService.URLS.CHANGE_LANGUAGE + '/' + this.languages.en.code.toUpperCase(),
+      ar: this.urlService.URLS.CHANGE_LANGUAGE + '/' + this.languages.ar.code.toUpperCase(),
+    };
+    this.urlService.languageUrlsList = Object.values(this.languageChangeUrls);
+  }
+
+  _getDialogComponent(): ComponentType<any> {
+    return LocalizationPopupComponent;
+  }
 
   private getLinkElement(): void {
     this.linkElement = this.document.getElementById('main-style') as HTMLLinkElement;
@@ -115,8 +131,8 @@ export class LangService extends CrudGenericService<Localization> {
     this.map = this.list.reduce<Record<keyof ILanguageKeys, string>>((acc: ILanguageKeys, current: Localization) => {
       const key = current.localizationKey as keyof ILanguageKeys;
       const currentLang = this.languageChange.value.code + 'Name' as keyof Localization;
-      return { ...acc, [key]: current[currentLang] } as ILanguageKeys;
-    }, { lang: this.languageChange.value.code } as Record<keyof ILanguageKeys, string>);
+      return {...acc, [key]: current[currentLang]} as ILanguageKeys;
+    }, {lang: this.languageChange.value.code} as Record<keyof ILanguageKeys, string>);
     return this.map;
   }
 
@@ -124,7 +140,7 @@ export class LangService extends CrudGenericService<Localization> {
   prepareLocalizationMap(): void {
     this.localizationMap = this.list.reduce<LocalizationMap>((acc, current) => {
       const localKey = current.localizationKey as keyof ILanguageKeys;
-      return { ...acc, [localKey]: current };
+      return {...acc, [localKey]: current};
     }, {} as LocalizationMap);
   }
 
@@ -145,7 +161,7 @@ export class LangService extends CrudGenericService<Localization> {
       .pipe(tap(_ => this.changeStatus$.next("Start")))
       .pipe(delay(300))
       .pipe(tap(_ => this.changeStatus$.next("InProgress")))
-      .pipe(exhaustMap(({ language, silent }) => {
+      .pipe(exhaustMap(({language, silent}) => {
         this.changeHTMLDirection(language.direction);
         this.changeStyleHref(language.style);
         this.eCookieService.putEObject(this.configurationService.CONFIG.LANGUAGE_STORE_KEY, language);
@@ -153,6 +169,7 @@ export class LangService extends CrudGenericService<Localization> {
           this.languageChange.next(language);
         }
         this.prepareCurrentLang();
+        this.changeTitle();
         return of(true)
       }))
       .pipe(delay(300))
@@ -195,7 +212,8 @@ export class LangService extends CrudGenericService<Localization> {
 
   @CastResponse('')
   private _changeUserLanguage(code: string): Observable<ILoginData> {
-    return this.http.post<ILoginData>(this.urlService.URLS.AUTHENTICATE.replace('/nas/login', '') + '/lang/' + (code).toUpperCase(), undefined);
+    return this.http.post<ILoginData>(this.languageChangeUrls[code], undefined);
+    // return this.http.post<ILoginData>(this.urlService.URLS.CHANGE_LANGUAGE + '/' + (code).toUpperCase(), undefined);
   }
 
   changeLanguageByCode(code: string): void {
@@ -229,19 +247,8 @@ export class LangService extends CrudGenericService<Localization> {
     return this.getLocalForSpecificLang(key, 'en');
   }
 
-  openUpdateDialog(modelId: number): Observable<DialogRef> {
-    return this.getById(modelId).pipe(
-      switchMap((localization: Localization) => {
-        return of(this.dialogService.show<IDialogData<Localization>>(LocalizationPopupComponent, {
-          model: localization,
-          operation: OperationTypes.UPDATE
-        }));
-      })
-    );
-  }
-
-  openCreateDialog(): DialogRef {
-    return this.dialogService.show<IDialogData<Localization>>(LocalizationPopupComponent, {
+  addDialog(): DialogRef {
+    return this.dialog.show<IDialogData<Localization>>(LocalizationPopupComponent, {
       model: new Localization(),
       operation: OperationTypes.CREATE
     });
@@ -269,5 +276,10 @@ export class LangService extends CrudGenericService<Localization> {
       .pipe(map(response => {
         return response.rs;
       }));
+  }
+
+  changeTitle() {
+    const globalSettingsService = FactoryService.getService<GlobalSettingsService>('GlobalSettingsService');
+    this.titleService.setTitle(globalSettingsService.getGlobalSettings().getApplicationName());
   }
 }

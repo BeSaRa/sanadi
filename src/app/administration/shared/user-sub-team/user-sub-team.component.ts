@@ -78,7 +78,7 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
     this.userSubTeamsChanged$
       .pipe(map(userSubTeams => this.userSubTeams = userSubTeams))
       .subscribe((userSubTeams) => {
-        this.selectedTeamsIds = userSubTeams.map(userSubTeam => userSubTeam.id);
+        this.selectedTeamsIds = userSubTeams.map(userSubTeam => userSubTeam.subTeamId);
       });
   }
 
@@ -101,8 +101,10 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
     // add sub team to the user
     const subTeam = new UserSubTeam().clone({
       generalUserId: this.model.generalUserId,
-      subTeamId: this.selectedTeamControl.value.id
-    }).denormalize();
+      subTeamId: this.selectedTeamControl.value.id,
+      arName: this.selectedTeamControl.value.arName,
+      enName: this.selectedTeamControl.value.enName,
+    })
     this.subTeamService
       .createSubTeamUserLink(subTeam)
       .subscribe(() => {

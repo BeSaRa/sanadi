@@ -44,6 +44,18 @@ export class ServiceListComponent implements OnInit, OnDestroy {
     this.router.navigate([item.path]).then();
   }
 
+  navigateToEServiceItemPath(item: MenuItem, navigationType: 'service'| 'search' | 'output'): void {
+    let route = item.data!.servicePath;
+    switch (navigationType) {
+      case 'search':
+        route = item.data!.searchPath;
+        break;
+      case 'output':
+        route = item.data!.outputPath;
+    }
+    this.router.navigate([route]).then();
+  }
+
   hasCustomPermissions(item: MenuItem): boolean {
     return CustomEmployeePermission.hasCustomPermission(item.langKey) ? CustomEmployeePermission.getCustomPermission(item.langKey)(this.empService, item) : true;
   }

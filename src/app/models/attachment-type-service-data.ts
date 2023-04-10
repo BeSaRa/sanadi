@@ -11,6 +11,7 @@ import {LookupService} from '@services/lookup.service';
 import {ISearchFieldsMap} from '@app/types/types';
 import {normalSearchFields} from '@helpers/normal-search-fields';
 import {CommonUtils} from '@helpers/common-utils';
+import {infoSearchFields} from '@helpers/info-search-fields';
 
 
 const {send, receive} = new AttachmentTypeServiceDataInterceptor();
@@ -38,6 +39,14 @@ export class AttachmentTypeServiceData extends BaseModel<AttachmentTypeServiceDa
   searchFields: ISearchFieldsMap<AttachmentTypeServiceData> = {
     ...normalSearchFields(['arName', 'enName']),
     requestType: (text) => this.getRequestTypeName().toLowerCase().indexOf(text) > -1
+  };
+
+  searchFieldsAttachmentTypePopup: ISearchFieldsMap<AttachmentTypeServiceData> = {
+    arName: (text) => (this.serviceInfo.arName ?? '').toLowerCase().indexOf(text) > -1,
+    enName: (text) => (this.serviceInfo.enName ?? '').toLowerCase().indexOf(text) > -1,
+    requestType: (text) => this.getRequestTypeName().toLowerCase().indexOf(text) > -1,
+    required: (text) => (this.isRequired ? this.langService.map.lbl_yes : this.langService.map.lbl_no).toLowerCase().indexOf(text) > -1,
+    ...infoSearchFields(['userTypeInfo'])
   };
 
   constructor() {

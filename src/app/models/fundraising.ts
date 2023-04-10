@@ -9,7 +9,7 @@ import { mixinApprovalLicenseWithDuration } from "@app/mixins/mixin-approval-lic
 import { mixinRequestType } from "@app/mixins/mixin-request-type";
 import {
   FundraisingApproveTaskPopupComponent
-} from "@app/modules/collection/popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component";
+} from "@app/modules/services/fundraising-channel-licensing/popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component";
 import { DialogService } from "@app/services/dialog.service";
 import { FactoryService } from "@app/services/factory.service";
 import { FundraisingService } from "@app/services/fundraising.service";

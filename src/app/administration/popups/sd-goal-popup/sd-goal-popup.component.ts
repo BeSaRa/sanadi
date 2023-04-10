@@ -1,34 +1,29 @@
-import {Component, Inject, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Inject, ViewChild} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {SDGoal} from '@app/models/sdgoal';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {BehaviorSubject, isObservable, Observable, of, Subject} from 'rxjs';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {Observable, Subject} from 'rxjs';
 import {LangService} from '@app/services/lang.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {IKeyValue} from '@app/interfaces/i-key-value';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {PageEvent} from '@contracts/page-event';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {TableComponent} from '@app/shared/components/table/table.component';
+import {SdGoalListComponent} from '@app/administration/pages/sd-goal-list/sd-goal-list.component';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {TabMap} from '@app/types/types';
 
 @Component({
   selector: 'sd-goal-popup',
   templateUrl: './sd-goal-popup.component.html',
   styleUrls: ['./sd-goal-popup.component.scss']
 })
-export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
+export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> implements AfterViewInit {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<SDGoal>,
               public fb: UntypedFormBuilder,
@@ -40,68 +35,57 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
     super();
     this.model = data.model;
     this.operation = data.operation;
-    this.parentId = data.parentId;
+    this.defaultSelectedTab = data.selectedTab || 'basic';
+  }
+
+  initPopup(): void {
+  }
+
+  ngAfterViewInit() {
+    this._setDefaultSelectedTab();
+  }
+
+  private _setDefaultSelectedTab(): void {
+    setTimeout(() => {
+      if (this.tabsData.hasOwnProperty(this.defaultSelectedTab) && this.tabsData[this.defaultSelectedTab]) {
+        this.selectedTabIndex$.next(this.tabsData[this.defaultSelectedTab].index);
+      }
+    });
   }
 
   form!: UntypedFormGroup;
   model!: SDGoal;
   operation!: OperationTypes;
-  tabsData: IKeyValue = {
-    basic: {name: 'basic'},
-    subGoals: {name: 'subGoals'}
+  tabsData: TabMap = {
+    basic: {
+      name: 'basic', langKey: 'lbl_basic_info', index: 0,
+      validStatus: () => {
+        if (!this.form || this.readonly) {
+          return true;
+        }
+        return this.form.valid;
+      },
+      isTouchedOrDirty: () => true
+    },
+    children: {
+      name: 'children',
+      langKey: 'lbl_sub_sd_goals',
+      index: 1,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      isLoaded: false
+    }
   };
-  validToAddSubGoals = false;
+  selectedTabIndex$: Subject<number> = new Subject<number>();
+  defaultSelectedTab: string = 'basic';
+  selectedTab: string = 'basic';
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
-  destroy$: Subject<void> = new Subject<void>();
-  filterControl: UntypedFormControl = new UntypedFormControl('');
-  reloadSubGoals$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  addSubSdGoal$: Subject<any> = new Subject<any>();
-  editSubSdGoal$: Subject<SDGoal> = new Subject<SDGoal>();
-  saveSubSdGoal$: Subject<any> = new Subject<any>();
-  subGoals: SDGoal[] = [];
-  displayedColumns = ['arName', 'enName', 'status', 'actions'];
-  parentId: number;
+
+  validToAddSubGoals = false;
   commonStatusEnum = CommonStatusEnum;
   saveVisible = true;
   @ViewChild('table') table!: TableComponent;
-  readonly: boolean = false;
-
-  sortingCallbacks = {
-    statusInfo: (a: SDGoal, b: SDGoal, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    }
-  };
-
-  actions: IMenuItem<SDGoal>[] = [
-    // edit
-    {
-      type: 'action',
-      label: 'btn_edit',
-      icon: ActionIconsEnum.EDIT,
-      onClick: (item: SDGoal) => this.editSubSdGoal$.next(item),
-      show: (_item: SDGoal) => !this.readonly
-    },
-    // delete
-    {
-      type: 'action',
-      icon: ActionIconsEnum.DELETE,
-      label: 'btn_delete',
-      onClick: (item: SDGoal) => this.delete(item),
-      show: (_item: SDGoal) => !this.readonly
-    }
-  ];
-
-  usePagination: boolean = true;
-  count: number = 0;
-
-  pageEvent: PageEvent = {
-    pageIndex: 0,
-    pageSize: 10,
-    length: 0,
-    previousPageIndex: null
-  };
+  @ViewChild('childListComponent') childListComponentRef!: SdGoalListComponent;
 
   get popupTitle(): string {
     if (this.operation === OperationTypes.CREATE) {
@@ -112,108 +96,31 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
     return this.lang.map.view;
   };
 
-  initPopup(): void {
-    this.listenToReloadSubGoals();
-    this.listenToAddSubSdGoal();
-    this.listenToEditSubSdGoal();
-    this.listenToSaveSubSdGoal();
+  get readonly(): boolean {
+    return this.operation === OperationTypes.VIEW;
   }
 
-  pageChange($event: PageEvent): void {
-    this.pageEvent = $event;
-    if (this.usePagination && this.pageEvent.previousPageIndex !== null) {
-      this.reloadSubGoals$.next(this.reloadSubGoals$.value);
-    }
+  tabChanged(tab: TabComponent) {
+    this.selectedTab = tab.name;
+    this.setDialogButtonsVisibility(tab);
+    /*if ((this.selectedTab === this.tabsData.children.name) && !this.tabsData.children.isLoaded) {
+      this.childListComponentRef.reload$.next(null);
+      this.tabsData.children.isLoaded = true;
+    }*/
   }
 
-  listenToReloadSubGoals() {
-    this.reloadSubGoals$
-      .pipe(takeUntil(this.destroy$),
-        exhaustMap(() => {
-          const paginationOptions = {
-            limit: this.pageEvent.pageSize,
-            offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
-          };
-          return this.model.loadSubGoalsPaginate(paginationOptions)
-            .pipe(map((res) => {
-              this.count = res.count;
-              return res.rs;
-            }));
-        }))
-      .subscribe((list: SDGoal[]) => {
-        this.subGoals = list;
-        this.table && this.table.clearSelection();
-      });
-  }
-
-  listenToAddSubSdGoal(): void {
-    this.addSubSdGoal$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => this.model.service.subSdGoalAddDialog(this.model.id).onAfterClose$))
-      .subscribe(() => this.reloadSubGoals$.next(null));
-  }
-
-  listenToEditSubSdGoal(): void {
-    this.editSubSdGoal$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap((model) => this.model.service.subSdGoalEditDialog(model).onAfterClose$))
-      .subscribe(() => this.reloadSubGoals$.next(null));
-  }
-
-  listenToSaveSubSdGoal() {
-    this.saveSubSdGoal$
-      // call before Save callback
-      .pipe(switchMap(() => {
-        const result = this.beforeSave(this.model, this.form);
-        return isObservable(result) ? result : of(result);
-      }))
-      // filter the return value from saveBeforeCallback and allow only the true
-      .pipe(filter(value => value))
-      .pipe(switchMap(_ => {
-        const result = this.prepareModel(this.model, this.form);
-        return isObservable(result) ? result : of(result);
-      }))
-      .pipe(exhaustMap((model: SDGoal) => {
-        model.parentId = this.parentId;
-        return model.save().pipe(catchError(error => {
-          this.saveFail(error);
-          return of({
-            error: error,
-            model
-          });
-        }));
-      }))
-      .pipe(filter((value) => !value.hasOwnProperty('error')))
-      .subscribe((model: SDGoal | any) => {
-        this.afterSave(model, this.dialogRef);
-      });
+  setDialogButtonsVisibility(tab: any): void {
+    this.saveVisible = (tab.name && tab.name === this.tabsData.basic.name);
+    this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.basic.name);
   }
 
   buildForm(): void {
-    this.readonly = false;
     this.form = this.fb.group(this.model.buildForm(true));
-    if (this.operation === OperationTypes.VIEW) {
-      this.readonly = true;
+    if (this.readonly) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
     }
-  }
-
-  delete(model: SDGoal): void {
-    // @ts-ignore
-    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
-    this.dialogService.confirm(message)
-      .onAfterClose$
-      .pipe(
-        takeUntil(this.destroy$),
-        exhaustMap((click: UserClickOn) => {
-          return click === UserClickOn.YES ? model.delete() : of(null);
-        }))
-      .subscribe(() => {
-        this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
-        this.reloadSubGoals$.next(null);
-      });
   }
 
   prepareModel(model: SDGoal, form: UntypedFormGroup): Observable<SDGoal> | SDGoal {
@@ -233,7 +140,7 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
     const operationBeforeSave = this.operation;
     this.operation = OperationTypes.UPDATE;
 
-    if (operationBeforeSave == OperationTypes.UPDATE || this.parentId) {
+    if (operationBeforeSave == OperationTypes.UPDATE || !!this.model.parentId) {
       this.dialogRef.close(this.model);
     }
   }
@@ -242,7 +149,7 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
   }
 
   destroyPopup(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+
   }
+
 }

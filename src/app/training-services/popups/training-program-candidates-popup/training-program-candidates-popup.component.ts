@@ -1,23 +1,23 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {TrainingProgram} from '@app/models/training-program';
-import {BehaviorSubject, of, Subject} from 'rxjs';
-import {Trainee} from '@app/models/trainee';
-import {LangService} from '@app/services/lang.service';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
-import {TraineeService} from '@app/services/trainee.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {TraineeData} from '@app/models/trainee-data';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {CandidatesListTypeEnum} from '@app/enums/candidates-list-type.enum';
-import {CertificateService} from '@app/services/certificate.service';
-import {TraineeStatus} from '@app/enums/trainee-status';
-import {EmployeeService} from '@app/services/employee.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { TrainingProgram } from '@app/models/training-program';
+import { BehaviorSubject, of, Subject } from 'rxjs';
+import { Trainee } from '@app/models/trainee';
+import { LangService } from '@app/services/lang.service';
+import { DialogService } from '@app/services/dialog.service';
+import { ToastService } from '@app/services/toast.service';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
+import { TraineeService } from '@app/services/trainee.service';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { TraineeData } from '@app/models/trainee-data';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { CandidatesListTypeEnum } from '@app/enums/candidates-list-type.enum';
+import { CertificateService } from '@app/services/certificate.service';
+import { TraineeStatus } from '@app/enums/trainee-status';
+import { EmployeeService } from '@app/services/employee.service';
 
 @Component({
   selector: 'training-program-candidates',
@@ -48,12 +48,12 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
   traineeStatusEnum = TraineeStatus;
   isInternalUser!: boolean;
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<number>,
-              public lang: LangService,
-              public service: TraineeService,
-              private dialogService: DialogService,
-              private toast: ToastService,
-              private certificateService: CertificateService,
-              private employeeService: EmployeeService) {
+    public lang: LangService,
+    public service: TraineeService,
+    private dialogService: DialogService,
+    private toast: ToastService,
+    private certificateService: CertificateService,
+    private employeeService: EmployeeService) {
     this.operation = data.operation;
     this.trainingProgramId = data.model;
     this.candidatesListType = data.candidatesListType;
@@ -145,33 +145,31 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
     event.preventDefault();
     const traineeModel = (new Trainee()).clone(model.trainee);
     // @ts-ignore
-    const message = this.lang.map.msg_confirm_delete_x.change({x: model.trainee.getName()});
+    const message = this.lang.map.msg_confirm_delete_x.change({ x: model.trainee.getName() });
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
-      if (click === UserClickOn.YES) {
-        const sub = traineeModel.deleteTrainee(this.trainingProgramId).subscribe(() => {
-          // @ts-ignore
-          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.trainee.getName()}));
-          this.reload$.next(null);
-          sub.unsubscribe();
-        });
-      }
-    });
+        if (click === UserClickOn.YES) {
+          const sub = traineeModel.deleteTrainee(this.trainingProgramId).subscribe(() => {
+            // @ts-ignore
+            this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.trainee.getName() }));
+            this.reload$.next(null);
+            sub.unsubscribe();
+          });
+        }
+      });
   }
 
   showDeleteButton(row: TraineeData) {
-    return !this.isInternalUser &&
-      this.candidatesListType == this.candidatesListTypeEnum.ADD &&
-      row.status != this.traineeStatusEnum.ACCEPTED_TRAINEE &&
+    return (this.employeeService.isLicensingUser() && this.candidatesListType == this.candidatesListTypeEnum.ADD) || (
+      !this.isInternalUser && row.status != this.traineeStatusEnum.ACCEPTED_TRAINEE &&
       !row.addedByRACA &&
-      row.trainee.isDraft
+      row.trainee.isDraft)
   }
 
   showEditButton(row: TraineeData) {
-    return !this.isInternalUser &&
-      this.candidatesListType == this.candidatesListTypeEnum.ADD &&
-      row.status != this.traineeStatusEnum.ACCEPTED_TRAINEE &&
+    return (this.employeeService.isLicensingUser() && this.candidatesListType == this.candidatesListTypeEnum.ADD) || (
+      !this.isInternalUser && row.status != this.traineeStatusEnum.ACCEPTED_TRAINEE &&
       !row.addedByRACA &&
-      row.trainee.isDraft
+      row.trainee.isDraft)
   }
 }

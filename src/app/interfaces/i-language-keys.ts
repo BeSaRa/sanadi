@@ -1,10 +1,28 @@
 export interface ILanguageKeys {
+  add_followup: string;
+  msg_check_x_duplicate: string;
+  msg_session_timed_out: string;
+  related_departments: string;
+  lbl_model: string;
+  menu_add: string;
+  menu_search: string;
+  menu_outputs: string;
+  menu_service: string;
+  msg_service_search_unavailable: string;
+  msg_full_amount_used: string;
+  more: string;
+  msg_terminated_notification: string;
+  notification_user_inbox: string;
+  notification_team_inbox: string;
+  notification_terminated: string;
   logs_history: string;
   the_donor: string;
   city_village: string;
   project_impl_total_cost: string;
   region_territories: string;
   cannot_take_this_action_before_consume_full_permit_amount: string;
+  notifications: string;
+  no_notifications: string;
   project_ar_name: string;
   project_en_name: string;
   fundraising_remaining_amount: string;
@@ -513,6 +531,7 @@ export interface ILanguageKeys {
   training_x_approved_successfully: string;
   msg_confirm_cancel_x: string;
   training_program_save_and_publish: string;
+  training_program_save_and_advertise: string;
   cancel_training_program: string;
   training_program_status: string;
   training_program_publish: string;
@@ -736,6 +755,7 @@ export interface ILanguageKeys {
   pagination_previous: string;
   menu_user_inbox: string;
   save_as_draft: string;
+  save_as_draft_and_continue: string;
   request_body: string;
   full_name: string;
   competent_dep: string;
@@ -1314,6 +1334,7 @@ export interface ILanguageKeys {
   entity_name: string;
   execution_country: string;
   msg_please_select_x_to_continue: string;
+  msg_please_validate_x_to_continue: string;
   menu_external_project_implementation: string;
   msg_add_intervention_license_first: string;
   integration_moj: string;
@@ -1324,11 +1345,19 @@ export interface ILanguageKeys {
   integration_izzab: string;
   integration_kahramaa: string;
   integration_mol: string;
+  integration_sjc: string;
   integration_qatar_charity: string;
+  integration_qatar_zakat_fund: string;
+  integration_qrcs: string;
+  integration_jasim_hamad_bin_jasim_charity_fund: string;
+  integration_qatar_cancer_society: string;
+  integration_raf: string;
   date_of_death: string;
   company_info: string;
   garsia_pensions: string;
   payroll_report: string;
+  married: string;
+  marriage_date: string;
   relation_status: string;
   parcel_number: string;
   parcel_type: string;
@@ -1702,6 +1731,7 @@ export interface ILanguageKeys {
   month_6_to_12: string;
   over_12_months: string;
   states: string;
+  state_province: string;
   license_duration_type: string;
   office_type: string;
   lbl_beneficiaries_nature: string;
@@ -1711,7 +1741,7 @@ export interface ILanguageKeys {
   lbl_profile: string;
   lbl_min_limit: string;
   lbl_max_limit: string;
-  lbl_maximum_deduction_ratio: string
+  lbl_maximum_deduction_ratio: string;
   menu_organizations_entities_support: string;
   beneficiaries_type: string;
   beneficiaries_description: string;
@@ -1761,7 +1791,7 @@ export interface ILanguageKeys {
   charitable_entities: string;
   government_agencies: string;
   countries_add_successfully: string;
-  remove_countries_messages: string;
+  remove_profile_country_link_messages: string;
   must_have_one_active_field_at_least: string;
   must_have_one_required_field_at_least: string;
   must_have_one_field_at_least_shown_on_table: string;
@@ -1782,9 +1812,24 @@ export interface ILanguageKeys {
   transfer_number: string;
   transferred_amount: string;
   due_amount: string;
-  total_qatari_riyal_transaction_amount:string;
-  msg_select_project_required:string;
-  task_seen:string;
-  lbl_approve_conditions:string;
-  lbl_other:string;
+  total_qatari_riyal_transaction_amount: string;
+  msg_select_project_required: string;
+  task_seen: string;
+  lbl_approve_conditions: string;
+  lbl_other: string;
+  training_notes:string;
+  msg_only_this_file_size_or_less_allowed_to_upload: string;
+  err_must_have_letters:string;
+  msg_qatari_transaction_should_not_exceed_due_amount:string;
+  neighborhood_street_building: string;
+  menu_admin_license:string;
+  training_domain_name:string;
+  training_partner_name:string;
+  menu_training_program_partner:string;
+  lbl_edit_training_program_partner:string;
+  lbl_add_training_program_partner:string;
+  lbl_transfer_operation_date:string;
+  msg_record_is_linked:string;
+  previews_replays:string;
+  sub_meeting_point_name:string;
 }

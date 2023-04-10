@@ -16,14 +16,14 @@ import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {
   TransferFundsAbroadApproveTaskPopupComponent
-} from '@app/modules/projects/popups/transfer-funds-abroad-approve-task-popup/transfer-funds-abroad-approve-task-popup.component';
+} from '@app/modules/services/transferring-individual-funds-abroad/popups/transfer-funds-abroad-approve-task-popup/transfer-funds-abroad-approve-task-popup.component';
 import {Observable} from 'rxjs';
 import {ReceiverOrganization} from '@app/models/receiver-organization';
-import {SelectReceiverEntityPopupComponent} from '@app/modules/projects/popups/select-receiver-entity-popup/select-receiver-entity-popup.component';
+import {SelectReceiverEntityPopupComponent} from '@app/modules/services/transferring-individual-funds-abroad/popups/select-receiver-entity-popup/select-receiver-entity-popup.component';
 import {ReceiverPerson} from '@app/models/receiver-person';
 import {
   TransferFundsAbroadCompleteTaskPopupComponent
-} from '@app/modules/projects/popups/transfer-funds-abroad-complete-task-popup/transfer-funds-abroad-complete-task-popup.component';
+} from '@app/modules/services/transferring-individual-funds-abroad/popups/transfer-funds-abroad-complete-task-popup/transfer-funds-abroad-complete-task-popup.component';
 import {UntypedFormGroup} from '@angular/forms';
 import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';

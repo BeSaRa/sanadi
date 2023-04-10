@@ -1,8 +1,9 @@
-import {Component, Input, OnInit, TemplateRef, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {LangService} from '@app/services/lang.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {BehaviorSubject} from 'rxjs';
+import {delay} from 'rxjs/operators';
 
 @Component({
   selector: 'grid-actions',
@@ -46,6 +47,10 @@ export class GridActionsComponent implements OnInit {
 
   displayLabel(action: IMenuItem<any>): string {
     return typeof action.label === 'function' ? action.label(this.record) : this.lang.map[action.label as unknown as keyof ILanguageKeys];
+  }
+
+  actionClass(action: IMenuItem<any>): string {
+    return (!action.class ? '' : (typeof action.class === 'function' ? action.class(this.record) : action.class)) || '';
   }
 
   onClick(event: MouseEvent, action: IMenuItem<any>) {
@@ -128,7 +133,7 @@ export class GridActionsComponent implements OnInit {
   }
 
   private onRecordChange() {
-    this._record.subscribe(() => {
+    this._record.pipe(delay(100)).subscribe(() => {
       this.filteredActions = this._filterActions();
     })
   }

@@ -1,95 +1,97 @@
 import {
   GeneralProcessNotificationComponent
-} from '@modules/general-services/pages/general-process-notification/general-process-notification.component';
+} from '@modules/services/general-process-notification/pages/general-process-notification/general-process-notification.component';
 import {
   AwarenessActivitySuggestionComponent
-} from '@modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
+} from '@modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import {
   ForeignCountriesProjectsComponent
-} from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
+} from '@app/modules/services/foreign-countries-projects/pages/foreign-countries-projects/foreign-countries-projects.component';
 import {
   UrgentInterventionFinancialNotificationComponent
-} from '@modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
-import {EmploymentComponent} from '@modules/general-services/pages/employment/employment.component';
-import {NpoManagementComponent} from '@modules/general-services/pages/npo-management/npo-management.component';
+} from '@modules/services/urgent-intervention-financial-notification/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
+import {EmploymentComponent} from '@modules/services/employment/pages/employment/employment.component';
+import {NpoManagementComponent} from '@modules/services/npo-management/pages/npo-management/npo-management.component';
 import {Injectable} from '@angular/core';
 import {DynamicComponentService} from './dynamic-component.service';
 import {TeamService} from './team.service';
 import {CustomEmployeePermission} from '@app/helpers/custom-employee-permission';
 import {
   InternationalCooperationComponent
-} from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
+} from '@app/modules/services/international-cooperation/pages/international-cooperation/international-cooperation.component';
 import {
   InitialExternalOfficeApprovalComponent
-} from '@app/modules/office-services/pages/initial-external-office-approval/initial-external-office-approval.component';
+} from '@app/modules/services/initial-external-office-approval/pages/initial-external-office-approval/initial-external-office-approval.component';
 import {
   FinalExternalOfficeApprovalComponent
-} from '@app/modules/office-services/pages/final-external-office-approval/final-external-office-approval.component';
+} from '@app/modules/services/final-external-office-approval/pages/final-external-office-approval/final-external-office-approval.component';
 import {
   PartnerApprovalComponent
-} from '@app/modules/office-services/pages/partner-approval/partner-approval.component';
+} from '@app/modules/services/partner-approval/pages/partner-approval/partner-approval.component';
 import {
   InternalProjectLicenseComponent
-} from '@app/modules/projects/pages/internal-project-license/internal-project-license.component';
-import {ProjectModelComponent} from '@app/modules/projects/pages/project-model/project-model.component';
+} from '@app/modules/services/internal-project-license/pages/internal-project-license/internal-project-license.component';
+import {ProjectModelComponent} from '@app/modules/services/project-models/pages/project-model/project-model.component';
 import {
   CollectionApprovalComponent
-} from '@app/modules/collection/pages/collection-services-approval/collection-approval.component';
+} from '@app/modules/services/collection-approval/pages/collection-services-approval/collection-approval.component';
 import {MapService} from '@app/services/map.service';
-import {FundraisingComponent} from '@app/modules/collection/pages/fundraising/fundraising.component';
+import {FundraisingComponent} from '@app/modules/services/fundraising-channel-licensing/pages/fundraising/fundraising.component';
 import {
   CollectorApprovalComponent
-} from '@app/modules/collection/pages/collector-approval/collector-approval.component';
+} from '@app/modules/services/collector-approval/pages/collector-approval/collector-approval.component';
 import {
   CustomsExemptionComponent
-} from '@app/modules/remittances/pages/customs-exemption/customs-exemption.component';
+} from '@app/modules/services/customs-exemption-remittance/pages/customs-exemption/customs-exemption.component';
 import {
   InternalBankAccountApprovalComponent
-} from '@app/modules/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
+} from '@app/modules/services/internal-bank-account-approval/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 
 import {
   UrgentJointReliefCampaignComponent
-} from '@app/modules/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
+} from '@app/modules/services/urgent-joint-relief-campaign/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
 import {
   UrgentInterventionAnnouncementComponent
-} from '@app/modules/urgent-intervention/pages/urgent-intervention-announcement/urgent-intervention-announcement.component';
+} from '@app/modules/services/urgent-intervention-announcement/pages/urgent-intervention-announcement/urgent-intervention-announcement.component';
 import {
   UrgentInterventionClosureComponent
-} from '@app/modules/urgent-intervention/pages/urgent-intervention-closure/urgent-intervention-closure.component';
+} from '@app/modules/services/urgent-intervention-closure/pages/urgent-intervention-closure/urgent-intervention-closure.component';
 import {
   ExternalOrgAffiliationComponent
-} from '@modules/general-services/pages/external-org-affiliation/external-org-affiliation.component';
+} from '@modules/services/external-organization-affiliation/pages/external-org-affiliation/external-org-affiliation.component';
 import {
   UrgentInterventionLicenseComponent
-} from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
+} from '@app/modules/services/urgent-intervention-licensing/pages/urgent-intervention-license/urgent-intervention-license.component';
 import {
   TransferringIndividualFundsAbroadComponent
-} from '@app/modules/projects/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
+} from '@app/modules/services/transferring-individual-funds-abroad/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
 import {
   CoordinationWithOrganizationsRequestComponent
-} from '@app/modules/general-services/pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
+} from '@app/modules/services/coordination-with-organization-request/pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
 import {
   UrgentInterventionLicenseFollowupComponent
-} from '@app/modules/urgent-intervention/pages/urgent-intervention-license-followup/urgent-intervention-license-followup.component';
+} from '@app/modules/services/urgent-intervention-license-followup/pages/urgent-intervention-license-followup/urgent-intervention-license-followup.component';
 import {
   GeneralAssociationMeetingAttendanceComponent
-} from '@app/modules/projects/pages/general-association-meeting-attendance/general-association-meeting-attendance.component';
+} from '@app/modules/services/general-association-meeting-attendance/pages/general-association-meeting-attendance/general-association-meeting-attendance.component';
 import {
   CharityOrganizationUpdateComponent
-} from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
+} from '@app/modules/services/charity-organization-update/pages/charity-organization-update/charity-organization-update.component';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
-import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
-import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
+import {ConsultationComponent} from '@app/modules/services/consultation/pages/consultation/consultation.component';
+import {InquiryComponent} from '@app/modules/services/inquiries-and-complaints/pages/inquiry/inquiry.component';
 import {
   ProjectFundraisingComponent
-} from "@app/modules/projects/pages/project-fundraising/project-fundraising.component";
+} from "@modules/services/project-fundraising/pages/project-fundraising/project-fundraising.component";
 import {
   OrganizationsEntitiesSupportComponent
-} from '@app/modules/general-services/pages/organizations-entities-support/organizations-entities-support.component';
+} from '@app/modules/services/organization-entities-support/pages/organizations-entities-support/organizations-entities-support.component';
 import {
   ProjectImplementationComponent
-} from "@modules/projects/pages/project-implementation/project-implementation.component";
-import { FinancialTransfersLicensingComponent } from '@app/modules/remittances/pages/financial-transfers-licensing/financial-transfers-licensing.component';
+} from "@modules/services/project-implementation/pages/project-implementation/project-implementation.component";
+import {
+  FinancialTransfersLicensingComponent
+} from '@app/modules/services/financial-transfer-licensing/pages/financial-transfers-licensing/financial-transfers-licensing.component';
 
 @Injectable({
   providedIn: 'root'

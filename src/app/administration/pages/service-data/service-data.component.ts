@@ -16,6 +16,10 @@ import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {DateUtils} from '@helpers/date-utils';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {AidLookupStatusEnum} from '@app/enums/status.enum';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { FormBuilder } from '@angular/forms';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { LookupService } from '@app/services/lookup.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -31,12 +35,15 @@ export class ServiceDataComponent extends AdminGenericComponent<ServiceData, Ser
               public service: ServiceDataService,
               private dialogService: DialogService,
               private sharedService: SharedService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private fb:FormBuilder,
+              private lookupService:LookupService) {
     super();
   }
 
   protected _init(): void {
     this.listenToView();
+    this.buildFilterForm();
   }
 
   view$: Subject<ServiceData> = new Subject<ServiceData>();
@@ -79,6 +86,40 @@ export class ServiceDataComponent extends AdminGenericComponent<ServiceData, Ser
     }
   ];
   displayedColumns: string[] = ['bawServiceCode', 'arName', 'enName', 'updatedOn', 'updatedBy', 'status', 'actions'];
+  searchColumns: string[] = ['search_bawServiceCode', 'search_arName', 'search_enName','search_updatedOn', 'search_updatedBy', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_bawServiceCode: {
+      key: 'bawServiceCode',
+      controlType: 'text',
+      property: 'bawServiceCode',
+      label: 'baw_service_code'
+    },
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
   sortingCallbacks = {
     updatedBy: (a: ServiceData, b: ServiceData, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.updatedByInfo.getName().toLowerCase(),
@@ -122,5 +163,11 @@ export class ServiceDataComponent extends AdminGenericComponent<ServiceData, Ser
         this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
+  }
+
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], status: [null], bawServiceCode: ['']
+    })
   }
 }

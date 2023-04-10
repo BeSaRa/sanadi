@@ -1,4 +1,4 @@
-import {Directive, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
+import {Directive, EventEmitter, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
@@ -33,6 +33,9 @@ import {FactoryService} from '@services/factory.service';
 import {AttachmentTypeService} from '@services/attachment-type.service';
 import {HasAttachmentHandlerDirective} from '@app/shared/directives/has-attachment-handler.directive';
 import {AttachmentHandlerDirective} from '@app/shared/directives/attachment-handler.directive';
+import {TabsListComponent} from '@app/shared/components/tabs/tabs-list.component';
+import {CommonUtils} from '@helpers/common-utils';
+import {FieldControlAndLabelKey} from '@app/types/types';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends BaseGenericEService<M>> implements OnInit, OnDestroy, IESComponent<M> {
@@ -74,8 +77,11 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   private saveMethods: Record<SaveTypes, keyof Omit<ICaseModel<M>, 'id'>> = {
     [SaveTypes.FINAL]: 'save',
     [SaveTypes.COMMIT]: 'commit',
-    [SaveTypes.DRAFT]: 'draft'
+    [SaveTypes.DRAFT]: 'draft',
+    [SaveTypes.DRAFT_CONTINUE]: 'draft',
   };
+
+  @ViewChild(TabsListComponent) mainTabsListRef!: TabsListComponent;
 
   ngOnDestroy(): void {
     this.destroy$.next(null);
@@ -120,7 +126,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       .pipe(
         // before save
         switchMap(saveType => {
-          const result = this._beforeSave(saveType);
+          const result = this._beforeSave(saveType === SaveTypes.DRAFT_CONTINUE ? SaveTypes.DRAFT : saveType);
           return isObservable(result) ? result : of(result);
         }),
         // emit only if the beforeSave returned true
@@ -148,6 +154,9 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         this._afterSave(result.model, result.saveType, this.operation);
         this.operation = OperationTypes.UPDATE;
         this.afterSave$.emit(result.model);
+        if (result.saveType === SaveTypes.DRAFT_CONTINUE) {
+          this.goToNextTab();
+        }
       });
   }
 
@@ -371,4 +380,29 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   _afterOpenCase(model: M): void {
 
   }
+
+  goToNextTab() {
+    if (!CommonUtils.isValidValue(this.mainTabsListRef)) {
+      return;
+    }
+    const activeTabIndex = this.mainTabsListRef.getActiveTabIndex();
+    if (activeTabIndex === -1) {
+      this.mainTabsListRef.tabListService.selectTabByIndex(0);
+    } else if (activeTabIndex < this.mainTabsListRef.tabs.length - 1) {
+      const nextActiveIndex = this.mainTabsListRef.getNextActiveTabIndex();
+      this.mainTabsListRef.tabListService.selectTabByIndex(nextActiveIndex <= 0 ? 0 : nextActiveIndex);
+    }
+  }
+
+  getInvalidDraftField(fieldsList: FieldControlAndLabelKey[]): FieldControlAndLabelKey | undefined {
+    let inValidItem;
+    for (const item of fieldsList) {
+      if (item.control.invalid) {
+        inValidItem = item;
+        break;
+      }
+    }
+    return inValidItem;
+  }
+
 }

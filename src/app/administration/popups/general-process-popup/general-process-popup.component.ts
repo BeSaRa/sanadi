@@ -1,27 +1,9 @@
 import { UntypedFormArray, Validators } from '@angular/forms';
-import { LookupService } from './../../../services/lookup.service';
-import { Lookup } from './../../../models/lookup';
-import { UserClickOn } from './../../../enums/user-click-on.enum';
-import { DialogService } from './../../../services/dialog.service';
-import { ProcessFieldBuilder } from './process-formly-components/process-fields-builder';
 import { catchError, map } from 'rxjs/operators';
-import { CustomValidators } from './../../../validators/custom-validators';
-import { TemplateField } from '../../../models/template-field';
 import { InternalDepartment } from '@app/models/internal-department';
-import { InternalDepartmentService } from './../../../services/internal-department.service';
-import { Team } from './../../../models/team';
-import { AdminLookupTypeEnum } from './../../../enums/admin-lookup-type-enum';
-import { AdminLookup } from './../../../models/admin-lookup';
 import { AdminLookupService } from '@services/admin-lookup.service';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { DIALOG_DATA_TOKEN } from './../../../shared/tokens/tokens';
-import { DialogRef } from './../../../shared/models/dialog-ref';
-import { LangService } from './../../../services/lang.service';
-import { IDialogData } from './../../../interfaces/i-dialog-data';
-import { ToastService } from './../../../services/toast.service';
 import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
-import { OperationTypes } from './../../../enums/operation-types.enum';
-import { GeneralProcess } from './../../../models/genral-process';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { Component, Inject } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
@@ -29,6 +11,24 @@ import { SubTeamService } from '@app/services/sub-team.service';
 import { SubTeam } from '@app/models/sub-team';
 import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
 import { v4 } from 'uuid';
+import { GeneralProcess } from '@app/models/genral-process';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { Lookup } from '@app/models/lookup';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { ProcessFieldBuilder } from '@app/administration/popups/general-process-popup/process-formly-components/process-fields-builder';
+import { AdminLookup } from '@app/models/admin-lookup';
+import { Team } from '@app/models/team';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { LangService } from '@app/services/lang.service';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { LookupService } from '@app/services/lookup.service';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { ToastService } from '@app/services/toast.service';
+import { InternalDepartmentService } from '@app/services/internal-department.service';
+import { DialogService } from '@app/services/dialog.service';
+import { TemplateField } from '@app/models/template-field';
+import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'app-general-process-popup',
@@ -48,6 +48,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   isEditField: boolean = false;
   saveVisible = true;
   mainClassificationsList: AdminLookup[] = [];
+  _subClassificationsList: AdminLookup[] = [];
   subClassificationsList: AdminLookup[] = [];
   departmentList: InternalDepartment[] = [];
   private _teamsList: Team[] = [];
@@ -108,16 +109,21 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     }
   }
   initPopup(): void {
-    this.adminLookupService.loadGeneralProcessClassificaion().subscribe(data => {
-      this.mainClassificationsList = data.filter(c => !c.parentId);;
+    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, true).subscribe((data: AdminLookup[]) => {
+      this.mainClassificationsList = data.filter(c => !c.parentId);
+      this._subClassificationsList = data.filter(c => !!c.parentId);
+      if (this.model?.mainClass) {
+        this.subClassificationsList = this._subClassificationsList.filter(sc => sc.parentId == this.model?.mainClass);
+      }
     })
     this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
       this.departmentList = deparments;
     })
     if (this.model?.id) {
       this._loadSubTeam(this.model?.teamId);
-      this.loadSubClasses(this.model?.mainClass)
+      this.handleMainCatChange(this.model?.mainClass)
       this.processForm.generateFromString(this.model?.template)
+      this.subClassField.setValue(this.model?.subClass);
     }
     this.listenToFieldDetailsSubsecribtion$ = ProcessFieldBuilder.listenToSelectField().subscribe((fieldId: string) => {
       if (fieldId) {
@@ -173,10 +179,9 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
         }
       });
   }
-  loadSubClasses(parentId: number) {
-    this.adminLookupService.loadByParentId(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, parentId).subscribe(data => {
-      this.subClassificationsList = data;
-    })
+  handleMainCatChange(parentId: number) {
+    this.subClassField.reset();
+    this.subClassificationsList = this._subClassificationsList.filter(sc => sc.parentId == parentId);
   }
   private _loadSubTeam(parentTeamId?: number) {
     if (parentTeamId)
@@ -258,6 +263,9 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   }
   get subTeamField(): UntypedFormControl {
     return this.form.get('subTeamId') as UntypedFormControl
+  }
+  get subClassField(): UntypedFormControl {
+    return this.form.get('subClass') as UntypedFormControl
   }
   getLabel(name: any) {
     return this.lang.map[('lbl_' + name) as keyof ILanguageKeys];

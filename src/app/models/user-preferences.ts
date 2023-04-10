@@ -1,4 +1,3 @@
-import {BaseModel} from '@models/base-model';
 import {UserPreferencesService} from '@services/user-preferences.service';
 import {FactoryService} from '@services/factory.service';
 import {LangService} from '@services/lang.service';
@@ -6,6 +5,7 @@ import {UserPreferencesInterceptor} from '@model-interceptors/user-preferences-i
 import {InterceptModel} from '@decorators/intercept-model';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable} from 'rxjs';
+import {Cloneable} from '@models/cloneable';
 
 const interceptor: UserPreferencesInterceptor = new UserPreferencesInterceptor();
 
@@ -13,15 +13,13 @@ const interceptor: UserPreferencesInterceptor = new UserPreferencesInterceptor()
   receive: interceptor.receive,
   send: interceptor.send
 })
-export class UserPreferences extends BaseModel<UserPreferences, UserPreferencesService> {
-  empNum!: string;
-  qid!: string;
-  phoneNumber!: string;
-  email!: string;
+export class UserPreferences extends Cloneable<UserPreferences> {
   alternateEmailList!: string;
   isMailNotificationEnabled!: boolean;
   defaultLang!: number;
 
+  // extra properties
+  alternateEmailListParsed: string[] = [];
   service: UserPreferencesService;
   langService: LangService;
 
@@ -31,34 +29,14 @@ export class UserPreferences extends BaseModel<UserPreferences, UserPreferencesS
     this.service = FactoryService.getService('UserPreferencesService');
   }
 
-  buildForm(isLoggedInUserPreferences: boolean, controls?: boolean): any {
+  buildForm(controls?: boolean): any {
     const {
-      arName,
-      enName,
-      empNum,
-      qid,
-      phoneNumber,
-      email,
       isMailNotificationEnabled,
       defaultLang
     } = this;
     return {
-      arName: controls ? [{value: arName, disabled: true}, [
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('AR_NUM_ONE_AR')
-      ]] : arName,
-      enName: controls ? [{value: enName, disabled: true}, [
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('ENG_NUM_ONE_ENG')
-      ]] : enName,
-      empNum: controls ? [{value: empNum, disabled: true}, [CustomValidators.number, CustomValidators.maxLength(10)]] : empNum,
-      qid: controls ? [{value: qid, disabled: true}, [...CustomValidators.commonValidations.qId]] : qid,
-      phoneNumber: controls ? [{value: phoneNumber, disabled: true}, CustomValidators.commonValidations.phone] : phoneNumber,
-      email: controls ? [{value: email, disabled: true}, [CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : email,
-      isMailNotificationEnabled: controls ? [{value: isMailNotificationEnabled, disabled: !isLoggedInUserPreferences}] : isMailNotificationEnabled,
-      defaultLang: controls ? [{value: defaultLang, disabled: !isLoggedInUserPreferences}, CustomValidators.required] : defaultLang
+      isMailNotificationEnabled: controls ? [isMailNotificationEnabled] : isMailNotificationEnabled,
+      defaultLang: controls ? [defaultLang, CustomValidators.required] : defaultLang
     }
   }
 

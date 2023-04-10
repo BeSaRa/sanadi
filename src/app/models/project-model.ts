@@ -138,7 +138,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
           CustomValidators.required,
           CustomValidators.minLength(4),
           CustomValidators.maxLength(100),
-          CustomValidators.pattern('ENG_AR_ONLY')
+          //CustomValidators.pattern('ENG_AR_NUM_ONLY')
         ]
       ] : projectName,
       projectDescription: controls ? [projectDescription, [
@@ -300,7 +300,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       executionCountry: this.executionCountry,
       executionCountryInfo: this.executionCountryInfo,
       beneficiaryRegion: this.beneficiaryRegion,
-      region: this.executionRegion
+      region: this.executionRegion,
+      targetAmount: this.targetAmount ? this.targetAmount : this.projectTotalCost
     })
   }
 }

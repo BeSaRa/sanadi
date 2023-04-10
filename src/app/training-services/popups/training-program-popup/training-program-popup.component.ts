@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {TrainingProgram} from '@app/models/training-program';
 import {FormManager} from '@app/models/form-manager';
@@ -26,13 +26,16 @@ import {EmployeeService} from '@app/services/employee.service';
 import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 import {ProfileService} from '@services/profile.service';
 import {Profile} from '@app/models/profile';
+import {TrainingProgramPartner} from '@app/models/training-program-partner';
+import {TrainingProgramPartnerService} from '@app/services/training-program-partner.service';
+import {CommonUtils} from '@helpers/common-utils';
 
 @Component({
   selector: 'training-program-popup',
   templateUrl: './training-program-popup.component.html',
   styleUrls: ['./training-program-popup.component.scss']
 })
-export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingProgram> {
+export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingProgram> implements AfterViewInit {
   approve$ = new Subject<any>();
   saveAndApproveClicked = false;
   saveAndPublishClicked = false;
@@ -81,12 +84,13 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     registerationClosureDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
   };
   hoursList = DateUtils.getHoursList();
+  trainingDomains: Lookup[] = this.lookupService.listByCategory.TRAINING_DOMAIN;
   trainingTypes: Lookup[] = this.lookupService.listByCategory.TRAINING_TYPE;
   organizationTypes: Lookup[] = this.lookupService.listByCategory.ProfileType;
   targetAudienceList: Lookup[] = this.lookupService.listByCategory.TRAINING_AUDIENCE;
   attendanceMethods: Lookup[] = this.lookupService.listByCategory.TRAINING_ATTENDENCE_METHOD;
   trainingLanguages: Lookup[] = this.lookupService.listByCategory.TRAINING_LANG;
-
+  trainingPartnersList: TrainingProgramPartner[] = [];
   // organizations properties
   selectedOrganizationType!: number;
   selectedOrganizations: Profile[] = [];
@@ -110,6 +114,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   isValidPastTrainingStartDate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isValidPastRegistrationEndDate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   internalUserControls: UntypedFormControl[] = [];
+  @ViewChild('dialogContent') dialogContent!: ElementRef;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
               public lang: LangService,
@@ -120,11 +125,20 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
               public dialogService: DialogService,
               private profileService: ProfileService,
               private trainerService: TrainerService,
+              private trainingProgramPartnerService: TrainingProgramPartnerService,
               private employeeService: EmployeeService) {
     super();
     this.operation = data.operation;
     this.model = data.model;
     this.isCertification = !!data.isCertification;
+  }
+
+  ngAfterViewInit() {
+    Promise.resolve().then(() => {
+      if (this.operation !== OperationTypes.VIEW) {
+        CommonUtils.displayFormValidity(this.form, this.dialogContent.nativeElement);
+      }
+    })
   }
 
   initPopup(): void {
@@ -144,6 +158,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     }
 
     this.loadTrainers();
+    this.loadTrainingProgramPartners();
     this.loadSelectedTrainers();
     this.listenToApprove();
     // this.listenToSaveAndApprove();
@@ -445,7 +460,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   get trainingLangControl(): UntypedFormControl {
-    return this.form.get('trainingLang') as UntypedFormControl;
+    return this.form.get('trainingLangParsed') as UntypedFormControl;
   }
 
   get numberOfSeatsControl(): UntypedFormControl {
@@ -505,7 +520,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       this.totalTrainingCostControl,
       this.commentsControl
     ];
-    this.internalUserControls.forEach((control)=> {
+    this.internalUserControls.forEach((control) => {
       control.removeValidators(CustomValidators.required);
       control.updateValueAndValidity();
     })
@@ -626,6 +641,13 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     event.preventDefault();
     this.selectedTrainers = this.selectedTrainers.filter(element => element.id != trainer.id);
     this.model.trainerListIds = this.selectedTrainers.map(trainer => trainer.id);
+  }
+
+  loadTrainingProgramPartners(): void {
+    this.trainingProgramPartnerService.loadActive()
+      .subscribe(partners => {
+        this.trainingPartnersList = partners;
+      });
   }
 
   private loadTrainers(): void {

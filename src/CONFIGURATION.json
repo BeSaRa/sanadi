@@ -10,5 +10,6 @@
   },
   "BASE_ENVIRONMENT": "BAW_UI",
   "REPORTS_URL": "http://racabi/Reports/",
-  "RESET_PASSWORD": "https://stgnas.gov.qa/self-service/reset/personal"
+  "RESET_PASSWORD": "https://stgnas.gov.qa/self-service/reset/personal",
+  "NOTIFICATIONS_URL": "http://eblaepm.no-ip.org:9026/notify/api/notifications"
 }

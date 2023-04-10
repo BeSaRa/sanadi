@@ -1,26 +1,26 @@
-import { Injectable } from '@angular/core';
-import { AdminLookup } from '@app/models/admin-lookup';
-import { HttpClient } from '@angular/common/http';
-import { UrlService } from '@services/url.service';
-import { DialogService } from '@services/dialog.service';
-import { FactoryService } from '@services/factory.service';
-import { ComponentType } from '@angular/cdk/portal';
-import { AdminLookupInterceptor } from '@app/model-interceptors/admin-lookup-interceptor';
-import { AdminLookupPopupComponent } from '@app/administration/popups/admin-lookup-popup/admin-lookup-popup.component';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { Observable, of, Subject } from 'rxjs';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { IDefaultResponse } from '@contracts/idefault-response';
-import { CrudServiceAdminLookupContract } from '@contracts/crud-service-admin-lookup-contract';
-import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
-import { HasInterception, InterceptParam } from '@decorators/intercept-model';
-import { Pagination } from '@app/models/pagination';
-import { PaginationContract } from '@contracts/pagination-contract';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { IDialogData } from '@contracts/i-dialog-data';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { CommonUtils } from '@helpers/common-utils';
+import {Injectable} from '@angular/core';
+import {AdminLookup} from '@app/models/admin-lookup';
+import {HttpClient} from '@angular/common/http';
+import {UrlService} from '@services/url.service';
+import {DialogService} from '@services/dialog.service';
+import {FactoryService} from '@services/factory.service';
+import {ComponentType} from '@angular/cdk/portal';
+import {AdminLookupInterceptor} from '@app/model-interceptors/admin-lookup-interceptor';
+import {AdminLookupPopupComponent} from '@app/administration/popups/admin-lookup-popup/admin-lookup-popup.component';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {Observable, of, Subject} from 'rxjs';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {IDefaultResponse} from '@contracts/idefault-response';
+import {CrudServiceAdminLookupContract} from '@contracts/crud-service-admin-lookup-contract';
+import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
+import {HasInterception, InterceptParam} from '@decorators/intercept-model';
+import {Pagination} from '@app/models/pagination';
+import {PaginationContract} from '@contracts/pagination-contract';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {IDialogData} from '@contracts/i-dialog-data';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {CommonUtils} from '@helpers/common-utils';
 
 @CastResponseContainer({
   $default: {
@@ -28,7 +28,7 @@ import { CommonUtils } from '@helpers/common-utils';
   },
   $pagination: {
     model: () => Pagination,
-    shape: { 'rs.*': () => AdminLookup }
+    shape: {'rs.*': () => AdminLookup}
   }
 })
 @Injectable({
@@ -40,8 +40,8 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
   interceptor: AdminLookupInterceptor = new AdminLookupInterceptor();
 
   constructor(public http: HttpClient,
-    private urlService: UrlService,
-    public dialog: DialogService) {
+              private urlService: UrlService,
+              public dialog: DialogService) {
     FactoryService.registerService('AdminLookupService', this);
   }
 
@@ -175,7 +175,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
   })
   private _paginate(options: Partial<PaginationContract>, typeId: AdminLookupTypeEnum): Observable<Pagination<AdminLookup[]>> {
     return this.http.get<Pagination<AdminLookup[]>>(this.getServiceURLByType(typeId) + '/composite/pg', {
-      params: { ...options }
+      params: {...options}
     });
   }
 
@@ -188,7 +188,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
   })
   private _paginateComposite(options: Partial<PaginationContract>, typeId: AdminLookupTypeEnum): Observable<Pagination<AdminLookup[]>> {
     return this.http.get<Pagination<AdminLookup[]>>(this.getServiceURLByType(typeId) + '/composite/pg', {
-      params: { ...options }
+      params: {...options}
     });
   }
 
@@ -196,17 +196,21 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     return this._paginateComposite(options, typeId);
   }
 
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  loadByFilterPaginate(options: Partial<PaginationContract>, typeId: AdminLookupTypeEnum, filterModel: Partial<AdminLookup>): Observable<Pagination<AdminLookup[]>> {
+    return this.http.post<Pagination<AdminLookup[]>>(this.getServiceURLByType(typeId) + '/filter/pg', {...filterModel}, {
+      params: {...options}
+    })
+  }
+
   @CastResponse(() => AdminLookup, {
     fallback: '$default',
     unwrap: 'rs'
   })
-  private _loadGeneralProcessClassificaion() {
-    return this.http.get<AdminLookup[]>(this.getServiceURLByType(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION) + '/main')
-      .pipe((catchError((_) => of([]))));
-  }
-
-  loadGeneralProcessClassificaion() {
-    return this._loadGeneralProcessClassificaion();
+  loadByFilter(typeId: AdminLookupTypeEnum, filterModel: Partial<AdminLookup>): Observable<AdminLookup[]> {
+    return this.http.post<AdminLookup[]>(this.getServiceURLByType(typeId) + '/filter', {...filterModel})
   }
 
   @CastResponse(() => AdminLookup, {
@@ -243,6 +247,20 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     return this._loadByParentIdPaging(options, typeId, parentId);
   }
 
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  loadParentsPaging(options: Partial<PaginationContract>, typeId: AdminLookupTypeEnum): Observable<Pagination<AdminLookup[]>> {
+    if (!CommonUtils.isValidValue(typeId)) {
+      return this._emptyPaginationListResponse;
+    }
+    return this.http.get<Pagination<AdminLookup[]>>(this.getServiceURLByType(typeId) + '/main', {
+      params: options
+    }).pipe((catchError((_) => {
+      return this._emptyPaginationListResponse;
+    })));
+  }
+
   @CastResponse(() => AdminLookup, {
     fallback: '$default',
     unwrap: 'rs'
@@ -270,11 +288,52 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     })));
   }
 
+  @CastResponse(() => AdminLookup, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   loadWorkFieldsByTypePaging(options: Partial<PaginationContract>, typeId: AdminLookupTypeEnum): Observable<Pagination<AdminLookup[]>> {
     if (!CommonUtils.isValidValue(typeId)) {
       return this._emptyPaginationListResponse;
     }
     return this._loadWorkFieldsByTypePaging(options, typeId);
+  }
+
+  @CastResponse(() => AdminLookup, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  loadWorkFieldsByFilter(typeId: AdminLookupTypeEnum, filterModel: Partial<AdminLookup>): Observable<AdminLookup[]> {
+    if (!CommonUtils.isValidValue(typeId)) {
+      return of([]);
+    }
+    return this.http.post<AdminLookup[]>(this.getServiceURLByType(typeId) + '/' + typeId + '/filter', {...filterModel})
+  }
+
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  loadWorkFieldsByFilterPaging(options: Partial<PaginationContract>, typeId: AdminLookupTypeEnum, filterModel: Partial<AdminLookup>): Observable<Pagination<AdminLookup[]>> {
+    if (!CommonUtils.isValidValue(typeId)) {
+      return this._emptyPaginationListResponse;
+    }
+    return this.http.post<Pagination<AdminLookup[]>>(this.getServiceURLByType(typeId) + '/' + typeId + '/filter/pg', {...filterModel}, {
+      params: {...options}
+    })
+  }
+
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  loadWorkFieldsParentsByTypePaging(options: Partial<PaginationContract>, typeId: AdminLookupTypeEnum): Observable<Pagination<AdminLookup[]>> {
+    if (!CommonUtils.isValidValue(typeId)) {
+      return this._emptyPaginationListResponse;
+    }
+    return this.http.get<Pagination<AdminLookup[]>>(this.getServiceURLByType(typeId) + '/main/type/' + typeId, {
+      params: options
+    }).pipe((catchError((_) => {
+      return this._emptyPaginationListResponse;
+    })));
   }
 
   @CastResponse(() => AdminLookup, {
@@ -354,7 +413,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
   }
 
   deleteBulk(modelIds: any[], typeId: AdminLookupTypeEnum): Observable<Record<number, boolean>> {
-    return this.http.request<IDefaultResponse<Record<number, boolean>>>('delete', this.getServiceURLByType(typeId) + '/bulk', { body: modelIds })
+    return this.http.request<IDefaultResponse<Record<number, boolean>>>('delete', this.getServiceURLByType(typeId) + '/bulk', {body: modelIds})
       .pipe(
         map((response: any) => {
           return response.rs;
@@ -398,7 +457,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
 
   openCreateDialog(typeId: AdminLookupTypeEnum, parentId?: number): DialogRef {
     return this.dialog.show<IDialogData<AdminLookup>>(this._getDialogComponent(), {
-      model: new AdminLookup().clone({ type: typeId, parentId: parentId, status: CommonStatusEnum.ACTIVATED }),
+      model: new AdminLookup().clone({type: typeId, parentId: parentId, status: CommonStatusEnum.ACTIVATED}),
       operation: OperationTypes.CREATE,
       selectedTab: 'basic',
       hasSubRecord: this.adminLookupTypesWithChildren.includes(typeId)

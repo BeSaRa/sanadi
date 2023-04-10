@@ -14,6 +14,7 @@ export class TabListService implements OnDestroy {
   onSelectTabChange$: Observable<TabComponent> = this.changeSelectedTabTo$.asObservable();
   onTabChangeEvent!: EventEmitter<TabComponent>;
   public accordionView: boolean = false;
+  public hasForm: boolean = false;
   collapse: boolean = false;
 
 

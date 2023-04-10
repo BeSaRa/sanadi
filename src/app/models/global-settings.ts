@@ -5,6 +5,7 @@ import {LangService} from '@services/lang.service';
 import {InterceptModel} from '@decorators/intercept-model';
 import {GlobalSettingsInterceptor} from '@model-interceptors/global-settings-interceptor';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {Validators} from '@angular/forms';
 
 const interceptor: GlobalSettingsInterceptor = new GlobalSettingsInterceptor();
 
@@ -14,16 +15,19 @@ const interceptor: GlobalSettingsInterceptor = new GlobalSettingsInterceptor();
 })
 export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsService> {
   systemArabicName!: string;
-  systemEnName!: string;
+  systemEnglishName!: string;
   sessionTimeout!: number;
   fileSize!: number;
   fileType!: string;
-  fileTypeArr: number[] = [];
   inboxRefreshInterval!: number;
   supportEmailList!: string;
   enableMailNotification!: boolean;
   enableSMSNotification!: boolean;
+  maxDeductionRatio!: number;
 
+  // extra properties
+  fileTypeParsed: number[] = [];
+  supportEmailListParsed: string[] = [];
   service: GlobalSettingsService;
   langService: LangService;
 
@@ -33,16 +37,24 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
     this.service = FactoryService.getService('GlobalSettingsService');
   }
 
+  getApplicationName(): string {
+    if (this.langService.map.lang === 'ar') {
+      return this.systemArabicName;
+    }
+    return this.systemEnglishName;
+  }
+
   buildForm(controls?: boolean): any {
     const {
       systemArabicName,
-      systemEnName,
+      systemEnglishName,
       sessionTimeout,
       fileSize,
       inboxRefreshInterval,
-      fileTypeArr,
+      fileTypeParsed,
       enableMailNotification,
-      enableSMSNotification
+      enableSMSNotification,
+      maxDeductionRatio
     } = this;
     return {
       systemArabicName: controls ? [systemArabicName, [
@@ -51,32 +63,44 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('AR_NUM_ONE_AR')
       ]] : systemArabicName,
-      systemEnName: controls ? [systemEnName, [
+      systemEnglishName: controls ? [systemEnglishName, [
         CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
-      ]] : systemEnName,
+      ]] : systemEnglishName,
       sessionTimeout: controls ? [sessionTimeout, [
         CustomValidators.required,
         CustomValidators.maxLength(9),
-        CustomValidators.number
+        CustomValidators.number,
+        Validators.max(300),
+        Validators.min(1)
       ]] : sessionTimeout,
       fileSize: controls ? [fileSize, [
         CustomValidators.required,
         CustomValidators.maxLength(9),
-        CustomValidators.number
+        CustomValidators.number,
+        Validators.max(30),
+        Validators.min(5)
       ]] : fileSize,
       inboxRefreshInterval: controls ? [inboxRefreshInterval, [
         CustomValidators.required,
         CustomValidators.maxLength(9),
-        CustomValidators.number
+        CustomValidators.number,
+        Validators.max(30),
+        Validators.min(5)
       ]] : inboxRefreshInterval,
-      fileTypeArr: controls ? [fileTypeArr, [
+      fileTypeParsed: controls ? [fileTypeParsed, [
         CustomValidators.requiredArray
-      ]] : fileTypeArr,
+      ]] : fileTypeParsed,
       enableMailNotification: controls ? [enableMailNotification] : enableMailNotification,
-      enableSMSNotification: controls ? [enableSMSNotification] : enableSMSNotification
+      enableSMSNotification: controls ? [enableSMSNotification] : enableSMSNotification,
+      maxDeductionRatio: controls ? [maxDeductionRatio, [
+        CustomValidators.required,
+        CustomValidators.number,
+        Validators.max(100),
+        Validators.min(1)
+      ]] : maxDeductionRatio,
     }
   }
 }

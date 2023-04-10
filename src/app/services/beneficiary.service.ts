@@ -39,6 +39,7 @@ import {GdxMawaredResponse} from '@app/models/gdx-mawared-response';
 import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response';
 import {GdxKahramaaResponse} from '@app/models/gdx-kahramaa-response';
 import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
+import {GdxSjcMaritalStatusResponse} from '@models/gdx-sjc-marital-status-response';
 
 const beneficiarySearchLogCriteriaInterceptor = new BeneficiarySearchLogCriteriaInterceptor();
 
@@ -225,5 +226,13 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   })
   addMOLInquiry(criteria: IGdxCriteria) {
     return this.http.post<GdxMolPayrollResponse[]>(this._getGDXServiceURL() + '/mol-payroll', criteria);
+  }
+
+  @CastResponse(() => GdxSjcMaritalStatusResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addSJCInquiry(criteria: IGdxCriteria) {
+    return this.http.post<GdxSjcMaritalStatusResponse[]>(this._getGDXServiceURL() + '/sjc/marital-status', criteria);
   }
 }

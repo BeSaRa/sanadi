@@ -1,20 +1,22 @@
-import { Observable } from 'rxjs';
-import { LicenseService } from '@app/services/license.service';
-import { AwarenessActivitySuggestionApprovalComponent } from './../modules/general-services/popups/awareness-activity-suggestion-approval/awareness-activity-suggestion-approval.component';
-import { DialogRef } from './../shared/models/dialog-ref';
-import { WFResponseType } from './../enums/wfresponse-type.enum';
-import { SearchAwarenessActivitySuggestionCriteria } from './../models/search-awareness-activity-suggestion-criteria';
-import { FactoryService } from './factory.service';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { AwarenessActivitySuggestion } from './../models/awareness-activity-suggestion';
-import { Injectable } from '@angular/core';
-import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
-import { HttpClient } from '@angular/common/http';
-import { DomSanitizer } from '@angular/platform-browser';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { DialogService } from './dialog.service';
-import { DynamicOptionsService } from './dynamic-options.service';
-import { UrlService } from './url.service';
+import {Observable} from 'rxjs';
+import {LicenseService} from '@app/services/license.service';
+import {
+  AwarenessActivitySuggestionApprovalPopupComponent
+} from '@modules/services/awareness-activity-suggestion/popups/awareness-activity-suggestion-approval-popup/awareness-activity-suggestion-approval-popup.component';
+import {DialogRef} from './../shared/models/dialog-ref';
+import {WFResponseType} from '@enums/wfresponse-type.enum';
+import {SearchAwarenessActivitySuggestionCriteria} from '@models/search-awareness-activity-suggestion-criteria';
+import {FactoryService} from './factory.service';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {AwarenessActivitySuggestion} from '@models/awareness-activity-suggestion';
+import {Injectable} from '@angular/core';
+import {CastResponseContainer} from '@app/decorators/decorators/cast-response';
+import {HttpClient} from '@angular/common/http';
+import {DomSanitizer} from '@angular/platform-browser';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {DialogService} from './dialog.service';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {UrlService} from './url.service';
 
 @CastResponseContainer({
   $default: {
@@ -64,7 +66,13 @@ export class AwarenessActivitySuggestionService extends BaseGenericEService<Awar
   }
 
   approve(model: AwarenessActivitySuggestion, action: WFResponseType): DialogRef {
-    return this.dialog.show(AwarenessActivitySuggestionApprovalComponent, {
+    return this.dialog.show(AwarenessActivitySuggestionApprovalPopupComponent, {
+      model,
+      action
+    });
+  }
+  finalApprove(model: AwarenessActivitySuggestion, action: WFResponseType): DialogRef {
+    return this.dialog.show(AwarenessActivitySuggestionApprovalPopupComponent, {
       model,
       action
     });

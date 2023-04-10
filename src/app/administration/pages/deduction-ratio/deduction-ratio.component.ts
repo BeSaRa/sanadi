@@ -1,14 +1,17 @@
 import { Component, ViewChild } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { IGridAction } from '@app/interfaces/i-grid-action';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { DeductionRatioItem } from '@app/models/deduction-ratio-item';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { DeductionRatioItemService } from '@app/services/deduction-ratio-item.service';
 import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
 import { SharedService } from '@app/services/shared.service';
 import { ToastService } from '@app/services/toast.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
@@ -29,12 +32,42 @@ export class DeductionRatioComponent extends AdminGenericComponent<DeductionRati
   view$: Subject<DeductionRatioItem> = new Subject<DeductionRatioItem>();
   commonStatusEnum = CommonStatusEnum;
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   constructor(public lang: LangService,
               public service: DeductionRatioItemService,
               private dialogService: DialogService,
               private sharedService: SharedService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private lookupService:LookupService,
+              private fb:FormBuilder) {
     super();
   }
 
@@ -44,6 +77,7 @@ export class DeductionRatioComponent extends AdminGenericComponent<DeductionRati
 
   protected _init(): void {
     this.listenToView();
+    this.buildFilterForm();
   }
 
   actions: IMenuItem<DeductionRatioItem>[] = [
@@ -190,5 +224,9 @@ export class DeductionRatioComponent extends AdminGenericComponent<DeductionRati
         this.reload$.next(null);
       });
   }
-
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], status: [null]
+    })
+  }
 }

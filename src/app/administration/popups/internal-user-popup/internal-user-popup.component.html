@@ -2,24 +2,24 @@
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <span class="flex-grow-1"></span>
   <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
-    fullscreenBtn></button>
+          fullscreenBtn></button>
   <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
 <div class="dialog-content w800px" #dialogContent>
-  <tabs-list (onTabChange)="onTabChange($event)">
+  <tabs-list (onTabChange)="onTabChange($event)" [hasForm]="true">
     <tab [name]="tabsData.basic.name" [hasError]="getTabInvalidStatus('basic')" [template]="basicInfoTab"
-      [title]="lang.map.lbl_basic_info"></tab>
+         [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.permissions.name" [hasError]="getTabInvalidStatus('permissions')" [template]="permissionsTab"
-      [title]="lang.map.lbl_permissions"></tab>
+         [title]="lang.map.lbl_permissions"></tab>
     <tab [name]="tabsData.menus.name" [template]="menusTab" [title]="lang.map.menus"></tab>
     <tab [name]="tabsData.departments.name" [disabled]="!model.id" [title]="lang.map.departments"
-      [template]="departmentsTab"></tab>
+         [template]="departmentsTab"></tab>
     <tab [name]="tabsData.teams.name" [disabled]="!model.id" [title]="lang.map.link_teams" [template]="teamsTab"></tab>
     <tab [name]="tabsData.subTeams.name" [disabled]="!model.id" [title]="lang.map.link_sub_teams"
-      [template]="subTeamsTab"></tab>
+         [template]="subTeamsTab"></tab>
     <tab [name]="tabsData.followup.name" [title]="lang.map.followup" [template]="followupTab"></tab>
     <tab [name]="tabsData.services.name" [disabled]="!(userTeamComponent && userTeamComponent.userTeams.length)"
-      [title]="lang.map.link_services" [template]="serviceTab"></tab>
+         [title]="lang.map.link_services" [template]="serviceTab"></tab>
   </tabs-list>
   <ng-template #basicInfoTab>
     <form [formGroup]="form" novalidate>
@@ -40,7 +40,7 @@
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="domainName" for="domainName">{{lang.map.login_name}}</label>
             <input validationClasses="domainName" formControlName="domainName" type="text" id="domainName"
-              class="form-control">
+                   class="form-control">
             <app-field-error-message controlName="domainName"></app-field-error-message>
           </div>
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
@@ -51,35 +51,44 @@
         </div>
         <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="qid" for="qid">{{lang.map.lbl_qid}}</label>
+            <input validationClasses="qid" formControlName="qid" type="text" id="qid"
+                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+            <app-field-error-message controlName="qid"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="status" for="status">{{lang.map.lbl_status}}</label>
             <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false" placeholder="{{lang.map.select}}"
-              id="status" [notFoundText]="lang.map.msg_not_found" formControlName="status" validationClasses="status">
+                       id="status" [notFoundText]="lang.map.msg_not_found" formControlName="status"
+                       validationClasses="status">
               <ng-option value="">{{lang.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
-                [disabled]="option.isRetiredCommonStatus()">
+                         [disabled]="option.isRetiredCommonStatus()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
             <app-field-error-message controlName="status"></app-field-error-message>
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
             <input validationClasses="email" formControlName="email" type="text" id="email" class="form-control">
             <app-field-error-message controlName="email"></app-field-error-message>
           </div>
-        </div>
-        <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="phoneNumber"
-              for="phoneNumber">{{lang.map.mobile_number}}</label>
+                   for="phoneNumber">{{lang.map.mobile_number}}</label>
             <input validationClasses="phoneNumber" formControlName="phoneNumber" type="text" id="phoneNumber"
-              class="form-control" trimInput>
+                   class="form-control" trimInput>
             <app-field-error-message controlName="phoneNumber"></app-field-error-message>
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative" *ngIf="!readonly">
             <file-uploader labelKey="signature" [isRequired]="false" [loadedFile]="loadedSignature"
-              [showFilePreview]="true" (fileUploadEvent)="setSignatureFile($event)"
-              [allowedExtensions]="[fileExtensionsEnum.PNG, fileExtensionsEnum.JPEG, fileExtensionsEnum.JPG]">
+                           [showFilePreview]="true" (fileUploadEvent)="setSignatureFile($event)"
+                           [allowedExtensions]="[fileExtensionsEnum.PNG, fileExtensionsEnum.JPEG, fileExtensionsEnum.JPG]">
             </file-uploader>
           </div>
         </div>
@@ -91,10 +100,10 @@
       <div formGroupName="userPermissions" class="row">
         <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
           <label for="customRoleId" asteriskIfRequired="customRoleId"
-            class="form-label">{{lang.map.lbl_custom_role}}</label>
+                 class="form-label">{{lang.map.lbl_custom_role}}</label>
           <ng-select [selectOnTab]="true" labelForId="customRoleId" [clearable]="false"
-            placeholder="{{lang.map.select}}" id="customRoleId" [notFoundText]="lang.map.msg_not_found"
-            formControlName="customRoleId" (change)="onCustomRoleChange()">
+                     placeholder="{{lang.map.select}}" id="customRoleId" [notFoundText]="lang.map.msg_not_found"
+                     formControlName="customRoleId" (change)="onCustomRoleChange()">
             <ng-option value="">{{lang.map.lbl_none}}</ng-option>
             <ng-option *ngFor="let option of customRoles" [value]="option.id" [disabled]="!option.status">
               {{option.getName()}}
@@ -103,7 +112,7 @@
         </div>
         <div class="col-sm-6 mb-4 text-end">
           <button *ngIf="model.id && customRoleId?.value" (click)="printPermissions($event)"
-            tooltip="{{lang.map.print}}" class="btn icon-btn text-primary">
+                  tooltip="{{lang.map.print}}" class="btn icon-btn text-primary">
             <i class="mdi mdi-printer"></i>
           </button>
         </div>
@@ -114,17 +123,17 @@
         <div class="p-2 border border-1">
           <div class="form-check mb-2 pb-2 border-bottom">
             <input [indeterminate]="checkBoxGroup.isIndeterminate()" [disabled]="readonly"
-              [checked]="checkBoxGroup.isFull()" type="checkbox" id="group-id-{{checkBoxGroup.group.id}}"
-              (change)="groupHandler.onGroupClicked(checkBoxGroup)" class="form-check-input cursor-pointer">
+                   [checked]="checkBoxGroup.isFull()" type="checkbox" id="group-id-{{checkBoxGroup.group.id}}"
+                   (change)="groupHandler.onGroupClicked(checkBoxGroup)" class="form-check-input cursor-pointer">
             <label for="group-id-{{checkBoxGroup.group.id}}"
-              class="cursor-pointer">{{checkBoxGroup.group.getName()}}</label>
+                   class="cursor-pointer">{{checkBoxGroup.group.getName()}}</label>
           </div>
           <div *ngFor="let row of checkBoxGroup.rows" class="row mx-2">
             <div *ngFor="let permission of row" class="form-check col-sm-12 col-md-4">
               <input type="checkbox" [disabled]="readonly" [checked]="checkBoxGroup.isSelected(permission.id)"
-                [value]="permission.id" id="group-permission-id-{{permission.id}}"
-                (change)="groupHandler.onCheckBoxClicked(permission , $event , checkBoxGroup)"
-                class="form-check-input cursor-pointer">
+                     [value]="permission.id" id="group-permission-id-{{permission.id}}"
+                     (change)="groupHandler.onCheckBoxClicked(permission , $event , checkBoxGroup)"
+                     class="form-check-input cursor-pointer">
               <label for="group-permission-id-{{permission.id}}" class="cursor-pointer">{{permission.getName()}}</label>
             </div>
           </div>
@@ -141,11 +150,11 @@
   </ng-template>
   <ng-template #subTeamsTab>
     <user-sub-team [model]="model" [subTeams]="(userTeamComponent?.subTeamsListBasedOnUserTeams||[])"
-      [readonly]="readonly" [operation]="operation"></user-sub-team>
+                   [readonly]="readonly" [operation]="operation"></user-sub-team>
   </ng-template>
   <ng-template #serviceTab>
     <user-security [operation]="operation" [model]="model" [readonly]="readonly"
-      [userTeams]="(userTeamComponent?.userTeams||[])"></user-security>
+                   [userTeams]="(userTeamComponent?.userTeams||[])"></user-security>
   </ng-template>
   <ng-template #departmentsTab>
     <div class="row" *ngIf="!readonly">
@@ -162,14 +171,14 @@
             </ng-select>
           </div>
           <button [disabled]="!selectedDepartment.value" (click)="addDepartment()"
-            class="btn btn-primary">{{lang.map.btn_add}}</button>
+                  class="btn btn-primary">{{lang.map.btn_add}}</button>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-12">
         <app-table #table sortableTable [paginator]="paginator" [useSearchToFilter]="true" [data]="userDepartments"
-          [columns]="displayedColumns">
+                   [columns]="displayedColumns">
           <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
             <ng-container cdkColumnDef="arabicName">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
@@ -184,8 +193,8 @@
               <td cdk-cell *cdkCellDef="let row">
                 <div class="form-switch form-check">
                   <input #input [disabled]="readonly || canNotToggleItOff(row)"
-                    (change)="toggleDefaultDepartment(row , input)" class="form-check-input" type="checkbox"
-                    [checked]="model.defaultDepartmentId === row.internalDepartmentId">
+                         (change)="toggleDefaultDepartment(row , input)" class="form-check-input" type="checkbox"
+                         [checked]="model.defaultDepartmentId === row.internalDepartmentId">
                 </div>
               </td>
             </ng-container>
@@ -193,11 +202,11 @@
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row; index as itemIndex">
                 <button [disabled]="canNotDeleteDepartment(row)" (click)="deleteDepartment(row)"
-                  class="btn p-0 icon-btn"><i class="mdi text-primary mdi-delete"></i>
+                        class="btn p-0 icon-btn"><i class="mdi text-primary mdi-delete"></i>
                 </button>
               </td>
             </ng-container>
-            <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+            <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
             <tr *cdkNoDataRow>
               <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -209,13 +218,15 @@
     </div>
   </ng-template>
   <ng-template #followupTab>
-    <user-followup-permission [user]="model" [readonly]="readonly" [userTeams]="(userTeamComponent?.userTeams||[])">
-    </user-followup-permission>
+    <!--<user-followup-permission [user]="model" [readonly]="readonly" [userTeams]="(userTeamComponent?.userTeams||[])">
+    </user-followup-permission>-->
+    <user-followup-permission-new #userFollowupPermissionComponent [user]="model" [readonly]="readonly">
+    </user-followup-permission-new>
   </ng-template>
 </div>
 <div class="dialog-actions">
   <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null , dialogContent)"
-    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <div class="flex-grow-1"></div>

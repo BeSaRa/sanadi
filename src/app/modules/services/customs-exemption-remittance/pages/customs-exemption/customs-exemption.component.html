@@ -1,0 +1,241 @@
+<div class="row">
+  <tabs-list [accordionView]="accordionView" [hasForm]="true">
+    <tab name="basic_info" [hasError]="form.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
+    </tab>
+    <tab name="attachments" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab"
+         [title]="lang.map.attachments"></tab>
+  </tabs-list>
+  <ng-container [formGroup]="form">
+    <ng-template #basic_info>
+      <div class="row align-items-end">
+        <!-- Request Type -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="requestType"
+                 for="requestType">{{lang.map.request_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
+                     [readonly]="!isEditRequestTypeAllowed()" placeholder="{{lang.map.select}}" id="requestType"
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="requestType"
+                     validationClasses="requestType" (change)="handleRequestTypeChange($event, true)">
+            <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requestType"></app-field-error-message>
+        </div>
+        <!-- Order Number -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="oldFullSerial"
+                 for="oldFullSerial">{{lang.map.order_number}}</label>
+          <div class="input-group">
+            <input (keydown.enter)="isEditOrderNoAndDocNoAllowed() && documentSearchByOrderNo($event)"
+                   formControlName="oldFullSerial"
+                   trimInput type="text" [readonly]="!isEditOrderNoAndDocNoAllowed()" validationClasses="oldFullSerial"
+                   [onlyInvalid]="false" class="form-control" id="oldFullSerial">
+            <button *ngIf="isEditOrderNoAndDocNoAllowed()" type="button" (click)="documentSearchByOrderNo($event)"
+                    class="input-group-text"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <app-field-error-message controlName="oldFullSerial"></app-field-error-message>
+          </div>
+        </div>
+        <!-- Document Number -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="oldBookFullSerial"
+                 for="oldBookFullSerial">{{lang.map.document_number}}</label>
+          <div class="input-group">
+            <input (keydown.enter)="isEditOrderNoAndDocNoAllowed() && documentSearchByDocNo($event)"
+                   formControlName="oldBookFullSerial" trimInput type="text"
+                   [readonly]="!isEditOrderNoAndDocNoAllowed()" validationClasses="oldBookFullSerial"
+                   [onlyInvalid]="false" class="form-control" id="oldBookFullSerial">
+            <button *ngIf="isEditOrderNoAndDocNoAllowed()" type="button" (click)="documentSearchByDocNo($event)"
+                    class="input-group-text"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <app-field-error-message controlName="oldBookFullSerial"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedDocument">
+        <selected-license-table [caseType]="caseTypes.CUSTOMS_EXEMPTION_REMITTANCE"
+                                [caseTypeViewLicense]="caseTypes.CUSTOMS_EXEMPTION_REMITTANCE"
+                                [licenseList]="[selectedDocument]"
+                                [columns]="service.selectDocumentDisplayColumns"></selected-license-table>
+      </div>
+      <div class="row">
+        <!-- Arabic Name -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="arName" for="arName"
+                 class="form-label">{{lang.map.arabic_name}}</label>
+          <input type="text" id="arName" validationClasses="arName" formControlName="arName" trimInput
+                 class="form-control" [readonly]="(isCancelRequestType() || readonly)">
+          <app-field-error-message controlName="arName"></app-field-error-message>
+        </div>
+        <!-- English Name -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="enName" for="enName"
+                 class="form-label">{{lang.map.english_name}}</label>
+          <input type="text" id="enName" validationClasses="enName" formControlName="enName" trimInput
+                 class="form-control" [readonly]="(isCancelRequestType() || readonly)">
+          <app-field-error-message controlName="enName"></app-field-error-message>
+        </div>
+        <!-- Shipping Method -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="shipmentCarrier"
+                 for="shipmentCarrier">{{lang.map.shipping_method}}</label>
+          <ng-select [selectOnTab]="true" labelForId="shipmentCarrier" [clearable]="true"
+                     [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}"
+                     id="shipmentCarrier" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+                     formControlName="shipmentCarrier" validationClasses="shipmentCarrier">
+            <ng-option [value]="type.lookupKey" *ngFor="let type of shippingMethods">{{type.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="shipmentCarrier"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Shipment Source -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="shipmentSource"
+                 for="shipmentSource">{{lang.map.shipment_source}}</label>
+          <ng-select [selectOnTab]="true" labelForId="shipmentSource" [clearable]="true"
+                     [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}"
+                     id="shipmentSource" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+                     formControlName="shipmentSource" validationClasses="shipmentSource">
+            <ng-option [value]="type.lookupKey" *ngFor="let type of shipmentSources">{{type.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="shipmentSource"></app-field-error-message>
+        </div>
+        <!-- Shipment Weight -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="shipmentWeight" for="shipmentWeight"
+                 class="form-label">{{lang.map.shipment_weight}}</label>
+          <input id="shipmentWeight" validationClasses="shipmentWeight" formControlName="shipmentWeight"
+                 class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY" trimInput
+                 [readonly]="(isCancelRequestType() || readonly)">
+          <app-field-error-message controlName="shipmentWeight"></app-field-error-message>
+        </div>
+        <!-- Bill of lading number -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="waybill" for="waybill"
+                 class="form-label">{{lang.map.bill_of_lading_number}}</label>
+          <input type="text" id="waybill" validationClasses="waybill" formControlName="waybill"
+                 class="form-control" [readonly]="(isCancelRequestType() || readonly)" trimInput>
+          <app-field-error-message controlName="waybill"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Shipment Port -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="shipmentPort" for="shipmentPort"
+                 class="form-label">{{lang.map.shipment_port}}</label>
+          <input type="text" id="shipmentPort" validationClasses="shipmentPort" formControlName="shipmentPort"
+                 class="form-control" [readonly]="(isCancelRequestType() || readonly)" trimInput>
+          <app-field-error-message controlName="shipmentPort"></app-field-error-message>
+        </div>
+        <!-- Subordinate to a project -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="linkedProject"
+                 for="linkedProject">{{lang.map.subordinate_to_project}}</label>
+          <ng-select [selectOnTab]="true" labelForId="linkedProject" [clearable]="true"
+                     [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}"
+                     id="linkedProject" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+                     formControlName="linkedProject" validationClasses="linkedProject">
+            <ng-option [value]="type.lookupKey" *ngFor="let type of linkedProjects">{{type.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="linkedProject"></app-field-error-message>
+        </div>
+        <!-- Project Name -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="projectName"  for="projectName" class="form-label">{{lang.map.project_name}}</label>
+          <input type="text" id="projectName" validationClasses="projectName" formControlName="projectName"
+                 class="form-control" [readonly]="(isCancelRequestType() || readonly)" trimInput>
+          <app-field-error-message controlName="projectName"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Country -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="country" for="country">{{lang.map.country}}</label>
+          <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true"
+                     [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}" id="country"
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="country"
+                     validationClasses="country" (change)="handleCountryChange($event, true)">
+            <ng-option [value]="option.id" *ngFor="let option of countriesList">{{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="country"></app-field-error-message>
+        </div>
+        <!-- Region -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="zoneNumber" for="zoneNumber"
+                 class="form-label">{{lang.map.region}}</label>
+          <input type="text" id="zoneNumber" validationClasses="zoneNumber" formControlName="zoneNumber"
+                 class="form-control" [readonly]="(isCancelRequestType() || readonly)" trimInput>
+          <app-field-error-message controlName="zoneNumber"></app-field-error-message>
+        </div>
+        <!-- Recipient type -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="receiverType"
+                 for="receiverType">{{lang.map.recipient_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="receiverType" [clearable]="true"
+                     [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}"
+                     id="receiverType" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+                     formControlName="receiverType" validationClasses="receiverType"
+                     (change)="handleReceiverTypeChange($event, true)">
+            <ng-option [value]="type.lookupKey" *ngFor="let type of receiverTypes">{{type.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="receiverType"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Name of the recipient -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="receiverName"
+                 for="receiverName">{{lang.map.recipient_name}}</label>
+          <ng-select [selectOnTab]="true" labelForId="receiverName" [clearable]="true"
+                     [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}"
+                     id="receiverName" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+                     formControlName="receiverName" validationClasses="receiverName">
+            <ng-option [value]="option.fnId" *ngFor="let option of receiverNamesList">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="receiverName"></app-field-error-message>
+        </div>
+        <!-- The name of the other recipient -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="otherReceiverName" for="otherReceiverName"
+                 class="form-label">{{lang.map.other_recipient_name}}</label>
+          <input type="text" id="otherReceiverName" validationClasses="otherReceiverName"
+                 [readonly]="(isCancelRequestType() || readonly)" formControlName="otherReceiverName"
+                 class="form-control" trimInput>
+          <app-field-error-message controlName="otherReceiverName"></app-field-error-message>
+        </div>
+        <!--  Estimated value of the shipment in riyals -->
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="shipmentApproximateValue" for="shipmentApproximateValue"
+                 class="form-label">{{lang.map.shipment_approximate_value}}</label>
+          <input id="shipmentApproximateValue" validationClasses="shipmentApproximateValue"
+                 [readonly]="(isCancelRequestType() || readonly)" formControlName="shipmentApproximateValue"
+                 class="form-control" [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+                 [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR" trimInput>
+          <app-field-error-message controlName="shipmentApproximateValue"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <!-- description -->
+        <div class="col-md-12 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="description" for="description"
+                 class="form-label">{{lang.map.lbl_description}}</label>
+          <textarea name="description" formControlName="description" validationClasses="description"
+                    id="description" rows="4" class="form-control" maxlength="2000"
+                    [readonly]="(isCancelRequestType() || readonly)" trimInput></textarea>
+          <app-field-error-message controlName="description"></app-field-error-message>
+        </div>
+      </div>
+    </ng-template>
+  </ng-container>
+  <ng-template #attachmentsTab>
+    <attachments [model]="model" [caseId]="model?.id" [caseType]="model?.caseType" [service]="service.documentService"
+                 [formProperties]="formProperties">
+    </attachments>
+  </ng-template>
+</div>

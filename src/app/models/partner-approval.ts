@@ -28,8 +28,8 @@ import { WorkArea } from './work-area';
 const { send, receive } = new PartnerApprovalInterceptor();
 @InterceptModel({ send, receive })
 export class PartnerApproval extends LicenseApprovalModel<
-  PartnerApprovalService,
-  PartnerApproval
+PartnerApprovalService,
+PartnerApproval
 > {
   caseType: number = CaseTypes.PARTNER_APPROVAL;
   organizationId!: number;
@@ -39,6 +39,7 @@ export class PartnerApproval extends LicenseApprovalModel<
   region!: string;
   country!: number;
   city!: string;
+  address!: string;
   countryInfo!: AdminResult;
   specialistDecisionInfo!: AdminResult;
   chiefDecisionInfo!: AdminResult;
@@ -68,8 +69,8 @@ export class PartnerApproval extends LicenseApprovalModel<
   state!: number;
   subject!: string;
   website!: string;
-  goals!: string[] ;
-  displayGoals!:| Goal[];
+  goals!: string[];
+  displayGoals!: | Goal[];
   bankAccountList!: BankAccount[];
   approvalReasonList!: ApprovalReason[];
   contactOfficerList!: ContactOfficer[];
@@ -127,6 +128,7 @@ export class PartnerApproval extends LicenseApprovalModel<
       enName,
       country,
       city,
+      address,
       region,
       headQuarterType,
       latitude,
@@ -160,38 +162,41 @@ export class PartnerApproval extends LicenseApprovalModel<
         : requestClassification,
       arName: control
         ? [
-            arName,
-            [
-              CustomValidators.required,
-              CustomValidators.pattern('AR_ONLY'),
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ARABIC_NAME_MAX
-              ),
-              CustomValidators.minLength(
-                CustomValidators.defaultLengths.MIN_LENGTH
-              ),
-            ],
-          ]
+          arName,
+          [
+            CustomValidators.required,
+            CustomValidators.pattern('AR_ONLY'),
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ARABIC_NAME_MAX
+            ),
+            CustomValidators.minLength(
+              CustomValidators.defaultLengths.MIN_LENGTH
+            ),
+          ],
+        ]
         : arName,
       enName: control
         ? [
-            enName,
-            [
-              CustomValidators.required,
-              CustomValidators.pattern('ENG_ONLY'),
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-              CustomValidators.minLength(
-                CustomValidators.defaultLengths.MIN_LENGTH
-              ),
-            ],
-          ]
+          enName,
+          [
+            CustomValidators.required,
+            CustomValidators.pattern('ENG_ONLY'),
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+            CustomValidators.minLength(
+              CustomValidators.defaultLengths.MIN_LENGTH
+            ),
+          ],
+        ]
         : enName,
       country: control ? [country, CustomValidators.required] : country,
       city: control
         ? [city, [CustomValidators.required, CustomValidators.maxLength(50)]]
         : city,
+      address: control
+        ? [address, [CustomValidators.required, CustomValidators.maxLength(50)]]
+        : address,
       region: control
         ? [region, [CustomValidators.required, CustomValidators.maxLength(50)]]
         : region,
@@ -200,74 +205,74 @@ export class PartnerApproval extends LicenseApprovalModel<
         : headQuarterType,
       latitude: control
         ? [
-            latitude,
-            [
-              CustomValidators.required,
-              CustomValidators.pattern('NUM_HYPHEN_COMMA'),
-            ],
-          ]
+          latitude,
+          [
+            CustomValidators.required,
+            CustomValidators.pattern('NUM_HYPHEN_COMMA'),
+          ],
+        ]
         : latitude,
       longitude: control
         ? [
-            longitude,
-            [
-              CustomValidators.required,
-              CustomValidators.pattern('NUM_HYPHEN_COMMA'),
-            ],
-          ]
+          longitude,
+          [
+            CustomValidators.required,
+            CustomValidators.pattern('NUM_HYPHEN_COMMA'),
+          ],
+        ]
         : longitude,
       establishmentDate: control
         ? [
-            establishmentDate,
-            [CustomValidators.required, CustomValidators.maxDate(new Date())],
-          ]
+          establishmentDate,
+          [CustomValidators.required, CustomValidators.maxDate(new Date())],
+        ]
         : DateUtils.changeDateToDatepicker(establishmentDate),
       phone: control
         ? [
-            phone,
-            [CustomValidators.required].concat(
-              CustomValidators.commonValidations.phone
-            ),
-          ]
+          phone,
+          [CustomValidators.required].concat(
+            CustomValidators.commonValidations.phone
+          ),
+        ]
         : phone,
       fax: control
         ? [
-            fax,
-            [CustomValidators.required].concat(
-              CustomValidators.commonValidations.fax
-            ),
-          ]
+          fax,
+          [CustomValidators.required].concat(
+            CustomValidators.commonValidations.fax
+          ),
+        ]
         : fax,
       website: control
         ? [
-            website,
-            [
-              CustomValidators.required,
-              CustomValidators.maxLength(300),
-            ],
-          ]
+          website,
+          [
+            CustomValidators.required,
+            CustomValidators.pattern('WEBSITE'),
+          ],
+        ]
         : website,
       email: control
         ? [
-            email,
-            [
-              CustomValidators.required,
-              CustomValidators.pattern('EMAIL'),
-              CustomValidators.maxLength(100),
-            ],
-          ]
+          email,
+          [
+            CustomValidators.required,
+            CustomValidators.pattern('EMAIL'),
+            CustomValidators.maxLength(100),
+          ],
+        ]
         : email,
       postalCode: control
         ? [
-            postalCode,
-            [CustomValidators.required, CustomValidators.maxLength(100)],
-          ]
+          postalCode,
+          [CustomValidators.required, CustomValidators.maxLength(100)],
+        ]
         : postalCode,
       firstSocialMedia: control
         ? [
-            firstSocialMedia,
-            [CustomValidators.required, CustomValidators.maxLength(100)],
-          ]
+          firstSocialMedia,
+          [CustomValidators.required, CustomValidators.maxLength(100)],
+        ]
         : firstSocialMedia,
       secondSocialMedia: control
         ? [secondSocialMedia, CustomValidators.maxLength(100)]
@@ -277,18 +282,18 @@ export class PartnerApproval extends LicenseApprovalModel<
         : thirdSocialMedia,
       description: control
         ? [
-            description,
-            [
-              CustomValidators.required,
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.EXPLANATIONS
-              ),
-            ],
-          ]
+          description,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.EXPLANATIONS
+            ),
+          ],
+        ]
         : description,
     };
   }
-  buildCommercialLicenseData( ): any {
+  buildCommercialLicenseData(): any {
     const { commercialLicenseNo, commercialLicenseEndDate } = this;
 
     return {
@@ -301,11 +306,11 @@ export class PartnerApproval extends LicenseApprovalModel<
   isWithCommercialTrade(requestClassification?: number): boolean {
     return (
       requestClassification ===
-        RequestClassifications.Private_Sector_Profit_Outside_Qatar ||
+      RequestClassifications.Private_Sector_Profit_Outside_Qatar ||
       requestClassification ===
-        RequestClassifications.Private_Sector_None_Profit_Qatar ||
+      RequestClassifications.Private_Sector_None_Profit_Qatar ||
       requestClassification ===
-        RequestClassifications.Private_Sector_None_Profit_Outside_Qatar
+      RequestClassifications.Private_Sector_None_Profit_Outside_Qatar
     );
   }
   hasMarker(): boolean {

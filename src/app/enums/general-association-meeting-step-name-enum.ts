@@ -1,9 +1,10 @@
 export enum GeneralAssociationMeetingStepNameEnum {
-  SUPERVISION_AND_CONTROL_REVIEW = 'Supervision and Control Review',
-  SUPERVISION_MANAGER_REVIEW = 'Supervision Manager Review',
-  DECISION_MAKER_REVIEW = 'Decision Maker Review',
-  MEMBER_REVIEW = 'Member Review',
-  MANAGER_FINAL_REVIEW = 'Man Final Review',
-  SUPERVISION_AND_CONTROL_REWORK = 'Supervision and Control ReWork',
-  CharityManagerReview = 'Charity Man Review'
+  SUPERVISION_AND_CONTROL_REVIEW = 'SPEC_REV',
+  SUPERVISION_MANAGER_REVIEW = 'MNGR_REV',
+  DECISION_MAKER_REVIEW = 'DEC_MAK_REV',
+  DECISION_MAKER_REWORK = 'DEC_MAK_REW',
+  MEMBER_REVIEW = 'MEMBER_REV',
+  MANAGER_FINAL_REVIEW = 'MNGR_FINAL_REV',
+  SUPERVISION_AND_CONTROL_REWORK = 'SPEC_REW',
+  CharityManagerReview = 'ORG_REV'
 }

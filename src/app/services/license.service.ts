@@ -193,8 +193,8 @@ export class LicenseService {
 
   @CastResponse(() => PartnerApproval)
   partnerApprovalLicenseSearch(criteria: Partial<PartnerApprovalSearchCriteria>): Observable<PartnerApproval[]> {
-    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined}
-    return this.http.post<PartnerApproval[]>(this.getServiceUrlByCaseType(CaseTypes.PARTNER_APPROVAL) + '/license/search', {...criteria, ...orgId})
+    // const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined}
+    return this.http.post<PartnerApproval[]>(this.getServiceUrlByCaseType(CaseTypes.PARTNER_APPROVAL) + '/license/search', {...criteria})
   }
 
   @CastResponse(() => Fundraising)
@@ -548,10 +548,10 @@ export class LicenseService {
   }
 
   @CastResponse(() => OrganizationsEntitiesSupport)
-  _validateOrganizationsEntitiesSupportByRequestType<T>(requestType: number, oldFullSerial: string): Observable<T> {
+  _validateOrganizationsEntitiesSupportByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) + '/draft/validate', {
       requestType,
-      oldFullSerial
+      oldLicenseId
     });
   }
   @CastResponse(() => FinancialTransferLicensing)

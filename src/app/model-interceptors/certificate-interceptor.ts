@@ -7,6 +7,9 @@ export class CertificateInterceptor implements IModelInterceptor<Certificate>{
   }
 
   send(model: Partial<Certificate>): Partial<Certificate> {
+    delete model.langService;
+    delete model.service;
+    delete model.searchFields;
     return model;
   }
 }

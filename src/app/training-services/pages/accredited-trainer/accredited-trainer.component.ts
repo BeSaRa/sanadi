@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {Trainer} from '@app/models/trainer';
 import {TrainerService} from '@app/services/trainer.service';
@@ -7,9 +7,13 @@ import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {cloneDeep as _deepClone} from 'lodash';
 import {SharedService} from '@app/services/shared.service';
-import {IGridAction} from '@app/interfaces/i-grid-action';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {JobTitle} from '@models/job-title';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'accredited-trainer',
@@ -17,44 +21,63 @@ import {IGridAction} from '@app/interfaces/i-grid-action';
   styleUrls: ['./accredited-trainer.component.scss']
 })
 export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, TrainerService> {
-  searchText = '';
-  actions: IMenuItem<Trainer>[] = [
-    {
-      type: 'action',
-      label: 'btn_reload',
-      icon: 'mdi-reload',
-      onClick: _ => this.reload$.next(null),
-    },
-    {
-      type: 'action',
-      label: 'btn_edit',
-      icon: 'mdi-pen',
-      onClick: (trainer) => this.edit$.next(trainer)
-    }
-  ];
-  displayedColumns: string[] = [/*'rowSelection',*/ 'arName', 'enName', 'specialization', 'jobTitle', 'actions'];
-  selectedRecords: Trainer[] = [];
-  actionsList: IGridAction[] = [
-    {
-      langKey: 'btn_delete',
-      icon: 'mdi-close-box',
-      callback: ($event: MouseEvent) => {
-        this.deleteBulk($event);
-      }
-    }
-  ];
-
   constructor(public lang: LangService,
               public service: TrainerService,
               private dialogService: DialogService,
               private sharedService: SharedService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private fb: FormBuilder) {
     super();
   }
+  protected _init(): void {
+    this.buildFilterForm()
+  }
+  actions: IMenuItem<Trainer>[] = [
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (trainer) => this.edit$.next(trainer)
+    }
+  ];
+  displayedColumns: string[] = ['arName', 'enName', 'specialization', 'jobTitle', 'actions'];
+  searchColumns: string[] = ['search_arName', 'search_enName', 'search_specialization','search_jobTitle', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_specialization:{
+      key: 'specialization',
+      controlType: 'text',
+      property: 'specialization',
+      label: 'trainer_specialization',
+    },
+    search_jobTitle:{
+      key: 'jobTitle',
+      controlType: 'text',
+      property: 'jobTitle',
+      label: 'trainer_job_title',
+    },
+  }
+  @ViewChild('table') table!: TableComponent;
 
-  edit(trainer: Trainer, event: MouseEvent) {
-    event.preventDefault();
-    this.edit$.next(trainer);
+  afterReload(): void {
+    this.table && this.table.clearSelection();
+  }
+
+  get selectedRecords(): JobTitle[] {
+    return this.table.selection.selected;
   }
 
   delete(event: MouseEvent, model: Trainer): void {
@@ -87,7 +110,7 @@ export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, T
           const sub = this.service.deleteBulk(ids).subscribe((response) => {
             this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
               .subscribe(() => {
-                this.selectedRecords = [];
+                this.table.clearSelection();
                 this.reload$.next(null);
                 sub.unsubscribe();
               });
@@ -96,50 +119,9 @@ export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, T
       });
     }
   }
-
-  filterCallback = (record: any, searchText: string) => {
-    return record.search(searchText);
-  }
-
-  private _addSelected(record: Trainer): void {
-    this.selectedRecords.push(_deepClone(record));
-  }
-
-  private _removeSelected(record: Trainer): void {
-    const index = this.selectedRecords.findIndex((item) => {
-      return item.id === record.id;
-    });
-    this.selectedRecords.splice(index, 1);
-  }
-
-  get isIndeterminateSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length < this.models.length;
-  }
-
-  get isFullSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.models.length;
-  }
-
-  isSelected(record: Trainer): boolean {
-    return !!this.selectedRecords.find((item) => {
-      return item.id === record.id;
-    });
-  }
-
-  onSelect($event: Event, record: Trainer): void {
-    const checkBox = $event.target as HTMLInputElement;
-    if (checkBox.checked) {
-      this._addSelected(record);
-    } else {
-      this._removeSelected(record);
-    }
-  }
-
-  onSelectAll(): void {
-    if (this.selectedRecords.length === this.models.length) {
-      this.selectedRecords = [];
-    } else {
-      this.selectedRecords = _deepClone(this.models);
-    }
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], specialization: [''], jobTitle:['']
+    })
   }
 }

@@ -125,7 +125,7 @@ CharityOrganizationUpdate
           [
             CustomValidators.required,
             CustomValidators.maxLength(
-              CustomValidators.defaultLengths.SWIFT_CODE_MAX
+              CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
             ),
           ],
         ]
@@ -235,7 +235,7 @@ CharityOrganizationUpdate
           ],
         ]
         : email,
-      website: controls ? [website, [CustomValidators.required, CustomValidators.maxLength(350)]] : website,
+      website: controls ? [website, [CustomValidators.required, CustomValidators.pattern('WEBSITE')]] : website,
       zoneNumber: controls
         ? [
           zoneNumber,

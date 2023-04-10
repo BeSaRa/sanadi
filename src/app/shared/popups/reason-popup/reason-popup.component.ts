@@ -23,6 +23,8 @@ export class ReasonPopupComponent implements OnInit {
     this.control.setValidators(this.data.required ? CustomValidators.required : null)
     this.control.addValidators(CustomValidators.minLength(4))
     this.control.addValidators(CustomValidators.maxLength(100))
+    this.control.setValue(this.data.reason || '')
+    this.data.view ? this.control.disable() : null
   }
 
   sendReason(): void {

@@ -64,7 +64,7 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
     return this.service.updateStatus(this.id, newStatus);
   }
 
-  buildForm(controls?: boolean): any {
+  buildForm(controls?: boolean, maxDeductionRatio?:number): any {
     const {
       arName,
       enName,
@@ -92,7 +92,7 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
       profileTypesList: controls ? [profileTypesList, [CustomValidators.required]] : profileTypesList,
       workArea: controls ? [workArea] : workArea,
       permitType: controls ? [permitType, [CustomValidators.required]] : permitType,
-      maxLimit: controls ? [maxLimit, [CustomValidators.required, Validators.max(50)]] : maxLimit,
+      maxLimit: controls ? [maxLimit, [CustomValidators.required, Validators.max(maxDeductionRatio? maxDeductionRatio:50)]] : maxLimit,
       minLimit: controls ? [minLimit, [CustomValidators.required, Validators.min(0.1)]] : minLimit,
     }
   }

@@ -1,86 +1,50 @@
 <div class="row">
-  <label class="form-label"
-    >{{ lang.map[labelKey]
-    }}<span class="text-danger" *ngIf="isRequired"> * </span></label
-  >
-  <input
-    type="file"
-    class="input-file"
-    #fileUploader
-    [hidden]="true"
-    (change)="onFileSelected($event)"
-    [accept]="allowedExtensions.join(',')"
-    [multiple]="allowMultiple"
-  />
+  <label class="form-label">{{ lang.map[labelKey]}}<span class="text-danger" *ngIf="isRequired"> * </span></label>
+  <input type="file" class="input-file" #fileUploader
+         [hidden]="true" (change)="onFileSelected($event)"
+         [accept]="allowedExtensions.join(',')" [multiple]="allowMultiple"/>
   <div class="col-sm-12">
-    <button
-      class="btn btn-primary mb-3"
-      [disabled]="readonly"
-      (click)="openFileBrowser($event)"
-    >
-      {{ lang.map[fileInputKey] }}
-    </button>
+    <button class="btn btn-primary mb-3" [disabled]="readonly"
+            (click)="openFileBrowser($event)">{{ lang.map[fileInputKey] }}</button>
+    <div *ngIf="showRequiredFileMsg()">
+      <span class="text-danger"> {{lang.map.err_required_field}}</span>
+    </div>
     <div *ngIf="showFileName">
-      <span *ngIf="uploadedFileName">{{
-        uploadedFileName ? uploadedFileName.getName() : ''
-      }}</span>
-      <button
-        [disabled]="readonly"
-        *ngIf="uploadedFile || uploadedFiles.length > 0"
-        class="btn icon-btn text-primary m-0 align-top"
-        tooltip="{{ lang.map.btn_remove }}"
-        (click)="removeFile($event)"
-      >
+      <span *ngIf="uploadedFileName">{{uploadedFileName ? uploadedFileName.getName() : ''}}</span>
+      <button [disabled]="readonly"
+              *ngIf="uploadedFile || uploadedFiles.length > 0"
+              class="btn icon-btn text-primary m-0 align-top"
+              tooltip="{{ lang.map.btn_remove }}"
+              (click)="removeFile($event)">
         <i class="mdi mdi-close-circle"></i>
       </button>
     </div>
   </div>
   <div class="col-sm-12" *ngIf="showFilePreview">
-    <div
-      class="preview-container mb-3"
-      *ngIf="uploadedFilesCount > 0 || isLoadedFileAvailable()"
-    >
+    <div class="preview-container mb-3" *ngIf="uploadedFilesCount > 0 || isLoadedFileAvailable()">
       <ng-container *ngIf="uploadedFilesCount > 0">
-        <img
-          *ngIf="uploadedFilePath"
-          id="fileImgUploaded"
-          [src]="uploadedFilePath"
-          alt="{{ lang.map.file }}"
-          class="img-fit-contain"
-        />
+        <img *ngIf="uploadedFilePath" id="fileImgUploaded" [src]="uploadedFilePath" alt="{{ lang.map.file }}"
+             class="img-fit-contain"/>
 
-        <button
-          class="btn icon-btn text-primary m-0 align-top btn-remove-file"
-          tooltip="{{ lang.map.btn_remove }}"
-          (click)="removeFile($event)"
-        >
+        <button class="btn icon-btn text-primary m-0 align-top btn-remove-file"
+                tooltip="{{ lang.map.btn_remove }}"
+                (click)="removeFile($event)">
           <i class="mdi mdi-close-circle"></i>
         </button>
       </ng-container>
 
-      <ng-container
-        *ngIf="uploadedFilesCount === 0 && (loadedFile || loadedFilePath)"
-      >
-        <img
-          *ngIf="loadedFile"
-          id="loadedFile"
-          [src]="loadedFile.safeUrl"
-          alt="{{ lang.map.file }}"
-          class="img-fit-contain"
-        />
-        <img
-          *ngIf="!loadedFile && loadedFilePath"
-          id="loadedFileByPath"
-          [src]="loadedFilePath"
-          alt="{{ lang.map.file }}"
-          class="img-fit-contain"
-        />
-        <button
-          class="btn icon-btn text-primary m-0 align-top btn-remove-file"
-          tooltip="{{ lang.map.btn_remove }}"
-          *ngIf="allowRemoveLoadedFile"
-          (click)="removeLoadedFile($event)"
-        >
+      <ng-container *ngIf="uploadedFilesCount === 0 && (loadedFile || loadedFilePath)">
+        <img *ngIf="loadedFile" id="loadedFile" [src]="loadedFile.safeUrl" alt="{{ lang.map.file }}"
+             class="img-fit-contain"/>
+        <img *ngIf="!loadedFile && loadedFilePath"
+             id="loadedFileByPath"
+             [src]="loadedFilePath"
+             alt="{{ lang.map.file }}"
+             class="img-fit-contain"/>
+        <button class="btn icon-btn text-primary m-0 align-top btn-remove-file"
+                tooltip="{{ lang.map.btn_remove }}"
+                *ngIf="allowRemoveLoadedFile"
+                (click)="removeLoadedFile($event)">
           <i class="mdi mdi-close-circle"></i>
         </button>
       </ng-container>

@@ -7,6 +7,9 @@ import { LangService } from '@app/services/lang.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { ChecklistItemInterceptor } from '@app/model-interceptors/checklist-item-interceptor';
 import { InterceptModel } from "@decorators/intercept-model";
+import {ISearchFieldsMap} from '@app/types/types';
+import {normalSearchFields} from '@helpers/normal-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
 
 const { send, receive } = new ChecklistItemInterceptor();
 
@@ -23,6 +26,11 @@ export class ChecklistItem extends BaseModel<ChecklistItem, ChecklistService> {
 
   // not related to the model will remove it while sending to the backend
   checked: boolean = false;
+
+  searchFields: ISearchFieldsMap<ChecklistItem> = {
+    ...normalSearchFields(['arName', 'enName']),
+    ...infoSearchFields(['statusInfo'])
+  };
 
   constructor() {
     super();

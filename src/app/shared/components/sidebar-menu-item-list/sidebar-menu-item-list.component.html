@@ -3,13 +3,14 @@
     <li [class.px-2]="level > 1" [@expendCollapse]="item.expand || _searchText.length ? 'expend' : 'collapse'"
         routerLinkActive="active"
         [class.expanded]="item.expand"
-        *ngIf="empService.checkPermissions(item.getPermissions(), true) && hasCustomPermissions(item)"
+        *ngIf="item.isAvailableToShow"
         [class.parent-menu-item]="!item.parent" [class.has-children]="item.children.length"
         class="sidebar-menu-item">
       <a class="d-none" [routerLink]="item.path"></a>
       <a href="#" [class.px-2]="level > 1" [class.justify-content-start]="level > 1"
          [class.justify-content-center]="level === 1" (click)="toggleCollapseOrNavigate(item , $event)"
-         class="d-flex flex-row align-items-center overflow-hidden">
+         class="d-flex flex-row align-items-center overflow-hidden position-relative"
+         [ngClass]="{'color:': !item.children.length}">
         <div class="sidebar-menu-icon d-flex  flex-grow-0 justify-content-center align-items-center">
           <div *ngIf="!item.parent">
             <div *ngIf="item.isSvg" [innerHTML]="item.safeSVG"

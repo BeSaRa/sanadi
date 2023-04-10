@@ -21,4 +21,11 @@ export class FileType extends SearchableCloneable<FileType> {
   getName() {
     return this[(this.langService?.map.lang + 'Name') as keyof INames] || '';
   }
+
+  ngSelectSearch(searchText: string): boolean {
+    if (!searchText) {
+      return true;
+    }
+    return this.getName().toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+  }
 }

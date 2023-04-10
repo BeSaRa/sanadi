@@ -3,7 +3,6 @@ import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {Certificate} from '@app/models/certificate';
 import {CertificateService} from '@app/services/certificate.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {IGridAction} from '@app/interfaces/i-grid-action';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
 import {SharedService} from '@app/services/shared.service';
@@ -14,6 +13,10 @@ import {of, Subject} from 'rxjs';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {TableComponent} from '@app/shared/components/table/table.component';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {SortEvent} from '@contracts/sort-event';
+import {CommonUtils} from '@helpers/common-utils';
+import {JobTitle} from '@models/job-title';
 
 @Component({
   selector: 'certificates',
@@ -21,34 +24,6 @@ import {TableComponent} from '@app/shared/components/table/table.component';
   styleUrls: ['./certificates.component.scss']
 })
 export class CertificatesComponent extends AdminGenericComponent<Certificate, CertificateService> {
-  actions: IMenuItem<Certificate>[] = [
-    {
-      type: 'action',
-      label: 'btn_reload',
-      icon: 'mdi-reload',
-      onClick: _ => this.reload$.next(null),
-    },
-    {
-      type: 'action',
-      label: 'btn_edit',
-      icon: 'mdi-pen',
-      onClick: (certificate) => this.edit$.next(certificate)
-    }
-  ];
-  @ViewChild('table') table!: TableComponent;
-  displayedColumns: string[] = ['documentTitle', 'status', 'actions'];
-
-  actionsList: IGridAction[] = [
-    {
-      langKey: 'btn_delete',
-      icon: 'mdi-close-box',
-      callback: ($event: MouseEvent) => {
-        this.deleteBulk($event);
-      }
-    }
-  ];
-  editTemplate$: Subject<Certificate> = new Subject<Certificate>();
-  commonStatusEnum = CommonStatusEnum;
 
   constructor(public lang: LangService,
               public service: CertificateService,
@@ -57,11 +32,48 @@ export class CertificatesComponent extends AdminGenericComponent<Certificate, Ce
               private toast: ToastService) {
     super();
   }
+  actions: IMenuItem<Certificate>[] = [
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item) => this.edit$.next(item)
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item) => this.delete(item)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_activate',
+      onClick: (item) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => !item.status
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_deactivate',
+      onClick: (item) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => item.status
+    }
+  ];
+  @ViewChild('table') table!: TableComponent;
+  displayedColumns: string[] = ['documentTitle', 'status', 'actions'];
 
-  ngOnInit(): void {
-    super.listenToReload();
-    super.listenToAdd();
-    this.listenToEdit();
+  sortingCallbacks = {
+    status: (a: Certificate, b: Certificate, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.getStatusText().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.getStatusText().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
   }
 
   get selectedRecords(): Certificate[] {
@@ -69,7 +81,7 @@ export class CertificatesComponent extends AdminGenericComponent<Certificate, Ce
   }
 
   listenToEdit(): void {
-    this.editTemplate$
+    this.edit$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
         return this.service.editTemplateDialog(model).pipe(catchError(_ => of(null)));
@@ -79,13 +91,8 @@ export class CertificatesComponent extends AdminGenericComponent<Certificate, Ce
       .subscribe(() => this.reload$.next(null));
   }
 
-  edit(certificate: Certificate, event: MouseEvent) {
-    event.preventDefault();
-    this.editTemplate$.next(certificate);
-  }
-
-  delete(event: MouseEvent, model: Certificate): void {
-    event.preventDefault();
+  delete(model: Certificate, event?: MouseEvent): void {
+    event?.preventDefault();
     // @ts-ignore
     const message = this.lang.map.msg_confirm_delete_x.change({x: model.documentTitle});
     this.dialogService.confirm(message)

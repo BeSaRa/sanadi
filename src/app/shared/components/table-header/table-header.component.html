@@ -1,4 +1,4 @@
-<div class="d-flex flex-row justify-content-start align-items-center bg-primary p-2 text-white">
+<div class="d-flex flex-row justify-content-start align-items-center bg-primary p-2 text-white {{headerClass}}">
   <h1 class="h6 my-1">{{tableTitle ? lang.map[tableTitle] : ''}}</h1>
   <div>
     <button [tooltip]="lang.map.btn_add"
@@ -12,11 +12,11 @@
       <i class="mdi {{actionIconsEnum.RELOAD}}"></i>
     </button>
   </div>
-  <div *ngIf="customTemplate">
+  <div *ngIf="customTemplate" class="">
     <ng-container *ngTemplateOutlet="customTemplate"></ng-container>
   </div>
-
   <div class="flex-grow-1"></div>
+
   <!-- Risk Status -->
   <div class="d-flex gap-3 risk-status">
     <div class="d-flex" *ngIf="selectedFilter">
@@ -47,7 +47,7 @@
   </div>
   <div class="vr" *ngIf="contentRef.children.length"></div>
 
-  <button (click)="clearSort()" [tooltip]="lang.map.clear_sorting" [ngClass]="{isDisabled: !hasSort}"
+  <button *ngIf="!skipClearSort" (click)="clearSort()" [tooltip]="lang.map.clear_sorting" [ngClass]="{isDisabled: !hasSort}"
           class="btn icon-btn">
     <i class="mdi mdi-sort-variant-remove"></i>
   </button>
@@ -61,7 +61,7 @@
           class="btn icon-btn">
     <i [ngClass]="{'mdi-filter': hasFilterCriteria(), 'mdi-filter-outline': !hasFilterCriteria()}" class="mdi"></i>
   </button>
-  <div class="position-relative">
+  <div class="position-relative" *ngIf="!skipSearch">
     <i class="mdi zoom-icon mdi-magnify position-absolute translate-middle-y top-50 start-0 ms-1"></i>
     <input [formControl]="filterControl" placeholder="{{lang.map.lbl_search}}"
            class="form-control form-control-sm px-4"/>

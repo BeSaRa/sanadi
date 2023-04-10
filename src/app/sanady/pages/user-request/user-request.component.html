@@ -11,7 +11,7 @@
   </div>
 </div>
 <form autocomplete="off" [formGroup]="form" id="form" (keydown.enter)="$event.preventDefault()">
-  <tabs-list class="py-4">
+  <tabs-list class="py-4" [hasForm]="true">
     <tab [name]="tabsData.personal.name" [hasError]="getTabInvalidStatus('personal')"
          [template]="personalInfo" [title]="langService.map.personal_info"></tab>
     <tab [name]="tabsData.address.name" [hasError]="getTabInvalidStatus('address')"
@@ -27,7 +27,8 @@
     <tab [name]="tabsData.requestStatus.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
          [hasError]="getTabInvalidStatus('requestStatus')"
          [template]="requestStatus" [title]="langService.map.request_status"></tab>
-    <tab [name]="tabsData.attachments.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
+    <tab [name]="tabsData.attachments.name" [hideIcon]="true"
+         *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
          [hasError]="getTabInvalidStatus('attachments')"
          [template]="attachmentsTabTemplate" [title]="langService.map.attachments"></tab>
   </tabs-list>
@@ -368,7 +369,8 @@
           <label for="employeer" class="form-label"
                  asteriskIfRequired="employeer">{{langService.map.employer}}</label>
           <input id="employeer" validationClasses="employeer" formControlName="employeer"
-                 maxlength="100" trimInput class="form-control" type="text" [readOnly]="!isEnquired || readOnly || isPartialRequest">
+                 maxlength="100" trimInput class="form-control" type="text"
+                 [readOnly]="!isEnquired || readOnly || isPartialRequest">
           <app-field-error-message controlName="employeer"></app-field-error-message>
         </div>
       </div>
@@ -392,14 +394,16 @@
           <label for="occuption" class="form-label"
                  asteriskIfRequired="occuption">{{langService.map.occupation}}</label>
           <input id="occuption" validationClasses="occuption" formControlName="occuption"
-                 maxlength="100" trimInput class="form-control" type="text" [readOnly]="!isEnquired || readOnly || isPartialRequest">
+                 maxlength="100" trimInput class="form-control" type="text"
+                 [readOnly]="!isEnquired || readOnly || isPartialRequest">
           <app-field-error-message controlName="occuption"></app-field-error-message>
         </div>
         <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isBeneficiaryWorking()">
           <label for="employeerAddress" class="form-label"
                  asteriskIfRequired="employeerAddress">{{langService.map.workplace}}</label>
           <input id="employeerAddress" validationClasses="employeerAddress" formControlName="employeerAddress"
-                 maxlength="512" trimInput class="form-control" type="text" [readOnly]="!isEnquired || readOnly || isPartialRequest">
+                 maxlength="512" trimInput class="form-control" type="text"
+                 [readOnly]="!isEnquired || readOnly || isPartialRequest">
           <app-field-error-message controlName="employeerAddress"></app-field-error-message>
         </div>
       </div>
@@ -565,7 +569,7 @@
                 </div>
               </div>
               <div class="col-md-3 col-sm-12 mb-4 position-relative"
-                   *ngIf="!currentRequest?.id && !!allowDataSharingField?.value">
+                   *ngIf="isDisclosureFileRequired()">
                 <file-uploader [showFileName]="true" [showFilePreview]="false"
                                labelKey="disclosure_document"
                                [allowedExtensions]="[fileExtensionsEnum.PDF]"

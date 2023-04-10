@@ -9,15 +9,15 @@
 </div>
 <div class="dialog-content" #dialogContent>
   <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
-    <div class="row mb-3">
-      <div class="col-sm-6 position-relative">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="documentTitle" for="documentTitle"
-               class="form-label">{{lang.map.document_title}}</label>
+               class="form-label">{{lang.map.attachment_type}}</label>
         <input id="documentTitle" validationClasses="documentTitle"
                formControlName="documentTitle" class="form-control" trimInput>
         <app-field-error-message controlName="documentTitle"></app-field-error-message>
       </div>
-      <div class="col-sm-6 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="description" for="description"
                class="form-label">{{lang.map.lbl_description}}</label>
         <input id="description" validationClasses="description"
@@ -26,7 +26,16 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label class="form-label" for="isPublished">{{lang.map.published}}</label>
+        <div class="form-check form-switch form-switch-container">
+          <input class="form-check-input" type="checkbox" id="isPublished"
+                 formControlName="isPublished">
+          <label
+            class="form-check-label">{{isPublished.value ? lang.map.lbl_yes : lang.map.lbl_no}}</label>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <file-uploader #fileUploaderComponent [labelKey]="'file'" [allowedExtensions]="allowedExtensions" [readonly]="readonly"
                        [isRequired]="true" (fileUploadEvent)="setAttachmentFile($event)"></file-uploader>
       </div>

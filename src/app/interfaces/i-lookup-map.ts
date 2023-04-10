@@ -132,6 +132,7 @@ export interface ILookupMap {
   TemplateType: Lookup[];
   TRAINING_ATTENDENCE_METHOD: Lookup[];
   TRAINING_AUDIENCE: Lookup[];
+  TRAINING_DOMAIN: Lookup[];
   TRAINING_JOB_TYPE: Lookup[];
   TRAINING_LANG: Lookup[];
   TRAINING_STATUS: Lookup[];

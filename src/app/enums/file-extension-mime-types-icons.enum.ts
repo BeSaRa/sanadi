@@ -9,7 +9,20 @@ export enum FileExtensionsEnum {
   PPTX = '.pptx',
   DOC = '.doc',
   DOCX = '.docx',
-  TIFF = '.tiff'
+  TIFF = '.tiff',
+  TIF = '.tif',
+  BMP = '.bmp',
+  TXT = '.txt',
+  OUTLOOK_MSG = '.msg',
+  RTF = '.rtf',
+  X_RTF = '.rtf',
+  CSV = '.csv',
+  GIF = '.gif',
+  XLS = '.xls',
+  XLSX = '.xlsx',
+  ZIP = '.zip',
+  MHT = '.mht',
+  DWG = '.dwg'
 }
 
 export enum FileMimeTypesEnum {
@@ -23,7 +36,20 @@ export enum FileMimeTypesEnum {
   PPTX = 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   DOC = 'application/msword',
   DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  TIFF = 'image/tiff'
+  TIFF = 'image/tiff',
+  TIF = 'image/tiff',
+  BMP = 'image/bmp',
+  TXT = 'text/plain',
+  OUTLOOK_MSG = 'application/vnd.ms-outlook',
+  RTF = 'application/rtf',
+  X_RTF = 'application/x-rtf',
+  CSV = 'text/csv',
+  GIF = 'image/gif',
+  XLS = 'application/vnd.ms-excel',
+  XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  ZIP = 'application/zip',
+  MHT = 'multipart/related',
+  DWG  = 'application/acad'
 }
 
 export enum FileIconsEnum {
@@ -42,5 +68,18 @@ export enum FileIconsEnum {
   PPTX = 'mdi-file-powerpoint-outline',
   DOC = 'mdi-file-word-box',
   DOCX = 'mdi-file-word-box',
-  TIFF = 'mdi-file-image-outline'
+  TIFF = 'mdi-file-image-outline',
+  TIF = 'mdi-file-image-outline',
+  BMP = 'mdi-file-image-outline',
+  TXT = 'mdi-file-image-outline',
+  OUTLOOK_MSG = 'mdi-microsoft-outlook',
+  RTF = 'mdi-file-image-outline',
+  X_RTF = 'mdi-file-image-outline',
+  CSV = 'mdi-file-delimited-outline',
+  GIF = 'mdi-file-gif-box',
+  XLS = 'mdi-file-excel-box',
+  XLSX = 'mdi-file-excel-box',
+  ZIP = 'mdi-zip-box',
+  MHT = 'mdi-file-outline',
+  DWG = 'mdi-file-cad-box'
 }

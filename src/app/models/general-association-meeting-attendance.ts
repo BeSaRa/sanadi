@@ -57,6 +57,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   year!: number;
   isSendToMember!: boolean;
   organizationId!: number;
+  npoApproved!: boolean;
   generalAssociationMembers: GeneralAssociationExternalMember[] = [];
   administrativeBoardMembers: GeneralAssociationExternalMember[] = [];
   internalMembersDTO: GeneralAssociationInternalMember[] = [];
@@ -149,7 +150,9 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   isDecisionMakerReviewStep(): boolean {
     return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.DECISION_MAKER_REVIEW;
   }
-
+  isDecisionMakerReworkStep(): boolean {
+    return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.DECISION_MAKER_REWORK;
+  }
   isManagerFinalReviewStep(): boolean {
     return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.MANAGER_FINAL_REVIEW;
   }

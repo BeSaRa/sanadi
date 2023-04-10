@@ -4,13 +4,17 @@ import {IDialogData} from '@contracts/i-dialog-data';
 import {FileNetDocument} from '@app/models/file-net-document';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {FormBuilder, FormGroup, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {AdminResult} from '@app/models/admin-result';
 import {CommonUtils} from '@helpers/common-utils';
-import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {FileUploaderComponent} from '@app/shared/components/file-uploader/file-uploader.component';
+import {GlobalSettingsService} from '@app/services/global-settings.service';
+import {map} from 'rxjs/operators';
+import {GlobalSettings} from '@app/models/global-settings';
+import {DialogService} from '@app/services/dialog.service';
+import {EmployeeService} from '@services/employee.service';
 
 @Component({
   selector: 'other-attachment-details-popup',
@@ -23,7 +27,11 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
   form!: FormGroup;
   validateFieldsVisible: boolean = true;
   saveVisible: boolean = true;
-  allowedExtensions: string[] = [FileExtensionsEnum.PDF];
+
+  globalSettings: GlobalSettings = this.globalSettingsService.getGlobalSettings();
+  allowedExtensions: string[] = [];
+  allowedFileMaxSize: number = this.globalSettings.fileSize;
+
   attachmentFile?: File;
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
@@ -33,13 +41,27 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
               public lang: LangService,
               private fb: FormBuilder,
               private cd: ChangeDetectorRef,
-              public dialogRef: DialogRef) {
+              public dialogRef: DialogRef,
+              private globalSettingsService: GlobalSettingsService,
+              private employeeService: EmployeeService,
+              private dialog: DialogService) {
     this.model = data.model;
     this.operation = data.operation;
   }
 
   ngOnInit() {
+    this.setAllowedFiles();
     this._buildForm(true);
+  }
+
+  setAllowedFiles() {
+    this.globalSettingsService.getAllowedFileTypes()
+      .pipe(
+        map(fileTypes => fileTypes.map(fileType => '.' + (fileType.extension ?? '').toLowerCase()))
+      )
+      .subscribe(list => {
+        this.allowedExtensions = list
+      })
   }
 
   ngAfterViewInit() {
@@ -100,32 +122,58 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
     } else {
       this.attachmentFile = file[0];
     }
+
+    const validFileSize = file ? (this.attachmentFile!.size <= this.allowedFileMaxSize * 1000 * 1024) : true;
+    !validFileSize ? this.attachmentFile = undefined : null;
+    if (!validFileSize) {
+      this.dialog.error(this.lang.map.msg_only_this_file_size_or_less_allowed_to_upload.change({size: this.allowedFileMaxSize}));
+      this.attachmentFile = undefined
+      return;
+    }
+  }
+
+  get isPublished(): AbstractControl {
+    return this.form.get('isPublished') as AbstractControl;
+  }
+
+  private canChangePublished(): boolean {
+    if (this.readonly || this.employeeService.isExternalUser()) {
+      return false;
+    }
+    return !this.model.id;
   }
 
   private _buildForm(controls: boolean = false): void {
-    const {description, documentTitle} = this.model;
+    const {description, documentTitle, isPublished} = this.model;
     this.form = this.fb.group({
       documentTitle: controls ? [documentTitle, [CustomValidators.required, CustomValidators.maxLength(200)]] : documentTitle,
-      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(500)]] : description
+      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(500)]] : description,
+      isPublished: controls ? [{
+        value: this.employeeService.isExternalUser() ? true : isPublished,
+        disabled: !this.canChangePublished()
+      }] : isPublished
     });
   }
 
   private _createOtherAttachment(): FileNetDocument {
+    const value = this.form.getRawValue();
     return new FileNetDocument().clone({
       ...this.model,
-      description: this.form.value.description,
-      documentTitle: this.form.value.documentTitle,
+      description: value.description,
+      documentTitle: value.documentTitle,
       attachmentTypeStatus: true,
       attachmentTypeId: -1,
+      isPublished: value.isPublished,
       attachmentTypeInfo: this._createOtherLookup(),
     });
   }
 
   private _updateOtherAttachment(): FileNetDocument {
+    const value = this.form.getRawValue();
     return new FileNetDocument().clone({
       ...this.model,
-      description: this.form.value.description,
-      documentTitle: this.form.value.documentTitle
+      description: value.description,
+      documentTitle: value.documentTitle
     });
   }
 

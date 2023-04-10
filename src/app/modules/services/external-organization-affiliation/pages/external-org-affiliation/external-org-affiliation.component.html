@@ -1,0 +1,463 @@
+<div class="row">
+  <form autocomplete="off" [formGroup]="form" id="form">
+    <tabs-list [accordionView]="accordionView" [hasForm]="true">
+      <tab
+        [name]="tabsData.basicInfo.name"
+        [template]="basic_info"
+        [title]="lang.map.lbl_basic_info"
+        [hasError]="getTabInvalidStatus('basicInfo')"
+      >
+      </tab>
+      <tab
+        [name]="tabsData.bankAccounts.name"
+        [template]="bank_accounts"
+        [title]="lang.map.bank_accounts"
+        [hasError]="getTabInvalidStatus('bankAccounts')"
+      >
+      </tab>
+      <tab
+        [name]="tabsData.managers.name"
+        [template]="executive_management"
+        [title]="lang.map.executive_management"
+        [hasError]="getTabInvalidStatus('managers')"
+      >
+      </tab>
+      <tab
+        [name]="tabsData.contactOfficer.name"
+        [template]="contact_officer"
+        [title]="lang.map.contact_officers"
+        [hasError]="getTabInvalidStatus('contactOfficer')"
+      >
+      </tab>
+      <tab
+        [hasError]="getTabInvalidStatus('specialExplanation')"
+        [name]="tabsData.specialExplanation.name"
+        [template]="special_explanations"
+        [title]="lang.map.special_explanations"
+      ></tab>
+      <tab
+        [name]="tabsData.attachments.name" [hideIcon]="true"
+        *ngIf="!accordionView"
+        [template]="attachmentsTab"
+        [title]="lang.map.attachments"
+        [hasError]="getTabInvalidStatus('attachments')"
+      ></tab>
+    </tabs-list>
+    <ng-template #basic_info>
+      <div formGroupName="basicInfo" class="row">
+        <!-- Request Type -->
+        <div class="col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="requestType"
+            for="requestType"
+            class="form-label"
+            >{{ lang.map.request_type }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="requestType"
+            [clearable]="true"
+            placeholder="{{ lang.map.select }}"
+            id="requestType"
+            [readonly]="readonly"
+            (change)="handleRequestTypeChange($event, true)"
+            [notFoundText]="lang.map.msg_not_found"
+            appendTo="body"
+            validationClasses="requestType"
+            formControlName="requestType"
+          >
+            <ng-option
+              *ngFor="let type of AffiliationRequestType"
+              [value]="type.lookupKey"
+              >{{ type.getName() }}</ng-option
+            >
+          </ng-select>
+          <app-field-error-message
+            controlName="requestType"
+          ></app-field-error-message>
+        </div>
+        <!-- category -->
+        <div class="col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="category"
+            for="category"
+            class="form-label"
+            >{{ lang.map.lbl_entity_classification }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="category"
+            [clearable]="true"
+            placeholder="{{ lang.map.select }}"
+            id="category"
+            [readonly]="isCancelRequestType() || readonly"
+            [notFoundText]="lang.map.msg_not_found"
+            appendTo="body"
+            validationClasses="category"
+            formControlName="category"
+          >
+            <ng-option
+              *ngFor="let type of AffiliationCategory"
+              [value]="type.lookupKey"
+              >{{ type.getName() }}</ng-option
+            >
+          </ng-select>
+          <app-field-error-message
+            controlName="category"
+          ></app-field-error-message>
+        </div>
+        <!-- License Number -->
+        <div class="col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="oldLicenseFullSerial" for="oldLicenseFullSerial"
+                  class="form-label">{{lang.map.license_number}}</label>
+          <div class="input-group">
+            <input (keydown.enter)="isEditOrCancel()"
+                    formControlName="oldLicenseFullSerial"
+                    [readonly]="!isEditOrCancel() || readonly"
+                    type="text" validationClasses="oldLicenseFullSerial" class="form-control"
+                    id="oldLicenseFullSerial" trimInput>
+            <button *ngIf="isEditOrCancel() && !readonly" type="button" (click)="licenseSearch($event)"
+                    class="input-group-text">
+              <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+          </div>
+        </div>
+        <!-- ar name -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="arName" for="arName" class="form-label">{{
+            lang.map.lbl_arabic_name
+          }}</label>
+          <input
+            id="arName"
+            formControlName="arName"
+            [readonly]="isCancelRequestType() || readonly"
+            validationClasses="arName"
+            class="form-control"
+          />
+          <app-field-error-message
+            controlName="arName"
+          ></app-field-error-message>
+        </div>
+        <!-- en name -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="enName" for="enName" class="form-label">{{
+            lang.map.lbl_english_name
+          }}</label>
+          <input
+            id="enName"
+            formControlName="enName"
+            [readonly]="isCancelRequestType() || readonly"
+            validationClasses="enName"
+            class="form-control"
+          />
+          <app-field-error-message
+            controlName="enName"
+          ></app-field-error-message>
+        </div>
+        <!-- E-mail -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="email" for="email" class="form-label">{{
+            lang.map.lbl_email
+          }}</label>
+          <input
+            id="email"
+            formControlName="email"
+            validationClasses="email"
+            [readonly]="isCancelRequestType() || readonly"
+            class="form-control"
+          />
+          <app-field-error-message
+            controlName="email"
+          ></app-field-error-message>
+        </div>
+        <!-- Country -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="country"
+            for="country"
+            class="form-label"
+            >{{ lang.map.country }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="country"
+            [clearable]="true"
+            placeholder="{{ lang.map.select }}"
+            [readonly]="isCancelRequestType() || readonly"
+            id="country"
+            [notFoundText]="lang.map.msg_not_found"
+            appendTo="body"
+            validationClasses="country"
+            formControlName="country"
+          >
+            <ng-option
+              [value]="option.id"
+              *ngFor="let option of countriesList"
+              >{{ option.getName() }}</ng-option
+            >
+          </ng-select>
+          <app-field-error-message
+            controlName="country"
+          ></app-field-error-message>
+        </div>
+        <!-- City -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="city" for="city" class="form-label">{{
+            lang.map.city
+          }}</label>
+          <input
+            type="text"
+            validationClasses="city"
+            [readonly]="isCancelRequestType() || readonly"
+            trimInput
+            class="form-control"
+            id="city"
+            formControlName="city"
+          />
+          <app-field-error-message controlName="city"></app-field-error-message>
+        </div>
+        <!-- Phone -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="phone" for="phone" class="form-label">{{
+            lang.map.lbl_phone
+          }}</label>
+          <input
+            type="text"
+            validationClasses="phone"
+            [readonly]="isCancelRequestType() || readonly"
+            trimInput
+            class="form-control"
+            id="phone"
+            formControlName="phone"
+          />
+          <app-field-error-message controlName="phone"></app-field-error-message>
+        </div>
+        <!-- Fax Number -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="fax" for="fax" class="form-label">{{
+            lang.map.fax_number
+          }}</label>
+          <input
+            type="text"
+            validationClasses="fax"
+            [readonly]="isCancelRequestType() || readonly"
+            trimInput
+            class="form-control"
+            id="fax"
+            formControlName="fax"
+          />
+          <app-field-error-message controlName="fax"></app-field-error-message>
+        </div>
+        <!-- Website -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="website"
+            for="website"
+            class="form-label"
+            >{{ lang.map.website }}</label
+          >
+          <input
+            type="text"
+            validationClasses="website"
+            class="form-control"
+            [readonly]="isCancelRequestType() || readonly"
+            trimInput
+            id="website"
+            formControlName="website"
+          />
+          <app-field-error-message
+            controlName="website"
+          ></app-field-error-message>
+        </div>
+        <!-- P.O.box -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="mailBox"
+            for="mailBox"
+            class="form-label"
+            >{{ lang.map.lbl_po_box_num }}</label
+          >
+          <input
+            type="text"
+            validationClasses="mailBox"
+            class="form-control"
+            [readonly]="isCancelRequestType() || readonly"
+            trimInput
+            id="mailBox"
+            formControlName="mailBox"
+          />
+          <app-field-error-message
+            controlName="mailBox"
+          ></app-field-error-message>
+        </div>
+        <!-- Introduction -->
+        <div class="mb-4 position-relative">
+          <label for="introduction" class="form-label"
+          asteriskIfRequired="introduction"
+          >{{
+            lang.map.lbl_introduction
+          }}</label>
+          <textarea
+            id="introduction"
+            validationClasses="introduction"
+            [readonly]="isCancelRequestType() || readonly"
+            trimInput
+            formControlName="introduction"
+            class="form-control"
+          ></textarea>
+          <app-field-error-message
+            controlName="introduction"
+          ></app-field-error-message>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #bank_accounts>
+      <bank-account
+        #bankAccountsTab
+        [caseType]="model?.caseType"
+        [countriesList]="countriesList"
+        [list]="model?.bankAccountDTOs || []"
+        [readonly]="isCancelRequestType() || readonly"
+        (readyEvent)="bankDetailsTabStatus = $event"
+      ></bank-account>
+    </ng-template>
+    <ng-template #executive_management>
+      <executive-management [hidePassport]="true"
+        #managersTab
+        [nationalities]="nationalities"
+        [list]="model?.executiveManagementDTOs || []"
+        [readonly]="isCancelRequestType() || readonly"
+        (readyEvent)="managersTabStatus = $event"
+      ></executive-management>
+    </ng-template>
+    <ng-template #contact_officer>
+      <div formGroupName="contactOfficer" class="row">
+        <!-- Arabic Name -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="arabicName"
+            for="arabicName"
+            class="form-label"
+            >{{ lang.map.lbl_arabic_name }}</label
+          >
+          <input
+            type="text"
+            validationClasses="arabicName"
+            formControlName="arabicName"
+            trimInput
+            [readonly]="isCancelRequestType() || readonly"
+            class="form-control"
+            id="arabicName"
+          />
+          <app-field-error-message
+            controlName="arabicName"
+          ></app-field-error-message>
+        </div>
+        <!-- English Name -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="englishName"
+            for="englishName"
+            class="form-label"
+            >{{ lang.map.english_name }}</label
+          >
+          <input
+            type="text"
+            validationClasses="englishName"
+            formControlName="englishName"
+            [readonly]="isCancelRequestType() || readonly"
+            trimInput
+            class="form-control"
+            id="englishName"
+          />
+          <app-field-error-message
+            controlName="englishName"
+          ></app-field-error-message>
+        </div>
+        <!-- Phone -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="phone" for="phone" class="form-label">{{
+            lang.map.lbl_phone
+          }}</label>
+          <input
+            type="text"
+            validationClasses="phone"
+            formControlName="phone"
+            [readonly]="isCancelRequestType() || readonly"
+            trimInput
+            class="form-control"
+            id="phone"
+          />
+          <app-field-error-message
+            controlName="phone"
+          ></app-field-error-message>
+        </div>
+        <!-- Mobile Number -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="mobileNo"
+            for="mobileNo"
+            class="form-label"
+            >{{ lang.map.mobile_number }}</label
+          >
+          <input
+            type="text"
+            validationClasses="mobileNo"
+            formControlName="mobileNo"
+            [readonly]="isCancelRequestType() || readonly"
+            trimInput
+            class="form-control"
+            id="mobileNo"
+          />
+          <app-field-error-message
+            controlName="mobileNo"
+          ></app-field-error-message>
+        </div>
+        <!-- Email -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="email" for="email" class="form-label">{{
+            lang.map.lbl_email
+          }}</label>
+          <input
+            type="text"
+            formControlName="email"
+            validationClasses="email"
+            [readonly]="isCancelRequestType() || readonly"
+            trimInput
+            class="form-control"
+            id="email"
+          />
+          <app-field-error-message
+            controlName="email"
+          ></app-field-error-message>
+        </div>
+      </div>
+    </ng-template>
+    <ng-container formGroupName="explanation">
+      <ng-template #special_explanations>
+          <div class="mb-4 position-relative">
+            <label for="description" class="form-label"
+          asteriskIfRequired="description"
+          >{{
+              lang.map.special_explanations
+            }}</label>
+            <textarea
+              id="description"
+              validationClasses="description"
+              trimInput
+              [readonly]="readonly"
+              formControlName="description"
+              class="form-control"
+            ></textarea>
+            <app-field-error-message
+              controlName="description"
+            ></app-field-error-message>
+          </div>
+      </ng-template>
+    </ng-container>
+    <ng-template #attachmentsTab>
+      <attachments [caseId]="model?.id" [caseType]="model?.caseType" [model]="model"
+      [service]="service.documentService" [formProperties]="formProperties"></attachments>
+    </ng-template>
+  </form>
+</div>

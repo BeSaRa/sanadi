@@ -7,6 +7,7 @@ import {ImplementationFundraising} from '@models/implementation-fundraising';
 import {ImplementationTemplateInterceptor} from '@model-interceptors/implementation-template-interceptor';
 import {ImplementingAgencyInterceptor} from '@model-interceptors/implementing-agency-interceptor';
 import {ImplementationFundraisingInterceptor} from '@model-interceptors/implementation-fundraising-interceptor';
+import {DateUtils} from "@helpers/date-utils";
 
 const implementationTemplateInterceptor = new ImplementationTemplateInterceptor();
 const implementingAgencyInterceptor = new ImplementingAgencyInterceptor();
@@ -50,7 +51,7 @@ export class ProjectImplementationInterceptor implements IModelInterceptor<Proje
     model.implementationTemplate = (model.implementationTemplate ?? []).map((item) => implementationTemplateInterceptor.receive(new ImplementationTemplate().clone(item)));
     model.implementingAgencyList = (model.implementingAgencyList ?? []).map((item) => implementingAgencyInterceptor.receive(new ImplementingAgency().clone(item)));
     model.implementationFundraising = (model.implementationFundraising ?? []).map((item) => implementationFundraisingInterceptor.receive(new ImplementationFundraising().clone(item)));
-
+    model.licenseStartDate = model.licenseStartDate ? DateUtils.changeDateToDatepicker(model.licenseStartDate) as unknown as string : model.licenseStartDate;
     return model;
   }
 }

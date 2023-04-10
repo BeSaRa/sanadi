@@ -13,8 +13,6 @@ import {Team} from '@app/models/team';
 import {InternalUser} from '@app/models/internal-user';
 import {InternalUserService} from '@app/services/internal-user.service';
 import {DialogService} from '@app/services/dialog.service';
-import {Lookup} from '@app/models/lookup';
-import {LookupService} from '@app/services/lookup.service';
 import {ToastService} from '@app/services/toast.service';
 import {catchError, switchMap, takeUntil} from 'rxjs/operators';
 import {IKeyValue} from '@app/interfaces/i-key-value';
@@ -27,12 +25,10 @@ import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enu
   templateUrl: './internal-department-popup.component.html',
   styleUrls: ['./internal-department-popup.component.scss']
 })
-export class InternalDepartmentPopupComponent extends AdminGenericDialog<InternalDepartment> implements AfterViewInit{
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
+export class InternalDepartmentPopupComponent extends AdminGenericDialog<InternalDepartment> implements AfterViewInit {
   form!: UntypedFormGroup;
   model!: InternalDepartment;
   operation!: OperationTypes;
-  operationTypes = OperationTypes;
   teams: Team[] = [];
   internalUsers: InternalUser[] = [];
   saveVisible = true;
@@ -49,17 +45,15 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
   teamInfo!: Team;
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
-  constructor(
-    public dialogRef: DialogRef,
-    public fb: UntypedFormBuilder,
-    public lang: LangService,
-    private cd: ChangeDetectorRef,
-    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InternalDepartment>,
-    private teamService: TeamService,
-    private internalUserService: InternalUserService,
-    private dialogService: DialogService,
-    private lookupService: LookupService,
-    private toast: ToastService) {
+  constructor(public dialogRef: DialogRef,
+              public fb: UntypedFormBuilder,
+              public lang: LangService,
+              private cd: ChangeDetectorRef,
+              @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InternalDepartment>,
+              private teamService: TeamService,
+              private internalUserService: InternalUserService,
+              private dialogService: DialogService,
+              private toast: ToastService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -205,8 +199,9 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
   destroyPopup(): void {
     this.blob.dispose();
   };
+
   get popupTitle(): string {
-    if (this.operation === OperationTypes.CREATE){
+    if (this.operation === OperationTypes.CREATE) {
       return this.lang.map.add_new_internal_department;
     } else if (this.operation === OperationTypes.UPDATE) {
       return this.lang.map.edit_internal_department;

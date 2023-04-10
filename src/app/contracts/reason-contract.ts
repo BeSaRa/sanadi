@@ -3,4 +3,6 @@ export interface ReasonContract {
   reasonLabel: string
   saveBtn: string
   required: boolean
+  reason?: string
+  view?: boolean
 }

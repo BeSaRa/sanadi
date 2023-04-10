@@ -1,11 +1,11 @@
-<div class="row pb-3">
+<!-- <div class="row pb-3">
   <app-page-header [customTemplate]="headerTemplate"></app-page-header>
   <ng-container>
     <app-grid-search (searchTextEvent)="filterRecords($event)"></app-grid-search>
   </ng-container>
-</div>
+</div> -->
 
-<ng-template #headerTemplate>
+<!-- <ng-template #headerTemplate>
   <div class="align-items-center">
     <h1 class="h6 text-primary m-0 d-inline-block">{{ lang.map.menu_admin_lookups }}</h1>
     <button class="btn btn-link outline-none" tooltip="{{ lang.map.btn_add }}" (click)="addCallback()">
@@ -15,7 +15,7 @@
       <i class="mdi mdi-reload"></i>
     </button>
   </div>
-</ng-template>
+</ng-template> -->
 
 <tabs-list (onTabChange)="tabChanged($event)">
   <tab [name]="tabsData.workField.name" [template]="workFieldTemplate" *ngIf="canShowTab(tabsData.workField)"
@@ -70,7 +70,7 @@
 </ng-template>
 <ng-template #activityTypeTemplate>
   <admin-lookup-list #activityTypeListComponent [adminLookupTypeId]="adminLookupTypeEnum.ACTIVITY_TYPE"
-    (onReady)="setLookupComponentMap($event, activityTypeListComponent)">
+    (onReady)="setLookupComponentMap($event, activityTypeListComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #templateIndicatorTemplate>
@@ -80,7 +80,7 @@
 </ng-template>
 <ng-template #exitMechanismTemplate>
   <admin-lookup-list #exitMechanismListComponent [adminLookupTypeId]="adminLookupTypeEnum.EXIT_MECHANISM"
-    (onReady)="setLookupComponentMap($event, exitMechanismListComponent)">
+    (onReady)="setLookupComponentMap($event, exitMechanismListComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #byLawsClassificationTemplate>
@@ -95,23 +95,23 @@
 </ng-template>
 <ng-template #riskClassificationTemplate>
   <admin-lookup-list #riskClassificationComponent [adminLookupTypeId]="adminLookupTypeEnum.RISK_CLASSIFICATION"
-    (onReady)="setLookupComponentMap($event, riskClassificationComponent)">
+    (onReady)="setLookupComponentMap($event, riskClassificationComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #coordinationAndSupportClassificationTemplate>
   <admin-lookup-list #coordinationAndSupportClassificationComponent
     [adminLookupTypeId]="adminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION"
-    (onReady)="setLookupComponentMap($event, coordinationAndSupportClassificationComponent)">
+    (onReady)="setLookupComponentMap($event, coordinationAndSupportClassificationComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #resolutionsIssuedTemplate>
   <admin-lookup-list #resolutionsIssuedComponent [adminLookupTypeId]="adminLookupTypeEnum.RESOLUTIONS_ISSUED"
-    (onReady)="setLookupComponentMap($event, resolutionsIssuedComponent)">
+    (onReady)="setLookupComponentMap($event, resolutionsIssuedComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #penaltiesDecisionsTemplate>
   <admin-lookup-list #penaltiesDecisionsComponent [adminLookupTypeId]="adminLookupTypeEnum.PENALTIES_DECISION"
-    (onReady)="setLookupComponentMap($event, penaltiesDecisionsComponent)">
+    (onReady)="setLookupComponentMap($event, penaltiesDecisionsComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #generalProcessClassificationTemplate>

@@ -5,11 +5,12 @@ import {ServicesSearchRoutingModule} from './services-search-routing.module';
 import {ServicesSearchComponent} from './services-search.component';
 import {SharedModule} from '../shared/shared.module';
 import {FormlyModule} from '@ngx-formly/core';
-import {FormlyFieldWrapperComponent} from './components/formly-field-wrapper/formly-field-wrapper.component';
-import {FormlyFieldFullWrapperComponent} from './components/formly-field-full-wrapper/formly-field-full-wrapper.component';
-import {FormlyDateFieldComponent} from './components/formly-date-field/formly-date-field.component';
-import {FormlySelectFieldComponent} from './components/formly-select-field/formly-select-field.component';
+import { FormlyDateFieldComponent } from './components/formly-date-field/formly-date-field.component';
+import { FormlySelectFieldComponent } from './components/formly-select-field/formly-select-field.component';
 import { FormlyMaskInputFieldComponent } from './components/formly-mask-input-field/formly-mask-input-field.component';
+import { FormlyFieldWrapperComponent } from './components/formly-field-wrapper/formly-field-wrapper.component';
+import { FormlyFieldFullWrapperComponent } from './components/formly-field-full-wrapper/formly-field-full-wrapper.component';
+
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { FormlyMaskInputFieldComponent } from './components/formly-mask-input-fi
     FormlyDateFieldComponent,
     FormlySelectFieldComponent,
     FormlyMaskInputFieldComponent
+
   ],
   imports: [
     CommonModule,

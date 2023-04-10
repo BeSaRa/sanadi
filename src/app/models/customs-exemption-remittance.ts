@@ -17,8 +17,9 @@ import {InterceptModel} from '@decorators/intercept-model';
 import {CustomsExemptionRemittanceInterceptor} from '@app/model-interceptors/customs-exemption-remittance-interceptor';
 
 const _ApprovalDocument = mixinRequestType(CaseModel);
-const { send, receive } = new CustomsExemptionRemittanceInterceptor();
-@InterceptModel({ send, receive })
+const {send, receive} = new CustomsExemptionRemittanceInterceptor();
+
+@InterceptModel({send, receive})
 export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExemptionRemittanceService, CustomsExemptionRemittance> implements HasRequestType {
   service: CustomsExemptionRemittanceService;
   id!: string;
@@ -110,7 +111,7 @@ export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExempti
       waybill,
       shipmentPort,
       linkedProject,
-      projectLicense,
+      // projectLicense,
       projectName,
       country,
       zoneNumber,
@@ -139,8 +140,8 @@ export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExempti
       waybill: controls ? [waybill, [CustomValidators.required, CustomValidators.maxLength(200)]] : waybill,
       shipmentPort: controls ? [shipmentPort, [CustomValidators.required, CustomValidators.maxLength(200)]] : shipmentPort,
       linkedProject: controls ? [linkedProject, [CustomValidators.required]] : linkedProject,
-      projectLicense: controls ? [projectLicense, CustomValidators.maxLength(50)] : projectLicense,
-      projectName: controls ? [projectName] : projectName,
+      // projectLicense: controls ? [projectLicense, CustomValidators.maxLength(50)] : projectLicense,
+      projectName: controls ? [projectName, [CustomValidators.maxLength(50)]] : projectName,
       country: controls ? [country, [CustomValidators.required]] : country,
       zoneNumber: controls ? [zoneNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : zoneNumber,
       receiverType: controls ? [receiverType, [CustomValidators.required]] : receiverType,

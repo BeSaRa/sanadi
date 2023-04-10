@@ -1,12 +1,21 @@
-import { AwarenessActivitySuggestionComponent } from './../../../modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
-import { AwarenessActivitySuggestion } from '@models/awareness-activity-suggestion';
-import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
-import { IGeneralAssociationMeetingAttendanceSpecialActions } from '@contracts/i-general-association-meeting-attendance-special-actions';
-import { IGeneralAssociationMeetingAttendanceApprove } from '@contracts/i-general-association-meeting-attendance-approve';
-import { IGeneralAssociationMeetingAttendanceComponent } from '@contracts/i-general-association-meeting-attendance-component';
-import { IGeneralAssociationMeetingAttendanceComplete } from '@contracts/i-general-association-meeting-attendance-complete';
-import { ITransferFundsAbroadComponent } from '@contracts/i-transfer-funds-abroad-component';
-import { ITransferIndividualFundsAbroadComplete } from '@contracts/i-transfer-individual-funds-abroad-complete';
+import {GeneralAssociationMeetingAttendance} from '@models/general-association-meeting-attendance';
+import {
+  AwarenessActivitySuggestionComponent
+} from '@modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
+import {AwarenessActivitySuggestion} from '@models/awareness-activity-suggestion';
+import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
+import {
+  IGeneralAssociationMeetingAttendanceSpecialActions
+} from '@contracts/i-general-association-meeting-attendance-special-actions';
+import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
+import {
+  IGeneralAssociationMeetingAttendanceComponent
+} from '@contracts/i-general-association-meeting-attendance-component';
+import {
+  IGeneralAssociationMeetingAttendanceComplete
+} from '@contracts/i-general-association-meeting-attendance-complete';
+import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
+import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
 
 import {
   AfterViewInit,
@@ -20,36 +29,42 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DynamicComponentService } from '@app/services/dynamic-component.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { LangService } from '@app/services/lang.service';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { CaseModel } from '@app/models/case-model';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { IOpenedInfo } from '@app/interfaces/i-opened-info';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { WFActions } from '@app/enums/wfactions.enum';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ToastService } from '@app/services/toast.service';
-import { InboxService } from '@app/services/inbox.service';
-import { isObservable, merge, Observable, of, Subject } from 'rxjs';
-import { filter, ignoreElements, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { IESComponent } from '@app/interfaces/iescomponent';
-import { ExternalUser } from '@app/models/external-user';
-import { InternalUser } from '@app/models/internal-user';
-import { ChecklistItem } from '@app/models/checklist-item';
-import { StepCheckListComponent } from '@app/shared/components/step-check-list/step-check-list.component';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { IGeneralAssociationMeetingAttendanceFinalApprove } from '@contracts/i-general-association-meeting-attendance-final-approve';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DynamicComponentService} from '@app/services/dynamic-component.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {LangService} from '@app/services/lang.service';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {CaseModel} from '@app/models/case-model';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {IOpenedInfo} from '@app/interfaces/i-opened-info';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {WFActions} from '@app/enums/wfactions.enum';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ToastService} from '@app/services/toast.service';
+import {InboxService} from '@app/services/inbox.service';
+import {isObservable, merge, Observable, of, Subject} from 'rxjs';
+import {filter, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {IESComponent} from '@app/interfaces/iescomponent';
+import {ExternalUser} from '@app/models/external-user';
+import {InternalUser} from '@app/models/internal-user';
+import {ChecklistItem} from '@app/models/checklist-item';
+import {StepCheckListComponent} from '@app/shared/components/step-check-list/step-check-list.component';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {
+  IGeneralAssociationMeetingAttendanceFinalApprove
+} from '@contracts/i-general-association-meeting-attendance-final-approve';
+import {ProjectImplementation} from '@models/project-implementation';
+import {CommonUtils} from '@helpers/common-utils';
+import {CharityViewButtonsGroupEnum} from '@app/enums/charity-view-buttons-group-enum';
+import {UrgentInterventionLicenseFollowup} from '@models/urgent-intervention-license-followup';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -61,13 +76,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
 
   constructor(private route: ActivatedRoute,
-    private injector: Injector,
-    private employeeService: EmployeeService,
-    public lang: LangService,
-    private router: Router,
-    private toast: ToastService,
-    private appRef: ApplicationRef,
-    private inboxService: InboxService) {
+              private injector: Injector,
+              private employeeService: EmployeeService,
+              public lang: LangService,
+              private router: Router,
+              private toast: ToastService,
+              private appRef: ApplicationRef,
+              private inboxService: InboxService) {
     this.render = this.route.snapshot.data.render as string;
     if (!this.render) {
       throw Error(`Please Provide render property in this route ${route.snapshot.url}`);
@@ -81,16 +96,18 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private readonly render: string;
   private componentRef!: ComponentRef<EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<any>>>;
-  @ViewChild('internalContainer', { read: ViewContainerRef })
+  @ViewChild('internalContainer', {read: ViewContainerRef})
   internalContainer!: ViewContainerRef;
 
-  @ViewChild('externalContainer', { read: ViewContainerRef })
+  @ViewChild('externalContainer', {read: ViewContainerRef})
   externalContainer!: ViewContainerRef;
 
   @ViewChild(StepCheckListComponent)
   checklistComponent!: StepCheckListComponent;
 
   actions: IMenuItem<CaseModel<any, any>>[] = [];
+  groupedActions?: Map<CharityViewButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]>;
+  charityViewButtonsGroupEnum = CharityViewButtonsGroupEnum;
   service!: BaseGenericEService<CaseModel<any, any>>;
   model?: CaseModel<any, any>;
   component!: EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<CaseModel<any, any>>>;
@@ -151,7 +168,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   finalApproveByMatrixServices: number[] = [
     CaseTypes.INTERNAL_PROJECT_LICENSE,
     CaseTypes.URGENT_INTERVENTION_LICENSING,
-    CaseTypes.PROJECT_FUNDRAISING
+    CaseTypes.PROJECT_FUNDRAISING,
+    CaseTypes.FINANCIAL_TRANSFERS_LICENSING
   ];
 
   canShowMatrixNotification: boolean = false;
@@ -274,9 +292,20 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return (this.component.form.invalid || item?.alreadyStarted()) && !this.canSave();
         },
         show: (item) => {
-          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
+          if (item.isCancelled() || this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
             return false;
           }
+
+          if (item.caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
+            if (this.model?.caseStatus === CommonCaseStatus.DRAFT ||
+              this.model?.caseStatus === CommonCaseStatus.NEW) {
+              return true;
+            }
+            if ((item as ProjectImplementation).isSubmissionMechanismRegistration() || (item as ProjectImplementation).isSubmissionMechanismNotification()) {
+              return false;
+            }
+          }
+
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
             const model = item as CoordinationWithOrganizationsRequest
             return this._isAllowedToSaveAtSearch(model);
@@ -286,6 +315,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 3
         }
       },
       // launch
@@ -308,8 +341,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         label: 'save_as_draft',
         show: (item) => {
-          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
+          if (item.isCancelled() || this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
             return false;
+          }
+          if (item.caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
+            if (this.model?.caseStatus === CommonCaseStatus.DRAFT) {
+              return true;
+            }
+            if ((item as ProjectImplementation).isSubmissionMechanismRegistration() || (item as ProjectImplementation).isSubmissionMechanismNotification()) {
+              return false;
+            }
           }
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
             if (item.caseStatus === CommonCaseStatus.CANCELLED) {
@@ -321,6 +362,42 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: item => !item?.canDraft(),
         onClick: () => {
           this.component.save.next(this.saveTypes.DRAFT);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 5
+        }
+      },
+      // save as draft and continue
+      {
+        type: 'action',
+        label: 'save_as_draft_and_continue',
+        show: (item) => {
+          if (this.internal) {
+            return false;
+          }
+          if (item.isCancelled() || this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
+            return false;
+          }
+          if (item.caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
+            if ((item as ProjectImplementation).isSubmissionMechanismRegistration() || (item as ProjectImplementation).isSubmissionMechanismNotification()) {
+              return false;
+            }
+          }
+          if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+            if (item.caseStatus === CommonCaseStatus.CANCELLED) {
+              return false;
+            }
+          }
+          return item?.canDraft();
+        },
+        disabled: item => !item?.canDraft(),
+        onClick: () => {
+          this.component.save.next(this.saveTypes.DRAFT_CONTINUE);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 5
         }
       },
       // view logs
@@ -331,6 +408,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => !!this.model?.id,
         onClick: (item: CaseModel<any, any>) => {
           item.viewLogs();
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 3
         }
       },
       // print
@@ -340,7 +421,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'print',
         show: (item) => !this.internal && item.getCaseType() !== CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
         disabled: () => !this.model || !this.model.id,
-        onClick: () => this.print()
+        onClick: () => this.print(),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 2
+        }
       },
       // back
       {
@@ -348,7 +433,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         class: 'btn-secondary',
         label: 'back',
         show: () => true,
-        onClick: () => this.navigateToSamePageThatUserCameFrom()
+        onClick: () => this.navigateToSamePageThatUserCameFrom(),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 1
+        }
       }
     ];
   }
@@ -364,6 +453,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return (this.component.form.invalid || item?.alreadyStarted()) && !this.canSave();
         },
         show: (item) => {
+          if (item.isCancelled()) {
+            return false;
+          }
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
             return false;
           }
@@ -373,6 +465,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 3
         }
       },
       // launch
@@ -404,6 +500,33 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: item => !item?.canDraft(),
         onClick: () => {
           this.component.save.next(this.saveTypes.DRAFT);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 5
+        }
+      },
+      // save as draft and continue
+      {
+        type: 'action',
+        // icon: 'mdi-rocket-launch-outline',
+        label: 'save_as_draft_and_continue',
+        show: (item) => {
+          if (this.internal) {
+            return false;
+          }
+          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
+            return false;
+          }
+          return item?.canDraft();
+        },
+        disabled: item => !item?.canDraft(),
+        onClick: () => {
+          this.component.save.next(this.saveTypes.DRAFT_CONTINUE);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 5
         }
       },
       // reset
@@ -421,6 +544,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   canSave(): boolean {
+    if (this.model?.isCancelled()) {
+      return false;
+    }
     if (this.model?.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
       const model = this.model as CoordinationWithOrganizationsRequest;
       return model.participatingOrganizaionList.length > 0;
@@ -457,6 +583,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         displayInGrid: true,
         onClick: (item: CaseModel<any, any>) => {
           this.claimAction(item);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 1
         }
       },
       // view logs
@@ -465,7 +595,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-view-list-outline',
         label: 'logs',
         show: () => !this.internal,
-        onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item)
+        onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 3
+        }
       },
       // print
       {
@@ -474,7 +608,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'print',
         show: (item) => !this.internal && item.getCaseType() !== CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
         disabled: () => !this.model || !this.model.id,
-        onClick: () => this.print()
+        onClick: () => this.print(),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 2
+        }
       },
       // mark as unread
       {
@@ -482,7 +620,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: ActionIconsEnum.CLOSE_MAIL,
         label: 'mark_as_unread',
         show: (_item) => true,
-        onClick: (item) => this.markAsUnreadAction(item)
+        onClick: (item) => this.markAsUnreadAction(item),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 4
+        }
       },
       // back
       {
@@ -490,7 +632,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         class: 'btn-secondary',
         label: 'back',
         show: () => true,
-        onClick: () => this.navigateToSamePageThatUserCameFrom()
+        onClick: () => this.navigateToSamePageThatUserCameFrom(),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 1
+        }
       }
     ];
   }
@@ -502,8 +648,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
         label: 'btn_save',
-        disabled: () => this.component.readonly && !this.canSave(),
+        disabled: () => this.component.form.invalid || (this.component.readonly && !this.canSave()),
         show: (item) => {
+          if (item.isCancelled()) {
+            return false;
+          }
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
             return false;
           }
@@ -518,6 +667,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 3
         }
       },
       // release
@@ -527,7 +680,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'release_task',
         askChecklist: true,
         show: item => item.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM),
-        onClick: (item: CaseModel<any, any>) => this.releaseAction(item)
+        onClick: (item: CaseModel<any, any>) => this.releaseAction(item),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 2
+        }
       },
       // send to competent department
       {
@@ -554,7 +711,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return item.getResponses().includes(WFResponseType.RETURN_TO_SPECIFIC_ORGANIZATION);
         },
         onClick: (item: CaseModel<any, any>) => {
-
           this.returnToSpecificOrganizationAction(item);
         }
       },
@@ -575,6 +731,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || (this.employeeService.getCurrentUser().generalUserId != this.model?.creatorInfo.id && item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT))
             || (this.employeeService.getCurrentUser().generalUserId != this.model?.creatorInfo.id && item.getResponses().includes(WFResponseType.FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS))
             || item.getResponses().includes(WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS)
+            || item.getResponses().includes(WFResponseType.ORGANIZATION_ENTITIES_SUPPORT_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS)
             || item.caseType === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT && this.employeeService.isLicensingUser();
         },
@@ -593,6 +750,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.FINANCIAL_TRANSFER_SEND_TO_SINGLE_DEPARTMENT)
           );
           let isSendToLicenseDepartment = item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT);
 
@@ -618,9 +776,15 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.PROJECT_IMPLEMENTATION_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.FINANCIAL_TRANSFER_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)
             ;
         },
         onClick: (item: CaseModel<any, any>) => {
+          if (item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)) {
+            this.sendToSingleDepartmentReportReviewAction(item);
+            return;
+          }
           this.sendToSingleDepartmentAction(item);
         }
       },
@@ -734,6 +898,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.completeAction(item);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.CENTER,
+          groupOrder: 1
         }
       },
       // approve
@@ -758,7 +926,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.TO_GENERAL_MEETING_MEMBERS) && item.caseStatus != CommonCaseStatus.CANCELLED;
+          return item.getResponses().includes(WFResponseType.TO_GENERAL_MEETING_MEMBERS) && !(item as GeneralAssociationMeetingAttendance).isSendToMember && item.caseStatus != CommonCaseStatus.CANCELLED;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToGeneralMeetingMembersAction(item);
@@ -772,7 +940,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
           return (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
-            && (model.isManagerFinalReviewStep()) || item.caseStatus === CommonCaseStatus.FINAL_APPROVE);
+            && (model.isManagerFinalReviewStep() || item.caseStatus === CommonCaseStatus.FINAL_APPROVE));
         },
         onClick: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
@@ -871,7 +1039,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return !!(item.getResponses().length && item.getResponses().includes(WFResponseType.KNEW));
+          return !!(item.getResponses().length && item.getResponses().includes(WFResponseType.SEEN));
         },
         onClick: (item: CaseModel<any, any>) => {
           this.seenAction(item);
@@ -885,7 +1053,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         label: (item) => this.finalApproveByMatrixServices.includes(item.getCaseType()) ? this.lang.map.final_approve_task_based_on_matrix : this.lang.map.final_approve_task,
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.FINAL_APPROVE) && item.caseState != CommonCaseStatus.CANCELLED;
+          return item.getResponses().includes(WFResponseType.FINAL_APPROVE) && item.getCaseStatus() != CommonCaseStatus.CANCELLED;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.finalApproveAction(item);
@@ -945,6 +1113,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.returnAction(item);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.CENTER,
+          groupOrder: 2
         }
       },
       // final reject
@@ -1031,6 +1203,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.closeAction(item);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.CENTER,
+          groupOrder: 3
         }
       },
       // view logs
@@ -1039,7 +1215,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-view-list-outline',
         label: 'logs',
         show: () => !this.internal,
-        onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item)
+        onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 3
+        }
       },
       // print
       {
@@ -1048,7 +1228,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'print',
         show: (item) => !this.internal && item.getCaseType() !== CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
         disabled: () => !this.model || !this.model.id,
-        onClick: () => this.print()
+        onClick: () => this.print(),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 2
+        }
       },
       // mark as unread
       {
@@ -1056,23 +1240,23 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: ActionIconsEnum.CLOSE_MAIL,
         label: 'mark_as_unread',
         show: (_item) => true,
-        onClick: (item) => this.markAsUnreadAction(item)
+        onClick: (item) => this.markAsUnreadAction(item),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 4
+        }
       },
-      /*// terminate task
-      {
-        type: 'action',
-        icon: ActionIconsEnum.TERMINATE,
-        label: 'terminate_task',
-        show: (item) => !item.isMain(),
-        onClick: (item) => this.terminateTaskAction(item)
-      },*/
       // back
       {
         type: 'action',
         class: 'btn-secondary',
         label: 'back',
         show: () => true,
-        onClick: () => this.navigateToSamePageThatUserCameFrom()
+        onClick: () => this.navigateToSamePageThatUserCameFrom(),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 1
+        }
       }
     ];
   }
@@ -1088,10 +1272,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       case OpenFrom.USER_INBOX:
         this.router.navigate(['/home/user-inbox']).then();
         break;
-      case OpenFrom.SEARCH: {
-        this.router.navigate(['/home/services-search', this.route.snapshot.params]).then();
+      case OpenFrom.SEARCH:
+        const caseType = this.route.snapshot.params.caseType;
+        this.router.navigate(['/home/services/search/' + caseType, this.route.snapshot.params]).then();
         break;
-      }
     }
 
   }
@@ -1101,6 +1285,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       openFrom = this.getTheRightOpenForm();
     }
     this.openFrom = openFrom;
+    this.component.openFrom = openFrom;
     switch (openFrom) {
       case OpenFrom.USER_INBOX:
         this.buildUserInboxActions();
@@ -1117,6 +1302,39 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       default:
         this.buildAddAction();
         this.actions = this.actionShowFilter(this.addActions);
+    }
+    this._groupActionsIcons()
+  }
+
+  private _hasValidCharityButtonGroup(action: IMenuItem<CaseModel<any, any>>): boolean {
+    return (CommonUtils.isValidValue(action.data)
+      && CommonUtils.isValidValue(action.data!.charityButtonsGroup)
+      && Object.values(CharityViewButtonsGroupEnum).includes(action.data!.charityButtonsGroup)
+    )
+  }
+
+  private _groupActionsIcons(): void {
+    if (!this.internal) {
+      this.groupedActions = new Map<CharityViewButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]>([
+        [CharityViewButtonsGroupEnum.LEFT, []],
+        [CharityViewButtonsGroupEnum.CENTER, []],
+        [CharityViewButtonsGroupEnum.RIGHT, []],
+      ]);
+      this.actions.forEach(action => {
+        if (!this._hasValidCharityButtonGroup(action)) {
+          if (!('data' in action)) {
+            action.data = {};
+          }
+          action.data!.charityButtonsGroup = CharityViewButtonsGroupEnum.CENTER;
+          action.data!.groupOrder = action.data!.groupOrder ?? this.actions.length + 1; // setting the highest number for sort (same for all actions which don't have sortOrder defined)
+        }
+        this.groupedActions!.set(action.data!.charityButtonsGroup, [...this.groupedActions!.get(action.data!.charityButtonsGroup)!, action]);
+      })
+      for (let [key, value] of this.groupedActions!) {
+        this.groupedActions!.set(key, value.sort((a: IMenuItem<CaseModel<any, any>>, b: IMenuItem<CaseModel<any, any>>) => {
+          return (a.data!.groupOrder ?? 0) - (b.data!.groupOrder ?? 0)
+        }));
+      }
     }
   }
 
@@ -1184,6 +1402,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private sendToSingleDepartmentAction(item: CaseModel<any, any>) {
     item.sendToSingleDepartment().subscribe(() => {
+      this.toast.success(this.lang.map.request_has_been_sent_successfully);
+      this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private sendToSingleDepartmentReportReviewAction(item: CaseModel<any, any>) {
+    (item as UrgentInterventionLicenseFollowup).sendToSingleDepartmentReportReviewAction().subscribe(() => {
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
       this.navigateToSamePageThatUserCameFrom();
     });
@@ -1294,15 +1519,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     }
     return !item.isInitialApproved() || !this.internal;
   }
+
   private _isAllowedToSaveAtSearch(model: CoordinationWithOrganizationsRequest) {
     if (this.employeeService.isInternalUser() && !model.isApproved) {
       return true;
     }
-    if (this.employeeService.isExternalUser() && model.isApproved && !model.isFinalApproved()) {
-      return true;
-    }
-
-    return false;
+    return this.employeeService.isExternalUser() && model.isApproved && !model.isFinalApproved();
   }
 
   private approveAction(item: CaseModel<any, any>) {
@@ -1657,5 +1879,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       }
     }
     return false;
+  }
+
+  actionClass(action: IMenuItem<any>): string {
+    return (!action.class ? '' : (typeof action.class === 'function' ? action.class(this.model) : action.class)) || '';
   }
 }

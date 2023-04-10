@@ -9,6 +9,7 @@ import {of, Subject} from "rxjs";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {catchError, exhaustMap, mapTo, takeUntil, tap} from "rxjs/operators";
 import {ConfigurationService} from '@services/configuration.service';
+import {GlobalSettingsService} from '@services/global-settings.service';
 
 @Component({
   selector: 'internal-login',
@@ -31,7 +32,8 @@ export class InternalLoginComponent implements OnInit {
               private configService: ConfigurationService,
               private eCookieService: ECookieService,
               private toastService: ToastService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private globalSettingsService: GlobalSettingsService) {
 
   }
 
@@ -46,6 +48,10 @@ export class InternalLoginComponent implements OnInit {
       userPassword: ['', CustomValidators.required] // for now, it is not required till we make full integration with NAS Services.
     });
     this.listenToLoginEvent();
+  }
+
+  get applicationName(): string {
+    return this.globalSettingsService.getGlobalSettings().getApplicationName();
   }
 
   togglePasswordView(event: Event): void {

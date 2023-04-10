@@ -11,15 +11,15 @@ import {
   ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { BehaviorSubject, fromEvent, Subject } from 'rxjs';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { filter, map, takeUntil } from 'rxjs/operators';
-import { TemplatePortal } from '@angular/cdk/portal';
-import { LangService } from '@app/services/lang.service';
-import { Language } from '@app/models/language';
-import { DOCUMENT } from '@angular/common';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import {Overlay, OverlayRef} from '@angular/cdk/overlay';
+import {BehaviorSubject, fromEvent, Subject} from 'rxjs';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {filter, map, takeUntil} from 'rxjs/operators';
+import {TemplatePortal} from '@angular/cdk/portal';
+import {LangService} from '@app/services/lang.service';
+import {Language} from '@app/models/language';
+import {DOCUMENT} from '@angular/common';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
 @Component({
   selector: 'context-menu-item',
@@ -53,6 +53,8 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
 
   @Input()
   debug: boolean = false;
+
+  private leftClick: boolean = false
 
   @Input()
   set actions(val: IMenuItem<any>[]) {
@@ -98,12 +100,12 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  open($event: MouseEvent, item?: any, itemIndex?: number): void {
+  open($event: MouseEvent, item?: any, itemIndex?: number, leftClick: boolean = false): void {
     $event.preventDefault();
-
+    this.leftClick = leftClick
     this.debugInfo(() => {
       console.log('Open Event fired');
-      console.log({ $event, item, itemIndex });
+      console.log({$event, item, itemIndex});
     });
 
     if (typeof this.prevent !== 'undefined') {
@@ -119,7 +121,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         return;
       }
     }
-    this.open$.next({ $event: $event, item: item, itemIndex: itemIndex });
+    this.open$.next({$event: $event, item: item, itemIndex: itemIndex});
   }
 
   private listenToItemChange() {
@@ -208,6 +210,12 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
 
   private listenToBackdropClick() {
     fromEvent(document, 'click')
+      .pipe(filter(_ => {
+        return this.leftClick ? (() => {
+          this.leftClick = false;
+          return false;
+        })() : true;
+      }))
       .pipe(takeUntil(this.destroy$))
       .pipe(
         filter(event => {

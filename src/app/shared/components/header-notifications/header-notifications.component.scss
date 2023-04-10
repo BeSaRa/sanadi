@@ -1,0 +1,28 @@
+@import "../../../../scss/custom_variables";
+
+#notificationsDropdownContainer {
+  .btn-notification {
+    color: rgba(255, 255, 255, 0.55);
+    &:hover {
+      color: rgba(255, 255, 255, 0.75);
+    }
+  }
+
+  .dropdown-menu {
+    min-width: 13rem;
+    max-width: 20rem;
+    max-height: 80vh;
+    overflow-y: auto;
+
+    .dropdown-item {
+      &:focus-visible {
+        outline: none;
+      }
+
+      &:hover, &.active, &:active {
+        background: $primary !important;
+        color: white !important;
+      }
+    }
+  }
+}

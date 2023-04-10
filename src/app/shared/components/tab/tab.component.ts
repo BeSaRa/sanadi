@@ -35,11 +35,13 @@ export class TabComponent implements OnInit, OnDestroy {
   @Input() hasError: boolean = false;
   @Input() disabled: boolean = false;
   @Input() tabWidth?: string;
+  @Input() hideIcon?: boolean = false;
 
   private destroy$: Subject<any> = new Subject<any>();
   @Output() onExpand: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
 
   accordionView: boolean = false;
+  hasForm: boolean = false;
   containerId: number = 0;
   tabId: string = '';
   tabIdRef: string = '';
@@ -50,6 +52,7 @@ export class TabComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.accordionView = this.tabListService.accordionView;
+    this.hasForm = this.tabListService.hasForm;
     this.containerId = this.tabListService.containerId;
     this.tabId = (this.name || Date.now().toString()) + this.containerId;
     this.tabIdRef = '#' + this.tabId;

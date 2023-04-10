@@ -68,7 +68,7 @@ export class ParticipantOrg extends SearchableCloneable<ParticipantOrg> {
           CustomValidators.defaultLengths.DECIMAL_PLACES
         ),
         CustomValidators.maxLength(
-          CustomValidators.defaultLengths.SWIFT_CODE_MAX
+          CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
         ))] : value,
 
     };

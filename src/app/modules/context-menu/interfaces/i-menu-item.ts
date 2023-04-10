@@ -2,8 +2,9 @@ import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { Observable } from "rxjs";
 
 export interface IMenuItem<T> {
+  hideLabel?: boolean;
   askChecklist?: boolean;
-  class?: string;
+  class?: string | ((item: T) => string);
   name?: string;
   type: 'action' | 'divider';
   onClick?: (item: T, ...params: any) => void;

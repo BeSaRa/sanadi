@@ -28,6 +28,7 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {UntypedFormGroup} from '@angular/forms';
 import {OrganizationOfficer} from '@app/models/organization-officer';
 import {CaseModelContract} from "@contracts/case-model-contract";
+import {CommonUtils} from '@helpers/common-utils';
 
 export abstract class CaseModel<S extends BaseGenericEService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel<T>, CaseModelContract<S, T> {
   serial!: number;
@@ -53,6 +54,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   itemDetails: string = '';
   encrypt!: EncryptionService;
   organizationId!: number;
+  submissionMechanism!: number;
 
   constructor() {
     super();
@@ -85,11 +87,11 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
 
   canDraft(): boolean {
-    return !this.caseStatus || this.caseStatus <= CommonCaseStatus.DRAFT;
+    return !CommonUtils.isValidValue(this.caseStatus) || this.caseStatus == CommonCaseStatus.DRAFT;
   }
 
   canSave(): boolean {
-    return !this.caseStatus || this.caseStatus >= CommonCaseStatus.NEW;
+    return !CommonUtils.isValidValue(this.caseStatus) || this.caseStatus >= CommonCaseStatus.NEW;
   }
 
   /**
@@ -292,6 +294,8 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
       [CaseTypes.NPO_MANAGEMENT]: WFResponseType.REVIEW_NPO_MANAGEMENT,
       [CaseTypes.PROJECT_FUNDRAISING]: WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS,
       [CaseTypes.PROJECT_IMPLEMENTATION]: WFResponseType.PROJECT_IMPLEMENTATION_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: WFResponseType.FINANCIAL_TRANSFER_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP]: WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT,
     }
 
     if (!caseType) {
@@ -476,7 +480,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
 
   setItemRoute(): void {
-    this.itemRoute = '/' + this.service.getMenuItem().path;
+    this.itemRoute = '/' + this.service.getMenuItem().path + '/service';
     this.itemDetails = this.encrypt.encrypt<INavigatedItem>({
       openFrom: OpenFrom.SEARCH,
       taskId: null,

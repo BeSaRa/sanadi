@@ -28,12 +28,13 @@ export enum WFResponseType {
   URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewUrgentInterventionLicensing',
   URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewUrgentInterventionLicensing',
   URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewUrgentInterventionClosureApproval',
-  URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewInterventionFollowUp',
+  URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewFollowUp',
   FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewFundraisingChannelLicensing',
   GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS = 'askSingle:ReviewGeneralNotification',
   FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewFundraisingChannelLicensing',
   ORGANIZATION_ENTITIES_SUPPORT_TO_MULTI_DEPARTMENTS = 'ask:ReviewOrganizationsEntitiesSupport',
   PROJECT_IMPLEMENTATION_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewExternalProjectImplementationLicensing',
+  FINANCIAL_TRANSFER_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewFinancialTransfersLicensing',
 
   INTERNAL_PROJECT_SEND_TO_EXPERT = 'ask:InternalProjectSpecialistReview', // not used anymore but still reference in multi-send popup
   TO_DEVELOPMENT_EXPERT = 'toDevExpert',

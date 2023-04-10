@@ -71,6 +71,7 @@ export interface IAppUrls {
   SANADI_ATTACHMENT: string;
   EXTERNAL_USER_PERMISSION: string;
   AUTHENTICATE: string;
+  CHANGE_LANGUAGE: string;
   VALIDATE_TOKEN: string;
   SUBVENTION_LOG: string;
   EXT_YOUTUBE: string;
@@ -133,5 +134,6 @@ export interface IAppUrls {
   USER_PREFERENCES: string;
   PROJECT_IMPLEMENTATION: string;
   FINANCIAL_TRANSFERS_LICENSING: string;
+  TRAINING_PROGRAM_PARTNER: string;
   [index: string]: string;
 }

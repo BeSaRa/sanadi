@@ -18,6 +18,7 @@ import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CustomValidators} from "@app/validators/custom-validators";
+import {GlobalSettingsService} from '@app/services/global-settings.service';
 
 @Component({
   selector: 'deduction-ratio-popup',
@@ -34,7 +35,7 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
   workAreas: Lookup[] = this.lookupService.listByCategory.ProjectWorkArea.slice().sort((a, b) => a.lookupKey - b.lookupKey)
   permitTypes: Lookup[] = this.lookupService.listByCategory.ProjectPermitType.slice().sort((a, b) => a.lookupKey - b.lookupKey)
   profileTypes: Lookup[] = this.lookupService.listByCategory.ProfileType.slice().sort((a, b) => a.lookupKey - b.lookupKey)
-
+  maxDeductionRatio: number = this.globalSettingsService.getGlobalSettings().maxDeductionRatio;
 
   permitTypeChangeWarn: Subject<{ warn: boolean, oldValue: ProjectPermitTypes }> = new Subject()
   workAreaChangeWarn: Subject<{ warn: boolean, oldValue: ProjectWorkArea }> = new Subject()
@@ -48,8 +49,7 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
               private toast: ToastService,
               private dialog: DialogService,
               private lookupService: LookupService,
-              // private profileService:ProfileService,
-  ) {
+              private globalSettingsService: GlobalSettingsService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -60,7 +60,7 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
   }
 
   buildForm(): void {
-    this.form = this.fb.group(this.model.buildForm(true), {validators: [this.validateMinMax]});
+    this.form = this.fb.group(this.model.buildForm(true, this.maxDeductionRatio), {validators: [this.validateMinMax]});
     if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
       this.saveVisible = false;

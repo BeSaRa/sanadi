@@ -126,8 +126,8 @@ export class CharityOrganizationProfileExtraData extends BaseModel<CharityOrgani
     } = this;
     return {
       phone: controls ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
-      email: controls ? [email, [CustomValidators.required, CustomValidators.maxLength(200), Validators.email]] : email,
-      website: controls ? [website, [Validators.maxLength(350)]] : website,
+      email: controls ? [email, [CustomValidators.required, CustomValidators.maxLength(200), CustomValidators.pattern('EMAIL')]] : email,
+      website: controls ? [website, [CustomValidators.pattern('WEBSITE')]] : website,
       zoneNumber: controls ? [zoneNumber, [CustomValidators.required, CustomValidators.maxLength(5)]] : zoneNumber,
       streetNumber: controls ? [streetNumber, [CustomValidators.required, CustomValidators.maxLength(5)]] : streetNumber,
       buildingNumber: controls ? [buildingNumber, [CustomValidators.required, CustomValidators.maxLength(5)]] : buildingNumber,

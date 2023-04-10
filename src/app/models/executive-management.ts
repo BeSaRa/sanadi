@@ -1,9 +1,9 @@
-import { infoSearchFields } from '@app/helpers/info-search-fields';
-import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
-import { ISearchFieldsMap } from '@app/types/types';
+import {ISearchFieldsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
-import { AdminResult } from './admin-result';
+import {AdminResult} from './admin-result';
 
 export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement> {
   arabicName!: string;
@@ -11,12 +11,18 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
   email!: string;
   jobTitle!: number;
   phone!: string;
-  country!: number;
-  countryInfo!:AdminResult
+  nationality!: number;
+  passportNumber!: string;
+  nationalityInfo!: AdminResult
 
   searchFields: ISearchFieldsMap<ExecutiveManagement> = {
-    ...infoSearchFields(['countryInfo']),
-    ...normalSearchFields(['arabicName','englishName','jobTitle','email','phone'])
+    ...infoSearchFields(['nationalityInfo']),
+    ...normalSearchFields(['arabicName', 'englishName', 'jobTitle', 'email', 'phone', 'passportNumber'])
+  };
+
+  searchFieldsNoPassport: ISearchFieldsMap<ExecutiveManagement> = {
+    ...infoSearchFields(['nationalityInfo']),
+    ...normalSearchFields(['arabicName', 'englishName', 'jobTitle', 'email', 'phone'])
   };
 
   getManagerFields(control: boolean = false): any {
@@ -26,7 +32,8 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
       email,
       jobTitle,
       phone,
-      country
+      nationality,
+      passportNumber
     } = this;
 
     return {
@@ -39,7 +46,8 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
       jobTitle: control ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitle,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
-      country: control ? [country, [CustomValidators.required]] : country
+      nationality: control ? [nationality] : nationality,
+      passportNumber: control ? [passportNumber, [...CustomValidators.commonValidations.passport]] : passportNumber
     }
   }
 }

@@ -4,7 +4,7 @@ import {ConfigurationMergingScope} from '@app/types/types';
 export const configurationMergingLevel: ConfigurationMergingScope = 'limited';
 
 export const defaultConfiguration: Partial<IAppConfig> = {
-  VERSION: 'v2.1.13',
+  VERSION: 'v2.2.11',
   PRIVATE_VERSION: '',
   API_VERSION: 'v1',
   BASE_ENVIRONMENT: 'BAW_UI',
@@ -29,7 +29,7 @@ export const defaultConfiguration: Partial<IAppConfig> = {
 };
 
 export const limitedConfigurableProperties: Array<keyof IAppConfig> = [
-  'ENVIRONMENTS_URLS', 'BASE_ENVIRONMENT', 'REPORTS_URL', 'RESET_PASSWORD',
+  'ENVIRONMENTS_URLS', 'BASE_ENVIRONMENT', 'REPORTS_URL', 'RESET_PASSWORD', 'NOTIFICATIONS_URL'
 ];
 
 export const extendedConfigurableProperties: Array<keyof IAppConfig> = [

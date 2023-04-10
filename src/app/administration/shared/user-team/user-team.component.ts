@@ -1,4 +1,3 @@
-import { SubTeam } from './../../../models/sub-team';
 import { SubTeamService } from '@app/services/sub-team.service';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { LangService } from '@app/services/lang.service';
@@ -22,6 +21,7 @@ import { TeamSecurityConfigurationService } from '@app/services/team-security-co
 import { UserSecurityConfigurationService } from '@app/services/user-security-configuration.service';
 import { TeamSecurityConfiguration } from '@app/models/team-security-configuration';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { SubTeam } from '@app/models/sub-team';
 
 @Component({
   selector: 'user-team',
@@ -94,6 +94,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((subTeams) => {
+        console.log(subTeams);
         this.subTeamsListBasedOnUserTeams = subTeams;
       });
   }

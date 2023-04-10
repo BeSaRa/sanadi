@@ -195,7 +195,6 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
       params: { ...options }
     })
   }
-
   paginateComposite(options: Partial<PaginationContract>): Observable<Pagination<T[]>> {
     return this._paginateComposite(options).pipe(
       tap(result => this.list = result.rs),
@@ -203,6 +202,36 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
     );
   }
 
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  private _loadByFilterPaginate(options: Partial<PaginationContract>, paginateFilter: Partial<T>): Observable<Pagination<T[]>> {
+    return this.http.post<Pagination<T[]>>(this._getServiceURL() + '/filter/pg', { ...paginateFilter }, {
+      params: { ...options }
+    })
+  }
+
+  loadByFilterPaginate(options: Partial<PaginationContract>, paginateFilter: Partial<T>): Observable<Pagination<T[]>> {
+    return this._loadByFilterPaginate(options, paginateFilter).pipe(
+      tap(result => this.list = result.rs),
+      tap(result => this._loadDone$.next(result.rs))
+    );
+  }
+
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  private _loadByFilter(filter: Partial<T>): Observable<T[]> {
+    return this.http.post<T[]>(this._getServiceURL() + '/filter', { ...filter });
+  }
+
+  loadByFilter(filter: Partial<T>): Observable<T[]> {
+    return this._loadByFilter(filter).pipe(
+      tap(result => this.list = result),
+      tap(result => this._loadDone$.next(result))
+    );
+  }
 
   _generateQueryString(queryStringOptions: IKeyValue): string {
     let queryString = '?';

@@ -29,6 +29,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   @Input() activeTabIndex: number = 0;
   @Input() tabByIndex$!: Subject<number>;
   @Input() accordionView: boolean = false;
+  @Input() hasForm: boolean = false;
 
   private _collapse: boolean = false;
   @Input()
@@ -53,13 +54,14 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   @ContentChildren(TabComponent) tabs!: QueryList<TabComponent>;
   @Output() onTabChange: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
 
-  constructor(@Self() private tabListService: TabListService, private employeeService: EmployeeService) {
+  constructor(@Self() public tabListService: TabListService, private employeeService: EmployeeService) {
     this.tabContainerNumber = this.tabListService.containerId;
     this.tabContainerId = 'tab-list-' + this.tabContainerNumber;
   }
 
   ngOnInit(): void {
     this.tabListService.accordionView = this.accordionView;
+    this.tabListService.hasForm = this.hasForm;
     this.listenToOutSideTabChange();
     this.paddingClass = this.employeeService.getCurrentUser() ? (this.employeeService.isExternalUser() ? '' : 'pb-2') : '';
   }
@@ -93,5 +95,15 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
     }
     this.tabListService.changeSelectedTabTo$.next(tab);
     this.onTabChange.emit(tab);
+  }
+
+  getActiveTabIndex(): number {
+    return this.tabs.toArray().findIndex(x => x.active) ?? 0;
+  }
+
+  getNextActiveTabIndex(): number {
+    const currentActiveIndex = this.getActiveTabIndex();
+    const tabsStatus = this.tabs.toArray().map(x => !x.disabled);
+    return tabsStatus.findIndex((activeTab, index) => activeTab && index > currentActiveIndex) ?? 0;
   }
 }

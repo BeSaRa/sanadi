@@ -5,15 +5,16 @@
         <img alt="user avatar" id="user-image" src="assets/images/man.svg">
         <div id="user-info-details" class="mx-2 d-flex">
           <a type="button" (click)="openUserPreferences()" class="user-preferences-link">
-            <div id="user-name">{{employee.getCurrentUserName()}}</div>
+            <div id="user-name">{{employeeService.getCurrentUserName()}}</div>
           </a>
           <span> &nbsp; - &nbsp;</span>
-          <div id="user-department">{{employee.getCurrentUserDepartment()}}</div>
+          <div id="user-department">{{employeeService.getCurrentUserDepartment()}}</div>
         </div>
       </div>
       <span class="flex-grow-1 align-self-stretch"></span>
     </div>
     <span class="flex-grow-1"></span>
+    <!--<header-notifications></header-notifications>-->
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" href="#" (click)="toggleLang($event)">
@@ -22,5 +23,4 @@
       </li>
     </ul>
   </div>
-
 </div>

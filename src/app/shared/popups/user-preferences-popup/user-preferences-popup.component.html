@@ -1,0 +1,98 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ lang.map.user_preferences }}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content w800px" #content>
+  <form [formGroup]="form" novalidate>
+    <div class="row mb-3">
+      <div class="col-sm-6 position-relative">
+        <label class="form-label">{{lang.map.lbl_arabic_name}}</label>
+        <span class="form-control input-disabled">{{user.arName || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 position-relative">
+        <label class="form-label">{{lang.map.lbl_english_name}}</label>
+        <span class="form-control input-disabled">{{user.enName || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-6 position-relative">
+        <label class="form-label">{{lang.map.lbl_employee_number}}</label>
+        <span class="form-control input-disabled">{{user.empNum || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 position-relative">
+        <label class="form-label">{{lang.map.qatari_id_number}}</label>
+        <span class="form-control input-disabled">{{user.qid || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-6 position-relative">
+        <label class="form-label">{{lang.map.lbl_phone}}</label>
+        <span class="form-control input-disabled">{{user.phoneNumber || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 position-relative">
+        <label class="form-label">{{lang.map.lbl_email}}</label>
+        <span class="form-control input-disabled">{{user.email || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-6 ng-select-wrapper">
+        <label asteriskIfRequired="defaultLang" for="defaultLang"
+               class="form-label">{{lang.map.default_language}}</label>
+        <ng-select validationClasses="defaultLang" labelForId="defaultLang"
+                   placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found"
+                   formControlName="defaultLang"
+                   id="defaultLang" appendTo="body">
+          <ng-option [value]="language.lookupKey"
+                     *ngFor="let language of languages">{{language.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="defaultLang"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 mt-4 form-check form-switch">
+        <div class="ms-3">
+          <input class="form-check-input" type="checkbox" id="isMailNotificationEnabled"
+                 formControlName="isMailNotificationEnabled">
+          <label class="form-check-label"
+                 for="isMailNotificationEnabled">{{lang.map.mail_notifications}}</label>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-6 position-relative">
+        <label class="form-label">{{lang.map.alternate_emails}}</label>
+        <button *ngIf="canEditPreferences" (click)="addAlternateUserEmail('',true)"
+                class="btn btn-link outline-none" title="{{lang.map.add_email}}">
+          <i class="mdi mdi-plus-box"></i>
+        </button>
+        <div class="row" [formGroup]="alternateUserEmailsForm">
+          <div formArrayName="emails" class="emails-container">
+            <div class="col-sm-12 position-relative email-wrapper"
+                 *ngFor="let email of emailsFormArray.controls; let i = index">
+              <div class="input-group">
+                <input [id]="i" class="form-control" [formControlName]="i" validationClasses="{{i}}">
+                <app-field-error-message controlName="{{i}}"></app-field-error-message>
+                <button *ngIf="canEditPreferences" (click)="deleteEmail(i)"
+                        class="input-group-text" title="{{lang.map.remove_email}}">
+                  <i class="mdi mdi-delete"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="canEditPreferences" (click)="displayFormValidity(null, content)" tooltip="{{ lang.map.validate_fields }}"
+          class="btn btn-link"><i class="mdi mdi-information-outline text-info"></i></button>
+  <div class="flex-grow-1"></div>
+  <button  *ngIf="canEditPreferences" (click)="save()" [disabled]="isInvalidForm()"
+          class="btn btn-primary">{{ lang.map.btn_save }}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
+</div>

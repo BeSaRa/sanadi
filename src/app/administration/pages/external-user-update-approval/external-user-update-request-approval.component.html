@@ -1,24 +1,20 @@
 <div class="row">
-  <app-page-header pageTitle="menu_external_user_request_approval" [clickOnReload$]="reload$"
-    [customTemplate]="customHeaderTemplate" [clickOnNew$]="add$" [addPermission]="service.canAddUser()">
-  </app-page-header>
-  <ng-template #customHeaderTemplate>
-    <ng-select [selectOnTab]="true" [clearable]="false" placeholder="{{lang.map.select}}" id="profileId"
-      [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="profileIdControl"
-      (change)="handleProfileChange()">
-      <ng-option value="">{{lang.map.lbl_all}}</ng-option>
-      <ng-option *ngFor="let option of profiles$|async" [value]="option.id">
-        {{option.getName()}}
-      </ng-option>
-    </ng-select>
-  </ng-template>
-</div>
-<div class="row pt-3">
   <div class="col-12">
     <div class="table-responsive">
       <app-table #table [paginator]="paginator" [filter]="filterControl.value" [useSearchToFilter]="true"
         [selectable]="true" [data]="models" [columns]="displayedColumns" sortableTable>
         <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header tableTitle="menu_external_user_request_approval"
+                            [reload$]="reload$"
+                            [add$]="add$"
+                            (textChange)="filterControl.setValue($event)"
+                            [allowAdd]="service.canAddUser()">
+                <ng-container *ngTemplateOutlet="bulk"></ng-container>
+              </table-header>
+            </th>
+          </ng-container>
           <ng-container cdkColumnDef="rowSelection">
             <th cdk-header-cell *cdkHeaderCellDef>
               <input type="checkbox" [disabled]="table.filter"
@@ -32,32 +28,16 @@
                 (change)="$event ? table.selection.toggle(row) : null" class="form-check-input">
             </td>
           </ng-container>
-          <ng-container cdkColumnDef="header">
+          <ng-container *ngFor="let column of searchColumns" [cdkColumnDef]="column">
+            <th cdk-header-cell *cdkHeaderCellDef>
+              <header-search-field (filterChange)="columnFilter$.next($event)" [form]="columnFilterForm"
+                                       [searchConfig]="searchColumnsConfig" [column]="column">
+              </header-search-field>
+            </th>
+          </ng-container>
+          <ng-container cdkColumnDef="profileHeader">
             <th cdk-header-cell colspan="100" *cdkHeaderCellDef="let row">
-              <div class="d-flex flex-row">
-                <ng-container *ngIf="table">
-                  <app-bulk-actions class="w-auto" *ngIf="table.selection && table.selection.selected.length"
-                    [selectedRecords]="table.selection.selected" [actionsList]="bulkActionsList"></app-bulk-actions>
-                </ng-container>
-                <div class="d-flex ms-auto" *ngIf="selectedFilter">
-                  <button (click)="selectFilter(undefined)" class="btn btn-sm"
-                    [ngClass]="requestStatusClasses[selectedFilter.lookupKey]">
-                    {{lang.map.selected_status}} - {{selectedFilter.getName()}}
-                  </button>
-                  <div class="px-1"></div>
-                  <div class="vr"></div>
-                  <div class="px-1"></div>
-                </div>
-                <div class="d-flex gap-3" [ngClass]="{ 'ms-auto': !selectedFilter}">
-                  <button *ngFor="let status of requestStatusList" (click)="selectFilter(status)"
-                    class="btn btn-sm  position-relative {{requestStatusClasses[status.lookupKey]}}"
-                    data-bs-toggle="button">
-                    {{status.getName()}} <span
-                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">{{requestCountMap
-                      && requestCountMap.get(status.lookupKey)}}</span>
-                  </button>
-                </div>
-              </div>
+              <ng-container [ngTemplateOutlet]="profileHeaderTemplate"></ng-container>
             </th>
           </ng-container>
           <ng-container cdkColumnDef="domainName">
@@ -113,8 +93,10 @@
               </grid-actions>
             </td>
           </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="['header']"></tr>
-          <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="['profileHeader']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="searchColumns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -126,3 +108,58 @@
     </div>
   </div>
 </div>
+
+<ng-template #profileHeaderTemplate>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-4 d-flex flex-row align-items-center">
+        <div class="col-2">
+          <label for="profileId">{{lang.map.menu_profile}}:</label>
+        </div>
+        <div class="col-10">
+          <ng-select [selectOnTab]="true" [clearable]="false" placeholder="{{lang.map.select}}" id="profileId"
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="profileIdControl"
+          (change)="handleProfileChange()">
+            <ng-option value="">{{lang.map.lbl_all}}</ng-option>
+            <ng-option *ngFor="let option of profiles$|async" [value]="option.id">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-8">
+        <div class="d-flex flex-row">
+         <!-- <ng-container *ngIf="table">
+            <app-bulk-actions class="w-auto" *ngIf="table.selection && table.selection.selected.length"
+            [selectedRecords]="table.selection.selected" [actionsList]="bulkActionsList"></app-bulk-actions>
+          </ng-container>-->
+          <div class="d-flex ms-auto" *ngIf="selectedFilter">
+            <button (click)="selectFilter(undefined)" class="btn btn-sm"
+              [ngClass]="requestStatusClasses[selectedFilter.lookupKey]">
+              {{lang.map.selected_status}} - {{selectedFilter.getName()}}
+            </button>
+            <div class="px-1"></div>
+            <div class="vr"></div>
+            <div class="px-1"></div>
+          </div>
+          <div class="d-flex gap-3" [ngClass]="{ 'ms-auto': !selectedFilter}">
+            <button *ngFor="let status of requestStatusList" (click)="selectFilter(status)"
+            class="btn btn-sm  position-relative {{requestStatusClasses[status.lookupKey]}}"
+            data-bs-toggle="button">
+              {{status.getName()}} <span
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">{{requestCountMap
+              && requestCountMap.get(status.lookupKey)}}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #bulk>
+  <app-bulk-actions *ngIf="table && table.selection && table.selection.selected.length"
+                    [selectedRecords]="table.selection.selected"
+                    [actionsList]="bulkActionsList"
+                    [reversedColors]="true"
+                    [hasTableHeaderContainer]="true"></app-bulk-actions>
+</ng-template>

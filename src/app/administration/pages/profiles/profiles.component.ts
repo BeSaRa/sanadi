@@ -13,6 +13,10 @@ import {ProfileTypes} from '@app/enums/profile-types.enum';
 import {CharityOrganizationProfileExtraDataService} from '@services/charity-organization-profile-extra-data.service';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { LookupService } from '@app/services/lookup.service';
+import { FormBuilder } from '@angular/forms';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -75,16 +79,59 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
     }
   ];
   displayedColumns: string[] = ['arName', 'enName', 'profileType', 'status', 'actions'];
+  searchColumns: string[] = ['search_arName', 'search_enName','search_profileType', 'search_status', 'search_actions'];
+  searchColumnsConfig: SearchColumnConfigMap = {
+    search_arName: {
+      key: 'arName',
+      controlType: 'text',
+      property: 'arName',
+      label: 'arabic_name',
+      maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
+    },
+    search_enName: {
+      key: 'enName',
+      controlType: 'text',
+      property: 'enName',
+      label: 'english_name',
+      maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+    },
+    search_profileType:{
+      key:'profileType',
+      controlType:'select',
+      property:'profileType',
+      label:'lbl_profile_type',
+      selectOptions: {
+        options: this.lookupService.listByCategory.ProfileType,
+        labelProperty:'getName',
+        optionValueKey:'lookupKey'
+      }
+    },
+    search_status: {
+      key: 'status',
+      controlType: 'select',
+      property: 'status',
+      label: 'lbl_status',
+      selectOptions: {
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    }
+  }
+
   view$: Subject<Profile> = new Subject<Profile>();
 
   constructor(public service: ProfileService,
               public lang: LangService,
-              private charityOrgProfileExtraDataService: CharityOrganizationProfileExtraDataService) {
+              private charityOrgProfileExtraDataService: CharityOrganizationProfileExtraDataService,
+              private lookupService: LookupService,
+              private fb:FormBuilder) {
     super();
   }
 
   protected _init(): void {
     this.listenToView();
+    this.buildFilterForm();
   }
 
   sortingCallbacks = {
@@ -147,5 +194,11 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
 
   enableEditExtraData(item: Profile) {
     return item.profileType === ProfileTypes.CHARITY;
+  }
+  
+  buildFilterForm() {
+    this.columnFilterForm = this.fb.group({
+      arName: [''], enName: [''], profileType: [null], status: [null]
+    })
   }
 }
