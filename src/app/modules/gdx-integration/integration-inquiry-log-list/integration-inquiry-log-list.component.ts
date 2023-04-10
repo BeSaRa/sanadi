@@ -132,6 +132,12 @@ export class IntegrationInquiryLogListComponent {
       case GdxServicesEnum.SJC:
         request = this.beneficiaryService.addSJCInquiry(this._getGDXCriteria());
         break;
+      case GdxServicesEnum.MOE:
+        request = this.beneficiaryService.addMOEPendingInstallments(this._getGDXCriteria());
+        break;
+      case GdxServicesEnum.MME:
+        request = this.beneficiaryService.addMMELeasedContract(this._getGDXCriteria());
+        break;
       default:
         request = null;
         break;

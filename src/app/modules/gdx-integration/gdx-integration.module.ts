@@ -24,6 +24,10 @@ import {
 } from './related-data/kahramaa-outstanding-payment-list/kahramaa-outstanding-payment-list.component';
 import {MolRelatedDataListComponent} from './related-data/mol-related-data-list/mol-related-data-list.component';
 import { SjcRelatedDataListComponent } from './related-data/sjc-related-data-list/sjc-related-data-list.component';
+import { MoeInstallmentsComponent } from './related-data/moe-installments/moe-installments.component';
+import { MoePendingPaymentComponent } from './related-data/moe-pending-payment/moe-pending-payment.component';
+import { MoeStudentInfoComponent } from './related-data/moe-student-info/moe-student-info.component';
+import { MmeLeasedContractComponent } from './related-data/mme-leased-contract/mme-leased-contract.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +41,11 @@ import { SjcRelatedDataListComponent } from './related-data/sjc-related-data-lis
     GarsiaPensionPaymentListComponent,
     KahramaaOutstandingPaymentListComponent,
     MolRelatedDataListComponent,
-    SjcRelatedDataListComponent
+    SjcRelatedDataListComponent,
+    MoeInstallmentsComponent,
+    MoePendingPaymentComponent,
+    MoeStudentInfoComponent,
+    MmeLeasedContractComponent
   ],
   exports: [
     IntegrationInquiriesComponent
