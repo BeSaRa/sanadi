@@ -116,6 +116,7 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
       type: 'action',
       label: 'btn_edit',
       icon: 'mdi-pen',
+      show: (item) => !this.readonly && this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser),
       onClick: (item) => this.edit(item)
     },
     // delete
