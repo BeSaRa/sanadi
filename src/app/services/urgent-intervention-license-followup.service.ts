@@ -129,8 +129,6 @@ export class UrgentInterventionLicenseFollowupService extends BaseGenericEServic
   updateAttachment(caseId: string, @InterceptParam() attachment: UrgentInterventionAttachment, file: File): Observable<any> {
     const formData = new FormData();
     file ? formData.append('content', file) : null;
-    console.log(attachment);
-
     const model ={
       id: attachment.id,
       documentTitle: attachment.documentTitle,
