@@ -18,13 +18,18 @@
                  class="form-control">
           <app-field-error-message controlName="documentTitle"></app-field-error-message>
         </div>
-        <div class="col-sm-12 col-md-4 mb-4 position-relative"
+        <div class="col-sm-12 col-md-2 mb-4 position-relative"
              *ngIf="!readonly && !viewOnly">
           <file-uploader [showFileName]="true" [showFilePreview]="false"
                          labelKey="update_file"
                          [allowedExtensions]="[fileExtensionsEnum.PDF]"
                          (fileUploadEvent)="setAttachmentFile($event)"
-                         [isRequired]="true"></file-uploader>
+                         [isRequired]="!editItem?.id"></file-uploader>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-4 position-relative d-flex align-items-start">
+             <button *ngIf="editItem && editItem.id" (click)="showAttachmentPopup(editItem)"
+             class="btn btn-primary" style="margin-top: 2rem;">{{ lang.map.view_document }}</button>
+
         </div>
       </div>
       <div class="row">
