@@ -1,5 +1,5 @@
 import {ApprovalDecisions} from '@enums/approval-decisions.enum';
-import {catchError, concatMap, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {catchError, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {ITerminateOrganizationTask} from '@contracts/iterminate-organization-task';
 import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, UntypedFormControl, Validators} from '@angular/forms';

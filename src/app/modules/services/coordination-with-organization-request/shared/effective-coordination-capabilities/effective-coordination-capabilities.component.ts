@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, UntypedFormControl} from '@angular/forms';
 import {UserClickOn} from '@enums/user-click-on.enum';
-import {DateUtils} from '@helpers/date-utils';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {EffectiveCoordinationCapabilities} from '@models/effective-coordination-capabilities';
 import {Lookup} from '@models/lookup';
@@ -9,11 +8,10 @@ import {DialogService} from '@services/dialog.service';
 import {LangService} from '@services/lang.service';
 import {LookupService} from '@services/lookup.service';
 import {ToastService} from '@services/toast.service';
-import {DatepickerOptionsMap} from '@app/types/types';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, map, take, takeUntil} from 'rxjs/operators';
 import {Profile} from '@models/profile';
+import { EffectiveCoordinationCapabilitiesPopupComponent } from './effective-coordination-capabilities-popup/effective-coordination-capabilities-popup.component';
 
 @Component({
   selector: 'effective-coordination-capabilities',
@@ -70,25 +68,17 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
   form!: FormGroup;
   @Input() organizationWays: Lookup[] = [];
   @Input() organizationUnits: Profile[] = [];
-  datepickerOptionsMap: DatepickerOptionsMap = {
-    eventStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
-  };
+
   @Input() canUpdate: boolean = true;
   @Input() isClaimed: boolean = false;
 
-  get formArray(): FormArray {
-    return this.form.get(this.formArrayName) as FormArray;
-  }
   filterControl: UntypedFormControl = new UntypedFormControl('');
-  showForm: boolean = false;
 
   ngOnInit(): void {
     this.buildForm();
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
-
-
   }
 
   ngOnDestroy(): void {
@@ -119,21 +109,32 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
           record.organizationId = this.orgId;
         }
         this.currentRecord = record || undefined;
-        this.showForm = !!this.currentRecord;
-        this.updateForm(this.currentRecord);
+        if(this.currentRecord) {
+          this.openFormDialog();
+        }
       });
   }
 
-  private updateForm(model: EffectiveCoordinationCapabilities | undefined) {
-    const formArray = this.formArray;
-    formArray.clear();
-    if (model) {
-
-      formArray.push(this.fb.group(new EffectiveCoordinationCapabilities().clone(model).BuildForm(true)));
-      if (this.readonly || this.viewOnly) {
-        this.formArray.disable();
+  _getFormPopup() {
+    return EffectiveCoordinationCapabilitiesPopupComponent;
+  }
+  openFormDialog() {
+    this.dialogService.show(this._getFormPopup(), {
+      form: this.form,
+      editIndex: this.editIndex,
+      model: this.currentRecord,
+      readonly: this.readonly,
+      viewOnly: this.viewOnly,
+      organizationWays: this.organizationWays,
+      organizationUnits: this.organizationUnits,
+      formArrayName: this.formArrayName
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.onSave();
+      } else {
+        this.onCancel();
       }
-    }
+    })
   }
 
   private listenToSave() {
@@ -151,6 +152,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
         .onAfterClose$.pipe(take(1))
         .subscribe(() => {
           this.form.get(this.formArrayName)?.markAllAsTouched();
+          this.openFormDialog();
         });
     });
 
@@ -215,15 +217,11 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
 
   onCancel() {
     this.resetForm();
-    this.showForm = false;
     this.editIndex = -1;
   }
 
   private resetForm() {
     this.formOpened = false;
-    this.formArray.clear();
-    this.formArray.markAsUntouched();
-    this.formArray.markAsPristine();
   }
 
   view($event: MouseEvent, record: EffectiveCoordinationCapabilities, index: number) {
@@ -259,25 +257,5 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
     this.editIndex = index;
     this.viewOnly = false;
     this.recordChanged$.next(record);
-  }
-
-  get searchStartDate() {
-    return this.form.controls.searchStartDate as UntypedFormControl;
-  }
-
-  get searchSubmissionDeadline() {
-    return this.form.controls.searchSubmissionDeadline as UntypedFormControl;
-  }
-
-  onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    DateUtils.setRelatedMinMaxDate({
-      fromFieldName,
-      toFieldName,
-      controlOptionsMap: this.datepickerOptionsMap,
-      controlsMap: {
-        searchStartDate: this.searchStartDate,
-        searchSubmissionDeadline: this.searchSubmissionDeadline
-      }
-    });
   }
 }

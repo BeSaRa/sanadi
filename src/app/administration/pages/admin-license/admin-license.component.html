@@ -56,6 +56,10 @@
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="subject">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.subject}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.subject}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="licenseStartDate">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.license_start_date}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.licenseStartDate|date}} </td>
@@ -65,7 +69,7 @@
             <td cdk-cell *cdkCellDef="let row"> {{row.licenseEndDate|date}} </td>
           </ng-container>
           <ng-container cdkColumnDef="ouInfo">
-            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.lbl_organization}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.created_by}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo?.getName()}} </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>

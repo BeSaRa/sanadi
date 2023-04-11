@@ -1,0 +1,14 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ editIndex > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map.lbl_template }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 800px">
+  <formly-form [form]="form" [fields]="fieldBuilder.fieldsGroups"></formly-form>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="!form.valid" *ngIf="!readonly && !viewOnly"
+    class="btn btn-primary m-2">{{(editIndex
+    > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>

@@ -280,6 +280,7 @@ th.serial-column, td.serial-column {
 td.table-actions {
   padding: 0;
   vertical-align: middle;
+
   button.icon-btn {
     padding: 0;
   }
@@ -304,7 +305,8 @@ textarea.input-disabled {
 
 ng-select {
   .ng-select-container {
-    height: 38px !important;
+    //height: 38px !important;
+    min-height: 38px !important;
   }
 
   &.no-dropdown {
@@ -321,6 +323,7 @@ ng-select {
 
   &.ng-touched {
     border-radius: 0.25rem;
+
     &.ng-valid {
       &.ng-select-opened {
         box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
@@ -390,6 +393,7 @@ td.td-checkbox, th.td-checkbox {
   margin: auto 0;
   padding: 10px 5px 0 5px;
 }
+
 .search-header,
 .extra-header {
   padding: 0 !important;
@@ -446,10 +450,12 @@ tr.risk {
 th.remain {
   background-color: red;
   color: white;
+
   i {
     color: white !important;
   }
 }
+
 .vr {
   min-height: 1rem;
   width: 1px;

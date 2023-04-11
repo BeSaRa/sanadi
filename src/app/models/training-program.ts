@@ -53,7 +53,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   trainerListIds: number[] = [];
   contactPerson!: string;
   attendenceMethod!: number;
-  trainingLang!: number;
+  trainingLang!: string;
   numberOfSeats!: number;
   comments!: string;
   status!: number;
@@ -72,6 +72,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   // to be removed
   registeredTraineeNumber: number = 0;
   acceptedTraineeNumber: number = 0;
+  trainingLangParsed: number[] = [];
 
   // unused properties
   trainerInfoList: any;
@@ -105,7 +106,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       trainingLocation,
       contactPerson,
       attendenceMethod,
-      trainingLang,
+      trainingLangParsed,
       numberOfSeats,
       comments,
       registerationStartDate,
@@ -175,9 +176,9 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       attendenceMethod: controls ? [attendenceMethod, [
         CustomValidators.required
       ]] : attendenceMethod,
-      trainingLang: controls ? [trainingLang, [
-        CustomValidators.required
-      ]] : trainingLang,
+      trainingLangParsed: controls ? [trainingLangParsed, [
+        CustomValidators.requiredArray
+      ]] : trainingLangParsed,
       numberOfSeats: controls ? [numberOfSeats, [
         CustomValidators.pattern('ENG_NUM_ONLY')
       ]] : numberOfSeats,

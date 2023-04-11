@@ -1,13 +1,14 @@
-import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
-import { TrainingProgram } from '@app/models/training-program';
-import { AdminResult } from '@app/models/admin-result';
-import { DateUtils } from '@app/helpers/date-utils';
-import { Trainee } from '@app/models/trainee';
-import { LookupService } from '@app/services/lookup.service';
-import { FactoryService } from '@app/services/factory.service';
-import { TrainingProgramBriefcaseService } from '@app/services/training-program-briefcase.service';
-import { TrainingProgramBriefcase } from '@app/models/training-program-briefcase';
-import { Lookup } from '@app/models/lookup';
+import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
+import {TrainingProgram} from '@app/models/training-program';
+import {AdminResult} from '@app/models/admin-result';
+import {DateUtils} from '@app/helpers/date-utils';
+import {Trainee} from '@app/models/trainee';
+import {LookupService} from '@app/services/lookup.service';
+import {FactoryService} from '@app/services/factory.service';
+import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
+import {TrainingProgramBriefcase} from '@app/models/training-program-briefcase';
+import {Lookup} from '@app/models/lookup';
+import {CommonUtils} from '@helpers/common-utils';
 
 export class TrainingProgramInterceptor implements IModelInterceptor<TrainingProgram> {
   receive(model: TrainingProgram): TrainingProgram {
@@ -36,7 +37,7 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
 
     model.targetAudienceListIds = convertIdsStringToArray(model.targetAudienceList);
 
-    model.trainingLang = +model.trainingLang!;
+    TrainingProgramInterceptor._parseTrainingLanguages(model);
     model.trainerListIds = convertIdsStringToArray(model.trainerList);
 
     let trainingProgramBriefcaseService = FactoryService.getService<TrainingProgramBriefcaseService>('TrainingProgramBriefcaseService');
@@ -68,6 +69,36 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     let trainingProgramBriefcaseService = FactoryService.getService<TrainingProgramBriefcaseService>('TrainingProgramBriefcaseService');
     model.trainingBundleList = !model.trainingBundleList ? [] : model.trainingBundleList.map(item => trainingProgramBriefcaseService._getSendInterceptor()(new TrainingProgramBriefcase().clone(item)));
 
+    TrainingProgramInterceptor._stringifyTrainingLanguages(model);
+    TrainingProgramInterceptor._deleteBeforeSend(model);
+    return model;
+  }
+
+  private static _parseTrainingLanguages(model: TrainingProgram) {
+    try {
+      let parseValue = JSON.parse(model.trainingLang);
+      if (!CommonUtils.isValidValue(parseValue)) {
+        model.trainingLangParsed = [];
+      } else {
+        if (!Array.isArray(parseValue)) {
+          parseValue = [parseValue];
+        }
+        model.trainingLangParsed = parseValue;
+      }
+    } catch (_) {
+      model.trainingLangParsed = [];
+    }
+
+  }
+
+  private static _stringifyTrainingLanguages(model: Partial<TrainingProgram>): void {
+    if (!model.trainingLangParsed) {
+      model.trainingLangParsed = [];
+    }
+    model.trainingLang = JSON.stringify(model.trainingLangParsed ?? [])
+  }
+
+  private static _deleteBeforeSend(model: Partial<TrainingProgram>): void {
     delete model.service;
     delete model.trainingDate;
     delete model.registrationDate;
@@ -81,7 +112,7 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     delete model.endDateString;
     delete model.registerationStartDateString;
     delete model.registerationClosureDateString;
-    return model;
+    delete model.trainingLangParsed;
   }
 
 

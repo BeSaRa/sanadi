@@ -1,14 +1,14 @@
 <div class="row mt-2">
-  <app-table #table attachmentHandler [columns]="columns" [data]="model.collectionItemList">
+  <app-table #table attachmentHandler [columns]="columns" [filter]="filterControl.value" [data]="model.collectionItemList">
     <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
       <ng-container cdkColumnDef="extra-header">
         <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-          <table-header *ngIf="!approvalMode" tableTitle="collection_items" [add$]="add$" [allowAdd]="!item && !disableAdd" [skipClearSort]="true"
-            [skipSearch]="true">
+          <table-header (textChange)="filterControl.setValue($event)" *ngIf="!approvalMode"
+            tableTitle="collection_items" [add$]="add$" [allowAdd]="!item && !disableAdd" [skipClearSort]="true">
           </table-header>
-          <table-header *ngIf="approvalMode" tableTitle="collection_items" [skipClearSort]="true"
-          [skipSearch]="true">
-        </table-header>
+          <table-header (textChange)="filterControl.setValue($event)" *ngIf="approvalMode" tableTitle="collection_items"
+            [skipClearSort]="true">
+          </table-header>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="identificationNumber">
@@ -39,7 +39,7 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.item_location}}</th>
         <td cdk-cell *cdkCellDef="let row">
           <button (click)="openLocationMap(row)" [tooltip]="lang.map.show_location_on_map" class="btn icon-btn"><i
-                  class="mdi mdi-map-marker text-primary"></i>
+              class="mdi mdi-map-marker text-primary"></i>
           </button>
         </td>
       </ng-container>
@@ -48,9 +48,9 @@
         <td cdk-cell *cdkCellDef="let row; index as itemIndex">
           <div *ngIf="approvalMode" class="d-flex">
             <i *ngIf="!row.hasValidApprovalInfo()" [tooltip]="lang.map.missing_approval_info"
-               class="mdi mdi-alert-circle text-warning"></i>
+              class="mdi mdi-alert-circle text-warning"></i>
             <i *ngIf="row.hasValidApprovalInfo()" [tooltip]="lang.map.approval_information_filled_out"
-               class="mdi mdi-check-circle text-success"></i>
+              class="mdi mdi-check-circle text-success"></i>
           </div>
         </td>
       </ng-container>
@@ -59,14 +59,14 @@
         <td cdk-cell *cdkCellDef="let row">
           <span *ngIf="isNewRequestType()">N/A</span>
           <span *ngIf="!isNewRequestType()" class="text-primary text-decoration-none cursor-pointer"
-                (click)="viewOldLicense(row)">{{row.oldLicenseFullSerial || ''}}</span>
+            (click)="viewOldLicense(row)">{{row.oldLicenseFullSerial || ''}}</span>
         </td>
       </ng-container>
       <ng-container cdkColumnDef="exportedLicenseFullSerial">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.generated_license_number}}</th>
         <td cdk-cell *cdkCellDef="let row">
           <span class="text-primary text-decoration-none cursor-pointer"
-                (click)="viewGeneratedLicense(row)">{{row.exportedLicenseFullSerial || ''}}</span>
+            (click)="viewGeneratedLicense(row)">{{row.exportedLicenseFullSerial || ''}}</span>
         </td>
       </ng-container>
       <ng-container cdkColumnDef="actions">
@@ -74,8 +74,7 @@
         <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
           <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
             <button multiAttachment [formObservables]="formProperties" [model]="model" [item]="row"
-                    identifier="collectionItemList" tooltip="{{lang.map.attachments}}"
-                    class="btn text-primary icon-btn">
+              identifier="collectionItemList" tooltip="{{lang.map.attachments}}" class="btn text-primary icon-btn">
               <i class="mdi mdi-attachment"></i>
             </button>
           </grid-actions>

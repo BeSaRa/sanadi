@@ -54,6 +54,7 @@ export class LangService extends CrudWithDialogGenericService<Localization> {
     ar: 'en',
     en: 'ar'
   };
+  private languageChangeUrls: { [key: string]: string } = {};
   private languageChange: BehaviorSubject<Language> = new BehaviorSubject<Language>(this.languages.ar);
   public onLanguageChange$: Observable<Language> = this.languageChange.asObservable().pipe(delay(0));
   protected firstTime = true;
@@ -89,6 +90,14 @@ export class LangService extends CrudWithDialogGenericService<Localization> {
       this.prepareLocalizationMap();
     });
     this.listenToChangeTrigger();
+  }
+
+  setLanguageChangeUrls(): void {
+    this.languageChangeUrls = {
+      en: this.urlService.URLS.CHANGE_LANGUAGE + '/' + this.languages.en.code.toUpperCase(),
+      ar: this.urlService.URLS.CHANGE_LANGUAGE + '/' + this.languages.ar.code.toUpperCase(),
+    };
+    this.urlService.languageUrlsList = Object.values(this.languageChangeUrls);
   }
 
   _getDialogComponent(): ComponentType<any> {
@@ -203,7 +212,8 @@ export class LangService extends CrudWithDialogGenericService<Localization> {
 
   @CastResponse('')
   private _changeUserLanguage(code: string): Observable<ILoginData> {
-    return this.http.post<ILoginData>(this.urlService.URLS.AUTHENTICATE.replace('/nas/login', '') + '/lang/' + (code).toUpperCase(), undefined);
+    return this.http.post<ILoginData>(this.languageChangeUrls[code], undefined);
+    // return this.http.post<ILoginData>(this.urlService.URLS.CHANGE_LANGUAGE + '/' + (code).toUpperCase(), undefined);
   }
 
   changeLanguageByCode(code: string): void {

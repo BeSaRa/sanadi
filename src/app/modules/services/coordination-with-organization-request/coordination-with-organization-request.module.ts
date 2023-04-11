@@ -42,6 +42,10 @@ import {
 import {
   ResearchAndStudiesComponent
 } from '@modules/services/coordination-with-organization-request/shared/research-and-studies/research-and-studies.component';
+import { BuildingAbilityPopupComponent } from './shared/building-ability/building-ability-popup/building-ability-popup.component';
+import { EffectiveCoordinationCapabilitiesPopupComponent } from './shared/effective-coordination-capabilities/effective-coordination-capabilities-popup/effective-coordination-capabilities-popup.component';
+import { ResearchAndStudiesPopupComponent } from './shared/research-and-studies/research-and-studies-popup/research-and-studies-popup.component';
+import { DynamicTemplatesPopupComponent } from './shared/dynamic-templates/dynamic-templates-popup/dynamic-templates-popup.component';
 
 
 @NgModule({
@@ -50,12 +54,16 @@ import {
     CoordinationWithOrganizationRequestOutputComponent,
     CoordinationWithOrgPopupComponent,
     DynamicTemplatesComponent,
+    DynamicTemplatesPopupComponent,
     ParticipantOrganizationsPopupComponent,
     ParticipantOrganizationComponent,
     BuildingAbilityComponent,
+    BuildingAbilityPopupComponent,
     EffectiveCoordinationCapabilitiesComponent,
+    EffectiveCoordinationCapabilitiesPopupComponent,
     OrganizationOfficerComponent,
-    ResearchAndStudiesComponent
+    ResearchAndStudiesComponent,
+    ResearchAndStudiesPopupComponent
   ],
   imports: [
     CommonModule,

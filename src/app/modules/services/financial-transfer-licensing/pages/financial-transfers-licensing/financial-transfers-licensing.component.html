@@ -158,10 +158,10 @@
               id="transferringEntityName" trimInput [readonly]="!isEditTransfereeAllowed() || readonly"
               class="form-control">
             <button *ngIf=" isSearchAuthorizedEntityAllowed()" type="button"
-              (click)="transfereeEntitySearch()" class="input-group-text"><i
+              (click)="transfereeEntitySearch()" class="input-group-text bg-white"><i
                 class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
             <button *ngIf=" isPreRegisteredEntityAllowed()" type="button"
-              (click)="transfereeEntitySearch()" class="input-group-text"><i
+              (click)="transfereeEntitySearch()" class="input-group-text bg-white"><i
                 class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
             <app-field-error-message controlName="transferringEntityName"></app-field-error-message>
           </div>

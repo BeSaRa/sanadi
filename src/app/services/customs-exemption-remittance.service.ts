@@ -80,9 +80,9 @@ export class CustomsExemptionRemittanceService extends BaseGenericEService<Custo
   private _customExemptionDocumentSearch(criteria: Partial<CustomsExemptionSearchCriteria>): Observable<CustomsExemptionRemittance[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined};
     let url = this._getURLSegment() + '/search';
-    if (criteria.requestType === CustomsExemptionRequestTypes.CANCEL) {
-      url += '/approved';
-    }
+    // if (criteria.requestType === CustomsExemptionRequestTypes.CANCEL) {
+    //   url += '/approved';
+    // }
     delete criteria.requestType; // it was added to check the request type to distinguish between requests
     return this.http.post<CustomsExemptionRemittance[]>(url, {...criteria, ...orgId});
   }

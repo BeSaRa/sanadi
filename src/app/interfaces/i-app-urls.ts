@@ -71,6 +71,7 @@ export interface IAppUrls {
   SANADI_ATTACHMENT: string;
   EXTERNAL_USER_PERMISSION: string;
   AUTHENTICATE: string;
+  CHANGE_LANGUAGE: string;
   VALIDATE_TOKEN: string;
   SUBVENTION_LOG: string;
   EXT_YOUTUBE: string;

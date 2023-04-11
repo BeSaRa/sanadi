@@ -18,7 +18,8 @@
          *ngIf="showProjectAddressesTab"></tab>
     <tab [name]="tabsData.foreignCountriesProjects.name"
          [hasError]="getTabInvalidStatus('foreignCountriesProjects')"
-         [template]="foreignCountriesProjectsTab" [title]="lang.map.project_model_foreign_countries_projects"></tab>
+         [template]="foreignCountriesProjectsTab" [title]="lang.map.project_model_foreign_countries_projects"
+         *ngIf="isOutsideQatarProject()"></tab>
     <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
          [template]="specialExplanationTab" [title]="lang.map.special_explanations"></tab>
     <tab [name]="tabsData.comments.name" [hasError]="getTabInvalidStatus('comments')"
@@ -169,7 +170,7 @@
               <div class="mb-4 ng-select-wrapper flex-grow-1 ">
                 <label class="form-label" asteriskIfRequired="beneficiaryCountry"
                        for="beneficiaryCountry">{{lang.map.country}}</label>
-                <ng-select [readonly]="readonly" validationClasses="beneficiaryCountry"
+                <ng-select [readonly]="readonly || !isOutsideQatarWorkArea" validationClasses="beneficiaryCountry"
                            (change)="loadForeignCountriesProjectsNeeds()"
                            appendTo="body"
                            labelForId="beneficiaryCountry"
@@ -202,7 +203,7 @@
           <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="executionCountry"
                    for="executionCountry">{{lang.map.country}}</label>
-            <ng-select [readonly]="readonly" validationClasses="executionCountry"
+            <ng-select [readonly]="readonly || !isOutsideQatarWorkArea" validationClasses="executionCountry"
                        appendTo="body"
                        labelForId="executionCountry"
                        placeholder="{{lang.map.select}}"
@@ -316,7 +317,7 @@
           </ng-container>
         </div>
         <div class="row" *ngIf="projectWorkArea.value && !isOutsideQatarWorkArea">
-          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper" *ngIf="isSoftwareProjectType()">
             <label class="form-label" asteriskIfRequired="internalProjectClassification"
                    for="internalProjectClassification">{{lang.map.internal_project_classification}}</label>
             <ng-select [readonly]="readonly"
@@ -332,7 +333,7 @@
             </ng-select>
             <app-field-error-message controlName="internalProjectClassification"></app-field-error-message>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper" *ngIf="isAidsProjectType()">
             <label class="form-label" asteriskIfRequired="sanadiDomain"
                    for="sanadiDomain">{{lang.map.sanadi_classification}}</label>
             <ng-select (change)="loadSanadiMainClassification($event)" [readonly]="readonly"
@@ -348,7 +349,7 @@
             </ng-select>
             <app-field-error-message controlName="sanadiDomain"></app-field-error-message>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper" *ngIf="isAidsProjectType()">
             <label class="form-label" asteriskIfRequired="sanadiMainClassification"
                    for="sanadiMainClassification">{{lang.map.sanadi_main_classification}}</label>
             <ng-select [readonly]="readonly"

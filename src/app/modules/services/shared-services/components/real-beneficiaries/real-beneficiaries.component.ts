@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {UntypedFormBuilder} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl} from '@angular/forms';
 import {ListModelComponent} from '@app/generics/ListModel-component';
 import {RealBeneficiary} from '@models/real-beneficiary';
 import {LangService} from '@services/lang.service';
@@ -19,6 +19,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     return ReadBenefucuariesPopupComponent;
   }
   @Input() readonly!: boolean;
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   @Input() set list(_list: RealBeneficiary[]) {
     this._list = _list;

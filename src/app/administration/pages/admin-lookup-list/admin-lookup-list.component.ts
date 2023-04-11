@@ -465,10 +465,7 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
       .subscribe(() => {
         this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: model.getName()}));
         this.reload$.next(null);
-      }, () => {
-        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
-        this.reload$.next(null);
-      });
+      },()=> this.reload$.next(null));
   }
   delete(model: AdminLookup, $event?: MouseEvent) {
     if (this.readonly) {
@@ -479,10 +476,7 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
       .subscribe(() => {
         this.toast.success(this.lang.map.msg_delete_success.change({x: model.getName()}));
         this.reload$.next(null);
-      }, () => {
-        this.toast.error(this.lang.map.msg_delete_fail.change({x: model.getName()}));
-        this.reload$.next(null);
-      });
+      }, ()=> this.reload$.next(null));
   }
 
 }

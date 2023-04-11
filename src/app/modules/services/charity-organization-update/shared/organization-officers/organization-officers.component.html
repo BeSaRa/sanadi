@@ -4,7 +4,7 @@
     <app-table
       #table
       [useSearchToFilter]="true"
-      [selectable]="true"
+      [selectable]="true" [filter]="filterControl.value"
       [data]="selectedOrganizationOfficers"
       [columns]="organizationOfficerDisplayedColumns"
       sortableTable
@@ -16,7 +16,7 @@
       >
       <ng-container cdkColumnDef="extra-header">
         <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-          <table-header [tableTitle]="_label" [add$]="add$" [skipClearSort]="true" [skipSearch]="true">
+          <table-header [tableTitle]="_label" [add$]="add$" [skipClearSort]="true" (textChange)="filterControl.setValue($event)">
           </table-header>
         </th>
       </ng-container>

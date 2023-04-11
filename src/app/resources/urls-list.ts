@@ -43,6 +43,7 @@ export const urlsList: Partial<IAppUrls> = {
   ATTACHMENT_TYPES_SERVICE_DATA: 'admin/attachment-type/service',
   ATTACHMENT_TYPES_CUSTOM_PROPERTIES: 'admin/attachment-type/custom-properties',
   COUNTRY: 'admin/country',
+  CHANGE_LANGUAGE: 'auth/lang',
   AUTHENTICATE: 'auth/nas/login',
   INTERNAL_AUTHENTICATE: 'auth/internal/login',
   VALIDATE_TOKEN: '/auth/validate-token',

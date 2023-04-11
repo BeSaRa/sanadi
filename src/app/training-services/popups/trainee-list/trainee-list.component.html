@@ -41,7 +41,7 @@
             </td>
           </ng-container>
 
-          <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
