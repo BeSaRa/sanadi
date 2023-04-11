@@ -19,21 +19,21 @@ export class MoeStudentInfoComponent {
   constructor(public lang: LangService) {
   }
   headerColumn: string[] = ['extra-header'];
-  
+
   displayedColumns: string[] = ['studentQID', 'gradeLevelEN', 'gradeLevelAR', 'studentNameEN', 'schoolNameAR', 'schoolNameEN', 'actions'];
   filterControl: UntypedFormControl = new UntypedFormControl('');
-  
+
   actions: IMenuItem<GdxMoeResponse>[] = [
     {
       type: 'action',
-      label: 'select_item',
+      label: 'select',
       show: () => true,
       onClick: (item: GdxMoeResponse) => this.setSelectedStudentInfo(item)
     }
   ];
 
   selectedMoeStudentInfo?: GdxMoeResponse;
-  
+
   setSelectedStudentInfo(item?: GdxMoeResponse) {
     this.selectedMoeStudentInfo = item;
     this.onSelectStudentInfo.emit(item);
