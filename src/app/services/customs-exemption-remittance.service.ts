@@ -102,15 +102,15 @@ export class CustomsExemptionRemittanceService extends BaseGenericEService<Custo
   }
 
   @CastResponse(undefined)
-  _validateDocumentByRequestType(requestType: number, exportedBookId: string): Observable<CustomsExemptionRemittance> {
+  _validateDocumentByRequestType(requestType: number, oldFullSerial : string): Observable<CustomsExemptionRemittance> {
     return this.http.post<CustomsExemptionRemittance>(this._getURLSegment() + '/draft/validate', {
       requestType,
-      exportedBookId
+      oldFullSerial
     });
   }
 
-  validateDocumentByRequestType<T>(caseType: CaseTypes, requestType: number, exportedBookId: string): Observable<T | undefined | CustomsExemptionRemittance> {
-    return this._validateDocumentByRequestType(requestType, exportedBookId);
+  validateDocumentByRequestType<T>(caseType: CaseTypes, requestType: number, oldFullSerial: string): Observable<T | undefined | CustomsExemptionRemittance> {
+    return this._validateDocumentByRequestType(requestType, oldFullSerial);
   }
 
 
