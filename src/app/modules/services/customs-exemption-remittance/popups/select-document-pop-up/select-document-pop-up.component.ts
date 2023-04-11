@@ -61,7 +61,7 @@ export class SelectDocumentPopUpComponent {
   }
 
   selectDocument(document: CustomsExemptionRemittance): void {
-    this.customsExemptionRemittanceService.validateDocumentByRequestType(this.caseType, this.requestType, document.exportedBookId)
+    this.customsExemptionRemittanceService.validateDocumentByRequestType(this.caseType, this.requestType, document.fullSerial)
       .subscribe((documentDetails) => {
         if (!documentDetails) {
           return;
