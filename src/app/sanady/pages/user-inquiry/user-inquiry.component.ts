@@ -32,6 +32,7 @@ import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
 import {TabMap} from '@app/types/types';
 import {IGdxCriteria} from '@contracts/i-gdx-criteria';
 import {GdxMophResponse} from '@app/models/gdx-moph-response';
+import {PermissionsEnum} from '@enums/permissions-enum';
 
 @Component({
   selector: 'app-user-inquiry',
@@ -53,7 +54,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
               private activeRoute: ActivatedRoute,
               private empService: EmployeeService,
               private eCookieService: ECookieService) {
-    this.searchByNamePermission = empService.checkPermissions('BEN_SEARCH_NAME');
+    this.searchByNamePermission = empService.checkPermissions(PermissionsEnum.SANADI_SEARCH_BENEFICIARY_BY_NAME);
     if (!this.searchByNamePermission) {
       this.displayIdCriteria = true;
     }
