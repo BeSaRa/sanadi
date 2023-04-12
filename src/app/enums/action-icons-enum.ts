@@ -60,5 +60,6 @@ export enum ActionIconsEnum {
   CERTIFICATE = 'mdi-certificate',
   USER_CLOCK = 'mdi-account-clock',
   POLL = 'mdi-poll',
-  BLOCK = 'mdi-block-helper'
+  BLOCK = 'mdi-block-helper',
+  FILE_HISTORY = 'mdi-file-clock'
 }

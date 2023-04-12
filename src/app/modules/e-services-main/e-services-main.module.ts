@@ -23,13 +23,17 @@ import {
 import {
   FormlySelectFieldComponent
 } from '@app/services-search/components/formly-select-field/formly-select-field.component';
+import { CaseAuditPopupComponent } from './popups/case-audit-popup/case-audit-popup.component';
+import { CaseAuditDifferencesPopupComponent } from './popups/case-audit-differences-popup/case-audit-differences-popup.component';
 
 @NgModule({
   declarations: [
     SelectLicensePopupComponent,
     SelectTemplatePopupComponent,
     SelectedLicenseTableComponent,
-    SelectBankAccountPopupComponent
+    SelectBankAccountPopupComponent,
+    CaseAuditPopupComponent,
+    CaseAuditDifferencesPopupComponent
   ],
   imports: [
     CommonModule,

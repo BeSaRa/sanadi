@@ -1,0 +1,31 @@
+<div class="dropdown" id="auditLogsDropdownContainer" [tooltip]="lang.map.version_history">
+  <button class="btn btn-sm btn-outline-primary h-100 dropdown-toggle" type="button"
+          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="mdi {{actionIconsEnum.FILE_HISTORY}}"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end p-0 shadow" aria-labelledby="caseHistoryDropdown">
+    <ng-container *ngIf="auditList.length === 0; else auditListTemplate">
+      <li class="text-center">{{lang.map.msg_not_found}}</li>
+    </ng-container>
+  </ul>
+</div>
+
+<ng-template #auditListTemplate>
+  <ng-container *ngFor="let item of auditList; let last = last">
+    <li>
+      <ng-container [ngTemplateOutlet]="historyTemplate" [ngTemplateOutletContext]="{data: item}"></ng-container>
+    </li>
+    <li *ngIf="!last">
+      <hr class="dropdown-divider m-0">
+    </li>
+  </ng-container>
+</ng-template>
+
+<ng-template #historyTemplate let-auditItem="data">
+  <button class="dropdown-item p-2 text-primary" type="button" (click)="openViewChanges(auditItem)">
+    <div class="d-flex justify-content-between">
+      <span class="text-truncate">{{lang.map.version_x.change({x: auditItem.version})}}</span>
+    </div>
+    <div class="text-end">{{auditItem.auditDateString}}</div>
+  </button>
+</ng-template>

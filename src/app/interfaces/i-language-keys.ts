@@ -1,4 +1,10 @@
 export interface ILanguageKeys {
+  version_x: string;
+  differences: string;
+  lbl_record_added: string;
+  lbl_record_updated: string;
+  lbl_record_deleted: string;
+  version_history: string;
   add_followup: string;
   msg_check_x_duplicate: string;
   msg_session_timed_out: string;
