@@ -85,6 +85,7 @@ export interface ILanguageKeys {
   you_should_add_at_least_one_payment_in_payments: string;
   payment_name: string;
   add_payment: string;
+  payment: string;
   save_final_general_notes: string;
   final_general_notes: string;
   final_comments_saved_successfully: string;
@@ -207,7 +208,11 @@ export interface ILanguageKeys {
   you_should_add_at_least_one_purpose_in_purposes: string;
   you_should_add_at_least_one_person_to_executives_list: string;
   add_purpose: string;
-  add_executive: string;
+  purposes: string;
+  purpose: string;
+  add_executive: string
+  executive: string;
+  executives: string;
   transfer_purpose: string;
   btn_determine_the_end_date_of_the_contract: string;
   msg_user_identifier_is_already_exist: string;

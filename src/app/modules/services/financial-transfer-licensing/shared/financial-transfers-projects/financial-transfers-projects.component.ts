@@ -56,7 +56,6 @@ export class FinancialTransfersProjectsComponent implements OnInit {
   financialTransferProjectControl!: UntypedFormControl;
   totalQatariRiyalTransactions = 0;
   lastQatariTransactionAmountValue:any;
-  showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   commonStatusEnum = CommonStatusEnum;
@@ -165,7 +164,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
   ];
 
   addAllowed(): boolean {
-    return !this.readonly && this.requestType == FinancialTransferRequestTypes.NEW && !this.showForm;
+    return !this.readonly && this.requestType == FinancialTransferRequestTypes.NEW;
   }
 
   private listenToAdd() {
@@ -180,7 +179,6 @@ export class FinancialTransfersProjectsComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((FinancialTransfersProject) => {
         this.current = FinancialTransfersProject || undefined;
-        this.showForm = !!this.current;
         this.updateForm(this.current);
       });
   }
@@ -353,7 +351,6 @@ export class FinancialTransfersProjectsComponent implements OnInit {
 
   cancel() {
     this.resetForm();
-    this.showForm = false;
     this.viewOnly = false;
     this.editItem = undefined;
     this._setComponentReadiness('READY');
