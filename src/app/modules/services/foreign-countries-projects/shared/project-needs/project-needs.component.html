@@ -1,95 +1,82 @@
-<table
-  class="table mt-3 table-striped table-bordered caption-top"
-  cdk-table
-  [dataSource]="projectNeeds"
->
-  <ng-container cdkColumnDef="extra-header">
-    <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-      <table-header tableTitle="project_needs"
-       [add$]="add$" 
-       [allowAdd]="isAddingAllowed()" 
-       [skipClearSort]="true" 
-       [hidden]="projectNeedsForm.controls.length"
-       >
-      </table-header>
-    </th>
-  </ng-container>
-  <ng-container cdkColumnDef="projectName">
-    <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.project_name }}</th>
-    <td cdk-cell *cdkCellDef="let row">{{ row.projectName }}</td>
-    <td cdk-footer-cell *cdkFooterCellDef></td>
-  </ng-container>
-  <ng-container cdkColumnDef="projectDescription">
-    <th cdk-header-cell *cdkHeaderCellDef>
-      {{ lang.map.project_description }}
-    </th>
-    <td cdk-cell *cdkCellDef="let row">{{ row.projectDescription }}</td>
-    <td cdk-footer-cell *cdkFooterCellDef></td>
-  </ng-container>
+<div class="table-responsive">
+  <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="columns"
+    [filter]="filterControl.value" [useSearchToFilter]="true">
+    <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="projectNeeds">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header tableTitle="project_needs" [add$]="add$" [allowAdd]="isAddingAllowed()" [skipClearSort]="true"
+            (textChange)="filterControl.setValue($event)">
+          </table-header>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="projectName">
+        <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.project_name }}</th>
+        <td cdk-cell *cdkCellDef="let row">{{ row.projectName }}</td>
+        <td cdk-footer-cell *cdkFooterCellDef></td>
+      </ng-container>
+      <ng-container cdkColumnDef="projectDescription">
+        <th cdk-header-cell *cdkHeaderCellDef>
+          {{ lang.map.project_description }}
+        </th>
+        <td cdk-cell *cdkCellDef="let row">{{ row.projectDescription }}</td>
+        <td cdk-footer-cell *cdkFooterCellDef></td>
+      </ng-container>
 
-  <ng-container cdkColumnDef="beneficiaries">
-    <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_beneficiaries_nature }}</th>
-    <td cdk-cell *cdkCellDef="let row">{{ row.beneficiaries }}</td>
-    <td cdk-footer-cell *cdkFooterCellDef></td>
-  </ng-container>
-  <ng-container cdkColumnDef="goals">
-    <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.project_goals }}</th>
-    <td cdk-cell *cdkCellDef="let row">{{ row.goals }}</td>
-    <td cdk-footer-cell *cdkFooterCellDef></td>
-  </ng-container>
-  <ng-container cdkColumnDef="totalCost">
-    <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.total_cost }}</th>
-    <td cdk-cell class="text-end"
-        *cdkCellDef="let row">{{ (row.totalCost ?? 0) | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
-  </ng-container>
-  <ng-container cdkColumnDef="actions">
-    <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
-    <td cdk-cell *cdkCellDef="let row; let i = index" class="table-actions">
-      <div class="d-flex flex-row">
-        <button
-          (click)="deleteRow($event, row, i)"
-          class="icon-btn text-primary"
-          [disabled]="readonly" [hidden]="readonly"
-          tooltip="{{ lang.map.btn_delete }}"
-        >
-          <i class="mdi mdi-close-box"></i>
-        </button>
-        <button
-          (click)="editRow($event, row, i)"
-          class="icon-btn text-primary"
-          [disabled]="readonly" [hidden]="readonly"
-          tooltip="{{ lang.map.btn_edit }}"
-        >
-          <i class="mdi mdi-pen"></i>
-        </button>
-        <button
-          (click)="viewRow($event, row, i)"
-          class="icon-btn text-primary"
-          tooltip="{{ lang.map.view }}"
-        >
-          <i class="mdi mdi-eye"></i>
-        </button>
-      </div>
-    </td>
-  </ng-container>
-  <ng-container cdkColumnDef="totalCostFooterLabel">
-    <td cdk-footer-cell [colSpan]="footerLabelColSpan" class="text-end" *cdkFooterCellDef="let row">
-      <span><b> {{lang.map.total_cost}}: </b></span>
-    </td>
-  </ng-container>
-  <ng-container cdkColumnDef="totalCostFooter">
-    <td cdk-footer-cell class="text-end" *cdkFooterCellDef="let row">
-      <span><b>{{calculateTotalCost() | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR }}</b></span>
-    </td>
-  </ng-container>
-  <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-  <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
-  <tr cdk-row *cdkRowDef="let row; columns: columns"></tr>
-  <tr cdk-footer-row *cdkFooterRowDef="footerColumns" [hidden]="!list || list.length === 0"></tr>
+      <ng-container cdkColumnDef="beneficiaries">
+        <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_beneficiaries_nature }}</th>
+        <td cdk-cell *cdkCellDef="let row">{{ row.beneficiaries }}</td>
+        <td cdk-footer-cell *cdkFooterCellDef></td>
+      </ng-container>
+      <ng-container cdkColumnDef="goals">
+        <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.project_goals }}</th>
+        <td cdk-cell *cdkCellDef="let row">{{ row.goals }}</td>
+        <td cdk-footer-cell *cdkFooterCellDef></td>
+      </ng-container>
+      <ng-container cdkColumnDef="totalCost">
+        <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.total_cost }}</th>
+        <td cdk-cell class="text-end" *cdkCellDef="let row">{{ (row.totalCost ?? 0) |
+          mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
+        <td cdk-cell *cdkCellDef="let row; let i = index" class="table-actions">
+          <div class="d-flex flex-row">
+            <button (click)="deleteRow($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
+              [hidden]="readonly" tooltip="{{ lang.map.btn_delete }}">
+              <i class="mdi mdi-close-box"></i>
+            </button>
+            <button (click)="editRow($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
+              [hidden]="readonly" tooltip="{{ lang.map.btn_edit }}">
+              <i class="mdi mdi-pen"></i>
+            </button>
+            <button (click)="viewRow($event, row, i)" class="icon-btn text-primary" tooltip="{{ lang.map.view }}">
+              <i class="mdi mdi-eye"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container cdkColumnDef="totalCostFooterLabel">
+        <td cdk-footer-cell [colSpan]="footerLabelColSpan" class="text-end" *cdkFooterCellDef="let row">
+          <span><b> {{lang.map.total_cost}}: </b></span>
+        </td>
+      </ng-container>
+      <ng-container cdkColumnDef="totalCostFooter">
+        <td cdk-footer-cell class="text-end" *cdkFooterCellDef="let row">
+          <span><b>{{calculateTotalCost() | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR
+              }}</b></span>
+        </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columns"></tr>
+      <tr cdk-footer-row *cdkFooterRowDef="footerColumns" [hidden]="!list || list.length === 0"></tr>
 
-  <tr *cdkNoDataRow>
-    <td colspan="100" class="text-center">
-      {{ lang.map.no_records_to_display }}
-    </td>
-  </tr>
-</table>
+      <tr *cdkNoDataRow>
+        <td colspan="100" class="text-center">
+          {{ lang.map.no_records_to_display }}
+        </td>
+      </tr>
+    </table>
+    <app-paginator #paginator></app-paginator>
+  </app-table>
+</div>

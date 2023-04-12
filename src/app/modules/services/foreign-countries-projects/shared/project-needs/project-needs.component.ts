@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, } from '@angular/forms';
 import { CaseTypes } from '@enums/case-types.enum';
 import { UserClickOn } from '@enums/user-click-on.enum';
 import { ProjectNeed, ProjectNeeds } from '@models/project-needs';
@@ -38,6 +38,7 @@ export class ProjectNeedsComponent implements OnInit, AfterViewInit {
   footerLabelColSpan: number = this.columns.length - 2;
   projectNeeds = new BehaviorSubject<ProjectNeeds>([]);
   editRecordIndex = -1;
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   @Input() readonly = false;
   @Input() caseType?: CaseTypes;
