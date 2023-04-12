@@ -61,7 +61,6 @@ export class ExecutiveManagementComponent implements OnInit {
   }
 
   editItem?: ExecutiveManagement;
-  showForm: boolean = false;
   viewOnly: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
@@ -143,7 +142,6 @@ export class ExecutiveManagementComponent implements OnInit {
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.current = record || undefined;
-      this.showForm = !!this.current;
       this.updateForm(this.current);
     });
   }
@@ -281,7 +279,6 @@ export class ExecutiveManagementComponent implements OnInit {
 
   cancel() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');
