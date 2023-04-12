@@ -17,6 +17,7 @@ import {ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, of, Subject} from 'rxjs';
 import {CustomValidators} from '@app/validators/custom-validators';
 import { FinancialTransferRequestTypes } from '@app/enums/service-request-types';
+import { FinancialTransfersProjectsPopupComponent } from './financial-transfers-projects-popup/financial-transfers-projects-popup.component';
 
 @Component({
   selector: 'financial-transfers-projects',
@@ -190,10 +191,13 @@ export class FinancialTransfersProjectsComponent implements OnInit {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
+      this.openFormPopup();
       this.form.patchValue(record);
       this.lastQatariTransactionAmountValue = this.qatariTransactionAmount.value
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable()
       }
 
     } else {
@@ -421,5 +425,25 @@ export class FinancialTransfersProjectsComponent implements OnInit {
         this.form.patchValue({...project,qatariTransactionAmount:this.qatariTransactionAmount.value});
         this.selectedProject = project
       });
+  }
+  _getPopupComponent() {
+    return FinancialTransfersProjectsPopupComponent;
+  }
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form : this.form,
+      readonly : this.readonly,
+      editItem : this.editItem,
+      model : this.current,
+      financialTransferProjectControl : this.financialTransferProjectControl,
+      approvedFinancialTransferProjects : this.approvedFinancialTransferProjects,
+      selectedProject : this.selectedProject,
+        }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancel();
+      }
+    })
   }
 }

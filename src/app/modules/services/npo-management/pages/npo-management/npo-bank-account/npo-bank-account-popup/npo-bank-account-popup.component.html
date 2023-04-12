@@ -1,0 +1,59 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{ editIndex > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
+      lang.map.bank_details }}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+  </div>
+<div class="dialog-content no-fixed-height">
+    <div [formGroup]="form">
+        <div formGroupName="bankAccount">
+            <ng-container *ngFor="let account of bankAccountsFormArray.controls; let i = index">
+            <div [formGroupName]="i">
+                <div class="row">
+                <div class="col-sm-12 col-md-6 mb-4 position-relative">
+                    <label asteriskIfRequired="bankId" for="bankId" class="form-label">{{lang.map.bank_name}}</label>
+                    <ng-select [selectOnTab]="true" labelForId="bankId" [clearable]="false" placeholder="{{lang.map.select}}"
+                    id="bankId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+                    formControlName="bankId" validationClasses="bankId">
+                    <ng-option *ngFor="let option of bankList" [value]="option.id">
+                        {{option.getName()}}
+                    </ng-option>
+                    </ng-select>
+                    <app-field-error-message controlName="bankId"></app-field-error-message>
+                </div>
+                <div class="col-sm-12 col-md-6 mb-4 position-relative">
+                    <label asteriskIfRequired="accountNumber" for="accountNumber"
+                    class="form-label">{{lang.map.account_number}}</label>
+                    <input id="accountNumber" [readonly]="readonly" validationClasses="accountNumber"
+                    formControlName="accountNumber" trimInput class="form-control">
+                    <app-field-error-message controlName="accountNumber"></app-field-error-message>
+                </div>
+                </div>
+                <div class="row">
+                <div class="col-sm-12 col-md-6 mb-4 position-relative">
+                    <label asteriskIfRequired="iban" for="iban" class="form-label">{{lang.map.iban}}</label>
+                    <input id="iban" validationClasses="iban" [readonly]="readonly" formControlName="iban" trimInput
+                    class="form-control">
+                    <app-field-error-message controlName="iban"></app-field-error-message>
+                </div>
+                <div class="col-sm-12 col-md-6 mb-4 position-relative">
+                    <label asteriskIfRequired="currency" for="currency" class="form-label">{{lang.map.currency}}</label>
+                    <ng-select [selectOnTab]="true" labelForId="currency" [clearable]="false" placeholder="{{lang.map.select}}"
+                    id="currency" [notFoundText]="lang.map.msg_not_found" [readonly]="true" appendTo="body" formControlName="currency"
+                    validationClasses="currency">
+                    <ng-option *ngFor="let option of currenciesList" [value]="option.lookupKey">
+                        {{option.getName()}}
+                    </ng-option>
+                    </ng-select>
+                    <app-field-error-message controlName="currency"></app-field-error-message>
+                </div>
+                </div>
+            </div>
+            </ng-container>
+        </div>
+        </div> 
+</div>
+<div class="dialog-actions">
+    <button (click)="save()" [disabled]="!form.valid" *ngIf="!readonly"
+        class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
+    <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>

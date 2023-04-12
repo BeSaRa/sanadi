@@ -9,6 +9,7 @@ import {BankBranch} from '@app/models/bank-branch';
 import {filter, map, take, takeUntil} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DateUtils} from '@helpers/date-utils';
+import { BankBranchPopupComponent } from './bank-branch-popup/bank-branch-popup.component';
 
 @Component({
   selector: 'bank-branch',
@@ -117,9 +118,12 @@ export class BankBranchComponent implements OnInit {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
+      this.openFormPopup();
       branchFormArray.push(this.fb.group(branch.getBranchFields(true)));
       if (this.readonly || this.viewOnly) {
         this.branchesFormArray.disable();
+      } else {
+        this.branchesFormArray.enable()
       }
     } else {
       this._setComponentReadiness('READY');
@@ -134,23 +138,9 @@ export class BankBranchComponent implements OnInit {
   }
 
   private listenToSave() {
-    const branchForm$ = this.save$.pipe(map(() => {
+    this.save$.pipe(map(() => {
       return (this.form.get('branches.0')) as AbstractControl;
-    }));
-
-    const validForm$ = branchForm$.pipe(filter((form) => form.valid));
-    const invalidForm$ = branchForm$.pipe(filter((form) => form.invalid));
-    invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.dialogService
-        .error(this.lang.map.msg_all_required_fields_are_filled)
-        .onAfterClose$
-        .pipe(take(1))
-        .subscribe(() => {
-          this.form.get('branches')?.markAllAsTouched();
-        });
-    });
-
-    validForm$.pipe(
+    })).pipe(
       takeUntil(this.destroy$),
       map(() => {
         return (this.form.get('branches.0')) as UntypedFormArray;
@@ -237,5 +227,27 @@ export class BankBranchComponent implements OnInit {
           this.toastService.success(this.lang.map.msg_delete_success);
         }
       });
+  }
+  _getPopupComponent() {
+    return BankBranchPopupComponent;
+  }
+
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form : this.form,
+      readonly : this.readonly,
+      editIndex : this.editIndex,
+      model : this.currentRecord,
+      branchesFormArray : this.branchesFormArray,
+      viewOnly : this.viewOnly,
+      datepickerOptionsMap : this.datepickerOptionsMap,
+
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.saveBranch()
+      } else {
+        this.cancelBranch();
+      }
+    })
   }
 }

@@ -13,6 +13,7 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {filter, map, take, takeUntil} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {FounderMembers} from "@app/models/founder-members";
+import { FounderMembersPopupComponent } from './founder-members-popup/founder-members-popup.component';
 
 @Component({
   selector: 'founder-members',
@@ -66,7 +67,6 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
     this._jb.loadActive().subscribe((data) => {
       this.jobTitleAdminLookup = data;
     })
-    this._handleInitData();
     this.buildForm();
     this.listenToAdd();
     this.listenToChange();
@@ -80,9 +80,6 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  private _handleInitData() {
-  }
-
   private buildForm() {
     this.form = this.fb.group({
       founderMembers: this.fb.array([])
@@ -91,10 +88,6 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
 
   get founderMembersFormArray(): UntypedFormArray {
     return (this.form.get('founderMembers')) as UntypedFormArray;
-  }
-
-  addAllowed(): boolean {
-    return !this.readonly;
   }
 
   private listenToAdd() {
@@ -112,6 +105,28 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
       })
   }
 
+  _getPopupComponent() {
+    return FounderMembersPopupComponent;
+  }
+
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form: this.form,
+      readonly: this.readonly,
+      editIndex: this.editIndex,
+      model: this.current,
+      founderMembersFormArray: this.founderMembersFormArray,
+      nationalityList:this.nationalityList,
+      jobTitleAdminLookup: this.jobTitleAdminLookup
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancel();
+      }
+    })
+  }
+
   private updateForm(record: FounderMembers | undefined) {
     const founderMembersFormArray = this.founderMembersFormArray;
     founderMembersFormArray.clear();
@@ -119,6 +134,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
     if (record) {
       this._setComponentReadiness('NOT_READY');
       founderMembersFormArray.push(this.fb.group((record.getFounderMembersFields(true))));
+      this.openFormPopup()
     } else {
       this._setComponentReadiness('READY');
     }
@@ -132,24 +148,9 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
   }
 
   private listenToSave() {
-    const form$ = this.save$.pipe(map(() => {
+    this.save$.pipe(map(() => {
       return this.form.get('founderMembers.0') as AbstractControl;
-    }));
-
-    const validForm$ = form$.pipe(filter((form) => form.valid));
-    const invalidForm$ = form$.pipe(filter((form) => form.invalid));
-
-    invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.dialogService
-        .error(this.lang.map.msg_all_required_fields_are_filled)
-        .onAfterClose$
-        .pipe(take(1))
-        .subscribe(() => {
-          this.form.get('founderMembers')?.markAllAsTouched();
-        });
-    });
-
-    validForm$.pipe(
+    })).pipe(
       takeUntil(this.destroy$),
       filter((form) => {
         const valid = this._list.findIndex(f => f.identificationNumber == form.value.identificationNumber) == -1;
@@ -159,6 +160,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
           .pipe(take(1))
           .subscribe(() => {
             this.form.get('founderMembers')?.markAllAsTouched();
+            this.openFormPopup();
           });
         return valid || this.editIndex != -1
       }),
@@ -249,8 +251,5 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
   }
   openDateMenu(ref: any) {
     ref.toggleCalendar();
-  }
-  searchNgSelect(term: string, item: any): boolean {
-    return item.ngSelectSearch(term);
   }
 }
