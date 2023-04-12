@@ -13,6 +13,7 @@ import {
 import {
   SelectDocumentPopUpComponent
 } from '@modules/services/customs-exemption-remittance/popups/select-document-pop-up/select-document-pop-up.component';
+import { AuditCustomsExemptionComponent } from './audit/audit-customs-exemption/audit-customs-exemption.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import {
     CustomsExemptionComponent,
     CustomsExemptionOutputsComponent,
     CustomsExemptionApproveTaskPopupComponent,
-    SelectDocumentPopUpComponent
+    SelectDocumentPopUpComponent,
+    AuditCustomsExemptionComponent
   ],
   imports: [
     CommonModule,

@@ -13,6 +13,11 @@ import {CaseModel} from '@models/case-model';
 import {CaseTypes} from '@enums/case-types.enum';
 import {ComponentType} from '@angular/cdk/overlay';
 import {CaseAuditPopupComponent} from '@modules/e-services-main/popups/case-audit-popup/case-audit-popup.component';
+import {CustomsExemptionRemittance} from '@models/customs-exemption-remittance';
+import {CustomsExemptionRemittanceInterceptor} from '@model-interceptors/customs-exemption-remittance-interceptor';
+import {
+  AuditCustomsExemptionComponent
+} from '@modules/services/customs-exemption-remittance/audit/audit-customs-exemption/audit-customs-exemption.component';
 
 @CastResponseContainer({
   $default: {
@@ -28,9 +33,15 @@ import {CaseAuditPopupComponent} from '@modules/e-services-main/popups/case-audi
 })
 export class CaseAuditService extends CrudGenericService<CaseAudit> {
   list: CaseAudit[] = [];
-  caseModels: { [key in CaseTypes]?: any } = {};
-  caseInterceptors: { [key in CaseTypes]?: any } = {};
-  auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {};
+  caseModels: { [key in CaseTypes]?: any } = {
+    [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittance,
+  };
+  caseInterceptors: { [key in CaseTypes]?: any } = {
+    [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
+  };
+  auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
+    [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
+  };
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
