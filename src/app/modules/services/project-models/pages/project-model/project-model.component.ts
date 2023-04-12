@@ -1156,6 +1156,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.dialog.show(this._getEvaluationIndicatorsPopupComponent(), {
       form: this.evaluationIndicatorForm,
       readonly: this.readonly,
+      indicators:this.indicators,
+      editIndex:this.selectedIndicatorIndex,
+      model: this.evaluationIndicators,
     }).onAfterClose$.subscribe((data) => {
       if (data) {
         this.saveIndicator()
@@ -1166,6 +1169,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
   selectIndicator(event: MouseEvent, model: EvaluationIndicator) {
     this.addIndicatorFormActive = true;
+    this.openEvaluationIndicatorsFormPopup();
     event.preventDefault();
     this.selectedEvaluationIndicator = model;
     this.evaluationIndicatorForm.patchValue(this.selectedEvaluationIndicator!);
