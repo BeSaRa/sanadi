@@ -21,7 +21,6 @@ import {
 import {
   InterventionFieldListComponent
 } from '@modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
-import { AuditBankAccountListComponent } from './audit/audit-bank-account-list/audit-bank-account-list.component';
 
 
 @NgModule({
@@ -33,8 +32,7 @@ import { AuditBankAccountListComponent } from './audit/audit-bank-account-list/a
     ApprovalFormComponent,
     InterventionImplementingAgencyListComponent,
     InterventionRegionListComponent,
-    InterventionFieldListComponent,
-    AuditBankAccountListComponent
+    InterventionFieldListComponent
   ],
   imports: [
     CommonModule,
@@ -48,8 +46,7 @@ import { AuditBankAccountListComponent } from './audit/audit-bank-account-list/a
     ApprovalFormComponent,
     InterventionImplementingAgencyListComponent,
     InterventionRegionListComponent,
-    InterventionFieldListComponent,
-    AuditBankAccountListComponent
+    InterventionFieldListComponent
   ]
 })
 export class SharedServicesModule { }
