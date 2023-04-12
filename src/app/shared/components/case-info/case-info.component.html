@@ -24,7 +24,8 @@
       <label class="form-label">{{lang.map.serial_number}}</label>
       <div class="input-group">
         <span class="input-group-text"><i class="mdi mdi-counter text-primary"></i></span>
-        <span class="form-control input-disabled">{{fullSerial || '&nbsp;'}}</span>
+        <input readonly class="form-control input-disabled" [value]="fullSerial || ''">
+        <case-audit-log *ngIf="canShowVersionHistory" [model]="model"></case-audit-log>
       </div>
     </div>
   </div>
@@ -73,7 +74,8 @@
       <div class="input-group">
         <span class="input-group-text"><i class="mdi mdi-counter text-primary"></i></span>
         <span class="form-control input-disabled">{{generatedDocumentNumber || '&nbsp;'}}</span>
-        <a type="button" [tooltip]="lang.map.view" (click)="viewGeneralAssociationMeetingAttendanceInitApproveDocument()"
+        <a type="button" [tooltip]="lang.map.view"
+           (click)="viewGeneralAssociationMeetingAttendanceInitApproveDocument()"
            class="input-group-text"><i
           class="mdi mdi-eye text-primary"></i></a>
       </div>

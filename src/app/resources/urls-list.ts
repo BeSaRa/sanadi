@@ -141,4 +141,5 @@ export const urlsList: Partial<IAppUrls> = {
   USER_PREFERENCES: '/admin/user-preferences',
   TRAINING_PROGRAM_PARTNER: '/admin/training-program-partner',
   FIELD_ASSESSMENT_SERVICE: '/admin/field-assessment-service',
+  CASE_AUDIT: '/admin/case-audit'
 };

@@ -60,7 +60,9 @@ import {SendToComponent} from './popups/send-to-user-popup/send-to.component';
 import {ContextMenuModule} from '@modules/context-menu/context-menu.module';
 import {ActionWithCommentPopupComponent} from './popups/action-with-comment-popup/action-with-comment-popup.component';
 import {RecommendationPopupComponent} from './popups/recommendation-popup/recommendation-popup.component';
-import {ManageRecommendationPopupComponent} from './popups/manage-recommendation-popup/manage-recommendation-popup.component';
+import {
+  ManageRecommendationPopupComponent
+} from './popups/manage-recommendation-popup/manage-recommendation-popup.component';
 import {ManageCommentPopupComponent} from './popups/manage-comment-popup/manage-comment-popup.component';
 import {CaseViewerPopupComponent} from './popups/case-viewer-popup/case-viewer-popup.component';
 import {LocalizationKeyExistsDirective} from '../validators/localization-key-exists.directive';
@@ -69,7 +71,9 @@ import {CommentHistoryPopupComponent} from './popups/comment-history-popup/comme
 import {ViewerCaseInfoComponent} from './components/viewer-case-info/viewer-case-info.component';
 import {FilterRetiredStatusPipe} from './pipes/filter-retired-status.pipe';
 import {CustomTermPopupComponent} from './popups/custom-term-popup/custom-term-popup.component';
-import {RequestRecommendationsComponent} from '@app/shared/components/request-recommendations/request-recommendations.component';
+import {
+  RequestRecommendationsComponent
+} from '@app/shared/components/request-recommendations/request-recommendations.component';
 import {ValidationGroupClassesDirective} from './directives/validation-group-classes.directive';
 import {GroupErrorMessageComponent} from './components/group-error-message/group-error-message.component';
 import {SendToMultipleComponent} from './popups/send-to-multiple/send-to-multiple.component';
@@ -84,37 +88,53 @@ import {WorkItemStatusComponent} from './components/work-item-status/work-item-s
 import {InboxGridActionsComponent} from './components/inbox-grid-actions/inbox-grid-actions.component';
 import {ReadUnreadDirective} from './directives/read-unread.directive';
 import {RiskStatusDirective} from './directives/risk-status.directive';
-import {EServiceComponentWrapperComponent} from '@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component';
+import {
+  EServiceComponentWrapperComponent
+} from '@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component';
 import {CaseInfoComponent} from './components/case-info/case-info.component';
 import {GridActionsComponent} from './components/grid-actions/grid-actions.component';
 import {StepCheckListComponent} from './components/step-check-list/step-check-list.component';
 import {LangLoaderComponent} from './components/lang-loader/lang-loader.component';
-import {ApprovalFormMonthlyComponent} from '@app/modules/services/shared-services/components/approval-form-monthly/approval-form-monthly.component';
+import {
+  ApprovalFormMonthlyComponent
+} from '@app/modules/services/shared-services/components/approval-form-monthly/approval-form-monthly.component';
 import {BuildingPlateComponent} from './components/building-plate/building-plate.component';
 import {TranslatePipe} from '@app/pipes/translate.pipe';
 import {DatePipe} from '@app/pipes/date.pipe';
 import {FollowupComponent} from '@app/shared/popups/followup/followup.component';
 import {FollowupPopupComponent} from '@app/modules/followup/popups/followup-popup/followup-popup.component';
 import {ReasonPopupComponent} from './popups/reason-popup/reason-popup.component';
-import {ReturnToOrganizationPopupComponent} from './popups/return-to-organization-popup/return-to-organization-popup.component';
+import {
+  ReturnToOrganizationPopupComponent
+} from './popups/return-to-organization-popup/return-to-organization-popup.component';
 import {MultiAttachmentDirective} from './directives/multi-attachment.directive';
 import {CustomAttachmentPopupComponent} from './popups/custom-attachment-popup/custom-attachment-popup.component';
 import {AttachmentHandlerDirective} from './directives/attachment-handler.directive';
 import {TranslateNamePipe} from './pipes/translate-name.pipe';
-import {OtherAttachmentDetailsPopupComponent} from './popups/other-attachment-details-popup/other-attachment-details-popup.component';
+import {
+  OtherAttachmentDetailsPopupComponent
+} from './popups/other-attachment-details-popup/other-attachment-details-popup.component';
 import {ExternalOfficeListComponent} from '@app/shared/components/external-office-list/external-office-list.component';
-import {ExternalOfficesPopupComponent} from '@app/shared/components/external-offices-popup/external-offices-popup.component';
+import {
+  ExternalOfficesPopupComponent
+} from '@app/shared/components/external-offices-popup/external-offices-popup.component';
 import {ExecutiveManagementComponent} from '@app/shared/components/executive-management/executive-management.component';
 import {BankBranchComponent} from '@app/shared/components/bank-branch/bank-branch.component';
 import {ProfileCodeExistsDirective} from '@app/validators/profile-code-exists.directive';
-import {ProfileAttachmentDetailsPopupComponent} from './popups/profile-attachment-details-popup/profile-attachment-details-popup.component';
+import {
+  ProfileAttachmentDetailsPopupComponent
+} from './popups/profile-attachment-details-popup/profile-attachment-details-popup.component';
 import {CustomInputComponent} from '@app/shared/cva/custom-input/custom-input.component';
-import {ServiceLogItemLocationComponent} from '@app/shared/components/service-log-item-location/service-log-item-location.component';
+import {
+  ServiceLogItemLocationComponent
+} from '@app/shared/components/service-log-item-location/service-log-item-location.component';
 import {ServiceLogListComponent} from '@app/shared/components/service-log-list/service-log-list.component';
 import {HeadingRowComponent} from './components/heading-row/heading-row.component';
-import { HeaderNotificationsComponent } from './components/header-notifications/header-notifications.component';
-import { FilterInboxRequestPopupComponent } from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
-import { HeaderSearchFieldComponent } from './components/header-search-field/header-search-field.component';
+import {HeaderNotificationsComponent} from './components/header-notifications/header-notifications.component';
+import {
+  FilterInboxRequestPopupComponent
+} from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
+import {HeaderSearchFieldComponent} from './components/header-search-field/header-search-field.component';
 import {
   UserPreferencesPopupComponent
 } from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
@@ -122,7 +142,8 @@ import { CountryPopupComponent } from '@app/shared/popups/country-popup/country-
 import {
   EServiceWrapperButtonsComponent
 } from "@app/shared/components/e-service-wrapper-buttons/e-service-wrapper-buttons.component";
-
+import {CaseAuditLogComponent} from '@app/shared/components/case-audit-log/case-audit-log.component';
+import {ValueDifferencesListComponent} from './components/value-differences-list/value-differences-list.component';
 
 @NgModule({
   declarations: [
@@ -234,7 +255,9 @@ import {
     HeaderSearchFieldComponent,
     UserPreferencesPopupComponent,
     CountryPopupComponent,
-    EServiceWrapperButtonsComponent
+    EServiceWrapperButtonsComponent,
+    CaseAuditLogComponent,
+    ValueDifferencesListComponent
   ],
   imports: [
     CommonModule,
@@ -249,92 +272,94 @@ import {
     NgSelectModule,
     AngularMyDatePickerModule,
   ],
-    exports: [
-        CommonModule,
-        ContextMenuModule,
-        OverlayModule,
-        NgxMaskModule,
-        PortalModule,
-        A11yModule,
-        CdkTableModule,
-        ReactiveFormsModule,
-        FooterComponent,
-        HeaderComponent,
-        ErrorPageComponent,
-        MouseEnterLeaveDirective,
-        ToastComponent,
-        ServiceListComponent,
-        DialogCloseDirective,
-        PredefinedDialogComponent,
-        PageHeaderComponent,
-        LocalizationPopupComponent,
-        FieldErrorMessageComponent,
-        BulkActionsComponent,
-        TooltipDirective,
-        TabsListComponent,
-        TabComponent,
-        GridSearchComponent,
-        AsteriskIfRequiredDirective,
-        LoadingComponent,
-        VersionComponent,
-        SidebarComponent,
-        NgSelectModule,
-        AngularMyDatePickerModule,
-        DateFixDirective,
-        AttachmentListComponent,
-        TrimInputDirective,
-        ValidationClassesDirective,
-        DocumentsComponent,
-        CommentsComponent,
-        ViewDocumentPopupComponent,
-        CaseCommentPopupComponent,
-        TableComponent,
-        SortableTableDirective,
-        SortableHeaderComponent,
-        PaginatorComponent,
-        IndeterminateDirective,
-        RecommendationsComponent,
-        LocalizationKeyExistsDirective,
-        FullscreenBtnDirective,
-        ManageCommentPopupComponent,
-        FilterRetiredStatusPipe,
-        RequestRecommendationsComponent,
-        ValidationGroupClassesDirective,
-        GroupErrorMessageComponent,
-        AttachmentsComponent,
-        OnlyNumbersDirective,
-        LogViewerComponent,
-        SurveyViewComponent,
-        FileUploaderComponent,
-        TableHeaderComponent,
-        WorkItemStatusComponent,
-        InboxGridActionsComponent,
-        ReadUnreadDirective,
-        RiskStatusDirective,
-        EServiceComponentWrapperComponent,
-        GridActionsComponent,
-        LangLoaderComponent,
-        ApprovalFormMonthlyComponent,
-        BuildingPlateComponent,
-        TranslatePipe,
-        DatePipe,
-        FollowupComponent,
-        FollowupPopupComponent,
-        MultiAttachmentDirective,
-        AttachmentHandlerDirective,
-        TranslateNamePipe,
-        ExternalOfficeListComponent,
-        ExternalOfficesPopupComponent,
-        ExecutiveManagementComponent,
-        BankBranchComponent,
-        ProfileCodeExistsDirective,
-        CustomInputComponent,
-        ServiceLogListComponent,
-        ServiceLogItemLocationComponent,
-        HeadingRowComponent,
-        HeaderSearchFieldComponent,
-        CountryPopupComponent
-    ]
+  exports: [
+    CommonModule,
+    ContextMenuModule,
+    OverlayModule,
+    NgxMaskModule,
+    PortalModule,
+    A11yModule,
+    CdkTableModule,
+    ReactiveFormsModule,
+    FooterComponent,
+    HeaderComponent,
+    ErrorPageComponent,
+    MouseEnterLeaveDirective,
+    ToastComponent,
+    ServiceListComponent,
+    DialogCloseDirective,
+    PredefinedDialogComponent,
+    PageHeaderComponent,
+    LocalizationPopupComponent,
+    FieldErrorMessageComponent,
+    BulkActionsComponent,
+    TooltipDirective,
+    TabsListComponent,
+    TabComponent,
+    GridSearchComponent,
+    AsteriskIfRequiredDirective,
+    LoadingComponent,
+    VersionComponent,
+    SidebarComponent,
+    NgSelectModule,
+    AngularMyDatePickerModule,
+    DateFixDirective,
+    AttachmentListComponent,
+    TrimInputDirective,
+    ValidationClassesDirective,
+    DocumentsComponent,
+    CommentsComponent,
+    ViewDocumentPopupComponent,
+    CaseCommentPopupComponent,
+    TableComponent,
+    SortableTableDirective,
+    SortableHeaderComponent,
+    PaginatorComponent,
+    IndeterminateDirective,
+    RecommendationsComponent,
+    LocalizationKeyExistsDirective,
+    FullscreenBtnDirective,
+    ManageCommentPopupComponent,
+    FilterRetiredStatusPipe,
+    RequestRecommendationsComponent,
+    ValidationGroupClassesDirective,
+    GroupErrorMessageComponent,
+    AttachmentsComponent,
+    OnlyNumbersDirective,
+    LogViewerComponent,
+    SurveyViewComponent,
+    FileUploaderComponent,
+    TableHeaderComponent,
+    WorkItemStatusComponent,
+    InboxGridActionsComponent,
+    ReadUnreadDirective,
+    RiskStatusDirective,
+    EServiceComponentWrapperComponent,
+    GridActionsComponent,
+    LangLoaderComponent,
+    ApprovalFormMonthlyComponent,
+    BuildingPlateComponent,
+    TranslatePipe,
+    DatePipe,
+    FollowupComponent,
+    FollowupPopupComponent,
+    MultiAttachmentDirective,
+    AttachmentHandlerDirective,
+    TranslateNamePipe,
+    ExternalOfficeListComponent,
+    ExternalOfficesPopupComponent,
+    ExecutiveManagementComponent,
+    BankBranchComponent,
+    ProfileCodeExistsDirective,
+    CustomInputComponent,
+    ServiceLogListComponent,
+    ServiceLogItemLocationComponent,
+    HeadingRowComponent,
+    HeaderSearchFieldComponent,
+    CountryPopupComponent,
+    CaseAuditLogComponent,
+    ValueDifferencesListComponent
+  ]
 })
 export class SharedModule {
 }

@@ -24,6 +24,7 @@ import {
 import { SelectCustomServiceTemplatePopupComponent } from './popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
 import { BankAccountNewComponent } from './components/bank-account-new/bank-account-new.component';
 import { BankAccountNewPopupComponent } from './popups/bank-account-new-popup/bank-account-new-popup.component';
+import { AuditBankAccountListComponent } from './audit/audit-bank-account-list/audit-bank-account-list.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { BankAccountNewPopupComponent } from './popups/bank-account-new-popup/ba
     InterventionFieldListComponent,
     SelectCustomServiceTemplatePopupComponent,
     BankAccountNewComponent,
-    BankAccountNewPopupComponent
+    BankAccountNewPopupComponent,
+    AuditBankAccountListComponent
   ],
   imports: [
     CommonModule,
@@ -53,7 +55,8 @@ import { BankAccountNewPopupComponent } from './popups/bank-account-new-popup/ba
     InterventionImplementingAgencyListComponent,
     InterventionRegionListComponent,
     InterventionFieldListComponent,
-    BankAccountNewComponent
+    BankAccountNewComponent,
+    AuditBankAccountListComponent
   ]
 })
 export class SharedServicesModule { }
