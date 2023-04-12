@@ -817,7 +817,11 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
           }
           if (value === FinancialTransfereeTypes.AUTHORIZED_ENTITY) {
             this.receiverType.setValidators([CustomValidators.required]);
-            this.receiverType.setValue(ImplementingAgencyTypes.Partner);
+            if(this.transferType.value ===  FinancialTransferTypes.OVERSEAS_OFFICE_OPERATING_EXPENSES ){
+              this.receiverType.setValue(ImplementingAgencyTypes.ExternalOffice);
+            }else{
+              this.receiverType.setValue(ImplementingAgencyTypes.Partner);
+            }
           }
           this.receiverType.updateValueAndValidity();
         })

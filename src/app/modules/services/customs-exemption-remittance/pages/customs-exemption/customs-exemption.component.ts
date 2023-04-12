@@ -370,7 +370,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
       .pipe(takeUntil(this.destroy$))
       .pipe(
         exhaustMap((oldBookFullSerial) => {
-          return this.loadDocumentsByCriteria({exportedBookFullSerial: oldBookFullSerial, requestType: this.requestType.value})
+          return this.loadDocumentsByCriteria({oldFullSerial : oldBookFullSerial, requestType: this.requestType.value})
             .pipe(catchError(() => of([])));
         })
       )
@@ -393,7 +393,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
 
   private validateSingleDocument(document: CustomsExemptionRemittance): Observable<undefined | CustomsExemptionRemittance> {
     return this.service
-      .validateDocumentByRequestType<CustomsExemptionRemittance>(this.model!.caseType, this.requestType.value, document.exportedBookId) as Observable<undefined | CustomsExemptionRemittance>;
+      .validateDocumentByRequestType<CustomsExemptionRemittance>(this.model!.caseType, this.requestType.value, document.fullSerial) as Observable<undefined | CustomsExemptionRemittance>;
   }
 
   private openSelectDocument(documents: CustomsExemptionRemittance[]): Observable<undefined | CustomsExemptionRemittance> {
