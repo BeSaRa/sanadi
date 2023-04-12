@@ -1,0 +1,54 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+      aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content" #dialogContent>
+  <div [formGroup]="form">
+    <div class="row">
+      <!-- Arabic Name -->
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="arabicName" for="arabicName" class="form-label">{{ lang.map.lbl_arabic_name
+          }}</label>
+        <input type="text" validationClasses="arabicName" formControlName="arabicName" trimInput
+          [readonly]="readOnly" class="form-control" id="arabicName" />
+        <app-field-error-message controlName="arabicName"></app-field-error-message>
+      </div>
+      <!-- English Name -->
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="englishName" for="englishName" class="form-label">{{ lang.map.english_name }}</label>
+        <input type="text" validationClasses="englishName" formControlName="englishName"
+          [readonly]="readOnly" trimInput class="form-control" id="englishName" />
+        <app-field-error-message controlName="englishName"></app-field-error-message>
+      </div>
+      <!-- template type -->
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="approvalTemplateType"
+               for="approvalTemplateType">{{lang.map.template_type}}</label>
+        <ng-select [selectOnTab]="true" labelForId="approvalTemplateType" [clearable]="false"
+                   placeholder="{{lang.map.select}}" id="approvalTemplateType"
+                   [notFoundText]="lang.map.msg_not_found"
+                   formControlName="approvalTemplateType" validationClasses="approvalTemplateType">
+          <ng-option *ngFor="let option of approvalTemplateTypes" [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="approvalTemplateType"></app-field-error-message>
+      </div>
+      <!-- docx file -->
+      <div class="col-md-6 col-sm-12 mb-4 position-relative" *ngIf="!readOnly">
+        <file-uploader labelKey="template_file" [isRequired]="false" [loadedFile]="loadedTemplate"
+                      (fileUploadEvent)="setTemplateile($event)"
+                      [allowedExtensions]="[fileExtensionsEnum.DOCX]">
+        </file-uploader>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readOnly && !viewOnly"
+    class="btn btn-primary m-2">{{!!editIndex ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>

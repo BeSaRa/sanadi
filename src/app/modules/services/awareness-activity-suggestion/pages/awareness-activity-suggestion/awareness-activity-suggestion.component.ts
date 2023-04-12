@@ -47,7 +47,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     basicInfo: {
       name: 'basicInfoTab',
       langKey: 'lbl_basic_info' as keyof ILanguageKeys,
-      validStatus: () => this.requestTypeField,
+      validStatus: () => this.basicInfo.valid,
     },
     contactOfficer: {
       name: 'contactOfficerTab',
@@ -145,11 +145,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   _buildForm(): void {
     const model = new AwarenessActivitySuggestion().formBuilder(true);
     this.form = this.fb.group({
-      requestType: model.requestType,
+      basicInfo: this.fb.group(model.basicInfo),
       description: model.description,
-      subject: model.subject,
-      goal: model.goal,
-      oldLicenseFullSerial: model.oldLicenseFullSerial,
       beneficiariesNature: this.fb.group(model.beneficiariesNature),
       contactOfficer: this.fb.group(model.contactOfficer),
     });
@@ -212,12 +209,12 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   _prepareModel(): AwarenessActivitySuggestion | Observable<AwarenessActivitySuggestion> {
     const value = new AwarenessActivitySuggestion().clone({
       ...this.model,
-      requestType: this.form.value.requestType,
-      description: this.form.value.description,
-      subject: this.form.value.subject,
-      goal: this.form.value.goal,
+      requestType: this.form.value.basicInfo.requestType,
+      subject: this.form.value.basicInfo.subject,
+      goal: this.form.value.basicInfo.goal,
       ...this.form.value.contactOfficer,
       ...this.form.value.beneficiariesNature,
+      description: this.form.value.description,
       profileType: this.employeeService.getProfile()?.profileType
     });
     return value;
@@ -262,11 +259,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     this.model = model;
     const formModel = model.formBuilder();
     this.form.patchValue({
-      requestType: formModel.requestType,
+      basicInfo: formModel.basicInfo,
       description: formModel.description,
-      subject: formModel.subject,
-      goal: formModel.goal,
-      oldLicenseFullSerial: formModel.oldLicenseFullSerial,
       contactOfficer: formModel.contactOfficer,
       beneficiariesNature: formModel.beneficiariesNature,
     });
@@ -437,22 +431,22 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     return this.requestTypeField.value == CollectionRequestType.CANCEL;
   }
 
+  get basicInfo(): UntypedFormGroup {
+    return this.form.get('basicInfo') as UntypedFormGroup;
+  }
   get contactOfficer(): UntypedFormGroup {
     return this.form.get('contactOfficer') as UntypedFormGroup;
   }
-
   get beneficiariesNature(): UntypedFormGroup {
     return this.form.get('beneficiariesNature') as UntypedFormGroup;
   }
   get requestTypeField(): UntypedFormControl {
-    return this.form.get('requestType') as UntypedFormControl;
+    return this.basicInfo.get('requestType') as UntypedFormControl;
   }
-
   get specialExplanationsField(): UntypedFormControl {
     return this.form.get('description') as UntypedFormControl;
   }
-
   get oldLicenseFullSerialField(): UntypedFormControl {
-    return this.form.get('oldLicenseFullSerial') as UntypedFormControl;
+    return this.basicInfo.get('oldLicenseFullSerial') as UntypedFormControl;
   }
 }

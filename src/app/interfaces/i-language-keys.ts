@@ -1832,4 +1832,6 @@ export interface ILanguageKeys {
   msg_record_is_linked:string;
   previews_replays:string;
   sub_meeting_point_name:string;
+  template_type:string;
+  template_file:string;
 }

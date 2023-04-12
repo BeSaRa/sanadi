@@ -89,12 +89,13 @@ export class AwarenessActivitySuggestion
       oldLicenseFullSerial
     } = this;
     return {
-      requestType: controls ? [requestType, Validators.required] : requestType,
-      oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       description: controls ? [description, Validators.required] : description,
-      subject: controls ? [subject, [Validators.required]] : subject,
-      goal: controls ? [goal, [Validators.required]] : goal,
-
+      basicInfo: {
+        requestType: controls ? [requestType, Validators.required] : requestType,
+        oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
+        subject: controls ? [subject, [Validators.required]] : subject,
+        goal: controls ? [goal, [Validators.required]] : goal,
+      },
       contactOfficer: {
         contactQID: controls ? [contactQID, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : contactQID,
         contactName: controls ? [contactName, [CustomValidators.required, Validators.maxLength(300)]] : contactName,

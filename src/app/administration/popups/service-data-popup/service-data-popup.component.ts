@@ -1,31 +1,34 @@
-import {Component, Inject} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {AttachmentType} from '@app/models/attachment-type';
-import {InternalDepartment} from '@app/models/internal-department';
-import {Lookup} from '@app/models/lookup';
-import {ServiceData} from '@app/models/service-data';
-import {ServiceDataStep} from '@app/models/service-data-step';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ChecklistService} from '@app/services/checklist.service';
-import {DialogService} from '@app/services/dialog.service';
-import {InternalDepartmentService} from '@app/services/internal-department.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ServiceDataStepService} from '@app/services/service-data-step.service';
-import {ServiceDataService} from '@app/services/service-data.service';
-import {ToastService} from '@app/services/toast.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {TabMap} from '@app/types/types';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {AttachmentTypeService} from '@services/attachment-type.service';
-import {BehaviorSubject, iif, Observable, of, Subject} from 'rxjs';
-import {catchError, exhaustMap, filter, mapTo, switchMap, takeUntil, tap} from 'rxjs/operators';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { Component, ViewChild, Inject } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { CustomServiceTemplateComponent } from '@app/administration/shared/custom-service-template/custom-service-template.component';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { AttachmentType } from '@app/models/attachment-type';
+import { InternalDepartment } from '@app/models/internal-department';
+import { Lookup } from '@app/models/lookup';
+import { ServiceData } from '@app/models/service-data';
+import { ServiceDataStep } from '@app/models/service-data-step';
+import { CustomServiceTemplate } from '@app/models/custom-service-template';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ChecklistService } from '@app/services/checklist.service';
+import { DialogService } from '@app/services/dialog.service';
+import { InternalDepartmentService } from '@app/services/internal-department.service';
+import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
+import { ServiceDataStepService } from '@app/services/service-data-step.service';
+import { ServiceDataService } from '@app/services/service-data.service';
+import { ToastService } from '@app/services/toast.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { ReadinessStatus, TabMap } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { AttachmentTypeService } from '@services/attachment-type.service';
+import { BehaviorSubject, iif, Observable, of, Subject } from 'rxjs';
+import { catchError, exhaustMap, filter, mapTo, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'service-data-popup',
@@ -34,18 +37,21 @@ import {catchError, exhaustMap, filter, mapTo, switchMap, takeUntil, tap} from '
 })
 export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
 
+  customServiceTemplateTabStatus: ReadinessStatus = 'READY';
+  templatesList: CustomServiceTemplate[] = [];
+  @ViewChild('customServiceTemplateTab') customServiceTemplateComponentRef!: CustomServiceTemplateComponent;
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceData>,
-              private lookupService: LookupService,
-              public lang: LangService,
-              public fb: UntypedFormBuilder,
-              private toast: ToastService,
-              public dialogRef: DialogRef,
-              private attachmentTypeService: AttachmentTypeService,
-              private serviceDataStepsService: ServiceDataStepService,
-              private checklistService: ChecklistService,
-              private serviceData: ServiceDataService,
-              private dialog: DialogService,
-              private internalDepartmentService: InternalDepartmentService,
+    private lookupService: LookupService,
+    public lang: LangService,
+    public fb: UntypedFormBuilder,
+    private toast: ToastService,
+    public dialogRef: DialogRef,
+    private attachmentTypeService: AttachmentTypeService,
+    private serviceDataStepsService: ServiceDataStepService,
+    private checklistService: ChecklistService,
+    private serviceData: ServiceDataService,
+    private dialog: DialogService,
+    private internalDepartmentService: InternalDepartmentService,
   ) {
     super();
     this.model = data.model;
@@ -66,6 +72,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
   showMaxTargetAmount = false;
   showMaxElementsCount = false;
   showActivateDevelopmentField = false;
+  isTemplateTable = false;
   showAttachmentTypeField = false;
   attachmentTypesList: AttachmentType[] = [];
   departments: InternalDepartment[] = [];
@@ -111,6 +118,10 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
           return false;
         }
         if (this.customSettingsGroup.disabled) {
+          return true;
+        }
+        if (this.customServiceTemplateTabStatus === 'READY' &&
+          this.customServiceTemplateComponentRef && this.customServiceTemplateComponentRef.list.length > 0) {
           return true;
         }
         return this.customSettingsGroup.valid;
@@ -179,6 +190,9 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
     this.listenToViewStep();
     this.listenToFollowUpStatus();
     this.loadDepartments();
+    if (this.model.caseType == CaseTypes.ORGANIZATION_ENTITIES_SUPPORT || this.model.caseType == CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
+      this.loadTemplates(this.model.caseType);
+    }
   }
 
   loadDepartments() {
@@ -187,7 +201,12 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
       .subscribe(deps => this.departments = deps);
 
   }
-
+  loadTemplates(caseType: number) {
+    this.serviceData.loadTemplatesbyCaseType(caseType).subscribe((data: CustomServiceTemplate[]) => {
+      console.log(data)
+      this.templatesList = data;
+    })
+  }
   searchNgSelect(term: string, item: any): boolean {
     return item.ngSelectSearch(term);
   }
@@ -196,7 +215,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
     this.form = this.fb.group({
       basic: this.fb.group({
         caseType: [this.model.caseType, [CustomValidators.required, CustomValidators.number]],
-        bawServiceCode: [{value: this.model.bawServiceCode, disabled: true}, [
+        bawServiceCode: [{ value: this.model.bawServiceCode, disabled: true }, [
           CustomValidators.required,
           CustomValidators.unique<ServiceData>(this.list, 'bawServiceCode', this.model)]],
         arName: [this.model.arName, [
@@ -207,7 +226,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
           CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
           CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
         ]],
-        concernedDepartmentsIdsParsed: [{value: this.model.concernedDepartmentsIdsParsed, disabled: true}, []],
+        concernedDepartmentsIdsParsed: [{ value: this.model.concernedDepartmentsIdsParsed, disabled: true }, []],
         requestSerialCode: [this.model.requestSerialCode, [CustomValidators.required, CustomValidators.maxLength(20)]],
         licenseSerialCode: [this.model.licenseSerialCode, [CustomValidators.required, CustomValidators.maxLength(20)]],
         status: [this.model.status, [CustomValidators.required]],
@@ -254,7 +273,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
 
   afterSave(model: ServiceData, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
-    this.toast.success(message.change({x: model.getName()}));
+    this.toast.success(message.change({ x: model.getName() }));
     this.model = model;
     this.operation = OperationTypes.UPDATE;
     dialogRef.close(model);
@@ -267,6 +286,10 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
   }
 
   validateCustomSettingsFields() {
+    if (this.model.isAwarenessActivitySuggesion() || this.model.isOrgEntitySupport()) {
+      this.isTemplateTable = true;
+    }
+
     if (this.model.isExternalProjectModels()) {
       this.showActivateDevelopmentField = true;
     }
@@ -357,15 +380,15 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
       .valueChanges
       .pipe(switchMap(value => iif(() => value, of(value), of(value)
         .pipe(switchMap(_ => this.dialog.confirm(this.lang.map.followup_change_status_confirm).onAfterClose$))
-        .pipe(tap(val => val === UserClickOn.NO && this.followUpStatus.patchValue((this.model.followUp = true), {emitEvent: false})))
+        .pipe(tap(val => val === UserClickOn.NO && this.followUpStatus.patchValue((this.model.followUp = true), { emitEvent: false })))
         .pipe(filter(val => val === UserClickOn.YES), mapTo(value))
       )))
       .pipe(switchMap((value) => {
         return this.serviceData.toggleFollowUpStatus(this.model.id, value).pipe(mapTo(value));
       }))
       .subscribe(res => {
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: this.lang.map.followup}));
-        this.model = this.model.clone({followUp: res});
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: this.lang.map.followup }));
+        this.model = this.model.clone({ followUp: res });
       });
   }
 

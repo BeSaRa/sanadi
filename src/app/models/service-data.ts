@@ -77,7 +77,8 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
     return this.caseType == CaseTypes.EXTERNAL_PROJECT_MODELS ||
       this.caseType == CaseTypes.URGENT_INTERVENTION_LICENSING ||
       this.caseType == CaseTypes.COLLECTOR_LICENSING ||
-      this.caseType === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE;
+      this.caseType === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE ||
+      this.caseType === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION;
   }
 
   isExternalProjectModels() {
@@ -94,6 +95,14 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
 
   isCustomExemption() {
     return this.caseType == CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE;
+  }
+
+  isAwarenessActivitySuggesion() {
+    return this.caseType == CaseTypes.AWARENESS_ACTIVITY_SUGGESTION;
+  }
+
+  isOrgEntitySupport() {
+    return this.caseType == CaseTypes.ORGANIZATION_ENTITIES_SUPPORT;
   }
 
   updateStatus(newStatus: CommonStatusEnum): any {
