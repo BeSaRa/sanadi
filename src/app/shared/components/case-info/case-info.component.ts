@@ -1,5 +1,5 @@
-import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
-import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
+import {FinancialTransferLicensingService} from '@app/services/financial-transfer-licensing.service';
+import {FinancialTransferLicensing} from '@app/models/financial-transfer-licensing';
 import {Component, Input} from '@angular/core';
 import {CaseModel} from '@app/models/case-model';
 import {LangService} from '@app/services/lang.service';
@@ -20,6 +20,7 @@ import {GeneralAssociationMeetingAttendance} from '@app/models/general-associati
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
 import {SubmissionMechanisms} from '@app/enums/submission-mechanisms.enum';
 import {ProjectImplementation} from '@models/project-implementation';
+import {EmployeeService} from '@services/employee.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -29,17 +30,32 @@ import {ProjectImplementation} from '@models/project-implementation';
 })
 export class CaseInfoComponent {
   constructor(public lang: LangService,
+              private employeeService: EmployeeService,
               private licenseService: LicenseService,
               private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
               private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
-              private financialTransferLicensingService:FinancialTransferLicensingService,
+              private financialTransferLicensingService: FinancialTransferLicensingService,
               private sharedService: SharedService) {
   }
 
+  private _model!: CaseModel<any, any>;
   @Input()
-  model!: CaseModel<any, any>;
+  set model(value: CaseModel<any, any>) {
+    this._model = value;
+    this._setShowVersionHistory();
+  }
+
+  get model(): CaseModel<any, any> {
+    return this._model;
+  }
+
+  /*@Input()
+  model!: CaseModel<any, any>;*/
+
+  canShowVersionHistory: boolean = false;
+
   // this should be updated when ever you will add a new license service
-  private licenseCasList: number[] = [
+  private licenseCaseList: number[] = [
     CaseTypes.INTERNAL_PROJECT_LICENSE,
     CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.PARTNER_APPROVAL,
@@ -106,8 +122,7 @@ export class CaseInfoComponent {
       return (this.model as GeneralAssociationMeetingAttendance).fullSerial || '';
     } else if (this.model.getCaseType() === CaseTypes.FINANCIAL_TRANSFERS_LICENSING) {
       return (this.model as FinancialTransferLicensing).exportedLicenseFullSerial || '';
-    }
-     else {
+    } else {
       return '';
     }
   }
@@ -119,8 +134,7 @@ export class CaseInfoComponent {
       return (this.model as CustomsExemptionRemittance).bookId;
     } else if (this.model.getCaseType() === CaseTypes.FINANCIAL_TRANSFERS_LICENSING) {
       return (this.model as FinancialTransferLicensing).exportedLicenseId;
-    }
-     else {
+    } else {
       return '';
     }
 
@@ -135,7 +149,7 @@ export class CaseInfoComponent {
   }
 
   isLicenseCase(): boolean {
-    if (!this.licenseCasList.includes(this.model.getCaseType())) {
+    if (!this.licenseCaseList.includes(this.model.getCaseType())) {
       return false;
     }
     const caseStatus = this.model.getCaseStatus();
@@ -148,9 +162,8 @@ export class CaseInfoComponent {
 
       return (caseStatus === CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.UNDER_EXAMINATION);
     } else if (this.model.caseType === CaseTypes.FINANCIAL_TRANSFERS_LICENSING && this.model.submissionMechanism === SubmissionMechanisms.NOTIFICATION) {
-      return  caseStatus >= CommonCaseStatus.UNDER_PROCESSING ;
-    }
-     else {
+      return caseStatus >= CommonCaseStatus.UNDER_PROCESSING;
+    } else {
       return caseStatus === CommonCaseStatus.FINAL_APPROVE;
     }
   }
@@ -184,7 +197,6 @@ export class CaseInfoComponent {
   }
 
   viewGeneratedDocument(): void {
-    console.log(this.generatedDocumentId);
     if (!this.generatedDocumentId) {
       return;
     }
@@ -192,7 +204,6 @@ export class CaseInfoComponent {
       documentTitle: this.generatedDocumentNumber,
       bookId: this.generatedDocumentId
     };
-    console.log(document);
 
     if (this.model.getCaseType() === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) {
       this.customsExemptionRemittanceService
@@ -223,5 +234,15 @@ export class CaseInfoComponent {
       .subscribe((file: BlobModel) => {
         this.sharedService.openViewContentDialog(file, {documentTitle: this.templateSerial});
       });
+  }
+
+  private _setShowVersionHistory(): void {
+    this.canShowVersionHistory = true;
+    /*// @ts-ignore
+    const requestType = this.model.requestType;
+    if (this.employeeService.isExternalUser() || !requestType) {
+      return;
+    }
+    this.canShowVersionHistory = [AllRequestTypesEnum.RENEW, AllRequestTypesEnum.CANCEL, AllRequestTypesEnum.UPDATE].includes(requestType) || this.model.isReturned();*/
   }
 }

@@ -1,10 +1,10 @@
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { Localization } from '@models/localization';
-import { IAngularMyDpOptions } from 'angular-mydatepicker';
-import { AbstractControl } from '@angular/forms';
-import { ITabData } from '@app/interfaces/i-tab-data';
-import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
-import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {Localization} from '@models/localization';
+import {IAngularMyDpOptions} from 'angular-mydatepicker';
+import {AbstractControl} from '@angular/forms';
+import {ITabData} from '@app/interfaces/i-tab-data';
+import {ForeignCountriesProjects} from '@app/models/foreign-countries-projects';
+import {CharityOrganizationUpdate} from '@app/models/charity-organization-update';
 import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
@@ -73,3 +73,5 @@ export type ItemId = string
 export type FollowUpDateModels = ForeignCountriesProjects | CharityOrganizationUpdate;
 
 export type FieldControlAndLabelKey = { control: AbstractControl, labelKey: keyof ILanguageKeys };
+
+export type ControlValueLabelLangKey = { langKey: keyof ILanguageKeys, value: any, comparisonValue?: any, label?: () => string };

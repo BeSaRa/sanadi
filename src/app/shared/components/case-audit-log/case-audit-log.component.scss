@@ -1,0 +1,22 @@
+@import "../../../../scss/custom_variables";
+
+#auditLogsDropdownContainer {
+height: 100%;
+  .dropdown-menu {
+    min-width: 13rem;
+    max-width: 20rem;
+    max-height: 80vh;
+    overflow-y: auto;
+
+    .dropdown-item {
+      &:focus-visible {
+        outline: none;
+      }
+
+      &:hover, &.active, &:active {
+        background: #e9ecef !important;
+        //color: white !important;
+      }
+    }
+  }
+}
