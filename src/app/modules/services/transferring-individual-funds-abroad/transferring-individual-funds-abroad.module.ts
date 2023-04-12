@@ -18,6 +18,9 @@ import {
 import {
   TransferFundsAbroadCompleteTaskPopupComponent
 } from '@modules/services/transferring-individual-funds-abroad/popups/transfer-funds-abroad-complete-task-popup/transfer-funds-abroad-complete-task-popup.component';
+import { TIFAExecutiveManagementPopupComponent } from './popups/TIFA-executive-management-popup/TIFA-executive-management-popup.component';
+import { TIFAPurposePopupComponent } from './popups/TIFB-purpose-popup/TIFA-purpose-popup.component';
+import { TIFAPaymentPopupComponent } from './popups/TIFA-payment-popup/TIFA-payment-popup.component';
 import { AuditTransferringIndividualFundsAbroadComponent } from './audit/audit-transferring-individual-funds-abroad/audit-transferring-individual-funds-abroad.component';
 import { AuditTransferFundsExecutiveManagementComponent } from './audit/audit-transfer-funds-executive-management/audit-transfer-funds-executive-management.component';
 import { AuditTransferPurposeComponent } from './audit/audit-transfer-purpose/audit-transfer-purpose.component';
@@ -27,6 +30,9 @@ import { SharedServicesModule } from '../shared-services/shared-services.module'
 @NgModule({
   declarations: [
     TransferringIndividualFundsAbroadComponent,
+    TIFAExecutiveManagementPopupComponent,
+    TIFAPurposePopupComponent,
+    TIFAPaymentPopupComponent,
     TransferringIndividualFundsAbroadOutputsComponent,
     TransferFundsAbroadApproveTaskPopupComponent,
     SelectReceiverEntityPopupComponent,
