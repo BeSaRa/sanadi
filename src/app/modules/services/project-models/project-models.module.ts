@@ -17,7 +17,7 @@ import { EvaluationIndicatorsPopupComponent } from './pages/project-model/evalua
     ProjectModelOutputsComponent,
     ComponentBudgetsComponent,
     ComponentBudgetsPopupComponent,
-    EvaluationIndicatorsPopupComponent
+    EvaluationIndicatorsPopupComponent,
   ],
   imports: [
     CommonModule,
