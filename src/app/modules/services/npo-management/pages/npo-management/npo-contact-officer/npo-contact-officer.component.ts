@@ -4,7 +4,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { LangService } from "@app/services/lang.service";
 import { ToastService } from "@app/services/toast.service";
 import { DialogService } from "@app/services/dialog.service";
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { ReadinessStatus } from "@app/types/types";
 import { BehaviorSubject, Subject } from "rxjs";
 import { filter, map, take, takeUntil } from "rxjs/operators";
@@ -48,6 +48,7 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
   editIndex: number = -1;
   add$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   private changed$: Subject<NpoContactOfficer | null> = new Subject<NpoContactOfficer | null>();
   private current?: NpoContactOfficer;

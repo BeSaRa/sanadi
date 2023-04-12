@@ -3,7 +3,7 @@ import {CurrencyEnum} from '@app/enums/currency-enum';
 import {Bank} from '@models/bank';
 import {NpoBankAccount} from '@models/npo-bank-account';
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {filter, map, take, takeUntil} from 'rxjs/operators';
 import {Lookup} from '@app/models/lookup';
@@ -46,6 +46,7 @@ export class NpoBankAccountComponent implements OnInit {
   @Input() bankList: Bank[] = [];
   currenciesList: Lookup[] = this.lookupService.listByCategory.Currency;
   caseTypes = CaseTypes;
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   listDataSource: BehaviorSubject<NpoBankAccount[]> = new BehaviorSubject<NpoBankAccount[]>([]);
   columns = ['bankName', 'accountNumber', 'iban', 'actions'];
