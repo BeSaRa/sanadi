@@ -5,12 +5,14 @@ import { InquiriesAndComplaintsRoutingModule } from './inquiries-and-complaints-
 import { InquiryAndComplaintOutputsComponent } from './pages/inquiry-and-complaint-outputs/inquiry-and-complaint-outputs.component';
 import {InquiryComponent} from '@modules/services/inquiries-and-complaints/pages/inquiry/inquiry.component';
 import {EServicesMainModule} from '@modules/e-services-main/e-services-main.module';
+import { AuditInquiryAndComplaintComponent } from './audit/audit-inquiry-and-complaint/audit-inquiry-and-complaint.component';
 
 
 @NgModule({
   declarations: [
     InquiryComponent,
-    InquiryAndComplaintOutputsComponent
+    InquiryAndComplaintOutputsComponent,
+    AuditInquiryAndComplaintComponent
   ],
   imports: [
     CommonModule,
