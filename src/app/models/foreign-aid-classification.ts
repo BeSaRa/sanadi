@@ -3,6 +3,8 @@ import { ForeignAidClassificationInterceptor } from '@app/model-interceptors/for
 import { CustomValidators } from '@app/validators/custom-validators';
 import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';
+import {AuditOperationTypes} from '@enums/audit-operation-types';
+import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 
 const { send, receive } = new ForeignAidClassificationInterceptor();
 
@@ -11,7 +13,7 @@ const { send, receive } = new ForeignAidClassificationInterceptor();
   send
 })
 
-export class ForeignAidClassification extends SearchableCloneable<ForeignAidClassification> {
+export class ForeignAidClassification extends SearchableCloneable<ForeignAidClassification> implements IAuditModelProperties<ForeignAidClassification> {
   charityWorkArea!: number;
   aidClassification!: number;
   aidClassificationInfo!: AdminResult;
@@ -34,6 +36,12 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
   objectDBId?: number;
   domain?: number;
   domainInfo!: AdminResult;
+
+  // extra properties
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  getAdminResultByProperty(property: keyof ForeignAidClassification): AdminResult {
+    return AdminResult.createInstance({});
+  }
 
   toCharityOrgnizationUpdate() {
     const {

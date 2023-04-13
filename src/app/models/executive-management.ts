@@ -4,8 +4,10 @@ import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {ISearchFieldsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {AdminResult} from './admin-result';
+import {AuditOperationTypes} from '@enums/audit-operation-types';
+import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 
-export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement> {
+export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement> implements IAuditModelProperties<ExecutiveManagement> {
   arabicName!: string;
   englishName!: string;
   email!: string;
@@ -24,6 +26,12 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
     ...infoSearchFields(['nationalityInfo']),
     ...normalSearchFields(['arabicName', 'englishName', 'jobTitle', 'email', 'phone'])
   };
+
+  // extra properties
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  getAdminResultByProperty(property: keyof ExecutiveManagement): AdminResult {
+    return AdminResult.createInstance({});
+  }
 
   getManagerFields(control: boolean = false): any {
     const {

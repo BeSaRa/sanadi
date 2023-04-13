@@ -16,12 +16,15 @@ import {HasRequestType} from '@app/interfaces/has-request-type';
 import {InterceptModel} from '@decorators/intercept-model';
 import {CustomsExemptionRemittanceInterceptor} from '@app/model-interceptors/customs-exemption-remittance-interceptor';
 import {ObjectUtils} from '@helpers/object-utils';
+import {CommonUtils} from '@helpers/common-utils';
+import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
+import {AuditOperationTypes} from '@enums/audit-operation-types';
 
 const _ApprovalDocument = mixinRequestType(CaseModel);
 const {send, receive} = new CustomsExemptionRemittanceInterceptor();
 
 @InterceptModel({send, receive})
-export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExemptionRemittanceService, CustomsExemptionRemittance> implements HasRequestType {
+export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExemptionRemittanceService, CustomsExemptionRemittance> implements HasRequestType, IAuditModelProperties<CustomsExemptionRemittance> {
   service: CustomsExemptionRemittanceService;
   id!: string;
   createdOn!: string;
@@ -88,6 +91,7 @@ export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExempti
   licenseClassName!: string;
 
   dialog!: DialogService;
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
 
   searchFields: ISearchFieldsMap<CustomsExemptionRemittance> = {
     ...normalSearchFields(['fullSerial']),
@@ -206,7 +210,11 @@ export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExempti
         adminResultValue = this.linkedProjectInfo;
         break;
       default:
-        adminResultValue = AdminResult.createInstance({arName: this[property] as string, enName: this[property] as string});
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
     }
     return adminResultValue ?? new AdminResult();
   }

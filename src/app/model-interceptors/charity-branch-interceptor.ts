@@ -8,6 +8,7 @@ export class CharityBranchInterceptor implements IModelInterceptor<CharityBranch
   send(model: Partial<CharityBranch>): Partial<CharityBranch> {
     delete model.searchFields;
     delete model.branchContactOfficerList;
+    delete model.auditOperation;
     const organizationOfficerInterceptor = new OrganizationOfficerInterceptor();
     model.branchContactOfficer = model.branchContactOfficer?.map(e => organizationOfficerInterceptor.send(e) as OrganizationOfficer);
     return model;

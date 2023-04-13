@@ -20,6 +20,7 @@ export class RealBeneficiaryInterceptor implements IModelInterceptor<RealBenefic
   send(model: Partial<RealBeneficiary>): Partial<RealBeneficiary> {
     delete model.searchFields;
     delete model.birthDateString;
+    delete model.auditOperation;
     return model;
   }
 }

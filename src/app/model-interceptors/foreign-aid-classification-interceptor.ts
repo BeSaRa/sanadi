@@ -31,6 +31,7 @@ export class ForeignAidClassificationInterceptor implements IModelInterceptor<Fo
     delete model.subUNOCHAInfo;
     delete model.mainDACInfo;
     delete model.mainUNOCHAInfo;
+    delete model.auditOperation;
     return model;
   }
 }
