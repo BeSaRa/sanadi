@@ -24,6 +24,7 @@ import {
 import { ReadBenefucuariesPopupComponent } from './components/real-beneficiaries/read-benefucuaries-popup/read-benefucuaries-popup.component';
 import { WorkAreasPopupComponent } from './components/work-areas/work-areas-popup/work-areas-popup.component';
 import { BankAccountPopupComponent } from './components/bank-account/bank-account-popup/bank-account-popup.component';
+import { InterventionImplementingAgencyListPopupComponent } from './components/intervention-implementing-agency-list/intervention-implementing-agency-list-popup/intervention-implementing-agency-list-popup.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { BankAccountPopupComponent } from './components/bank-account/bank-accoun
     ReadBenefucuariesPopupComponent,
     ApprovalFormComponent,
     InterventionImplementingAgencyListComponent,
+    InterventionImplementingAgencyListPopupComponent,
     InterventionRegionListComponent,
     InterventionFieldListComponent,
     BankAccountPopupComponent

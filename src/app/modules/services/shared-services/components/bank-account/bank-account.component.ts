@@ -58,7 +58,6 @@ export class BankAccountComponent implements OnInit {
   columns = ['bankName', 'accountNumber', 'iBan', 'country', 'actions'];
 
   editItem?: BankAccount;
-  showForm: boolean = false;
   viewOnly: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
@@ -136,7 +135,6 @@ export class BankAccountComponent implements OnInit {
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.current = record || undefined;
-      this.showForm = !!this.current;
       this.updateForm(this.current);
     });
   }
@@ -271,7 +269,6 @@ export class BankAccountComponent implements OnInit {
   }
   cancel() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');
