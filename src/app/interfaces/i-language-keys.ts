@@ -1357,6 +1357,9 @@ export interface ILanguageKeys {
   integration_jasim_hamad_bin_jasim_charity_fund: string;
   integration_qatar_cancer_society: string;
   integration_raf: string;
+  integration_al_sheikh_eid_charitable_foundation: string;
+  integration_al_asmakh_charitable_foundation: string;
+  integration_qsrn: string;
   integration_moe:string;
   date_of_death: string;
   company_info: string;

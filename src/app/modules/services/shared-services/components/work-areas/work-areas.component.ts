@@ -24,7 +24,14 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
   @Input() set list(_list: WorkArea[]) {
     this._list = _list;
   }
-  @Input() countries: Country[] = [];
+  // @Input() countries: Country[] = [];
+  private _countries: Country[] = []
+  get countries() {
+    return this._countries;
+  }
+  @Input() set countries(value: Country[]) {
+    this._countries = value;
+  }
   @Input() readonly!: boolean;
   form!: UntypedFormGroup;
   filterControl: UntypedFormControl = new UntypedFormControl('');
