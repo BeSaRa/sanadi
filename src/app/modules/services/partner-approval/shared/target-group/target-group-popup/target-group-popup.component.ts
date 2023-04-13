@@ -38,7 +38,7 @@ export class TargetGroupPopupComponent implements OnInit {
   }
 
   mapFormTo(form: any): TargetGroup {
-    const model: TargetGroup = new TargetGroup().clone(form);
+    const model: TargetGroup = new TargetGroup().clone({...this.model, ...form});
 
     return model;
   }

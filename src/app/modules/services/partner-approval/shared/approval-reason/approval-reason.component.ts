@@ -127,7 +127,7 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
       model: this.current
     }).onAfterClose$.subscribe((data) => {
       if (data) {
-        this.save()
+        this.save(data)
       } else {
         this.cancel()
       }
@@ -151,11 +151,11 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
     }
   }
 
-  save() {
+  save(model: ApprovalReason) {
     if (this.readonly || this.viewOnly) {
       return;
     }
-    this.save$.next();
+    this.save$.next(model);
   }
   private displayRequiredFieldsMessage(): void {
     this.dialogService
@@ -181,13 +181,6 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
             this.openFormDialog();
           }
           return !isDuplicate;
-        }),
-        map(() => {
-          let formValue = this.form.getRawValue();
-          return new ApprovalReason().clone({
-            ...this.current,
-            ...formValue,
-          });
         })
       )
       .subscribe((record: ApprovalReason) => {

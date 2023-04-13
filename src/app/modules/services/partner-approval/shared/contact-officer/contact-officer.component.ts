@@ -5,7 +5,7 @@ import { DialogService } from "@services/dialog.service";
 import {  UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { ReadinessStatus } from "@app/types/types";
 import { BehaviorSubject, Subject } from "rxjs";
-import { filter, map, take, takeUntil, tap } from "rxjs/operators";
+import { filter, take, takeUntil, tap } from "rxjs/operators";
 import { UserClickOn } from "@enums/user-click-on.enum";
 import { ContactOfficer } from "@models/contact-officer";
 import { ActionIconsEnum } from '@enums/action-icons-enum';
@@ -128,7 +128,7 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
       model: this.current
     }).onAfterClose$.subscribe((data) => {
       if (data) {
-        this.save()
+        this.save(data)
       } else {
         this.cancel()
       }
@@ -152,11 +152,11 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
     }
   }
 
-  save() {
+  save(model: ContactOfficer) {
     if (this.readonly || this.viewOnly) {
       return;
     }
-    this.save$.next();
+    this.save$.next(model);
   }
   private displayRequiredFieldsMessage(): void {
     this.dialogService
@@ -182,14 +182,6 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
             this.openFormDialog();
           }
           return !isDuplicate;
-        }),
-        map(() => {
-          let formValue = this.form.getRawValue();
-          return new ContactOfficer().clone({
-            ...this.current,
-            ...formValue,
-
-          });
         })
       )
       .subscribe((record: ContactOfficer) => {

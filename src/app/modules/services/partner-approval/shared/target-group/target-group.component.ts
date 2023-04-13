@@ -130,7 +130,7 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
       model: this.current,
     }).onAfterClose$.subscribe((data) => {
       if (data) {
-        this.save()
+        this.save(data)
       } else {
         this.cancel()
       }
@@ -154,11 +154,11 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
     }
   }
 
-  save() {
+  save(model: TargetGroup) {
     if (this.readonly || this.viewOnly) {
       return;
     }
-    this.save$.next();
+    this.save$.next(model);
   }
 
 
@@ -184,13 +184,6 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
           this.openFormDialog();
         }
         return !isDuplicate;
-      }),
-      map(() => {
-        let formValue = this.form.getRawValue();
-
-        return (new TargetGroup()).clone({
-          ...this.current, ...formValue,
-        });
       })
     ).subscribe((agency: TargetGroup) => {
       if (!agency) {

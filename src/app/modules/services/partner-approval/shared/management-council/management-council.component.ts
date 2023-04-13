@@ -143,7 +143,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
       nationalities: this.nationalities
     }).onAfterClose$.subscribe((data) => {
       if (data) {
-        this.save()
+        this.save(data)
       } else {
         this.cancel()
       }
@@ -167,11 +167,11 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
     }
   }
 
-  save() {
+  save(model: ManagementCouncil) {
     if (this.readonly || this.viewOnly) {
       return;
     }
-    this.save$.next();
+    this.save$.next(model);
   }
 
   private displayRequiredFieldsMessage(): void {
@@ -199,19 +199,6 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
             this.openFormDialog();
           }
           return !isDuplicate;
-        }),
-        map(() => {
-          let formValue = this.form.getRawValue();
-          let nationalityInfo: AdminResult =
-            this.nationalities
-              .find((x) => x.id === formValue.nationality)
-              ?.createAdminResult() ?? new AdminResult();
-
-          return new ManagementCouncil().clone({
-            ...this.current,
-            ...formValue,
-            nationalityInfo: nationalityInfo,
-          });
         })
       )
       .subscribe((record: ManagementCouncil) => {

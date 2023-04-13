@@ -37,7 +37,7 @@ export class GoalPopupComponent implements OnInit {
     this.form.patchValue(this.model);
   }
   mapFormTo(form: any): Goal {
-    const model: Goal = new Goal().clone(form);
+    const model: Goal = new Goal().clone({ ...this.model, ...form });
 
     return model;
   }
