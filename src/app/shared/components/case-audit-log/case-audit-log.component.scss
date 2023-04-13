@@ -1,11 +1,12 @@
 @import "../../../../scss/custom_variables";
 
 #auditLogsDropdownContainer {
-height: 100%;
+  height: 100%;
+
   .dropdown-menu {
     min-width: 13rem;
     max-width: 20rem;
-    max-height: 80vh;
+    max-height: 60vh;
     overflow-y: auto;
 
     .dropdown-item {
