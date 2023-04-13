@@ -85,7 +85,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     }, {fullscreen: true})
   }
 
-  showDifferencesPopup(differencesList: IValueDifference[], titleInfo: AdminResult): void {
+  showDifferencesPopup(differencesList: IValueDifference[], titleInfo?: AdminResult): void {
     this.dialog.show(CaseAuditDifferencesPopupComponent, {
       differencesList: differencesList,
       titleInfo: titleInfo
