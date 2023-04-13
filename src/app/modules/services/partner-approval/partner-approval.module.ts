@@ -30,6 +30,7 @@ import { GoalPopupComponent } from './shared/goal/goal-popup/goal-popup.componen
 import { TargetGroupPopupComponent } from './shared/target-group/target-group-popup/target-group-popup.component';
 import { ManagementCouncilPopupComponent } from './shared/management-council/management-council-popup/management-council-popup.component';
 import { ApprovalReasonPopupComponent } from './shared/approval-reason/approval-reason-popup/approval-reason-popup.component';
+import { ContactOfficerPopupComponent } from './shared/contact-officer/contact-officer-popup/contact-officer-popup.component';
 import {AuditPartnerApprovalComponent} from './audit/audit-partner-approval/audit-partner-approval.component';
 import {AuditGoalsComponent} from './audit/audit-goals/audit-goals.component';
 import {AuditGoalsListComponent} from './audit/audit-goals-list/audit-goals-list.component';
@@ -46,6 +47,7 @@ import { AuditCommercialActivityComponent } from './audit/audit-commercial-activ
     ApprovalReasonComponent,
     ApprovalReasonPopupComponent,
     ContactOfficerComponent,
+    ContactOfficerPopupComponent,
     GoalComponent,
     GoalPopupComponent,
     ManagementCouncilComponent,
