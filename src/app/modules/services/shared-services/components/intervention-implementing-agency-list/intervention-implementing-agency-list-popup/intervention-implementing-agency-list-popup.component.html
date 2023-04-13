@@ -1,0 +1,45 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ editItem > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map.entities }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <div [formGroup]="form">
+    <div class="row">
+      <!-- Entity Type -->
+      <div class="col-sm-12 mb-4 ng-select-wrapper">
+        <label asteriskIfRequired="implementingAgencyType" for="implementingAgencyType"
+          class="form-label">{{lang.map.entity_type}}</label>
+        <ng-select [selectOnTab]="true" labelForId="implementingAgencyType" [clearable]="false"
+          [readonly]="readonly || viewOnly" placeholder="{{lang.map.select}}" id="implementingAgencyType"
+          [notFoundText]="lang.map.msg_not_found" (change)="handleImplementingAgencyTypeChange($event, true)"
+          formControlName="implementingAgencyType" validationClasses="implementingAgencyType">
+          <ng-option *ngFor="let option of implementingAgencyTypeList" [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="implementingAgencyType"></app-field-error-message>
+      </div>
+
+      <!-- Entity Name -->
+      <div class="col-sm-12 mb-4 ng-select-wrapper">
+        <label asteriskIfRequired="implementingAgency" for="implementingAgency"
+          class="form-label">{{lang.map.entity_name}}</label>
+        <ng-select [selectOnTab]="true" labelForId="implementingAgency" [clearable]="false"
+          [readonly]="readonly || viewOnly" placeholder="{{lang.map.select}}" id="implementingAgency"
+          [notFoundText]="lang.map.msg_not_found" formControlName="implementingAgency"
+          validationClasses="implementingAgency">
+          <ng-option *ngFor="let option of implementingAgencyList" [value]="option.fnId">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="implementingAgency"></app-field-error-message>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
+    class="btn btn-primary m-2">{{editItem > -1 ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>
