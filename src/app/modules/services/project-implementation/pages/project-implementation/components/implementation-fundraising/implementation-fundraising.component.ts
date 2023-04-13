@@ -53,7 +53,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
 
   @Output()
   amountConsumed: EventEmitter<boolean> = new EventEmitter<boolean>()
-
+  addFundraisingLicense$ : Subject<any> = new Subject<any>();
   displayedColumns: string[] = [
     'projectLicenseFullSerial',
     'permitType',
@@ -99,6 +99,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       })
       this.control = ctrl?.control as FormControl || undefined
     })
+    this.listenToAdd()
   }
 
   ngOnDestroy(): void {
@@ -112,6 +113,12 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
 
   private destroyOldListeners(): void {
     this.destroyListeners$.next(true)
+  }
+
+  listenToAdd(){
+    this.addFundraisingLicense$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(() => this.addFundraisingLicense())
   }
 
   writeValue(value: ImplementationFundraising[]): void {
