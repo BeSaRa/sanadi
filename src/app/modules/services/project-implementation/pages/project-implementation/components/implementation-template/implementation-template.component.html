@@ -1,7 +1,5 @@
 <div class="row">
   <div class="d-flex align-items-center justify-content-start position-relative">
-    <app-page-header [removeContainerClasses]="true" [pageTitle]="'templates'" class="flex-grow-0"
-                     [disableAdd]="disabled || isUpdateRequestType()" [clickOnNew$]="addTemplate$"></app-page-header>
     <input type="hidden" *ngIf="control" validationClasses="" [control]="control!">
     <app-field-error-message [absolute]="false" class="flex-grow-1" *ngIf="control"
                              [control]="control"></app-field-error-message>
@@ -11,6 +9,12 @@
              [data]="value"
              [columns]="displayedColumns">
     <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header tableTitle="templates" [add$]="addTemplate$" [allowAdd]="!disabled || !isUpdateRequestType()" [skipClearSort]="true" [skipSearch]="true">
+          </table-header>
+        </th>
+      </ng-container>
       <ng-container cdkColumnDef="templateName">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.name}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.templateName}} </td>
@@ -66,6 +70,7 @@
           </button>
         </td>
       </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
       <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
       <tr *cdkNoDataRow>
