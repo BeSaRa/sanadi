@@ -48,7 +48,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   remainingAmount!: number
 
   destroy$ = new Subject<void>()
-
+  addPaymentDialog$ : Subject<any> = new Subject<any>();
   value: Payment[] = []
   onChange!: (value: Payment[]) => void
   onTouch!: () => void
@@ -73,9 +73,15 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   ngOnInit(): void {
-
+    this.listenToAdd()
   }
 
+  listenToAdd(){
+    this.addPaymentDialog$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(()=>this.openAddPaymentDialog())
+  }
+  
   writeValue(value: Payment[]): void {
     this.value = []
     this.createInputs(value)
