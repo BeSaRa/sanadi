@@ -1,0 +1,37 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ !!editItem ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map.approval_reasons }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <div [formGroup]="form">
+    <div class="row">
+      <!-- Projects -->
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="projects" for="projects" class="form-label">{{lang.map.lbl_projects}}</label>
+        <textarea formControlName="projects" type="text"
+               validationClasses="projects" trimInput class="form-control" id="projects"></textarea>
+        <app-field-error-message controlName="projects"></app-field-error-message>
+      </div>
+      <!-- Research -->
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="research" for="research" class="form-label">{{lang.map.lbl_research}}</label>
+        <textarea formControlName="research" type="text"
+               validationClasses="research" trimInput class="form-control" id="research"></textarea>
+        <app-field-error-message controlName="research"></app-field-error-message>
+      </div>
+      <!-- Field Visit -->
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="fieldVisit" for="fieldVisit" class="form-label">{{lang.map.lbl_field_visit}}</label>
+        <textarea formControlName="fieldVisit" type="text"
+               validationClasses="fieldVisit" trimInput class="form-control" id="fieldVisit"></textarea>
+        <app-field-error-message controlName="fieldVisit"></app-field-error-message>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
+    class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>
