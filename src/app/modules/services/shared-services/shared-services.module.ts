@@ -25,6 +25,7 @@ import { ReadBenefucuariesPopupComponent } from './components/real-beneficiaries
 import { WorkAreasPopupComponent } from './components/work-areas/work-areas-popup/work-areas-popup.component';
 import { BankAccountPopupComponent } from './components/bank-account/bank-account-popup/bank-account-popup.component';
 import { InterventionImplementingAgencyListPopupComponent } from './components/intervention-implementing-agency-list/intervention-implementing-agency-list-popup/intervention-implementing-agency-list-popup.component';
+import { InterventionRegionListPopupComponent } from './components/intervention-region-list/intervention-region-list-popup/intervention-region-list-popup.component';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { InterventionImplementingAgencyListPopupComponent } from './components/i
     InterventionImplementingAgencyListComponent,
     InterventionImplementingAgencyListPopupComponent,
     InterventionRegionListComponent,
+    InterventionRegionListPopupComponent,
     InterventionFieldListComponent,
     BankAccountPopupComponent
   ],
