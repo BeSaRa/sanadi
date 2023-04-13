@@ -37,7 +37,7 @@ export class ApprovalReasonPopupComponent implements OnInit {
     this.form.patchValue(this.model);
   }
   mapFormTo(form: any): ApprovalReason {
-    const model: ApprovalReason = new ApprovalReason().clone(form);
+    const model: ApprovalReason = new ApprovalReason().clone({ ...this.model, ...form });
 
     return model;
   }

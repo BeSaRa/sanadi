@@ -37,7 +37,7 @@ export class ContactOfficerPopupComponent implements OnInit {
     this.form.patchValue(this.model);
   }
   mapFormTo(form: any): ContactOfficer {
-    const model: ContactOfficer = new ContactOfficer().clone(form);
+    const model: ContactOfficer = new ContactOfficer().clone({ ...this.model, ...form });
 
     return model;
   }

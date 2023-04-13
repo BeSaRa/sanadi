@@ -1,4 +1,3 @@
-import { AdminLookup } from '@app/models/admin-lookup';
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
@@ -7,10 +6,13 @@ import { LangService } from '@app/services/lang.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { Lookup } from '@app/models/lookup';
-import { takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { DomainTypes } from '@app/enums/domain-types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { Subject } from 'rxjs';
+import { AdminResult } from '@app/models/admin-result';
+import { DacOchaService } from '@app/services/dac-ocha.service';
+import { LookupService } from '@app/services/lookup.service';
 
 @Component({
   selector: 'app-goals-list-popup',
@@ -24,9 +26,10 @@ export class GoalsListPopupComponent implements OnInit, OnDestroy {
   editItem: number;
   model: GoalList;
   viewOnly: boolean;
-  domainsList: Lookup[];
-  mainDACCategoriesList: AdminLookup[];
-  mainUNOCHACategoriesList: AdminLookup[];
+  domainsList: Lookup[] = this.lookupService.listByCategory.Domain;
+  mainDACCategoriesList: AdminResult[] = [];
+  mainUNOCHACategoriesList: AdminResult[] = [];;
+
   displayByDomain: 'DAC' | 'OCHA' | null = null;
   private destroy$: Subject<any> = new Subject<any>();
 
@@ -37,10 +40,9 @@ export class GoalsListPopupComponent implements OnInit, OnDestroy {
     editItem: number,
     model: GoalList,
     viewOnly: boolean,
-    domainsList: Lookup[],
-    mainDACCategoriesList: AdminLookup[],
-    mainUNOCHACategoriesList: AdminLookup[]
   },
+    private dacOchaService: DacOchaService,
+    private lookupService: LookupService,
     public lang: LangService,
     private dialogRef: DialogRef) {
     this.form = data.form;
@@ -48,14 +50,12 @@ export class GoalsListPopupComponent implements OnInit, OnDestroy {
     this.editItem = data.editItem;
     this.model = data.model;
     this.viewOnly = data.viewOnly;
-    this.domainsList = data.domainsList;
-    this.mainDACCategoriesList = data.mainDACCategoriesList;
-    this.mainUNOCHACategoriesList = data.mainUNOCHACategoriesList;
   }
   ngOnInit() {
     this.displayByDomain = null;
     this.listenToGoalListChange();
     this.form.patchValue(this.model);
+    this.loadOCHADACClassifications();
   }
 
   private listenToGoalListChange(): void {
@@ -94,9 +94,47 @@ export class GoalsListPopupComponent implements OnInit, OnDestroy {
     ) as UntypedFormControl;
   }
   mapFormTo(form: any): GoalList {
-    const model: GoalList = new GoalList().clone(form);
+    let domainInfo: AdminResult =
+      this.domainsList
+        .find((x) => x.lookupKey === form.domain)
+        ?.convertToAdminResult() ?? new AdminResult();
+    let mainDACCategoryInfo: AdminResult =
+      this.mainDACCategoriesList.find(
+        (x) => x.id === form.mainDACCategory
+      ) ?? new AdminResult();
 
-    return model;
+    let mainUNOCHACategoryInfo: AdminResult =
+      this.mainUNOCHACategoriesList.find(
+        (x) => x.id === form.mainUNOCHACategory
+      ) ?? new AdminResult();
+
+    return new GoalList().clone({
+      ...this.model,
+      ...form,
+      domainInfo: domainInfo,
+      mainUNOCHACategoryInfo: mainUNOCHACategoryInfo,
+      mainDACCategoryInfo: mainDACCategoryInfo,
+    });
+  }
+  private loadOCHADACClassifications() {
+    return this.dacOchaService
+      .loadAsLookups()
+      .pipe(
+        map((list) => {
+          return list.filter((model) => !model.parentId);
+        }),
+        map((result) => {
+          return result.filter((record) => {
+            if (record.type === DomainTypes.HUMANITARIAN) {
+              this.mainUNOCHACategoriesList.push(record.convertToAdminResult());
+            } else if (record.type === DomainTypes.DEVELOPMENT) {
+              this.mainDACCategoriesList.push(record.convertToAdminResult());
+            }
+            return record;
+          });
+        })
+      )
+      .subscribe();
   }
   cancel() {
     this.dialogRef.close(null)

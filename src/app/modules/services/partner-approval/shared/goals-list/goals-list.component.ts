@@ -3,23 +3,18 @@ import { GoalList } from '@models/goal-list';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActionIconsEnum } from '@enums/action-icons-enum';
-import { DomainTypes } from '@enums/domain-types';
 import { UserClickOn } from '@enums/user-click-on.enum';
 import { CommonUtils } from '@helpers/common-utils';
 import { SortEvent } from '@contracts/sort-event';
 import { AdminLookup } from '@models/admin-lookup';
 import { AdminResult } from '@models/admin-result';
-import { Lookup } from '@models/lookup';
 import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
-import { DacOchaService } from '@services/dac-ocha.service';
 import { DialogService } from '@services/dialog.service';
 import { LangService } from '@services/lang.service';
-import { LookupService } from '@services/lookup.service';
 import { ToastService } from '@services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
-import { CustomValidators } from '@app/validators/custom-validators';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, take, takeUntil, tap } from 'rxjs/operators';
 import { GoalsListPopupComponent } from './goals-list-popup/goals-list-popup.component';
 
 @Component({
@@ -33,8 +28,6 @@ export class GoalsListComponent implements OnInit, OnDestroy {
     public lang: LangService,
     private toastService: ToastService,
     private dialogService: DialogService,
-    public lookupService: LookupService,
-    private dacOchaService: DacOchaService,
     private fb: UntypedFormBuilder
   ) { }
 
@@ -51,10 +44,6 @@ export class GoalsListComponent implements OnInit, OnDestroy {
   }
 
   filterControl: UntypedFormControl = new UntypedFormControl('');
-
-  domainsList: Lookup[] = this.lookupService.listByCategory.Domain;
-  mainDACCategoriesList: AdminResult[] = [];
-  mainUNOCHACategoriesList: AdminResult[] = [];
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 
@@ -77,7 +66,6 @@ export class GoalsListComponent implements OnInit, OnDestroy {
   form!: UntypedFormGroup;
 
   ngOnInit(): void {
-    this._handleInitData();
     this.buildForm();
     this.listenToAdd();
     this.listenToChange();
@@ -90,10 +78,6 @@ export class GoalsListComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
-  }
-
-  private _handleInitData() {
-    this.loadOCHADACClassifications();
   }
 
   private buildForm() {
@@ -167,13 +151,10 @@ export class GoalsListComponent implements OnInit, OnDestroy {
       readonly: this.readonly,
       form: this.form,
       editItem: this.editItem,
-      model: this.current,
-      domainsList: this.domainsList,
-      mainDACCategoriesList: this.mainDACCategoriesList,
-      mainUNOCHACategoriesList: this.mainUNOCHACategoriesList
+      model: this.current
     }).onAfterClose$.subscribe((data) => {
       if (data) {
-        this.save()
+        this.save(data)
       } else {
         this.cancel()
       }
@@ -211,11 +192,11 @@ export class GoalsListComponent implements OnInit, OnDestroy {
     }
   }
 
-  save() {
+  save(model: GoalList) {
     if (this.readonly || this.viewOnly) {
       return;
     }
-    this.save$.next();
+    this.save$.next(model);
   }
 
   private listenToSave() {
@@ -238,30 +219,6 @@ export class GoalsListComponent implements OnInit, OnDestroy {
             this.openFormDialog();
           }
           return !isDuplicate;
-        }),
-        map(() => {
-          let formValue = this.form.getRawValue();
-          let domainInfo: AdminResult =
-            this.domainsList
-              .find((x) => x.lookupKey === formValue.domain)
-              ?.convertToAdminResult() ?? new AdminResult();
-          let mainDACCategoryInfo: AdminResult =
-            this.mainDACCategoriesList.find(
-              (x) => x.id === formValue.mainDACCategory
-            ) ?? new AdminResult();
-
-          let mainUNOCHACategoryInfo: AdminResult =
-            this.mainUNOCHACategoriesList.find(
-              (x) => x.id === formValue.mainUNOCHACategory
-            ) ?? new AdminResult();
-
-          return new GoalList().clone({
-            ...this.current,
-            ...formValue,
-            domainInfo: domainInfo,
-            mainUNOCHACategoryInfo: mainUNOCHACategoryInfo,
-            mainDACCategoryInfo: mainDACCategoryInfo,
-          });
         })
       )
       .subscribe((goalList: GoalList) => {
@@ -362,27 +319,6 @@ export class GoalsListComponent implements OnInit, OnDestroy {
     this.list = [];
     this._updateList(null, 'NONE');
     this._setComponentReadiness('READY');
-  }
-
-  private loadOCHADACClassifications() {
-    return this.dacOchaService
-      .loadAsLookups()
-      .pipe(
-        map((list) => {
-          return list.filter((model) => !model.parentId);
-        }),
-        map((result) => {
-          return result.filter((record) => {
-            if (record.type === DomainTypes.HUMANITARIAN) {
-              this.mainUNOCHACategoriesList.push(record.convertToAdminResult());
-            } else if (record.type === DomainTypes.DEVELOPMENT) {
-              this.mainDACCategoriesList.push(record.convertToAdminResult());
-            }
-            return record;
-          });
-        })
-      )
-      .subscribe();
   }
 
   trackBy(item: AdminResult) {

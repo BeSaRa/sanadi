@@ -115,7 +115,7 @@ openFormDialog() {
     model: this.currentRecord
   }).onAfterClose$.subscribe((data) => {
     if(data) {
-      this.save()
+      this.save(data)
     } else {
       this.cancelForm()
     }
@@ -135,7 +135,6 @@ private updateForm(record: CommercialActivity | undefined) {
     } else {
       this._setComponentReadiness('NOT_READY');
     }
-    this.form.patchValue(record);
     this.openFormDialog()
     if (this.readonly || this.viewOnly) {
       this.form.disable();
@@ -147,11 +146,11 @@ private updateForm(record: CommercialActivity | undefined) {
   }
 }
 
-save() {
+save(model: CommercialActivity) {
   if (this.readonly || this.viewOnly) {
     return;
   }
-  this.save$.next();
+  this.save$.next(model);
 }
 
 private displayRequiredFieldsMessage(): void {
@@ -167,13 +166,6 @@ private listenToSave() {
     takeUntil(this.destroy$),
     tap(_ => this.form.invalid ? this.displayRequiredFieldsMessage() : true),
     filter(() => this.form.valid),
-    map(() => {
-      let formValue = this.form.getRawValue();
-
-      return (new CommercialActivity()).clone({
-        ...this.currentRecord, ...formValue
-      });
-    })
   ).subscribe((record: CommercialActivity) => {
     if (!record) {
       return;

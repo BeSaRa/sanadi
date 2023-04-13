@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
+import { AdminResult } from '@app/models/admin-result';
 import { Lookup } from '@app/models/lookup';
 import { ManagementCouncil } from '@app/models/management-council';
 import { LangService } from '@app/services/lang.service';
@@ -42,9 +43,16 @@ export class ManagementCouncilPopupComponent implements OnInit {
   }
 
   mapFormTo(form: any): ManagementCouncil {
-    const model: ManagementCouncil = new ManagementCouncil().clone(form);
+    let nationalityInfo: AdminResult =
+      this.nationalities
+        .find((x) => x.id === form.nationality)
+        ?.createAdminResult() ?? new AdminResult();
 
-    return model;
+    return new ManagementCouncil().clone({
+      ...this.model,
+      ...form,
+      nationalityInfo: nationalityInfo,
+    });
   }
   cancel() {
     this.dialogRef.close(null)

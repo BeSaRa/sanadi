@@ -37,10 +37,11 @@ export class CommercialActivityPopupComponent implements OnInit {
     this.viewOnly = data.viewOnly;
   }
   ngOnInit() {
+    this.form.patchValue(this.model);
   }
 
   mapFormTo(form: any): CommercialActivity {
-    const model: CommercialActivity = new CommercialActivity().clone(form);
+    const model: CommercialActivity = new CommercialActivity().clone({ ...this.model, ...form });
 
     return model;
   }
