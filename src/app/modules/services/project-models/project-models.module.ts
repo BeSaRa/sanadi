@@ -9,6 +9,7 @@ import {MapsModule} from '@modules/maps/maps.module';
 import { ComponentBudgetsComponent } from './pages/project-model/component-budgets/component-budgets.component';
 import { ComponentBudgetsPopupComponent } from './pages/project-model/component-budgets/component-budgets-popup/component-budgets-popup.component';
 import { EvaluationIndicatorsPopupComponent } from './pages/project-model/evaluation-indicators-popup/evaluation-indicators-popup.component';
+import { ForeignCountriesProjectPopupComponent } from './pages/project-model/foreign-countries-project-popup/foreign-countries-project-popup.component';
 import { AuditProjectModelsComponent } from './audit/audit-project-models/audit-project-models.component';
 import { AuditEvaluationIndicatorComponent } from './audit/audit-evaluation-indicator/audit-evaluation-indicator.component';
 import { AuditProjectAddressComponent } from './audit/audit-project-address/audit-project-address.component';
@@ -23,6 +24,7 @@ import { AuditProjectModelForeignCountriesProjectComponent } from './audit/audit
     ComponentBudgetsComponent,
     ComponentBudgetsPopupComponent,
     EvaluationIndicatorsPopupComponent,
+    ForeignCountriesProjectPopupComponent,
     AuditProjectModelsComponent,
     AuditEvaluationIndicatorComponent,
     AuditProjectAddressComponent,

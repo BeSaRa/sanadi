@@ -60,6 +60,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { catchError, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ComponentBudgetsComponent } from './component-budgets/component-budgets.component';
 import { EvaluationIndicatorsPopupComponent } from './evaluation-indicators-popup/evaluation-indicators-popup.component';
+import { ForeignCountriesProjectPopupComponent } from './foreign-countries-project-popup/foreign-countries-project-popup.component';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -145,6 +146,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   searchTemplate$: Subject<string> = new Subject<string>();
   addIndicatorForm$ : Subject<any> = new Subject<any>();
+  addPMForeignCountriesProjectForm$ : Subject<any> = new Subject<any>();
   tabsData: IKeyValue = {
     basicInfo: {
       name: 'basicInfoTab',
@@ -258,9 +260,12 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.listenToTemplateSearch();
     this.listenToAdd();
   }
+
   listenToAdd(){
     this.addIndicatorForm$.pipe(takeUntil(this.destroy$)).subscribe(() => this.openAddIndicatorForm());
+    this.addPMForeignCountriesProjectForm$.pipe(takeUntil(this.destroy$)).subscribe(() => this.openAddPMForeignCountriesProjectForm());
   }
+
   setUserProfiles(): void {
     this.isCharityProfile = this.employeeService.isCharityProfile();
     this.isInstitutionProfile = this.employeeService.isInstitutionProfile();
@@ -1152,6 +1157,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return EvaluationIndicatorsPopupComponent;
   }
 
+  _getForeignCountriesPopupComponent(){
+    return ForeignCountriesProjectPopupComponent;
+  }
+
   openEvaluationIndicatorsFormPopup() {
     this.dialog.show(this._getEvaluationIndicatorsPopupComponent(), {
       form: this.evaluationIndicatorForm,
@@ -1164,6 +1173,20 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         this.saveIndicator()
       } else {
         this.cancelAddIndicator();
+      }
+    })
+  }
+  openForeignCountriesFormPopup() {
+    this.dialog.show(this._getForeignCountriesPopupComponent(), {
+      form: this.pMForeignCountriesProjectForm,
+      readonly: this.readonly,
+      editIndex:this.selectedPMForeignCountriesProjectIndex,
+      foreignCountriesProjectsNeeds:this.foreignCountriesProjectsNeeds
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.savePMForeignCountriesProject()
+      } else {
+        this.cancelAddPMForeignCountriesProject();
       }
     })
   }
@@ -1244,10 +1267,12 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   ///////// foreign countries project functionality
   openAddPMForeignCountriesProjectForm() {
     this.addPMForeignCountriesProjectFormActive = true;
+    this.openForeignCountriesFormPopup()
   }
 
   selectPMForeignCountriesProject(event: MouseEvent, model: ProjectModelForeignCountriesProject) {
     this.addPMForeignCountriesProjectFormActive = true;
+    this.openForeignCountriesFormPopup()
     event.preventDefault();
     this.selectedPMForeignCountriesProject = model;
     this.pMForeignCountriesProjectForm.patchValue(this.selectedPMForeignCountriesProject!);

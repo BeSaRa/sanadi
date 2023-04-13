@@ -1,0 +1,40 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{ editIndex > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
+      lang.map.project_model_foreign_countries_projects }}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+  </div>
+<div class="dialog-content no-fixed-height">
+<ng-container [formGroup]="form">
+    <div class="row">
+      <div class="col-12 mb-4 position-relative">
+        <label class="form-label" for="objectDBId"
+               asteriskIfRequired="objectDBId">{{lang.map.project_needs}}</label>
+        <ng-select [readonly]="readonly" validationClasses="objectDBId"
+                   appendTo="body"
+                   labelForId="objectDBId"
+                   placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found"
+                   [clearable]="true"
+                   id="objectDBId"
+                   formControlName="objectDBId">
+          <ng-option *ngFor="let option of foreignCountriesProjectsNeeds"
+                     [value]="option.id">{{option.projectName}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="objectDBId"></app-field-error-message>
+      </div>
+      <div class="col-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="notes"
+               for="needsNotes">{{lang.map.notes}}</label>
+        <input id="needsNotes" validationClasses="notes" formControlName="notes"
+               class="form-control" maxlength="250">
+        <app-field-error-message controlName="notes"></app-field-error-message>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<div class="dialog-actions">
+    <button [disabled]="!form.valid" (click)="save()"
+        class="btn btn-primary">{{lang.map.btn_save}}</button>
+    <button class="btn btn-secondary"
+        (click)="cancel()">{{lang.map.btn_cancel}}</button>
+</div>
