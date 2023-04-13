@@ -18,6 +18,11 @@ import {CustomsExemptionRemittanceInterceptor} from '@model-interceptors/customs
 import {
   AuditCustomsExemptionComponent
 } from '@modules/services/customs-exemption-remittance/audit/audit-customs-exemption/audit-customs-exemption.component';
+import {
+  CaseAuditDifferencesPopupComponent
+} from '@modules/e-services-main/popups/case-audit-differences-popup/case-audit-differences-popup.component';
+import {AdminResult} from '@models/admin-result';
+import {IValueDifference} from '@contracts/i-value-difference';
 
 @CastResponseContainer({
   $default: {
@@ -73,10 +78,17 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
       .pipe(catchError(() => of([])));
   }
 
-  showDifference(newVersion: CaseModel<any, any>, caseAudit: CaseAudit) {
+  showCaseModelAuditPopup(newVersion: CaseModel<any, any>, caseAudit: CaseAudit) {
     this.dialog.show(CaseAuditPopupComponent, {
       newVersion: newVersion,
       caseAudit: caseAudit
     }, {fullscreen: true})
+  }
+
+  showDifferencesPopup(differencesList: IValueDifference[], titleInfo: AdminResult): void {
+    this.dialog.show(CaseAuditDifferencesPopupComponent, {
+      differencesList: differencesList,
+      titleInfo: titleInfo
+    }).onAfterClose$.subscribe();
   }
 }
