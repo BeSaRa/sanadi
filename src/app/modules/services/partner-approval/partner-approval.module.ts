@@ -25,6 +25,7 @@ import {
 import {GoalsListComponent} from '@modules/services/partner-approval/shared/goals-list/goals-list.component';
 import {MapsModule} from '@modules/maps/maps.module';
 import { CommercialActivityPopupComponent } from './shared/commercial-activity/commercial-activity-popup/commercial-activity-popup.component';
+import { GoalsListPopupComponent } from './shared/goals-list/goals-list-popup/goals-list-popup.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { CommercialActivityPopupComponent } from './shared/commercial-activity/c
     TargetGroupComponent,
     CommercialActivityComponent,
     CommercialActivityPopupComponent,
-    GoalsListComponent
+    GoalsListComponent,
+    GoalsListPopupComponent
   ],
   imports: [
     CommonModule,
