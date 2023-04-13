@@ -16,6 +16,8 @@ import {
 import {
   UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent
 } from '@modules/services/urgent-joint-relief-campaign/popups/urgent-joint-relief-campaign-organization-approve-task-popup/urgent-joint-relief-campaign-organization-approve-task-popup.component';
+import { UrgentJoinOrganizationOfficerComponent } from './shared/urgent-join-organization-officer/urgent-join-organization-officer.component';
+import { UrgentJoinOrganizationOfficerPopupComponent } from './shared/urgent-join-organization-officer/urgent-join-organization-officer-popup/urgent-join-organization-officer-popup.component';
 import { AuditUrgentJointReliefCampaignComponent } from './audit/audit-urgent-joint-relief-campaign/audit-urgent-joint-relief-campaign.component';
 import { AuditParticipantOrganizationsComponent } from './audit/audit-participant-organizations/audit-participant-organizations.component';
 import { AuditOrganizationOfficersComponent } from './audit/audit-organization-officers/audit-organization-officers.component';
@@ -24,6 +26,8 @@ import { AuditOrganizationOfficersComponent } from './audit/audit-organization-o
 @NgModule({
   declarations: [
     UrgentJointReliefCampaignComponent,
+    UrgentJoinOrganizationOfficerComponent,
+    UrgentJoinOrganizationOfficerPopupComponent,
     UrgentJointReliefCampaignOutputsComponent,
     UrgentJointReliefCampaignInitialApproveTaskPopupComponent,
     UrgentJointReliefCampaignFinalApproveTaskPopupComponent,

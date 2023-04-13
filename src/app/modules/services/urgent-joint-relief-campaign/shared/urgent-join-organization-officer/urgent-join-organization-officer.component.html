@@ -1,0 +1,48 @@
+<div class="table-responsive">
+  <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="columns"
+    [filter]="filterControl.value" [useSearchToFilter]="true">
+    <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header tableTitle="organization_officers" [add$]="add$" [allowAdd]="!readonly && isExternalUser" [skipClearSort]="true"
+            (textChange)="filterControl.setValue($event)">
+          </table-header>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="fullName">
+        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.full_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.fullName}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="identificationNumber">
+        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.identification_number}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.identificationNumber}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="email">
+        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_email}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.email}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="phoneNumber">
+        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_phone}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.phone}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="extraPhoneNumber">
+        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_extra_phone_number}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.extraPhone}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+          <grid-actions [record]="row" [actions]="actions" [itemIndex]="i"></grid-actions>
+        </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
+      <tr *cdkNoDataRow>
+        <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
+      </tr>
+    </table>
+    <app-paginator #paginator></app-paginator>
+  </app-table>
+  <context-menu-item #menu [actions]="actions"></context-menu-item>
+</div>
