@@ -333,8 +333,8 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
           );
         })
       )
-      .subscribe((list: AdminLookup[]) => {
-        this.models = list; //this.parentId ? list : list.filter(x => !x.parentId);
+      .subscribe((list: AdminLookup[]) => {        
+        this.models = list.filter(adminLookup => adminLookup.status !== CommonStatusEnum.RETIRED); //this.parentId ? list : list.filter(x => !x.parentId);
         this._afterReload();
       });
   }
