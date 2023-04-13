@@ -26,6 +26,7 @@ import {GoalsListComponent} from '@modules/services/partner-approval/shared/goal
 import {MapsModule} from '@modules/maps/maps.module';
 import { CommercialActivityPopupComponent } from './shared/commercial-activity/commercial-activity-popup/commercial-activity-popup.component';
 import { GoalsListPopupComponent } from './shared/goals-list/goals-list-popup/goals-list-popup.component';
+import { GoalPopupComponent } from './shared/goal/goal-popup/goal-popup.component';
 import {AuditPartnerApprovalComponent} from './audit/audit-partner-approval/audit-partner-approval.component';
 import {AuditGoalsComponent} from './audit/audit-goals/audit-goals.component';
 import {AuditGoalsListComponent} from './audit/audit-goals-list/audit-goals-list.component';
@@ -42,6 +43,7 @@ import { AuditCommercialActivityComponent } from './audit/audit-commercial-activ
     ApprovalReasonComponent,
     ContactOfficerComponent,
     GoalComponent,
+    GoalPopupComponent,
     ManagementCouncilComponent,
     TargetGroupComponent,
     CommercialActivityComponent,
