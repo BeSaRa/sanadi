@@ -30,6 +30,7 @@ import { GoalPopupComponent } from './shared/goal/goal-popup/goal-popup.componen
 import { TargetGroupPopupComponent } from './shared/target-group/target-group-popup/target-group-popup.component';
 import { ManagementCouncilPopupComponent } from './shared/management-council/management-council-popup/management-council-popup.component';
 import { ApprovalReasonPopupComponent } from './shared/approval-reason/approval-reason-popup/approval-reason-popup.component';
+import { ContactOfficerPopupComponent } from './shared/contact-officer/contact-officer-popup/contact-officer-popup.component';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { ApprovalReasonPopupComponent } from './shared/approval-reason/approval-
     ApprovalReasonComponent,
     ApprovalReasonPopupComponent,
     ContactOfficerComponent,
+    ContactOfficerPopupComponent,
     GoalComponent,
     GoalPopupComponent,
     ManagementCouncilComponent,

@@ -10,6 +10,7 @@ import { UserClickOn } from "@enums/user-click-on.enum";
 import { ContactOfficer } from "@models/contact-officer";
 import { ActionIconsEnum } from '@enums/action-icons-enum';
 import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
+import { ContactOfficerPopupComponent } from './contact-officer-popup/contact-officer-popup.component';
 
 @Component({
   selector: 'contact-officer',
@@ -42,7 +43,6 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
   columns = ['arabicName', 'englishName', 'email', 'phone', 'passportNumber', 'actions'];
 
   editItem?: ContactOfficer;
-  showForm: boolean = false;
   viewOnly: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
@@ -112,11 +112,28 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.current = record || undefined;
-      this.showForm = !!this.current;
       this.updateForm(this.current);
     });
   }
 
+  _getPopupComponent() {
+    return ContactOfficerPopupComponent;
+  }
+  openFormDialog() {
+    this.dialogService.show(this._getPopupComponent(), {
+      viewOnly: this.viewOnly,
+      readonly: this.readonly,
+      form: this.form,
+      editItem: this.editItem,
+      model: this.current
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancel()
+      }
+    })
+  }
   private updateForm(record: ContactOfficer | undefined) {
     if (record) {
       if (this.viewOnly) {
@@ -124,9 +141,11 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      this.form.patchValue(record);
+      this.openFormDialog();
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable();
       }
     } else {
       this._setComponentReadiness('READY');
@@ -160,6 +179,7 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
           const isDuplicate = this.list.some((x) => x === formValue);
           if (isDuplicate) {
             this.toastService.alert(this.lang.map.msg_duplicated_item);
+            this.openFormDialog();
           }
           return !isDuplicate;
         }),
@@ -239,7 +259,6 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
   }
   cancel() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');
