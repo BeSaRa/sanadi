@@ -10,6 +10,7 @@ import { LangService } from "@services/lang.service";
 import { ToastService } from "@services/toast.service";
 import { BehaviorSubject, Subject } from "rxjs";
 import { filter, map, take, takeUntil, tap } from "rxjs/operators";
+import { ApprovalReasonPopupComponent } from './approval-reason-popup/approval-reason-popup.component';
 
 @Component({
   selector: 'approval-reason',
@@ -19,9 +20,9 @@ import { filter, map, take, takeUntil, tap } from "rxjs/operators";
 export class ApprovalReasonComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
-              private toastService: ToastService,
-              private dialogService: DialogService,
-              private fb: UntypedFormBuilder) {
+    private toastService: ToastService,
+    private dialogService: DialogService,
+    private fb: UntypedFormBuilder) {
   }
 
   private _list: ApprovalReason[] = [];
@@ -33,15 +34,14 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
   get list(): ApprovalReason[] {
     return this._list;
   }
-  @Input() readonly : boolean = false;
+  @Input() readonly: boolean = false;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 
   dataSource: BehaviorSubject<ApprovalReason[]> = new BehaviorSubject<ApprovalReason[]>([]);
-  columns = ['projects', 'research', 'fieldVisit',  'actions'];
+  columns = ['projects', 'research', 'fieldVisit', 'actions'];
 
   editItem?: ApprovalReason;
-  showForm: boolean = false;
   viewOnly: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
@@ -111,11 +111,28 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.current = record || undefined;
-      this.showForm = !!this.current;
       this.updateForm(this.current);
     });
   }
 
+  _getPopupComponent() {
+    return ApprovalReasonPopupComponent;
+  }
+  openFormDialog() {
+    this.dialogService.show(this._getPopupComponent(), {
+      viewOnly: this.viewOnly,
+      readonly: this.readonly,
+      form: this.form,
+      editItem: this.editItem,
+      model: this.current
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancel()
+      }
+    })
+  }
   private updateForm(record: ApprovalReason | undefined) {
     if (record) {
       if (this.viewOnly) {
@@ -123,9 +140,11 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      this.form.patchValue(record);
+      this.openFormDialog();
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable()
       }
     } else {
       this._setComponentReadiness('READY');
@@ -159,6 +178,7 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
           const isDuplicate = this.list.some((x) => x === formValue);
           if (isDuplicate) {
             this.toastService.alert(this.lang.map.msg_duplicated_item);
+            this.openFormDialog();
           }
           return !isDuplicate;
         }),
@@ -237,7 +257,6 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
   }
   cancel() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');
