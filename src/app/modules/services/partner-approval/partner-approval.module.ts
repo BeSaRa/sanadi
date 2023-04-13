@@ -27,6 +27,7 @@ import {MapsModule} from '@modules/maps/maps.module';
 import { CommercialActivityPopupComponent } from './shared/commercial-activity/commercial-activity-popup/commercial-activity-popup.component';
 import { GoalsListPopupComponent } from './shared/goals-list/goals-list-popup/goals-list-popup.component';
 import { GoalPopupComponent } from './shared/goal/goal-popup/goal-popup.component';
+import { TargetGroupPopupComponent } from './shared/target-group/target-group-popup/target-group-popup.component';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { GoalPopupComponent } from './shared/goal/goal-popup/goal-popup.componen
     GoalPopupComponent,
     ManagementCouncilComponent,
     TargetGroupComponent,
+    TargetGroupPopupComponent,
     CommercialActivityComponent,
     CommercialActivityPopupComponent,
     GoalsListComponent,

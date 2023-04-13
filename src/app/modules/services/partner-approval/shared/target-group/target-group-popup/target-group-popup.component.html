@@ -1,0 +1,31 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ !!editItem ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map.target_groups }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <div [formGroup]="form">
+    <div class="row">
+      <!-- Services -->
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="services" for="services" class="form-label">{{lang.map.lbl_services}}</label>
+        <input formControlName="services" type="text" validationClasses="services" trimInput class="form-control"
+          id="services">
+        <app-field-error-message controlName="services"></app-field-error-message>
+      </div>
+      <!-- Targeted Groups -->
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="targetedGroup" for="targetedGroup"
+          class="form-label">{{lang.map.targeted_groups}}</label>
+        <textarea formControlName="targetedGroup" type="text" validationClasses="targetedGroup" trimInput
+          class="form-control" id="targetedGroup"></textarea>
+        <app-field-error-message controlName="targetedGroup"></app-field-error-message>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
+    class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>
