@@ -35,5 +35,6 @@ export class CustomsExemptionRemittanceInterceptor implements IModelInterceptor<
     delete model.receiverTypeInfo;
     delete model.countryInfo;
     delete model.linkedProjectInfo;
+    delete model.auditOperation;
   }
 }

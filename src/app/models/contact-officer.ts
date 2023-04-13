@@ -2,8 +2,11 @@ import { CustomValidators } from "@app/validators/custom-validators";
 import { SearchableCloneable } from "@app/models/searchable-cloneable";
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { ISearchFieldsMap } from '@app/types/types';
+import {AuditOperationTypes} from '@enums/audit-operation-types';
+import {AdminResult} from '@models/admin-result';
+import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 
-export class ContactOfficer extends SearchableCloneable<ContactOfficer>{
+export class ContactOfficer extends SearchableCloneable<ContactOfficer> implements IAuditModelProperties<ContactOfficer> {
   arabicName!: string;
   englishName!: string;
   email!: string;
@@ -14,6 +17,12 @@ export class ContactOfficer extends SearchableCloneable<ContactOfficer>{
   searchFields: ISearchFieldsMap<ContactOfficer> = {
     ...normalSearchFields(['arabicName', 'englishName', 'email', 'phone', 'passportNumber'])
   };
+
+  // extra properties
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  getAdminResultByProperty(property: keyof ContactOfficer): AdminResult {
+    return AdminResult.createInstance({});
+  }
 
   getContactOfficerFields(control: boolean): any {
     const { arabicName, englishName, email, phone, mobileNo, passportNumber } = this;

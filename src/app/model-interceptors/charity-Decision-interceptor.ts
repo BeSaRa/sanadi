@@ -8,6 +8,7 @@ export class CharityDecisionInterceptor implements IModelInterceptor<CharityDeci
   send(model: Partial<CharityDecision>): Partial<CharityDecision> {
     delete model.service;
     delete model.langService;
+    delete model.auditOperation;
     return model;
   }
   receive(model: CharityDecision): CharityDecision {

@@ -12,6 +12,7 @@ export class GoalListInterceptor implements IModelInterceptor<GoalList> {
     delete model.mainDACCategoryInfo;
     delete model.domainInfo;
     delete model.searchFields;
+    delete model.auditOperation;
     return model;
   }
 

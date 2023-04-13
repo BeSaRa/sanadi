@@ -13,6 +13,7 @@ export class OrgMemberInterceptor implements IModelInterceptor<OrgMember> {
   send(model: Partial<OrgMember>): Partial<OrgMember> {
     delete model.searchFields;
     delete model.jobTitleInfo;
+    delete model.auditOperation;
     return model;
   }
 }

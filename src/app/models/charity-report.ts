@@ -7,6 +7,8 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDate, IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { BaseModel } from './base-model';
+import {AuditOperationTypes} from '@enums/audit-operation-types';
+import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 
 const interceptor = new CharityReportInterceptor();
 
@@ -17,7 +19,7 @@ const interceptor = new CharityReportInterceptor();
 export class CharityReport extends BaseModel<
   CharityReport,
   CharityReportService
-> {
+> implements IAuditModelProperties<CharityReport> {
   service: CharityReportService = FactoryService.getService(
     'CharityReportService'
   );
@@ -38,6 +40,13 @@ export class CharityReport extends BaseModel<
   categoryInfo!: AdminResult;
   reportStatusInfo!: AdminResult;
   riskTypeInfo!: AdminResult;
+
+  // extra properties
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  getAdminResultByProperty(property: keyof CharityReport): AdminResult {
+    return AdminResult.createInstance({});
+  }
+
   getName(): string {
     return this.langService.map.lang === 'en' ? this.enName : this.arName;
   }

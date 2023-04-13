@@ -4,8 +4,10 @@ import {CustomValidators} from "@app/validators/custom-validators";
 import {SearchableCloneable} from "@app/models/searchable-cloneable";
 import {infoSearchFields} from '@app/helpers/info-search-fields';
 import {ISearchFieldsMap} from '@app/types/types';
+import {AuditOperationTypes} from '@enums/audit-operation-types';
+import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 
-export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> {
+export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> implements IAuditModelProperties<ManagementCouncil> {
   arabicName!: string;
   englishName!: string;
   email!: string;
@@ -20,6 +22,12 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> {
     ...infoSearchFields(['nationalityInfo']),
     ...normalSearchFields(['arabicName', 'englishName', 'jobTitle', 'email', 'passportNumber', 'phone'])
   };
+
+  // extra properties
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  getAdminResultByProperty(property: keyof ManagementCouncil): AdminResult {
+    return AdminResult.createInstance({});
+  }
 
   getManagementCouncilFields(control: boolean): any {
     const {arabicName, englishName, email, jobTitle, phone, nationality, passportNumber} = this;

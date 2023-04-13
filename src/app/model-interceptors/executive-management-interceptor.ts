@@ -7,6 +7,7 @@ export class ExecutiveManagementInterceptor implements IModelInterceptor<Executi
     delete model.searchFields;
     delete model.nationalityInfo;
     delete model.searchFieldsNoPassport;
+    delete model.auditOperation;
 
     return model;
   }

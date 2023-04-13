@@ -1,18 +1,20 @@
-import { ValidatorFn } from '@angular/forms';
-import { InterceptModel } from '@app/decorators/decorators/intercept-model';
-import { RealBeneficiaryInterceptor } from '@app/model-interceptors/real-beneficiary-interceptors';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDateModel } from 'angular-mydatepicker';
-import { AdminResult } from './admin-result';
-import { SearchableCloneable } from './searchable-cloneable';
+import {ValidatorFn} from '@angular/forms';
+import {InterceptModel} from '@app/decorators/decorators/intercept-model';
+import {RealBeneficiaryInterceptor} from '@app/model-interceptors/real-beneficiary-interceptors';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {IMyDateModel} from 'angular-mydatepicker';
+import {AdminResult} from './admin-result';
+import {SearchableCloneable} from './searchable-cloneable';
+import {AuditOperationTypes} from '@enums/audit-operation-types';
+import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 
-const { receive, send } = new RealBeneficiaryInterceptor()
+const {receive, send} = new RealBeneficiaryInterceptor()
 
 
 @InterceptModel({
   receive, send
 })
-export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
+export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> implements IAuditModelProperties<RealBeneficiary> {
   updatedBy!: number;
   clientData!: string;
   objectDBId!: number;
@@ -43,6 +45,13 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
   idexpiryDate!: string | IMyDateModel;
   nationalityInfo!: AdminResult;
   birthDateString!: string;
+
+  // extra properties
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getAdminResultByProperty(property: keyof RealBeneficiary): AdminResult {
+    return AdminResult.createInstance({});
+  }
 
   buildForm(controls = true) {
     const {
@@ -162,6 +171,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
       passportExpiryDate: controls ? [passportExpiryDate, [CustomValidators.required]] : passportExpiryDate
     };
   }
+
   getPassportValidation(): ValidatorFn[][] {
     return [
       [CustomValidators.required, CustomValidators.maxLength(20)],
@@ -169,6 +179,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
       [CustomValidators.required],
     ];
   }
+
   getIdValidation(): ValidatorFn[][] {
     return [
       [CustomValidators.required, ...CustomValidators.commonValidations.qId],
@@ -176,6 +187,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
       [CustomValidators.required],
     ]
   }
+
   toCharityOrganizationRealBenficiary(): RealBeneficiary {
     const {
       address,

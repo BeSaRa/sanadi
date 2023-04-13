@@ -1,12 +1,15 @@
-import { InterceptModel } from '@app/decorators/decorators/intercept-model';
-import { DateUtils } from '@app/helpers/date-utils';
-import { CharityDecisionInterceptor } from '@app/model-interceptors/charity-Decision-interceptor';
-import { CharityDecisionService } from '@app/services/charity-decision.service';
-import { FactoryService } from '@app/services/factory.service';
-import { LangService } from '@app/services/lang.service';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDateModel } from 'angular-mydatepicker';
-import { BaseModel } from './base-model';
+import {InterceptModel} from '@app/decorators/decorators/intercept-model';
+import {DateUtils} from '@app/helpers/date-utils';
+import {CharityDecisionInterceptor} from '@app/model-interceptors/charity-Decision-interceptor';
+import {CharityDecisionService} from '@app/services/charity-decision.service';
+import {FactoryService} from '@app/services/factory.service';
+import {LangService} from '@app/services/lang.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {IMyDateModel} from 'angular-mydatepicker';
+import {BaseModel} from './base-model';
+import {AuditOperationTypes} from '@enums/audit-operation-types';
+import {AdminResult} from '@models/admin-result';
+import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 
 const interceptor = new CharityDecisionInterceptor();
 
@@ -17,7 +20,7 @@ const interceptor = new CharityDecisionInterceptor();
 export class CharityDecision extends BaseModel<
   CharityDecision,
   CharityDecisionService
-> {
+> implements IAuditModelProperties<CharityDecision> {
   service: CharityDecisionService = FactoryService.getService(
     'CharityDecisionService'
   );
@@ -30,8 +33,16 @@ export class CharityDecision extends BaseModel<
   id!: number;
   objectDBId?: number;
   category?: number;
+
+  // extra properties
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getAdminResultByProperty(property: keyof CharityDecision): AdminResult {
+    return AdminResult.createInstance({});
+  }
+
   buildForm(controls = true, withOrg = true) {
-    const { referenceNumber, generalDate, category, subject, organization } =
+    const {referenceNumber, generalDate, category, subject, organization} =
       this;
 
     return {
@@ -64,6 +75,7 @@ export class CharityDecision extends BaseModel<
       category: controls ? [category, [CustomValidators.required]] : category,
     };
   }
+
   toCharityOrganizationUpdate() {
     const {
       id,

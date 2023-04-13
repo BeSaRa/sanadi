@@ -6,6 +6,7 @@ export class ManagementCouncilInterceptor implements IModelInterceptor<Managemen
   send(model: Partial<ManagementCouncil>): Partial<ManagementCouncil> {
     delete model.searchFields;
     delete model.nationalityInfo;
+    delete model.auditOperation;
     return model;
   }
 

@@ -1,17 +1,20 @@
-import { InterceptModel } from '@app/decorators/decorators/intercept-model';
-import { DateUtils } from '@app/helpers/date-utils';
-import { OrgMemberInterceptor } from '@app/model-interceptors/org-member-interceptor';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDateModel } from 'angular-mydatepicker';
-import { AdminResult } from './admin-result';
-import { SearchableCloneable } from './searchable-cloneable';
-const { send, receive } = new OrgMemberInterceptor();
+import {InterceptModel} from '@app/decorators/decorators/intercept-model';
+import {DateUtils} from '@app/helpers/date-utils';
+import {OrgMemberInterceptor} from '@app/model-interceptors/org-member-interceptor';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {IMyDateModel} from 'angular-mydatepicker';
+import {AdminResult} from './admin-result';
+import {SearchableCloneable} from './searchable-cloneable';
+import {AuditOperationTypes} from '@enums/audit-operation-types';
+import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
+
+const {send, receive} = new OrgMemberInterceptor();
 
 @InterceptModel({
   receive,
   send,
 })
-export class OrgMember extends SearchableCloneable<OrgMember> {
+export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditModelProperties<OrgMember> {
   objectDBId!: number;
   qid?: string;
   identificationNumber!: string;
@@ -25,8 +28,16 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
   extraPhone!: string;
   jobTitleInfo!: AdminResult;
   nationalityInfo!: AdminResult;
+
+  // extra properties
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getAdminResultByProperty(property: keyof OrgMember): AdminResult {
+    return AdminResult.createInstance({});
+  }
+
   buildForm(controls = true) {
-    const { fullName, identificationNumber, jobTitleId } = this;
+    const {fullName, identificationNumber, jobTitleId} = this;
     return {
       fullName: controls
         ? [
@@ -50,19 +61,21 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
         : jobTitleId,
     };
   }
+
   buildExtendedBoardMembersForm(controls = true) {
 
     const form = this.buildForm(controls);
-    const { joinDate } = this;
+    const {joinDate} = this;
     return {
       ...form,
       joinDate: controls ? [joinDate, [CustomValidators.required]] : joinDate,
 
     };
   }
+
   bulildExtendedForm(controls = true) {
     const form = this.buildForm(controls);
-    const { joinDate, email, phone } = this;
+    const {joinDate, email, phone} = this;
     return {
       ...form,
       joinDate: controls ? [joinDate, [CustomValidators.required]] : joinDate,
@@ -91,6 +104,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
         : phone,
     };
   }
+
   toCharityOrganizationOrgMember(): OrgMember {
     const {
       id,

@@ -3,6 +3,9 @@ import { CharityBranchInterceptor } from '@app/model-interceptors/charity-branch
 import { CustomValidators } from '@app/validators/custom-validators';
 import { OrganizationOfficer } from './organization-officer';
 import { SearchableCloneable } from './searchable-cloneable';
+import {AuditOperationTypes} from '@enums/audit-operation-types';
+import {AdminResult} from '@models/admin-result';
+import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 
 const interceptor = new CharityBranchInterceptor();
 
@@ -10,7 +13,7 @@ const interceptor = new CharityBranchInterceptor();
   send: interceptor.send,
   receive: interceptor.receive,
 })
-export class CharityBranch extends SearchableCloneable<CharityBranch> {
+export class CharityBranch extends SearchableCloneable<CharityBranch> implements IAuditModelProperties<CharityBranch>{
   branchId!: number;
   fullName!: string;
   category!: number;
@@ -24,6 +27,11 @@ export class CharityBranch extends SearchableCloneable<CharityBranch> {
   branchContactOfficer: OrganizationOfficer[] = [];
   branchContactOfficerList: OrganizationOfficer[] = [];
 
+  // extra properties
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  getAdminResultByProperty(property: keyof CharityBranch): AdminResult {
+    return AdminResult.createInstance({});
+  }
 
   buildForm(controls = true) {
     const {
