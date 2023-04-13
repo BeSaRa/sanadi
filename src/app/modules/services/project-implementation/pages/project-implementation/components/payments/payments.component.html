@@ -1,16 +1,16 @@
 <div class="row">
-  <div class="d-flex">
-    <h1 class="h6 text-primary mb-2">{{lang.map.payments}}</h1>
-    <button [disabled]="disabled" (click)="!disabled && openAddPaymentDialog()" class="btn p-0 icon-btn">
-      <i class="mdi mdi-plus-box text-primary"></i>
-    </button>
-  </div>
   <ng-container [formGroup]="form">
     <app-table #table
                [useSearchToFilter]="true"
                [data]="value"
                [columns]="displayedColumns">
       <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="payments" [add$]="addPaymentDialog$" [allowAdd]="!disabled" [skipClearSort]="true" [skipSearch]="true">
+            </table-header>
+          </th>
+        </ng-container>
         <ng-container cdkColumnDef="paymentNo">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.payment_name}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.paymentNo}} </td>
@@ -105,6 +105,7 @@
             </div>
           </th>
         </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
         <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
         <tr cdk-footer-row class="table-row-header" *cdkFooterRowDef="['Total','TotalValue']"></tr>

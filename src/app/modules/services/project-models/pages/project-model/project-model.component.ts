@@ -58,6 +58,9 @@ import { ServiceDataService } from '@services/service-data.service';
 import { ToastService } from '@services/toast.service';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ComponentBudgetsComponent } from './component-budgets/component-budgets.component';
+import { EvaluationIndicatorsPopupComponent } from './evaluation-indicators-popup/evaluation-indicators-popup.component';
+import { ForeignCountriesProjectPopupComponent } from './foreign-countries-project-popup/foreign-countries-project-popup.component';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -128,6 +131,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   @ViewChild(AttachmentsComponent)
   attachmentComponent!: AttachmentsComponent;
 
+  @ViewChild('componentBudgetsTap')
+  componentBudgetsRef!: ComponentBudgetsComponent
+
   selectedModel?: ProjectModel;
   displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn'];
   displayTemplateSerialField: boolean = false;
@@ -139,7 +145,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   templateSerialControl: UntypedFormControl = new UntypedFormControl(null);
 
   searchTemplate$: Subject<string> = new Subject<string>();
-
+  addIndicatorForm$ : Subject<any> = new Subject<any>();
+  addPMForeignCountriesProjectForm$ : Subject<any> = new Subject<any>();
   tabsData: IKeyValue = {
     basicInfo: {
       name: 'basicInfoTab',
@@ -168,7 +175,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       name: 'projectComponentsAndBudgetTab',
       langKey: 'project_components_budgets',
       index: 3,
-      validStatus: () => (this.model && this.model.componentList && this.model.componentList.length > 0) && this.projectTotalCostField && this.projectTotalCostField.value > 0
+      validStatus: () => (this.model && this.model.componentList && this.model.componentList.length > 0) && this.componentBudgetsRef.projectTotalCostField && this.componentBudgetsRef.projectTotalCostField.value > 0
     },
     evaluationIndicators: {
       name: 'evaluationIndicatorsTab',
@@ -250,8 +257,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.loadSanadiDomains();
     this.loadCountries();
     this.loadGoals();
-    this.listenToProjectComponentChange();
     this.listenToTemplateSearch();
+    this.listenToAdd();
+  }
+
+  listenToAdd(){
+    this.addIndicatorForm$.pipe(takeUntil(this.destroy$)).subscribe(() => this.openAddIndicatorForm());
+    this.addPMForeignCountriesProjectForm$.pipe(takeUntil(this.destroy$)).subscribe(() => this.openAddPMForeignCountriesProjectForm());
   }
 
   setUserProfiles(): void {
@@ -298,10 +310,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
           ]
         )
       }),
-      componentBudgetInfo: this.fb.group({
-        projectTotalCost: [model.projectTotalCost, [CustomValidators.required, CustomValidators.decimal(2)]],
-        componentList: this.fb.array([])
-      }),
+      // we move it into component-budgets component
+      // componentBudgetInfo: this.fb.group({
+      //   projectTotalCost: [model.projectTotalCost, [CustomValidators.required, CustomValidators.decimal(2)]],
+      //   componentList: this.fb.array([])
+      // }),
       description: this.fb.control(model.description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)])
     });
 
@@ -426,8 +439,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         return false;
       } else {
         // if project component total cost is 0, mark it invalid
-        if (!this.projectTotalCostField || !CommonUtils.isValidValue(this.projectTotalCostField.value) || this.projectTotalCostField.value === 0) {
-          this.toast.error(this.lang.map.err_invalid_project_component_total_x.change({value: this.projectTotalCostField.value || 0}));
+        if (!this.componentBudgetsRef.projectTotalCostField || !CommonUtils.isValidValue(this.componentBudgetsRef.projectTotalCostField.value) || this.componentBudgetsRef.projectTotalCostField.value === 0) {
+          this.toast.error(this.lang.map.err_invalid_project_component_total_x.change({value: this.componentBudgetsRef.projectTotalCostField.value || 0}));
           return false;
         }
       }
@@ -444,11 +457,12 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
-    return this.form.valid;
+    return this.form.valid && this.componentBudgetsRef.form.valid;
   }
 
   _afterLaunch(): void {
     this.resetForm$.next();
+    
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -460,7 +474,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       ...this.categoryGoalPercentGroup.getRawValue(),
       ...this.summaryInfoTab.getRawValue(),
       ...this.summaryPercentGroup.getRawValue(),
-      projectTotalCost: this.projectTotalCostField.value,
+      projectTotalCost: this.componentBudgetsRef.projectTotalCostField.value,
       evaluationIndicatorList: this.evaluationIndicators,
       foreignCountriesProjectList: this.pMForeignCountriesProjects,
       projectAddressList: this.projectAddresses,
@@ -510,16 +524,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   _updateForm(model: ProjectModel): void {
     this.model = model;
+    this.componentBudgetsRef.updateForm(model)
     this.form.patchValue({
       basicInfo: model.buildBasicInfoTab(false),
       categoryInfo: model.buildCategoryTab(false),
       categoryGoalPercentGroup: model.buildCategoryGoalPercentGroup(false),
       summaryInfo: model.buildSummaryTab(false),
       summaryPercentGroup: model.buildSummaryPercentGroup(false),
-      componentBudgetInfo: {
-        projectTotalCost: model.projectTotalCost,
-        componentList: []
-      },
       description: model.description
     });
 
@@ -535,6 +546,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   _resetForm(): void {
     this.form.reset();
+    this.componentBudgetsRef.form.reset()
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
     this.templateSerialControl.setValue('');
@@ -542,7 +554,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.templateSerialControl.updateValueAndValidity();
     this.selectedModel = undefined;
     this.displayTemplateSerialField = false;
-    this.cancelProjectComponent();
+    this.componentBudgetsRef.cancelProjectComponent();
     this.setDefaultValues();
   }
 
@@ -570,13 +582,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.form.get('basicInfo')?.get('isConstructional') as AbstractControl;
   }
 
-  get projectTotalCostField(): AbstractControl {
-    return this.form.get('componentBudgetInfo')?.get('projectTotalCost') as AbstractControl;
-  }
+  // get projectTotalCostField(): AbstractControl {
+  //   return this.form.get('componentBudgetInfo')?.get('projectTotalCost') as AbstractControl;
+  // }
 
-  get componentBudgetArray(): UntypedFormArray {
-    return this.form.get('componentBudgetInfo')?.get('componentList') as UntypedFormArray;
-  }
+  // get componentBudgetArray(): UntypedFormArray {
+  //   return this.form.get('componentBudgetInfo')?.get('componentList') as UntypedFormArray;
+  // }
 
   get basicInfoTab(): UntypedFormGroup {
     return this.form.get('basicInfo') as UntypedFormGroup;
@@ -757,29 +769,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
 
-  private listenToProjectComponentChange() {
-    this.projectComponentChange$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((event) => {
-        event.operation === OperationTypes.DELETE ? this.removeProjectComponentForm(event.model) : this.createProjectComponentForm(event.model);
-        this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost(2) ?? 0);
-      });
-  }
-
-  private createProjectComponentForm(model: ProjectComponent): void {
-    !this.componentBudgetArray.length ? this.componentBudgetArray.push(this.fb.group(model.buildForm(true))) : null;
-  }
-
-  private removeProjectComponentForm(model: ProjectComponent) {
-    this.componentBudgetArray.removeAt(0);
-    this.model?.componentList.splice(this.model?.componentList.indexOf(model), 1);
-    this.model && (this.model.componentList = this.model?.componentList.slice());
-  }
-
-  get currentProjectComponent(): AbstractControl {
-    return this.componentBudgetArray.get('0') as AbstractControl;
-  }
-
   // noinspection JSUnusedLocalSymbols
   private displayAttachmentsMessage(validAttachments: boolean): void {
     if (!validAttachments) {
@@ -947,39 +936,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     selectedId ? this.loadSubDacOcha(selectedId) : this.emptySubCategories();
   }
 
-  onClickAddProjectComponent(): void {
-    this.currentEditedProjectComponent = undefined;
-    this.projectComponentChange$.next({operation: OperationTypes.CREATE, model: new ProjectComponent()});
-  }
-
-  onClickEditProjectComponent(model: ProjectComponent): void {
-    this.currentEditedProjectComponent = model;
-    this.projectComponentChange$.next({operation: OperationTypes.UPDATE, model: model});
-  }
-
-  onClickDeleteProjectComponent(model: ProjectComponent): void {
-    this.projectComponentChange$.next({operation: OperationTypes.DELETE, model: model});
-  }
-
-  saveProjectComponent(): void {
-    if (this.currentProjectComponent.invalid) {
-      return;
-    }
-    if (this.currentEditedProjectComponent) {
-      this.model && this.model.componentList.splice(this.model.componentList.indexOf(this.currentEditedProjectComponent), 1, (new ProjectComponent()).clone({...this.currentProjectComponent.value}));
-      this.model && (this.model.componentList = this.model.componentList.slice());
-    } else {
-      const list = this.model?.componentList ? this.model?.componentList : [];
-      this.model && (this.model.componentList = list.concat(new ProjectComponent().clone({...this.currentProjectComponent.value})));
-    }
-    this.toast.success(this.lang.map.msg_save_success);
-    this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost(2) ?? 0);
-    this.cancelProjectComponent();
-  }
-
-  cancelProjectComponent(): void {
-    this.componentBudgetArray.removeAt(0);
-  }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(
@@ -1194,10 +1150,49 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   ///////// indicators functionality
   openAddIndicatorForm() {
     this.addIndicatorFormActive = true;
+    this.openEvaluationIndicatorsFormPopup()
   }
 
+  _getEvaluationIndicatorsPopupComponent() {
+    return EvaluationIndicatorsPopupComponent;
+  }
+
+  _getForeignCountriesPopupComponent(){
+    return ForeignCountriesProjectPopupComponent;
+  }
+
+  openEvaluationIndicatorsFormPopup() {
+    this.dialog.show(this._getEvaluationIndicatorsPopupComponent(), {
+      form: this.evaluationIndicatorForm,
+      readonly: this.readonly,
+      indicators:this.indicators,
+      editIndex:this.selectedIndicatorIndex,
+      model: this.evaluationIndicators,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.saveIndicator()
+      } else {
+        this.cancelAddIndicator();
+      }
+    })
+  }
+  openForeignCountriesFormPopup() {
+    this.dialog.show(this._getForeignCountriesPopupComponent(), {
+      form: this.pMForeignCountriesProjectForm,
+      readonly: this.readonly,
+      editIndex:this.selectedPMForeignCountriesProjectIndex,
+      foreignCountriesProjectsNeeds:this.foreignCountriesProjectsNeeds
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.savePMForeignCountriesProject()
+      } else {
+        this.cancelAddPMForeignCountriesProject();
+      }
+    })
+  }
   selectIndicator(event: MouseEvent, model: EvaluationIndicator) {
     this.addIndicatorFormActive = true;
+    this.openEvaluationIndicatorsFormPopup();
     event.preventDefault();
     this.selectedEvaluationIndicator = model;
     this.evaluationIndicatorForm.patchValue(this.selectedEvaluationIndicator!);
@@ -1272,10 +1267,12 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   ///////// foreign countries project functionality
   openAddPMForeignCountriesProjectForm() {
     this.addPMForeignCountriesProjectFormActive = true;
+    this.openForeignCountriesFormPopup()
   }
 
   selectPMForeignCountriesProject(event: MouseEvent, model: ProjectModelForeignCountriesProject) {
     this.addPMForeignCountriesProjectFormActive = true;
+    this.openForeignCountriesFormPopup()
     event.preventDefault();
     this.selectedPMForeignCountriesProject = model;
     this.pMForeignCountriesProjectForm.patchValue(this.selectedPMForeignCountriesProject!);

@@ -6,12 +6,20 @@ import {ProjectModelOutputsComponent} from './pages/project-model-outputs/projec
 import {ProjectModelComponent} from '@modules/services/project-models/pages/project-model/project-model.component';
 import {EServicesMainModule} from '@modules/e-services-main/e-services-main.module';
 import {MapsModule} from '@modules/maps/maps.module';
+import { ComponentBudgetsComponent } from './pages/project-model/component-budgets/component-budgets.component';
+import { ComponentBudgetsPopupComponent } from './pages/project-model/component-budgets/component-budgets-popup/component-budgets-popup.component';
+import { EvaluationIndicatorsPopupComponent } from './pages/project-model/evaluation-indicators-popup/evaluation-indicators-popup.component';
+import { ForeignCountriesProjectPopupComponent } from './pages/project-model/foreign-countries-project-popup/foreign-countries-project-popup.component';
 
 
 @NgModule({
   declarations: [
     ProjectModelComponent,
-    ProjectModelOutputsComponent
+    ProjectModelOutputsComponent,
+    ComponentBudgetsComponent,
+    ComponentBudgetsPopupComponent,
+    EvaluationIndicatorsPopupComponent,
+    ForeignCountriesProjectPopupComponent,
   ],
   imports: [
     CommonModule,

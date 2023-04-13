@@ -51,7 +51,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   permitAmountConsumed!: boolean
 
   inputMask = CustomValidators.inputMaskPatterns
-
+  
   form: UntypedFormGroup = new UntypedFormGroup({
     inputs: new UntypedFormArray([])
   })
@@ -59,7 +59,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   totalValue: number = 0;
 
   listeners$ = new Subject()
-
+  addFundSourceDialog$: Subject<any> = new Subject<any>();
   constructor(public lang: LangService, private dialog: DialogService) {
 
   }
@@ -84,8 +84,15 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   ngOnInit(): void {
     this.label = this.type === FundSourceType.GRANT ? 'grant_financial' : 'self_financial'
     this.isGrant() && this.displayedColumns.unshift('fullName')
+    this.listenToAdd()
   }
 
+  listenToAdd(){
+    this.addFundSourceDialog$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(()=>this.openAddFundSourceDialog())
+  }
+  
   destroyOldListeners(): void {
     this.listeners$.next()
   }
