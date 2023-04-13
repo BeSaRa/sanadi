@@ -9,6 +9,7 @@ import {MapsModule} from '@modules/maps/maps.module';
 import { ComponentBudgetsComponent } from './pages/project-model/component-budgets/component-budgets.component';
 import { ComponentBudgetsPopupComponent } from './pages/project-model/component-budgets/component-budgets-popup/component-budgets-popup.component';
 import { EvaluationIndicatorsPopupComponent } from './pages/project-model/evaluation-indicators-popup/evaluation-indicators-popup.component';
+import { ForeignCountriesProjectPopupComponent } from './pages/project-model/foreign-countries-project-popup/foreign-countries-project-popup.component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { EvaluationIndicatorsPopupComponent } from './pages/project-model/evalua
     ComponentBudgetsComponent,
     ComponentBudgetsPopupComponent,
     EvaluationIndicatorsPopupComponent,
+    ForeignCountriesProjectPopupComponent,
   ],
   imports: [
     CommonModule,
