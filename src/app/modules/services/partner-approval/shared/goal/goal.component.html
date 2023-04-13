@@ -1,37 +1,18 @@
-<ng-container *ngIf="showForm">
-  <div [formGroup]="form">
-    <div class="row">
-      <!-- Goal -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="goal" for="goal" class="form-label">{{lang.map.goal}}</label>
-        <input id="goal" validationClasses="goal" formControlName="goal" trimInput class="form-control">
-        <app-field-error-message controlName="goal"></app-field-error-message>
-      </div>
-    </div>
-    <div class="d-flex flex-row align-items-center justify-content-center">
-      <button (click)="save()" *ngIf="!readonly" class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save :
-        lang.map.btn_add}}</button>
-      <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
-    </div>
-
-  </div>
-
-</ng-container>
-
-<div class="row" [hidden]="showForm">
-  <app-page-header pageTitle="goal" [clickOnNew$]="add$" [addPermission]="addAllowed()">
-  </app-page-header>
-  <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
-</div>
-
-<div class="row pt-3" *ngIf="!showForm">
+<div class="row pt-3">
   <div class="col-12">
     <div class="table-responsive">
       <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="columns"
         [filter]="filterControl.value" [useSearchToFilter]="true">
         <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header tableTitle="goal" [add$]="add$" [allowAdd]="addAllowed()" [skipClearSort]="true"
+                (textChange)="filterControl.setValue($event)">
+              </table-header>
+            </th>
+          </ng-container>
           <ng-container cdkColumnDef="goal">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header > {{lang.map.goal}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.goal}}</th>
             <td cdk-cell *cdkCellDef="let row">
               {{row.goal || ''}} </td>
           </ng-container>
@@ -42,6 +23,7 @@
               <grid-actions [record]="row" [actions]="actions" [itemIndex]="i"></grid-actions>
             </td>
           </ng-container>
+          <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
           <tr *cdkNoDataRow>
