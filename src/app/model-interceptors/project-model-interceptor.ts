@@ -87,6 +87,9 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.projectAddressList = model.projectAddressList.map(item => {
       return new ProjectAddress().clone(item);
     });
+    model.componentList = model.componentList.map(item => {
+      return new ProjectComponent().clone(item);
+    });
     return model;
   }
 }
