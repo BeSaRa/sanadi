@@ -10,13 +10,15 @@ import {
 import {
   OrganizationsEntitiesSupportPopupComponent
 } from '@modules/services/organization-entities-support/popups/organizations-entities-support-popup/organizations-entities-support-popup.component';
+import { AuditOrganizationsEntitiesSupportComponent } from './audit/audit-organizations-entities-support/audit-organizations-entities-support.component';
 
 
 @NgModule({
   declarations: [
     OrganizationsEntitiesSupportComponent,
     OrganizationEntitiesSupportOutputsComponent,
-    OrganizationsEntitiesSupportPopupComponent
+    OrganizationsEntitiesSupportPopupComponent,
+    AuditOrganizationsEntitiesSupportComponent
   ],
   imports: [
     CommonModule,
