@@ -1,0 +1,16 @@
+<tabs-list>
+  <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
+  <tab name="beneficiaryGroup" [template]="beneficiaryGroupTapTemplate" [title]="lang.map.beneficiaries_type"></tab>
+  <tab name="organizationOfficer" [template]="organizationOfficerTabTemplate" [title]="lang.map.organization_officer">
+  </tab>
+
+</tabs-list>
+<ng-template #basicInfoTemplate>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #beneficiaryGroupTapTemplate>
+  <value-differences-list [differenceList]="beneficiariesTypeDifferences"></value-differences-list>
+</ng-template>
+<ng-template #organizationOfficerTabTemplate>
+  <value-differences-list [differenceList]="organizationOfficerDifferences"></value-differences-list>
+</ng-template>
