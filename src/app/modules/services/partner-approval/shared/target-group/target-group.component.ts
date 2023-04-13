@@ -10,6 +10,7 @@ import {UserClickOn} from "@enums/user-click-on.enum";
 import {TargetGroup} from "@models/target-group";
 import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import { TargetGroupPopupComponent } from './target-group-popup/target-group-popup.component';
 
 @Component({
   selector: 'target-group',
@@ -46,7 +47,6 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
 
   add$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
-  showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
   private changed$: Subject<TargetGroup | null> = new Subject<TargetGroup | null>();
   private current?: TargetGroup;
@@ -101,7 +101,6 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
     this.form = this.fb.group(new TargetGroup().getTargetGroupFields(true))
   }
 
-
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
@@ -115,11 +114,28 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
     this.changed$.pipe(takeUntil(this.destroy$))
       .subscribe(targetGroup => {
         this.current = targetGroup || undefined;
-        this.showForm = !!this.current;
         this.updateForm(this.current);
       })
   }
 
+  _getPopupComponent() {
+    return TargetGroupPopupComponent;
+  }
+  openFormDialog() {
+    this.dialogService.show(this._getPopupComponent(), {
+      viewOnly: this.viewOnly,
+      readonly: this.readonly,
+      form: this.form,
+      editItem: this.editItem,
+      model: this.current,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancel()
+      }
+    })
+  }
   private updateForm(record: TargetGroup | undefined) {
     if (record) {
       if (this.viewOnly) {
@@ -127,9 +143,11 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      this.form.patchValue(record);
+      this.openFormDialog();
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable();
       }
     } else {
       this._setComponentReadiness('READY');
@@ -163,6 +181,7 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
           x.targetedGroup === formValue.targetedGroup);
         if (isDuplicate) {
           this.toastService.alert(this.lang.map.msg_duplicated_item);
+          this.openFormDialog();
         }
         return !isDuplicate;
       }),
@@ -238,7 +257,6 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
 
   cancel() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');
