@@ -1,0 +1,22 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ !!editItem ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map.goal }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <div [formGroup]="form">
+    <div class="row">
+      <!-- Goal -->
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="goal" for="goal" class="form-label">{{lang.map.goal}}</label>
+        <input id="goal" validationClasses="goal" formControlName="goal" trimInput class="form-control">
+        <app-field-error-message controlName="goal"></app-field-error-message>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
+    class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>

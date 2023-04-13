@@ -1,45 +1,52 @@
-<table class="table mt-3 table-striped table-bordered caption-top" cdk-table
-  [dataSource]="listDataSource">
-  <ng-container cdkColumnDef="extra-header">
-    <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-      <table-header tableTitle="bank_details" [add$]="add$" [allowAdd]="addBankAccountAllowed()" [skipClearSort]="true" [skipSearch]="true">
-      </table-header>
-    </th>
-  </ng-container>
-  <ng-container cdkColumnDef="bankName">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.bank_name}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.bankInfo.getName()}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="accountNumber">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.account_number}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.accountNumber}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="iban">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.iban}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.iban}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="actions">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-    <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-      <div class="d-flex flex-row">
-        <button (click)="deleteBankAccount($event, row, i)" *ngIf="!readonly" class="icon-btn text-primary" [disabled]="readonly"
-          tooltip="{{lang.map.btn_delete}}">
-          <i class="mdi mdi-close-box"></i>
-        </button>
-        <button (click)="editBankAccount($event, row, i)" *ngIf="!readonly" class="icon-btn text-primary" [disabled]="readonly"
-          tooltip="{{lang.map.btn_edit}}">
-          <i class="mdi mdi-pen"></i>
-        </button>
-        <button (click)="view($event, row, i)" *ngIf="readonly" class="icon-btn text-primary" tooltip="{{lang.map.view}}">
-          <i class="mdi mdi-eye"></i>
-        </button>
-      </div>
-    </td>
-  </ng-container>
-  <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-  <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
-  <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
-  <tr *cdkNoDataRow>
-    <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-  </tr>
-</table>
+<div class="table-responsive">
+  <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
+    [filter]="filterControl.value" [useSearchToFilter]="true">
+    <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="listDataSource">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header tableTitle="bank_details" [add$]="add$" [allowAdd]="addBankAccountAllowed()"
+            [skipClearSort]="true" (textChange)="filterControl.setValue($event)">
+          </table-header>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="bankName">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.bank_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.bankInfo.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="accountNumber">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.account_number}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.accountNumber}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="iban">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.iban}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.iban}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+          <div class="d-flex flex-row">
+            <button (click)="deleteBankAccount($event, row, i)" *ngIf="!readonly" class="icon-btn text-primary"
+              [disabled]="readonly" tooltip="{{lang.map.btn_delete}}">
+              <i class="mdi mdi-close-box"></i>
+            </button>
+            <button (click)="editBankAccount($event, row, i)" *ngIf="!readonly" class="icon-btn text-primary"
+              [disabled]="readonly" tooltip="{{lang.map.btn_edit}}">
+              <i class="mdi mdi-pen"></i>
+            </button>
+            <button (click)="view($event, row, i)" *ngIf="readonly" class="icon-btn text-primary"
+              tooltip="{{lang.map.view}}">
+              <i class="mdi mdi-eye"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+      <tr *cdkNoDataRow>
+        <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+      </tr>
+    </table>
+    <app-paginator #paginator></app-paginator>
+  </app-table>
+</div>

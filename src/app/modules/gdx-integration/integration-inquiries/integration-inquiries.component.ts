@@ -22,6 +22,10 @@ import {
 } from '@app/modules/gdx-integration/related-data/garsia-pension-list/garsia-pension-list.component';
 import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
 import {GdxMojResponse} from '@app/models/gdx-moj-response';
+import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
+import { MoeStudentInfoComponent } from '../related-data/moe-student-info/moe-student-info.component';
+import { MoeInstallmentsComponent } from '../related-data/moe-installments/moe-installments.component';
+import { MoePendingPaymentComponent } from '../related-data/moe-pending-payment/moe-pending-payment.component';
 
 @Component({
   selector: 'integration-inquiries',
@@ -38,6 +42,10 @@ export class IntegrationInquiriesComponent {
 
   @ViewChild('garsiaPensionList') garsiaPensionListComponentRef!: GarsiaPensionListComponent;
   @ViewChild('garsiaPaymentList') garsiaPaymentListComponentRef!: GarsiaPensionPaymentListComponent;
+
+  @ViewChild('moeStudentInfoList') moeStudentInfoComponentRef!: MoeStudentInfoComponent;
+  @ViewChild('moeInstallmentsList') moeInstallmentsComponentRef!: MoeInstallmentsComponent;
+  @ViewChild('moePendingPaymentList') moePendingPaymentComponentRef!: MoePendingPaymentComponent;
 
   gdxServicesEnum = GdxServicesEnum;
   gdxServiceRelatedTypesEnum = GdxServiceRelatedTypesEnum;
@@ -133,6 +141,24 @@ export class IntegrationInquiriesComponent {
       isTouchedOrDirty: () => true,
       serviceId: GdxServicesEnum.SJC,
       isLoaded: false
+    },
+    moe: {
+      name:'moe',
+      index:8,
+      langKey:'integration_moe',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.MOE,
+      isLoaded: false
+    },
+    mme:{
+      name:'mme',
+      index:9,
+      langKey:'integration_mme',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.MME,
+      isLoaded: false
     }
   };
   charityTabsData: TabMap = {
@@ -145,22 +171,22 @@ export class IntegrationInquiriesComponent {
       // serviceId: GdxServicesEnum.QATAR_ZAKAT_FUND,
       isLoaded: true
     },
+    qatarCharity: {
+      name: 'qatarCharity',
+      index: 1,
+      langKey: 'integration_qatar_charity',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.QATAR_CHARITY,
+      isLoaded: true
+    },
     qrcs: {
       name: 'qrcs',
-      index: 1,
+      index: 2,
       langKey: 'integration_qrcs',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       // serviceId: GdxServicesEnum.QRCS,
-      isLoaded: true
-    },
-    jasimHamadBinJasimCharityFund: {
-      name: 'jasimHamadBinJasimCharityFund',
-      index: 2,
-      langKey: 'integration_jasim_hamad_bin_jasim_charity_fund',
-      validStatus: () => true,
-      isTouchedOrDirty: () => true,
-      // serviceId: GdxServicesEnum.JASIM_HAMAD_BIN_JASIM_CHARITY,
       isLoaded: true
     },
     qatarCancerSociety: {
@@ -172,24 +198,42 @@ export class IntegrationInquiriesComponent {
       // serviceId: GdxServicesEnum.QATAR_CANCER_SOCIETY,
       isLoaded: true
     },
-    raf: {
-      name: 'raf',
+    alSheikhEidCharitableFoundation: {
+      name: 'alSheikhEidCharitableFoundation',
       index: 4,
-      langKey: 'integration_raf',
+      langKey: 'integration_al_sheikh_eid_charitable_foundation',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
-      // serviceId: GdxServicesEnum.RAF,
+      // serviceId: GdxServicesEnum.AL_SHEIKH_EID_CHARITABLE_FOUNDATION,
       isLoaded: true
     },
-    qatarCharity: {
-      name: 'qatarCharity',
+    alAsmakhCharitableFoundation: {
+      name: 'alAsmakhCharitableFoundation',
       index: 5,
-      langKey: 'integration_qatar_charity',
+      langKey: 'integration_al_asmakh_charitable_foundation',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
-      // serviceId: GdxServicesEnum.QATAR_CHARITY,
+      // serviceId: GdxServicesEnum.AL_ASMAKH_CHARITABLE_FOUNDATION,
       isLoaded: true
-    }
+    },
+    jasimHamadBinJasimCharityFund: {
+      name: 'jasimHamadBinJasimCharityFund',
+      index: 6,
+      langKey: 'integration_jasim_hamad_bin_jasim_charity_fund',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.JASIM_HAMAD_BIN_JASIM_CHARITY,
+      isLoaded: true
+    },
+    qsrn: {
+      name: 'qsrn',
+      index: 7,
+      langKey: 'integration_qsrn',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.QSRN,
+      isLoaded: true
+    },
   }
   mainTabIndex$: Subject<number> = new Subject<number>();
   govTabIndex$: Subject<number> = new Subject<number>();
@@ -205,6 +249,10 @@ export class IntegrationInquiriesComponent {
     [GdxServiceRelatedTypesEnum.KAHRAMAA_OUTSTANDING_PAYMENTS]: [],
     [GdxServiceRelatedTypesEnum.MOL_RELATED_DATA]: [],
     [GdxServiceRelatedTypesEnum.SJC_RELATED_DATA]: [],
+    [GdxServiceRelatedTypesEnum.MOE_STUDENT_INFO]: [],
+    [GdxServiceRelatedTypesEnum.MOE_INSTALLMENTS]: [],
+    [GdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS]: [],
+    [GdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT]: [],
   };
 
   onMainTabChange($event: TabComponent): void {
@@ -254,6 +302,15 @@ export class IntegrationInquiriesComponent {
       case GdxServicesEnum.SJC:
         this.relatedData[GdxServiceRelatedTypesEnum.SJC_RELATED_DATA] = [log.gdxServiceResponseParsed];
         break;
+      case GdxServicesEnum.MOE:
+        this.relatedData[this.gdxServiceRelatedTypesEnum.MOE_STUDENT_INFO] = log.gdxServiceResponseList;
+        this.moeStudentInfoComponentRef.setSelectedStudentInfo(undefined);
+        break;
+      case GdxServicesEnum.MME:
+        // console.log(log)
+        this.relatedData[this.gdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT] = log.gdxServiceResponseList;
+        // console.log(this.relatedData)
+        break;
       default:
         break;
     }
@@ -278,6 +335,14 @@ export class IntegrationInquiriesComponent {
   setPensionPayment(pensionRecord?: GdxGarsiaPensionResponse) {
     this.garsiaPaymentListComponentRef.paginator.goToControl.setValue(1);
     this.relatedData[GdxServiceRelatedTypesEnum.GARSIA_PENSION_PAYMENT] = pensionRecord?.pensionMonthlyPayments || [];
+  }
+
+  setStudentInfo(studentRecord?: GdxMoeResponse) {
+    this.moeInstallmentsComponentRef.paginator.goToControl.setValue(1);
+    this.relatedData[GdxServiceRelatedTypesEnum.MOE_INSTALLMENTS] = studentRecord?.installments || [];
+
+    this.moePendingPaymentComponentRef.paginator.goToControl.setValue(1);
+    this.relatedData[GdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS] = studentRecord?.privateSchoolPendingPayment || [];
   }
 
   private _getServiceComponent(serviceId: GdxServicesEnum): IntegrationInquiryLogListComponent {
@@ -318,6 +383,14 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.SJC:
         this.relatedData[GdxServiceRelatedTypesEnum.SJC_RELATED_DATA] = [];
+        break;
+      case GdxServicesEnum.MOE:
+        this.relatedData[GdxServiceRelatedTypesEnum.MOE_INSTALLMENTS] = [];
+        this.relatedData[GdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS] = [];
+        this.moeStudentInfoComponentRef?.setSelectedStudentInfo(undefined)
+        break;
+      case GdxServicesEnum.MME:
+        this.relatedData[GdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT] = [];
         break;
       default:
         break;

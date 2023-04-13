@@ -1,21 +1,18 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {ImplementingAgency} from '@models/implementing-agency';
-import {Subject} from 'rxjs';
-import {ReadinessStatus} from '@app/types/types';
-import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {DialogService} from '@services/dialog.service';
-import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@enums/action-icons-enum';
-import {SortEvent} from '@contracts/sort-event';
-import {CommonUtils} from '@helpers/common-utils';
-import {LookupService} from '@services/lookup.service';
-import {Lookup} from '@models/lookup';
-import {AdminResult} from '@models/admin-result';
-import {CommonService} from '@services/common.service';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ImplementingAgency } from '@models/implementing-agency';
+import { Subject } from 'rxjs';
+import { ReadinessStatus } from '@app/types/types';
+import { filter, take, takeUntil, tap } from 'rxjs/operators';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { DialogService } from '@services/dialog.service';
+import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@enums/action-icons-enum';
+import { SortEvent } from '@contracts/sort-event';
+import { CommonUtils } from '@helpers/common-utils';
+import { InterventionImplementingAgencyListPopupComponent } from './intervention-implementing-agency-list-popup/intervention-implementing-agency-list-popup.component';
 
 @Component({
   selector: 'intervention-implementing-agency-list',
@@ -25,11 +22,9 @@ import {CommonService} from '@services/common.service';
 export class InterventionImplementingAgencyListComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
-              private toastService: ToastService,
-              private dialogService: DialogService,
-              private lookupService: LookupService,
-              private commonService: CommonService,
-              private fb: UntypedFormBuilder) {
+    private toastService: ToastService,
+    private dialogService: DialogService,
+    private fb: UntypedFormBuilder) {
   }
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -47,8 +42,6 @@ export class InterventionImplementingAgencyListComponent implements OnInit, OnDe
   }
 
   displayedColumns = ['implementingAgencyType', 'implementingAgency', 'actions'];
-  implementingAgencyTypeList: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
-  implementingAgencyList: AdminResult[] = [];
 
   editItem?: ImplementingAgency;
   viewOnly: boolean = false;
@@ -58,7 +51,6 @@ export class InterventionImplementingAgencyListComponent implements OnInit, OnDe
   private recordChanged$: Subject<ImplementingAgency | null> = new Subject<ImplementingAgency | null>();
   private currentRecord?: ImplementingAgency;
   private destroy$: Subject<any> = new Subject<any>();
-  showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   form!: UntypedFormGroup;
@@ -138,34 +130,53 @@ export class InterventionImplementingAgencyListComponent implements OnInit, OnDe
 
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
-      this.currentRecord = record || undefined;
-      this.showForm = !!this.currentRecord;
+        this.currentRecord = record || undefined;
       this.updateForm(this.currentRecord);
     });
   }
 
+  _getPopupComponent() {
+    return InterventionImplementingAgencyListPopupComponent;
+  }
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form: this.form,
+      readonly: this.readonly,
+      editItem: this.editItem,
+      model: this.currentRecord,
+      viewOnly: this.viewOnly,
+      executionCountry: this.executionCountry,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save(data)
+      } else {
+        this.cancelForm();
+      }
+    })
+  }
   private updateForm(record: ImplementingAgency | undefined) {
     if (record) {
-      this.loadImplementingAgenciesByAgencyType(record.implementingAgencyType);
       if (this.viewOnly) {
         this._setComponentReadiness('READY');
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      this.form.patchValue(record);
+      this.openFormPopup();
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable();
       }
     } else {
       this._setComponentReadiness('READY');
     }
   }
 
-  save() {
+  save(model: ImplementingAgency) {
     if (this.readonly || this.viewOnly) {
       return;
     }
-    this.save$.next();
+    this.save$.next(model);
   }
 
   private displayRequiredFieldsMessage(): void {
@@ -177,7 +188,7 @@ export class InterventionImplementingAgencyListComponent implements OnInit, OnDe
   }
 
   private displayMissingCountryMessage(): void {
-    this.dialogService.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.execution_country})).onAfterClose$
+    this.dialogService.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.execution_country })).onAfterClose$
       .pipe(take(1))
       .subscribe();
   }
@@ -192,19 +203,9 @@ export class InterventionImplementingAgencyListComponent implements OnInit, OnDe
         const isDuplicate = this.list.some(x => x.implementingAgency === formValue.implementingAgency && x.implementingAgencyType === formValue.implementingAgencyType);
         if (isDuplicate) {
           this.toastService.alert(this.lang.map.msg_duplicated_item);
+          this.openFormPopup();
         }
         return !isDuplicate;
-      }),
-      map(() => {
-        let formValue = this.form.getRawValue();
-        let agencyTypeInfo: AdminResult = (this.implementingAgencyTypeList.find(x => x.lookupKey === formValue.implementingAgencyType) ?? new Lookup()).convertToAdminResult();
-        let agencyInfo: AdminResult = (this.implementingAgencyList.find(x => x.fnId === formValue.implementingAgency)) ?? new AdminResult();
-
-        return (new ImplementingAgency()).clone({
-          ...this.currentRecord, ...formValue,
-          agencyTypeInfo: agencyTypeInfo,
-          implementingAgencyInfo: agencyInfo
-        });
       })
     ).subscribe((agency: ImplementingAgency) => {
       if (!agency) {
@@ -235,7 +236,6 @@ export class InterventionImplementingAgencyListComponent implements OnInit, OnDe
 
   cancelForm() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');
@@ -289,29 +289,4 @@ export class InterventionImplementingAgencyListComponent implements OnInit, OnDe
       });
   }
 
-  handleImplementingAgencyTypeChange(agencyType: number, userInteraction: boolean = false): void {
-    if (userInteraction) {
-      this.implementingAgencyField.setValue(null);
-      this.loadImplementingAgenciesByAgencyType(agencyType);
-    }
-  }
-
-  private loadImplementingAgenciesByAgencyType(agencyType: number) {
-    if (!agencyType) {
-      this.implementingAgencyList = [];
-      return;
-    }
-    this.commonService.loadAgenciesByAgencyTypeAndCountry(agencyType, this.executionCountry)
-      .subscribe((result) => {
-        this.implementingAgencyList = result;
-      });
-  }
-
-  get implementingAgencyTypeField(): UntypedFormControl {
-    return this.form.get('implementingAgencyType') as UntypedFormControl;
-  }
-
-  get implementingAgencyField(): UntypedFormControl {
-    return this.form.get('implementingAgency') as UntypedFormControl;
-  }
 }

@@ -72,7 +72,8 @@ export class ReadBenefucuariesPopupComponent implements OnInit {
     passportDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
     startDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
     lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
-  }; controls: (ControlWrapper & { isDisplayed?: boolean })[] = [
+  };
+  controls: (ControlWrapper & { isDisplayed?: boolean })[] = [
     {
       gridClass: 'col-sm-6',
       controlName: 'arabicName',

@@ -1,12 +1,8 @@
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { IMenuItem } from './../../../../context-menu/interfaces/i-menu-item';
 import { Component, Input } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ListModelComponent } from '@app/generics/ListModel-component';
 import { CommonUtils } from '@helpers/common-utils';
-import { ControlWrapper } from '@contracts/i-control-wrapper';
 import { SortEvent } from '@contracts/sort-event';
-import { AdminResult } from '@models/admin-result';
 import { Country } from '@models/country';
 import { WorkArea } from '@models/work-area';
 import { LangService } from '@services/lang.service';
@@ -28,7 +24,14 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
   @Input() set list(_list: WorkArea[]) {
     this._list = _list;
   }
-  @Input() countries: Country[] = [];
+  // @Input() countries: Country[] = [];
+  private _countries: Country[] = []
+  get countries() {
+    return this._countries;
+  }
+  @Input() set countries(value: Country[]) {
+    this._countries = value;
+  }
   @Input() readonly!: boolean;
   form!: UntypedFormGroup;
   filterControl: UntypedFormControl = new UntypedFormControl('');

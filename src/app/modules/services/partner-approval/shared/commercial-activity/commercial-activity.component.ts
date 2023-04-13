@@ -11,6 +11,7 @@ import { ReadinessStatus } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { Subject } from 'rxjs';
 import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import { CommercialActivityPopupComponent } from './commercial-activity-popup/commercial-activity-popup.component';
 
 @Component({
   selector: 'commercial-activity',
@@ -53,14 +54,11 @@ get list(): CommercialActivity[] {
 displayedColumns = ['activityName', 'details', 'actions'];
 editItem?: CommercialActivity;
 viewOnly: boolean = false;
-customValidators = CustomValidators;
-inputMaskPatterns = CustomValidators.inputMaskPatterns;
 private save$: Subject<any> = new Subject<any>();
 add$: Subject<any> = new Subject<any>();
 private recordChanged$: Subject<CommercialActivity | null> = new Subject<CommercialActivity | null>();
 private currentRecord?: CommercialActivity;
 private destroy$: Subject<any> = new Subject<any>();
-showForm: boolean = false;
 filterControl: UntypedFormControl = new UntypedFormControl('');
 
 form!: UntypedFormGroup;
@@ -94,7 +92,6 @@ private _setComponentReadiness(readyStatus: ReadinessStatus) {
   this.readyEvent.emit(readyStatus);
 }
 
-
 buildForm(): void {
   this.form = this.fb.group(new CommercialActivity().buildForm(true));
 }
@@ -106,11 +103,27 @@ private listenToAdd() {
       this.recordChanged$.next(new CommercialActivity());
     });
 }
-
+_getPopupComponent() {
+  return CommercialActivityPopupComponent;
+}
+openFormDialog() {
+  this.dialogService.show(this._getPopupComponent(), {
+    viewOnly: this.viewOnly,
+    readonly: this.readonly,
+    form: this.form,
+    editItem: this.editItem,
+    model: this.currentRecord
+  }).onAfterClose$.subscribe((data) => {
+    if(data) {
+      this.save(data)
+    } else {
+      this.cancelForm()
+    }
+  })
+}
 private listenToRecordChange() {
   this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
     this.currentRecord = record || undefined;
-    this.showForm = !!this.currentRecord;
     this.updateForm(this.currentRecord);
   });
 }
@@ -122,20 +135,22 @@ private updateForm(record: CommercialActivity | undefined) {
     } else {
       this._setComponentReadiness('NOT_READY');
     }
-    this.form.patchValue(record);
+    this.openFormDialog()
     if (this.readonly || this.viewOnly) {
       this.form.disable();
+    } else {
+      this.form.enable();
     }
   } else {
     this._setComponentReadiness('READY');
   }
 }
 
-save() {
+save(model: CommercialActivity) {
   if (this.readonly || this.viewOnly) {
     return;
   }
-  this.save$.next();
+  this.save$.next(model);
 }
 
 private displayRequiredFieldsMessage(): void {
@@ -151,13 +166,6 @@ private listenToSave() {
     takeUntil(this.destroy$),
     tap(_ => this.form.invalid ? this.displayRequiredFieldsMessage() : true),
     filter(() => this.form.valid),
-    map(() => {
-      let formValue = this.form.getRawValue();
-
-      return (new CommercialActivity()).clone({
-        ...this.currentRecord, ...formValue
-      });
-    })
   ).subscribe((record: CommercialActivity) => {
     if (!record) {
       return;
@@ -187,7 +195,6 @@ private _updateList(record: (CommercialActivity | null), operation: 'ADD' | 'UPD
 
 cancelForm() {
   this.resetForm();
-  this.showForm = false;
   this.editItem = undefined;
   this.viewOnly = false;
   this._setComponentReadiness('READY');

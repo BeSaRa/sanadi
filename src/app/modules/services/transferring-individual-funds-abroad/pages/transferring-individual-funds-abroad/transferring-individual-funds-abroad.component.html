@@ -355,97 +355,6 @@
     </ng-container>
     <ng-container [formGroup]="executiveManagementForm">
       <ng-template #executive_management_info>
-        <ng-container *ngIf="isExternalUser">
-          <div class="row">
-            <div class="col">
-              <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_executive}}</h1>
-              <button class="btn btn-link outline-none"
-                      tooltip="{{lang.map.btn_add}}" (click)="openAddExecutiveForm()" [disabled]="isCancel">
-                <i class="mdi mdi-plus-box"></i></button>
-            </div>
-          </div>
-          <ng-container *ngIf="addExecutiveFormActive">
-            <div class="row">
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="nameLikePassport" class="form-label"
-                       for="nameLikePassport">{{lang.map.name_in_local_language_like_passport}}</label>
-                <input [readonly]="(readonly)" class="form-control"
-                       formControlName="nameLikePassport"
-                       id="nameLikePassport" validationClasses="nameLikePassport">
-                <app-field-error-message controlName="nameLikePassport"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="englishNameLikePassport" class="form-label"
-                       for="englishNameLikePassport">{{lang.map.name_in_English_language_like_passport}}</label>
-                <input [readonly]="(readonly)" class="form-control" formControlName="englishNameLikePassport"
-                       id="englishNameLikePassport" validationClasses="englishNameLikePassport">
-                <app-field-error-message controlName="englishNameLikePassport"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="jobTitle" class="form-label"
-                       for="jobTitle">{{lang.map.job_title}}</label>
-                <input [readonly]="(readonly)" class="form-control" formControlName="jobTitle"
-                       id="jobTitle" validationClasses="jobTitle">
-                <app-field-error-message controlName="jobTitle"></app-field-error-message>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="executiveNationality" class="form-label"
-                       for="executiveNationality">{{lang.map.lbl_nationality}}</label>
-                <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                           formControlName="executiveNationality"
-                           id="executiveNationality" validationClasses="executiveNationality">
-                  <ng-option *ngFor="let option of nationalities"
-                             [value]="option.lookupKey">{{option.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="executiveNationality"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="executiveIdentificationNumber" class="form-label"
-                       for="executiveIdentificationNumber">{{lang.map.national_id_number}}</label>
-                <input [readonly]="(readonly)" class="form-control"
-                       formControlName="executiveIdentificationNumber"
-                       id="executiveIdentificationNumber" validationClasses="executiveIdentificationNumber">
-                <app-field-error-message controlName="executiveIdentificationNumber"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="passportNumber" class="form-label"
-                       for="passportNumber">{{lang.map.passport_number}}</label>
-                <input [readonly]="(readonly)" class="form-control"
-                       formControlName="passportNumber"
-                       id="passportNumber" validationClasses="passportNumber">
-                <app-field-error-message controlName="passportNumber"></app-field-error-message>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="executivephone1" class="form-label"
-                       for="executivephone1">{{lang.map.lbl_phone_1}}</label>
-                <input [readonly]="(readonly)" class="form-control"
-                       formControlName="executivephone1"
-                       id="executivephone1" validationClasses="executivephone1">
-                <app-field-error-message controlName="executivephone1"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="executivephone2" class="form-label"
-                       for="executivephone2">{{lang.map.lbl_phone_2}}</label>
-                <input [readonly]="(readonly)" class="form-control"
-                       formControlName="executivephone2"
-                       id="executivephone2" validationClasses="executivephone2">
-                <app-field-error-message controlName="executivephone2"></app-field-error-message>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12 text-center action-container mb-3">
-                <button [disabled]="!executiveManagementForm.valid" (click)="saveExecutive()"
-                        class="btn btn-primary">{{lang.map.btn_save}}</button>
-                <button class="btn btn-secondary"
-                        (click)="cancelAddExecutive()">{{lang.map.btn_cancel}}</button>
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
         <div class="row">
           <div class="col-12">
             <app-table #table [columns]="executiveDisplayedColumns"
@@ -454,6 +363,12 @@
                        sortableTable>
               <table [dataSource]="table.dataSource" cdk-table
                      class="table table-striped table-bordered caption-top">
+                <ng-container cdkColumnDef="extra-header">
+                  <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                    <table-header *ngIf="isExternalUser" tableTitle="executives" [skipSearch]="true" [add$]="addExecutive$" [allowAdd]="!isCancel" [skipClearSort]="true">
+                    </table-header>
+                  </th>
+                </ng-container>
                 <ng-container cdkColumnDef="localName">
                   <th *cdkHeaderCellDef cdk-header-cell
                       sortable-header> {{lang.map.name_in_local_language_like_passport}}</th>
@@ -480,17 +395,18 @@
                   <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
-                      <button (click)="removeExecutive($event, row)" [disabled]="(readonly || addExecutiveFormActive || isCancel)"
+                      <button (click)="removeExecutive($event, row)" [disabled]="(readonly || isCancel)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
                       </button>
-                      <button (click)="selectExecutive($event, row)" [disabled]="(readonly || addExecutiveFormActive || isCancel)"
+                      <button (click)="selectExecutive($event, row)" [disabled]="(readonly || isCancel)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                         <i class="mdi mdi-pen"></i>
                       </button>
                     </div>
                   </td>
                 </ng-container>
+                <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
                 <tr *cdkHeaderRowDef="executiveDisplayedColumns" cdk-header-row></tr>
                 <tr *cdkRowDef="let row; columns: executiveDisplayedColumns;" cdk-row></tr>
                 <!--suppress HtmlUnknownBooleanAttribute -->
@@ -596,122 +512,6 @@
     </ng-container>
     <ng-container [formGroup]="transferPurposeForm">
       <ng-template #transfer_purpose_info>
-        <ng-container *ngIf="isExternalUser">
-          <div class="row">
-            <div class="col">
-              <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_purpose}}</h1>
-              <button class="btn btn-link outline-none"
-                      tooltip="{{lang.map.btn_add}}" (click)="openAddPurposeForm()" [disabled]="isCancel">
-                <i class="mdi mdi-plus-box"></i></button>
-            </div>
-          </div>
-          <ng-container *ngIf="addPurposeFormActive">
-            <div class="row">
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="projectName" class="form-label"
-                       for="projectName">{{lang.map.project_name}}</label>
-                <input [readonly]="(readonly)" class="form-control"
-                       formControlName="projectName"
-                       id="projectName" validationClasses="projectName">
-                <app-field-error-message controlName="projectName"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="projectType" class="form-label"
-                       for="projectType">{{lang.map.project_type}}</label>
-                <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                           formControlName="projectType"
-                           id="projectType" validationClasses="projectType">
-                  <ng-option *ngFor="let option of projectTypes"
-                             [value]="option.lookupKey">{{option.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="projectType"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="projectImplementationPeriod" class="form-label"
-                       for="projectImplementationPeriod">{{lang.map.execution_period_in_months}}</label>
-                <input [readonly]="(readonly)" class="form-control"
-                       formControlName="projectImplementationPeriod"
-                       id="projectImplementationPeriod" validationClasses="projectImplementationPeriod">
-                <app-field-error-message controlName="projectImplementationPeriod"></app-field-error-message>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="beneficiaryCountry" class="form-label"
-                       for="beneficiaryCountry">{{lang.map.beneficiary_country}}</label>
-                <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                           formControlName="beneficiaryCountry"
-                           id="beneficiaryCountry" validationClasses="beneficiaryCountry">
-                  <ng-option *ngFor="let option of countries"
-                             [value]="option.id">{{option.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="beneficiaryCountry"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="executionCountry" class="form-label"
-                       for="executionCountry">{{lang.map.execution_country}}</label>
-                <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                           formControlName="executionCountry"
-                           id="executionCountry" validationClasses="executionCountry">
-                  <ng-option *ngFor="let option of countries"
-                             [value]="option.id">{{option.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="executionCountry"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="totalCost" class="form-label"
-                       for="totalCost">{{lang.map.total_cost}}</label>
-                <input [readonly]="(readonly)" class="form-control"
-                       formControlName="totalCost"
-                       id="totalCost" validationClasses="totalCost">
-                <app-field-error-message controlName="totalCost"></app-field-error-message>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="domain" class="form-label"
-                       for="domain">{{lang.map.domain}}</label>
-                <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                           formControlName="domain"
-                           id="domain" validationClasses="domain">
-                  <ng-option *ngFor="let option of domains"
-                             [value]="option.lookupKey">{{option.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="domain"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isHumanitarian">
-                <label asteriskIfRequired="mainUNOCHACategory" class="form-label"
-                       for="mainUNOCHACategory">{{lang.map.ocha}}</label>
-                <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                           formControlName="mainUNOCHACategory"
-                           id="mainUNOCHACategory" validationClasses="mainUNOCHACategory">
-                  <ng-option *ngFor="let option of mainOchas"
-                             [value]="option.id">{{option.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isDevelopment">
-                <label asteriskIfRequired="mainDACCategory" class="form-label"
-                       for="mainDACCategory">{{lang.map.dac}}</label>
-                <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                           formControlName="mainDACCategory"
-                           id="mainDACCategory" validationClasses="mainDACCategory">
-                  <ng-option *ngFor="let option of mainDacs"
-                             [value]="option.id">{{option.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12 text-center action-container mb-3">
-                <button [disabled]="!transferPurposeForm.valid" (click)="savePurpose()"
-                        class="btn btn-primary">{{lang.map.btn_save}}</button>
-                <button class="btn btn-secondary"
-                        (click)="cancelAddPurpose()">{{lang.map.btn_cancel}}</button>
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
         <div class="row">
           <div class="col-12">
             <app-table #table [columns]="purposeDisplayedColumns"
@@ -720,6 +520,12 @@
                        sortableTable>
               <table [dataSource]="table.dataSource" cdk-table
                      class="table table-striped table-bordered caption-top">
+                <ng-container cdkColumnDef="extra-header">
+                  <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                    <table-header *ngIf="isExternalUser" tableTitle="purposes" [skipSearch]="true" [add$]="addPropose$" [allowAdd]="!isCancel" [skipClearSort]="true">
+                    </table-header>
+                  </th>
+                </ng-container>
                 <ng-container cdkColumnDef="projectName">
                   <th *cdkHeaderCellDef cdk-header-cell
                       sortable-header> {{lang.map.project_name}}</th>
@@ -750,17 +556,18 @@
                   <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
-                      <button (click)="removePurpose($event, row)" [disabled]="(readonly || addPurposeFormActive || isCancel)"
+                      <button (click)="removePurpose($event, row)" [disabled]="(readonly || isCancel)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
                       </button>
-                      <button (click)="selectPurpose($event, row)" [disabled]="(readonly || addPurposeFormActive || isCancel)"
+                      <button (click)="selectPurpose($event, row)" [disabled]="(readonly || isCancel)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                         <i class="mdi mdi-pen"></i>
                       </button>
                     </div>
                   </td>
                 </ng-container>
+                <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
                 <tr *cdkHeaderRowDef="purposeDisplayedColumns" cdk-header-row></tr>
                 <tr *cdkRowDef="let row; columns: purposeDisplayedColumns;" cdk-row></tr>
                 <!--suppress HtmlUnknownBooleanAttribute -->
@@ -873,74 +680,6 @@
     </ng-container>
     <ng-container [formGroup]="paymentForm">
       <ng-template #payment_info>
-        <ng-container *ngIf="isExternalUser">
-          <div class="row">
-            <div class="col">
-              <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_payment}}</h1>
-              <button class="btn btn-link outline-none"
-                      tooltip="{{lang.map.btn_add}}" (click)="openAddPaymentForm()" [disabled]="isCancel">
-                <i class="mdi mdi-plus-box"></i></button>
-            </div>
-          </div>
-          <ng-container *ngIf="addPaymentFormActive">
-            <div class="row">
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="paymentNo" class="form-label"
-                       for="paymentNo">{{lang.map.payment_name}}</label>
-                <input [readonly]="(readonly)" class="form-control"
-                       formControlName="paymentNo"
-                       id="paymentNo" validationClasses="paymentNo">
-                <app-field-error-message controlName="paymentNo"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="totalCost" class="form-label"
-                       for="amount">{{lang.map.amount}}</label>
-                <input [readonly]="(readonly)" class="form-control"
-                       formControlName="totalCost"
-                       id="amount" validationClasses="totalCost"
-                       [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
-                       [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
-                <app-field-error-message controlName="totalCost"></app-field-error-message>
-              </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="dueDate" class="form-label"
-                       for="dueDate">{{lang.map.establishment_date}}</label>
-                <div class="reg-start-date-container">
-                  <div class="input-group">
-                    <i class="input-group-text mdi mdi-calendar"></i>
-                    <div #dpDueDate="angular-mydatepicker"
-                         (click)="!readonly && dpDueDate.toggleCalendar()"
-                         [ngClass]="{'input-disabled': (readonly)}"
-                         [options]="datepickerOptionsMap.dueDate"
-                         angular-mydatepicker
-                         class="form-control"
-                         formControlName="dueDate"
-                         id="dueDate" validationClasses="dueDate"></div>
-                  </div>
-                </div>
-                <app-field-error-message controlName="dueDate"></app-field-error-message>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="notes" class="form-label"
-                       for="notes">{{lang.map.notes}}</label>
-                <textarea [readonly]="(readonly)" class="form-control" formControlName="notes" id="notes"
-                          name="notes" rows="4" validationClasses="notes"></textarea>
-                <app-field-error-message controlName="notes"></app-field-error-message>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12 text-center action-container mb-3">
-                <span class="flex-grow-1"></span>
-                <button [disabled]="!paymentForm.valid" (click)="savePayment()"
-                        class="btn btn-primary">{{lang.map.btn_save}}</button>
-                <button class="btn btn-secondary"
-                        (click)="cancelAddPayment()">{{lang.map.btn_cancel}}</button>
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
         <div class="row">
           <div class="col-12">
             <app-table #table [columns]="paymentDisplayedColumns"
@@ -949,6 +688,12 @@
                        sortableTable>
               <table [dataSource]="table.dataSource" cdk-table
                      class="table table-striped table-bordered caption-top">
+                <ng-container cdkColumnDef="extra-header">
+                  <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                    <table-header *ngIf="isExternalUser" tableTitle="payments" [skipSearch]="true" [add$]="addPayment$" [allowAdd]="!isCancel" [skipClearSort]="true">
+                    </table-header>
+                  </th>
+                </ng-container>
                 <ng-container cdkColumnDef="paymentNo">
                   <th *cdkHeaderCellDef cdk-header-cell
                       sortable-header> {{lang.map.payment_name}}</th>
@@ -967,20 +712,20 @@
                   <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
-                      <button (click)="removePayment($event, row)" [disabled]="(readonly || addPaymentFormActive || isCancel)"
+                      <button (click)="removePayment($event, row)" [disabled]="(readonly || isCancel)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
                       </button>
-                      <button (click)="selectPayment($event, row)" [disabled]="(readonly || addPaymentFormActive || isCancel)"
+                      <button (click)="selectPayment($event, row)" [disabled]="(readonly || isCancel)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                         <i class="mdi mdi-pen"></i>
                       </button>
                     </div>
                   </td>
                 </ng-container>
+                <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
                 <tr *cdkHeaderRowDef="paymentDisplayedColumns" cdk-header-row></tr>
                 <tr *cdkRowDef="let row; columns: paymentDisplayedColumns;" cdk-row></tr>
-                <!--suppress HtmlUnknownBooleanAttribute -->
                 <tr *cdkNoDataRow>
                   <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
                 </tr>

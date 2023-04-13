@@ -14,6 +14,7 @@ import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import { ManagementCouncilPopupComponent } from './management-council-popup/management-council-popup.component';
 
 @Component({
   selector: 'management-council',
@@ -48,7 +49,6 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
   >([]);
   columns = ['arabicName', 'englishName', 'email', 'nationality', 'passportNumber', 'actions'];
   editItem?: ManagementCouncil;
-  showForm: boolean = false;
   viewOnly: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
@@ -126,11 +126,29 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.current = record || undefined;
-      this.showForm = !!this.current;
       this.updateForm(this.current);
     });
   }
 
+  _getPopupComponent() {
+    return ManagementCouncilPopupComponent;
+  }
+  openFormDialog() {
+    this.dialogService.show(this._getPopupComponent(), {
+      viewOnly: this.viewOnly,
+      readonly: this.readonly,
+      form: this.form,
+      editItem: this.editItem,
+      model: this.current,
+      nationalities: this.nationalities
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save(data)
+      } else {
+        this.cancel()
+      }
+    })
+  }
   private updateForm(record: ManagementCouncil | undefined) {
     if (record) {
       if (this.viewOnly) {
@@ -138,20 +156,22 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      this.form.patchValue(record);
+      this.openFormDialog();
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable()
       }
     } else {
       this._setComponentReadiness('READY');
     }
   }
 
-  save() {
+  save(model: ManagementCouncil) {
     if (this.readonly || this.viewOnly) {
       return;
     }
-    this.save$.next();
+    this.save$.next(model);
   }
 
   private displayRequiredFieldsMessage(): void {
@@ -176,21 +196,9 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
           const isDuplicate = this.list.some((x) => x === formValue);
           if (isDuplicate) {
             this.toastService.alert(this.lang.map.msg_duplicated_item);
+            this.openFormDialog();
           }
           return !isDuplicate;
-        }),
-        map(() => {
-          let formValue = this.form.getRawValue();
-          let nationalityInfo: AdminResult =
-            this.nationalities
-              .find((x) => x.id === formValue.nationality)
-              ?.createAdminResult() ?? new AdminResult();
-
-          return new ManagementCouncil().clone({
-            ...this.current,
-            ...formValue,
-            nationalityInfo: nationalityInfo,
-          });
         })
       )
       .subscribe((record: ManagementCouncil) => {
@@ -261,7 +269,6 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
 
   cancel() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');

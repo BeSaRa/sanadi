@@ -1,103 +1,44 @@
-<ng-container *ngIf="showForm">
-  <div [formGroup]="form">
-    <div class="row">
-      <!-- Domain -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="domain" for="domain" class="form-label">{{lang.map.domain}}</label>
-        <ng-select [selectOnTab]="true" labelForId="domain" [clearable]="false" placeholder="{{lang.map.select}}"
-          id="domain" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="domain"
-          validationClasses="domain">
-          <ng-option *ngFor="let option of domainsList" [value]="option.lookupKey">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="domain"></app-field-error-message>
-      </div>
-
-      <!-- Main DAC Category -->
-      <div *ngIf="displayByDomain === 'DAC'" class="col-sm-12 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="mainDACCategory" for="mainDACCategory"
-          class="form-label">{{lang.map.main_dac_category}}</label>
-        <ng-select [selectOnTab]="true" labelForId="mainDACCategory" [clearable]="false"
-          placeholder="{{lang.map.select}}" id="mainDACCategory" [notFoundText]="lang.map.msg_not_found" appendTo="body"
-          bindLabel="id" formControlName="mainDACCategory" validationClasses="mainDACCategory">
-          <ng-option *ngFor="let option of mainDACCategoriesList" [value]="option.id"
-            [disabled]="option.status !== commonStatusEnum.ACTIVATED">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
-      </div>
-      <!-- Main UNOCHA Category -->
-      <div *ngIf="displayByDomain === 'OCHA'" class="col-sm-12 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="mainUNOCHACategory" for="mainUNOCHACategory"
-          class="form-label">{{lang.map.main_unocha_category}}</label>
-        <ng-select [selectOnTab]="true" labelForId="mainUNOCHACategory" [clearable]="false"
-          placeholder="{{lang.map.select}}" id="mainUNOCHACategory" [notFoundText]="lang.map.msg_not_found"
-          appendTo="body" bindLabel="id" formControlName="mainUNOCHACategory" validationClasses="mainUNOCHACategory">
-          <ng-option *ngFor="let option of mainUNOCHACategoriesList" [value]="option.id"
-            [disabled]="option.status !== commonStatusEnum.ACTIVATED">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
-      </div>
-    </div>
-
-
-
-    <div class="d-flex flex-row align-items-center justify-content-center">
-      <button (click)="save()" *ngIf="!readonly" class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save :
-        lang.map.btn_add}}</button>
-      <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
-    </div>
-  </div>
-
-</ng-container>
-
-<div class="row" [hidden]="showForm">
-  <app-page-header pageTitle="domain" [clickOnNew$]="add$" [addPermission]="addAllowed()">
-  </app-page-header>
-  <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
-</div>
-
-<div class="row pt-3" *ngIf="!showForm">
-  <div class="col-12">
-    <div class="table-responsive">
-      <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="columns"
-        [filter]="filterControl.value" [useSearchToFilter]="true">
-        <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
-          <ng-container cdkColumnDef="domain">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-              [sortCallback]="sortingCallbacks.domain"> {{lang.map.domain}}</th>
-            <td cdk-cell *cdkCellDef="let row">
-              {{row.domainInfo?.getName() || ''}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="mainDACCategory">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-              [sortCallback]="sortingCallbacks.dac"> {{lang.map.main_dac_category}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.mainDACCategoryInfo?.getName()|| ''}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="mainUNOCHACategory">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-              [sortCallback]="sortingCallbacks.unocha"> {{lang.map.main_unocha_category}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.mainUNOCHACategoryInfo?.getName() || ''}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="actions">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-            <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-              <grid-actions [record]="row" [actions]="actions" [itemIndex]="i"></grid-actions>
-            </td>
-          </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
-          <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
-          <tr *cdkNoDataRow>
-            <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
-          </tr>
-        </table>
-        <app-paginator #paginator></app-paginator>
-      </app-table>
-      <context-menu-item #menu [actions]="actions"></context-menu-item>
-    </div>
-  </div>
+<div class="table-responsive">
+  <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="columns"
+    [filter]="filterControl.value" [useSearchToFilter]="true">
+    <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header tableTitle="domain" [add$]="add$" [allowAdd]="addAllowed()" [skipClearSort]="true"
+            (textChange)="filterControl.setValue($event)">
+          </table-header>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="domain">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+          [sortCallback]="sortingCallbacks.domain"> {{lang.map.domain}}</th>
+        <td cdk-cell *cdkCellDef="let row">
+          {{row.domainInfo?.getName() || ''}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="mainDACCategory">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+          [sortCallback]="sortingCallbacks.dac"> {{lang.map.main_dac_category}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.mainDACCategoryInfo?.getName()|| ''}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="mainUNOCHACategory">
+        <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+          [sortCallback]="sortingCallbacks.unocha"> {{lang.map.main_unocha_category}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.mainUNOCHACategoryInfo?.getName() || ''}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+          <grid-actions [record]="row" [actions]="actions" [itemIndex]="i"></grid-actions>
+        </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
+      <tr *cdkNoDataRow>
+        <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
+      </tr>
+    </table>
+    <app-paginator #paginator></app-paginator>
+  </app-table>
+  <context-menu-item #menu [actions]="actions"></context-menu-item>
 </div>

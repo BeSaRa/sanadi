@@ -1,46 +1,43 @@
-import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
-import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {SaveTypes} from '@enums/save-types';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {TransferringIndividualFundsAbroad} from '@models/transferring-individual-funds-abroad';
-import {LangService} from '@services/lang.service';
-import {TransferringIndividualFundsAbroadService} from '@services/transferring-individual-funds-abroad.service';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {LookupService} from '@services/lookup.service';
-import {DialogService} from '@services/dialog.service';
-import {ToastService} from '@services/toast.service';
-import {LicenseService} from '@services/license.service';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {OpenFrom} from '@enums/open-from.enum';
-import {EmployeeService} from '@services/employee.service';
-import {Lookup} from '@models/lookup';
-import {DatepickerControlsMap, DatepickerOptionsMap, FieldControlAndLabelKey} from '@app/types/types';
-import {DateUtils} from '@helpers/date-utils';
-import {FormManager} from '@models/form-manager';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {TransferFundsExecutiveManagement} from '@models/transfer-funds-executive-management';
-import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {TransfereeTypeEnum} from '@enums/transferee-type-enum';
-import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
-import {AdminLookup} from '@models/admin-lookup';
-import {TransferFundsCharityPurpose} from '@models/transfer-funds-charity-purpose';
-import {AdminResult} from '@models/admin-result';
-import {DacOchaService} from '@services/dac-ocha.service';
-import {DomainTypes} from '@enums/domain-types';
-import {SelectedLicenseInfo} from '@contracts/selected-license-info';
-import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@enums/service-request-types';
-import {CountryService} from '@services/country.service';
-import {Country} from '@models/country';
-import {InternalProjectLicenseResult} from '@models/internal-project-license-result';
-import {SharedService} from '@services/shared.service';
-import {ReceiverOrganization} from '@models/receiver-organization';
-import {ReceiverPerson} from '@models/receiver-person';
-import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
-import {UserClickOn} from '@enums/user-click-on.enum'
-import {Payment} from '@models/payment';
-import {TransferTypeEnum} from '@enums/transfer-type-enum';
-
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { SaveTypes } from '@enums/save-types';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { TransferringIndividualFundsAbroad } from '@models/transferring-individual-funds-abroad';
+import { LangService } from '@services/lang.service';
+import { TransferringIndividualFundsAbroadService } from '@services/transferring-individual-funds-abroad.service';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { LookupService } from '@services/lookup.service';
+import { DialogService } from '@services/dialog.service';
+import { ToastService } from '@services/toast.service';
+import { LicenseService } from '@services/license.service';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { OpenFrom } from '@enums/open-from.enum';
+import { EmployeeService } from '@services/employee.service';
+import { Lookup } from '@models/lookup';
+import { DatepickerControlsMap, DatepickerOptionsMap, FieldControlAndLabelKey } from '@app/types/types';
+import { DateUtils } from '@helpers/date-utils';
+import { FormManager } from '@models/form-manager';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { TransferFundsExecutiveManagement } from '@models/transfer-funds-executive-management';
+import { exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { TransfereeTypeEnum } from '@enums/transferee-type-enum';
+import { TransferFundsCharityPurpose } from '@models/transfer-funds-charity-purpose';
+import { SelectedLicenseInfo } from '@contracts/selected-license-info';
+import { TransferringIndividualFundsAbroadRequestTypeEnum } from '@enums/service-request-types';
+import { CountryService } from '@services/country.service';
+import { Country } from '@models/country';
+import { InternalProjectLicenseResult } from '@models/internal-project-license-result';
+import { SharedService } from '@services/shared.service';
+import { ReceiverOrganization } from '@models/receiver-organization';
+import { ReceiverPerson } from '@models/receiver-person';
+import { ITransferFundsAbroadComponent } from '@contracts/i-transfer-funds-abroad-component';
+import { UserClickOn } from '@enums/user-click-on.enum'
+import { Payment } from '@models/payment';
+import { TransferTypeEnum } from '@enums/transfer-type-enum';
+import { TIFAExecutiveManagementPopupComponent } from '../../popups/TIFA-executive-management-popup/TIFA-executive-management-popup.component';
+import { TIFAPurposePopupComponent } from '../../popups/TIFB-purpose-popup/TIFA-purpose-popup.component';
+import { TIFAPaymentPopupComponent } from '../../popups/TIFA-payment-popup/TIFA-payment-popup.component';
 @Component({
   selector: 'transferring-individual-funds-abroad',
   templateUrl: './transferring-individual-funds-abroad.component.html',
@@ -71,16 +68,13 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     .sort((a, b) => a.lookupKey - b.lookupKey);
   domains: Lookup[] = this.lookupService.listByCategory.Domain
     .sort((a, b) => a.lookupKey - b.lookupKey);
-  mainDacs: AdminLookup[] = [];
-  mainOchas: AdminLookup[] = [];
 
   selectReceiverOrganizationDisplayedColumns = ['organizationArabicName', 'organizationEnglishName', 'establishmentDate', 'actions'];
   selectReceiverPersonDisplayedColumns = ['receiverNameLikePassport', 'receiverEnglishNameLikePassport', 'receiverIdentificationNumber', 'actions'];
 
   datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap: DatepickerOptionsMap = {
-    establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
-    dueDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
+    establishmentDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
   };
   formProperties = {
     requestType: () => {
@@ -96,17 +90,17 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   selectedExecutives: TransferFundsExecutiveManagement[] = [];
   selectedExecutive!: TransferFundsExecutiveManagement | null;
-  selectedExecutiveIndex!: number | null;
+  selectedExecutiveIndex: number = -1;
   executiveDisplayedColumns: string[] = ['localName', 'englishName', 'jobTitle', 'nationality', 'identificationNumber', 'actions'];
 
   selectedPurposes: TransferFundsCharityPurpose[] = [];
   selectedPurpose!: TransferFundsCharityPurpose | null;
-  selectedPurposeIndex!: number | null;
+  selectedPurposeIndex: number = -1;
   purposeDisplayedColumns: string[] = ['projectName', 'projectType', 'domain', 'totalCost', 'beneficiaryCountry', 'executionCountry', 'actions'];
 
   selectedPayments: Payment[] = [];
   selectedPayment!: Payment | null;
-  selectedPaymentIndex!: number | null;
+  selectedPaymentIndex: number = -1;
   paymentDisplayedColumns: string[] = ['paymentNo', 'totalCost', 'dueDate', 'actions'];
 
   isRequiredPayments = false;
@@ -125,11 +119,9 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   isExternalOrganizationTransferee!: boolean;
   isOnceTransferType!: boolean;
   isPeriodicalTransferType!: boolean;
-  isHumanitarian = true;
-  isDevelopment = true;
-  addExecutiveFormActive!: boolean;
-  addPurposeFormActive!: boolean;
-  addPaymentFormActive!: boolean;
+  addExecutive$: Subject<any> = new Subject<any>();
+  addPropose$: Subject<any> = new Subject<any>();
+  addPayment$: Subject<any> = new Subject<any>();
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
   selectedLicenses: TransferringIndividualFundsAbroad[] = [];
   selectedLicenseDisplayedColumns: string[] = ['serial', 'requestType', 'licenseStatus', 'actions'];
@@ -137,17 +129,16 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   totalPaymentsAmount = 0;
 
   constructor(public lang: LangService,
-              public fb: UntypedFormBuilder,
-              private cd: ChangeDetectorRef,
-              public service: TransferringIndividualFundsAbroadService,
-              private lookupService: LookupService,
-              private dialog: DialogService,
-              private toast: ToastService,
-              private licenseService: LicenseService,
-              private employeeService: EmployeeService,
-              private dacOchaService: DacOchaService,
-              private countryService: CountryService,
-              private sharedService: SharedService) {
+    public fb: UntypedFormBuilder,
+    private cd: ChangeDetectorRef,
+    public service: TransferringIndividualFundsAbroadService,
+    private lookupService: LookupService,
+    private dialog: DialogService,
+    private toast: ToastService,
+    private licenseService: LicenseService,
+    private employeeService: EmployeeService,
+    private countryService: CountryService,
+    private sharedService: SharedService) {
     super();
   }
 
@@ -224,10 +215,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     return this.form.get('receiverOrganizationInfo.establishmentDate')! as UntypedFormControl;
   }
 
-  get dueDate(): UntypedFormControl {
-    return this.form.get('financialTransactionInfo.dueDate')! as UntypedFormControl;
-  }
-
   get country(): UntypedFormControl {
     return this.form.get('receiverOrganizationInfo.country')! as UntypedFormControl;
   }
@@ -300,18 +287,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     return this.form.get('receiverPersonInfo.receiverPhone2')! as UntypedFormControl;
   }
 
-  get domain(): UntypedFormControl {
-    return this.transferPurposeForm.get('domain')! as UntypedFormControl;
-  }
-
-  get mainDACCategory(): UntypedFormControl {
-    return this.transferPurposeForm.get('mainDACCategory')! as UntypedFormControl;
-  }
-
-  get mainUNOCHACategory(): UntypedFormControl {
-    return this.transferPurposeForm.get('mainUNOCHACategory')! as UntypedFormControl;
-  }
-
   ngAfterViewInit(): void {
     this.cd.detectChanges();
   }
@@ -322,7 +297,9 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.buildExecutiveManagementForm();
     this.buildTransferPurposeForm();
     this.buildPaymentForm();
-    this.listenToDomainChanges();
+    this.listenToAddExecutive();
+    this.listenToAddPropose();
+    this.listenToAddPayment();
   }
 
   _buildForm(): void {
@@ -362,7 +339,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       return;
     }
 
-    this.model = new TransferringIndividualFundsAbroad().clone({...this.model, ...model});
+    this.model = new TransferringIndividualFundsAbroad().clone({ ...this.model, ...model });
     this.form.patchValue({
       basicInfo: this.model?.buildBasicInfo(),
       requesterInfo: this.model?.buildRequesterInfo(),
@@ -389,12 +366,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   _resetForm(): void {
-    // this.requestType.patchValue(null);
-    // this.transfereeType.patchValue(null, {emitEvent: false});
-    // this.oldLicenseFullSerialField.patchValue(null);
-    // this.requesterInfo.reset();
-    // this.financialTransactionInfo.reset();
-    // this.specialExplanation.reset();
     this.form.reset();
     this.hasSearchedForLicense = false;
     this.isIndividualTransferee = false;
@@ -424,11 +395,11 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   private _isValidDraftData(): boolean {
     const draftFields: FieldControlAndLabelKey[] = [
-      {control: this.requestType, labelKey: 'request_type'},
+      { control: this.requestType, labelKey: 'request_type' },
     ];
     const invalidDraftField = this.getInvalidDraftField(draftFields);
     if (invalidDraftField) {
-      this.dialog.error(this.lang.map.msg_please_validate_x_to_continue.change({x: this.lang.map[invalidDraftField.labelKey]}));
+      this.dialog.error(this.lang.map.msg_please_validate_x_to_continue.change({ x: this.lang.map[invalidDraftField.labelKey] }));
       invalidDraftField.control.markAsTouched();
       return false;
     }
@@ -487,7 +458,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -567,7 +538,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   searchForLicense() {
     this.licenseService
-      .transferringIndividualFundsAbroadSearch<TransferringIndividualFundsAbroad>({fullSerial: this.oldLicenseFullSerialField.value})
+      .transferringIndividualFundsAbroadSearch<TransferringIndividualFundsAbroad>({ fullSerial: this.oldLicenseFullSerialField.value })
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(licenses => !!licenses.length))
@@ -576,7 +547,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       }))
       .pipe(
         filter<null | SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>, SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>>
-        ((info): info is SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad> => !!info))
+          ((info): info is SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad> => !!info))
       .subscribe((_info) => {
         this.selectedLicenses = [_info.details];
         let value: any = new TransferringIndividualFundsAbroad().clone(_info.details);
@@ -631,8 +602,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   private _buildDatepickerControlsMap() {
     this.datepickerControlsMap = {
-      establishmentDate: this.establishmentDate,
-      dueDate: this.dueDate
+      establishmentDate: this.establishmentDate
     };
   }
 
@@ -953,121 +923,66 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.receiverPhone2.patchValue(null);
   }
 
-  loadDacs() {
-    this.dacOchaService.loadByType(AdminLookupTypeEnum.DAC).subscribe(list => {
-      this.mainDacs = list;
-    });
-  }
-
-  loadOchas() {
-    this.dacOchaService.loadByType(AdminLookupTypeEnum.OCHA).subscribe(list => {
-      this.mainOchas = list;
-    });
-  }
-
   loadCountries() {
     this.countryService.loadAsLookups().subscribe((list: Country[]) => {
       this.countries = list;
     });
   }
 
-  listenToDomainChanges() {
-    this.domain.valueChanges.subscribe(val => {
-      if (val === DomainTypes.HUMANITARIAN) {
-        this.showAndRequireMainUNOCHACategory();
-        this.hideAndDontRequireMainDACCategory();
-        this.loadOchas();
-      } else if (val === DomainTypes.DEVELOPMENT) {
-        this.hideAndDontRequireMainUNOCHACategory();
-        this.showAndRequireMainDACCategory();
-        this.loadDacs();
-      } else {
-        this.showAndDontRequireMainUNOCHACategory();
-        this.showAndDontRequireMainDACCategory();
-      }
+  // Execution
+  listenToAddExecutive() {
+    this.addExecutive$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.openExecutiveForm();
     });
   }
-
-  showAndRequireMainDACCategory() {
-    this.mainDACCategory.setValidators([CustomValidators.required]);
-    this.mainDACCategory.updateValueAndValidity();
-    this.isDevelopment = true;
+  _getExecutiveFormDialog() {
+    return TIFAExecutiveManagementPopupComponent;
   }
-
-  showAndRequireMainUNOCHACategory() {
-    this.mainUNOCHACategory.setValidators([CustomValidators.required]);
-    this.mainUNOCHACategory.updateValueAndValidity();
-    this.isHumanitarian = true;
-  }
-
-  hideAndDontRequireMainDACCategory() {
-    this.mainDACCategory.patchValue(null);
-    this.mainDACCategory.setValidators([]);
-    this.mainDACCategory.updateValueAndValidity();
-    this.isDevelopment = false;
-  }
-
-  hideAndDontRequireMainUNOCHACategory() {
-    this.mainUNOCHACategory.patchValue(null);
-    this.mainUNOCHACategory.setValidators([]);
-    this.mainUNOCHACategory.updateValueAndValidity();
-    this.isHumanitarian = false;
-  }
-
-  showAndDontRequireMainDACCategory() {
-    this.mainDACCategory.setValidators([]);
-    this.mainDACCategory.updateValueAndValidity();
-    this.isDevelopment = true;
-  }
-
-  showAndDontRequireMainUNOCHACategory() {
-    this.mainUNOCHACategory.setValidators([]);
-    this.mainUNOCHACategory.updateValueAndValidity();
-    this.isHumanitarian = true;
-  }
-
-  // add/edit executive functionality
-  openAddExecutiveForm() {
-    this.addExecutiveFormActive = true;
+  openExecutiveForm() {
+    this.dialog.show(this._getExecutiveFormDialog(), {
+      form: this.executiveManagementForm,
+      editItem: this.selectedExecutiveIndex,
+      model: this.selectedExecutive,
+      readonly: this.readonly,
+      nationalities: this.nationalities
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.saveExecutive(data)
+      } else {
+        this.resetExecutiveForm()
+      }
+    })
   }
 
   selectExecutive(event: MouseEvent, model: TransferFundsExecutiveManagement) {
-    this.addExecutiveFormActive = true;
     event.preventDefault();
     this.selectedExecutive = model;
-    this.executiveManagementForm.patchValue(this.selectedExecutive!);
     this.selectedExecutiveIndex = this.selectedExecutives
       .map(x => x.executiveIdentificationNumber).indexOf(model.executiveIdentificationNumber);
+    this.openExecutiveForm()
   }
 
-  saveExecutive() {
-    const executive = new TransferFundsExecutiveManagement().clone(this.executiveManagementForm.getRawValue() as TransferFundsExecutiveManagement);
+  saveExecutive(executive: TransferFundsExecutiveManagement) {
     if (!this.selectedExecutive) {
       if (!this.isExistExecutiveInCaseOfAdd(this.selectedExecutives, executive)) {
         this.selectedExecutives = this.selectedExecutives.concat(executive);
         this.resetExecutiveForm();
-        this.addExecutiveFormActive = false;
       } else {
         this.dialog.error(this.lang.map.selected_item_already_exists);
+        this.openExecutiveForm()
       }
     } else {
       if (!this.isExistExecutiveInCaseOfEdit(this.selectedExecutives, executive, this.selectedExecutiveIndex!)) {
-        // this.selectedExecutives.splice(this.selectedExecutiveIndex!, 1);
         let newList = this.selectedExecutives.slice();
         newList.splice(this.selectedExecutiveIndex!, 1);
         newList.splice(this.selectedExecutiveIndex!, 0, executive);
         this.selectedExecutives = newList;
         this.resetExecutiveForm();
-        this.addExecutiveFormActive = false;
       } else {
         this.dialog.error(this.lang.map.selected_item_already_exists);
+        this.openExecutiveForm()
       }
     }
-  }
-
-  cancelAddExecutive() {
-    this.resetExecutiveForm();
-    this.addExecutiveFormActive = false;
   }
 
   isExistExecutiveInCaseOfAdd(selectedExecutives: TransferFundsExecutiveManagement[], toBeAddedExecutive: TransferFundsExecutiveManagement): boolean {
@@ -1089,7 +1004,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   resetExecutiveForm() {
     this.selectedExecutive = null;
-    this.selectedExecutiveIndex = null;
+    this.selectedExecutiveIndex = -1;
     this.executiveManagementForm.reset();
   }
 
@@ -1100,68 +1015,71 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   // add/edit purpose functionality
-  openAddPurposeForm() {
-    this.addPurposeFormActive = true;
+  listenToAddPropose() {
+    this.addPropose$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.openPurposeForm();
+    });
+  }
+  _getPurposeFormDialog() {
+    return TIFAPurposePopupComponent;
+  }
+  openPurposeForm() {
+    this.dialog.show(this._getPurposeFormDialog(), {
+      form: this.transferPurposeForm,
+      editItem: this.selectedPurposeIndex,
+      model: this.selectedPurpose,
+      readonly: this.readonly,
+      projectTypes: this.projectTypes,
+      countries: this.countries,
+      domains: this.domains,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.savePurpose(data)
+      } else {
+        this.resetPurposeForm()
+      }
+    })
   }
 
   selectPurpose(event: MouseEvent, model: TransferFundsCharityPurpose) {
     event.preventDefault();
     model = new TransferFundsCharityPurpose().clone(model);
-    this.addPurposeFormActive = true;
     this.selectedPurpose = model;
-    this.transferPurposeForm.patchValue(this.selectedPurpose!);
     this.selectedPurposeIndex = this.getSelectedPurposeIndex(this.selectedPurposes, model);
+    this.openPurposeForm();
   }
 
-  getSelectedPurposeIndex(purposes: TransferFundsCharityPurpose[], purpose: TransferFundsCharityPurpose): number | null {
+  getSelectedPurposeIndex(purposes: TransferFundsCharityPurpose[], purpose: TransferFundsCharityPurpose): number {
     for (let i = 0; i < purposes.length; i++) {
       if (purposes[i].isEqual(purpose)) {
         return i;
       }
     }
 
-    return null;
+    return -1;
   }
 
-  savePurpose() {
-    const purpose = this.setPurposeInfoProperties(new TransferFundsCharityPurpose().clone(this.transferPurposeForm.getRawValue() as TransferFundsCharityPurpose));
+  savePurpose(purpose: TransferFundsCharityPurpose) {
     if (!this.selectedPurpose) {
       if (!this.isExistPurposeInCaseOfAdd(this.selectedPurposes, purpose)) {
         this.selectedPurposes = this.selectedPurposes.concat(purpose);
         this.resetPurposeForm();
-        this.addPurposeFormActive = false;
       } else {
         this.dialog.error(this.lang.map.selected_item_already_exists);
+        this.openPurposeForm();
       }
     } else {
       if (!this.isExistPurposeInCaseOfEdit(this.selectedPurposes, purpose, this.selectedPurposeIndex!)) {
-        // this.selectedPurposes.splice(this.selectedPurposeIndex!, 1);
         let newList = this.selectedPurposes.slice();
         newList.splice(this.selectedPurposeIndex!, 1);
         newList.splice(this.selectedPurposeIndex!, 0, purpose);
         this.selectedPurposes = newList;
         this.resetPurposeForm();
-        this.addPurposeFormActive = false;
       } else {
         this.dialog.error(this.lang.map.selected_item_already_exists);
+        this.openPurposeForm();
       }
     }
-  }
-
-  setPurposeInfoProperties(purpose: TransferFundsCharityPurpose): TransferFundsCharityPurpose {
-    purpose.projectTypeInfo = AdminResult.createInstance(this.projectTypes.find(x => x.lookupKey == purpose.projectType)!);
-    purpose.domainInfo = AdminResult.createInstance(this.domains.find(x => x.lookupKey == purpose.domain)!);
-    purpose.mainUNOCHACategoryInfo = AdminResult.createInstance(this.mainOchas.find(x => x.id == purpose.mainUNOCHACategory)!);
-    purpose.mainDACCategoryInfo = AdminResult.createInstance(this.mainDacs.find(x => x.id == purpose.mainDACCategory)!);
-    purpose.beneficiaryCountryInfo = AdminResult.createInstance(this.countries.find(x => x.id == purpose.beneficiaryCountry)!);
-    purpose.executionCountryInfo = AdminResult.createInstance(this.countries.find(x => x.id == purpose.executionCountry)!);
-
-    return purpose;
-  }
-
-  cancelAddPurpose() {
-    this.resetPurposeForm();
-    this.addPurposeFormActive = false;
   }
 
   isExistPurposeInCaseOfAdd(selectedPurposes: TransferFundsCharityPurpose[], toBeAddedPurpose: TransferFundsCharityPurpose): boolean {
@@ -1185,7 +1103,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   resetPurposeForm() {
     this.selectedPurpose = null;
-    this.selectedPurposeIndex = null;
+    this.selectedPurposeIndex = -1;
     this.transferPurposeForm.reset();
   }
 
@@ -1196,40 +1114,55 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   // add/edit payment functionality
-  openAddPaymentForm() {
-    this.addPaymentFormActive = true;
+  listenToAddPayment() {
+    this.addPayment$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.openPaymentForm();
+    });
+  }
+  _getPaymentFormDialog() {
+    return TIFAPaymentPopupComponent;
+  }
+  openPaymentForm() {
+    this.dialog.show(this._getPaymentFormDialog(), {
+      form: this.paymentForm,
+      editItem: this.selectedPaymentIndex,
+      model: this.selectedPayment,
+      readonly: this.readonly
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.savePayment(data)
+      } else {
+        this.resetPaymentForm()
+      }
+    })
   }
 
   selectPayment(event: MouseEvent, model: Payment) {
     event.preventDefault();
     model = new Payment().clone(model);
-    this.addPaymentFormActive = true;
     this.selectedPayment = model;
     this.selectedPaymentIndex = this.getSelectedPaymentIndex(this.selectedPayments, model);
-    model.dueDate = DateUtils.changeDateToDatepicker(model.dueDate);
-    this.paymentForm.patchValue(this.selectedPayment!);
+    this.openPaymentForm();
   }
 
-  getSelectedPaymentIndex(payments: Payment[], payment: Payment): number | null {
+  getSelectedPaymentIndex(payments: Payment[], payment: Payment): number {
     for (let i = 0; i < payments.length; i++) {
       if (payments[i].isEqual(payment)) {
         return i;
       }
     }
 
-    return null;
+    return -1;
   }
 
-  savePayment() {
-    const payment = new Payment().clone(this.paymentForm.getRawValue());
-    payment.dueDate = DateUtils.getDateStringFromDate(payment.dueDate);
+  savePayment(payment: Payment) {
     if (!this.selectedPayment) {
       if (!this.isExistPaymentInCaseOfAdd(this.selectedPayments, payment)) {
         this.selectedPayments = this.selectedPayments.concat(payment);
         this.resetPaymentForm();
-        this.addPaymentFormActive = false;
       } else {
         this.dialog.error(this.lang.map.selected_item_already_exists);
+        this.openPaymentForm();
       }
     } else {
       if (!this.isExistPaymentInCaseOfEdit(this.selectedPayments, payment, this.selectedPaymentIndex!)) {
@@ -1238,18 +1171,13 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
         newList.splice(this.selectedPaymentIndex!, 0, payment);
         this.selectedPayments = newList;
         this.resetPaymentForm();
-        this.addPaymentFormActive = false;
       } else {
         this.dialog.error(this.lang.map.selected_item_already_exists);
+        this.openPaymentForm();
       }
     }
 
     this.sumPayments();
-  }
-
-  cancelAddPayment() {
-    this.resetPaymentForm();
-    this.addPaymentFormActive = false;
   }
 
   isExistPaymentInCaseOfAdd(selectedPayments: Payment[], toBeAddedPayment: Payment): boolean {
@@ -1273,7 +1201,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   resetPaymentForm() {
     this.selectedPayment = null;
-    this.selectedPaymentIndex = null;
+    this.selectedPaymentIndex = -1;
     this.paymentForm.reset();
   }
 
@@ -1364,7 +1292,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   paymentHasError() {
     return ((this.selectedPayments && this.selectedPayments.length === 0) ||
-        (this.selectedPayments && this.selectedPayments.length > 0) && this.totalPaymentsAmount > +this.qatariTransactionAmount.value) &&
+      (this.selectedPayments && this.selectedPayments.length > 0) && this.totalPaymentsAmount > +this.qatariTransactionAmount.value) &&
       !this.isCancel
   }
 }

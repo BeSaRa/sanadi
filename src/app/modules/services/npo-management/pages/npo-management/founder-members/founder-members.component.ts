@@ -8,7 +8,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {LangService} from "@app/services/lang.service";
 import {ToastService} from "@app/services/toast.service";
 import {DialogService} from "@app/services/dialog.service";
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
 import {BehaviorSubject, Subject} from "rxjs";
 import {filter, map, take, takeUntil} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
@@ -47,6 +47,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
 
   dataSource: BehaviorSubject<FounderMembers[]> = new BehaviorSubject<FounderMembers[]>([]);
   columns = ['idNumber', 'fullName', 'email', 'phone', 'extraPhone', 'actions'];
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   editIndex: number = -1;
   add$: Subject<any> = new Subject<any>();

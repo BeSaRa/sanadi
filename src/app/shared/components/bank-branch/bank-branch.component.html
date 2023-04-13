@@ -1,56 +1,59 @@
-<table class="table mt-3 table-striped table-bordered caption-top" cdk-table
-       [dataSource]="listDataSource">
-    <ng-container cdkColumnDef="extra-header">
-    <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-      <table-header [hidden]="branchesFormArray.controls.length || !showHeader" tableTitle="branches" [add$]="add$" [allowAdd]="addBranchAllowed()" [skipClearSort]="true" [skipSearch]="true">
-      </table-header>
-    </th>
-  </ng-container>
-  <ng-container cdkColumnDef="fullName">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.full_name}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.fullName}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="email">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_email}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.email}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="fax">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.fax_number}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.fax}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="phone">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_phone}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.phone}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="recordNo">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.record_number}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.recordNo}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="actions">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-    <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-      <div class="d-flex flex-row">
-        <button (click)="deleteBranch($event, row, i)" class="icon-btn text-primary"
-                *ngIf="!readonly"
-                tooltip="{{lang.map.btn_delete}}">
-          <i class="mdi mdi-close-box"></i>
-        </button>
-        <button (click)="editBranch($event, row, i)" class="icon-btn text-primary"
-                *ngIf="!readonly"
-                tooltip="{{lang.map.btn_edit}}">
-          <i class="mdi mdi-pen"></i>
-        </button>
-        <button (click)="view($event, row, i)" class="icon-btn text-primary"
-                tooltip="{{lang.map.view}}">
-          <i class="mdi mdi-eye"></i>
-        </button>
-      </div>
-    </td>
-  </ng-container>
-  <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-  <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
-  <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
-  <tr *cdkNoDataRow>
-    <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-  </tr>
-</table>
+<div class="table-responsive">
+  <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="columns"
+    [filter]="filterControl.value" [useSearchToFilter]="true">
+    <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="listDataSource">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header [hidden]="!showHeader" tableTitle="branches" [add$]="add$" [allowAdd]="addBranchAllowed()"
+            [skipClearSort]="true" (textChange)="filterControl.setValue($event)">
+          </table-header>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="fullName">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.full_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.fullName}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="email">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_email}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.email}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="fax">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.fax_number}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.fax}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="phone">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_phone}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.phone}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="recordNo">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.record_number}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.recordNo}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+          <div class="d-flex flex-row">
+            <button (click)="deleteBranch($event, row, i)" class="icon-btn text-primary" *ngIf="!readonly"
+              tooltip="{{lang.map.btn_delete}}">
+              <i class="mdi mdi-close-box"></i>
+            </button>
+            <button (click)="editBranch($event, row, i)" class="icon-btn text-primary" *ngIf="!readonly"
+              tooltip="{{lang.map.btn_edit}}">
+              <i class="mdi mdi-pen"></i>
+            </button>
+            <button (click)="view($event, row, i)" class="icon-btn text-primary" tooltip="{{lang.map.view}}">
+              <i class="mdi mdi-eye"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+      <tr *cdkNoDataRow>
+        <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+      </tr>
+    </table>
+    <app-paginator #paginator></app-paginator>
+  </app-table>
+</div>

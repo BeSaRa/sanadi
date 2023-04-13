@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {BankBranch} from '@app/models/bank-branch';
@@ -41,6 +41,7 @@ export class BankBranchComponent implements OnInit {
 
   listDataSource: BehaviorSubject<BankBranch[]> = new BehaviorSubject<BankBranch[]>([]);
   columns = ['fullName', 'email', 'fax', 'phone', 'recordNo', 'actions'];
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   editIndex: number = -1;
   viewOnly: boolean = false;

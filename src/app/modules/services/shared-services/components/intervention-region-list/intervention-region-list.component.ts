@@ -10,7 +10,7 @@ import {UserClickOn} from '@enums/user-click-on.enum';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
-import {CustomValidators} from '@app/validators/custom-validators';
+import { InterventionRegionListPopupComponent } from './intervention-region-list-popup/intervention-region-list-popup.component';
 
 @Component({
   selector: 'intervention-region-list',
@@ -46,11 +46,9 @@ export class InterventionRegionListComponent implements OnInit, OnDestroy {
   private recordChanged$: Subject<InterventionRegion | null> = new Subject<InterventionRegion | null>();
   private currentRecord?: InterventionRegion;
   private destroy$: Subject<any> = new Subject<any>();
-  showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   form!: UntypedFormGroup;
-  customValidators = CustomValidators;
 
   actions: IMenuItem<InterventionRegion>[] = [
     // edit
@@ -113,11 +111,28 @@ export class InterventionRegionListComponent implements OnInit, OnDestroy {
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.currentRecord = record || undefined;
-      this.showForm = !!this.currentRecord;
       this.updateForm(this.currentRecord);
     });
   }
 
+  _getPopupComponent() {
+    return InterventionRegionListPopupComponent;
+  }
+  openFormDialog() {
+    this.dialogService.show(this._getPopupComponent(), {
+      viewOnly: this.viewOnly,
+      readonly: this.readonly,
+      form: this.form,
+      editItem: this.editItem,
+      model: this.currentRecord,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save(data)
+      } else {
+        this.cancelForm()
+      }
+    })
+  }
   private updateForm(record: InterventionRegion | undefined) {
     if (record) {
       if (this.viewOnly) {
@@ -125,20 +140,22 @@ export class InterventionRegionListComponent implements OnInit, OnDestroy {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      this.form.patchValue(record);
+      this.openFormDialog();
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable();
       }
     } else {
       this._setComponentReadiness('READY');
     }
   }
 
-  save() {
+  save(model: InterventionRegion) {
     if (this.readonly || this.viewOnly) {
       return;
     }
-    this.save$.next();
+    this.save$.next(model);
   }
 
   private displayRequiredFieldsMessage(): void {
@@ -154,12 +171,6 @@ export class InterventionRegionListComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       tap(_ => this.form.invalid ? this.displayRequiredFieldsMessage() : true),
       filter(() => this.form.valid),
-      map(() => {
-        let formValue = this.form.getRawValue();
-        return (new InterventionRegion()).clone({
-          ...this.currentRecord, ...formValue
-        });
-      })
     ).subscribe((agency: InterventionRegion) => {
       if (!agency) {
         return;
@@ -189,7 +200,6 @@ export class InterventionRegionListComponent implements OnInit, OnDestroy {
 
   cancelForm() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');

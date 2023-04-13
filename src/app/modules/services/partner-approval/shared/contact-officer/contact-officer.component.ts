@@ -5,11 +5,12 @@ import { DialogService } from "@services/dialog.service";
 import {  UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { ReadinessStatus } from "@app/types/types";
 import { BehaviorSubject, Subject } from "rxjs";
-import { filter, map, take, takeUntil, tap } from "rxjs/operators";
+import { filter, take, takeUntil, tap } from "rxjs/operators";
 import { UserClickOn } from "@enums/user-click-on.enum";
 import { ContactOfficer } from "@models/contact-officer";
 import { ActionIconsEnum } from '@enums/action-icons-enum';
 import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
+import { ContactOfficerPopupComponent } from './contact-officer-popup/contact-officer-popup.component';
 
 @Component({
   selector: 'contact-officer',
@@ -42,7 +43,6 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
   columns = ['arabicName', 'englishName', 'email', 'phone', 'passportNumber', 'actions'];
 
   editItem?: ContactOfficer;
-  showForm: boolean = false;
   viewOnly: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
@@ -112,11 +112,28 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.current = record || undefined;
-      this.showForm = !!this.current;
       this.updateForm(this.current);
     });
   }
 
+  _getPopupComponent() {
+    return ContactOfficerPopupComponent;
+  }
+  openFormDialog() {
+    this.dialogService.show(this._getPopupComponent(), {
+      viewOnly: this.viewOnly,
+      readonly: this.readonly,
+      form: this.form,
+      editItem: this.editItem,
+      model: this.current
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save(data)
+      } else {
+        this.cancel()
+      }
+    })
+  }
   private updateForm(record: ContactOfficer | undefined) {
     if (record) {
       if (this.viewOnly) {
@@ -124,20 +141,22 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      this.form.patchValue(record);
+      this.openFormDialog();
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable();
       }
     } else {
       this._setComponentReadiness('READY');
     }
   }
 
-  save() {
+  save(model: ContactOfficer) {
     if (this.readonly || this.viewOnly) {
       return;
     }
-    this.save$.next();
+    this.save$.next(model);
   }
   private displayRequiredFieldsMessage(): void {
     this.dialogService
@@ -160,16 +179,9 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
           const isDuplicate = this.list.some((x) => x === formValue);
           if (isDuplicate) {
             this.toastService.alert(this.lang.map.msg_duplicated_item);
+            this.openFormDialog();
           }
           return !isDuplicate;
-        }),
-        map(() => {
-          let formValue = this.form.getRawValue();
-          return new ContactOfficer().clone({
-            ...this.current,
-            ...formValue,
-
-          });
         })
       )
       .subscribe((record: ContactOfficer) => {
@@ -239,7 +251,6 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
   }
   cancel() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');

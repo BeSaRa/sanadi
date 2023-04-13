@@ -6,7 +6,7 @@ export class GeneralInterceptor {
   static receive(model: any): any {
     model.setItemRoute && model.setItemRoute();
     model.taskDetails && (model.taskDetails = new TaskDetails().clone(model.taskDetails));
-    model.taskDetails && model.taskDetails.fromUserInfo && (model.taskDetails.fromUserInfo = AdminResult.createInstance(model.taskDetails.fromUserInfo));
+    model.taskDetails && (model.taskDetails.fromUserInfo = AdminResult.createInstance(model.taskDetails.fromUserInfo ?? {}));
     model.creatorInfo && (model.creatorInfo = AdminResult.createInstance(model.creatorInfo))
     model.ouInfo && (model.ouInfo = AdminResult.createInstance(model.ouInfo))
     model.caseStatusInfo && (model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo))

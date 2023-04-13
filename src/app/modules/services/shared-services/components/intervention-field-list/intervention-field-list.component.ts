@@ -5,18 +5,15 @@ import {Subject} from 'rxjs';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@enums/action-icons-enum';
-import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import {filter, take, takeUntil, tap} from 'rxjs/operators';
 import {UserClickOn} from '@enums/user-click-on.enum';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
-import {LookupService} from '@services/lookup.service';
-import {AdminResult} from '@models/admin-result';
 import {DacOchaService} from '@services/dac-ocha.service';
-import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
-import {AdminLookup} from '@models/admin-lookup';
+import { InterventionFieldListPopupComponent } from './intervention-field-list-popup/intervention-field-list-popup.component';
 
 @Component({
   selector: 'intervention-field-list',
@@ -28,8 +25,6 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              private lookupService: LookupService,
-              private dacOchaService: DacOchaService,
               private fb: UntypedFormBuilder) {
   }
 
@@ -54,11 +49,7 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
   private recordChanged$: Subject<InterventionField | null> = new Subject<InterventionField | null>();
   private currentRecord?: InterventionField;
   private destroy$: Subject<any> = new Subject<any>();
-  showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
-
-  mainOchaCategories: AdminLookup[] = [];
-  subOchaCategories: AdminLookup[] = [];
 
   form!: UntypedFormGroup;
   actions: IMenuItem<InterventionField>[] = [
@@ -105,7 +96,6 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
-    this.loadMainOchaList();
     this._setComponentReadiness('READY');
   }
 
@@ -118,38 +108,6 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
   }
-
-  private loadMainOchaList(): void {
-    this.dacOchaService.loadByType(AdminLookupTypeEnum.OCHA)
-      .pipe(
-        takeUntil(this.destroy$),
-        map((result: AdminLookup[]) => {
-          return result.filter(x => !x.parentId);
-        })
-      ).subscribe((list) => {
-      this.mainOchaCategories = list
-    });
-  }
-
-  handleChangeMainOcha(value: number, userInteraction: boolean = false): void {
-    if (userInteraction) {
-      this.subUNOCHACategoryField.setValue(null);
-      this.loadSubOchaList(value);
-    }
-  }
-
-  private loadSubOchaList(mainOchaId: number): void {
-    if (!mainOchaId) {
-      this.subOchaCategories = [];
-      return;
-    }
-    this.dacOchaService.loadByParentId(mainOchaId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((list) => {
-        this.subOchaCategories = list;
-      });
-  }
-
 
   buildForm(): void {
     this.form = this.fb.group(new InterventionField().getInterventionFieldForm(true));
@@ -166,33 +124,51 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.currentRecord = record || undefined;
-      this.showForm = !!this.currentRecord;
       this.updateForm(this.currentRecord);
     });
   }
 
+  _getPopupComponent() {
+    return InterventionFieldListPopupComponent;
+  }
+  openFormDialog() {
+    this.dialogService.show(this._getPopupComponent(), {
+      viewOnly: this.viewOnly,
+      readonly: this.readonly,
+      form: this.form,
+      editItem: this.editItem,
+      model: this.currentRecord,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save(data)
+      } else {
+        this.cancelForm()
+      }
+    })
+  }
   private updateForm(record: InterventionField | undefined) {
     if (record) {
-      this.loadSubOchaList(record.mainUNOCHACategory);
       if (this.viewOnly) {
         this._setComponentReadiness('READY');
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      this.form.patchValue(record);
+      this.openFormDialog()
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable();
       }
     } else {
       this._setComponentReadiness('READY');
     }
   }
 
-  save() {
+  save(model: InterventionField) {
     if (this.readonly || this.viewOnly) {
       return;
     }
-    this.save$.next();
+    this.save$.next(model);
   }
 
   private displayRequiredFieldsMessage(): void {
@@ -213,19 +189,9 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
         const isDuplicate = this.list.some(x => x.mainUNOCHACategory === formValue.mainUNOCHACategory && x.subUNOCHACategory === formValue.subUNOCHACategory);
         if (isDuplicate) {
           this.toastService.alert(this.lang.map.msg_duplicated_item);
+          this.openFormDialog()
         }
         return !isDuplicate;
-      }),
-      map(() => {
-        let formValue = this.form.getRawValue();
-        let mainUNOCHACategoryInfo: AdminResult = (this.mainOchaCategories.find(x => x.id === formValue.mainUNOCHACategory))?.convertToAdminResult() ?? new AdminResult();
-        let subUNOCHACategoryInfo: AdminResult = (this.subOchaCategories.find(x => x.id === formValue.subUNOCHACategory))?.convertToAdminResult() ?? new AdminResult();
-
-        return (new InterventionField()).clone({
-          ...this.currentRecord, ...formValue,
-          mainUNOCHACategoryInfo: mainUNOCHACategoryInfo,
-          subUNOCHACategoryInfo: subUNOCHACategoryInfo
-        });
       })
     ).subscribe((agency: InterventionField) => {
       if (!agency) {
@@ -256,7 +222,6 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
 
   cancelForm() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');
@@ -308,9 +273,5 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
           this.cancelForm();
         }
       });
-  }
-
-  get subUNOCHACategoryField(): UntypedFormControl {
-    return this.form.get('subUNOCHACategory') as UntypedFormControl;
   }
 }

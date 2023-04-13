@@ -1,0 +1,30 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ !!editItem ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map.intervention_areas }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <div [formGroup]="form">
+    <div class="row">
+      <!-- Region -->
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="region" for="region" class="form-label">{{lang.map.region}}</label>
+        <input id="region" validationClasses="region" formControlName="region" class="form-control" trimInput>
+        <app-field-error-message controlName="region"></app-field-error-message>
+      </div>
+      <!-- Description -->
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="description" for="description"
+               class="form-label">{{lang.map.lbl_description}}</label>
+        <textarea id="description" validationClasses="description" formControlName="description" class="form-control"
+                  rows="4" [maxlength]="customValidators.defaultLengths.EXPLANATIONS" trimInput></textarea>
+        <app-field-error-message controlName="description"></app-field-error-message>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
+    class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>

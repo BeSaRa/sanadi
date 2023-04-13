@@ -1,0 +1,32 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ !!editItem ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map.commercial_activity }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <div [formGroup]="form">
+    <div class="row">
+      <!-- Activity Name -->
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="activityName" for="activityName"
+          class="form-label">{{lang.map.lbl_activity_name}}</label>
+        <input formControlName="activityName" type="text" [readOnly]="(readonly)" validationClasses="activityName"
+          class="form-control" trimInput id="activityName">
+        <app-field-error-message controlName="activityName"></app-field-error-message>
+      </div>
+      <!-- Details -->
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="details" for="details" class="form-label">{{lang.map.details}}</label>
+        <textarea rows="2" id="details" validationClasses="details"
+          [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readOnly]="(readonly)" formControlName="details"
+          trimInput class="form-control"></textarea>
+        <app-field-error-message controlName="details"></app-field-error-message>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
+    class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>

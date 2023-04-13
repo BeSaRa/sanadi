@@ -1,0 +1,110 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ editItem > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map.purpose }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <div [formGroup]="form">
+    <div class="row">
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="projectName" class="form-label"
+               for="projectName">{{lang.map.project_name}}</label>
+        <input [readonly]="(readonly)" class="form-control"
+               formControlName="projectName"
+               id="projectName" validationClasses="projectName">
+        <app-field-error-message controlName="projectName"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="projectType" class="form-label"
+               for="projectType">{{lang.map.project_type}}</label>
+        <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
+                   formControlName="projectType"
+                   id="projectType" validationClasses="projectType">
+          <ng-option *ngFor="let option of projectTypes"
+                     [value]="option.lookupKey">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="projectType"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="projectImplementationPeriod" class="form-label"
+               for="projectImplementationPeriod">{{lang.map.execution_period_in_months}}</label>
+        <input [readonly]="(readonly)" class="form-control"
+               formControlName="projectImplementationPeriod"
+               id="projectImplementationPeriod" validationClasses="projectImplementationPeriod">
+        <app-field-error-message controlName="projectImplementationPeriod"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="beneficiaryCountry" class="form-label"
+               for="beneficiaryCountry">{{lang.map.beneficiary_country}}</label>
+        <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
+                   formControlName="beneficiaryCountry"
+                   id="beneficiaryCountry" validationClasses="beneficiaryCountry">
+          <ng-option *ngFor="let option of countries"
+                     [value]="option.id">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="beneficiaryCountry"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="executionCountry" class="form-label"
+               for="executionCountry">{{lang.map.execution_country}}</label>
+        <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
+                   formControlName="executionCountry"
+                   id="executionCountry" validationClasses="executionCountry">
+          <ng-option *ngFor="let option of countries"
+                     [value]="option.id">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="executionCountry"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="totalCost" class="form-label"
+               for="totalCost">{{lang.map.total_cost}}</label>
+        <input [readonly]="(readonly)" class="form-control"
+               formControlName="totalCost"
+               id="totalCost" validationClasses="totalCost">
+        <app-field-error-message controlName="totalCost"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="domain" class="form-label"
+               for="domain">{{lang.map.domain}}</label>
+        <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
+                   formControlName="domain"
+                   id="domain" validationClasses="domain">
+          <ng-option *ngFor="let option of domains"
+                     [value]="option.lookupKey">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="domain"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isHumanitarian">
+        <label asteriskIfRequired="mainUNOCHACategory" class="form-label"
+               for="mainUNOCHACategory">{{lang.map.ocha}}</label>
+        <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
+                   formControlName="mainUNOCHACategory"
+                   id="mainUNOCHACategory" validationClasses="mainUNOCHACategory">
+          <ng-option *ngFor="let option of mainOchas"
+                     [value]="option.id">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isDevelopment">
+        <label asteriskIfRequired="mainDACCategory" class="form-label"
+               for="mainDACCategory">{{lang.map.dac}}</label>
+        <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
+                   formControlName="mainDACCategory"
+                   id="mainDACCategory" validationClasses="mainDACCategory">
+          <ng-option *ngFor="let option of mainDacs"
+                     [value]="option.id">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly"
+    class="btn btn-primary m-2">{{editItem > -1 ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>
