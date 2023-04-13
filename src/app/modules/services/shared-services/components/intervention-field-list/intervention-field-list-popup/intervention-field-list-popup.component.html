@@ -1,0 +1,49 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ !!editItem ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map.intervention_fields }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <div [formGroup]="form">
+    <div class="row">
+      <!-- Main UNOCHA category -->
+      <div class="col-sm-12 mb-4 ng-select-wrapper">
+        <label asteriskIfRequired="mainUNOCHACategory" for="mainUNOCHACategory"
+               class="form-label">{{lang.map.main_unocha_category}}</label>
+        <ng-select [selectOnTab]="true" labelForId="mainUNOCHACategory" [clearable]="false"
+                   [readonly]="readonly || viewOnly"
+                   placeholder="{{lang.map.select}}" id="mainUNOCHACategory"
+                   [notFoundText]="lang.map.msg_not_found"
+                   (change)="handleChangeMainOcha($event, true)"
+                   formControlName="mainUNOCHACategory" validationClasses="mainUNOCHACategory">
+          <ng-option *ngFor="let option of mainOchaCategories" [value]="option.id"
+                     [disabled]="!option.isActive()">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
+      </div>
+      <!-- Sub UNOCHA category -->
+      <div class="col-sm-12 mb-4 ng-select-wrapper">
+        <label asteriskIfRequired="subUNOCHACategory" for="subUNOCHACategory"
+               class="form-label">{{lang.map.sub_unocha_category}}</label>
+        <ng-select [selectOnTab]="true" labelForId="subUNOCHACategory" [clearable]="false"
+                   [readonly]="readonly || viewOnly"
+                   placeholder="{{lang.map.select}}" id="subUNOCHACategory"
+                   [notFoundText]="lang.map.msg_not_found"
+                   formControlName="subUNOCHACategory" validationClasses="subUNOCHACategory">
+          <ng-option *ngFor="let option of subOchaCategories" [value]="option.id"
+                     [disabled]="!option.isActive()">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="subUNOCHACategory"></app-field-error-message>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
+    class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>
