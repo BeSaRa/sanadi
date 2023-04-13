@@ -31,6 +31,9 @@ import {
 import { OrganizationsEntitiesSupport } from '@app/models/organizations-entities-support';
 import { AuditOrganizationsEntitiesSupportComponent } from '@app/modules/services/organization-entities-support/audit/audit-organizations-entities-support/audit-organizations-entities-support.component';
 import { OrganizationsEntitiesSupportInterceptor } from '@app/model-interceptors/organizations-entities-support-interceptor';
+import { Inquiry } from '@app/models/inquiry';
+import { InquiryInterceptor } from '@app/model-interceptors/inquiry-interceptor';
+import { AuditInquiryAndComplaintComponent } from '@app/modules/services/inquiries-and-complaints/audit/audit-inquiry-and-complaint/audit-inquiry-and-complaint.component';
 
 @CastResponseContainer({
   $default: {
@@ -50,16 +53,19 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittance,
     [CaseTypes.PARTNER_APPROVAL]: PartnerApproval
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: OrganizationsEntitiesSupport,
+    [CaseTypes.INQUIRY]: Inquiry,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
     [CaseTypes.PARTNER_APPROVAL]: PartnerApprovalInterceptor,
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: OrganizationsEntitiesSupportInterceptor,
+    [CaseTypes.INQUIRY]: InquiryInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
     [CaseTypes.PARTNER_APPROVAL]: AuditPartnerApprovalComponent,
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: AuditOrganizationsEntitiesSupportComponent,
+    [CaseTypes.INQUIRY]: AuditInquiryAndComplaintComponent,
   };
 
   constructor(public http: HttpClient,
