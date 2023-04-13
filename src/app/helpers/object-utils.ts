@@ -4,6 +4,7 @@ import {IValueDifference} from '@contracts/i-value-difference';
 import {AdminResult} from '@models/admin-result';
 import {LangService} from '@services/lang.service';
 import {FactoryService} from '@services/factory.service';
+import {IAdminResultByProperty} from '@contracts/i-admin-result-by-property';
 
 export class ObjectUtils {
   static getControlValues<M>(controlValuesWithLabels: { [key: string]: ControlValueLabelLangKey }): Partial<M> {
@@ -58,11 +59,11 @@ export class ObjectUtils {
     return hasDifference;
   }
 
-  static getValueDifferencesList<M, V>(newVersionFullObject: M & { getAdminResultByProperty: (key: keyof M) => AdminResult },
-                                       oldVersionFullObject: V & { getAdminResultByProperty: (key: keyof V) => AdminResult },
-                                       newVersionDataObject: Partial<M>,
-                                       oldVersionDataObject: Partial<V>,
-                                       labelLangKeys: { [p: string]: keyof ILanguageKeys }): IValueDifference[] {
+  static getValueDifferencesList<M extends IAdminResultByProperty<M>, V extends IAdminResultByProperty<V>>(newVersionFullObject: M,
+                                                                                                           oldVersionFullObject: V,
+                                                                                                           newVersionDataObject: Partial<M>,
+                                                                                                           oldVersionDataObject: Partial<V>,
+                                                                                                           labelLangKeys: { [p: string]: keyof ILanguageKeys }): IValueDifference[] {
     const langService: LangService = FactoryService.getService('LangService');
     let differencesList: IValueDifference[] = [];
 
