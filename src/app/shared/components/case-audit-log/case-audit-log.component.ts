@@ -44,6 +44,6 @@ export class CaseAuditLogComponent {
   }
 
   openViewChanges(item: CaseAudit): void {
-    this.caseAuditService.showDifference(this.model, item);
+    this.caseAuditService.showCaseModelAuditPopup(this.model, item);
   }
 }
