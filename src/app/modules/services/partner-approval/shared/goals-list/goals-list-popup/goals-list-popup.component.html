@@ -1,0 +1,56 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ !!editItem ? lang.map.btn_update : lang.map.btn_add }} {{
+    lang.map.bank_details }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <div [formGroup]="form">
+    <div class="row">
+      <!-- Domain -->
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="domain" for="domain" class="form-label">{{lang.map.domain}}</label>
+        <ng-select [selectOnTab]="true" labelForId="domain" [clearable]="false" placeholder="{{lang.map.select}}"
+          id="domain" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="domain"
+          validationClasses="domain">
+          <ng-option *ngFor="let option of domainsList" [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="domain"></app-field-error-message>
+      </div>
+      <!-- Main DAC Category -->
+      <div *ngIf="displayByDomain === 'DAC'" class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="mainDACCategory" for="mainDACCategory"
+          class="form-label">{{lang.map.main_dac_category}}</label>
+        <ng-select [selectOnTab]="true" labelForId="mainDACCategory" [clearable]="false"
+          placeholder="{{lang.map.select}}" id="mainDACCategory" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+          bindLabel="id" formControlName="mainDACCategory" validationClasses="mainDACCategory">
+          <ng-option *ngFor="let option of mainDACCategoriesList" [value]="option.id"
+            [disabled]="option.status !== commonStatusEnum.ACTIVATED">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
+      </div>
+      <!-- Main UNOCHA Category -->
+      <div *ngIf="displayByDomain === 'OCHA'" class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="mainUNOCHACategory" for="mainUNOCHACategory"
+          class="form-label">{{lang.map.main_unocha_category}}</label>
+        <ng-select [selectOnTab]="true" labelForId="mainUNOCHACategory" [clearable]="false"
+          placeholder="{{lang.map.select}}" id="mainUNOCHACategory" [notFoundText]="lang.map.msg_not_found"
+          appendTo="body" bindLabel="id" formControlName="mainUNOCHACategory" validationClasses="mainUNOCHACategory">
+          <ng-option *ngFor="let option of mainUNOCHACategoriesList" [value]="option.id"
+            [disabled]="option.status !== commonStatusEnum.ACTIVATED">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
+    class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>
