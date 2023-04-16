@@ -29,6 +29,7 @@ import {
 import { StageListPopupComponent } from './pages/urgent-intervention-closure/components/stage-list/stage-list-popup/stage-list-popup.component';
 import { ResultListPopupComponent } from './pages/urgent-intervention-closure/components/result-list/result-list-popup/result-list-popup.component';
 import { ImplementationEvaluationPopupComponent } from './pages/urgent-intervention-closure/components/implementation-evaluation-list/implementation-evaluation-popup/implementation-evaluation-popup.component';
+import { BestPracticesPopupComponent } from './pages/urgent-intervention-closure/components/best-practices-list/best-practices-popup/best-practices-popup.component';
 import { AuditUrgentInterventionClosureComponent } from './audit/audit-urgent-intervention-closure/audit-urgent-intervention-closure.component';
 import { AuditStageListComponent } from './audit/audit-stage-list/audit-stage-list.component';
 import { AuditResultListComponent } from './audit/audit-result-list/audit-result-list.component';
@@ -50,6 +51,7 @@ import { AuditLessonsLearntListComponent } from './audit/audit-lessons-learnt-li
     StageListPopupComponent,
     ResultListPopupComponent,
     ImplementationEvaluationPopupComponent,
+    BestPracticesPopupComponent,
     AuditUrgentInterventionClosureComponent,
     AuditStageListComponent,
     AuditResultListComponent,

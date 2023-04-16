@@ -14,6 +14,7 @@ import { BestPractices } from '@models/best-practices';
 import { AdminResult } from '@models/admin-result';
 import { FieldAssessmentService } from '@services/field-assessment.service';
 import { FieldAssessmentTypesEnum } from '@enums/field-assessment-types.enum';
+import { BestPracticesPopupComponent } from './best-practices-popup/best-practices-popup.component';
 
 @Component({
   selector: 'best-practices-list',
@@ -132,9 +133,12 @@ export class BestPracticesListComponent implements OnInit {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
+      this.openFormPopup()
       this.form.patchValue(record);
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable();
       }
     } else {
       this._setComponentReadiness('READY');
@@ -252,6 +256,25 @@ export class BestPracticesListComponent implements OnInit {
         }
       });
   }
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form : this.form,
+      readonly : this.readonly,
+      viewOnly : this.viewOnly,
+      editItem : this.editItem,
+      model : this.currentRecord,
+      bestPracticesList : this.bestPracticesList,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancelForm();
+      }
+    })
+  }
+  _getPopupComponent(){
+    return BestPracticesPopupComponent
+  }
 
   private loadBestPractices() {
     this.fieldAssessmentService.loadByType(FieldAssessmentTypesEnum.BEST_PRACTICES)
@@ -264,9 +287,5 @@ export class BestPracticesListComponent implements OnInit {
       this.bestPracticesList = result;
     });
   }
-
-  searchNgSelect(term: string, item: AdminResult): boolean {
-    return item.ngSelectSearch(term);
-  }
-
+  
 }
