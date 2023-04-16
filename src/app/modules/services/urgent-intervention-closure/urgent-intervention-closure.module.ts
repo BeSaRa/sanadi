@@ -27,6 +27,7 @@ import {
   UrgentInterventionClosureApproveTaskPopupComponent
 } from '@modules/services/urgent-intervention-closure/popups/urgent-intervention-closure-approve-task-popup/urgent-intervention-closure-approve-task-popup.component';
 import { StageListPopupComponent } from './pages/urgent-intervention-closure/components/stage-list/stage-list-popup/stage-list-popup.component';
+import { ResultListPopupComponent } from './pages/urgent-intervention-closure/components/result-list/result-list-popup/result-list-popup.component';
 import { AuditUrgentInterventionClosureComponent } from './audit/audit-urgent-intervention-closure/audit-urgent-intervention-closure.component';
 import { AuditStageListComponent } from './audit/audit-stage-list/audit-stage-list.component';
 import { AuditResultListComponent } from './audit/audit-result-list/audit-result-list.component';
@@ -46,6 +47,7 @@ import { AuditLessonsLearntListComponent } from './audit/audit-lessons-learnt-li
     LessonsLearntListComponent,
     UrgentInterventionClosureApproveTaskPopupComponent,
     StageListPopupComponent,
+    ResultListPopupComponent,
     AuditUrgentInterventionClosureComponent,
     AuditStageListComponent,
     AuditResultListComponent,
