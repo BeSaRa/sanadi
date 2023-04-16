@@ -284,6 +284,10 @@ td.table-actions {
   button.icon-btn {
     padding: 0;
   }
+
+  &.audit-actions {
+    width: 100px;
+  }
 }
 
 .font-12 {
