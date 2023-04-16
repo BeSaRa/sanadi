@@ -18,7 +18,7 @@ export class ImplementationEvaluationPopupComponent {
   form: UntypedFormGroup;
   readonly: boolean;
   viewOnly: boolean;
-  editItem: number;
+  editItem: boolean;
   model: OfficeEvaluation;
   evaluationHubList: AdminResult[];
   evaluationResultList = this.lookupService.listByCategory.EvaluationResult;
@@ -27,7 +27,7 @@ export class ImplementationEvaluationPopupComponent {
       form: UntypedFormGroup,
       readonly: boolean,
       viewOnly: boolean,
-      editItem: number,
+      editItem: boolean,
       model: OfficeEvaluation,
       evaluationHubList: AdminResult[],
     },
