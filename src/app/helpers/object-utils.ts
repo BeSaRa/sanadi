@@ -5,6 +5,7 @@ import {AdminResult} from '@models/admin-result';
 import {LangService} from '@services/lang.service';
 import {FactoryService} from '@services/factory.service';
 import {IAdminResultByProperty} from '@contracts/i-admin-result-by-property';
+import {CommonUtils} from '@helpers/common-utils';
 
 export class ObjectUtils {
   static getControlValues<M>(controlValuesWithLabels: { [key: string]: ControlValueLabelLangKey }): Partial<M> {
@@ -51,6 +52,10 @@ export class ObjectUtils {
         break;
       }
       const currentValue = newVersionDataObject[key as keyof M];
+      // if new and old values are undefined/null, consider no difference
+      if (!CommonUtils.isValidValue(oldValue) && !CommonUtils.isValidValue(currentValue)) {
+        continue;
+      }
       if (oldValue !== currentValue) {
         hasDifference = true;
         break;
@@ -70,6 +75,10 @@ export class ObjectUtils {
     for (const [key, oldValue] of Object.entries(oldVersionDataObject)) {
       if (key in newVersionDataObject) {
         const currentValue = newVersionDataObject[key as keyof M];
+        // if new and old values are undefined/null, consider no difference
+        if (!CommonUtils.isValidValue(oldValue) && !CommonUtils.isValidValue(currentValue)) {
+          continue;
+        }
         if (oldValue !== currentValue) {
           differencesList.push({
             oldValueInfo: oldVersionFullObject.getAdminResultByProperty(key as keyof V),
