@@ -169,7 +169,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.INTERNAL_PROJECT_LICENSE,
     CaseTypes.URGENT_INTERVENTION_LICENSING,
     CaseTypes.PROJECT_FUNDRAISING,
-    CaseTypes.FINANCIAL_TRANSFERS_LICENSING
+    // CaseTypes.FINANCIAL_TRANSFERS_LICENSING
   ];
 
   canShowMatrixNotification: boolean = false;

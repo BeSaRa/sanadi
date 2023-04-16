@@ -12,7 +12,6 @@ import {CommonUtils} from '@helpers/common-utils';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
-import {DacOchaService} from '@services/dac-ocha.service';
 import { InterventionFieldListPopupComponent } from './intervention-field-list-popup/intervention-field-list-popup.component';
 
 @Component({

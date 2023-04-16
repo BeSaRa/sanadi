@@ -1,5 +1,7 @@
 import {CustomValidators} from '@app/validators/custom-validators';
-import {UrgentInterventionAttachmentInterceptor} from '@app/model-interceptors/urgent-intervention-attachment-interceptor';
+import {
+  UrgentInterventionAttachmentInterceptor
+} from '@app/model-interceptors/urgent-intervention-attachment-interceptor';
 import {InterceptModel} from '@decorators/intercept-model';
 import {ISearchFieldsMap} from '@app/types/types';
 import {normalSearchFields} from '@helpers/normal-search-fields';
@@ -8,6 +10,7 @@ import {mixinFileNetDocument} from '@app/mixins/mixin-filenet-document';
 import {FileNetDocumentContract} from '@contracts/file-net-document.contract';
 import {FileNetDocumentInterceptor} from '@app/model-interceptors/file-net-document-interceptor';
 import {AdminResult} from '@models/admin-result';
+import {CommonUtils} from '@helpers/common-utils';
 
 const urgentInterventionAttachmentInterceptor = new UrgentInterventionAttachmentInterceptor();
 
@@ -49,5 +52,13 @@ export class UrgentInterventionAttachment extends FileNet implements FileNetDocu
       documentTitle: controls ? [documentTitle, [CustomValidators.required, CustomValidators.maxLength(200), CustomValidators.pattern('ENG_AR_NUM_ONLY')]] : documentTitle,
       description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     };
+  }
+
+  isApprovedAttachment(): boolean {
+    return this.isApproved;
+  }
+
+  isRejectedAttachment(): boolean {
+    return CommonUtils.isValidValue(this.isApproved) && !this.isApproved;
   }
 }
