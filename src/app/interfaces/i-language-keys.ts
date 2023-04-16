@@ -1876,4 +1876,5 @@ export interface ILanguageKeys {
   no_atarization_no_lbl:string;
   certificate_code_lbl:string;
   leased_contract_lbl:string;
+  please_select_service_to_link:string;
 }

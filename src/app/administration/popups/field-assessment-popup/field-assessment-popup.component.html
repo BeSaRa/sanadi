@@ -45,6 +45,9 @@
         <app-field-error-message controlName="status"></app-field-error-message>
       </div>
     </div>
+    <div class="row">
+      <field-assessment-service-link [type]="type.value" [model]="model" [readonly]="operation === operationTypes.VIEW" [operation]="operation"></field-assessment-service-link>
+    </div>
   </form>
 </div>
 <div class="dialog-actions">

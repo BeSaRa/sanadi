@@ -126,6 +126,7 @@ import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
 import {
   UserFollowupPermissionNewComponent
 } from './shared/user-followup-permission-new/user-followup-permission-new.component';
+import { FieldAssessmentServiceLinkComponen } from './shared/field-assessment-service-link/field-assessment-service-link.component';
 
 @NgModule({
   declarations: [
@@ -185,6 +186,7 @@ import {
     UserFollowupPermissionComponent,
     FieldAssessmentPopupComponent,
     FieldAssessmentComponent,
+    FieldAssessmentServiceLinkComponen,
     AdminLookupPopupComponent,
     DacOchaNewPopupComponent,
     VactionDatesComponent,
