@@ -1,5 +1,5 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-    <h1 class="h6 text-white">{{ editItem > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
+    <h1 class="h6 text-white">{{ editItem ? lang.map.btn_update : lang.map.btn_add }} {{
       lang.map.stage }}</h1>
     <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
   </div>
@@ -49,7 +49,7 @@
 </div>
 <div class="dialog-actions">
   <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
-    class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
+    class="btn btn-primary m-2">{{editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
   <button (click)="cancel()"
     class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
 </div>
