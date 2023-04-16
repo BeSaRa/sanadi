@@ -48,11 +48,11 @@ export class UrgentInterventionReportService extends CrudWithDialogGenericServic
   }
 
   @CastResponse(undefined)
-  loadByDocumentId(documentId: string): Observable<any> {
-    if (!documentId) {
+  loadByDocumentVsId(documentVsId: string): Observable<any> {
+    if (!documentVsId) {
       return of([]);
     }
-    return this.http.get<any>(this._getServiceURL() + '/documentId/' + documentId)
+    return this.http.get<any>(this._getServiceURL() + '/documentVsId/' + documentVsId)
       .pipe(catchError(_ => of([])));
   }
 

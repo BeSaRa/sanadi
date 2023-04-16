@@ -32,15 +32,15 @@ export class UrgentInterventionReportListComponent extends AdminGenericComponent
   @Input() readonly: boolean = false;
   @Input() model?: UrgentInterventionLicenseFollowup;
 
-  private _documentId: string = '';
+  private _documentVsId: string = '';
   @Input()
-  set documentId(value: string) {
-    this._documentId = value;
+  set documentVsId(value: string) {
+    this._documentVsId = value;
     this.reload$.next(value);
   }
 
-  get documentId(): string {
-    return this._documentId;
+  get documentVsId(): string {
+    return this._documentVsId;
   }
 
   _init() {
@@ -96,7 +96,7 @@ export class UrgentInterventionReportListComponent extends AdminGenericComponent
   listenToReload() {
     this.reload$.pipe(
       takeUntil(this.destroy$),
-      switchMap((val) => this.service.loadByDocumentId(this.documentId))
+      switchMap((val) => this.service.loadByDocumentVsId(this.documentVsId))
     ).subscribe((result: UrgentInterventionReport[]) => {
       this.list = result;
     });

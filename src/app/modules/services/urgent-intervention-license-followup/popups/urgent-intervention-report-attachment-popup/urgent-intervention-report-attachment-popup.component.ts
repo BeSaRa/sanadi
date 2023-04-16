@@ -273,7 +273,7 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        const sub = this.urgentInterventionLicenseFollowupService.deleteAttachment(record.id).subscribe(() => {
+        const sub = this.urgentInterventionLicenseFollowupService.deleteAttachment(record.id,record.vsId).subscribe(() => {
           // @ts-ignore
           this.toastService.success(this.lang.map.msg_delete_x_success.change({x: record.documentTitle}));
           this.reload$.next(null);
