@@ -11,6 +11,7 @@ import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 import {UserClickOn} from '@enums/user-click-on.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
+import { StageListPopupComponent } from './stage-list-popup/stage-list-popup.component';
 
 @Component({
   selector: 'stage-list',
@@ -64,7 +65,6 @@ export class StageListComponent implements OnInit, OnDestroy {
   private recordChanged$: Subject<Stage | null> = new Subject<Stage | null>();
   private currentRecord?: Stage;
   private destroy$: Subject<any> = new Subject<any>();
-  showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   form!: UntypedFormGroup;
@@ -115,7 +115,6 @@ export class StageListComponent implements OnInit, OnDestroy {
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.currentRecord = record || undefined;
-      this.showForm = !!this.currentRecord;
       this.updateForm(this.currentRecord);
     });
   }
@@ -127,9 +126,12 @@ export class StageListComponent implements OnInit, OnDestroy {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
+      this.openFormPopup();
       this.form.patchValue(record);
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable()
       }
     } else {
       this._setComponentReadiness('READY');
@@ -192,7 +194,6 @@ export class StageListComponent implements OnInit, OnDestroy {
 
   cancelForm() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');
@@ -259,6 +260,24 @@ export class StageListComponent implements OnInit, OnDestroy {
       }).reduce((resultSum, a) => resultSum + a, 0);
     }
     return this.totalInterventionCost = total;
+  }
+  _getPopupComponent() {
+    return StageListPopupComponent;
+  }
+
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form : this.form,
+      readonly : this.readonly,
+      viewOnly : this.viewOnly,
+      editItem : this.editItem,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancelForm();
+      }
+    })
   }
 
 }

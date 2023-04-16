@@ -17,6 +17,7 @@ import {LookupService} from '@services/lookup.service';
 import {FieldAssessmentService} from '@services/field-assessment.service';
 import {AdminResult} from '@models/admin-result';
 import {FieldAssessmentTypesEnum} from '@enums/field-assessment-types.enum';
+import { ImplementationEvaluationPopupComponent } from './implementation-evaluation-popup/implementation-evaluation-popup.component';
 
 @Component({
   selector: 'implementation-evaluation-list',
@@ -74,7 +75,6 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
   private recordChanged$: Subject<OfficeEvaluation | null> = new Subject<OfficeEvaluation | null>();
   private currentRecord?: OfficeEvaluation;
   private destroy$: Subject<any> = new Subject<any>();
-  showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   form!: UntypedFormGroup;
@@ -138,7 +138,6 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.currentRecord = record || undefined;
-      this.showForm = !!this.currentRecord;
       this.updateForm(this.currentRecord);
     });
   }
@@ -150,9 +149,12 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
       } else {
         this._setComponentReadiness('NOT_READY');
       }
+      this.openFormPopup()
       this.form.patchValue(record);
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable()
       }
     } else {
       this._setComponentReadiness('READY');
@@ -227,7 +229,6 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
 
   cancelForm() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');
@@ -291,5 +292,25 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
       ).subscribe((result) => {
       this.evaluationHubList = result;
     });
+  }
+  _getPopupComponent() {
+    return ImplementationEvaluationPopupComponent;
+  }
+
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form : this.form,
+      readonly : this.readonly,
+      viewOnly : this.viewOnly,
+      editItem : this.editItem? true:false,
+      model : this.currentRecord,
+      evaluationHubList : this.evaluationHubList,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancelForm();
+      }
+    })
   }
 }

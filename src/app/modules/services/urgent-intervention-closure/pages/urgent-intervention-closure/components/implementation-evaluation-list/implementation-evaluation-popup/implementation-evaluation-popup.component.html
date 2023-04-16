@@ -1,0 +1,59 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{ editItem ? lang.map.btn_update : lang.map.btn_add }} {{
+      lang.map.entities }}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+    <div [formGroup]="form">
+        <div class="row">
+        <!-- Evaluation Hub -->
+        <div class="col-12 mb-4 ng-select-wrapper">
+            <label asteriskIfRequired="evaluationHub" for="evaluationHub"
+                class="form-label">{{lang.map.evaluation_hub}}</label>
+            <ng-select [selectOnTab]="true" labelForId="evaluationHub" [clearable]="false"
+                    [readonly]="readonly || viewOnly"
+                    placeholder="{{lang.map.select}}" id="evaluationHub"
+                    [notFoundText]="lang.map.msg_not_found"
+                    formControlName="evaluationHub" validationClasses="evaluationHub">
+            <ng-option *ngFor="let option of evaluationHubList" [value]="option.id"
+                        [disabled]="option.disabled">
+                {{option.getName()}}
+            </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="evaluationHub"></app-field-error-message>
+        </div>
+        <!-- Evaluation Result -->
+        <div class="col-12 mb-4 ng-select-wrapper">
+            <label asteriskIfRequired="evaluationResult" for="evaluationResult"
+                class="form-label">{{lang.map.evaluation_result}}</label>
+            <ng-select [selectOnTab]="true" labelForId="evaluationResult" [clearable]="false"
+                    [readonly]="readonly || viewOnly"
+                    placeholder="{{lang.map.select}}" id="evaluationResult"
+                    [notFoundText]="lang.map.msg_not_found"
+                    formControlName="evaluationResult" validationClasses="evaluationResult">
+            <ng-option *ngFor="let option of evaluationResultList" [value]="option.lookupKey">
+                {{option.getName()}}
+            </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="evaluationResult"></app-field-error-message>
+        </div>
+        </div>
+        <div>
+        <div class="col-sm-12 mb-4 position-relative">
+            <label for="notes" asteriskIfRequired="notes"
+                class="form-label">{{lang.map.notes}}</label>
+            <textarea rows="2" id="notes" validationClasses="notes"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                    [readonly]="readonly || viewOnly"
+                    formControlName="notes" trimInput class="form-control"></textarea>
+            <app-field-error-message controlName="notes"></app-field-error-message>
+        </div>
+        </div>
+    </div>
+</div>
+  <div class="dialog-actions">
+    <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
+    class="btn btn-primary m-2">{{editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
+    <button (click)="cancel()"
+        class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+  </div>

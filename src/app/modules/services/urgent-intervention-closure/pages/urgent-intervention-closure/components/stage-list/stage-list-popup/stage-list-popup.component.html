@@ -1,0 +1,55 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{ editItem ? lang.map.btn_update : lang.map.btn_add }} {{
+      lang.map.stage }}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+  </div>
+<div class="dialog-content no-fixed-height">
+    <div [formGroup]="form">
+      <div class="row">
+        <!-- Stage -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="stage" for="stage"
+                 class="form-label">{{lang.map.stage}}</label>
+          <input formControlName="stage" class="form-control" type="text"
+                 [readonly]="readonly" validationClasses="stage" id="stage" trimInput>
+          <app-field-error-message controlName="stage"></app-field-error-message>
+        </div>
+        <!-- Duration -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="duration" for="duration"
+                 class="form-label">{{lang.map.duration}} ({{lang.map.days}})</label>
+          <input formControlName="duration" class="form-control" type="text"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY"
+                 [readonly]="readonly" validationClasses="duration" id="duration" trimInput>
+          <app-field-error-message controlName="duration"></app-field-error-message>
+        </div>
+        <!-- Intervention Cost -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="interventionCost" for="interventionCost"
+                 class="form-label">{{lang.map.intervention_cost}}</label>
+          <input formControlName="interventionCost" class="form-control" type="text"
+                 [readonly]="readonly" validationClasses="interventionCost" id="interventionCost" trimInput
+                 [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+                 prefix="$"
+                 [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+          <app-field-error-message controlName="interventionCost"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label for="notes" asteriskIfRequired="notes"
+                 class="form-label">{{lang.map.notes}}</label>
+          <textarea formControlName="notes" class="form-control" rows="4"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
+                    validationClasses="notes" id="notes" trimInput></textarea>
+          <app-field-error-message controlName="notes"></app-field-error-message>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="dialog-actions">
+  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
+    class="btn btn-primary m-2">{{editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
+  <button (click)="cancel()"
+    class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>

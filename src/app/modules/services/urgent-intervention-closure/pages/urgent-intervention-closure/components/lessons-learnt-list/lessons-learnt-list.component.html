@@ -1,68 +1,24 @@
-<ng-container *ngIf="showForm">
-  <div [formGroup]="form">
-    <div class="row">
-      <!-- Lessons Learnt -->
-      <div class="col-sm-12 col-md-4 mb-4 ng-select-wrapper">
-        <label asteriskIfRequired="lessonsLearned" for="lessonsLearned"
-               class="form-label">{{lang.map.lessons_learnt}}</label>
-        <ng-select [selectOnTab]="true" [items]="lessonsLearntList" labelForId="lessonsLearned"
-                   bindValue="id" [clearable]="true"
-                   [searchFn]="searchNgSelect"
-                   placeholder="{{lang.map.select}}" id="lessonsLearned"
-                   [notFoundText]="lang.map.msg_not_found"
-                   [multiple]="true" [closeOnSelect]="false"
-                   [readonly]="readonly"
-                   formControlName="lessonsLearned" validationClasses="lessonsLearned">
-          <ng-template ng-option-tmp let-item="item">
-            <span class="custom-option">{{item.getName()}}</span>
-          </ng-template>
-          <ng-template ng-label-tmp let-item="item" let-clear="clear">
-            <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
-            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
-          </ng-template>
-          <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
-            <div class="ng-value" *ngFor="let item of (items ? items.slice(0,2): [])">
-              <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
-              <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
-            </div>
-            <div class="ng-value" *ngIf="items.length > 2">
-              <span class="ng-value-label">{{items.length - 2}} more...</span>
-            </div>
-          </ng-template>
-        </ng-select>
-        <app-field-error-message controlName="lessonsLearned"></app-field-error-message>
-      </div>
-      <!-- Statement -->
-      <div class="col-sm-12 col-md-8 mb-4 position-relative">
-        <label asteriskIfRequired="statement" for="statement"
-               class="form-label">{{lang.map.statement}}</label>
-        <textarea formControlName="statement" class="form-control" rows="4"
-                  [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
-                  validationClasses="statement" id="statement" trimInput></textarea>
-        <app-field-error-message controlName="statement"></app-field-error-message>
-      </div>
-    </div>
-    <div class="d-flex flex-row align-items-center justify-content-center">
-      <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
-              class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
-      <button (click)="cancelForm()"
-              class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
-    </div>
-  </div>
-</ng-container>
+
 <ng-container>
-  <div class="row" [hidden]="showForm">
-    <app-page-header pageTitle="lessons_learnt" [clickOnNew$]="add$"
-                     [addPermission]="!readonly && !showForm"></app-page-header>
-    <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
-  </div>
-  <div class="row pt-3" *ngIf="!showForm">
+  <div class="row pt-3">
     <div class="col-12">
       <div class="table-responsive">
         <app-table #table sortableTable [paginator]="paginator" [data]="list"
                    [columns]="displayedColumns"
                    [filter]="filterControl.value" [useSearchToFilter]="true">
           <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+            <ng-container cdkColumnDef="extra-header">
+              <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                <table-header
+                  tableTitle="lessons_learnt" 
+                  [add$]="add$" 
+                  [skipClearSort]="true" 
+                  [allowAdd]="!readonly"
+                  (textChange)="filterControl.setValue($event)"
+                  >
+                </table-header>
+              </th>
+            </ng-container>
             <ng-container cdkColumnDef="lessonsLearntListString">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lessons_learnt}}</th>
               <td cdk-cell *cdkCellDef="let row"> {{row.lessonsLearntListString}} </td>
@@ -77,6 +33,7 @@
                 <grid-actions [record]="row" [actions]="actions" [itemIndex]="i"></grid-actions>
               </td>
             </ng-container>
+            <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
             <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
             <tr *cdkNoDataRow>

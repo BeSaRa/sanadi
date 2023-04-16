@@ -1,0 +1,51 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{ editItem ? lang.map.btn_update : lang.map.btn_add }} {{
+      lang.map.output_and_impact_analysis }}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>    
+<div class="dialog-content no-fixed-height">
+    <div [formGroup]="form">
+        <div class="row">
+        <!-- Outputs -->
+        <div class="col-sm-12 mb-4 position-relative">
+            <label asteriskIfRequired="outputs" for="outputs"
+                class="form-label">{{lang.map.project_outputs}}</label>
+            <textarea rows="2" id="outputs" validationClasses="outputs"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                    [readOnly]="(readonly)"
+                    formControlName="outputs" trimInput class="form-control"></textarea>
+            <app-field-error-message controlName="outputs"></app-field-error-message>
+        </div>
+        <!-- Expected Result -->
+        <div class="col-sm-12 mb-4 position-relative">
+            <label asteriskIfRequired="expectedResults" for="expectedResults"
+                class="form-label">{{lang.map.project_expected_results}}</label>
+            <textarea rows="2" id="expectedResults" validationClasses="expectedResults"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                    [readOnly]="(readonly)"
+                    formControlName="expectedResults" trimInput class="form-control"></textarea>
+            <app-field-error-message controlName="expectedResults"></app-field-error-message>
+        </div>
+        <!-- Expected Impacts -->
+        <div class="col-sm-12 mb-4 position-relative">
+            <label asteriskIfRequired="expectedImpact" for="expectedImpact"
+                class="form-label">{{lang.map.project_expected_impacts}}</label>
+            <textarea rows="2" id="expectedImpact" validationClasses="expectedImpact"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                    [readOnly]="(readonly)"
+                    formControlName="expectedImpact" trimInput class="form-control"></textarea>
+            <app-field-error-message controlName="expectedImpact"></app-field-error-message>
+        </div>
+        </div>
+        <div class="d-flex flex-row align-items-center justify-content-center">
+        
+        </div>
+    </div>
+</div>
+
+<div class="dialog-actions">
+    <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
+                class="btn btn-primary m-2">{{editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
+    <button (click)="cancel()"
+            class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>
