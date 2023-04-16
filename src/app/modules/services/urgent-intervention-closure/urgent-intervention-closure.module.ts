@@ -30,6 +30,7 @@ import { StageListPopupComponent } from './pages/urgent-intervention-closure/com
 import { ResultListPopupComponent } from './pages/urgent-intervention-closure/components/result-list/result-list-popup/result-list-popup.component';
 import { ImplementationEvaluationPopupComponent } from './pages/urgent-intervention-closure/components/implementation-evaluation-list/implementation-evaluation-popup/implementation-evaluation-popup.component';
 import { BestPracticesPopupComponent } from './pages/urgent-intervention-closure/components/best-practices-list/best-practices-popup/best-practices-popup.component';
+import { LessonsLearntPopupComponent } from './pages/urgent-intervention-closure/components/lessons-learnt-list/lessons-learnt-popup/lessons-learnt-popup.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { BestPracticesPopupComponent } from './pages/urgent-intervention-closure
     ResultListPopupComponent,
     ImplementationEvaluationPopupComponent,
     BestPracticesPopupComponent,
+    LessonsLearntPopupComponent,
   ],
   imports: [
     CommonModule,
