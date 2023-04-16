@@ -26,7 +26,7 @@ import {
 import {
   UrgentInterventionClosureApproveTaskPopupComponent
 } from '@modules/services/urgent-intervention-closure/popups/urgent-intervention-closure-approve-task-popup/urgent-intervention-closure-approve-task-popup.component';
-
+import { StageListPopupComponent } from './pages/urgent-intervention-closure/components/stage-list/stage-list-popup/stage-list-popup.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +37,8 @@ import {
     ImplementationEvaluationListComponent,
     BestPracticesListComponent,
     LessonsLearntListComponent,
-    UrgentInterventionClosureApproveTaskPopupComponent
+    UrgentInterventionClosureApproveTaskPopupComponent,
+    StageListPopupComponent,
   ],
   imports: [
     CommonModule,
