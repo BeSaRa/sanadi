@@ -91,14 +91,14 @@
         </div>
         <!-- Arabic Name -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
+          <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.arabic_name}}</label>
           <input formControlName="arName" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                  validationClasses="arName" class="form-control" trimInput id="arName">
           <app-field-error-message controlName="arName"></app-field-error-message>
         </div>
         <!-- English Name -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.lbl_english_name}}</label>
+          <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.english_name}}</label>
           <input formControlName="enName" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                  validationClasses="enName" class="form-control" trimInput id="enName">
           <app-field-error-message controlName="enName"></app-field-error-message>
@@ -138,7 +138,7 @@
           <app-field-error-message controlName="city"></app-field-error-message>
         </div>
 
-        <!-- Headquarter  Type -->
+        <!-- Headquarter Type -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="headQuarterType" for="headQuarterType"
                  class="form-label">{{lang.map.headquarter_type}}</label>

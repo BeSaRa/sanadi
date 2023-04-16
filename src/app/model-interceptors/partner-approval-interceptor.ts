@@ -49,6 +49,7 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
     model.commercialActivitiesList = model.commercialActivitiesList.map((x) => service.commercialActivityInterceptor.receive(new CommercialActivity().clone(x)));
     model.displayGoals = model.goals.map(x => new Goal().clone({goal: x}))
     model.establishmentDateTimestamp = !model.establishmentDate ? null : DateUtils.getTimeStampFromDate(model.establishmentDate);
+    model.commercialLicenseEndDateTimestamp = !model.commercialLicenseEndDate ? null : DateUtils.getTimeStampFromDate(model.commercialLicenseEndDate);
 
     if (!model.headQuarterTypeInfo) {
       const lookupService: LookupService = FactoryService.getService('LookupService');
@@ -140,6 +141,7 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
     delete model.ouInfo;
     delete model.employeeService;
     delete model.establishmentDateTimestamp;
+    delete model.commercialLicenseEndDateTimestamp;
 
     delete model.countryInfo;
     delete model.headQuarterTypeInfo;
