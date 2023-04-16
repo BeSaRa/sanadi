@@ -10,7 +10,7 @@
               <table-header 
                 tableTitle="output_and_impact_analysis" 
                 [add$]="add$" 
-                [allowAdd]="!readonly && !showForm" 
+                [allowAdd]="!readonly" 
                 [skipClearSort]="true" 
                 (textChange)="filterControl.setValue($event)">
               </table-header>

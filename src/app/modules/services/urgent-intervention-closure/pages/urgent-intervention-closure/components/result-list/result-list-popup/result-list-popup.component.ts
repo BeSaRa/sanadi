@@ -15,7 +15,7 @@ export class ResultListPopupComponent {
   form: UntypedFormGroup;
   readonly: boolean;
   viewOnly: boolean;
-  editItem: number;
+  editItem: boolean;
   model: Result;
   customValidators =CustomValidators
 
@@ -24,7 +24,7 @@ export class ResultListPopupComponent {
       form: UntypedFormGroup,
       readonly: boolean,
       viewOnly: boolean,
-      editItem: number,
+      editItem: boolean,
       model: Result,
       
     },
