@@ -28,6 +28,7 @@ import {
 } from '@modules/services/urgent-intervention-closure/popups/urgent-intervention-closure-approve-task-popup/urgent-intervention-closure-approve-task-popup.component';
 import { StageListPopupComponent } from './pages/urgent-intervention-closure/components/stage-list/stage-list-popup/stage-list-popup.component';
 import { ResultListPopupComponent } from './pages/urgent-intervention-closure/components/result-list/result-list-popup/result-list-popup.component';
+import { ImplementationEvaluationPopupComponent } from './pages/urgent-intervention-closure/components/implementation-evaluation-list/implementation-evaluation-popup/implementation-evaluation-popup.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { ResultListPopupComponent } from './pages/urgent-intervention-closure/co
     UrgentInterventionClosureApproveTaskPopupComponent,
     StageListPopupComponent,
     ResultListPopupComponent,
+    ImplementationEvaluationPopupComponent,
   ],
   imports: [
     CommonModule,
