@@ -4,7 +4,7 @@ import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { ListModelComponent } from '@app/generics/ListModel-component';
 import { CharityBranch } from '@models/charity-branch';
 import { LangService } from '@services/lang.service';
-import { CharityBranchPopupComponent } from './charity-branch-popup/charity-branch-popup.component';
+import { CharityBranchPopupComponent } from '../../popups/charity-branch-popup/charity-branch-popup.component';
 
 @Component({
   selector: 'charity-branch',

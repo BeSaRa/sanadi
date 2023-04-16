@@ -1,6 +1,6 @@
-import { ILanguageKeys } from './../../../../../../interfaces/i-language-keys';
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { OrganizationOfficer } from '@app/models/organization-officer';
 import { LangService } from '@app/services/lang.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';

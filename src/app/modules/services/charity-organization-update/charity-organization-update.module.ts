@@ -30,14 +30,13 @@ import {
 import {
   FollowupDateApprovePopupComponent
 } from '@modules/services/charity-organization-update/popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
-import { OrganizationOfficerPopupComponent } from '@modules/services/charity-organization-update/shared/organization-officers/organization-officer-popup/organization-officer-popup.component';
-import { CharityBranchPopupComponent } from '@modules/services/charity-organization-update/shared/charity-branch/charity-branch-popup/charity-branch-popup.component';
-import { MembersPopupComponent } from '@modules/services/charity-organization-update/shared/members/members-popup/members-popup.component';
-import { ForeignAidClassificationsPopupComponent } from './shared/foreign-aid-classifications/foreign-aid-classifications-popup/foreign-aid-classifications-popup.component';
-import { BylawsPopupComponent } from './shared/bylaws/bylaws-popup/bylaws-popup.component';
-import { CharityReportsPopupComponent } from './shared/charity-reports/charity-reports-popup/charity-reports-popup.component';
-import { CharityDecisionsPopupComponent } from './shared/charity-decisions/charity-decisions-popup/charity-decisions-popup.component';
-
+import { BylawsPopupComponent } from './popups/bylaws-popup/bylaws-popup.component';
+import { CharityBranchPopupComponent } from './popups/charity-branch-popup/charity-branch-popup.component';
+import { CharityDecisionsPopupComponent } from './popups/charity-decisions-popup/charity-decisions-popup.component';
+import { ForeignAidClassificationsPopupComponent } from './popups/foreign-aid-classifications-popup/foreign-aid-classifications-popup.component';
+import { MembersPopupComponent } from './popups/members-popup/members-popup.component';
+import { CharityReportsPopupComponent } from './popups/charity-reports-popup/charity-reports-popup.component';
+import { OrganizationOfficerPopupComponent } from './popups/organization-officer-popup/organization-officer-popup.component';
 
 @NgModule({
   declarations: [

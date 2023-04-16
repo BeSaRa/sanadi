@@ -6,7 +6,7 @@ import {CharityReport} from '@models/charity-report';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import { ComponentType } from '@angular/cdk/portal';
-import { CharityReportsPopupComponent } from './charity-reports-popup/charity-reports-popup.component';
+import { CharityReportsPopupComponent } from '../../popups/charity-reports-popup/charity-reports-popup.component';
 
 @Component({
   selector: 'charity-reports',

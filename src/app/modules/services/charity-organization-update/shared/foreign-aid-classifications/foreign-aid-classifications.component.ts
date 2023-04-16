@@ -6,7 +6,7 @@ import {ForeignAidClassification} from '@models/foreign-aid-classification';
 import {LangService} from '@services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import { ComponentType } from '@angular/cdk/portal';
-import { ForeignAidClassificationsPopupComponent } from './foreign-aid-classifications-popup/foreign-aid-classifications-popup.component';
+import { ForeignAidClassificationsPopupComponent } from '../../popups/foreign-aid-classifications-popup/foreign-aid-classifications-popup.component';
 
 @Component({
   selector: 'foreign-aid-classifications',

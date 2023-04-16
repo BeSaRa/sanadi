@@ -1,5 +1,7 @@
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { CharityBranchInterceptor } from '@app/model-interceptors/charity-branch-interceptor';
+import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { OrganizationOfficer } from './organization-officer';
 import { SearchableCloneable } from './searchable-cloneable';
@@ -23,6 +25,10 @@ export class CharityBranch extends SearchableCloneable<CharityBranch> {
   tempId!: number;
   branchContactOfficer: OrganizationOfficer[] = [];
   branchContactOfficerList: OrganizationOfficer[] = [];
+
+  searchFields: ISearchFieldsMap<CharityBranch> = {
+    ...normalSearchFields(['fullName', 'address', 'streetNumber', 'zoneNumber', 'buildingNumber']),
+  }
 
 
   buildForm(controls = true) {

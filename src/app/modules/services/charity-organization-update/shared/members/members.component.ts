@@ -8,7 +8,7 @@ import {OrgMember} from '@models/org-member';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import { ComponentType } from '@angular/cdk/portal';
-import { MembersPopupComponent } from './members-popup/members-popup.component';
+import { MembersPopupComponent } from '../../popups/members-popup/members-popup.component';
 
 @Component({
   selector: 'members',

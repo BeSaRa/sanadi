@@ -1,8 +1,11 @@
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { CharityReportInterceptor } from '@app/model-interceptors/charity-report-interceptor';
 import { CharityReportService } from '@app/services/charity-report.service';
 import { FactoryService } from '@app/services/factory.service';
 import { LangService } from '@app/services/lang.service';
+import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDate, IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
@@ -41,14 +44,14 @@ export class CharityReport extends BaseModel<
   getName(): string {
     return this.langService.map.lang === 'en' ? this.enName : this.arName;
   }
+  searchFields: ISearchFieldsMap<CharityReport> = {
+    ...normalSearchFields(['fullName', 'subject', 'subject', 'feedback', 'procedures', 'riskMitigationMeasures']),
+    ...infoSearchFields(['riskTypeInfo', 'reportStatusInfo', 'reportStatusInfo'])
+  }
   buildForm(controls = true) {
     const {
       fullName,
       generalDate,
-      riskType,
-      category,
-      riskMitigationMeasures,
-      subject,
       feedback,
       reportStatus,
     } = this;
