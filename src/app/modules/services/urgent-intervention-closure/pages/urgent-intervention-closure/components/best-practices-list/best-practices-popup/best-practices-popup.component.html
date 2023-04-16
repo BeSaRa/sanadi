@@ -1,0 +1,58 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{ editItem > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
+      lang.map.project_evaluation_indicators }}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>    
+<div class="dialog-content no-fixed-height">
+    <div [formGroup]="form">
+        <div class="row">
+        <!-- Best Practices -->
+        <div class="col-12 mb-4 ng-select-wrapper">
+            <label asteriskIfRequired="bestPractices" for="bestPractices"
+                class="form-label">{{lang.map.best_practices}}</label>
+            <ng-select [selectOnTab]="true" [items]="bestPracticesList" labelForId="bestPractices"
+                    bindValue="id" [clearable]="true"
+                    [searchFn]="searchNgSelect"
+                    placeholder="{{lang.map.select}}" id="bestPractices"
+                    [notFoundText]="lang.map.msg_not_found"
+                    [multiple]="true" [closeOnSelect]="false"
+                    [readonly]="readonly"
+                    formControlName="bestPractices" validationClasses="bestPractices">
+            <ng-template ng-option-tmp let-item="item">
+                <span class="custom-option">{{item.getName()}}</span>
+            </ng-template>
+            <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+            </ng-template>
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of (items ? items.slice(0,2): [])">
+                <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                </div>
+            </ng-template>
+            </ng-select>
+            <app-field-error-message controlName="bestPractices"></app-field-error-message>
+        </div>
+        <!-- Statement -->
+        <div class="col-12 mb-4 position-relative">
+            <label asteriskIfRequired="statement" for="statement"
+                class="form-label">{{lang.map.statement}}</label>
+            <textarea formControlName="statement" class="form-control" rows="4"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
+                    validationClasses="statement" id="statement" trimInput></textarea>
+            <app-field-error-message controlName="statement"></app-field-error-message>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="dialog-actions">
+    <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
+        class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
+    <button (click)="cancel()"
+        class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+</div>  
