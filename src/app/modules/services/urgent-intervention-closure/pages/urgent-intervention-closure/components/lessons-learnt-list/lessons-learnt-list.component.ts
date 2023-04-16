@@ -68,7 +68,6 @@ export class LessonsLearntListComponent implements OnInit {
   private recordChanged$: Subject<LessonsLearned | null> = new Subject<LessonsLearned | null>();
   private currentRecord?: LessonsLearned;
   private destroy$: Subject<any> = new Subject<any>();
-  showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   lessonsLearntList: AdminResult[] = [];
@@ -121,7 +120,6 @@ export class LessonsLearntListComponent implements OnInit {
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.currentRecord = record || undefined;
-      this.showForm = !!this.currentRecord;
       this.updateForm(this.currentRecord);
     });
   }
@@ -203,7 +201,6 @@ export class LessonsLearntListComponent implements OnInit {
 
   cancelForm() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');
@@ -267,7 +264,7 @@ export class LessonsLearntListComponent implements OnInit {
       readonly : this.readonly,
       viewOnly : this.viewOnly,
       lessonsLearntList : this.lessonsLearntList,
-      editItem : this.editItem,
+      editItem : this.editItem? true: false,
       model : this.currentRecord,
     }).onAfterClose$.subscribe((data) => {
       if (data) {

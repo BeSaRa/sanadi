@@ -13,7 +13,7 @@
                   tableTitle="lessons_learnt" 
                   [add$]="add$" 
                   [skipClearSort]="true" 
-                  [allowAdd]="!readonly && !showForm"
+                  [allowAdd]="!readonly"
                   (textChange)="filterControl.setValue($event)"
                   >
                 </table-header>

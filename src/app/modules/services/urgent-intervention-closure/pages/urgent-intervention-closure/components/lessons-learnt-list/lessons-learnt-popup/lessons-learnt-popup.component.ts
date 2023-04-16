@@ -17,7 +17,7 @@ export class LessonsLearntPopupComponent {
   form: UntypedFormGroup;
   readonly: boolean;
   viewOnly: boolean;
-  editItem: number;
+  editItem: boolean;
   model: LessonsLearned;
   lessonsLearntList: AdminResult[];
 
@@ -26,7 +26,7 @@ export class LessonsLearntPopupComponent {
        form: UntypedFormGroup,
        readonly: boolean,
        viewOnly: boolean,
-       editItem: number,
+       editItem: boolean,
        model: LessonsLearned,
        lessonsLearntList: AdminResult[];
      },
