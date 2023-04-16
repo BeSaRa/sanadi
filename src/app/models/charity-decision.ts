@@ -1,9 +1,11 @@
 import {InterceptModel} from '@app/decorators/decorators/intercept-model';
 import {DateUtils} from '@app/helpers/date-utils';
-import {CharityDecisionInterceptor} from '@app/model-interceptors/charity-Decision-interceptor';
-import {CharityDecisionService} from '@app/services/charity-decision.service';
-import {FactoryService} from '@app/services/factory.service';
-import {LangService} from '@app/services/lang.service';
+import {normalSearchFields } from '@app/helpers/normal-search-fields';
+import { CharityDecisionInterceptor } from '@app/model-interceptors/charity-Decision-interceptor';
+import { CharityDecisionService } from '@app/services/charity-decision.service';
+import { FactoryService } from '@app/services/factory.service';
+import { LangService } from '@app/services/lang.service';
+import { ISearchFieldsMap } from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {BaseModel} from './base-model';
@@ -35,6 +37,11 @@ export class CharityDecision extends BaseModel<
   id!: number;
   objectDBId?: number;
   category?: number;
+
+  searchFields: ISearchFieldsMap<CharityDecision> = {
+    ...normalSearchFields(['referenceNumber', 'subject', 'organization'])
+  }
+
   categoryInfo!: AdminResult;
   generalDateStamp!: number |null;
 

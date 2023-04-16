@@ -7,8 +7,8 @@ import { EmployeeService } from '@services/employee.service';
 import { LangService } from '@services/lang.service';
 import { ToastService } from '@services/toast.service';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { OrganizationOfficerPopupComponent } from './organization-officer-popup/organization-officer-popup.component';
 import { DialogService } from '@app/services/dialog.service';
+import { OrganizationOfficerPopupComponent } from '../../popups/organization-officer-popup/organization-officer-popup.component';
 
 @Component({
   selector: 'organization-officers',

@@ -1,5 +1,7 @@
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { CharityBranchInterceptor } from '@app/model-interceptors/charity-branch-interceptor';
+import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { OrganizationOfficer } from './organization-officer';
 import { SearchableCloneable } from './searchable-cloneable';
@@ -32,6 +34,11 @@ export class CharityBranch extends SearchableCloneable<CharityBranch> implements
   categoryInfo!:AdminResult;
   branchAdjectiveInfo!:AdminResult;
   usageAdjectiveInfo!:AdminResult;
+
+
+  searchFields: ISearchFieldsMap<CharityBranch> = {
+    ...normalSearchFields(['fullName', 'address', 'streetNumber', 'zoneNumber', 'buildingNumber']),
+  }
 
   getAdminResultByProperty(property: keyof CharityBranch): AdminResult {
     let adminResultValue: AdminResult;

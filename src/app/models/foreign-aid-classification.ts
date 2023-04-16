@@ -1,6 +1,7 @@
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { ForeignAidClassificationInterceptor } from '@app/model-interceptors/foreign-aid-classification-interceptor';
-import { CustomValidators } from '@app/validators/custom-validators';
+import { ISearchFieldsMap } from '@app/types/types';
 import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';
 import {AuditOperationTypes} from '@enums/audit-operation-types';
@@ -39,6 +40,10 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
   domain?: number;
   domainInfo!: AdminResult;
 
+  searchFields: ISearchFieldsMap<ForeignAidClassification> = {
+    ...infoSearchFields(['subUNOCHACategoryInfo', 'subUNOCHAInfo', 'subDACCategoryInfo', 'mainUNOCHACategoryInfo',
+      'mainUNOCHAInfo', 'mainDACCategoryInfo', 'mainDACInfo', 'governanceDomainInfo', 'aidClassificationInfo'])
+  }
   getAdminResultByProperty(property: keyof ForeignAidClassification): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
@@ -122,8 +127,6 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
       mainUNOCHACategoryInfo: mainUNOCHAInfo,
       subDACCategoryInfo: subDACInfo,
       subUNOCHACategoryInfo: subUNOCHAInfo
-
-
     });
   }
 }

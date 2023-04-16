@@ -1,6 +1,9 @@
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { DateUtils } from '@app/helpers/date-utils';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { ByLawInterceptor } from '@app/model-interceptors/bylaw-interceptor';
+import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
@@ -26,6 +29,11 @@ export class Bylaw extends SearchableCloneable<Bylaw> implements IAuditModelProp
   objectDBId?: number;
   firstReleaseDateStamp!:number|null;
   lastUpdateDateStamp!:number|null;
+
+  searchFields: ISearchFieldsMap<Bylaw> = {
+    ...normalSearchFields(['fullName']),
+    ...infoSearchFields(['categoryInfo'])
+  }
 
   getAdminResultByProperty(property: keyof Bylaw): AdminResult {
     let adminResultValue: AdminResult;

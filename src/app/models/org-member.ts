@@ -1,6 +1,9 @@
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { DateUtils } from '@app/helpers/date-utils';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { OrgMemberInterceptor } from '@app/model-interceptors/org-member-interceptor';
+import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
@@ -30,6 +33,11 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   extraPhone!: string;
   jobTitleInfo!: AdminResult;
   nationalityInfo!: AdminResult;
+
+  searchFields: ISearchFieldsMap<OrgMember> = {
+    ...normalSearchFields(['qid', 'fullName', 'identificationNumber', 'email', 'phone', 'extraPhone']),
+    ...infoSearchFields(['jobTitleInfo', 'nationalityInfo'])
+  }
   joinDateStamp!: number | null;
 
   getAdminResultByProperty(property: keyof OrgMember): AdminResult {

@@ -8,6 +8,7 @@ import { CharityDecision } from '@app/models/charity-decision';
 export class CharityDecisionInterceptor implements IModelInterceptor<CharityDecision>{
   caseInterceptor?: IModelInterceptor<CharityDecision> | undefined;
   send(model: Partial<CharityDecision>): Partial<CharityDecision> {
+    delete model.searchFields;
     delete model.service;
     delete model.langService;
     delete model.auditOperation;

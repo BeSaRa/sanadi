@@ -1,4 +1,3 @@
-import { ILanguageKeys } from './../../../../../../interfaces/i-language-keys';
 import { LangService } from '@services/lang.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { DateUtils } from '@app/helpers/date-utils';
@@ -14,6 +13,7 @@ import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
 import { AdminLookup } from '@app/models/admin-lookup';
 import { AdminResult } from '@app/models/admin-result';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 
 @Component({
   selector: 'app-charity-reports-popup',
