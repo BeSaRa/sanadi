@@ -14,6 +14,7 @@ import {UserClickOn} from '@enums/user-click-on.enum';
 import {LessonsLearned} from '@models/lessons-learned';
 import {FieldAssessmentTypesEnum} from '@enums/field-assessment-types.enum';
 import {FieldAssessmentService} from '@services/field-assessment.service';
+import { LessonsLearntPopupComponent } from './lessons-learnt-popup/lessons-learnt-popup.component';
 
 @Component({
   selector: 'lessons-learnt-list',
@@ -132,9 +133,12 @@ export class LessonsLearntListComponent implements OnInit {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
+      this.openFormPopup()
       this.form.patchValue(record);
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable();
       }
     } else {
       this._setComponentReadiness('READY');
@@ -253,6 +257,27 @@ export class LessonsLearntListComponent implements OnInit {
       });
   }
 
+  _getPopupComponent() {
+    return LessonsLearntPopupComponent;
+  }
+
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form : this.form,
+      readonly : this.readonly,
+      viewOnly : this.viewOnly,
+      lessonsLearntList : this.lessonsLearntList,
+      editItem : this.editItem,
+      model : this.currentRecord,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancelForm();
+      }
+    })
+  }
+
   private loadLessonsLearnt() {
     this.fieldAssessmentService.loadByType(FieldAssessmentTypesEnum.LESSONS_LEARNT)
       .pipe(
@@ -265,8 +290,6 @@ export class LessonsLearntListComponent implements OnInit {
     });
   }
 
-  searchNgSelect(term: string, item: AdminResult): boolean {
-    return item.ngSelectSearch(term);
-  }
+  
 
 }
