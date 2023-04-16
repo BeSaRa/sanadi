@@ -16,7 +16,7 @@ export class BestPracticesPopupComponent {
   form: UntypedFormGroup;
   readonly: boolean;
   viewOnly: boolean;
-  editItem: number;
+  editItem: boolean;
   model: BestPractices;
   bestPracticesList: AdminResult[];
   customValidators = CustomValidators
@@ -25,7 +25,7 @@ export class BestPracticesPopupComponent {
       form: UntypedFormGroup,
       readonly: boolean,
       viewOnly: boolean,
-      editItem: number,
+      editItem: boolean,
       model: BestPractices,
       bestPracticesList: AdminResult[];
     },

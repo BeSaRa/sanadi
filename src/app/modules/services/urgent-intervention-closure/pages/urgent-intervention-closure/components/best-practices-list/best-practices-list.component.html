@@ -2,7 +2,7 @@
   
 
 <ng-container>
-  <div class="row pt-3" *ngIf="!showForm">
+  <div class="row pt-3">
     <div class="col-12">
       <div class="table-responsive">
         <app-table #table sortableTable [paginator]="paginator" [data]="list"
@@ -14,7 +14,7 @@
                 <table-header 
                   tableTitle="best_practices" 
                   [add$]="add$" 
-                  [allowAdd]="!readonly && !showForm"
+                  [allowAdd]="!readonly"
                   [skipClearSort]="true"
                   (textChange)="filterControl.setValue($event)">
                 </table-header>
