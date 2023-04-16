@@ -5,7 +5,6 @@ import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {FactoryService} from '@app/services/factory.service';
 import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
 import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
-import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {AdminResult} from './admin-result';
 import {CaseModel} from './case-model';

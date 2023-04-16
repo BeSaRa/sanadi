@@ -1,7 +1,5 @@
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
 import {AdminResult} from '@app/models/admin-result';
 import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittance';
@@ -26,16 +24,16 @@ export class CustomsExemptionRemittanceInterceptor implements IModelInterceptor<
     model.countryInfo = AdminResult.createInstance(model.countryInfo);
     model.linkedProjectInfo = AdminResult.createInstance(model.linkedProjectInfo);
 
-    if (model.getCaseStatus() === CommonCaseStatus.CANCELLED) {
-      if (!!model.taskDetails?.responses) {
+
     if (model.getCaseStatus() === CommonCaseStatus.CANCELLED) {
       if (!!model.taskDetails?.responses) {
         model.taskDetails.responses = [WFResponseType.CLOSE]
       }
     }
-    return model;
-  }
 
+    return model;
+
+  }
   private static _deleteBeforeSend(model: Partial<CustomsExemptionRemittance>): void {
     delete model.requestTypeInfo;
     delete model.shipmentSourceInfo;
