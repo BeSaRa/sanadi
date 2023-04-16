@@ -24,9 +24,10 @@ export class CustomsExemptionRemittanceInterceptor implements IModelInterceptor<
         model.taskDetails.responses = [WFResponseType.CLOSE]
       }
     }
-    return model;
-  }
 
+    return model;
+
+  }
   private static _deleteBeforeSend(model: Partial<CustomsExemptionRemittance>): void {
     delete model.requestTypeInfo;
     delete model.shipmentSourceInfo;

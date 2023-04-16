@@ -51,7 +51,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
   list: CaseAudit[] = [];
   caseModels: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittance,
-    [CaseTypes.PARTNER_APPROVAL]: PartnerApproval
+    [CaseTypes.PARTNER_APPROVAL]: PartnerApproval,
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: OrganizationsEntitiesSupport,
     [CaseTypes.INQUIRY]: Inquiry,
   };
