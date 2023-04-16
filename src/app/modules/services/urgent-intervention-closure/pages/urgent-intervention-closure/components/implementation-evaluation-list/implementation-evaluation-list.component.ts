@@ -17,6 +17,7 @@ import {LookupService} from '@services/lookup.service';
 import {FieldAssessmentService} from '@services/field-assessment.service';
 import {AdminResult} from '@models/admin-result';
 import {FieldAssessmentTypesEnum} from '@enums/field-assessment-types.enum';
+import { ImplementationEvaluationPopupComponent } from './implementation-evaluation-popup/implementation-evaluation-popup.component';
 
 @Component({
   selector: 'implementation-evaluation-list',
@@ -150,9 +151,12 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
       } else {
         this._setComponentReadiness('NOT_READY');
       }
+      this.openFormPopup()
       this.form.patchValue(record);
       if (this.readonly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable()
       }
     } else {
       this._setComponentReadiness('READY');
@@ -291,5 +295,25 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
       ).subscribe((result) => {
       this.evaluationHubList = result;
     });
+  }
+  _getPopupComponent() {
+    return ImplementationEvaluationPopupComponent;
+  }
+
+  openFormPopup() {
+    this.dialogService.show(this._getPopupComponent(), {
+      form : this.form,
+      readonly : this.readonly,
+      viewOnly : this.viewOnly,
+      editItem : this.editItem,
+      model : this.currentRecord,
+      evaluationHubList : this.evaluationHubList,
+    }).onAfterClose$.subscribe((data) => {
+      if (data) {
+        this.save()
+      } else {
+        this.cancelForm();
+      }
+    })
   }
 }
