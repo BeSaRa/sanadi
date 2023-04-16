@@ -75,7 +75,6 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
   private recordChanged$: Subject<OfficeEvaluation | null> = new Subject<OfficeEvaluation | null>();
   private currentRecord?: OfficeEvaluation;
   private destroy$: Subject<any> = new Subject<any>();
-  showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   form!: UntypedFormGroup;
@@ -139,7 +138,6 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.currentRecord = record || undefined;
-      this.showForm = !!this.currentRecord;
       this.updateForm(this.currentRecord);
     });
   }
@@ -231,7 +229,6 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
 
   cancelForm() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');
@@ -305,7 +302,7 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
       form : this.form,
       readonly : this.readonly,
       viewOnly : this.viewOnly,
-      editItem : this.editItem,
+      editItem : this.editItem? true:false,
       model : this.currentRecord,
       evaluationHubList : this.evaluationHubList,
     }).onAfterClose$.subscribe((data) => {

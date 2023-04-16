@@ -11,7 +11,7 @@
                 <table-header 
                   tableTitle="entities" 
                   [add$]="add$" 
-                  [allowAdd]="!readonly && !showForm" 
+                  [allowAdd]="!readonly" 
                   [skipClearSort]="true" 
                   (textChange)="filterControl.setValue($event)"
                 >
