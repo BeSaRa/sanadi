@@ -23,6 +23,11 @@ import {
 } from '@modules/e-services-main/popups/case-audit-differences-popup/case-audit-differences-popup.component';
 import {AdminResult} from '@models/admin-result';
 import {IValueDifference} from '@contracts/i-value-difference';
+import {PartnerApproval} from '@models/partner-approval';
+import {PartnerApprovalInterceptor} from '@model-interceptors/partner-approval-interceptor';
+import {
+  AuditPartnerApprovalComponent
+} from '@modules/services/partner-approval/audit/audit-partner-approval/audit-partner-approval.component';
 
 @CastResponseContainer({
   $default: {
@@ -40,12 +45,15 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
   list: CaseAudit[] = [];
   caseModels: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittance,
+    [CaseTypes.PARTNER_APPROVAL]: PartnerApproval
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
+    [CaseTypes.PARTNER_APPROVAL]: PartnerApprovalInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
+    [CaseTypes.PARTNER_APPROVAL]: AuditPartnerApprovalComponent,
   };
 
   constructor(public http: HttpClient,

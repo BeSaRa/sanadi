@@ -24,6 +24,14 @@ import {
 } from '@modules/services/partner-approval/shared/commercial-activity/commercial-activity.component';
 import {GoalsListComponent} from '@modules/services/partner-approval/shared/goals-list/goals-list.component';
 import {MapsModule} from '@modules/maps/maps.module';
+import {AuditPartnerApprovalComponent} from './audit/audit-partner-approval/audit-partner-approval.component';
+import {AuditGoalsComponent} from './audit/audit-goals/audit-goals.component';
+import {AuditGoalsListComponent} from './audit/audit-goals-list/audit-goals-list.component';
+import {AuditTargetGroupComponent} from './audit/audit-target-group/audit-target-group.component';
+import { AuditManagementCouncilComponent } from './audit/audit-management-council/audit-management-council.component';
+import { AuditContactOfficersComponent } from './audit/audit-contact-officers/audit-contact-officers.component';
+import { AuditApprovalReasonsComponent } from './audit/audit-approval-reasons/audit-approval-reasons.component';
+import { AuditCommercialActivityComponent } from './audit/audit-commercial-activity/audit-commercial-activity.component';
 
 
 @NgModule({
@@ -36,7 +44,15 @@ import {MapsModule} from '@modules/maps/maps.module';
     ManagementCouncilComponent,
     TargetGroupComponent,
     CommercialActivityComponent,
-    GoalsListComponent
+    GoalsListComponent,
+    AuditPartnerApprovalComponent,
+    AuditGoalsComponent,
+    AuditGoalsListComponent,
+    AuditTargetGroupComponent,
+    AuditManagementCouncilComponent,
+    AuditContactOfficersComponent,
+    AuditApprovalReasonsComponent,
+    AuditCommercialActivityComponent
   ],
   imports: [
     CommonModule,
@@ -46,4 +62,5 @@ import {MapsModule} from '@modules/maps/maps.module';
     PartnerApprovalRoutingModule
   ]
 })
-export class PartnerApprovalModule { }
+export class PartnerApprovalModule {
+}

@@ -1,15 +1,15 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { LangService } from "@services/lang.service";
-import { ToastService } from "@services/toast.service";
-import { DialogService } from "@services/dialog.service";
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
-import { ReadinessStatus } from "@app/types/types";
-import { BehaviorSubject, Subject } from "rxjs";
-import { filter, map, take, takeUntil, tap } from "rxjs/operators";
-import { UserClickOn } from "@enums/user-click-on.enum";
-import { TargetGroup } from "@models/target-group";
-import { ActionIconsEnum } from '@enums/action-icons-enum';
-import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {LangService} from "@services/lang.service";
+import {ToastService} from "@services/toast.service";
+import {DialogService} from "@services/dialog.service";
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
+import {ReadinessStatus} from "@app/types/types";
+import {BehaviorSubject, Subject} from "rxjs";
+import {filter, map, take, takeUntil, tap} from "rxjs/operators";
+import {UserClickOn} from "@enums/user-click-on.enum";
+import {TargetGroup} from "@models/target-group";
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
 
 @Component({
   selector: 'target-group',
@@ -33,7 +33,8 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
   get list(): TargetGroup[] {
     return this._list;
   }
-  @Input() readonly : boolean = false;
+
+  @Input() readonly: boolean = false;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 
@@ -101,7 +102,6 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
   }
 
 
-
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
@@ -151,6 +151,7 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
         this.form.markAllAsTouched();
       });
   }
+
   private listenToSave() {
     this.save$.pipe(
       takeUntil(this.destroy$),
@@ -159,7 +160,7 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
       filter(() => {
         const formValue = this.form.getRawValue();
         const isDuplicate = this.list.some(x => x.services === formValue.services &&
-           x.targetedGroup === formValue.targetedGroup);
+          x.targetedGroup === formValue.targetedGroup);
         if (isDuplicate) {
           this.toastService.alert(this.lang.map.msg_duplicated_item);
         }
