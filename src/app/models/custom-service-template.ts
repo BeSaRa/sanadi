@@ -11,7 +11,7 @@ const interceptor = new CustomServiceTemplateInterceptor()
   receive: interceptor.receive
 })
 export class CustomServiceTemplate extends SearchableCloneable<CustomServiceTemplate>{
-  id!: number;
+  id!: string;
   approvalTemplateType!: number;
   arabicName!: string;
   englishName!: string;

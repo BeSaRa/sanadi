@@ -24,7 +24,6 @@ export class CustomServiceTemplatePopupComponent implements OnInit {
   caseType: number;
   model: CustomServiceTemplate;
   approvalTemplateTypes: Lookup[] = this.lookupService.listByCategory.ApprovalTemplateType;
-  loadedTemplate?: BlobModel;
   TemplateFile?: File;
   fileExtensionsEnum = FileExtensionsEnum;
 
@@ -58,19 +57,6 @@ export class CustomServiceTemplatePopupComponent implements OnInit {
         this.form.disable();
       }
     }
-    if (this.editIndex != -1) {
-      this.loadTemplate();
-    }
-  }
-  private loadTemplate() {
-    // this.serviceData.loadTemplateDocId(this.caseType, this.model.)
-    //   .subscribe((result) => {
-    //     if (result.blob.size === 0) {
-    //       this.loadedTemplate = undefined;
-    //       return;
-    //     }
-    //     this.loadedTemplate = result;
-    //   });
   }
 
   setTemplateile(file: File | File[] | undefined): void {
@@ -93,14 +79,12 @@ export class CustomServiceTemplatePopupComponent implements OnInit {
 
   mapForm(form: CustomServiceTemplate): CustomServiceTemplate {
     const entity: CustomServiceTemplate = new CustomServiceTemplate().clone(form);
-    entity.approvalTemplateTypeInfo =
-      this.approvalTemplateTypes.find((x) => x.lookupKey === form.approvalTemplateType)?.createAdminResult() ?? new AdminResult();
     return entity;
   }
   cancel() {
     this.dialogRef.close(null)
   }
   save() {
-    this.dialogRef.close(this.mapForm(this.form.getRawValue()))
+    this.dialogRef.close({model: this.mapForm(this.form.getRawValue()), file: this.TemplateFile})
   }
 }

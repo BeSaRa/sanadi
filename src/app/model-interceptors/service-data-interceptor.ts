@@ -60,6 +60,7 @@ export class ServiceDataInterceptor implements IModelInterceptor<ServiceData> {
   }
 
   private static _setCustomSettingsForSend(model: Partial<ServiceData>): void {
+    console.log(model)
     // stringify custom settings object
     let record = (model as ServiceData);
     if (!(model as ServiceData).hasCustomSettings()) {
@@ -86,6 +87,7 @@ export class ServiceDataInterceptor implements IModelInterceptor<ServiceData> {
         delete customSettings.maxTargetAmount;
         delete customSettings.maxElementsCount;
         delete customSettings.activateDevelopmentField;
+      } else if (record.isAwarenessActivitySuggesion() || record.isOrgEntitySupport()) {
       }
 
       model.customSettings = JSON.stringify(customSettings);

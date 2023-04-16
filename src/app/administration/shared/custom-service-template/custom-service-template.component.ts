@@ -8,10 +8,11 @@ import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
 import { ServiceDataService } from '@app/services/service-data.service';
+import { SharedService } from '@app/services/shared.service';
 import { ToastService } from '@app/services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { CustomServiceTemplatePopupComponent } from './custom-service-template-popup/custom-service-template-popup.component';
 
 @Component({
@@ -25,6 +26,7 @@ export class CustomServiceTemplateComponent implements OnInit {
     private toastService: ToastService,
     private serviceData: ServiceDataService,
     private dialogService: DialogService,
+    private sharedService: SharedService,
     private fb: UntypedFormBuilder) {
   }
 
@@ -46,7 +48,7 @@ export class CustomServiceTemplateComponent implements OnInit {
   caseTypes = CaseTypes;
 
   dataSource: BehaviorSubject<CustomServiceTemplate[]> = new BehaviorSubject<CustomServiceTemplate[]>([]);
-  columns = ['arabicName', 'englishName', 'approvalTemplateType', 'actions'];
+  columns = ['arabicName', 'englishName', 'actions'];
 
   editItem?: CustomServiceTemplate;
   viewOnly: boolean = false;
@@ -61,6 +63,7 @@ export class CustomServiceTemplateComponent implements OnInit {
   private destroy$: Subject<any> = new Subject<any>();
 
   form!: UntypedFormGroup;
+
   actions: IMenuItem<CustomServiceTemplate>[] = [
     // edit
     {
@@ -84,6 +87,13 @@ export class CustomServiceTemplateComponent implements OnInit {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: CustomServiceTemplate) => this.view(item),
+    },
+    // download documint
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DOWNLOAD,
+      label: 'btn_download',
+      onClick: (item: CustomServiceTemplate) => this.loadTemplate(item),
     }
   ];
   ngOnInit(): void {
@@ -95,6 +105,14 @@ export class CustomServiceTemplateComponent implements OnInit {
     this._setComponentReadiness('READY');
   }
 
+  private loadTemplate(row: CustomServiceTemplate) {
+    this.serviceData.loadTemplateDocId(this.caseType, row.id).subscribe((result) => {
+      if (result.blob.size === 0) {
+        return;
+      }
+      this.sharedService.downloadFileToSystem(result.blob)
+    });
+  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -143,13 +161,19 @@ export class CustomServiceTemplateComponent implements OnInit {
       form: this.form,
       model: this.current,
       caseType: this.caseType
+    }).onAfterClose$.subscribe((data) => {
+      if(data) {
+        this.save(data);
+      } else {
+        this.cancel();
+      }
     })
   }
-  save() {
+  save(data: {model: CustomServiceTemplate, file: File}) {
     if (this.readOnly || this.viewOnly) {
       return;
     }
-    this.save$.next();
+    this.save$.next(data);
   }
   private displayRequiredFieldsMessage(): void {
     this.dialogService
@@ -174,22 +198,21 @@ export class CustomServiceTemplateComponent implements OnInit {
             this.toastService.alert(this.lang.map.msg_duplicated_item);
           }
           return !isDuplicate;
-        }),
-        map(() => {
-          let formValue = this.form.getRawValue();
-
-          return new CustomServiceTemplate().clone({
-            ...this.current,
-            ...formValue
-          });
         })
       )
-      .pipe(switchMap((model) => {
-        console.log(model);
-        return this.serviceData.addTemplate(this.caseType, model)
+      .pipe(switchMap((data) => {
+        console.log(data, this.current)
+        if(this.current) {
+          if(data.file) {
+            return this.serviceData.updateContent(this.caseType, data.model, data.file)
+          } else {
+            return this.serviceData.updateProp(this.caseType, data.model)
+          }
+        } else {
+          return this.serviceData.addTemplate(this.caseType, data.model, data.file)
+        }
       }))
       .subscribe((record: CustomServiceTemplate) => {
-        console.log(record);
         if (!record) {
           return;
         }

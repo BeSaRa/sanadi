@@ -16,10 +16,6 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
       </ng-container>
-      <ng-container cdkColumnDef="approvalTemplateType">
-        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.approvalTemplateTypeInfo.getName()}} </td>
-      </ng-container>
 
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>

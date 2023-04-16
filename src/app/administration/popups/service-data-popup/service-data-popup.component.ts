@@ -203,7 +203,6 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
   }
   loadTemplates(caseType: number) {
     this.serviceData.loadTemplatesbyCaseType(caseType).subscribe((data: CustomServiceTemplate[]) => {
-      console.log(data)
       this.templatesList = data;
     })
   }
