@@ -65,7 +65,6 @@ export class StageListComponent implements OnInit, OnDestroy {
   private recordChanged$: Subject<Stage | null> = new Subject<Stage | null>();
   private currentRecord?: Stage;
   private destroy$: Subject<any> = new Subject<any>();
-  showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   form!: UntypedFormGroup;
@@ -116,7 +115,6 @@ export class StageListComponent implements OnInit, OnDestroy {
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.currentRecord = record || undefined;
-      this.showForm = !!this.currentRecord;
       this.updateForm(this.currentRecord);
     });
   }
@@ -196,7 +194,6 @@ export class StageListComponent implements OnInit, OnDestroy {
 
   cancelForm() {
     this.resetForm();
-    this.showForm = false;
     this.editItem = undefined;
     this.viewOnly = false;
     this._setComponentReadiness('READY');

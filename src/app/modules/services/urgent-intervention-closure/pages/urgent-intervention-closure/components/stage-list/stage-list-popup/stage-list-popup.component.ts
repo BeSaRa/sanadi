@@ -15,7 +15,7 @@ export class StageListPopupComponent {
   form: UntypedFormGroup;
   readonly: boolean;
   viewOnly: boolean;
-  editItem: number;
+  editItem: boolean;
   
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   customValidators = CustomValidators
@@ -24,7 +24,7 @@ export class StageListPopupComponent {
       form: UntypedFormGroup,
       readonly: boolean,
       viewOnly: boolean,
-      editItem: number,
+      editItem: boolean,
 
     },
     public lang: LangService,
