@@ -24,13 +24,13 @@ import {
 } from '@modules/services/partner-approval/shared/commercial-activity/commercial-activity.component';
 import {GoalsListComponent} from '@modules/services/partner-approval/shared/goals-list/goals-list.component';
 import {MapsModule} from '@modules/maps/maps.module';
-import { CommercialActivityPopupComponent } from './shared/commercial-activity/commercial-activity-popup/commercial-activity-popup.component';
-import { GoalsListPopupComponent } from './shared/goals-list/goals-list-popup/goals-list-popup.component';
-import { GoalPopupComponent } from './shared/goal/goal-popup/goal-popup.component';
-import { TargetGroupPopupComponent } from './shared/target-group/target-group-popup/target-group-popup.component';
-import { ManagementCouncilPopupComponent } from './shared/management-council/management-council-popup/management-council-popup.component';
-import { ApprovalReasonPopupComponent } from './shared/approval-reason/approval-reason-popup/approval-reason-popup.component';
-import { ContactOfficerPopupComponent } from './shared/contact-officer/contact-officer-popup/contact-officer-popup.component';
+import { CommercialActivityPopupComponent } from './popups/commercial-activity-popup/commercial-activity-popup.component';
+import { GoalsListPopupComponent } from './popups/goals-list-popup/goals-list-popup.component';
+import { GoalPopupComponent } from './popups/goal-popup/goal-popup.component';
+import { TargetGroupPopupComponent } from './popups/target-group-popup/target-group-popup.component';
+import { ManagementCouncilPopupComponent } from './popups/management-council-popup/management-council-popup.component';
+import { ApprovalReasonPopupComponent } from './popups/approval-reason-popup/approval-reason-popup.component';
+import { ContactOfficerPopupComponent } from './popups/contact-officer-popup/contact-officer-popup.component';
 
 
 @NgModule({

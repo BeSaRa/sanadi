@@ -10,7 +10,7 @@ import { LangService } from "@services/lang.service";
 import { ToastService } from "@services/toast.service";
 import { BehaviorSubject, Subject } from "rxjs";
 import { filter, map, take, takeUntil, tap } from "rxjs/operators";
-import { ApprovalReasonPopupComponent } from './approval-reason-popup/approval-reason-popup.component';
+import { ApprovalReasonPopupComponent } from '../../popups/approval-reason-popup/approval-reason-popup.component';
 
 @Component({
   selector: 'approval-reason',

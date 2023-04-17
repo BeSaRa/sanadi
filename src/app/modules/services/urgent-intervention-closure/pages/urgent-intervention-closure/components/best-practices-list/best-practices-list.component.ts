@@ -14,7 +14,7 @@ import { BestPractices } from '@models/best-practices';
 import { AdminResult } from '@models/admin-result';
 import { FieldAssessmentService } from '@services/field-assessment.service';
 import { FieldAssessmentTypesEnum } from '@enums/field-assessment-types.enum';
-import { BestPracticesPopupComponent } from './best-practices-popup/best-practices-popup.component';
+import { BestPracticesPopupComponent } from '../../../../popups/best-practices-popup/best-practices-popup.component';
 
 @Component({
   selector: 'best-practices-list',

@@ -24,7 +24,7 @@ import { LookupService } from '@services/lookup.service';
 import { ToastService } from '@services/toast.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
-import { GoalPopupComponent } from './goal-popup/goal-popup.component';
+import { GoalPopupComponent } from '../../popups/goal-popup/goal-popup.component';
 
 @Component({
   selector: 'goal',

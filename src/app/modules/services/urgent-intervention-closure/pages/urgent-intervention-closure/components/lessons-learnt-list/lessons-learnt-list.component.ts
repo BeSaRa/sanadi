@@ -14,7 +14,7 @@ import {UserClickOn} from '@enums/user-click-on.enum';
 import {LessonsLearned} from '@models/lessons-learned';
 import {FieldAssessmentTypesEnum} from '@enums/field-assessment-types.enum';
 import {FieldAssessmentService} from '@services/field-assessment.service';
-import { LessonsLearntPopupComponent } from './lessons-learnt-popup/lessons-learnt-popup.component';
+import { LessonsLearntPopupComponent } from '../../../../popups/lessons-learnt-popup/lessons-learnt-popup.component';
 
 @Component({
   selector: 'lessons-learnt-list',

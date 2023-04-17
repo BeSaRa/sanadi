@@ -7,7 +7,7 @@ import { Country } from '@models/country';
 import { WorkArea } from '@models/work-area';
 import { LangService } from '@services/lang.service';
 import { ComponentType } from '@angular/cdk/portal';
-import { WorkAreasPopupComponent } from './work-areas-popup/work-areas-popup.component';
+import { WorkAreasPopupComponent } from '../../popups/work-areas-popup/work-areas-popup.component';
 
 @Component({
   selector: 'work-areas',

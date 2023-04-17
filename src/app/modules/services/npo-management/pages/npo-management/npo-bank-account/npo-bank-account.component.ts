@@ -14,7 +14,7 @@ import {ToastService} from '@app/services/toast.service';
 import {ReadinessStatus} from '@app/types/types';
 import {LookupService} from '@app/services/lookup.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
-import { NpoBankAccountPopupComponent } from './npo-bank-account-popup/npo-bank-account-popup.component';
+import { NpoBankAccountPopupComponent } from '../../../popups/npo-bank-account-popup/npo-bank-account-popup.component';
 
 @Component({
   selector: 'npo-bank-account',

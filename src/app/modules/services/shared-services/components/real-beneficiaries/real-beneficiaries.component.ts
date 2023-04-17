@@ -6,7 +6,7 @@ import {LangService} from '@services/lang.service';
 import {LookupService} from '@services/lookup.service';
 import {ToastService} from '@services/toast.service';
 import { ComponentType } from '@angular/cdk/portal';
-import { ReadBenefucuariesPopupComponent } from './read-benefucuaries-popup/read-benefucuaries-popup.component';
+import { ReadBenefucuariesPopupComponent } from '../../popups/read-benefucuaries-popup/read-benefucuaries-popup.component';
 import { Nationalities } from '@app/enums/nationalities.enum';
 
 @Component({

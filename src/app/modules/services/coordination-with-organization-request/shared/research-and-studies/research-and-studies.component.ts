@@ -19,7 +19,7 @@ import { DatepickerOptionsMap } from '@app/types/types';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
-import { ResearchAndStudiesPopupComponent } from './research-and-studies-popup/research-and-studies-popup.component';
+import { ResearchAndStudiesPopupComponent } from '../../popups/research-and-studies-popup/research-and-studies-popup.component';
 
 @Component({
   selector: 'app-research-and-studies',

@@ -13,7 +13,7 @@ import { ReadinessStatus } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
-import { UrgentJoinOrganizationOfficerPopupComponent } from './urgent-join-organization-officer-popup/urgent-join-organization-officer-popup.component';
+import { UrgentJoinOrganizationOfficerPopupComponent } from '../../popups/urgent-join-organization-officer-popup/urgent-join-organization-officer-popup.component';
 
 @Component({
   selector: 'urgent-join-organization-officer',

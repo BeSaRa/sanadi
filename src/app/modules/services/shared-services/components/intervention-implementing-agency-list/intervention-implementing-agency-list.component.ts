@@ -12,7 +12,7 @@ import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
 import { ActionIconsEnum } from '@enums/action-icons-enum';
 import { SortEvent } from '@contracts/sort-event';
 import { CommonUtils } from '@helpers/common-utils';
-import { InterventionImplementingAgencyListPopupComponent } from './intervention-implementing-agency-list-popup/intervention-implementing-agency-list-popup.component';
+import { InterventionImplementingAgencyListPopupComponent } from '../../popups/intervention-implementing-agency-list-popup/intervention-implementing-agency-list-popup.component';
 
 @Component({
   selector: 'intervention-implementing-agency-list',

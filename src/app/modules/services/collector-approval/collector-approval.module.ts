@@ -16,7 +16,7 @@ import {
 import {
   CollectorApprovalOutputsComponent
 } from '@modules/services/collector-approval/pages/collector-approval-outputs/collector-approval-outputs.component';
-import { CollectorApprovalPopupComponent } from './shared/collector-item/collector-approval-popup/collector-approval-popup.component';
+import { CollectorApprovalPopupComponent } from './popups/collector-approval-popup/collector-approval-popup.component';
 
 
 @NgModule({
