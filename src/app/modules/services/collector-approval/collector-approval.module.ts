@@ -16,6 +16,8 @@ import {
 import {
   CollectorApprovalOutputsComponent
 } from '@modules/services/collector-approval/pages/collector-approval-outputs/collector-approval-outputs.component';
+import { AuditCollectorApprovalComponent } from './audit/audit-collector-approval/audit-collector-approval.component';
+import { AuditCollectorItemComponent } from './audit/audit-collector-item/audit-collector-item.component';
 
 
 @NgModule({
@@ -23,7 +25,9 @@ import {
     CollectorApprovalComponent,
     CollectorApprovalOutputsComponent,
     CollectorItemComponent,
-    CollectorApprovalApproveTaskPopupComponent
+    CollectorApprovalApproveTaskPopupComponent,
+    AuditCollectorApprovalComponent,
+    AuditCollectorItemComponent
   ],
   imports: [
     CommonModule,

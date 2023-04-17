@@ -40,6 +40,9 @@ import { AuditAwarenessActivitySuggestionComponent } from '@app/modules/services
 import { CollectionApproval } from '@app/models/collection-approval';
 import { CollectionApprovalInterceptor } from '@app/model-interceptors/collection-approval-interceptor';
 import { AuditCollectionServicesApprovalComponent } from '@app/modules/services/collection-approval/audit/audit-collection-services-approval/audit-collection-services-approval.component';
+import { CollectorApproval } from '@app/models/collector-approval';
+import { CollectorApprovalInterceptor } from '@app/model-interceptors/collector-approval-interceptor';
+import { AuditCollectorApprovalComponent } from '@app/modules/services/collector-approval/audit/audit-collector-approval/audit-collector-approval.component';
 
 @CastResponseContainer({
   $default: {
@@ -62,6 +65,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.INQUIRY]: Inquiry,
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AwarenessActivitySuggestion,
     [CaseTypes.COLLECTION_APPROVAL]: CollectionApproval,
+    [CaseTypes.COLLECTOR_LICENSING]: CollectorApproval,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -70,6 +74,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.INQUIRY]: InquiryInterceptor,
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AwarenessActivitySuggestionInterceptor,
     [CaseTypes.COLLECTION_APPROVAL]: CollectionApprovalInterceptor,
+    [CaseTypes.COLLECTOR_LICENSING]: CollectorApprovalInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -78,6 +83,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.INQUIRY]: AuditInquiryAndComplaintComponent,
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AuditAwarenessActivitySuggestionComponent,
     [CaseTypes.COLLECTION_APPROVAL]: AuditCollectionServicesApprovalComponent,
+    [CaseTypes.COLLECTOR_LICENSING]: AuditCollectorApprovalComponent,
   };
 
   constructor(public http: HttpClient,
