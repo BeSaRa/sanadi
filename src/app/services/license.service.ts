@@ -420,6 +420,15 @@ export class LicenseService {
     return this._loadUrgentInterventionAnnouncementByLicenseId(licenseId);
   }
 
+  @CastResponse(() => UrgentInterventionAnnouncement)
+  private _loadUrgentInterventionAnnouncementByLicenseVsId(licenseVsId: string): Observable<UrgentInterventionAnnouncement> {
+    return this.http.get<UrgentInterventionAnnouncement>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) + '/document/latest/' + licenseVsId + '/details');
+  }
+
+  loadUrgentInterventionAnnouncementByLicenseVsId(licenseVsId: string): Observable<UrgentInterventionAnnouncement> {
+    return this._loadUrgentInterventionAnnouncementByLicenseVsId(licenseVsId);
+  }
+
   loadUrgentInterventionInterventionLicense() {
     return this.http.get<any>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) + '/intervention-license')
   }
