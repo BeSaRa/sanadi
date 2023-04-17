@@ -12,6 +12,7 @@ import {
   AwarenessActivitySuggestionApprovalPopupComponent
 } from '@modules/services/awareness-activity-suggestion/popups/awareness-activity-suggestion-approval-popup/awareness-activity-suggestion-approval-popup.component';
 import {EServicesMainModule} from '@modules/e-services-main/e-services-main.module';
+import { AuditAwarenessActivitySuggestionComponent } from './audit/audit-awareness-activity-suggestion/audit-awareness-activity-suggestion.component';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import {EServicesMainModule} from '@modules/e-services-main/e-services-main.modu
     AwarenessActivitySuggestionComponent,
     AwarenessActivitySuggestionOutputsComponent,
     AwarenessActivitySuggestionApprovalPopupComponent,
+    AuditAwarenessActivitySuggestionComponent
   ],
   imports: [
     CommonModule,
