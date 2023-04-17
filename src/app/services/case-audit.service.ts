@@ -34,6 +34,9 @@ import { OrganizationsEntitiesSupportInterceptor } from '@app/model-interceptors
 import { Inquiry } from '@app/models/inquiry';
 import { InquiryInterceptor } from '@app/model-interceptors/inquiry-interceptor';
 import { AuditInquiryAndComplaintComponent } from '@app/modules/services/inquiries-and-complaints/audit/audit-inquiry-and-complaint/audit-inquiry-and-complaint.component';
+import { AwarenessActivitySuggestion } from '@app/models/awareness-activity-suggestion';
+import { AwarenessActivitySuggestionInterceptor } from '@app/model-interceptors/awareness-activity-suggestion';
+import { AuditAwarenessActivitySuggestionComponent } from '@app/modules/services/awareness-activity-suggestion/audit/audit-awareness-activity-suggestion/audit-awareness-activity-suggestion.component';
 
 @CastResponseContainer({
   $default: {
@@ -54,18 +57,21 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.PARTNER_APPROVAL]: PartnerApproval,
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: OrganizationsEntitiesSupport,
     [CaseTypes.INQUIRY]: Inquiry,
+    [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AwarenessActivitySuggestion,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
     [CaseTypes.PARTNER_APPROVAL]: PartnerApprovalInterceptor,
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: OrganizationsEntitiesSupportInterceptor,
     [CaseTypes.INQUIRY]: InquiryInterceptor,
+    [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AwarenessActivitySuggestionInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
     [CaseTypes.PARTNER_APPROVAL]: AuditPartnerApprovalComponent,
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: AuditOrganizationsEntitiesSupportComponent,
     [CaseTypes.INQUIRY]: AuditInquiryAndComplaintComponent,
+    [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AuditAwarenessActivitySuggestionComponent,
   };
 
   constructor(public http: HttpClient,

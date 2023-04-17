@@ -1,0 +1,14 @@
+<tabs-list>
+  <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
+  <tab *ngIf="isNonProfitProfile()" name="dataOfApplicant" [template]="dataOfApplicantTemplate" [title]="lang.map.lbl_data_of_applicant"></tab>
+  <tab name="contactOfficer" [template]="contactOfficerTemplate" [title]="lang.map.contact_officer"></tab>
+  </tabs-list>
+<ng-template #basicInfoTemplate>
+  <value-differences-list [differenceList]="formDifferences"></value-differences-list>
+</ng-template>
+<ng-template #dataOfApplicantTemplate>
+  <value-differences-list [differenceList]="dataOfApplicant"></value-differences-list>
+</ng-template>
+<ng-template #contactOfficerTemplate>
+  <value-differences-list [differenceList]="contactOfficer"></value-differences-list>
+</ng-template>
