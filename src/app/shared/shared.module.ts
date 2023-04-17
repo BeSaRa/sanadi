@@ -117,7 +117,7 @@ import {
 import {ExternalOfficeListComponent} from '@app/shared/components/external-office-list/external-office-list.component';
 import {
   ExternalOfficesPopupComponent
-} from '@app/shared/components/external-offices-popup/external-offices-popup.component';
+} from '@app/shared/popups/external-offices-popup/external-offices-popup.component';
 import {ExecutiveManagementComponent} from '@app/shared/components/executive-management/executive-management.component';
 import {BankBranchComponent} from '@app/shared/components/bank-branch/bank-branch.component';
 import {ProfileCodeExistsDirective} from '@app/validators/profile-code-exists.directive';
@@ -138,8 +138,8 @@ import {HeaderSearchFieldComponent} from './components/header-search-field/heade
 import {
   UserPreferencesPopupComponent
 } from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
-import { ExecutiveManagementPopupComponent } from './components/executive-management/executive-management-popup/executive-management-popup.component';
-import { BankBranchPopupComponent } from './components/bank-branch/bank-branch-popup/bank-branch-popup.component';
+import { ExecutiveManagementPopupComponent } from './popups/executive-management-popup/executive-management-popup.component';
+import { BankBranchPopupComponent } from './popups/bank-branch-popup/bank-branch-popup.component';
 import { CountryPopupComponent } from '@app/shared/popups/country-popup/country-popup.component';
 import {
   EServiceWrapperButtonsComponent

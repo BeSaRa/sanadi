@@ -8,7 +8,7 @@ import {BlobModel} from '@app/models/blob-model';
 import {CharityOrganizationUpdate} from '@app/models/charity-organization-update';
 import {CharityOrganizationUpdateSearchCriteria} from '@app/models/charity-organization-update-search-criteria';
 import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
-import {ExternalOfficesPopupComponent} from '@app/shared/components/external-offices-popup/external-offices-popup.component';
+import {ExternalOfficesPopupComponent} from '@app/shared/popups/external-offices-popup/external-offices-popup.component';
 import {of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {DialogService} from './dialog.service';
