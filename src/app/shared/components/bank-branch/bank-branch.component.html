@@ -32,19 +32,7 @@
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-          <div class="d-flex flex-row">
-            <button (click)="deleteBranch($event, row, i)" class="icon-btn text-primary" *ngIf="!readonly"
-              tooltip="{{lang.map.btn_delete}}">
-              <i class="mdi mdi-close-box"></i>
-            </button>
-            <button (click)="editBranch($event, row, i)" class="icon-btn text-primary" *ngIf="!readonly"
-              tooltip="{{lang.map.btn_edit}}">
-              <i class="mdi mdi-pen"></i>
-            </button>
-            <button (click)="view($event, row, i)" class="icon-btn text-primary" tooltip="{{lang.map.view}}">
-              <i class="mdi mdi-eye"></i>
-            </button>
-          </div>
+          <grid-actions [record]="row" [actions]="actions" [itemIndex]="i" [rebindTrigger]="readonly"></grid-actions>
         </td>
       </ng-container>
       <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>

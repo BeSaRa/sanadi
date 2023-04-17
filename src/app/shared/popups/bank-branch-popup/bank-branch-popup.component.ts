@@ -14,7 +14,7 @@ import { DatepickerOptionsMap } from '@app/types/types';
 export class BankBranchPopupComponent {
   form: UntypedFormGroup;
   readonly: boolean;
-  editIndex: number;
+  editItem?: BankBranch;
   model: BankBranch;
   branchesFormArray:UntypedFormArray;
   viewOnly:boolean;
@@ -23,7 +23,7 @@ export class BankBranchPopupComponent {
   public data: {
     form: UntypedFormGroup,
     readonly: boolean,
-    editIndex: number,
+    editItem: BankBranch,
     model: BankBranch,
     branchesFormArray: UntypedFormArray,
     viewOnly: boolean,
@@ -34,7 +34,7 @@ export class BankBranchPopupComponent {
     private dialogRef: DialogRef) {
     this.form = data.form;
     this.readonly = data.readonly;
-    this.editIndex = data.editIndex;
+    this.editItem = data.editItem;
     this.model = data.model;
     this.branchesFormArray = data.branchesFormArray;
     this.viewOnly = data.viewOnly;
