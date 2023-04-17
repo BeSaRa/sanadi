@@ -49,6 +49,6 @@
 </div>
 <div class="dialog-actions">
   <button (click)="save()" [disabled]="form.invalid" *ngIf="!readOnly && !viewOnly"
-    class="btn btn-primary m-2">{{!!editIndex ? lang.map.btn_save : lang.map.btn_add}}</button>
+    class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
   <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
 </div>

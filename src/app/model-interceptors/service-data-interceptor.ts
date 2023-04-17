@@ -19,6 +19,7 @@ export class ServiceDataInterceptor implements IModelInterceptor<ServiceData> {
   }
 
   send(model: Partial<ServiceData>): Partial<ServiceData> {
+    console.log(model)
     model.caseType = Number(model.caseType);
     ServiceDataInterceptor._stringifyConcernedDepartmentIds(model);
 
@@ -60,7 +61,6 @@ export class ServiceDataInterceptor implements IModelInterceptor<ServiceData> {
   }
 
   private static _setCustomSettingsForSend(model: Partial<ServiceData>): void {
-    console.log(model)
     // stringify custom settings object
     let record = (model as ServiceData);
     if (!(model as ServiceData).hasCustomSettings()) {

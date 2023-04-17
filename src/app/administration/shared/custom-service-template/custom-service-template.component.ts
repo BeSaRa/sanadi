@@ -13,7 +13,7 @@ import { ToastService } from '@app/services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { CustomServiceTemplatePopupComponent } from './custom-service-template-popup/custom-service-template-popup.component';
+import { CustomServiceTemplatePopupComponent } from '../../popups/custom-service-template-popup/custom-service-template-popup.component';
 
 @Component({
   selector: 'custom-service-template',
@@ -160,7 +160,8 @@ export class CustomServiceTemplateComponent implements OnInit {
       viewOnly: this.viewOnly,
       form: this.form,
       model: this.current,
-      caseType: this.caseType
+      caseType: this.caseType,
+      editItem: this.editItem,
     }).onAfterClose$.subscribe((data) => {
       if(data) {
         this.save(data);
@@ -201,8 +202,7 @@ export class CustomServiceTemplateComponent implements OnInit {
         })
       )
       .pipe(switchMap((data) => {
-        console.log(data, this.current)
-        if(this.current) {
+        if(this.current?.id) {
           if(data.file) {
             return this.serviceData.updateContent(this.caseType, data.model, data.file)
           } else {

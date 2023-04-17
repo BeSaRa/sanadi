@@ -20,7 +20,7 @@ export class CustomServiceTemplatePopupComponent implements OnInit {
   form: UntypedFormGroup;
   readOnly: boolean;
   viewOnly: boolean;
-  editIndex: number;
+  editItem: number;
   caseType: number;
   model: CustomServiceTemplate;
   approvalTemplateTypes: Lookup[] = this.lookupService.listByCategory.ApprovalTemplateType;
@@ -29,13 +29,12 @@ export class CustomServiceTemplatePopupComponent implements OnInit {
 
   constructor(
     public lang: LangService,
-    private serviceData: ServiceDataService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
       form: UntypedFormGroup;
       readOnly: boolean;
       viewOnly: boolean;
-      editIndex: number;
+      editItem: number;
       model: CustomServiceTemplate;
       caseType: number;
     },
@@ -45,7 +44,7 @@ export class CustomServiceTemplatePopupComponent implements OnInit {
     this.form = data.form;
     this.readOnly = data.readOnly;
     this.viewOnly = data.viewOnly;
-    this.editIndex = data.editIndex;
+    this.editItem = data.editItem;
     this.model = data.model;
     this.caseType = data.caseType;
   }
@@ -55,6 +54,8 @@ export class CustomServiceTemplatePopupComponent implements OnInit {
       this.form.patchValue(this.model);
       if (this.readOnly || this.viewOnly) {
         this.form.disable();
+      } else {
+        this.form.enable();
       }
     }
   }
@@ -67,9 +68,9 @@ export class CustomServiceTemplatePopupComponent implements OnInit {
     }
   }
   get popupTitle(): string {
-    if (this.editIndex == -1) {
+    if (this.editItem == -1) {
       return this.lang.map.add_template;
-    } else if (this.editIndex && !this.viewOnly) {
+    } else if (this.editItem && !this.viewOnly) {
       return this.lang.map.btn_update + this.lang.map.lbl_template;
     } else if (this.viewOnly) {
       return this.lang.map.view;
@@ -78,7 +79,9 @@ export class CustomServiceTemplatePopupComponent implements OnInit {
   }
 
   mapForm(form: CustomServiceTemplate): CustomServiceTemplate {
-    const entity: CustomServiceTemplate = new CustomServiceTemplate().clone(form);
+    const entity: CustomServiceTemplate = new CustomServiceTemplate().clone({...form});
+    entity.id = this.model.id
+
     return entity;
   }
   cancel() {
