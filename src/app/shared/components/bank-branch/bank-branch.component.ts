@@ -6,10 +6,10 @@ import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormContro
 import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {BankBranch} from '@app/models/bank-branch';
-import {filter, map, take, takeUntil} from 'rxjs/operators';
+import { map, take, takeUntil } from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DateUtils} from '@helpers/date-utils';
-import { BankBranchPopupComponent } from './bank-branch-popup/bank-branch-popup.component';
+import { BankBranchPopupComponent } from '../../popups/bank-branch-popup/bank-branch-popup.component';
 
 @Component({
   selector: 'bank-branch',

@@ -16,7 +16,7 @@ import { ToastService } from '@services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
-import { ExecutiveManagementPopupComponent } from './executive-management-popup/executive-management-popup.component';
+import { ExecutiveManagementPopupComponent } from '../../popups/executive-management-popup/executive-management-popup.component';
 
 @Component({
   selector: 'executive-management',
