@@ -17,6 +17,8 @@ import {
 } from '@modules/services/collection-approval/popups/collection-approval-approve-task-poup/collection-approval-approve-task-popup.component';
 import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
 import {MapsModule} from '@modules/maps/maps.module';
+import { AuditCollectionItemComponent } from './audit/audit-collection-item/audit-collection-item.component';
+import { AuditCollectionServicesApprovalComponent } from './audit/audit-collection-services-approval/audit-collection-services-approval.component';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import {MapsModule} from '@modules/maps/maps.module';
     CollectionApprovalComponent,
     CollectionApprovalOutputsComponent,
     CollectionItemComponent,
-    CollectionApprovalApproveTaskPopupComponent
+    CollectionApprovalApproveTaskPopupComponent,
+    AuditCollectionItemComponent,
+    AuditCollectionServicesApprovalComponent
   ],
   imports: [
     CommonModule,
