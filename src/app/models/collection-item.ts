@@ -6,11 +6,17 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
 import {mixinApprovalLicenseWithDuration} from "@app/mixins/mixin-approval-license-with-duration";
 import {mixinCollectionItemBuildForm} from "@app/mixins/mixin-collection-item-build-form";
 import {HasCollectionItemBuildForm} from "@app/interfaces/has-collection-item-build-form";
+import { IAuditModelProperties } from "@app/interfaces/i-audit-model-properties";
+import { AuditOperationTypes } from "@app/enums/audit-operation-types";
+import { CommonUtils } from "@app/helpers/common-utils";
 
 const _LicenseApproval = mixinCollectionItemBuildForm(mixinApprovalLicenseWithDuration(class {
 }))
 
-export class CollectionItem extends _LicenseApproval implements HasLicenseApproval, HasCollectionItemBuildForm {
+export class CollectionItem extends _LicenseApproval implements HasLicenseApproval, HasCollectionItemBuildForm,IAuditModelProperties<CollectionItem> {
+  // extra properties
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
   buildingNumber!: string
   identificationNumber!: string
   itemId!: string
@@ -55,5 +61,18 @@ export class CollectionItem extends _LicenseApproval implements HasLicenseApprov
       lat: Number(this.latitude),
       lng: Number(this.longitude)
     }
+  }
+  // don't delete (used in case audit history)
+  getAdminResultByProperty(property: keyof CollectionItem): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
+    }
+    return adminResultValue ?? new AdminResult();
   }
 }

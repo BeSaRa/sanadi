@@ -37,6 +37,9 @@ import { AuditInquiryAndComplaintComponent } from '@app/modules/services/inquiri
 import { AwarenessActivitySuggestion } from '@app/models/awareness-activity-suggestion';
 import { AwarenessActivitySuggestionInterceptor } from '@app/model-interceptors/awareness-activity-suggestion';
 import { AuditAwarenessActivitySuggestionComponent } from '@app/modules/services/awareness-activity-suggestion/audit/audit-awareness-activity-suggestion/audit-awareness-activity-suggestion.component';
+import { CollectionApproval } from '@app/models/collection-approval';
+import { CollectionApprovalInterceptor } from '@app/model-interceptors/collection-approval-interceptor';
+import { AuditCollectionServicesApprovalComponent } from '@app/modules/services/collection-approval/audit/audit-collection-services-approval/audit-collection-services-approval.component';
 
 @CastResponseContainer({
   $default: {
@@ -58,6 +61,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: OrganizationsEntitiesSupport,
     [CaseTypes.INQUIRY]: Inquiry,
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AwarenessActivitySuggestion,
+    [CaseTypes.COLLECTION_APPROVAL]: CollectionApproval,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -65,6 +69,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: OrganizationsEntitiesSupportInterceptor,
     [CaseTypes.INQUIRY]: InquiryInterceptor,
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AwarenessActivitySuggestionInterceptor,
+    [CaseTypes.COLLECTION_APPROVAL]: CollectionApprovalInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -72,6 +77,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: AuditOrganizationsEntitiesSupportComponent,
     [CaseTypes.INQUIRY]: AuditInquiryAndComplaintComponent,
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AuditAwarenessActivitySuggestionComponent,
+    [CaseTypes.COLLECTION_APPROVAL]: AuditCollectionServicesApprovalComponent,
   };
 
   constructor(public http: HttpClient,
