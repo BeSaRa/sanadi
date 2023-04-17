@@ -8,7 +8,7 @@ import { ToastService } from '@app/services/toast.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ComponentBudgetsPopupComponent } from './component-budgets-popup/component-budgets-popup.component';
+import { ComponentBudgetsPopupComponent } from '../../../popups/component-budgets-popup/component-budgets-popup.component';
 import { DialogService } from '@app/services/dialog.service';
 
 @Component({

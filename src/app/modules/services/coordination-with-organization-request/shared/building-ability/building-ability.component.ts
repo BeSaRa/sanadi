@@ -25,7 +25,7 @@ import { RecommendedWay } from '@enums/recommended-way.enum';
 import { TrainingLanguage } from '@enums/training-language-enum';
 import { BuildingAbility } from '@models/building-ability';
 import { Profile } from '@models/profile';
-import { BuildingAbilityPopupComponent } from './building-ability-popup/building-ability-popup.component';
+import { BuildingAbilityPopupComponent } from '../../popups/building-ability-popup/building-ability-popup.component';
 
 @Component({
   selector: 'building-ability',

@@ -11,7 +11,7 @@ import {ToastService} from '@services/toast.service';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, map, take, takeUntil} from 'rxjs/operators';
 import {Profile} from '@models/profile';
-import { EffectiveCoordinationCapabilitiesPopupComponent } from './effective-coordination-capabilities-popup/effective-coordination-capabilities-popup.component';
+import { EffectiveCoordinationCapabilitiesPopupComponent } from '../../popups/effective-coordination-capabilities-popup/effective-coordination-capabilities-popup.component';
 
 @Component({
   selector: 'effective-coordination-capabilities',

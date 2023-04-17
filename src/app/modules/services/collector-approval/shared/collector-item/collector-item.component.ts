@@ -27,7 +27,7 @@ import { CollectionItem } from '@models/collection-item';
 import { CommonCaseStatus } from '@enums/common-case-status.enum';
 import { HasAttachmentHandlerDirective } from '@app/shared/directives/has-attachment-handler.directive';
 import { AttachmentHandlerDirective } from '@app/shared/directives/attachment-handler.directive';
-import { CollectorApprovalPopupComponent } from './collector-approval-popup/collector-approval-popup.component';
+import { CollectorApprovalPopupComponent } from '../../popups/collector-approval-popup/collector-approval-popup.component';
 
 @Component({
   selector: 'collector-item',

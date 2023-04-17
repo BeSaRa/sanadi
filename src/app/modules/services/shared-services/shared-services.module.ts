@@ -21,12 +21,12 @@ import {
 import {
   InterventionFieldListComponent
 } from '@modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
-import { ReadBenefucuariesPopupComponent } from './components/real-beneficiaries/read-benefucuaries-popup/read-benefucuaries-popup.component';
-import { WorkAreasPopupComponent } from './components/work-areas/work-areas-popup/work-areas-popup.component';
-import { BankAccountPopupComponent } from './components/bank-account/bank-account-popup/bank-account-popup.component';
-import { InterventionImplementingAgencyListPopupComponent } from './components/intervention-implementing-agency-list/intervention-implementing-agency-list-popup/intervention-implementing-agency-list-popup.component';
-import { InterventionRegionListPopupComponent } from './components/intervention-region-list/intervention-region-list-popup/intervention-region-list-popup.component';
-import { InterventionFieldListPopupComponent } from './components/intervention-field-list/intervention-field-list-popup/intervention-field-list-popup.component';
+import { ReadBenefucuariesPopupComponent } from './popups/read-benefucuaries-popup/read-benefucuaries-popup.component';
+import { WorkAreasPopupComponent } from './popups/work-areas-popup/work-areas-popup.component';
+import { BankAccountPopupComponent } from './popups/bank-account-popup/bank-account-popup.component';
+import { InterventionImplementingAgencyListPopupComponent } from './popups/intervention-implementing-agency-list-popup/intervention-implementing-agency-list-popup.component';
+import { InterventionRegionListPopupComponent } from './popups/intervention-region-list-popup/intervention-region-list-popup.component';
+import { InterventionFieldListPopupComponent } from './popups/intervention-field-list-popup/intervention-field-list-popup.component';
 
 
 @NgModule({

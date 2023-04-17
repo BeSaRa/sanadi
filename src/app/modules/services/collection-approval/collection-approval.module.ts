@@ -17,7 +17,7 @@ import {
 } from '@modules/services/collection-approval/popups/collection-approval-approve-task-poup/collection-approval-approve-task-popup.component';
 import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
 import {MapsModule} from '@modules/maps/maps.module';
-import { CollectionItemPopupComponent } from './shared/collection-item/collection-item-popup/collection-item-popup.component';
+import { CollectionItemPopupComponent } from './popups/collection-item-popup/collection-item-popup.component';
 
 
 @NgModule({

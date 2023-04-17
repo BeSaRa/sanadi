@@ -17,7 +17,7 @@ import {ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, of, Subject} from 'rxjs';
 import {CustomValidators} from '@app/validators/custom-validators';
 import { FinancialTransferRequestTypes } from '@app/enums/service-request-types';
-import { FinancialTransfersProjectsPopupComponent } from './financial-transfers-projects-popup/financial-transfers-projects-popup.component';
+import { FinancialTransfersProjectsPopupComponent } from '../../popups/financial-transfers-projects-popup/financial-transfers-projects-popup.component';
 
 @Component({
   selector: 'financial-transfers-projects',

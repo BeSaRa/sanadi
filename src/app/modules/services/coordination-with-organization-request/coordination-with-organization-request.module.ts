@@ -42,10 +42,10 @@ import {
 import {
   ResearchAndStudiesComponent
 } from '@modules/services/coordination-with-organization-request/shared/research-and-studies/research-and-studies.component';
-import { BuildingAbilityPopupComponent } from './shared/building-ability/building-ability-popup/building-ability-popup.component';
-import { EffectiveCoordinationCapabilitiesPopupComponent } from './shared/effective-coordination-capabilities/effective-coordination-capabilities-popup/effective-coordination-capabilities-popup.component';
-import { ResearchAndStudiesPopupComponent } from './shared/research-and-studies/research-and-studies-popup/research-and-studies-popup.component';
-import { DynamicTemplatesPopupComponent } from './shared/dynamic-templates/dynamic-templates-popup/dynamic-templates-popup.component';
+import { BuildingAbilityPopupComponent } from './popups/building-ability-popup/building-ability-popup.component';
+import { EffectiveCoordinationCapabilitiesPopupComponent } from './popups/effective-coordination-capabilities-popup/effective-coordination-capabilities-popup.component';
+import { ResearchAndStudiesPopupComponent } from './popups/research-and-studies-popup/research-and-studies-popup.component';
+import { DynamicTemplatesPopupComponent } from './popups/dynamic-templates-popup/dynamic-templates-popup.component';
 
 
 @NgModule({

@@ -10,7 +10,7 @@ import { UserClickOn } from "@enums/user-click-on.enum";
 import { ContactOfficer } from "@models/contact-officer";
 import { ActionIconsEnum } from '@enums/action-icons-enum';
 import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
-import { ContactOfficerPopupComponent } from './contact-officer-popup/contact-officer-popup.component';
+import { ContactOfficerPopupComponent } from '../../popups/contact-officer-popup/contact-officer-popup.component';
 
 @Component({
   selector: 'contact-officer',

@@ -10,7 +10,7 @@ import { ReadinessStatus } from '@app/types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { ProjectNeedsPopupComponent } from './project-needs-popup/project-needs-popup.component';
+import { ProjectNeedsPopupComponent } from '../../popups/project-needs-popup/project-needs-popup.component';
 
 @Component({
   selector: 'project-needs',

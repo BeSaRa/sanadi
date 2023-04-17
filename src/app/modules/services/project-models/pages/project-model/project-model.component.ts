@@ -59,8 +59,8 @@ import { ToastService } from '@services/toast.service';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ComponentBudgetsComponent } from './component-budgets/component-budgets.component';
-import { EvaluationIndicatorsPopupComponent } from './evaluation-indicators-popup/evaluation-indicators-popup.component';
-import { ForeignCountriesProjectPopupComponent } from './foreign-countries-project-popup/foreign-countries-project-popup.component';
+import { EvaluationIndicatorsPopupComponent } from '../../popups/evaluation-indicators-popup/evaluation-indicators-popup.component';
+import { ForeignCountriesProjectPopupComponent } from '../../popups/foreign-countries-project-popup/foreign-countries-project-popup.component';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({

@@ -26,11 +26,11 @@ import {
 import {
   UrgentInterventionClosureApproveTaskPopupComponent
 } from '@modules/services/urgent-intervention-closure/popups/urgent-intervention-closure-approve-task-popup/urgent-intervention-closure-approve-task-popup.component';
-import { StageListPopupComponent } from './pages/urgent-intervention-closure/components/stage-list/stage-list-popup/stage-list-popup.component';
-import { ResultListPopupComponent } from './pages/urgent-intervention-closure/components/result-list/result-list-popup/result-list-popup.component';
-import { ImplementationEvaluationPopupComponent } from './pages/urgent-intervention-closure/components/implementation-evaluation-list/implementation-evaluation-popup/implementation-evaluation-popup.component';
-import { BestPracticesPopupComponent } from './pages/urgent-intervention-closure/components/best-practices-list/best-practices-popup/best-practices-popup.component';
-import { LessonsLearntPopupComponent } from './pages/urgent-intervention-closure/components/lessons-learnt-list/lessons-learnt-popup/lessons-learnt-popup.component';
+import { StageListPopupComponent } from './popups/stage-list-popup/stage-list-popup.component';
+import { ResultListPopupComponent } from './popups/result-list-popup/result-list-popup.component';
+import { ImplementationEvaluationPopupComponent } from './popups/implementation-evaluation-popup/implementation-evaluation-popup.component';
+import { BestPracticesPopupComponent } from './popups/best-practices-popup/best-practices-popup.component';
+import { LessonsLearntPopupComponent } from './popups/lessons-learnt-popup/lessons-learnt-popup.component';
 
 @NgModule({
   declarations: [

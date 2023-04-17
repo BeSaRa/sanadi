@@ -17,7 +17,7 @@ import {
   UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent
 } from '@modules/services/urgent-joint-relief-campaign/popups/urgent-joint-relief-campaign-organization-approve-task-popup/urgent-joint-relief-campaign-organization-approve-task-popup.component';
 import { UrgentJoinOrganizationOfficerComponent } from './shared/urgent-join-organization-officer/urgent-join-organization-officer.component';
-import { UrgentJoinOrganizationOfficerPopupComponent } from './shared/urgent-join-organization-officer/urgent-join-organization-officer-popup/urgent-join-organization-officer-popup.component';
+import { UrgentJoinOrganizationOfficerPopupComponent } from './popups/urgent-join-organization-officer-popup/urgent-join-organization-officer-popup.component';
 
 
 @NgModule({

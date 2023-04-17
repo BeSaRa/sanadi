@@ -13,7 +13,7 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {filter, map, take, takeUntil} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {FounderMembers} from "@app/models/founder-members";
-import { FounderMembersPopupComponent } from './founder-members-popup/founder-members-popup.component';
+import { FounderMembersPopupComponent } from '../../../popups/founder-members-popup/founder-members-popup.component';
 
 @Component({
   selector: 'founder-members',

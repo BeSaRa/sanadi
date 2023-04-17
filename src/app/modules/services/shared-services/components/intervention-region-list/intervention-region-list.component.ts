@@ -10,7 +10,7 @@ import {UserClickOn} from '@enums/user-click-on.enum';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
-import { InterventionRegionListPopupComponent } from './intervention-region-list-popup/intervention-region-list-popup.component';
+import { InterventionRegionListPopupComponent } from '../../popups/intervention-region-list-popup/intervention-region-list-popup.component';
 
 @Component({
   selector: 'intervention-region-list',

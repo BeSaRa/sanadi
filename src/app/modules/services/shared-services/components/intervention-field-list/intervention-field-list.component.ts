@@ -12,7 +12,7 @@ import {CommonUtils} from '@helpers/common-utils';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
-import { InterventionFieldListPopupComponent } from './intervention-field-list-popup/intervention-field-list-popup.component';
+import { InterventionFieldListPopupComponent } from '../../popups/intervention-field-list-popup/intervention-field-list-popup.component';
 
 @Component({
   selector: 'intervention-field-list',
