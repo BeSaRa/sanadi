@@ -120,21 +120,21 @@
     <form [formGroup]="beneficiariesNature" autocomplete="off">
       <div class="row">
         <!-- Beneficiaries count -->
-        <!-- <div class="col-sm-4 position-relative">
-          <label asteriskIfRequired="sessionTimeout" for="sessionTimeout"
-            class="form-label">{{lang.map.session_timeout_in_minutes}}</label>
-          <input id="sessionTimeout" validationClasses="sessionTimeout" formControlName="sessionTimeout"
+        <div class="col-sm-4 position-relative">
+          <label asteriskIfRequired="beneficiariesNumber" for="beneficiariesNumber"
+            class="form-label">{{lang.map.lbl_beneficiaries_count}}</label>
+          <input id="beneficiariesNumber" validationClasses="beneficiariesNumber" formControlName="beneficiariesNumber"
             class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-          <app-field-error-message controlName="sessionTimeout"></app-field-error-message>
-        </div> -->
+          <app-field-error-message controlName="beneficiariesNumber"></app-field-error-message>
+        </div>
         <!-- Beneficiaries desc -->
-        <!-- <div class="mb-4 position-relative">
-          <label for="goal" asteriskIfRequired="goal" class="form-label">{{lang.map.goal}}</label>
-          <textarea rows="5" id="goal" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-            validationClasses="goal" [readonly]="readonly" formControlName="goal" trimInput
+        <div class="mb-4 position-relative">
+          <label for="beneficiaries" asteriskIfRequired="beneficiaries" class="form-label">{{lang.map.lbl_beneficiaries}}</label>
+          <textarea rows="5" id="beneficiaries" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+            validationClasses="beneficiaries" [readonly]="readonly" formControlName="beneficiaries" trimInput
             class="form-control"></textarea>
-          <app-field-error-message controlName="goal"></app-field-error-message>
-        </div> -->
+          <app-field-error-message controlName="beneficiaries"></app-field-error-message>
+        </div>
       </div>
     </form>
   </ng-template>

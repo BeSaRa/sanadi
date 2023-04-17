@@ -47,12 +47,18 @@ export class AwarenessActivitySuggestion
   subject!: string;
   goal!: string;
 
+  approvalTemplateId!: string;
+  rejectTemplateId!: string;
+
   oldLicenseFullSerial!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
   ouInfo!: AdminResult;
   licenseStatusInfo!: AdminResult;
   profileType!: number;
+
+  beneficiaries!: string;
+  beneficiariesNumber!: number;
 
   searchFields: ISearchFieldsMap<AwarenessActivitySuggestion> = {
     ...dateSearchFields(['createdOn']),
@@ -86,7 +92,10 @@ export class AwarenessActivitySuggestion
       subject,
       goal,
 
-      oldLicenseFullSerial
+      oldLicenseFullSerial,
+
+      beneficiaries,
+      beneficiariesNumber,
     } = this;
     return {
       description: controls ? [description, Validators.required] : description,
@@ -105,7 +114,8 @@ export class AwarenessActivitySuggestion
         jobTitle: controls ? [jobTitle, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : jobTitle,
       },
       beneficiariesNature: {
-
+        beneficiaries: controls ? [beneficiaries, [CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : beneficiaries,
+        beneficiariesNumber: controls ? [beneficiariesNumber, [CustomValidators.required]] : beneficiariesNumber,
       },
     };
   }

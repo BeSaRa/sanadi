@@ -1834,4 +1834,5 @@ export interface ILanguageKeys {
   sub_meeting_point_name:string;
   template_type:string;
   template_file:string;
+  lbl_beneficiaries_count:string;
 }
