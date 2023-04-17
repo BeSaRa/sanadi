@@ -3,9 +3,9 @@
  </tabs-list>
 <ng-template #basicInfoTemplate>
   <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
-  <audit-collection-item [newVersionList]="newVersion.collectionItemList"
-                      [oldVersionList]="oldVersion.collectionItemList"
+  <audit-collector-item [newVersionList]="newVersion.collectorItemList"
+                      [oldVersionList]="oldVersion.collectorItemList"
                       [caseType]="newVersion.caseType"
-                      [uniqueComparisonProperty]="'itemId'">
-  </audit-collection-item>
+                      [uniqueComparisonProperty]="'id'">
+  </audit-collector-item>
 </ng-template>

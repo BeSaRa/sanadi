@@ -15,8 +15,6 @@ export class AuditCollectionServicesApprovalComponent implements IAuditCasePrope
   oldVersion!: CollectionApproval; // don't delete or rename the property
 
   basicInfoDifferences: IValueDifference[] = [];
-  commercialLicenseDifferences: IValueDifference[]= [];
-
   constructor(public lang: LangService) {
   }
 
