@@ -14,7 +14,7 @@ import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import { ManagementCouncilPopupComponent } from './management-council-popup/management-council-popup.component';
+import { ManagementCouncilPopupComponent } from '../../popups/management-council-popup/management-council-popup.component';
 
 @Component({
   selector: 'management-council',

@@ -16,7 +16,7 @@ import {
 import {
   ProjectNeedsComponent
 } from '@modules/services/foreign-countries-projects/shared/project-needs/project-needs.component';
-import { ProjectNeedsPopupComponent } from './shared/project-needs/project-needs-popup/project-needs-popup.component';
+import { ProjectNeedsPopupComponent } from './popups/project-needs-popup/project-needs-popup.component';
 import { AuditProjectNeedComponent } from './audit/audit-project-need/audit-project-need.component';
 
 

@@ -10,7 +10,7 @@ import {UserClickOn} from "@enums/user-click-on.enum";
 import {TargetGroup} from "@models/target-group";
 import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
-import { TargetGroupPopupComponent } from './target-group-popup/target-group-popup.component';
+import { TargetGroupPopupComponent } from '../../popups/target-group-popup/target-group-popup.component';
 
 @Component({
   selector: 'target-group',

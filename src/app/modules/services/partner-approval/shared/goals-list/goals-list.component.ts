@@ -15,7 +15,7 @@ import { ToastService } from '@services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, take, takeUntil, tap } from 'rxjs/operators';
-import { GoalsListPopupComponent } from './goals-list-popup/goals-list-popup.component';
+import { GoalsListPopupComponent } from '../../popups/goals-list-popup/goals-list-popup.component';
 
 @Component({
   selector: 'goals-list',

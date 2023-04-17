@@ -11,7 +11,7 @@ import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 import {UserClickOn} from '@enums/user-click-on.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
-import { StageListPopupComponent } from './stage-list-popup/stage-list-popup.component';
+import { StageListPopupComponent } from '../../../../popups/stage-list-popup/stage-list-popup.component';
 
 @Component({
   selector: 'stage-list',

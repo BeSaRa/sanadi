@@ -19,7 +19,7 @@ import { LicenseDurationType } from '@enums/license-duration-type';
 import { CommonCaseStatus } from '@enums/common-case-status.enum';
 import { AttachmentHandlerDirective } from '@app/shared/directives/attachment-handler.directive';
 import { HasAttachmentHandlerDirective } from '@app/shared/directives/has-attachment-handler.directive';
-import { CollectionItemPopupComponent } from './collection-item-popup/collection-item-popup.component';
+import { CollectionItemPopupComponent } from '../../popups/collection-item-popup/collection-item-popup.component';
 
 @Component({
   selector: 'collection-item',

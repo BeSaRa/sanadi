@@ -17,7 +17,7 @@ import { TemplateFieldTypes } from '@enums/template-field-types.enum';
 import { CoordinationWithOrganizationTemplate } from '@models/corrdination-with-organization-template';
 import { ProcessFieldBuilder } from '@app/administration/popups/general-process-popup/process-formly-components/process-fields-builder';
 import { DynamicModelService } from '@services/dynamic-models.service';
-import { DynamicTemplatesPopupComponent } from './dynamic-templates-popup/dynamic-templates-popup.component';
+import { DynamicTemplatesPopupComponent } from '../../popups/dynamic-templates-popup/dynamic-templates-popup.component';
 
 @Component({
   selector: 'app-dynamic-templates',

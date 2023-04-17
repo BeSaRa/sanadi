@@ -11,7 +11,7 @@ import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 import {UserClickOn} from '@enums/user-click-on.enum';
 import {Result} from '@models/result';
-import { ResultListPopupComponent } from './result-list-popup/result-list-popup.component';
+import { ResultListPopupComponent } from '../../../../popups/result-list-popup/result-list-popup.component';
 
 @Component({
   selector: 'result-list',

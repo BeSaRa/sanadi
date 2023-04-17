@@ -10,7 +10,7 @@ import { BehaviorSubject, Subject } from "rxjs";
 import { filter, map, take, takeUntil } from "rxjs/operators";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { NpoContactOfficer } from "@app/models/npo-contact-officer";
-import { NpoContactOfficerPopupComponent } from './npo-contact-officer-popup/npo-contact-officer-popup.component';
+import { NpoContactOfficerPopupComponent } from '../../../popups/npo-contact-officer-popup/npo-contact-officer-popup.component';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 
 @Component({

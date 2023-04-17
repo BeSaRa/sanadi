@@ -18,7 +18,7 @@ import { CommonUtils } from '@helpers/common-utils';
 import { SortEvent } from '@contracts/sort-event';
 import { AdminResult } from '@models/admin-result';
 import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
-import { BankAccountPopupComponent } from './bank-account-popup/bank-account-popup.component';
+import { BankAccountPopupComponent } from '../../popups/bank-account-popup/bank-account-popup.component';
 
 @Component({
   selector: 'bank-account',

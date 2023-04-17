@@ -17,7 +17,7 @@ import {LookupService} from '@services/lookup.service';
 import {FieldAssessmentService} from '@services/field-assessment.service';
 import {AdminResult} from '@models/admin-result';
 import {FieldAssessmentTypesEnum} from '@enums/field-assessment-types.enum';
-import { ImplementationEvaluationPopupComponent } from './implementation-evaluation-popup/implementation-evaluation-popup.component';
+import { ImplementationEvaluationPopupComponent } from '../../../../popups/implementation-evaluation-popup/implementation-evaluation-popup.component';
 
 @Component({
   selector: 'implementation-evaluation-list',

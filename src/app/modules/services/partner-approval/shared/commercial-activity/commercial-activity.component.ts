@@ -11,7 +11,7 @@ import { ReadinessStatus } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { Subject } from 'rxjs';
 import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
-import { CommercialActivityPopupComponent } from './commercial-activity-popup/commercial-activity-popup.component';
+import { CommercialActivityPopupComponent } from '../../popups/commercial-activity-popup/commercial-activity-popup.component';
 
 @Component({
   selector: 'commercial-activity',
