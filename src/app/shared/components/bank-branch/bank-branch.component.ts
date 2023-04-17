@@ -1,15 +1,17 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {DialogService} from '@services/dialog.service';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {BankBranch} from '@app/models/bank-branch';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { DialogService } from '@services/dialog.service';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { BankBranch } from '@app/models/bank-branch';
 import { map, take, takeUntil } from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DateUtils} from '@helpers/date-utils';
-import { BankBranchPopupComponent } from '../../popups/bank-branch-popup/bank-branch-popup.component';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { DateUtils } from '@helpers/date-utils';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { BankBranchPopupComponent } from '@app/shared/popups/bank-branch-popup/bank-branch-popup.component';
 
 @Component({
   selector: 'bank-branch',
@@ -19,9 +21,9 @@ import { BankBranchPopupComponent } from '../../popups/bank-branch-popup/bank-br
 export class BankBranchComponent implements OnInit {
 
   constructor(public lang: LangService,
-              private toastService: ToastService,
-              private dialogService: DialogService,
-              private fb: UntypedFormBuilder) {
+    private toastService: ToastService,
+    private dialogService: DialogService,
+    private fb: UntypedFormBuilder) {
   }
 
   private _list: BankBranch[] = [];
@@ -38,12 +40,36 @@ export class BankBranchComponent implements OnInit {
   get list(): BankBranch[] {
     return this._list;
   }
-
+  actions: IMenuItem<BankBranch>[] = [
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: BankBranch) => this.edit(item),
+      show: (_item: BankBranch) => !this.readonly
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: BankBranch) => this.delete(item),
+      show: (_item: BankBranch) => !this.readonly
+    },
+    // view
+    {
+      type: 'action',
+      icon: ActionIconsEnum.VIEW,
+      label: 'view',
+      onClick: (item: BankBranch) => this.view(item)
+    }
+  ];
   listDataSource: BehaviorSubject<BankBranch[]> = new BehaviorSubject<BankBranch[]>([]);
   columns = ['fullName', 'email', 'fax', 'phone', 'recordNo', 'actions'];
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
-  editIndex: number = -1;
+  editItem?: BankBranch;
   viewOnly: boolean = false;
   private save$: Subject<any> = new Subject<any>();
 
@@ -56,7 +82,7 @@ export class BankBranchComponent implements OnInit {
   form!: UntypedFormGroup;
 
   datepickerOptionsMap: DatepickerOptionsMap = {
-    establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'})
+    establishmentDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' })
   };
 
   ngOnInit(): void {
@@ -156,22 +182,24 @@ export class BankBranchComponent implements OnInit {
         return;
       }
 
-      this._updateList(branch, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
+      this._updateList(branch, (!!this.editItem ? 'UPDATE' : 'ADD'));
       this.toastService.success(this.lang.map.msg_save_success);
-      this.editIndex = -1;
       this.viewOnly = false;
       this.recordChanged$.next(null);
     });
   }
 
-  private _updateList(record: (BankBranch | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE', gridIndex: number = -1) {
+  private _updateList(record: (BankBranch | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
-      } else if (operation === 'UPDATE') {
-        this.list.splice(gridIndex, 1, record);
-      } else if (operation === 'DELETE') {
-        this.list.splice(gridIndex, 1);
+      } else {
+        let index = !this.editItem ? -1 : this.list.findIndex(x => x === this.editItem);
+        if (operation === 'UPDATE') {
+          this.list.splice(index, 1, record);
+        } else if (operation === 'DELETE') {
+          this.list.splice(index, 1);
+        }
       }
     }
     this.list = this.list.slice();
@@ -181,7 +209,7 @@ export class BankBranchComponent implements OnInit {
   cancelBranch() {
     this.resetBranchForm();
     this._setComponentReadiness('READY');
-    this.editIndex = -1;
+    this.editItem = undefined;
   }
 
   private resetBranchForm() {
@@ -197,25 +225,25 @@ export class BankBranchComponent implements OnInit {
     this._setComponentReadiness('READY');
   }
 
-  editBranch($event: MouseEvent, record: BankBranch, index: number) {
-    $event.preventDefault();
+  edit(record: BankBranch, $event?: MouseEvent) {
+    $event?.preventDefault();
     if (this.readonly) {
       return;
     }
-    this.editIndex = index;
+    this.editItem = record;
     this.viewOnly = false;
     this.recordChanged$.next(record);
   }
 
-  view($event: MouseEvent, record: BankBranch, index: number) {
-    $event.preventDefault();
-    this.editIndex = index;
+  view(record: BankBranch, $event?: MouseEvent) {
+    $event?.preventDefault();
+    this.editItem = record;
     this.viewOnly = true;
     this.recordChanged$.next(record);
   }
 
-  deleteBranch($event: MouseEvent, record: BankBranch, index: number): any {
-    $event.preventDefault();
+  delete(record: BankBranch, $event?: MouseEvent): any {
+    $event?.preventDefault();
     if (this.readonly) {
       return;
     }
@@ -224,8 +252,10 @@ export class BankBranchComponent implements OnInit {
       .pipe(take(1))
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
-          this._updateList(record, 'DELETE', index);
+          this.editItem = record;
+          this._updateList(record, 'DELETE');
           this.toastService.success(this.lang.map.msg_delete_success);
+          this.cancelBranch();
         }
       });
   }
@@ -235,13 +265,13 @@ export class BankBranchComponent implements OnInit {
 
   openFormPopup() {
     this.dialogService.show(this._getPopupComponent(), {
-      form : this.form,
-      readonly : this.readonly,
-      editIndex : this.editIndex,
-      model : this.currentRecord,
-      branchesFormArray : this.branchesFormArray,
-      viewOnly : this.viewOnly,
-      datepickerOptionsMap : this.datepickerOptionsMap,
+      form: this.form,
+      readonly: this.readonly,
+      editItem: this.editItem,
+      model: this.currentRecord,
+      branchesFormArray: this.branchesFormArray,
+      viewOnly: this.viewOnly,
+      datepickerOptionsMap: this.datepickerOptionsMap,
 
     }).onAfterClose$.subscribe((data) => {
       if (data) {
