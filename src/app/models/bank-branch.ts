@@ -14,6 +14,10 @@ export class BankBranch extends SearchableCloneable<BankBranch> {
   phone!: string;
   postalCode!: string;
 
+  searchFields: ISearchFieldsMap<BankBranch> = {
+    ...normalSearchFields(['fullName', 'email', 'fax', 'recordNo', 'phone'])
+  };
+
   getBranchFields(control: boolean = false): any {
     const {
       fullName,
@@ -37,7 +41,4 @@ export class BankBranch extends SearchableCloneable<BankBranch> {
       postalCode: control ? [postalCode, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : postalCode
     }
   }
-  searchFields: ISearchFieldsMap<BankBranch> = {
-    ...normalSearchFields(['fullName','establishmentDate','address','email','fax','recordNo','phone','postalCode'])
-  };
 }
