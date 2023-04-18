@@ -49,6 +49,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   transferPurposeForm!: UntypedFormGroup;
   paymentForm!: UntypedFormGroup;
   fm!: FormManager;
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   requestTypes: Lookup[] = this.lookupService.listByCategory.TransferringIndividualRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
   transfereeTypes: Lookup[] = this.lookupService.listByCategory.TransfereeType
