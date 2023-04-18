@@ -30,6 +30,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   @Input() tabByIndex$!: Subject<number>;
   @Input() accordionView: boolean = false;
   @Input() hasForm: boolean = false;
+  @Input() scrollToViewPort: boolean = false;
 
   private _collapse: boolean = false;
   @Input()
@@ -82,7 +83,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   }
 
   ngAfterContentInit(): void {
-    this.tabListService.setTabs(this.tabs, this.activeTabIndex, this.collapse, this.onTabChange);
+    this.tabListService.setTabs(this.tabs, this.activeTabIndex, this.collapse, this.scrollToViewPort, this.onTabChange);
   }
 
   /**
