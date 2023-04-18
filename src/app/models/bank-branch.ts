@@ -1,6 +1,8 @@
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {DateUtils} from "@app/helpers/date-utils";
+import { ISearchFieldsMap } from '@app/types/types';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 
 export class BankBranch extends SearchableCloneable<BankBranch> {
   fullName!: string;
@@ -11,6 +13,10 @@ export class BankBranch extends SearchableCloneable<BankBranch> {
   recordNo!: string;
   phone!: string;
   postalCode!: string;
+
+  searchFields: ISearchFieldsMap<BankBranch> = {
+    ...normalSearchFields(['fullName', 'email', 'fax', 'recordNo', 'phone'])
+  };
 
   getBranchFields(control: boolean = false): any {
     const {
