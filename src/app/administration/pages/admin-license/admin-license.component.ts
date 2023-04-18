@@ -61,6 +61,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     CaseTypes.NPO_MANAGEMENT,
     CaseTypes.GENERAL_PROCESS_NOTIFICATION,
     CaseTypes.CHARITY_ORGANIZATION_UPDATE,
+    CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT
 
   ]
   serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.hasSearchPermission(caseType));
