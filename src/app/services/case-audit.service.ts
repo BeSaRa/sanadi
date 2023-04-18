@@ -46,6 +46,9 @@ import { AuditCollectorApprovalComponent } from '@app/modules/services/collector
 import { Employment } from '@app/models/employment';
 import { EmploymentInterceptor } from '@app/model-interceptors/employment-interceptor';
 import { AuditEmploymentComponent } from '@app/modules/services/employment/audit/audit-employment/audit-employment.component';
+import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
+import { ExternalOrgAffiliationInterceptor } from '@app/model-interceptors/external-org-affiliation-interceptor';
+import { AuditExternalOrganizationAffiliationComponent } from '@app/modules/services/external-organization-affiliation/audit/audit-external-organization-affiliation/audit-external-organization-affiliation.component';
 
 @CastResponseContainer({
   $default: {
@@ -70,6 +73,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.COLLECTION_APPROVAL]: CollectionApproval,
     [CaseTypes.COLLECTOR_LICENSING]: CollectorApproval,
     [CaseTypes.EMPLOYMENT]: Employment,
+    [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: ExternalOrgAffiliation,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -80,6 +84,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.COLLECTION_APPROVAL]: CollectionApprovalInterceptor,
     [CaseTypes.COLLECTOR_LICENSING]: CollectorApprovalInterceptor,
     [CaseTypes.EMPLOYMENT]: EmploymentInterceptor,
+    [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: ExternalOrgAffiliationInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -90,6 +95,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.COLLECTION_APPROVAL]: AuditCollectionServicesApprovalComponent,
     [CaseTypes.COLLECTOR_LICENSING]: AuditCollectorApprovalComponent,
     [CaseTypes.EMPLOYMENT]: AuditEmploymentComponent,
+    [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: AuditExternalOrganizationAffiliationComponent,
   };
 
   constructor(public http: HttpClient,
