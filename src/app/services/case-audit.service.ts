@@ -43,6 +43,9 @@ import { AuditCollectionServicesApprovalComponent } from '@app/modules/services/
 import { CollectorApproval } from '@app/models/collector-approval';
 import { CollectorApprovalInterceptor } from '@app/model-interceptors/collector-approval-interceptor';
 import { AuditCollectorApprovalComponent } from '@app/modules/services/collector-approval/audit/audit-collector-approval/audit-collector-approval.component';
+import { Employment } from '@app/models/employment';
+import { EmploymentInterceptor } from '@app/model-interceptors/employment-interceptor';
+import { AuditEmploymentComponent } from '@app/modules/services/employment/audit/audit-employment/audit-employment.component';
 
 @CastResponseContainer({
   $default: {
@@ -66,6 +69,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AwarenessActivitySuggestion,
     [CaseTypes.COLLECTION_APPROVAL]: CollectionApproval,
     [CaseTypes.COLLECTOR_LICENSING]: CollectorApproval,
+    [CaseTypes.EMPLOYMENT]: Employment,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -75,6 +79,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AwarenessActivitySuggestionInterceptor,
     [CaseTypes.COLLECTION_APPROVAL]: CollectionApprovalInterceptor,
     [CaseTypes.COLLECTOR_LICENSING]: CollectorApprovalInterceptor,
+    [CaseTypes.EMPLOYMENT]: EmploymentInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -84,6 +89,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AuditAwarenessActivitySuggestionComponent,
     [CaseTypes.COLLECTION_APPROVAL]: AuditCollectionServicesApprovalComponent,
     [CaseTypes.COLLECTOR_LICENSING]: AuditCollectorApprovalComponent,
+    [CaseTypes.EMPLOYMENT]: AuditEmploymentComponent,
   };
 
   constructor(public http: HttpClient,

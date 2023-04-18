@@ -12,6 +12,8 @@ import {
   EmploymentApproveComponent
 } from '@modules/services/employment/popups/employment-approve/employment-approve.component';
 import {EServicesMainModule} from '@modules/e-services-main/e-services-main.module';
+import { AuditEmploymentComponent } from './audit/audit-employment/audit-employment.component';
+import { AuditEmployeeComponent } from './audit/audit-employee/audit-employee.component';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import {EServicesMainModule} from '@modules/e-services-main/e-services-main.modu
     EmploymentOutputsComponent,
     EmployeeFormPopupComponent,
     EmployeesDataComponent,
-    EmploymentApproveComponent
+    EmploymentApproveComponent,
+    AuditEmploymentComponent,
+    AuditEmployeeComponent
   ],
   imports: [
     CommonModule,
