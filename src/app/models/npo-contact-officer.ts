@@ -1,6 +1,8 @@
 import { AdminResult } from './admin-result';
 import { CustomValidators } from "@app/validators/custom-validators";
 import { SearchableCloneable } from "@app/models/searchable-cloneable";
+import { ISearchFieldsMap } from '@app/types/types';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ControlValueLabelLangKey } from '@app/types/types';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
@@ -58,4 +60,8 @@ export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer> im
     }
     return adminResultValue ?? new AdminResult();
   }
+
+  searchFields: ISearchFieldsMap<NpoContactOfficer> = {
+    ...normalSearchFields(['officerId','identificationNumber','fullName','email','phone','extraPhone','jobTitleId'])
+  };
 }
