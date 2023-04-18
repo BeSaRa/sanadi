@@ -13,13 +13,15 @@ import {
   ExternalOrgAffiliationApprovePopupComponent
 } from '@modules/services/external-organization-affiliation/popups/external-org-affiliation-approve-popup/external-org-affiliation-approve-popup.component';
 import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
+import { AuditExternalOrganizationAffiliationComponent } from './audit/audit-external-organization-affiliation/audit-external-organization-affiliation.component';
 
 
 @NgModule({
   declarations: [
     ExternalOrgAffiliationComponent,
     ExternalOrgAffiliationOutputsComponent,
-    ExternalOrgAffiliationApprovePopupComponent
+    ExternalOrgAffiliationApprovePopupComponent,
+    AuditExternalOrganizationAffiliationComponent
   ],
   imports: [
     CommonModule,

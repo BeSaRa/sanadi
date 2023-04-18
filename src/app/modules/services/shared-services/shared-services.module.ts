@@ -24,6 +24,7 @@ import {
 import {AuditBankAccountComponent} from './audit/audit-bank-account/audit-bank-account.component';
 import {AuditWorkAreasComponent} from './audit/audit-work-areas/audit-work-areas.component';
 import { AuditExecutiveManagementComponent } from './audit/audit-executive-management/audit-executive-management.component';
+import { AuditContactOfficersComponent } from './audit/audit-contact-officers/audit-contact-officers.component';
 
 
 @NgModule({
@@ -38,7 +39,9 @@ import { AuditExecutiveManagementComponent } from './audit/audit-executive-manag
     InterventionFieldListComponent,
     AuditBankAccountComponent,
     AuditWorkAreasComponent,
-    AuditExecutiveManagementComponent
+    AuditExecutiveManagementComponent,
+    AuditContactOfficersComponent,
+
   ],
   imports: [
     CommonModule,
@@ -55,7 +58,9 @@ import { AuditExecutiveManagementComponent } from './audit/audit-executive-manag
     InterventionFieldListComponent,
     AuditBankAccountComponent,
     AuditWorkAreasComponent,
-    AuditExecutiveManagementComponent
+    AuditExecutiveManagementComponent,
+    AuditContactOfficersComponent,
+
   ]
 })
 export class SharedServicesModule { }

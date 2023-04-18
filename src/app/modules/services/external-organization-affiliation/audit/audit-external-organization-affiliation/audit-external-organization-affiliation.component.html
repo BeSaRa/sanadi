@@ -1,0 +1,37 @@
+<tabs-list>
+  <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
+  <tab name="bankDetails" [template]="bankDetailsTemplate" [title]="lang.map.bank_details"></tab>
+  <tab name="executiveManagements" [template]="executiveManagementsTemplate"
+       [title]="lang.map.executive_management"></tab>
+  <tab name="contactOfficers" [template]="contactOfficersTemplate" [title]="lang.map.contact_officers"></tab>
+  <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
+</tabs-list>
+<ng-template #basicInfoTemplate>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #bankDetailsTemplate>
+  <audit-bank-account [newVersionList]="newVersion.bankAccountDTOs"
+                      [oldVersionList]="oldVersion.bankAccountDTOs"
+                      [caseType]="newVersion.caseType"
+                      [uniqueComparisonProperty]="'iBan'">
+  </audit-bank-account>
+</ng-template>
+
+<ng-template #executiveManagementsTemplate>
+  <audit-executive-management [newVersionList]="newVersion.executiveManagementDTOs"
+                              [oldVersionList]="oldVersion.executiveManagementDTOs"
+                              [uniqueComparisonProperty]="'phone'"
+                              [hidePassport]="false"
+  ></audit-executive-management>
+</ng-template>
+<ng-template #contactOfficersTemplate>
+  <audit-contact-officers [newVersionList]="newVersion.contactOfficerDTOs"
+                          [oldVersionList]="oldVersion.contactOfficerDTOs"
+                          [displayColumns]="contactOfficersColumns"
+                          [uniqueComparisonProperty]="'phone'"
+  ></audit-contact-officers>
+</ng-template>
+<ng-template #specialExplanationTemplate>
+  <value-differences-list [differenceList]="specialExplanationDifferences"></value-differences-list>
+</ng-template>
+

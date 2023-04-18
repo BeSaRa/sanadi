@@ -29,7 +29,6 @@ import {AuditGoalsComponent} from './audit/audit-goals/audit-goals.component';
 import {AuditGoalsListComponent} from './audit/audit-goals-list/audit-goals-list.component';
 import {AuditTargetGroupComponent} from './audit/audit-target-group/audit-target-group.component';
 import { AuditManagementCouncilComponent } from './audit/audit-management-council/audit-management-council.component';
-import { AuditContactOfficersComponent } from './audit/audit-contact-officers/audit-contact-officers.component';
 import { AuditApprovalReasonsComponent } from './audit/audit-approval-reasons/audit-approval-reasons.component';
 import { AuditCommercialActivityComponent } from './audit/audit-commercial-activity/audit-commercial-activity.component';
 
@@ -50,7 +49,6 @@ import { AuditCommercialActivityComponent } from './audit/audit-commercial-activ
     AuditGoalsListComponent,
     AuditTargetGroupComponent,
     AuditManagementCouncilComponent,
-    AuditContactOfficersComponent,
     AuditApprovalReasonsComponent,
     AuditCommercialActivityComponent
   ],
