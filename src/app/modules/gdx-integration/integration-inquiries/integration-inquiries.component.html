@@ -5,7 +5,7 @@
        [title]="lang.map[mainTabsData.charitableEntities.langKey]"></tab>
 </tabs-list>
 <ng-template #GovernmentAgenciesTemplate>
-  <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="govTabIndex$" [scrollToViewPort]="true">
+  <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="govTabIndex$">
     <tab [name]="govTabsData.moj.name" [template]="MOJTemplate" [title]="lang.map[govTabsData.moj.langKey]"
          (onExpand)="onGovTabChange($event)"></tab>
     <tab [name]="govTabsData.moci.name" [template]="MOCITemplate" [title]="lang.map[govTabsData.moci.langKey]"
@@ -138,7 +138,7 @@
 </ng-template>
 
 <ng-template #CharitableEntitiesTemplate>
-  <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="charityTabIndex$" [scrollToViewPort]="true">
+  <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="charityTabIndex$">
     <tab [name]="charityTabsData.qatarZakatFund.name" [template]="QatarZakatFundTemplate"
          [title]="lang.map[charityTabsData.qatarZakatFund.langKey]" (onExpand)="onCharityTabChange($event)"></tab>
     <tab [name]="charityTabsData.qatarCharity.name" [template]="QatarCharityTemplate"

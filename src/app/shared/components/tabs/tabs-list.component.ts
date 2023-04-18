@@ -30,7 +30,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   @Input() tabByIndex$!: Subject<number>;
   @Input() accordionView: boolean = false;
   @Input() hasForm: boolean = false;
-  @Input() scrollToViewPort: boolean = false;
+  @Input() scrollToViewPort: boolean = true;
 
   private _collapse: boolean = false;
   @Input()
