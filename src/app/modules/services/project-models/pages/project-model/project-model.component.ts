@@ -143,7 +143,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   isInstitutionProfile: boolean = false;
 
   templateSerialControl: UntypedFormControl = new UntypedFormControl(null);
-
+  filterControl: UntypedFormControl = new UntypedFormControl('');
+  
   searchTemplate$: Subject<string> = new Subject<string>();
   addIndicatorForm$ : Subject<any> = new Subject<any>();
   addPMForeignCountriesProjectForm$ : Subject<any> = new Subject<any>();
