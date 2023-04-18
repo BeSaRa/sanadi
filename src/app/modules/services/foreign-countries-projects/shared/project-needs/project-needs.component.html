@@ -1,7 +1,8 @@
 <div class="table-responsive">
   <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="columns"
     [filter]="filterControl.value" [useSearchToFilter]="true">
-    <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="projectNeeds">
+    <!-- projectNeeds -->
+    <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
       <ng-container cdkColumnDef="extra-header">
         <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
           <table-header tableTitle="project_needs" [add$]="add$" [allowAdd]="isAddingAllowed()" [skipClearSort]="true"
