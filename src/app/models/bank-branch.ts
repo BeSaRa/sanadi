@@ -2,6 +2,8 @@ import { AdminResult } from '@app/models/admin-result';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {DateUtils} from "@app/helpers/date-utils";
+import { ISearchFieldsMap } from '@app/types/types';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { ControlValueLabelLangKey } from '@app/types/types';
 import { ObjectUtils } from '@app/helpers/object-utils';
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
@@ -20,6 +22,11 @@ export class BankBranch extends SearchableCloneable<BankBranch> implements IAudi
   recordNo!: string;
   phone!: string;
   postalCode!: string;
+
+  searchFields: ISearchFieldsMap<BankBranch> = {
+    ...normalSearchFields(['fullName', 'email', 'fax', 'recordNo', 'phone'])
+  };
+
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       fullName:{langKey: 'full_name', value: this.fullName},
