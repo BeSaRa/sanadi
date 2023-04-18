@@ -1,3 +1,4 @@
+import { FinalExternalOfficeApprovalInterceptor } from './../model-interceptors/final-external-office-approval-interceptor';
 import {Injectable} from '@angular/core';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import {Pagination} from '@models/pagination';
@@ -49,6 +50,8 @@ import { AuditEmploymentComponent } from '@app/modules/services/employment/audit
 import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
 import { ExternalOrgAffiliationInterceptor } from '@app/model-interceptors/external-org-affiliation-interceptor';
 import { AuditExternalOrganizationAffiliationComponent } from '@app/modules/services/external-organization-affiliation/audit/audit-external-organization-affiliation/audit-external-organization-affiliation.component';
+import { FinalExternalOfficeApproval } from '@app/models/final-external-office-approval';
+import { AuditFinalExternalOfficeApprovalComponent } from '@app/modules/services/final-external-office-approval/audit/audit-final-external-office-approval/audit-final-external-office-approval.component';
 
 @CastResponseContainer({
   $default: {
@@ -74,6 +77,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.COLLECTOR_LICENSING]: CollectorApproval,
     [CaseTypes.EMPLOYMENT]: Employment,
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: ExternalOrgAffiliation,
+    [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApproval,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -85,6 +89,8 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.COLLECTOR_LICENSING]: CollectorApprovalInterceptor,
     [CaseTypes.EMPLOYMENT]: EmploymentInterceptor,
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: ExternalOrgAffiliationInterceptor,
+    [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApprovalInterceptor,
+
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -96,6 +102,8 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.COLLECTOR_LICENSING]: AuditCollectorApprovalComponent,
     [CaseTypes.EMPLOYMENT]: AuditEmploymentComponent,
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: AuditExternalOrganizationAffiliationComponent,
+    [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: AuditFinalExternalOfficeApprovalComponent,
+
   };
 
   constructor(public http: HttpClient,
