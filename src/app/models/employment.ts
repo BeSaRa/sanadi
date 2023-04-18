@@ -1,7 +1,7 @@
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { dateSearchFields } from '@app/helpers/date-search-fields';
-import { ISearchFieldsMap } from './../types/types';
+import { ControlValueLabelLangKey, ISearchFieldsMap } from './../types/types';
 import { ContractTypes } from '@app/enums/contract-types.enum';
 import { EmploymentCategory } from '@app/enums/employment-category.enum';
 import { EmploymentRequestType } from '@app/enums/service-request-types';
@@ -21,6 +21,11 @@ import { HasRequestType } from "@app/interfaces/has-request-type";
 import { mixinRequestType } from "@app/mixins/mixin-request-type";
 import { CaseModelContract } from "@contracts/case-model-contract";
 import { DialogRef } from '@app/shared/models/dialog-ref';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { AdminResult } from './admin-result';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new EmploymentInterceptor();
@@ -31,7 +36,7 @@ const interceptor = new EmploymentInterceptor();
 })
 export class Employment
   extends _RequestType<EmploymentService, Employment>
-  implements HasRequestType, HasLicenseDurationType, CaseModelContract<EmploymentService, Employment> {
+  implements HasRequestType, HasLicenseDurationType, CaseModelContract<EmploymentService, Employment>,IAuditModelProperties<Employment> {
   service!: EmploymentService;
   caseType: number = CaseTypes.EMPLOYMENT;
   requestType!: number;
@@ -64,11 +69,11 @@ export class Employment
   }
 
   formBuilder(controls?: boolean) {
-    const { requestType, category, description } = this;
+    const values = ObjectUtils.getControlValues<Employment>(this.getBasicInfoValuesWithLabels());
     return {
-      requestType: controls ? [requestType, Validators.required] : requestType,
-      category: controls ? [category, Validators.required] : category,
-      description: controls ? [description] : description
+      requestType: controls ? [values.requestType, Validators.required] : values.requestType,
+      category: controls ? [values.category, Validators.required] : values.category,
+      description: controls ? [values.description] : values.description
     };
   }
   intirmDateFormBuilder() {
@@ -93,5 +98,35 @@ export class Employment
   }
   isInterm() {
     return this.employeeInfoDTOs[0].contractType == ContractTypes.Interim
+  }
+  getEmployees():Employee[]{
+    return this.employeeInfoDTOs as Employee[]
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: {langKey: 'request_type', value: this.requestType},
+      category:{langKey: 'main_category', value: this.category},
+      description:{langKey: 'special_explanations', value: this.description},
+    };
+  }
+  getAdminResultByProperty(property: keyof Employment): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
+      case 'caseStatus':
+        adminResultValue = this.caseStatusInfo;
+        break;
+
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
+    }
+    return adminResultValue ?? new AdminResult();
   }
 }
