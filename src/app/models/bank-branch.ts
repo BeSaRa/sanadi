@@ -4,6 +4,8 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {DateUtils} from "@app/helpers/date-utils";
 import { ISearchFieldsMap } from '@app/types/types';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { ISearchFieldsMap } from '@app/types/types';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { ControlValueLabelLangKey } from '@app/types/types';
 import { ObjectUtils } from '@app/helpers/object-utils';
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
