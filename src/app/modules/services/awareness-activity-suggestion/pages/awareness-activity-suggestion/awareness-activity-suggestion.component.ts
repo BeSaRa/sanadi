@@ -27,6 +27,11 @@ import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { SearchAwarenessActivitySuggestionCriteria } from '@models/search-awareness-activity-suggestion-criteria';
 import { JobTitle } from '@app/models/job-title';
 import { JobTitleService } from '@app/services/job-title.service';
+import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { ServiceDataService } from '@app/services/service-data.service';
+import { SharedService } from '@app/services/shared.service';
+import { TemplateTypePopupComponent } from '../../popups/template-type-popup/template-type-popup.component';
+import { SelectTemplatePopupComponent } from '@app/modules/services/shared-services/popups/select-template-popup/select-template-popup.component';
 
 @Component({
   selector: 'app-awareness-activity-suggestion',
@@ -37,8 +42,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   collectionRequestType: Lookup[] = this.lookupService.listByCategory.CollectionRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
   linkedProject: Lookup[] = this.lookupService.listByCategory.LinkedProject.sort((a, b) => a.lookupKey - b.lookupKey);
   jobTitleList: JobTitle[] = [];
-
-
+  fileExtensionsEnum = FileExtensionsEnum;
   licenseSearch$: Subject<string> = new Subject<string>();
   form!: UntypedFormGroup;
   selectedLicense?: AwarenessActivitySuggestion;
@@ -71,6 +75,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       validStatus: () => true
     },
   };
+  uploadedTemplate!: File;
   loadAttachments: boolean = false;
   datepickerOptionsMap: DatepickerOptionsMap = {
     expectedDate: DateUtils.getDatepickerOptions({
@@ -82,7 +87,38 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       return this.getObservableField('requestTypeField', 'requestType');
     }
   }
-
+  selectTemplatePopup() {
+    this.dialog.show(SelectTemplatePopupComponent, { caseType: this.model?.getCaseType() }).onAfterClose$.subscribe((temp) => {
+      if (temp) {
+        this.downloadTemplat(temp.id);
+      }
+    })
+  }
+  uploadTemplate(file: File | File[] | undefined) {
+    if (file) {
+      if (!file || file instanceof File) {
+        this.uploadedTemplate = file;
+      } else {
+        this.uploadedTemplate = file[0];
+      }
+      this.dialog.show(TemplateTypePopupComponent).onAfterClose$.subscribe(type => {
+        this.dataService.uploadCaseDoc(this.model?.getCaseType(), { documentDTO: { approvalTemplateType: type }, caseId: this.model?.getCaseId() }, this.uploadedTemplate).subscribe((result) => {
+          if (result.blob.size === 0) {
+            return;
+          }
+          this.sharedService.downloadFileToSystem(result.blob);
+        })
+      })
+    }
+  }
+  downloadTemplat(docId: string) {
+    this.dataService.loadTemplateDocId(this.model?.getCaseType(), docId).subscribe((result) => {
+      if (result.blob.size === 0) {
+        return;
+      }
+      this.sharedService.downloadFileToSystem(result.blob)
+    })
+  }
   constructor(
     public lang: LangService,
     public fb: UntypedFormBuilder,
@@ -93,6 +129,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     private cd: ChangeDetectorRef,
     private dialog: DialogService,
     public employeeService: EmployeeService,
+    private dataService: ServiceDataService,
+    private sharedService: SharedService,
     private licenseService: LicenseService
   ) {
     super();
@@ -331,7 +369,9 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
 
   _destroyComponent(): void {
   }
-
+  get isLicensingUser() {
+    return this.employeeService.isLicensingUser()
+  }
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
     let value = '';

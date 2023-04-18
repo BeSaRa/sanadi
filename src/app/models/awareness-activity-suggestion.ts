@@ -47,9 +47,6 @@ export class AwarenessActivitySuggestion
   subject!: string;
   goal!: string;
 
-  approvalTemplateId!: string;
-  rejectTemplateId!: string;
-
   oldLicenseFullSerial!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;

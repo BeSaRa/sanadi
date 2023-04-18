@@ -40,7 +40,7 @@
       <!-- docx file -->
       <div class="col-md-6 col-sm-12 mb-4 position-relative" *ngIf="!readOnly && !viewOnly">
         <file-uploader labelKey="template_file" [isRequired]="true"
-                      (fileUploadEvent)="setTemplateile($event)"
+                      (fileUploadEvent)="setTemplateFile($event)"
                       [allowedExtensions]="[fileExtensionsEnum.DOCX]">
         </file-uploader>
       </div>

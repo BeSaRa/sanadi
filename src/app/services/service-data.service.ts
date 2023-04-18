@@ -139,7 +139,7 @@ export class ServiceDataService extends CrudWithDialogGenericService<ServiceData
     unwrap: 'rs',
     fallback: '$CustomServiceTemplate'
   })
-  loadTemplatesbyCaseType(caseType: number) {
+  loadTemplatesbyCaseType(caseType: number, isActive = true) {
     return this.http.get<CustomServiceTemplate[]>(this._getServiceURLByCaseType(caseType) + '/templates?isActive=true')
   }
   @CastResponse(undefined, {
@@ -152,15 +152,6 @@ export class ServiceDataService extends CrudWithDialogGenericService<ServiceData
     return this.http.post<any>(this._getServiceURLByCaseType(caseType) + '/template/service', formData, {
       params: new HttpParams({ fromObject: model as any })
     }).pipe(catchError(() => of(null)));
-  }
-
-  @CastResponse(undefined, {
-    unwrap: 'rs',
-    fallback: '$CustomServiceTemplate'
-  })
-  updateProps(caseType: number = 0, model: CustomServiceTemplate) {
-    return this.http.post<any>(this._getServiceURLByCaseType(caseType) + '/template/update-prop', model)
-    .pipe(catchError(() => of(null)));
   }
 
   @CastResponse(undefined, {
@@ -182,5 +173,17 @@ export class ServiceDataService extends CrudWithDialogGenericService<ServiceData
     console.log(model)
     return this.http.post<any>(this._getServiceURLByCaseType(caseType) + '/template/update-prop', model)
       .pipe(catchError(() => of(null)));
+  }
+
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$CustomServiceTemplate'
+  })
+  uploadCaseDoc(caseType: number = 0, @InterceptParam() model: { documentDTO: Partial<CustomServiceTemplate>, caseId: string }, file: File) {
+    const formData = new FormData();
+    file ? formData.append('content', file) : null;
+    return this.http.post<any>(this._getServiceURLByCaseType(caseType) + '/template/update-content', formData, {
+      params: new HttpParams({ fromObject: { documentDTO: model.documentDTO, caseId: model.caseId } as any })
+    }).pipe(catchError(() => of(null)));
   }
 }

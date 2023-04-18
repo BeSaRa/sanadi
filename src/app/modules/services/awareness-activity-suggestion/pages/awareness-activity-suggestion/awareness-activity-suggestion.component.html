@@ -7,9 +7,9 @@
     <tab [name]="tabsData.beneficiariesNature.name" [hasError]="getTabInvalidStatus('beneficiariesNature')"
       [template]="beneficiariesNatureTabTemplate" [title]="lang.map.lbl_beneficiaries_nature"></tab>
     <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
-         [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
+      [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
     <tab [name]="tabsData.attachments.name" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab"
-         [title]="lang.map.attachments" [hasError]="getTabInvalidStatus('attachments')"></tab>
+      [title]="lang.map.attachments" [hasError]="getTabInvalidStatus('attachments')"></tab>
   </tabs-list>
 
   <ng-template #basicInfoTabTemplate>
@@ -17,7 +17,7 @@
       <h6 class="text-primary">{{ lang.map.request_info }}</h6>
       <div class="row">
         <!-- Request Type -->
-        <div class="col-md-6 mb-4 position-relative">
+        <div class="col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{ lang.map.request_type
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
@@ -30,7 +30,7 @@
           <app-field-error-message controlName="requestType"></app-field-error-message>
         </div>
         <!-- License Number -->
-        <div class="col-md-6 mb-4 position-relative">
+        <div class="col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="oldLicenseFullSerial" for="oldLicenseFullSerial"
             class="form-label">{{lang.map.license_number}}</label>
           <div class="input-group">
@@ -43,26 +43,36 @@
             <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
           </div>
         </div>
+        <!-- License Number -->
+        <div class="col-md-4 mb-4 position-relative">
+          <div class="input-group">
+            <button class="btn btn-primary" (click)="selectTemplatePopup()">{{lang.map.templates}}</button>
+            <file-uploader *ngIf="isLicensingUser" labelKey="template_file" [isRequired]="true" (fileUploadEvent)="uploadTemplate($event)"
+              [allowedExtensions]="[fileExtensionsEnum.DOCX]">
+            </file-uploader>
+            <!-- <button class="btn-primary" (click)="downloadTemplat()">{{lang.map.download_templat}}</button> -->
+          </div>
+        </div>
         <!-- goal -->
         <div class="mb-4 position-relative">
           <label for="goal" asteriskIfRequired="goal" class="form-label">{{lang.map.goal}}</label>
           <textarea rows="5" id="goal" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                    validationClasses="goal" [readonly]="isCancel() || readonly" formControlName="goal" trimInput
-                    class="form-control"></textarea>
+            validationClasses="goal" [readonly]="isCancel() || readonly" formControlName="goal" trimInput
+            class="form-control"></textarea>
           <app-field-error-message controlName="goal"></app-field-error-message>
         </div>
         <!-- subject -->
         <div class="mb-4 position-relative">
           <label for="subject" asteriskIfRequired="subject" class="form-label">{{lang.map.subject}}</label>
           <textarea rows="5" id="subject" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                    validationClasses="subject" [readonly]="isCancel() || readonly" formControlName="subject" trimInput
-                    class="form-control"></textarea>
+            validationClasses="subject" [readonly]="isCancel() || readonly" formControlName="subject" trimInput
+            class="form-control"></textarea>
           <app-field-error-message controlName="subject"></app-field-error-message>
         </div>
       </div>
     </form>
   </ng-template>
-   <ng-template #contactOfficerTabTemplate>
+  <ng-template #contactOfficerTabTemplate>
     <form [formGroup]="contactOfficer" autocomplete="off">
       <div class="row">
         <!-- contact QID -->
@@ -80,14 +90,14 @@
             lang.map.full_name
             }}</label>
           <input id="contactName" formControlName="contactName" [readonly]="isCancel() || readonly || isSameAsApplican"
-                 validationClasses="contactName" class="form-control"/>
+            validationClasses="contactName" class="form-control" />
           <app-field-error-message controlName="contactName"></app-field-error-message>
         </div>
         <!-- contactEmail -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="contactEmail" for="contactEmail">{{lang.map.lbl_email}}</label>
           <input validationClasses="contactEmail" [readonly]="isCancel() || readonly || isSameAsApplican"
-                 formControlName="contactEmail" type="text" id="contactEmail" class="form-control">
+            formControlName="contactEmail" type="text" id="contactEmail" class="form-control">
           <app-field-error-message controlName="contactEmail"></app-field-error-message>
         </div>
         <!-- contact Phone -->
@@ -96,7 +106,7 @@
             lang.map.lbl_phone
             }}</label>
           <input type="text" validationClasses="contactPhone" formControlName="contactPhone"
-                 [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control" id="contactPhone"/>
+            [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control" id="contactPhone" />
           <app-field-error-message controlName="contactPhone"></app-field-error-message>
         </div>
         <!-- contact Extra Phone -->
@@ -104,7 +114,8 @@
           <label asteriskIfRequired="contactExtraPhone" for="contactExtraPhone" class="form-label">{{
             lang.map.lbl_mobile_number }}</label>
           <input type="text" validationClasses="contactExtraPhone" formControlName="contactExtraPhone"
-                 [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control" id="contactExtraPhone"/>
+            [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control"
+            id="contactExtraPhone" />
           <app-field-error-message controlName="contactExtraPhone"></app-field-error-message>
         </div>
         <!-- Job Title -->
@@ -124,12 +135,13 @@
           <label asteriskIfRequired="beneficiariesNumber" for="beneficiariesNumber"
             class="form-label">{{lang.map.lbl_beneficiaries_count}}</label>
           <input id="beneficiariesNumber" validationClasses="beneficiariesNumber" formControlName="beneficiariesNumber"
-            class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+            class="form-control" [readonly]="readonly" [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="beneficiariesNumber"></app-field-error-message>
         </div>
         <!-- Beneficiaries desc -->
         <div class="mb-4 position-relative">
-          <label for="beneficiaries" asteriskIfRequired="beneficiaries" class="form-label">{{lang.map.lbl_beneficiaries}}</label>
+          <label for="beneficiaries" asteriskIfRequired="beneficiaries"
+            class="form-label">{{lang.map.lbl_beneficiaries}}</label>
           <textarea rows="5" id="beneficiaries" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
             validationClasses="beneficiaries" [readonly]="readonly" formControlName="beneficiaries" trimInput
             class="form-control"></textarea>
@@ -145,8 +157,8 @@
           <label for="description" asteriskIfRequired="description"
             class="form-label">{{lang.map.special_explanations}}</label>
           <textarea rows="5" id="description" validationClasses="description"
-                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="isCancel() || readonly"
-                    formControlName="description" trimInput class="form-control"></textarea>
+            [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="isCancel() || readonly"
+            formControlName="description" trimInput class="form-control"></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>
       </div>

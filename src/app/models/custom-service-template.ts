@@ -15,6 +15,7 @@ export class CustomServiceTemplate extends SearchableCloneable<CustomServiceTemp
   approvalTemplateType!: number;
   arabicName!: string;
   englishName!: string;
+  approvalTemplateTypeInfo!: AdminResult;
   constructor() {
     super();
   }

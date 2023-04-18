@@ -60,7 +60,7 @@ export class CustomServiceTemplatePopupComponent implements OnInit {
     }
   }
 
-  setTemplateile(file: File | File[] | undefined): void {
+  setTemplateFile(file: File | File[] | undefined): void {
     if (!file || file instanceof File) {
       this.TemplateFile = file;
     } else {

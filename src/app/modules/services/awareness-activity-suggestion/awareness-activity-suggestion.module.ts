@@ -12,6 +12,8 @@ import {
   AwarenessActivitySuggestionApprovalPopupComponent
 } from '@modules/services/awareness-activity-suggestion/popups/awareness-activity-suggestion-approval-popup/awareness-activity-suggestion-approval-popup.component';
 import {EServicesMainModule} from '@modules/e-services-main/e-services-main.module';
+import { TemplateTypePopupComponent } from './popups/template-type-popup/template-type-popup.component';
+import { SelectTemplatePopupComponent } from '../shared-services/popups/select-template-popup/select-template-popup.component';
 
 
 @NgModule({
@@ -19,6 +21,8 @@ import {EServicesMainModule} from '@modules/e-services-main/e-services-main.modu
     AwarenessActivitySuggestionComponent,
     AwarenessActivitySuggestionOutputsComponent,
     AwarenessActivitySuggestionApprovalPopupComponent,
+    SelectTemplatePopupComponent,
+    TemplateTypePopupComponent
   ],
   imports: [
     CommonModule,
