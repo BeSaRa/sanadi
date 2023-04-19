@@ -1,19 +1,21 @@
-import {DateUtils} from '@helpers/date-utils';
-import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
-import {LookupService} from '@services/lookup.service';
-import {Lookup} from '@models/lookup';
-import {JobTitleService} from '@services/job-title.service';
-import {JobTitle} from '@models/job-title';
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {LangService} from "@app/services/lang.service";
-import {ToastService} from "@app/services/toast.service";
-import {DialogService} from "@app/services/dialog.service";
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import {BehaviorSubject, Subject} from "rxjs";
-import {filter, map, take, takeUntil} from "rxjs/operators";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {FounderMembers} from "@app/models/founder-members";
+import { DateUtils } from '@helpers/date-utils';
+import { DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
+import { LookupService } from '@services/lookup.service';
+import { Lookup } from '@models/lookup';
+import { JobTitleService } from '@services/job-title.service';
+import { JobTitle } from '@models/job-title';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { LangService } from "@app/services/lang.service";
+import { ToastService } from "@app/services/toast.service";
+import { DialogService } from "@app/services/dialog.service";
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
+import { BehaviorSubject, Subject } from "rxjs";
+import { filter, map, take, takeUntil } from "rxjs/operators";
+import { UserClickOn } from "@app/enums/user-click-on.enum";
+import { FounderMembers } from "@app/models/founder-members";
 import { FounderMembersPopupComponent } from '../../../popups/founder-members-popup/founder-members-popup.component';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'founder-members',
@@ -48,8 +50,32 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
   dataSource: BehaviorSubject<FounderMembers[]> = new BehaviorSubject<FounderMembers[]>([]);
   columns = ['idNumber', 'fullName', 'email', 'phone', 'extraPhone', 'actions'];
   filterControl: UntypedFormControl = new UntypedFormControl('');
-
-  editIndex: number = -1;
+  actions: IMenuItem<FounderMembers>[] = [
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: FounderMembers) => this.edit(item),
+      show: (_item: FounderMembers) => !this.readonly
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: FounderMembers) => this.delete(item),
+      show: (_item: FounderMembers) => !this.readonly
+    },
+    // view
+    {
+      type: 'action',
+      icon: ActionIconsEnum.VIEW,
+      label: 'view',
+      onClick: (item: FounderMembers) => this.view(item)
+    }
+  ];
+  editItem? : FounderMembers
   add$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
 
@@ -114,7 +140,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
     this.dialogService.show(this._getPopupComponent(), {
       form: this.form,
       readonly: this.readonly,
-      editIndex: this.editIndex,
+      editItem:this.editItem,
       model: this.current,
       founderMembersFormArray: this.founderMembersFormArray,
       nationalityList:this.nationalityList,
@@ -155,7 +181,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       filter((form) => {
         const valid = this._list.findIndex(f => f.identificationNumber == form.value.identificationNumber) == -1;
-        !valid && this.editIndex == -1 && this.dialogService
+        !valid && this.editItem == undefined && this.dialogService
           .error(this.lang.map.msg_user_identifier_is_already_exist)
           .onAfterClose$
           .pipe(take(1))
@@ -163,7 +189,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
             this.form.get('founderMembers')?.markAllAsTouched();
             this.openFormPopup();
           });
-        return valid || this.editIndex != -1
+        return valid || !!this.editItem
       }),
       map(() => {
         return (this.form.get('founderMembers.0')) as UntypedFormArray;
@@ -178,38 +204,41 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this._updateList(member, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
+      this._updateList(member, (!!this.editItem ? 'UPDATE' : 'ADD'));
       this.toastService.success(this.lang.map.msg_save_success);
-      this.editIndex = -1;
+      this.editItem == undefined;
       this.changed$.next(null);
     });
   }
 
-  private _updateList(record: (FounderMembers | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE', gridIndex: number = -1) {
+  private _updateList(record: (FounderMembers | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
-      } else if (operation === 'UPDATE') {
-        this.list.splice(gridIndex, 1, record);
-      } else if (operation === 'DELETE') {
-        this.list.splice(gridIndex, 1);
+      } else {
+        let index = !this.editItem ? -1 : this.list.findIndex(x => x === this.editItem);
+        if (operation === 'UPDATE') {
+          this.list.splice(index, 1, record);
+        } else if (operation === 'DELETE') {
+          this.list.splice(index, 1);
+        }
       }
     }
     this.list = this.list.slice();
     this.dataSource.next(this.list);
   }
 
-  edit($event: MouseEvent, record: FounderMembers, index: number) {
-    $event.preventDefault();
+  edit(record: FounderMembers, $event?: MouseEvent) {
+    $event?.preventDefault();
     if (this.readonly) {
       return;
     }
-    this.editIndex = index;
+    this.editItem = record
     this.changed$.next(record);
   }
 
-  delete($event: MouseEvent, record: FounderMembers, index: number): any {
-    $event.preventDefault();
+  delete(record: FounderMembers, $event?: MouseEvent): any {
+    $event?.preventDefault();
     if (this.readonly) {
       return;
     }
@@ -218,7 +247,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
-          this._updateList(record, 'DELETE', index);
+          this._updateList(record, 'DELETE');
           this.toastService.success(this.lang.map.msg_delete_success);
         }
       });
@@ -227,7 +256,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
   cancel() {
     this.resetForm();
     this._setComponentReadiness('READY');
-    this.editIndex = -1;
+    this.editItem = undefined
   }
 
   private resetForm() {
@@ -239,9 +268,9 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
   }
-  view($event: MouseEvent, record: FounderMembers, index: number) {
-    $event.preventDefault();
-    this.editIndex = index;
+  view(record: FounderMembers,$event?: MouseEvent) {
+    $event?.preventDefault();
+    this.editItem = record
     this.changed$.next(record);
   }
   forceClearComponent() {
