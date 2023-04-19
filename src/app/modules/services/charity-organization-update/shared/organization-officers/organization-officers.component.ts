@@ -9,6 +9,8 @@ import { ToastService } from '@services/toast.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { DialogService } from '@app/services/dialog.service';
 import { OrganizationOfficerPopupComponent } from '../../popups/organization-officer-popup/organization-officer-popup.component';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'organization-officers',
@@ -16,10 +18,9 @@ import { OrganizationOfficerPopupComponent } from '../../popups/organization-off
   styleUrls: ['./organization-officers.component.scss']
 })
 export class OrganizationOfficersComponent implements OnInit {
-  selectedOfficer!: OrganizationOfficer | null;
+  selectedOfficer?: OrganizationOfficer;
   selectedOrganizationOfficers: OrganizationOfficer[] = [];
   laisonOfficers: OrganizationOfficer[] = [];
-  selectedOfficerIndex!: number | null;
   add$: Subject<null> = new Subject();
   @Input() label!: string;
   get _label() {
@@ -42,7 +43,23 @@ export class OrganizationOfficersComponent implements OnInit {
   get list(): OrganizationOfficer[] {
     return this.selectedOrganizationOfficers;
   }
-
+  actions: IMenuItem<OrganizationOfficer>[] = [
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_remove',
+      onClick: (item: OrganizationOfficer) => this.removeOfficer(item),
+      show: (_item: OrganizationOfficer) => !this.readonly
+    },
+    // select
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: OrganizationOfficer) => this.selectOfficer(item)
+    }
+  ];
   constructor(
     private fb: UntypedFormBuilder,
     public lang: LangService,
@@ -116,7 +133,7 @@ export class OrganizationOfficersComponent implements OnInit {
         ) === -1
       ) {
         this.selectedOrganizationOfficers =
-          this.selectedOrganizationOfficers.concat(officer);
+        this.selectedOrganizationOfficers.concat(officer);
         this.resetOfficerForm();
         return;
       }
@@ -124,16 +141,17 @@ export class OrganizationOfficersComponent implements OnInit {
 
     }
     else {
-      this.selectedOrganizationOfficers.splice(this.selectedOfficerIndex!, 1);
+      let index = !this.selectOfficer ? -1 : this.selectedOrganizationOfficers.findIndex(x => x == this.selectedOfficer)
+
+      this.selectedOrganizationOfficers.splice(index, 1);
       this.selectedOrganizationOfficers =
         this.selectedOrganizationOfficers.concat(officer);
-      this.selectedOfficer = null;
-      this.selectedOfficerIndex = null;
+      this.selectedOfficer = undefined;
       this.resetOfficerForm();
     }
   }
-  removeOfficer(event: MouseEvent, model: OrganizationOfficer) {
-    event.preventDefault();
+  removeOfficer(model: OrganizationOfficer, event?: MouseEvent) {
+    event?.preventDefault();
     this.selectedOrganizationOfficers =
       this.selectedOrganizationOfficers.filter(
         (x) => x.identificationNumber !== model.identificationNumber
@@ -141,17 +159,13 @@ export class OrganizationOfficersComponent implements OnInit {
     this.resetOfficerForm();
   }
   resetOfficerForm() {
-    this.selectedOfficer = null;
-    this.selectedOfficerIndex = null;
+    this.selectedOfficer = undefined;
     this.officerForm.reset();
   }
-  selectOfficer(event: MouseEvent, model: OrganizationOfficer) {
-    event.preventDefault();
+  selectOfficer(model: OrganizationOfficer, event?: MouseEvent) {
+    event?.preventDefault();
     this.selectedOfficer = this.mapOrganizationOfficerToForm(model);
     this.officerForm.patchValue(this.selectedOfficer!);
-    this.selectedOfficerIndex = this.selectedOrganizationOfficers
-      .map((x) => x.identificationNumber)
-      .indexOf(model.identificationNumber);
     this.openFormDialog();
   }
   mapOrganizationOfficerToForm(officer: OrganizationOfficer): any {
@@ -165,7 +179,6 @@ export class OrganizationOfficersComponent implements OnInit {
   }
   cancel() {
     this.resetOfficerForm();
-    this.selectedOfficer = null;
-    this.selectedOfficerIndex = null;
+    this.selectedOfficer = undefined;
   }
 }
