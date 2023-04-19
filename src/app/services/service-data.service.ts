@@ -182,8 +182,14 @@ export class ServiceDataService extends CrudWithDialogGenericService<ServiceData
   uploadCaseDoc(caseType: number = 0, @InterceptParam() model: { documentDTO: Partial<CustomServiceTemplate>, caseId: string }, file: File) {
     const formData = new FormData();
     file ? formData.append('content', file) : null;
+    console.log(model)
     return this.http.post<any>(this._getServiceURLByCaseType(caseType) + '/template/update-content', formData, {
-      params: new HttpParams({ fromObject: { documentDTO: model.documentDTO, caseId: model.caseId } as any })
+      params: new HttpParams({
+        fromObject: {
+          documentDTO: new HttpParams({ fromObject: model.documentDTO as any }),
+          caseId: model.caseId
+        } as any
+      })
     }).pipe(catchError(() => of(null)));
   }
 }

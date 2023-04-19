@@ -1,5 +1,3 @@
-import { BlobModel } from '@app/models/blob-model';
-import { AdminResult } from '@app/models/admin-result';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
@@ -8,7 +6,6 @@ import { LangService } from '@app/services/lang.service';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { LookupService } from '@app/services/lookup.service';
 import { Lookup } from '@app/models/lookup';
-import { ServiceDataService } from '@app/services/service-data.service';
 import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({

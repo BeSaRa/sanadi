@@ -30,7 +30,7 @@ import { JobTitleService } from '@app/services/job-title.service';
 import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { ServiceDataService } from '@app/services/service-data.service';
 import { SharedService } from '@app/services/shared.service';
-import { TemplateTypePopupComponent } from '../../popups/template-type-popup/template-type-popup.component';
+import { TemplateTypePopupComponent } from '../../../shared-services/popups/template-type-popup/template-type-popup.component';
 import { SelectTemplatePopupComponent } from '@app/modules/services/shared-services/popups/select-template-popup/select-template-popup.component';
 
 @Component({
@@ -102,12 +102,15 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
         this.uploadedTemplate = file[0];
       }
       this.dialog.show(TemplateTypePopupComponent).onAfterClose$.subscribe(type => {
-        this.dataService.uploadCaseDoc(this.model?.getCaseType(), { documentDTO: { approvalTemplateType: type }, caseId: this.model?.getCaseId() }, this.uploadedTemplate).subscribe((result) => {
-          if (result.blob.size === 0) {
-            return;
-          }
-          this.sharedService.downloadFileToSystem(result.blob);
-        })
+        console.log(type)
+        if (type) {
+          this.dataService.uploadCaseDoc(this.model?.getCaseType(), { documentDTO: { approvalTemplateType: type }, caseId: this.model?.getCaseId() }, this.uploadedTemplate).subscribe((result) => {
+            if (result.blob.size === 0) {
+              return;
+            }
+            this.sharedService.downloadFileToSystem(result.blob);
+          })
+        }
       })
     }
   }

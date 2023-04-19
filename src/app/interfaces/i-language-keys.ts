@@ -1836,4 +1836,5 @@ export interface ILanguageKeys {
   template_file:string;
   lbl_beneficiaries_count:string;
   download_templat:string;
+  uploaded_templates:string;
 }

@@ -46,11 +46,15 @@
         <!-- License Number -->
         <div class="col-md-4 mb-4 position-relative">
           <div class="input-group">
-            <button class="btn btn-primary" (click)="selectTemplatePopup()">{{lang.map.templates}}</button>
-            <file-uploader *ngIf="isLicensingUser" labelKey="template_file" [isRequired]="true" (fileUploadEvent)="uploadTemplate($event)"
-              [allowedExtensions]="[fileExtensionsEnum.DOCX]">
+            <file-uploader *ngIf="isLicensingUser" labelKey="template_file" [isRequired]="true"
+              (fileUploadEvent)="uploadTemplate($event)" [allowedExtensions]="[fileExtensionsEnum.DOCX]">
             </file-uploader>
-            <!-- <button class="btn-primary" (click)="downloadTemplat()">{{lang.map.download_templat}}</button> -->
+            <div style="font-size: 19px; padding-top: 2rem">
+              <button class="btn btn-primary btn-sm me-2" [tooltip]="lang.map.view + ' ' + lang.map.uploaded_templates" (click)="selectTemplatePopup()"><i
+                class="mdi mdi-file-eye"></i></button>
+              <button class="btn btn-primary btn-sm" [tooltip]="lang.map.select  + ' ' + lang.map.lbl_template" (click)="selectTemplatePopup()"><i
+                  class="mdi mdi-file-word"></i></button>
+            </div>
           </div>
         </div>
         <!-- goal -->
