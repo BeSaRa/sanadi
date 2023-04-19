@@ -16,7 +16,7 @@ import { LangService } from '@app/services/lang.service';
 export class NpoContactOfficerPopupComponent implements OnInit {
   form: UntypedFormGroup;
   readonly: boolean;
-  editIndex: number;
+  editItem: NpoContactOfficer;
   model: NpoContactOfficer;
   jobTitleAdminLookup: JobTitle[] = [];
   contactOfficersFormArray: UntypedFormArray;
@@ -24,7 +24,7 @@ export class NpoContactOfficerPopupComponent implements OnInit {
   public data: {
     form: UntypedFormGroup,
     readonly: boolean,
-    editIndex: number,
+    editItem: NpoContactOfficer,
     model: NpoContactOfficer,
     contactOfficersFormArray: UntypedFormArray;
     jobTitleAdminLookup: JobTitle[]
@@ -33,7 +33,7 @@ export class NpoContactOfficerPopupComponent implements OnInit {
     private dialogRef: DialogRef) {
     this.form = data.form;
     this.readonly = data.readonly;
-    this.editIndex = data.editIndex;
+    this.editItem = data.editItem;
     this.model = data.model;
     this.contactOfficersFormArray = data.contactOfficersFormArray;
     this.jobTitleAdminLookup = data.jobTitleAdminLookup;
