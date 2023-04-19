@@ -304,9 +304,11 @@ export class ExecutiveManagementComponent implements OnInit {
   get nationalitiyField(): UntypedFormControl {
     return (this.form.get('nationality')) as UntypedFormControl;
   }
+  
   _getPopupComponent() {
     return ExecutiveManagementPopupComponent;
   }
+
   openFormPopup() {
     this.dialogService.show(this._getPopupComponent(), {
       form: this.form,
