@@ -1,7 +1,7 @@
 <div class="table-responsive">
-  <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="columns"
+  <app-table #table sortableTable [paginator]="paginator" [data]="dataSource" [columns]="columns"
     [filter]="filterControl.value" [useSearchToFilter]="true">
-    <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="dataSource">
+    <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
       <ng-container cdkColumnDef="extra-header">
         <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
           <table-header tableTitle="contact_officers" [add$]="add$" [allowAdd]="!readonly" [skipClearSort]="true" (textChange)="filterControl.setValue($event)">
@@ -32,20 +32,7 @@
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-          <div class="d-flex flex-row">
-            <button (click)="delete($event, row, i)" *ngIf="!readonly" class="icon-btn text-primary"
-              tooltip="{{lang.map.btn_delete}}" [disabled]="readonly">
-              <i class="mdi mdi-close-box"></i>
-            </button>
-            <button (click)="edit($event, row, i)" *ngIf="!readonly" class="icon-btn text-primary"
-              tooltip="{{lang.map.btn_edit}}" [disabled]="readonly">
-              <i class="mdi mdi-pen"></i>
-            </button>
-            <button (click)="view($event, row, i)" *ngIf="readonly" class="icon-btn text-primary"
-              tooltip="{{lang.map.view}}">
-              <i class="mdi mdi-eye"></i>
-            </button>
-          </div>
+          <grid-actions [record]="row" [actions]="actions" [itemIndex]="i" [rebindTrigger]="readonly"></grid-actions>
         </td>
       </ng-container>
       <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>

@@ -11,6 +11,8 @@ import { filter, map, take, takeUntil } from "rxjs/operators";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { NpoContactOfficer } from "@app/models/npo-contact-officer";
 import { NpoContactOfficerPopupComponent } from '../../../popups/npo-contact-officer-popup/npo-contact-officer-popup.component';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 
 @Component({
@@ -45,7 +47,8 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
   dataSource: BehaviorSubject<NpoContactOfficer[]> = new BehaviorSubject<NpoContactOfficer[]>([]);
   columns = ['idNumber', 'fullName', 'email', 'phone', 'extraPhone', 'actions'];
 
-  editIndex: number = -1;
+  editItem?: NpoContactOfficer;
+
   add$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
   filterControl: UntypedFormControl = new UntypedFormControl('');
@@ -54,6 +57,31 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
   private current?: NpoContactOfficer;
   private destroy$: Subject<any> = new Subject<any>();
 
+  actions: IMenuItem<NpoContactOfficer>[] = [
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: NpoContactOfficer) => this.edit(item),
+      show: (_item: NpoContactOfficer) => !this.readonly
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: NpoContactOfficer) => this.delete(item),
+      show: (_item: NpoContactOfficer) => !this.readonly
+    },
+    // view
+    {
+      type: 'action',
+      icon: ActionIconsEnum.VIEW,
+      label: 'view',
+      onClick: (item: NpoContactOfficer) => this.view(item)
+    }
+  ];
   form!: UntypedFormGroup;
 
   ngOnInit(): void {
@@ -99,7 +127,7 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
     this.dialogService.show(this._getPopupComponent(), {
       form: this.form,
       readonly: this.readonly,
-      editIndex: this.editIndex,
+      editItem: this.editItem,
       model: this.current,
       contactOfficersFormArray: this.contactOfficersFormArray,
       jobTitleAdminLookup: this.jobTitleAdminLookup
@@ -138,7 +166,7 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       filter((form) => {
         const valid = this._list.findIndex(c => c.identificationNumber == form.value.identificationNumber) == -1;
-        !valid && this.editIndex == -1 && this.dialogService
+        !valid && this.editItem == undefined && this.dialogService
           .error(this.lang.map.msg_user_identifier_is_already_exist)
           .onAfterClose$
           .pipe(take(1))
@@ -146,7 +174,7 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
             this.form.get('contactOfficers')?.markAllAsTouched();
             this.openFormPopup();
           });
-        return valid || this.editIndex != -1
+        return valid || !!this.editItem
       }),
       map(() => {
         return (this.form.get('contactOfficers.0')) as UntypedFormArray;
@@ -160,38 +188,41 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
       if (!contactOfficer) {
         return;
       }
-      this._updateList(contactOfficer, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
+      this._updateList(contactOfficer, (!!this.editItem ? 'UPDATE' : 'ADD'));
       this.toastService.success(this.lang.map.msg_save_success);
-      this.editIndex = -1;
+      this.editItem = undefined;
       this.changed$.next(null);
     });
   }
 
-  private _updateList(record: (NpoContactOfficer | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE', gridIndex: number = -1) {
+  private _updateList(record: (NpoContactOfficer | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
-      } else if (operation === 'UPDATE') {
-        this.list.splice(gridIndex, 1, record);
-      } else if (operation === 'DELETE') {
-        this.list.splice(gridIndex, 1);
+      } else {
+        let index = !this.editItem ? -1 : this.list.findIndex(x => x === this.editItem);
+        if (operation === 'UPDATE') {
+          this.list.splice(index, 1, record);
+        } else if (operation === 'DELETE') {
+          this.list.splice(index, 1);
+        }
       }
     }
     this.list = this.list.slice();
     this.dataSource.next(this.list);
   }
 
-  edit($event: MouseEvent, record: NpoContactOfficer, index: number) {
-    $event.preventDefault();
+  edit(record: NpoContactOfficer, $event?: MouseEvent) {
+    $event?.preventDefault();
     if (this.readonly) {
       return;
     }
-    this.editIndex = index;
+    this.editItem = record
     this.changed$.next(record);
   }
 
-  delete($event: MouseEvent, record: NpoContactOfficer, index: number): any {
-    $event.preventDefault();
+  delete(record: NpoContactOfficer,$event?: MouseEvent): any {
+    $event?.preventDefault();
     if (this.readonly) {
       return;
     }
@@ -200,7 +231,7 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
-          this._updateList(record, 'DELETE', index);
+          this._updateList(record, 'DELETE');
           this.toastService.success(this.lang.map.msg_delete_success);
         }
       });
@@ -209,7 +240,7 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
   cancel() {
     this.resetForm();
     this._setComponentReadiness('READY');
-    this.editIndex = -1;
+    this.editItem = undefined
   }
 
   private resetForm() {
@@ -222,9 +253,9 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
     this.readyEvent.emit(readyStatus);
   }
 
-  view($event: MouseEvent, record: NpoContactOfficer, index: number) {
-    $event.preventDefault();
-    this.editIndex = index;
+  view(record: NpoContactOfficer, $event?: MouseEvent) {
+    $event?.preventDefault();
+    this.editItem = record
     this.changed$.next(record);
   }
   forceClearComponent() {
