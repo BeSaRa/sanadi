@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { OrganizationOfficer } from '@app/models/organization-officer';
@@ -11,7 +11,7 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
   templateUrl: './organization-officer-popup.component.html',
   styleUrls: ['./organization-officer-popup.component.scss']
 })
-export class OrganizationOfficerPopupComponent implements OnInit {
+export class OrganizationOfficerPopupComponent {
   officerForm!: UntypedFormGroup;
   readonly: boolean = false;
   selectedOfficer!: OrganizationOfficer;
@@ -32,9 +32,6 @@ export class OrganizationOfficerPopupComponent implements OnInit {
     this.label = data.label as keyof ILanguageKeys;
   }
 
-  ngOnInit() {
-  }
-
   mapFormToOrganizationOfficer(form: any): OrganizationOfficer {
     const officer: OrganizationOfficer = new OrganizationOfficer();
     officer.identificationNumber = form.identificationNumber;
@@ -45,9 +42,11 @@ export class OrganizationOfficerPopupComponent implements OnInit {
 
     return officer;
   }
+  
   cancel() {
     this.dialogRef.close(null)
   }
+
   saveOfficer() {
     this.dialogRef.close(
       this.mapFormToOrganizationOfficer(

@@ -56,25 +56,8 @@
           <th cdk-header-cell *cdkHeaderCellDef>
             {{ lang.map.lbl_actions }}
           </th>
-          <td cdk-cell *cdkCellDef="let row" class="table-actions">
-            <div class="d-flex flex-row">
-              <button
-                (click)="removeOfficer($event, row)"
-                tooltip="{{ lang.map.btn_remove }}"
-                class="btn btn-link outline-none"
-                [disabled]="readonly"
-              >
-                <i class="mdi mdi-close-box"></i>
-              </button>
-              <button
-                (click)="selectOfficer($event, row)"
-                tooltip="{{ lang.map.btn_edit }}"
-                class="btn btn-link outline-none"
-                [disabled]="readonly"
-              >
-                <i class="mdi mdi-pen"></i>
-              </button>
-            </div>
+          <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="i" [rebindTrigger]="readonly"></grid-actions>
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
