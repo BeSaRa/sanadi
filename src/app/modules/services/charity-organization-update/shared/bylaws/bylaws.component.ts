@@ -1,8 +1,8 @@
-import {Component, Input} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {ListModelComponent} from '@app/generics/ListModel-component';
-import {Bylaw} from '@models/bylaw';
-import {LangService} from '@services/lang.service';
+import { Component, Input } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ListModelComponent } from '@app/generics/ListModel-component';
+import { Bylaw } from '@models/bylaw';
+import { LangService } from '@services/lang.service';
 import { ComponentType } from '@angular/cdk/portal';
 import { BylawsPopupComponent } from '../../popups/bylaws-popup/bylaws-popup.component';
 
