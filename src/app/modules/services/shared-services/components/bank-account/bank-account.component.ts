@@ -1,18 +1,17 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {LangService} from '@services/lang.service';
-import {Country} from '@models/country';
-import {CountryService} from '@services/country.service';
-import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {Lookup} from '@models/lookup';
-import {BankAccount} from '@models/bank-account';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {DialogService} from '@services/dialog.service';
-import {ToastService} from '@services/toast.service';
-import {ReadinessStatus} from '@app/types/types';
-import {LookupService} from '@services/lookup.service';
-import {CaseTypes} from '@enums/case-types.enum';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { LangService } from '@services/lang.service';
+import { Country } from '@models/country';
+import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import { Lookup } from '@models/lookup';
+import { BankAccount } from '@models/bank-account';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { DialogService } from '@services/dialog.service';
+import { ToastService } from '@services/toast.service';
+import { ReadinessStatus } from '@app/types/types';
+import { LookupService } from '@services/lookup.service';
+import { CaseTypes } from '@enums/case-types.enum';
 import { ActionIconsEnum } from '@enums/action-icons-enum';
 import { CommonUtils } from '@helpers/common-utils';
 import { SortEvent } from '@contracts/sort-event';
@@ -28,10 +27,10 @@ import { BankAccountPopupComponent } from '../../popups/bank-account-popup/bank-
 export class BankAccountComponent implements OnInit {
 
   constructor(public lang: LangService,
-              private toastService: ToastService,
-              private dialogService: DialogService,
-              private lookupService: LookupService,
-              private fb: UntypedFormBuilder) {
+  private toastService: ToastService,
+  private dialogService: DialogService,
+  private lookupService: LookupService,
+  private fb: UntypedFormBuilder) {
   }
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
