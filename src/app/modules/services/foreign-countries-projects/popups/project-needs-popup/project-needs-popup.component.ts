@@ -15,7 +15,7 @@ export class ProjectNeedsPopupComponent {
   form: UntypedFormGroup;
   viewOnly: boolean;
   readonly: boolean;
-  editRecordIndex: number;
+  editRecord: ProjectNeed;
   model: ProjectNeed;
   projectNeedsForm: UntypedFormArray;
   customValidators = CustomValidators
@@ -26,7 +26,7 @@ export class ProjectNeedsPopupComponent {
     form: UntypedFormGroup,
     viewOnly: boolean,
     readonly: boolean,
-    editRecordIndex: number,
+    editRecord: ProjectNeed,
     model: ProjectNeed,
     projectNeedsForm: UntypedFormArray,
   },
@@ -35,21 +35,20 @@ export class ProjectNeedsPopupComponent {
     this.form = data.form;
     this.viewOnly = data.viewOnly;
     this.readonly = data.readonly;
-    this.editRecordIndex = data.editRecordIndex;
+    this.editRecord = data.editRecord;
     this.model = data.model;
     this.projectNeedsForm = data.projectNeedsForm;
-  }
-
-  ngOnInit() {
   }
   mapFormTo(form: any): ProjectNeed {
     const model: ProjectNeed = new ProjectNeed().clone(form);
 
     return model;
   }
+
   cancel() {
     this.dialogRef.close(null)
   }
+  
   save() {
     this.dialogRef.close(this.mapFormTo(this.form.getRawValue()))
   }
