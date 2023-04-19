@@ -2,6 +2,8 @@ import { AdminResult } from './admin-result';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { SearchableCloneable } from './searchable-cloneable';
+import { ISearchFieldsMap } from '@app/types/types';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
@@ -54,7 +56,9 @@ export class ProjectNeed extends SearchableCloneable<ProjectNeed> implements IAu
       goals: withControls ? [goals, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : goals,
     };
   }
-
+  searchFields: ISearchFieldsMap<ProjectNeed> = {
+    ...normalSearchFields(['projectName','projectDescription','totalCost','beneficiaries','goals'])
+  };
 }
 
 export type ProjectNeeds = Partial<ProjectNeed>[];
