@@ -5,13 +5,14 @@ import { dateSearchFields } from '@app/helpers/date-search-fields';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { FactoryService } from '@app/services/factory.service';
 import { OrganizationsEntitiesSupportService } from '@app/services/organizations-entities-support.service';
-import { ISearchFieldsMap } from '@app/types/types';
+import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from './../validators/custom-validators';
 import { LicenseApprovalModel } from './license-approval-model';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const { send, receive } = new OrganizationsEntitiesSupportInterceptor();
 
@@ -21,8 +22,8 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
   OrganizationsEntitiesSupport
 > {
   caseType: number = CaseTypes.ORGANIZATION_ENTITIES_SUPPORT;
-  organizationId!: number;
   serviceType!: 1;
+  organizationId!: number;
   subject!: string;
   goal!: string;
   beneficiaries!: string;
@@ -35,17 +36,21 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
   phone!: string;
   description!: string;
 
-  ouInfo!:AdminResult;
-  requestTypeInfo!:AdminResult;
-  serviceTypeInfo!:AdminResult;
+  ouInfo!: AdminResult;
+  requestTypeInfo!: AdminResult;
+  serviceTypeInfo!: AdminResult;
   licenseStatusInfo!: AdminResult;
   otherService!: string;
-
 
   service: OrganizationsEntitiesSupportService;
   searchFields: ISearchFieldsMap<OrganizationsEntitiesSupport> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['ouInfo', 'requestTypeInfo','caseStatusInfo','creatorInfo']),
+    ...infoSearchFields([
+      'ouInfo',
+      'requestTypeInfo',
+      'caseStatusInfo',
+      'creatorInfo',
+    ]),
     ...normalSearchFields(['fullSerial', 'subject']),
   };
 
@@ -64,38 +69,65 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
       delete this.searchFields.organization;
     }
   }
+  getOrganizationOfficerValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      arName: { langKey: 'arabic_name', value: this.arName },
+      enName: { langKey: 'english_name', value: this.enName },
+      email: { langKey: 'lbl_email', value: this.email },
+      jobTitle: { langKey: 'job_title', value: this.jobTitle },
+      mobileNo: { langKey: 'lbl_mobile_number', value: this.mobileNo },
+      phone: { langKey: 'lbl_phone', value: this.phone },
+    }
+  }
+  getBeneficiariesTypeValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      beneficiaries: {
+        langKey: 'beneficiaries_description',
+        value: this.beneficiaries,
+      },
+      beneficiariesNumber: {
+        langKey: 'number_of_beneficiaries',
+        value: this.beneficiariesNumber,
+      },
+    }
+  }
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: { langKey: 'request_type', value: this.requestType },
+      serviceType: { langKey: 'service_type', value: this.serviceType },
+      organizationId: { langKey: 'organization', value: this.organizationId },
+      subject: { langKey: 'subject', value: this.subject },
+      goal: { langKey: 'goal', value: this.goal },
+      description: { langKey: 'special_explanations', value: this.description },
+      otherService: { langKey: 'lbl_other', value: this.otherService },
+    };
+  }
 
   getBasicInfoFields(control: boolean = false): any {
-    const {
-      organizationId,
-      serviceType,
-      requestType,
-      oldLicenseFullSerial,
-      oldLicenseId,
-      oldLicenseSerial,
-      subject,
-      goal,
-      otherService
-    } = this;
+    const values = ObjectUtils.getControlValues<OrganizationsEntitiesSupport>(
+      this.getBasicInfoValuesWithLabels()
+    );
 
     return {
       organizationId: control
-        ? [organizationId , [CustomValidators.required]]
-        : organizationId,
+        ? [values.organizationId, [CustomValidators.required]]
+        : values.organizationId,
       serviceType: control
-        ? [serviceType, [CustomValidators.required]]
-        : serviceType,
+        ? [values.serviceType, [CustomValidators.required]]
+        : values.serviceType,
       requestType: control
-        ? [requestType, [CustomValidators.required]]
-        : requestType,
+        ? [values.requestType, [CustomValidators.required]]
+        : values.requestType,
       oldLicenseFullSerial: control
-        ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]]
-        : oldLicenseFullSerial,
-      oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
-      oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
+        ? [values.oldLicenseFullSerial, [CustomValidators.maxLength(250)]]
+        : values.oldLicenseFullSerial,
+      oldLicenseId: control ? [values.oldLicenseId] : values.oldLicenseId,
+      oldLicenseSerial: control
+        ? [values.oldLicenseSerial]
+        : values.oldLicenseSerial,
       subject: control
         ? [
-            subject,
+            values.subject,
             [
               CustomValidators.required,
               CustomValidators.maxLength(
@@ -103,10 +135,10 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
               ),
             ],
           ]
-        : subject,
+        : values.subject,
       goal: control
         ? [
-            goal,
+            values.goal,
             [
               CustomValidators.required,
               CustomValidators.maxLength(
@@ -114,26 +146,29 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
               ),
             ],
           ]
-        : goal,
+        : values.goal,
       otherService: control
         ? [
-            otherService,
+            values.otherService,
             [
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),
             ],
           ]
-        : otherService,
+        : values.otherService,
     };
   }
   getBeneficiariesTypeFields(control: boolean = false): any {
-    const { beneficiaries, beneficiariesNumber } = this;
+    const values = ObjectUtils.getControlValues<OrganizationsEntitiesSupport>(
+      this.getBeneficiariesTypeValuesWithLabels()
+    );
+
 
     return {
       beneficiaries: control
         ? [
-            beneficiaries,
+           values.beneficiaries,
             [
               CustomValidators.required,
               CustomValidators.maxLength(
@@ -141,48 +176,54 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
               ),
             ],
           ]
-        : beneficiaries,
+        : values.beneficiaries,
       beneficiariesNumber: control
         ? [
-            beneficiariesNumber,
-            [CustomValidators.required, CustomValidators.number,CustomValidators.maxLength(
-              CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
-            )],
+           values. beneficiariesNumber,
+            [
+              CustomValidators.required,
+              CustomValidators.number,
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
+              ),
+            ],
           ]
-        : beneficiariesNumber,
+        : values.beneficiariesNumber,
     };
   }
 
   getOrganizationOfficerFields(control: boolean = false): any {
-    const { arName, enName, email, jobTitle, mobileNo, phone } = this;
+    const values = ObjectUtils.getControlValues<OrganizationsEntitiesSupport>(
+      this.getOrganizationOfficerValuesWithLabels()
+    );
 
     return {
-      arName: control ? [arName, [CustomValidators.required]] : arName,
-      enName: control ? [enName, [CustomValidators.required]] : enName,
+      arName: control ? [values.arName, [CustomValidators.required]] :values. arName,
+      enName: control ? [values.enName, [CustomValidators.required]] :values. enName,
       email: control
-        ? [
+        ? [values.
             email,
-            [CustomValidators.required, CustomValidators.pattern('EMAIL')],
+            [CustomValidators.required,CustomValidators.pattern('EMAIL')],
           ]
-        : email,
-      jobTitle: control ? [jobTitle, [CustomValidators.required]] : jobTitle,
-      mobileNo: control ? [mobileNo, [CustomValidators.number]] : mobileNo,
-      phone: control ? [phone, [CustomValidators.required]] : phone,
+        : values.email,
+      jobTitle: control ? [values.jobTitle, [CustomValidators.required]] :values. jobTitle,
+      mobileNo: control ? [values.mobileNo, [CustomValidators.number]] :values. mobileNo,
+      phone: control ? [values.phone, [CustomValidators.required]] :values. phone,
     };
   }
   buildApprovalForm(control: boolean = false): any {
-    const {
-      followUpDate
-    } = this;
+    const { followUpDate } = this;
     return {
-      followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
-    }
+      followUpDate: control
+        ? [followUpDate, [CustomValidators.required]]
+        : followUpDate,
+    };
   }
   approve(): DialogRef {
-    return this.service.approve(this, WFResponseType.APPROVE)
+    return this.service.approve(this, WFResponseType.APPROVE);
   }
   finalApprove(): DialogRef {
-    return this.service.finalApprove(this, WFResponseType.FINAL_APPROVE)
+    return this.service.finalApprove(this, WFResponseType.FINAL_APPROVE);
   }
   convertToOrganizationsEntitiesSupport() {
     return new OrganizationsEntitiesSupport().clone({
@@ -201,5 +242,26 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
       phone: this.phone,
       description: this.description,
     });
+  }
+  getAdminResultByProperty(property: keyof OrganizationsEntitiesSupport): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
+      case 'organizationId':
+        adminResultValue = this.ouInfo;
+        break;
+      case 'serviceType':
+        adminResultValue = this.serviceTypeInfo;
+        break;
+      case 'caseStatus':
+        adminResultValue = this.caseStatusInfo;
+        break;
+
+      default:
+        adminResultValue = AdminResult.createInstance({arName: this[property] as string, enName: this[property] as string});
+    }
+    return adminResultValue ?? new AdminResult();
   }
 }

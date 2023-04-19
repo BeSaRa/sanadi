@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {AuditListGenericComponent} from '@app/generics/audit-list-generic-component';
 import {ContactOfficer} from '@models/contact-officer';
 import {LangService} from '@services/lang.service';
@@ -20,6 +20,7 @@ export class AuditContactOfficersComponent extends AuditListGenericComponent<Con
     super();
   }
 
+  @Input()
   displayColumns: string[] = ['arabicName', 'englishName', 'email', 'phone', 'passportNumber', 'actions'];
   actions: IMenuItem<ContactOfficer>[] = [
     // show difference

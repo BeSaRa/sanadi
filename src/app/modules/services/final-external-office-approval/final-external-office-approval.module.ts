@@ -10,12 +10,14 @@ import {
   FinalExternalOfficeApprovalComponent
 } from '@modules/services/final-external-office-approval/pages/final-external-office-approval/final-external-office-approval.component';
 import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
+import { AuditFinalExternalOfficeApprovalComponent } from './audit/audit-final-external-office-approval/audit-final-external-office-approval.component';
 
 
 @NgModule({
   declarations: [
     FinalExternalOfficeApprovalComponent,
-    FinalExternalOfficeApprovalOutputsComponent
+    FinalExternalOfficeApprovalOutputsComponent,
+    AuditFinalExternalOfficeApprovalComponent
   ],
   imports: [
     CommonModule,

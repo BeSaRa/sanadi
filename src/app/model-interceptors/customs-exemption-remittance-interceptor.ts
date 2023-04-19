@@ -7,8 +7,10 @@ import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittan
 export class CustomsExemptionRemittanceInterceptor implements IModelInterceptor<CustomsExemptionRemittance> {
   send(model: Partial<CustomsExemptionRemittance>): Partial<CustomsExemptionRemittance> {
     CustomsExemptionRemittanceInterceptor._deleteBeforeSend(model);
+    CustomsExemptionRemittanceInterceptor._deleteBeforeSend(model);
     return model;
   }
+
 
   receive(model: CustomsExemptionRemittance): CustomsExemptionRemittance {
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
@@ -18,15 +20,20 @@ export class CustomsExemptionRemittanceInterceptor implements IModelInterceptor<
     model.receiverTypeInfo = AdminResult.createInstance(model.receiverTypeInfo);
     model.countryInfo = AdminResult.createInstance(model.countryInfo);
     model.linkedProjectInfo = AdminResult.createInstance(model.linkedProjectInfo);
+    model.receiverTypeInfo = AdminResult.createInstance(model.receiverTypeInfo);
+    model.countryInfo = AdminResult.createInstance(model.countryInfo);
+    model.linkedProjectInfo = AdminResult.createInstance(model.linkedProjectInfo);
+
 
     if (model.getCaseStatus() === CommonCaseStatus.CANCELLED) {
       if (!!model.taskDetails?.responses) {
         model.taskDetails.responses = [WFResponseType.CLOSE]
       }
     }
-    return model;
-  }
 
+    return model;
+
+  }
   private static _deleteBeforeSend(model: Partial<CustomsExemptionRemittance>): void {
     delete model.requestTypeInfo;
     delete model.shipmentSourceInfo;

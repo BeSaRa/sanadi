@@ -1,0 +1,33 @@
+<tabs-list>
+  <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
+  <tab name="bankDetails" [template]="bankDetailsTemplate" [title]="lang.map.bank_details"></tab>
+  <tab name="executiveManagements" [template]="executiveManagementsTemplate"
+       [title]="lang.map.executive_management"></tab>
+  <tab name="bankBranch" [template]="bankBranchTemplate" [title]="lang.map.branches"></tab>
+</tabs-list>
+<ng-template #basicInfoTemplate>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #bankDetailsTemplate>
+  <audit-bank-account [newVersionList]="newVersion.bankAccountList"
+                      [oldVersionList]="oldVersion.bankAccountList"
+                      [caseType]="newVersion.caseType"
+                      [uniqueComparisonProperty]="'iBan'">
+  </audit-bank-account>
+</ng-template>
+
+<ng-template #executiveManagementsTemplate>
+  <audit-executive-management [newVersionList]="newVersion.executiveManagementList"
+                              [oldVersionList]="oldVersion.executiveManagementList"
+                              [uniqueComparisonProperty]="'phone'"
+                              [hidePassport]="false"
+  ></audit-executive-management>
+</ng-template>
+<ng-template #bankBranchTemplate>
+ <audit-bank-branch [newVersionList]="newVersion.branchList"
+                    [oldVersionList]="oldVersion.branchList"
+                    [uniqueComparisonProperty]="'fullName'"
+                  >
+ </audit-bank-branch>
+</ng-template>
+

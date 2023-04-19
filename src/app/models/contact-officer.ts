@@ -43,6 +43,7 @@ export class ContactOfficer extends SearchableCloneable<ContactOfficer> implemen
       email: {langKey: 'lbl_email', value: this.email},
       phone: {langKey: 'lbl_phone', value: this.phone},
       passportNumber: {langKey: 'passport_number', value: this.passportNumber},
+      mobileNo: {langKey: 'mobile_number', value: this.mobileNo},
     };
   }
 

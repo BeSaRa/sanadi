@@ -1,0 +1,11 @@
+<tabs-list>
+  <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
+ </tabs-list>
+<ng-template #basicInfoTemplate>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+  <audit-collection-item [newVersionList]="newVersion.collectionItemList"
+                      [oldVersionList]="oldVersion.collectionItemList"
+                      [caseType]="newVersion.caseType"
+                      [uniqueComparisonProperty]="'itemId'">
+  </audit-collection-item>
+</ng-template>

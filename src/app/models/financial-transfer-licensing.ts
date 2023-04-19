@@ -9,11 +9,14 @@ import { AdminResult } from '@app/models/admin-result';
 import { FactoryService } from '@app/services/factory.service';
 import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { ISearchFieldsMap } from '@app/types/types';
+import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { EmployeeService } from '@services/employee.service';
 import { FinancialTransfersProject } from './financial-transfers-project';
 import { LicenseApprovalModel } from './license-approval-model';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 const { send, receive } = new FinancialTransferLicensingInterceptor();
 
@@ -21,7 +24,7 @@ const { send, receive } = new FinancialTransferLicensingInterceptor();
 export class FinancialTransferLicensing extends LicenseApprovalModel<
   FinancialTransferLicensingService,
   FinancialTransferLicensing
-> {
+> implements IAuditModelProperties<FinancialTransferLicensing> {
   caseType: number = CaseTypes.FINANCIAL_TRANSFERS_LICENSING;
   organizationId!: number;
   description!: string;
@@ -95,7 +98,48 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
       delete this.searchFields.organization;
     }
   }
+  getAdminResultByProperty(property: keyof FinancialTransferLicensing): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
+      case 'caseStatus':
+        adminResultValue = this.caseStatusInfo;
+        break;
+      case 'currency':
+        adminResultValue = this.currencyInfo;
+        break;
+      case 'transferCountry':
+        adminResultValue = this.transferCountryInfo;
+        break;
+      case 'country':
+        adminResultValue = this.countryInfo;
+        break;
+      case 'transferType':
+        adminResultValue = this.transferTypeInfo;
+        break;
+      case 'transfereeType':
+        adminResultValue = this.transfereeTypeInfo;
+        break;
 
+
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: {langKey: 'request_type', value: this.requestType},
+      oldLicenseFullSerial:{langKey: 'serial_number', value: this.oldLicenseFullSerial},
+    };
+  }
   getBasicInfoFields(control = false): any {
     const {
       requestType,
@@ -115,7 +159,16 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
       oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
     };
   }
-
+  getTransferOperationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      transferType:{langKey: 'transfer_type', value: this.transferType},
+      subject:{langKey: 'subject', value: this.subject},
+      transferDescription:{langKey: 'lbl_description', value: this.transferDescription},
+      transferCountry:{langKey: 'transfer_to_country', value: this.transferCountry},
+      country:{langKey: 'execution_country', value: this.country},
+      qatariTransactionAmount:{langKey: 'transaction_amount_in_transfer_currency', value: this.qatariTransactionAmount},
+    };
+  }
   getTransferOperationFields(control = false): any {
     const {
       transferType,
@@ -171,7 +224,15 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         : qatariTransactionAmount,
     };
   }
-
+  getTransfereeBankAccountValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      transfereeType:{langKey: 'transferee_type', value: this.transfereeType},
+      receiverType:{langKey: 'entity_type', value: this.receiverType},
+      transferringEntityName:{langKey: 'entity_name', value: this.transferringEntityName},
+      transferAccountNumber:{langKey: 'account_number', value: this.transferAccountNumber},
+      transfereeBankName:{langKey: 'transferee_bank_name', value: this.transfereeBankName},
+      transfereeIBAN:{langKey: 'transferee_iban', value: this.transfereeIBAN}, };
+  }
   getTransfereeBankAccountFields(control = false): any {
     const {
       transfereeType,
@@ -224,7 +285,13 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         : transfereeIBAN,
     };
   }
-
+  getTransferBankAccountValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      bankName:{langKey: 'bank_name', value: this.bankName},
+      transferFromIBAN:{langKey: 'transfer_from_iban', value: this.transferFromIBAN},
+      accountNumber:{langKey: 'account_number', value: this.accountNumber},
+    }
+  }
   getTransferBankAccountFields(control = false): any {
     const { bankName, transferFromIBAN, accountNumber } = this;
     return {
@@ -258,7 +325,13 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         : accountNumber,
     };
   }
-
+  getAffidavitOfCompletionValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      currency:{langKey: 'currency', value: this.currency},
+      currencyTransferTransactionAmount:{langKey: 'transaction_amount_in_transfer_currency', value: this.currencyTransferTransactionAmount},
+      actualTransferDate:{langKey: 'lbl_transfer_operation_date', value: this.actualTransferDate},
+      transferNumber:{langKey: 'transfer_number', value: this.transferNumber},  }
+  }
   getAffidavitOfCompletionFields(control = false): any {
     const {
       currency,

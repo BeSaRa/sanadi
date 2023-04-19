@@ -1,3 +1,4 @@
+import { FinalExternalOfficeApprovalInterceptor } from './../model-interceptors/final-external-office-approval-interceptor';
 import {Injectable} from '@angular/core';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import {Pagination} from '@models/pagination';
@@ -28,6 +29,32 @@ import {PartnerApprovalInterceptor} from '@model-interceptors/partner-approval-i
 import {
   AuditPartnerApprovalComponent
 } from '@modules/services/partner-approval/audit/audit-partner-approval/audit-partner-approval.component';
+import { OrganizationsEntitiesSupport } from '@app/models/organizations-entities-support';
+import { AuditOrganizationsEntitiesSupportComponent } from '@app/modules/services/organization-entities-support/audit/audit-organizations-entities-support/audit-organizations-entities-support.component';
+import { OrganizationsEntitiesSupportInterceptor } from '@app/model-interceptors/organizations-entities-support-interceptor';
+import { Inquiry } from '@app/models/inquiry';
+import { InquiryInterceptor } from '@app/model-interceptors/inquiry-interceptor';
+import { AuditInquiryAndComplaintComponent } from '@app/modules/services/inquiries-and-complaints/audit/audit-inquiry-and-complaint/audit-inquiry-and-complaint.component';
+import { AwarenessActivitySuggestion } from '@app/models/awareness-activity-suggestion';
+import { AwarenessActivitySuggestionInterceptor } from '@app/model-interceptors/awareness-activity-suggestion';
+import { AuditAwarenessActivitySuggestionComponent } from '@app/modules/services/awareness-activity-suggestion/audit/audit-awareness-activity-suggestion/audit-awareness-activity-suggestion.component';
+import { CollectionApproval } from '@app/models/collection-approval';
+import { CollectionApprovalInterceptor } from '@app/model-interceptors/collection-approval-interceptor';
+import { AuditCollectionServicesApprovalComponent } from '@app/modules/services/collection-approval/audit/audit-collection-services-approval/audit-collection-services-approval.component';
+import { CollectorApproval } from '@app/models/collector-approval';
+import { CollectorApprovalInterceptor } from '@app/model-interceptors/collector-approval-interceptor';
+import { AuditCollectorApprovalComponent } from '@app/modules/services/collector-approval/audit/audit-collector-approval/audit-collector-approval.component';
+import { Employment } from '@app/models/employment';
+import { EmploymentInterceptor } from '@app/model-interceptors/employment-interceptor';
+import { AuditEmploymentComponent } from '@app/modules/services/employment/audit/audit-employment/audit-employment.component';
+import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
+import { ExternalOrgAffiliationInterceptor } from '@app/model-interceptors/external-org-affiliation-interceptor';
+import { AuditExternalOrganizationAffiliationComponent } from '@app/modules/services/external-organization-affiliation/audit/audit-external-organization-affiliation/audit-external-organization-affiliation.component';
+import { FinalExternalOfficeApproval } from '@app/models/final-external-office-approval';
+import { AuditFinalExternalOfficeApprovalComponent } from '@app/modules/services/final-external-office-approval/audit/audit-final-external-office-approval/audit-final-external-office-approval.component';
+import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
+import { FinancialTransferLicensingInterceptor } from '@app/model-interceptors/financial-transfer-licensing-interceptor';
+import { AuditFinancialTransfersLicensingComponent } from '@app/modules/services/financial-transfer-licensing/audit/audit-financial-transfers-licensing/audit-financial-transfers-licensing.component';
 
 @CastResponseContainer({
   $default: {
@@ -45,15 +72,44 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
   list: CaseAudit[] = [];
   caseModels: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittance,
-    [CaseTypes.PARTNER_APPROVAL]: PartnerApproval
+    [CaseTypes.PARTNER_APPROVAL]: PartnerApproval,
+    [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: OrganizationsEntitiesSupport,
+    [CaseTypes.INQUIRY]: Inquiry,
+    [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AwarenessActivitySuggestion,
+    [CaseTypes.COLLECTION_APPROVAL]: CollectionApproval,
+    [CaseTypes.COLLECTOR_LICENSING]: CollectorApproval,
+    [CaseTypes.EMPLOYMENT]: Employment,
+    [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: ExternalOrgAffiliation,
+    [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApproval,
+    [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensing,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
     [CaseTypes.PARTNER_APPROVAL]: PartnerApprovalInterceptor,
+    [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: OrganizationsEntitiesSupportInterceptor,
+    [CaseTypes.INQUIRY]: InquiryInterceptor,
+    [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AwarenessActivitySuggestionInterceptor,
+    [CaseTypes.COLLECTION_APPROVAL]: CollectionApprovalInterceptor,
+    [CaseTypes.COLLECTOR_LICENSING]: CollectorApprovalInterceptor,
+    [CaseTypes.EMPLOYMENT]: EmploymentInterceptor,
+    [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: ExternalOrgAffiliationInterceptor,
+    [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApprovalInterceptor,
+    [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensingInterceptor,
+
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
     [CaseTypes.PARTNER_APPROVAL]: AuditPartnerApprovalComponent,
+    [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: AuditOrganizationsEntitiesSupportComponent,
+    [CaseTypes.INQUIRY]: AuditInquiryAndComplaintComponent,
+    [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: AuditAwarenessActivitySuggestionComponent,
+    [CaseTypes.COLLECTION_APPROVAL]: AuditCollectionServicesApprovalComponent,
+    [CaseTypes.COLLECTOR_LICENSING]: AuditCollectorApprovalComponent,
+    [CaseTypes.EMPLOYMENT]: AuditEmploymentComponent,
+    [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: AuditExternalOrganizationAffiliationComponent,
+    [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: AuditFinalExternalOfficeApprovalComponent,
+    [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: AuditFinancialTransfersLicensingComponent,
+
   };
 
   constructor(public http: HttpClient,

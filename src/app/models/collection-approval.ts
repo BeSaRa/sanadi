@@ -11,12 +11,17 @@ import { mixinRequestType } from "@app/mixins/mixin-request-type";
 import { HasRequestType } from "@app/interfaces/has-request-type";
 import { mixinLicenseDurationType } from "@app/mixins/mixin-license-duration";
 import { HasLicenseDurationType } from "@app/interfaces/has-license-duration-type";
-import { ISearchFieldsMap } from "@app/types/types";
+import { ControlValueLabelLangKey, ISearchFieldsMap } from "@app/types/types";
 import { dateSearchFields } from "@app/helpers/date-search-fields";
 import { normalSearchFields } from "@app/helpers/normal-search-fields";
 import { infoSearchFields } from "@app/helpers/info-search-fields";
 import { CollectionApprovalInterceptor } from "@app/model-interceptors/collection-approval-interceptor";
 import { InterceptModel } from "@decorators/intercept-model";
+import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
+import { AuditOperationTypes } from "@app/enums/audit-operation-types";
+import { CommonUtils } from "@app/helpers/common-utils";
+import { ObjectUtils } from "@app/helpers/object-utils";
+
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new CollectionApprovalInterceptor();
@@ -25,7 +30,7 @@ const interceptor = new CollectionApprovalInterceptor();
   send: interceptor.send,
   receive: interceptor.receive
 })
-export class CollectionApproval extends _RequestType<CollectionApprovalService, CollectionApproval> implements HasRequestType, HasLicenseDurationType {
+export class CollectionApproval extends _RequestType<CollectionApprovalService, CollectionApproval> implements HasRequestType, HasLicenseDurationType,IAuditModelProperties<CollectionApproval> {
   caseType: number = CaseTypes.COLLECTION_APPROVAL;
   organizationId!: number;
   serviceSteps!: string[];
@@ -80,13 +85,21 @@ export class CollectionApproval extends _RequestType<CollectionApprovalService, 
       delete this.searchFields.organization;
     }
   }
-
-  buildBasicInfo(controls: boolean = false): any {
-    const { requestType, requestClassification, licenseDurationType } = this;
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
-      requestClassification: controls ? [requestClassification, [CustomValidators.required]] : requestClassification,
-      licenseDurationType: controls ? [licenseDurationType, [CustomValidators.required]] : licenseDurationType
+      requestType: {langKey: 'request_type', value: this.requestType},
+      requestClassification:{langKey: 'request_type', value: this.requestClassification},
+      licenseDurationType:{langKey: 'request_type', value: this.licenseDurationType},
+    };
+  }
+  buildBasicInfo(controls: boolean = false): any {
+    const values = ObjectUtils.getControlValues<CollectionApproval>(this.getBasicInfoValuesWithLabels());
+
+    return {
+      requestType: controls ? [values.requestType, [CustomValidators.required]] :values.requestType,
+      requestClassification: controls ? [values.requestClassification, [CustomValidators.required]] :values.requestClassification,
+      licenseDurationType: controls ? [values.licenseDurationType, [CustomValidators.required]] :values.licenseDurationType
     }
   }
 
@@ -108,5 +121,24 @@ export class CollectionApproval extends _RequestType<CollectionApprovalService, 
 
   hasInvalidCollectionItems(): boolean {
     return !this.collectionItemList.length || this.collectionItemList.some((item) => !item.hasValidApprovalInfo());
+  }
+  getAdminResultByProperty(property: keyof CollectionApproval): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
+      case 'caseStatus':
+        adminResultValue = this.caseStatusInfo;
+        break;
+
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
+    }
+    return adminResultValue ?? new AdminResult();
   }
 }

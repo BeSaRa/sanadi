@@ -1,3 +1,5 @@
+import { ControlValueLabelLangKey } from "@app/types/types";
+
 export interface HasCollectionItemBuildForm {
   identificationNumber: string;
   locationDetails: string;
@@ -11,4 +13,5 @@ export interface HasCollectionItemBuildForm {
   oldLicenseFullSerial: string;
 
   buildForm(controls: boolean): any
+  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey }
 }
