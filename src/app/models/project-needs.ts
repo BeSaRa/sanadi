@@ -1,6 +1,8 @@
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { SearchableCloneable } from './searchable-cloneable';
+import { ISearchFieldsMap } from '@app/types/types';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 
 export class ProjectNeed extends SearchableCloneable<ProjectNeed> {
 
@@ -23,6 +25,9 @@ export class ProjectNeed extends SearchableCloneable<ProjectNeed> {
       goals: withControls ? [goals, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : goals,
     };
   }
+  searchFields: ISearchFieldsMap<ProjectNeed> = {
+    ...normalSearchFields(['projectName','projectDescription','totalCost','beneficiaries','goals'])
+  };
 
 }
 

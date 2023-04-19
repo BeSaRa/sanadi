@@ -1,10 +1,12 @@
 <fieldset [disabled]="readonly">
     <app-table
+    #table
     [filter]="filterControl.value"
     [useSearchToFilter]="true"
+    [data]="(model?.componentList)!"
     >
         <table *ngIf="model" class="table mt-3 table-striped table-bordered caption-top"
-            cdk-table [dataSource]="(model?.componentList)!">
+            cdk-table [dataSource]="table.dataSource">
             <ng-container cdkColumnDef="extra-header">
             <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef >
                 <table-header tableTitle="project_components" [add$]="add$" [skipClearSort]="true" (textChange)="filterControl.setValue($event)">
