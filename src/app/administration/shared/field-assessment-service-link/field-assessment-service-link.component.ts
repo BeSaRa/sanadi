@@ -28,7 +28,7 @@ import { FieldAssessmentTypesEnum } from '@app/enums/field-assessment-types.enum
 export class FieldAssessmentServiceLinkComponen implements OnInit, OnDestroy {
   selectedLinksIds: number[] = [];
   get displayedColumns(): string[] {
-    return this.readonly ? ['arName', 'enName', 'status'] : ['checkbox', 'arName', 'enName', 'status', 'actions'];
+    return this.readonly ? ['arName', 'enName'] : ['checkbox', 'arName', 'enName', 'actions'];
   }
   filterControl: UntypedFormControl = new UntypedFormControl();
   selectedLinkControl: UntypedFormControl = new UntypedFormControl();
@@ -107,10 +107,10 @@ export class FieldAssessmentServiceLinkComponen implements OnInit, OnDestroy {
       return;
     }
     const addLink$ = this.fieldAssessmentServiceLinkService
-      .createFieldAssessmentServiceLink(new FieldAssessmentServiceLink().clone({
+      .createFieldAssessmentServiceLink({
         serviceId: this.selectedLinkControl.value.id,
-        serviceInfo: AdminResult.createInstance(this.selectedLinkControl.value)
-      }).denormalize())
+        fieldAssessmentId: this.model.id,
+      })
       .pipe(share())
 
     addLink$
@@ -140,21 +140,6 @@ export class FieldAssessmentServiceLinkComponen implements OnInit, OnDestroy {
         this.filedTable && this.filedTable.clearSelection();
         this.FieldAssessmentServiceLinkChanged$.next(this.FieldAssessmentServiceLink.filter(fa => !ides.includes(fa.id)));
       });
-  }
-
-  toggleFieldAssessmentServiceLink(FieldAssessmentServiceLink: FieldAssessmentServiceLink): void {
-    FieldAssessmentServiceLink.toggleStatus()
-      .subscribe(() => {
-        let updatedFieldAssessmentServiceLink = this.FieldAssessmentServiceLink.map(x => {
-          if (x.id === FieldAssessmentServiceLink.id) {
-            x.status = 1 - FieldAssessmentServiceLink.status; // toggling 1 and 0
-          }
-          return x;
-        })
-        this.FieldAssessmentServiceLinkChanged$.next(updatedFieldAssessmentServiceLink);
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: FieldAssessmentServiceLink.serviceInfo.getName() }));
-      }
-      )
   }
 
   deleteFieldAssessmentServiceLink(FieldAssessmentServiceLink: FieldAssessmentServiceLink): void {

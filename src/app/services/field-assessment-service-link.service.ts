@@ -56,25 +56,14 @@ export class FieldAssessmentServiceLinkService extends CrudGenericService<FieldA
   }
 
   @HasInterception
-  createFieldAssessmentServiceLink(@InterceptParam() FieldAssessmentServiceLink: Partial<FieldAssessmentServiceLink>): Observable<FieldAssessmentServiceLink> {
-    return this.http.post<IDefaultResponse<FieldAssessmentServiceLink>>(this.urlService.URLS.TEAMS + '/add-user', FieldAssessmentServiceLink)
+  createFieldAssessmentServiceLink(model: {fieldAssessmentId: number, serviceId: number}): Observable<FieldAssessmentServiceLink> {
+    return this.http.post<IDefaultResponse<FieldAssessmentServiceLink>>(this.urlService.URLS.FIELD_ASSESSMENT_SERVICE, model)
       .pipe(map((res) => res.rs))
   }
 
   deleteBulk(FieldAssessmentServiceLinkIds: number[]): Observable<Record<number, boolean>> {
-    return this.http.request<IDefaultResponse<Record<number, boolean>>>('DELETE', this.urlService.URLS.TEAMS + '/remove-users/bulk', {
+    return this.http.request<IDefaultResponse<Record<number, boolean>>>('DELETE', this.urlService.URLS.FIELD_ASSESSMENT_SERVICE + '/bulk', {
       body: FieldAssessmentServiceLinkIds
     }).pipe(map(res => res.rs));
   }
-
-  deactivate(FieldAssessmentServiceLinksIds: number[]): Observable<Record<number, boolean>> {
-    return this.http.put<IDefaultResponse<Record<number, boolean>>>(this.urlService.URLS.TEAMS + '/de-activate-users/bulk', FieldAssessmentServiceLinksIds)
-      .pipe(map(res => res.rs));
-  }
-
-  activate(FieldAssessmentServiceLinksIds: number[]): Observable<Record<number, boolean>> {
-    return this.http.put<IDefaultResponse<Record<number, boolean>>>(this.urlService.URLS.TEAMS + '/activate-users/bulk', FieldAssessmentServiceLinksIds)
-      .pipe(map(res => res.rs));
-  }
-
 }

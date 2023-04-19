@@ -35,22 +35,6 @@ export class FieldAssessmentServiceLink extends Cloneable<FieldAssessmentService
     return this;
   }
 
-  isActive(): boolean {
-    return Number(this.status) === CommonStatusEnum.ACTIVATED;
-  }
-
-  toggleStatus(): Observable<boolean> {
-    return this.status ? this.deactivate() : this.activate();
-  }
-
-  activate(): Observable<boolean> {
-    return this.service.activate([this.id]).pipe(map(i => i[this.id]));
-  }
-
-  deactivate(): Observable<boolean> {
-    return this.service.deactivate([this.id]).pipe(map(i => i[this.id]));
-  }
-
   delete(): Observable<boolean> {
     return this.service.deleteBulk([this.id]).pipe(map(i => i[this.id]));
   }

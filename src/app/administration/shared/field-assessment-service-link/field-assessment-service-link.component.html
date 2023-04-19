@@ -54,15 +54,6 @@
         <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.serviceInfo.enName}} </td>
       </ng-container>
-      <ng-container cdkColumnDef="status">
-        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
-        <td cdk-cell *cdkCellDef="let row">
-          <div class="form-check form-switch">
-            <input type="checkbox" [disabled]="readonly" (change)="toggleFieldAssessmentServiceLink(row)" [checked]="row.status"
-                   class="form-check-input">
-          </div>
-        </td>
-      </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; index as itemIndex">
