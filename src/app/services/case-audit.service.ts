@@ -52,6 +52,9 @@ import { ExternalOrgAffiliationInterceptor } from '@app/model-interceptors/exter
 import { AuditExternalOrganizationAffiliationComponent } from '@app/modules/services/external-organization-affiliation/audit/audit-external-organization-affiliation/audit-external-organization-affiliation.component';
 import { FinalExternalOfficeApproval } from '@app/models/final-external-office-approval';
 import { AuditFinalExternalOfficeApprovalComponent } from '@app/modules/services/final-external-office-approval/audit/audit-final-external-office-approval/audit-final-external-office-approval.component';
+import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
+import { FinancialTransferLicensingInterceptor } from '@app/model-interceptors/financial-transfer-licensing-interceptor';
+import { AuditFinancialTransfersLicensingComponent } from '@app/modules/services/financial-transfer-licensing/audit/audit-financial-transfers-licensing/audit-financial-transfers-licensing.component';
 
 @CastResponseContainer({
   $default: {
@@ -78,6 +81,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.EMPLOYMENT]: Employment,
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: ExternalOrgAffiliation,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApproval,
+    [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensing,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -90,6 +94,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.EMPLOYMENT]: EmploymentInterceptor,
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: ExternalOrgAffiliationInterceptor,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApprovalInterceptor,
+    [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensingInterceptor,
 
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
@@ -103,6 +108,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.EMPLOYMENT]: AuditEmploymentComponent,
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: AuditExternalOrganizationAffiliationComponent,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: AuditFinalExternalOfficeApprovalComponent,
+    [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: AuditFinancialTransfersLicensingComponent,
 
   };
 

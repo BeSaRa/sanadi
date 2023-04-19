@@ -19,6 +19,8 @@ import {
 import {
   SelectAuthorizedEntityPopupComponent
 } from '@modules/services/financial-transfer-licensing/popups/select-authorized-entity-popup/select-authorized-entity-popup.component';
+import { AuditFinancialTransfersLicensingComponent } from './audit/audit-financial-transfers-licensing/audit-financial-transfers-licensing.component';
+import { AuditFinancialTransfersProjectsComponent } from './audit/audit-financial-transfers-projects/audit-financial-transfers-projects.component';
 
 
 @NgModule({
@@ -28,7 +30,9 @@ import {
     FinancialTransferLicensingApprovePopupComponent,
     FinancialTransfersProjectsComponent,
     SelectPreRegisteredPopupComponent,
-    SelectAuthorizedEntityPopupComponent
+    SelectAuthorizedEntityPopupComponent,
+    AuditFinancialTransfersLicensingComponent,
+    AuditFinancialTransfersProjectsComponent
   ],
   imports: [
     CommonModule,
