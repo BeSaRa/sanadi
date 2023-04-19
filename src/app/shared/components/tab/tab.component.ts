@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Host, Input, OnDestroy, OnInit, Output, TemplateRef } from '@angular/core';
-import { TabListService } from '../tabs/tab-list-service';
-import { delay, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { animate, state, style, transition, trigger } from "@angular/animations";
+import {Component, ElementRef, EventEmitter, Host, Input, OnDestroy, OnInit, Output, TemplateRef} from '@angular/core';
+import {TabListService} from '../tabs/tab-list-service';
+import {delay, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'tab , [tab]',
@@ -47,7 +47,8 @@ export class TabComponent implements OnInit, OnDestroy {
   tabIdRef: string = '';
   expanded: string = 'close';
 
-  constructor(@Host() private tabListService: TabListService) {
+  constructor(@Host() private tabListService: TabListService,
+              private elementRef: ElementRef) {
   }
 
   ngOnInit(): void {
@@ -79,7 +80,7 @@ export class TabComponent implements OnInit, OnDestroy {
       });
   }
 
-  toggleAccordion() {
+  toggleAccordion($event: any) {
     if (this.tabListService.collapse) {
       this.tabListService.tabs.forEach((t) => {
         if (t != this)
@@ -88,5 +89,21 @@ export class TabComponent implements OnInit, OnDestroy {
     }
     this.expanded = this.expanded === 'open' ? 'close' : 'open';
     this.onExpand.emit(this);
+    if (this.tabListService.scrollToViewPort) {
+      this.scrollToVisiblePosition($event);
+    }
   }
+
+  scrollToVisiblePosition($event: any) {
+    of(this.expanded)
+      .pipe(delay(200))
+      .subscribe((expansionStatus) => {
+        if (expansionStatus === 'open') {
+          let mainContent = document.getElementById('main-content')!;
+          let heightOfTabAccordion = $event.target.clientHeight + 10; //added margin/padding to the height
+          mainContent.scrollTop = (this.elementRef.nativeElement as HTMLElement).offsetTop - heightOfTabAccordion
+        }
+      })
+  }
+
 }

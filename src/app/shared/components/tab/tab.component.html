@@ -3,7 +3,7 @@
 </div>
 <div *ngIf="accordionView" class="accordion-item mb-3">
   <h2 class="accordion-header" id="title-{{tabId}}">
-    <button (click)="toggleAccordion()" class="accordion-button" type="button"
+    <button (click)="toggleAccordion($event)" class="accordion-button" type="button"
             [attr.data-bs-target]="tabIdRef"
             aria-expanded="true" [attr.aria-controls]="('title'+tabId)">
       <div class="d-flex">
@@ -16,7 +16,7 @@
     </button>
   </h2>
   <div [id]="tabId" class="accordion-collapse collapse show" [attr.aria-labelledby]="('title'+tabId)">
-    <div  [@toggleExpand]="expanded" class="accordion-body">
+    <div [@toggleExpand]="expanded" class="accordion-body">
       <ng-container [ngTemplateOutlet]="content"></ng-container>
     </div>
   </div>

@@ -122,7 +122,8 @@
 <ng-template #reportsTemplate>
   <urgent-intervention-report-list #urgentInterventionReportListComponent
                                    [readonly]="readonly" [model]="model"
-                                   [documentId]="(selectedLicense ? selectedLicense.id : '')"></urgent-intervention-report-list>
+                                   [documentVsId]="(selectedLicense ? selectedLicense.vsId : '')">
+  </urgent-intervention-report-list>
 </ng-template>
 <ng-template #attachmentsTab>
   <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"

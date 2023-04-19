@@ -142,8 +142,10 @@ export class UrgentInterventionLicenseFollowupService extends BaseGenericEServic
     })
       .pipe(catchError(() => of(null)));
   }
-  deleteAttachment(attachmentId: string): Observable<any> {
-    return this.http.delete<any>(this._getURLSegment() + '/report/' + attachmentId )
+  deleteAttachment(attachmentId: string,vsId:string): Observable<any> {
+    return this.http.delete<any>(this._getURLSegment() + '/report/' + attachmentId,{
+      params: new HttpParams().set('vsId', vsId)
+    } )
       .pipe(catchError(() => of(null)));
   }
 
