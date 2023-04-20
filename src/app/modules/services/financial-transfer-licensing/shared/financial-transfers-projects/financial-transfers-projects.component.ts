@@ -163,7 +163,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
   ];
 
   addAllowed(): boolean {
-    return !this.readonly && !this.showForm;
+    return !this.readonly && this.requestType == FinancialTransferRequestTypes.NEW && !this.showForm;
   }
 
   private listenToAdd() {
