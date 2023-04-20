@@ -44,7 +44,7 @@
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
           <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
-            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex" [rebindTrigger]="readonly">
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex" [rebindTrigger]="readonly" [rebindTrigger]="readonly">
             </grid-actions>
           </td>
         </ng-container>
