@@ -77,7 +77,7 @@
     <ng-container cdkColumnDef="actions">
       <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
       <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
-        <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+        <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex" [rebindTrigger]="readonly">
           <span afterTemplate class="form-check form-switch switch-action"
                 *ngIf="!readonly && !row.isDefaultItem() && row.status !== commonStatusEnum.RETIRED && (!parent || parent.isActive())"
                 style="top: auto">
@@ -100,4 +100,3 @@
 </app-table>
 <app-paginator #paginator (pageChange)="pageChange($event)" [length]="count" [backend]="true"></app-paginator>
 <context-menu-item #menu [actions]="actions"></context-menu-item>
-
