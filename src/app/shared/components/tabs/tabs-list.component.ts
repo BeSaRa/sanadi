@@ -54,6 +54,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
 
   tabContainerId: string = '';
   tabContainerNumber: number = 0;
+  accordionContainerId: string = '';
 
   @ContentChildren(TabComponent) tabs!: QueryList<TabComponent>;
   @Output() onTabChange: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
@@ -61,6 +62,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   constructor(@Self() public tabListService: TabListService, private employeeService: EmployeeService) {
     this.tabContainerNumber = this.tabListService.containerId;
     this.tabContainerId = 'tab-list-' + this.tabContainerNumber;
+    this.accordionContainerId = 'accordion-' + this.tabContainerNumber;
   }
 
   ngOnInit(): void {

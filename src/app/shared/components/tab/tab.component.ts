@@ -1,33 +1,14 @@
-import {Component, ElementRef, EventEmitter, Host, Input, OnDestroy, OnInit, Output, TemplateRef} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Host, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {TabListService} from '../tabs/tab-list-service';
 import {delay, takeUntil} from 'rxjs/operators';
 import {of, Subject} from 'rxjs';
-import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'tab , [tab]',
   templateUrl: './tab.component.html',
-  styleUrls: ['./tab.component.scss'],
-  animations: [
-    trigger('toggleExpand', [
-      state('open', style({
-        height: '!',
-        opacity: 1,
-        padding: '*'
-      })),
-      state('close', style({
-        height: 0,
-        opacity: 0,
-        padding: 0,
-        overflow: 'hidden'
-      })),
-      transition('open <=> close', [
-        animate('.250s ease-in-out')
-      ])
-    ])
-  ]
+  styleUrls: ['./tab.component.scss']
 })
-export class TabComponent implements OnInit, OnDestroy {
+export class TabComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() title!: string;
   active: boolean = false;
   @Input() template!: TemplateRef<any>;
@@ -44,7 +25,10 @@ export class TabComponent implements OnInit, OnDestroy {
   containerId: number = 0;
   tabId: string = '';
   tabIdRef: string = '';
-  expanded: string = 'close';
+  expansionState: 'open' | 'close' = 'close';
+
+  accordionCollapsable: boolean = false;
+  accordionIdRef: string = '';
 
   constructor(@Host() private tabListService: TabListService,
               private elementRef: ElementRef) {
@@ -56,8 +40,20 @@ export class TabComponent implements OnInit, OnDestroy {
     this.containerId = this.tabListService.containerId;
     this.tabId = (this.name || Date.now().toString()) + this.containerId;
     this.tabIdRef = '#' + this.tabId;
-    this.expanded = this.tabListService.collapse ? 'close' : 'open';
+    this.expansionState = this.tabListService.collapse ? 'close' : 'open';
+    if (this.accordionView) {
+      this.accordionCollapsable = this.tabListService.collapse;
+      this.accordionIdRef = '#accordion-' + this.tabListService.containerId;
+    }
     this.listenToTabChange();
+  }
+
+  ngAfterViewInit() {
+    Promise.resolve().then(() => {
+      if (this.disabled) {
+        this.expansionState = 'close';
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -80,30 +76,36 @@ export class TabComponent implements OnInit, OnDestroy {
   }
 
   toggleAccordion($event: any) {
-    if (this.tabListService.collapse) {
-      this.tabListService.tabs.forEach((t) => {
-        if (t != this)
-          t.expanded = 'close';
-      })
+    if (this.disabled) {
+      this.expansionState = 'close';
+      $event.preventDefault();
+      return;
     }
-    this.expanded = this.expanded === 'open' ? 'close' : 'open';
-    if (this.expanded === 'open') {
+    this.expansionState = this.expansionState === 'open' ? 'close' : 'open';
+
+    if (this.expansionState === 'open') {
+      this.tabListService.changeSelectedTabTo$.next(this);
       this.tabListService.onTabChangeEvent.emit(this);
-    }
-    if (this.tabListService.scrollToViewPort) {
-      this.scrollToVisiblePosition($event);
+
+      if (this.accordionCollapsable) {
+        this.tabListService.tabs.filter(x => x.tabId !== this.tabId).forEach((item) => {
+          item.expansionState = 'close';
+        });
+      }
+
+      if (this.tabListService.scrollToViewPort) {
+        this.scrollToVisiblePosition($event);
+      }
     }
   }
 
-  scrollToVisiblePosition($event: any) {
-    of(this.expanded)
+  private scrollToVisiblePosition($event: any) {
+    of(this.expansionState)
       .pipe(delay(200))
-      .subscribe((expansionStatus) => {
-        if (expansionStatus === 'open') {
-          let mainContent = this.elementRef.nativeElement.closest('.dialog-content') ?? document.getElementById('main-content')!;
-          let heightOfTabAccordion = $event.target.clientHeight + 10; //added margin/padding to the height
-          mainContent.scrollTop = (this.elementRef.nativeElement as HTMLElement).offsetTop - heightOfTabAccordion;
-        }
+      .subscribe((_) => {
+        let mainContent = this.elementRef.nativeElement.closest('.dialog-content') ?? document.getElementById('main-content')!;
+        let heightOfTabAccordion = $event.target.clientHeight + 10; //added margin/padding to the height
+        mainContent.scrollTop = (this.elementRef.nativeElement as HTMLElement).offsetTop - heightOfTabAccordion;
       })
   }
 
