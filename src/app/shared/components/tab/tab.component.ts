@@ -99,9 +99,9 @@ export class TabComponent implements OnInit, OnDestroy {
       .pipe(delay(200))
       .subscribe((expansionStatus) => {
         if (expansionStatus === 'open') {
-          let mainContent = document.getElementById('main-content')!;
+          let mainContent = this.elementRef.nativeElement.closest('.dialog-content') ?? document.getElementById('main-content')!;
           let heightOfTabAccordion = $event.target.clientHeight + 10; //added margin/padding to the height
-          mainContent.scrollTop = (this.elementRef.nativeElement as HTMLElement).offsetTop - heightOfTabAccordion
+          mainContent.scrollTop = (this.elementRef.nativeElement as HTMLElement).offsetTop - heightOfTabAccordion;
         }
       })
   }
