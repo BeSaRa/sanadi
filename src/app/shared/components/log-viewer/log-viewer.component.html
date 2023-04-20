@@ -1,15 +1,14 @@
 <ng-template #reloadRowTemplate>
   <div class="row">
     <div class="col-12 text-end">
-      <button [tooltip]="lang.map.btn_reload" (click)="reload$.next()" class="btn icon-btn">
-        <i class="mdi mdi-reload text-primary"></i></button>
+      <ng-container [ngTemplateOutlet]="reloadButtonTemplate"></ng-container>
     </div>
   </div>
 </ng-template>
-<ng-template #reloadButtonAbsoluteTemplate>
-  <button [tooltip]="lang.map.btn_reload" (click)="reload$.next()"
-          class="btn icon-btn position-absolute top-0 end-0">
-    <i class="mdi mdi-reload text-primary"></i></button>
+<ng-template #reloadButtonTemplate>
+  <button [tooltip]="lang.map.btn_reload" (click)="reload$.next()" class="btn icon-btn">
+    <i class="mdi mdi-reload text-primary"></i>
+  </button>
 </ng-template>
 <ng-template #itemLocationTemplate>
   <service-log-item-location [locationsList]="locations" [caseType]="caseType"
@@ -27,24 +26,24 @@
   <service-log-list [logsList]="logsHistory" [displayedColumns]="displayedColumnsHistory"></service-log-list>
 </ng-template>
 <ng-template #onePageCategorizedTemplate>
-  <heading-row [labelKey]="'action_others'"></heading-row>
-  <ng-container [ngTemplateOutlet]="otherLogsWithItemLocation"></ng-container>
+  <heading-row [labelKey]="'action_others'" [extraButtonsTemplate]="reloadButtonTemplate"></heading-row>
+  <ng-container [ngTemplateOutlet]="otherLogsContainerTemplate"></ng-container>
   <heading-row [labelKey]="'logs_history'"></heading-row>
   <ng-container [ngTemplateOutlet]="historyLogsListTemplate"></ng-container>
 </ng-template>
-<ng-template #allLogsWithItemLocation>
+<ng-template #allLogsContainerTemplate>
   <ng-container *ngIf="hideItemLocation" [ngTemplateOutlet]="allLogsListTemplate"></ng-container>
   <ng-container *ngIf="!hideItemLocation">
-    <tabs-list class="position-relative" [accordionView]="true" [collapse]="false">
+    <tabs-list [accordionView]="true" [collapse]="false">
       <tab name="itemLocation" [template]="itemLocationTemplate" [title]="lang.map.item_location"></tab>
       <tab name="logs" [template]="allLogsListTemplate" [title]="lang.map.logs"></tab>
     </tabs-list>
   </ng-container>
 </ng-template>
-<ng-template #otherLogsWithItemLocation>
+<ng-template #otherLogsContainerTemplate>
   <ng-container *ngIf="hideItemLocation" [ngTemplateOutlet]="otherLogsListTemplate"></ng-container>
   <ng-container *ngIf="!hideItemLocation">
-    <tabs-list class="position-relative" [accordionView]="true" [collapse]="false">
+    <tabs-list [accordionView]="true" [collapse]="false">
       <tab name="itemLocation" [template]="itemLocationTemplate" [title]="lang.map.item_location"></tab>
       <tab name="logs" [template]="otherLogsListTemplate" [title]="lang.map.logs"></tab>
     </tabs-list>
@@ -54,23 +53,20 @@
   <!-- Not Categorized -->
   <ng-container *ngIf="!categorizeLogs">
     <ng-container [ngTemplateOutlet]="reloadRowTemplate"></ng-container>
-    <ng-container [ngTemplateOutlet]="allLogsWithItemLocation"></ng-container>
+    <ng-container [ngTemplateOutlet]="allLogsContainerTemplate"></ng-container>
   </ng-container>
 
   <!-- Categorized -->
   <ng-container *ngIf="categorizeLogs">
-    <ng-container *ngIf="displayCategorizedAs === 'one-page'">
-      <div class="position-relative">
-        <ng-container [ngTemplateOutlet]="reloadButtonAbsoluteTemplate"></ng-container>
-        <ng-container [ngTemplateOutlet]="onePageCategorizedTemplate"></ng-container>
-      </div>
-    </ng-container>
+    <ng-container *ngIf="displayCategorizedAs === 'one-page'"
+                  [ngTemplateOutlet]="onePageCategorizedTemplate"></ng-container>
 
     <ng-container *ngIf="displayCategorizedAs === 'tabs'">
       <ng-container *ngIf="accordionView" [ngTemplateOutlet]="reloadRowTemplate"></ng-container>
-      <tabs-list class="position-relative" [accordionView]="accordionView" (onTabChange)="tabChanged($event)">
-        <ng-container *ngIf="!accordionView" [ngTemplateOutlet]="reloadButtonAbsoluteTemplate"></ng-container>
-        <tab name="other_actions" [template]="otherLogsWithItemLocation" [title]="lang.map.action_others"></tab>
+      <tabs-list [accordionView]="accordionView" (onTabChange)="tabChanged($event)"
+                 [extraButtonsTemplate]="!accordionView ? reloadButtonTemplate : undefined"
+                 [extraButtonsPositioning]="'relative'">
+        <tab name="other_actions" [template]="otherLogsContainerTemplate" [title]="lang.map.action_others"></tab>
         <tab name="history_actions" [template]="historyLogsListTemplate" [title]="lang.map.logs_history"></tab>
       </tabs-list>
     </ng-container>

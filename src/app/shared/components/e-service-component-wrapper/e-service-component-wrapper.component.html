@@ -15,18 +15,24 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
             (click)="canShowMatrixNotification = false;"></button>
   </div>
+
+  <ng-template #tabsExtraButtonsTemplate>
+    <button (click)="print()" [disabled]="!model?.id"
+            class="btn btn-primary btn-sm">
+      <i class="mdi {{actionIconsEnum.PRINT}}"></i>
+      <span class="px-1"></span>
+      <span>{{lang.map.print}}</span>
+    </button>
+  </ng-template>
+
   <ng-container *ngIf="internal">
-    <tabs-list (onTabChange)="onTabChange($event)" class="position-relative">
-      <button (click)="print()" [disabled]="!model?.id"
-              class="btn btn-primary btn-sm d-flex position-absolute top-0 end-0">
-        <i class="mdi {{actionIconsEnum.PRINT}}"></i>
-        <span class="px-1"></span>
-        <span>{{lang.map.print}}</span>
-      </button>
+    <tabs-list (onTabChange)="onTabChange($event)" [extraButtonsTemplate]="tabsExtraButtonsTemplate"
+               [extraButtonsPositioning]="'relative'">
       <tab [title]="lang.map.request_info" name="request_info">
         <ng-template #internalContainer></ng-template>
       </tab>
-      <tab [title]="lang.map.attachments" [hideIcon]="true" [template]="attachment" name="attachments">{{lang.map.attachments}}</tab>
+      <tab [title]="lang.map.attachments" [hideIcon]="true" [template]="attachment"
+           name="attachments">{{lang.map.attachments}}</tab>
       <tab [title]="lang.map.logs" [template]="logsTemplate" name="logs">{{lang.map.logs}}</tab>
       <!--      <tab [title]="lang.map.outputs" [template]="outputs" name="outputs">{{lang.map.outputs}}</tab>-->
       <tab [title]="lang.map.supporting_information" name="supporting_information">
@@ -62,7 +68,8 @@
             <ng-container [ngTemplateOutlet]="actionButtonTemplate"
                           [ngTemplateOutletContext]="{data: action}"></ng-container>
           </ng-container>
-          <ng-container *ngIf="group.key === charityViewButtonsGroupEnum.CENTER" [ngTemplateOutlet]="validateButtonTemplate"></ng-container>
+          <ng-container *ngIf="group.key === charityViewButtonsGroupEnum.CENTER"
+                        [ngTemplateOutlet]="validateButtonTemplate"></ng-container>
         </div>
       </div>
     </div>
