@@ -16,6 +16,7 @@ export class TabListService implements OnDestroy {
   public accordionView: boolean = false;
   public hasForm: boolean = false;
   collapse: boolean = false;
+  scrollToViewPort: boolean = false;
 
 
   constructor() {
@@ -30,11 +31,12 @@ export class TabListService implements OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  setTabs(tabs: QueryList<TabComponent>, activeTabIndex: number, collapse: boolean, onTabChangeEvent: EventEmitter<TabComponent>): void {
+  setTabs(tabs: QueryList<TabComponent>, activeTabIndex: number, collapse: boolean, scrollToViewPort: boolean, onTabChangeEvent: EventEmitter<TabComponent>): void {
     this.tabs = tabs;
     this.collapse = collapse;
     this.hasTabs = true;
     this.onTabChangeEvent = onTabChangeEvent;
+    this.scrollToViewPort = scrollToViewPort;
     this.activeTabIndex = typeof activeTabIndex !== undefined ? activeTabIndex : 0;
     if (this.tabs.length) {
       this.selectActiveIndexOrFirst();
