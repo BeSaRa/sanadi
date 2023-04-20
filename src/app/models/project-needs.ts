@@ -28,6 +28,7 @@ export class ProjectNeed extends SearchableCloneable<ProjectNeed> {
   searchFields: ISearchFieldsMap<ProjectNeed> = {
     ...normalSearchFields(['projectName','projectDescription','totalCost','beneficiaries','goals'])
   };
+
 }
 
 export type ProjectNeeds = Partial<ProjectNeed>[];
