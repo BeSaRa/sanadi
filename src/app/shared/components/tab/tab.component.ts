@@ -38,7 +38,6 @@ export class TabComponent implements OnInit, OnDestroy {
   @Input() hideIcon?: boolean = false;
 
   private destroy$: Subject<any> = new Subject<any>();
-  @Output() onExpand: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
 
   accordionView: boolean = false;
   hasForm: boolean = false;
@@ -88,7 +87,9 @@ export class TabComponent implements OnInit, OnDestroy {
       })
     }
     this.expanded = this.expanded === 'open' ? 'close' : 'open';
-    this.onExpand.emit(this);
+    if (this.expanded === 'open') {
+      this.tabListService.onTabChangeEvent.emit(this);
+    }
     if (this.tabListService.scrollToViewPort) {
       this.scrollToVisiblePosition($event);
     }
