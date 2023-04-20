@@ -9,7 +9,8 @@ import {
   OnInit,
   Output,
   QueryList,
-  Self
+  Self,
+  TemplateRef
 } from '@angular/core';
 import {TabComponent} from '../tab/tab.component';
 import {Subject} from 'rxjs';
@@ -31,6 +32,8 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   @Input() accordionView: boolean = false;
   @Input() hasForm: boolean = false;
   @Input() scrollToViewPort: boolean = true;
+  @Input() extraButtonsTemplate?: TemplateRef<any>;
+  @Input() extraButtonsPositioning: 'relative' | 'flex' = 'flex';
 
   private _collapse: boolean = false;
   @Input()

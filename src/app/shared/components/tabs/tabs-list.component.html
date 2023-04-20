@@ -1,15 +1,39 @@
-<ul *ngIf="tabs.length && !accordionView" [id]="tabContainerId" role="tablist" class="nav nav-tabs">
-  <li *ngFor="let tab of tabs" role="presentation" class="nav-item">
-    <a class="nav-link position-relative tab-link" [class.disabled]="tab.disabled" [class.active]="tab.active"
-       aria-current="page" data-bs-toggle="tab" role="tab"
-       (click)="selectTab(tab)">{{tab.title}}
-      <span *ngIf="tab.hasError && !tab.hideIcon"
-            class="position-absolute text-danger top-0 start-50 translate-middle mdi mdi-alert-circle"></span>
-      <span *ngIf="!tab.hasError && !tab.hideIcon && hasForm"
-        class="position-absolute text-success top-0 start-50 translate-middle mdi mdi-check-circle"></span>
-    </a>
-  </li>
-</ul>
+<ng-template #tabsTemplate>
+  <ul *ngIf="tabs.length && !accordionView" [id]="tabContainerId" role="tablist" class="nav nav-tabs">
+    <li *ngFor="let tab of tabs" role="presentation" class="nav-item">
+      <a class="nav-link position-relative tab-link" [class.disabled]="tab.disabled" [class.active]="tab.active"
+         aria-current="page" data-bs-toggle="tab" role="tab"
+         (click)="selectTab(tab)">{{tab.title}}
+        <span *ngIf="tab.hasError && !tab.hideIcon"
+              class="position-absolute text-danger top-0 start-50 translate-middle mdi mdi-alert-circle"></span>
+        <span *ngIf="!tab.hasError && !tab.hideIcon && hasForm"
+              class="position-absolute text-success top-0 start-50 translate-middle mdi mdi-check-circle"></span>
+      </a>
+    </li>
+  </ul>
+</ng-template>
+
+<ng-container *ngIf="extraButtonsPositioning === 'relative'">
+  <div class="position-relative">
+    <ng-container [ngTemplateOutlet]="tabsTemplate"></ng-container>
+    <div class="position-absolute d-flex gap-1 top-0 end-0">
+      <ng-container *ngIf="extraButtonsTemplate" [ngTemplateOutlet]="extraButtonsTemplate"></ng-container>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="extraButtonsPositioning === 'flex'">
+  <div class="d-flex justify-content-between">
+    <div class="flex-grow-1">
+      <ng-container [ngTemplateOutlet]="tabsTemplate"></ng-container>
+    </div>
+    <div>
+      <div class="d-flex gap-1">
+        <ng-container *ngIf="extraButtonsTemplate" [ngTemplateOutlet]="extraButtonsTemplate"></ng-container>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
 <div id="{{tabContainerId}}-content" [ngClass]="{'pt-4': !accordionView}" class="tab-content">
   <ng-content></ng-content>
 </div>
