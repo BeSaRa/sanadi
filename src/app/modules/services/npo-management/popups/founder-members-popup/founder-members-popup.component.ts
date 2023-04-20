@@ -15,7 +15,7 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 export class FounderMembersPopupComponent {
   form: UntypedFormGroup;
   readonly: boolean;
-  editIndex: number;
+  editItem: FounderMembers;
   model: FounderMembers;
   founderMembersFormArray:UntypedFormArray;
   nationalityList: Lookup[];
@@ -24,7 +24,7 @@ export class FounderMembersPopupComponent {
    public data: {
      form: UntypedFormGroup,
      readonly: boolean,
-     editIndex: number,
+     editItem: FounderMembers,
      model: FounderMembers,
      founderMembersFormArray:UntypedFormArray,
      nationalityList:Lookup[],
@@ -34,7 +34,7 @@ export class FounderMembersPopupComponent {
      private dialogRef: DialogRef) {
      this.form = data.form;
      this.readonly = data.readonly;
-     this.editIndex = data.editIndex;
+     this.editItem = data.editItem;
      this.model = data.model;
      this.founderMembersFormArray = data.founderMembersFormArray
      this.nationalityList = data.nationalityList

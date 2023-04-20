@@ -1,10 +1,10 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {CharityWorkArea} from '@enums/charity-work-area.enum';
-import {ListModelComponent} from '@app/generics/ListModel-component';
-import {ForeignAidClassification} from '@models/foreign-aid-classification';
-import {LangService} from '@services/lang.service';
-import {CustomValidators} from '@app/validators/custom-validators';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { CharityWorkArea } from '@enums/charity-work-area.enum';
+import { ListModelComponent } from '@app/generics/ListModel-component';
+import { ForeignAidClassification } from '@models/foreign-aid-classification';
+import { LangService } from '@services/lang.service';
+import { CustomValidators } from '@app/validators/custom-validators';
 import { ComponentType } from '@angular/cdk/portal';
 import { ForeignAidClassificationsPopupComponent } from '../../popups/foreign-aid-classifications-popup/foreign-aid-classifications-popup.component';
 
@@ -20,7 +20,7 @@ export class ForeignAidClassificationsComponent extends ListModelComponent<Forei
   get list() {
     return this._list;
   }
-
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   constructor(
     private fb: UntypedFormBuilder,
     public lang: LangService,

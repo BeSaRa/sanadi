@@ -16,7 +16,7 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 export class ExecutiveManagementPopupComponent {
   form: UntypedFormGroup;
   readonly: boolean;
-  editItem: number;
+  editItem: ExecutiveManagement;
   model: ExecutiveManagement;
   pageTitleKey: keyof ILanguageKeys;
   countriesList: Country[];
@@ -29,7 +29,7 @@ export class ExecutiveManagementPopupComponent {
   public data: {
     form: UntypedFormGroup,
     readonly: boolean,
-    editItem: number,
+    editItem: ExecutiveManagement,
     model: ExecutiveManagement,
     pageTitleKey: keyof ILanguageKeys;
     countriesList: Country[];
@@ -55,9 +55,11 @@ export class ExecutiveManagementPopupComponent {
 
     return model;
   }
+
   cancel() {
     this.dialogRef.close(null)
   }
+  
   save() {
     this.dialogRef.close(this.mapFormTo(this.form.getRawValue()))
   }

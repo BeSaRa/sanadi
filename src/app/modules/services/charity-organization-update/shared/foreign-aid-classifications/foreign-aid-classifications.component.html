@@ -7,6 +7,7 @@
       [data]="_list"
       [columns]="columns"
       sortableTable
+      [filter]="filterControl.value"
     >
       <table
         cdk-table
@@ -16,7 +17,7 @@
       <ng-container cdkColumnDef="extra-header">
         <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
           <table-header tableTitle="classification_of_foreign_aid" [add$]="add$" [allowAdd]="!readonly" [skipClearSort]="true"
-            [skipSearch]="true">
+          (textChange)="filterControl.setValue($event)">
           </table-header>
         </th>
       </ng-container>
@@ -78,7 +79,7 @@
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
           <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
-            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex" [rebindTrigger]="readonly" [rebindTrigger]="readonly">
             </grid-actions>
           </td>
         </ng-container>

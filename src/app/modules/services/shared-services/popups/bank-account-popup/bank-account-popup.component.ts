@@ -17,19 +17,19 @@ export class BankAccountPopupComponent {
   caseTypes = CaseTypes;
   form: UntypedFormGroup;
   readonly: boolean;
-  editItem: number;
+  viewOnly:boolean;
+  editItem: BankAccount;
   model: BankAccount;
   countriesList: Country[];
   currenciesList: Lookup[];
   caseType: CaseTypes;
   bankCategoriesList: Lookup[];
-  viewOnly:boolean;
 
   constructor(@Inject(DIALOG_DATA_TOKEN)
   public data: {
     form: UntypedFormGroup,
     readonly: boolean,
-    editItem: number,
+    editItem: BankAccount,
     model: BankAccount,
     countriesList: Country[],
     currenciesList: Lookup[],
@@ -52,12 +52,13 @@ export class BankAccountPopupComponent {
 
   mapFormTo(form: any): BankAccount {
     const model: BankAccount = new BankAccount().clone(form);
-
     return model;
   }
+
   cancel() {
     this.dialogRef.close(null)
   }
+
   save() {
     this.dialogRef.close(this.mapFormTo(this.form.getRawValue()))
   }

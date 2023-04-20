@@ -40,7 +40,7 @@
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
-            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex" [rebindTrigger]="readonly">
                 <span afterTemplate class="form-check form-switch switch-action"
                       *ngIf="!readonly && row.status !== commonStatusEnum.RETIRED" style="top: auto">
                     <input class="form-check-input" type="checkbox" [checked]="!!row.status"
