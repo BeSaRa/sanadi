@@ -7,6 +7,7 @@ export class CustomServiceTemplateInterceptor implements IModelInterceptor<Custo
   }
 
   send(model: CustomServiceTemplate): any {
+    console.log(model)
     CustomServiceTemplateInterceptor._deleteBeforeSend(model);
     return model
   }

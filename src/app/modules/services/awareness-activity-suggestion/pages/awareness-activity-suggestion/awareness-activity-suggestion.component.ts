@@ -1,9 +1,10 @@
+import { Validators } from '@angular/forms';
 import { LicenseService } from '@services/license.service';
 import { Lookup } from '@models/lookup';
 import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ILanguageKeys } from '@contracts/i-language-keys';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { OperationTypes } from '@enums/operation-types.enum';
 import { SaveTypes } from '@enums/save-types';
@@ -28,10 +29,10 @@ import { SearchAwarenessActivitySuggestionCriteria } from '@models/search-awaren
 import { JobTitle } from '@app/models/job-title';
 import { JobTitleService } from '@app/services/job-title.service';
 import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
-import { ServiceDataService } from '@app/services/service-data.service';
-import { SharedService } from '@app/services/shared.service';
-import { TemplateTypePopupComponent } from '../../../shared-services/popups/template-type-popup/template-type-popup.component';
 import { SelectTemplatePopupComponent } from '@app/modules/services/shared-services/popups/select-template-popup/select-template-popup.component';
+import { FileUploaderComponent } from '@app/shared/components/file-uploader/file-uploader.component';
+import { CustomServiceTemplate } from '@app/models/custom-service-template';
+import { CustomServiceTemplateService } from '@app/services/custom-service-template.service';
 
 @Component({
   selector: 'app-awareness-activity-suggestion',
@@ -45,13 +46,16 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   fileExtensionsEnum = FileExtensionsEnum;
   licenseSearch$: Subject<string> = new Subject<string>();
   form!: UntypedFormGroup;
+  selectedTemplate!: CustomServiceTemplate;
+  selectedTemplateControl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
   selectedLicense?: AwarenessActivitySuggestion;
   isSameAsApplican = false;
+  @ViewChild('fileUploader') fileUploaderRef!: FileUploaderComponent;
   tabsData: IKeyValue = {
     basicInfo: {
       name: 'basicInfoTab',
       langKey: 'lbl_basic_info' as keyof ILanguageKeys,
-      validStatus: () => this.basicInfo.valid,
+      validStatus: () => this.basicInfo.valid && this.selectedTemplateControl.valid,
     },
     contactOfficer: {
       name: 'contactOfficerTab',
@@ -75,7 +79,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       validStatus: () => true
     },
   };
-  uploadedTemplate!: File;
+  uploadedTemplate?: File;
   loadAttachments: boolean = false;
   datepickerOptionsMap: DatepickerOptionsMap = {
     expectedDate: DateUtils.getDatepickerOptions({
@@ -87,41 +91,6 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       return this.getObservableField('requestTypeField', 'requestType');
     }
   }
-  selectTemplatePopup() {
-    this.dialog.show(SelectTemplatePopupComponent, { caseType: this.model?.getCaseType() }).onAfterClose$.subscribe((temp) => {
-      if (temp) {
-        this.downloadTemplat(temp.id);
-      }
-    })
-  }
-  uploadTemplate(file: File | File[] | undefined) {
-    if (file) {
-      if (!file || file instanceof File) {
-        this.uploadedTemplate = file;
-      } else {
-        this.uploadedTemplate = file[0];
-      }
-      this.dialog.show(TemplateTypePopupComponent).onAfterClose$.subscribe(type => {
-        console.log(type)
-        if (type) {
-          this.dataService.uploadCaseDoc(this.model?.getCaseType(), { documentDTO: { approvalTemplateType: type }, caseId: this.model?.getCaseId() }, this.uploadedTemplate).subscribe((result) => {
-            if (result.blob.size === 0) {
-              return;
-            }
-            this.sharedService.downloadFileToSystem(result.blob);
-          })
-        }
-      })
-    }
-  }
-  downloadTemplat(docId: string) {
-    this.dataService.loadTemplateDocId(this.model?.getCaseType(), docId).subscribe((result) => {
-      if (result.blob.size === 0) {
-        return;
-      }
-      this.sharedService.downloadFileToSystem(result.blob)
-    })
-  }
   constructor(
     public lang: LangService,
     public fb: UntypedFormBuilder,
@@ -132,13 +101,43 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     private cd: ChangeDetectorRef,
     private dialog: DialogService,
     public employeeService: EmployeeService,
-    private dataService: ServiceDataService,
-    private sharedService: SharedService,
+    private customServiceTemplate: CustomServiceTemplateService,
     private licenseService: LicenseService
   ) {
     super();
   }
 
+
+  selectTemplatePopup(isUploaded: boolean) {
+    if (isUploaded && this.model) {
+      this.customServiceTemplate.loadTemplatesbyCaseType(this.model?.getCaseType()).subscribe((data) => {
+        this.dialog.show(SelectTemplatePopupComponent, { list: data, showSelectBtn: true }).onAfterClose$.subscribe((temp) => {
+          if (temp) {
+            this.selectedTemplate = temp;
+            this.selectedTemplateControl.setValue(temp.id);
+          }
+        })
+      })
+    } else if (this.model) {
+      this.customServiceTemplate.loadTemplatesbyCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
+        this.dialog.show(SelectTemplatePopupComponent, { list: data, showSelectBtn: false })
+      })
+
+    }
+  }
+  uploadTemplate(file: File | File[] | undefined) {
+    if (file) {
+      let uploadedTemplate;
+      if (!file || file instanceof File) {
+        uploadedTemplate = file;
+      } else {
+        uploadedTemplate = file[0];
+      }
+      this.customServiceTemplate.uploadCaseDoc(this.model?.getCaseType(), { documentDTO: this.selectedTemplate, caseId: this.model?.getCaseId() }, uploadedTemplate).subscribe((result) => {
+        this.dialog.success(this.lang.map.file_have_been_uploaded_successfully);
+      })
+    }
+  }
   handleReadonly(): void {
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
@@ -373,7 +372,10 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   _destroyComponent(): void {
   }
   get isLicensingUser() {
-    return this.employeeService.isLicensingUser()
+    return this.employeeService.isLicensingUser();
+  }
+  get isInternalUser() {
+    return this.employeeService.isInternalUser();
   }
   licenseSearch($event?: Event): void {
     $event?.preventDefault();

@@ -78,7 +78,8 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
       this.caseType == CaseTypes.URGENT_INTERVENTION_LICENSING ||
       this.caseType == CaseTypes.COLLECTOR_LICENSING ||
       this.caseType === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE ||
-      this.caseType === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION;
+      this.caseType === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION ||
+      this.caseType === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT;
   }
 
   isExternalProjectModels() {

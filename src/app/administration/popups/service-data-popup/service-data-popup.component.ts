@@ -29,6 +29,7 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { AttachmentTypeService } from '@services/attachment-type.service';
 import { BehaviorSubject, iif, Observable, of, Subject } from 'rxjs';
 import { catchError, exhaustMap, filter, mapTo, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { CustomServiceTemplateService } from '@app/services/custom-service-template.service';
 
 @Component({
   selector: 'service-data-popup',
@@ -50,6 +51,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
     private serviceDataStepsService: ServiceDataStepService,
     private checklistService: ChecklistService,
     private serviceData: ServiceDataService,
+    private customServiceTemplate: CustomServiceTemplateService,
     private dialog: DialogService,
     private internalDepartmentService: InternalDepartmentService,
   ) {
@@ -202,7 +204,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
 
   }
   loadTemplates(caseType: number) {
-    this.serviceData.loadTemplatesbyCaseType(caseType).subscribe((data: CustomServiceTemplate[]) => {
+    this.customServiceTemplate.loadTemplatesbyCaseType(caseType).subscribe((data: CustomServiceTemplate[]) => {
       this.templatesList = data;
     })
   }

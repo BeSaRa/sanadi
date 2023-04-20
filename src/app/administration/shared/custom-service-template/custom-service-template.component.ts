@@ -5,9 +5,9 @@ import { CaseTypes } from '@app/enums/case-types.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { CustomServiceTemplate } from '@app/models/custom-service-template';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { CustomServiceTemplateService } from '@app/services/custom-service-template.service';
 import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
-import { ServiceDataService } from '@app/services/service-data.service';
 import { SharedService } from '@app/services/shared.service';
 import { ToastService } from '@app/services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
@@ -24,7 +24,7 @@ export class CustomServiceTemplateComponent implements OnInit {
 
   constructor(public lang: LangService,
     private toastService: ToastService,
-    private serviceData: ServiceDataService,
+    private customServiceTemplate: CustomServiceTemplateService,
     private dialogService: DialogService,
     private sharedService: SharedService,
     private fb: UntypedFormBuilder) {
@@ -106,7 +106,7 @@ export class CustomServiceTemplateComponent implements OnInit {
   }
 
   private loadTemplate(row: CustomServiceTemplate) {
-    this.serviceData.loadTemplateDocId(this.caseType, row.id).subscribe((result) => {
+    this.customServiceTemplate.loadTemplateDocId(this.caseType, row.id).subscribe((result) => {
       if (result.blob.size === 0) {
         return;
       }
@@ -204,12 +204,12 @@ export class CustomServiceTemplateComponent implements OnInit {
       .pipe(switchMap((data) => {
         if(this.current?.id) {
           if(data.file) {
-            return this.serviceData.updateContent(this.caseType, data.model, data.file)
+            return this.customServiceTemplate.updateContent(this.caseType, data.model, data.file)
           } else {
-            return this.serviceData.updateProp(this.caseType, data.model)
+            return this.customServiceTemplate.updateProp(this.caseType, data.model)
           }
         } else {
-          return this.serviceData.addTemplate(this.caseType, data.model, data.file)
+          return this.customServiceTemplate.addTemplate(this.caseType, data.model, data.file)
         }
       }))
       .subscribe((record: CustomServiceTemplate) => {

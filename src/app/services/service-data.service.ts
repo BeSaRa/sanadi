@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ServiceData } from '../models/service-data';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { FactoryService } from './factory.service';
 import { UrlService } from './url.service';
 import { DialogRef } from '../shared/models/dialog-ref';
@@ -9,18 +9,12 @@ import { OperationTypes } from '../enums/operation-types.enum';
 import { Observable, of } from 'rxjs';
 import { DialogService } from './dialog.service';
 import { ServiceDataPopupComponent } from '../administration/popups/service-data-popup/service-data-popup.component';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 import { ComponentType } from '@angular/cdk/portal';
 import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
 import { Pagination } from "@app/models/pagination";
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { BlobModel } from '@app/models/blob-model';
-import { DomSanitizer } from '@angular/platform-browser';
-import { CustomServiceTemplate } from '@app/models/custom-service-template';
-import { InterceptParam } from '@app/decorators/decorators/intercept-model';
-
 @CastResponseContainer({
   $default: {
     model: () => ServiceData
@@ -29,9 +23,6 @@ import { InterceptParam } from '@app/decorators/decorators/intercept-model';
     model: () => Pagination,
     shape: { 'rs.*': () => ServiceData }
   },
-  $CustomServiceTemplate: {
-    model: () => CustomServiceTemplate
-  }
 })
 @Injectable({
   providedIn: 'root'
@@ -40,7 +31,6 @@ export class ServiceDataService extends CrudWithDialogGenericService<ServiceData
   list: ServiceData[] = [];
 
   constructor(public http: HttpClient,
-    private domSanitizer: DomSanitizer,
     public dialog: DialogService,
     private urlService: UrlService) {
     super();
@@ -56,14 +46,6 @@ export class ServiceDataService extends CrudWithDialogGenericService<ServiceData
   }
 
   _getServiceURL(): string {
-    return this.urlService.URLS.SERVICE_DATA;
-  }
-  _getServiceURLByCaseType(caseType: number) {
-    if (caseType == CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
-      return this.urlService.URLS.AWARENESS_ACTIVITY_SUGGESTION;
-    } else if (caseType == CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
-      return this.urlService.URLS.ORGANIZATION_ENTITIES_SUPPORT;
-    }
     return this.urlService.URLS.SERVICE_DATA;
   }
   editDialog(model: ServiceData): Observable<DialogRef> {
@@ -123,73 +105,5 @@ export class ServiceDataService extends CrudWithDialogGenericService<ServiceData
 
   toggleFollowUpStatus(serviceId: number, status: boolean) {
     return status ? this._followUpEnable(serviceId) : this._followUpDisable(serviceId);
-  }
-  loadTemplateDocId(caseType: number = 0, docId: string) {
-    return this.http.get(this._getServiceURLByCaseType(caseType) + '/template/' + docId + '/download', {
-      responseType: 'blob',
-      observe: 'body'
-    }).pipe(
-      map(blob => new BlobModel(blob, this.domSanitizer),
-        catchError(_ => {
-          return of(new BlobModel(new Blob([], { type: 'error' }), this.domSanitizer));
-        })));
-  }
-
-  @CastResponse(undefined, {
-    unwrap: 'rs',
-    fallback: '$CustomServiceTemplate'
-  })
-  loadTemplatesbyCaseType(caseType: number, isActive = true) {
-    return this.http.get<CustomServiceTemplate[]>(this._getServiceURLByCaseType(caseType) + '/templates?isActive=true')
-  }
-  @CastResponse(undefined, {
-    unwrap: 'rs',
-    fallback: '$CustomServiceTemplate'
-  })
-  addTemplate(caseType: number = 0, @InterceptParam() model: CustomServiceTemplate, file: File) {
-    const formData = new FormData();
-    file ? formData.append('content', file) : null;
-    return this.http.post<any>(this._getServiceURLByCaseType(caseType) + '/template/service', formData, {
-      params: new HttpParams({ fromObject: model as any })
-    }).pipe(catchError(() => of(null)));
-  }
-
-  @CastResponse(undefined, {
-    unwrap: 'rs',
-    fallback: '$CustomServiceTemplate'
-  })
-  updateContent(caseType: number = 0, @InterceptParam() model: CustomServiceTemplate, file: File) {
-    const formData = new FormData();
-    file ? formData.append('content', file) : null;
-    return this.http.post<any>(this._getServiceURLByCaseType(caseType) + '/template/update-content', formData, {
-      params: new HttpParams({ fromObject: model as any })
-    }).pipe(catchError(() => of(null)));
-  }
-  @CastResponse(undefined, {
-    unwrap: 'rs',
-    fallback: '$CustomServiceTemplate'
-  })
-  updateProp(caseType: number = 0, model: CustomServiceTemplate) {
-    console.log(model)
-    return this.http.post<any>(this._getServiceURLByCaseType(caseType) + '/template/update-prop', model)
-      .pipe(catchError(() => of(null)));
-  }
-
-  @CastResponse(undefined, {
-    unwrap: 'rs',
-    fallback: '$CustomServiceTemplate'
-  })
-  uploadCaseDoc(caseType: number = 0, @InterceptParam() model: { documentDTO: Partial<CustomServiceTemplate>, caseId: string }, file: File) {
-    const formData = new FormData();
-    file ? formData.append('content', file) : null;
-    console.log(model)
-    return this.http.post<any>(this._getServiceURLByCaseType(caseType) + '/template/update-content', formData, {
-      params: new HttpParams({
-        fromObject: {
-          documentDTO: new HttpParams({ fromObject: model.documentDTO as any }),
-          caseId: model.caseId
-        } as any
-      })
-    }).pipe(catchError(() => of(null)));
   }
 }

@@ -39,7 +39,20 @@
           </ng-select>
           <app-field-error-message controlName="activityType"></app-field-error-message>
         </div>
-
+        <!-- License Number -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative" *ngIf="isNotCreateOeration">
+          <div style="font-size: 19px; padding-top: 2rem">
+            <button class="btn btn-primary btn-sm me-2" *ngIf="isInternalUser" [tooltip]="lang.map.view + ' ' + lang.map.uploaded_templates"
+              (click)="selectTemplatePopup(false)"><i class="mdi mdi-file-eye"></i></button>
+            <button class="btn btn-primary btn-sm" *ngIf="isLicensingUser && isNotCreateOeration" [tooltip]="lang.map.select  + ' ' + lang.map.lbl_template"
+              (click)="selectTemplatePopup(true)"><i class="mdi mdi-file-word"></i></button>
+          </div>
+          <div class="input-group">
+            <file-uploader #fileUploader *ngIf="isLicensingUser && isNotCreateOeration" labelKey="template_file" [isRequired]="true"
+              (fileUploadEvent)="uploadTemplate($event)" [allowedExtensions]="[fileExtensionsEnum.DOCX]">
+            </file-uploader>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-4 mb-4 position-relative" [hidden]="!showOtherService">

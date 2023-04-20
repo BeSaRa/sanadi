@@ -75,16 +75,18 @@ export class CustomServiceTemplatePopupComponent implements OnInit {
     return '';
   }
 
-  mapForm(form: CustomServiceTemplate): CustomServiceTemplate {
-    const entity: CustomServiceTemplate = new CustomServiceTemplate().clone({...form});
-    entity.id = this.model.id
-
+  mapForm(form: CustomServiceTemplate): Partial<CustomServiceTemplate> {
+    const entity: Partial<CustomServiceTemplate> = new CustomServiceTemplate().clone({ ...form });
+    if (this.model.id){
+      entity.id = this.model.id
+    }
+    delete entity.searchFields
     return entity;
   }
   cancel() {
     this.dialogRef.close(null)
   }
   save() {
-    this.dialogRef.close({model: this.mapForm(this.form.getRawValue()), file: this.TemplateFile})
+    this.dialogRef.close({ model: this.mapForm(this.form.getRawValue()), file: this.TemplateFile })
   }
 }

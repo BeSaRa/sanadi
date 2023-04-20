@@ -1,8 +1,13 @@
-import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { CustomServiceTemplateInterceptor } from '@app/model-interceptors/custom-service-template-interceptor';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { INames } from '@app/interfaces/i-names';
 import { AdminResult } from '@app/models/admin-result';
+import { FactoryService } from '@app/services/factory.service';
+import { LangService } from '@app/services/lang.service';
+import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { SearchableCloneable } from './searchable-cloneable';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 
 const interceptor = new CustomServiceTemplateInterceptor()
 
@@ -15,11 +20,22 @@ export class CustomServiceTemplate extends SearchableCloneable<CustomServiceTemp
   approvalTemplateType!: number;
   arabicName!: string;
   englishName!: string;
+  arName!: string;
+  enName!: string;
   approvalTemplateTypeInfo!: AdminResult;
+  langService: LangService;
   constructor() {
     super();
+    this.langService = FactoryService.getService('LangService');
+    this.arName = this.arabicName
+    this.enName = this.englishName
   }
-
+  searchFields: ISearchFieldsMap<CustomServiceTemplate> = {
+    ...normalSearchFields(['arabicName','englishName'])
+  };
+  getName(): string {
+    return this[this.langService.map.lang as keyof INames];
+  }
   buildForm(control: boolean = false): any {
     const {
       arabicName,
