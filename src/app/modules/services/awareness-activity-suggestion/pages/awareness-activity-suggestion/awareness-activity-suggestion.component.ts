@@ -29,7 +29,7 @@ import { SearchAwarenessActivitySuggestionCriteria } from '@models/search-awaren
 import { JobTitle } from '@app/models/job-title';
 import { JobTitleService } from '@app/services/job-title.service';
 import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
-import { SelectTemplatePopupComponent } from '@app/modules/services/shared-services/popups/select-template-popup/select-template-popup.component';
+import { SelectCustomServiceTemplatePopupComponent } from '@app/modules/services/shared-services/popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
 import { FileUploaderComponent } from '@app/shared/components/file-uploader/file-uploader.component';
 import { CustomServiceTemplate } from '@app/models/custom-service-template';
 import { CustomServiceTemplateService } from '@app/services/custom-service-template.service';
@@ -55,7 +55,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     basicInfo: {
       name: 'basicInfoTab',
       langKey: 'lbl_basic_info' as keyof ILanguageKeys,
-      validStatus: () => this.basicInfo.valid && this.selectedTemplateControl.valid,
+      validStatus: () => this.basicInfo.valid && (!this.isLicensingUser || this.selectedTemplateControl.valid),
     },
     contactOfficer: {
       name: 'contactOfficerTab',
@@ -111,7 +111,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   selectTemplatePopup(isUploaded: boolean) {
     if (isUploaded && this.model) {
       this.customServiceTemplate.loadTemplatesbyCaseType(this.model?.getCaseType()).subscribe((data) => {
-        this.dialog.show(SelectTemplatePopupComponent, { list: data, showSelectBtn: true }).onAfterClose$.subscribe((temp) => {
+        this.dialog.show(SelectCustomServiceTemplatePopupComponent, { list: data, showSelectBtn: true }).onAfterClose$.subscribe((temp) => {
           if (temp) {
             this.selectedTemplate = temp;
             this.selectedTemplateControl.setValue(temp.id);
@@ -120,9 +120,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       })
     } else if (this.model) {
       this.customServiceTemplate.loadTemplatesbyCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
-        this.dialog.show(SelectTemplatePopupComponent, { list: data, showSelectBtn: false })
+        this.dialog.show(SelectCustomServiceTemplatePopupComponent, { list: data, showSelectBtn: false })
       })
-
     }
   }
   uploadTemplate(file: File | File[] | undefined) {
@@ -133,7 +132,13 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       } else {
         uploadedTemplate = file[0];
       }
-      this.customServiceTemplate.uploadCaseDoc(this.model?.getCaseType(), { documentDTO: this.selectedTemplate, caseId: this.model?.getCaseId() }, uploadedTemplate).subscribe((result) => {
+      this.customServiceTemplate.uploadCaseDoc(this.model?.getCaseType(), {
+        documentDTO: {
+          arabicName: this.selectedTemplate.arabicName,
+          englishName: this.selectedTemplate.englishName,
+          approvalTemplateType: this.selectedTemplate.approvalTemplateType,
+        }, caseId: this.model?.getCaseId()
+      }, uploadedTemplate).subscribe((result) => {
         this.dialog.success(this.lang.map.file_have_been_uploaded_successfully);
       })
     }

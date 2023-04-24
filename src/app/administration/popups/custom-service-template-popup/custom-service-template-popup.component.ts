@@ -80,7 +80,10 @@ export class CustomServiceTemplatePopupComponent implements OnInit {
     if (this.model.id){
       entity.id = this.model.id
     }
+    entity.isOriginal = true
     delete entity.searchFields
+    delete entity.arName
+    delete entity.enName
     return entity;
   }
   cancel() {

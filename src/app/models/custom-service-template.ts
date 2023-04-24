@@ -24,6 +24,7 @@ export class CustomServiceTemplate extends SearchableCloneable<CustomServiceTemp
   enName!: string;
   approvalTemplateTypeInfo!: AdminResult;
   langService: LangService;
+  isOriginal!: boolean;
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');
@@ -34,7 +35,7 @@ export class CustomServiceTemplate extends SearchableCloneable<CustomServiceTemp
     ...normalSearchFields(['arabicName','englishName'])
   };
   getName(): string {
-    return this[this.langService.map.lang as keyof INames];
+    return this[(this.langService?.map.lang + 'Name') as keyof INames] || '';
   }
   buildForm(control: boolean = false): any {
     const {

@@ -11,13 +11,13 @@ import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { CustomServiceTemplateService } from '@app/services/custom-service-template.service';
 
 @Component({
-  selector: 'app-select-template-popup',
-  templateUrl: './select-template-popup.component.html',
-  styleUrls: ['./select-template-popup.component.scss']
+  selector: 'select-custom-service-template-popup',
+  templateUrl: './select-custom-service-template-popup.component.html',
+  styleUrls: ['./select-custom-service-template-popup.component.scss']
 })
-export class SelectTemplatePopupComponent implements OnInit {
+export class SelectCustomServiceTemplatePopupComponent implements OnInit {
   list: CustomServiceTemplate[] = [];
-  columns: string[] = ['englishName', 'arabicName', 'actions'];
+  columns: string[] = ['englishName', 'arabicName', 'approvalTemplateType', 'actions'];
   filterControl: UntypedFormControl = new UntypedFormControl('');
   @ViewChild('table') table!: TableComponent;
   constructor(
@@ -60,6 +60,8 @@ export class SelectTemplatePopupComponent implements OnInit {
     })
   }
   save(template: CustomServiceTemplate) {
+    template.arName = template.arabicName
+    template.enName = template.englishName
     this.dialogRef.close(template)
   }
   close() {

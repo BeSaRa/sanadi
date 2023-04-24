@@ -4,7 +4,7 @@ import { ExternalUser } from '@models/external-user';
 import { ExternalUserService } from '@services/external-user.service';
 import { AdminLookupService } from '@services/admin-lookup.service';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, } from '@angular/forms';
 import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
 import { CommonCaseStatus } from '@enums/common-case-status.enum';
 import { OpenFrom } from '@enums/open-from.enum';
@@ -29,8 +29,7 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, map, takeUntil, tap, } from 'rxjs/operators';
 import { JobTitle } from '@models/job-title';
-import { ServiceDataService } from '@app/services/service-data.service';
-import { SelectTemplatePopupComponent } from '@app/modules/services/shared-services/popups/select-template-popup/select-template-popup.component';
+import { SelectCustomServiceTemplatePopupComponent } from '@app/modules/services/shared-services/popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
 import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { CustomServiceTemplate } from '@app/models/custom-service-template';
 
@@ -65,6 +64,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   jobTitleList: JobTitle[] = [];
   selectedLicense?: OrganizationsEntitiesSupport;
   selectedTemplate!: CustomServiceTemplate;
+  selectedTemplateControl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
   showOtherService: boolean = false;
   formProperties = {
     requestType: () => {
@@ -80,7 +80,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       checkTouchedDirty: false,
       isTouchedOrDirty: () => false,
       show: () => true,
-      validStatus: () => this.basicInfoTab && this.basicInfoTab.valid,
+      validStatus: () => this.basicInfoTab.valid && (!this.isLicensingUser || this.selectedTemplateControl.valid),
     },
     beneficiaryGroup: {
       name: 'beneficiaryGroupTab',
@@ -446,7 +446,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   selectTemplatePopup(isUploaded: boolean) {
     if (isUploaded && this.model) {
       this.customServiceTemplate.loadTemplatesbyCaseType(this.model?.getCaseType()).subscribe((data) => {
-        this.dialogService.show(SelectTemplatePopupComponent, { list: data, showSelectBtn: true }).onAfterClose$.subscribe((temp) => {
+        this.dialogService.show(SelectCustomServiceTemplatePopupComponent, { list: data, showSelectBtn: true }).onAfterClose$.subscribe((temp) => {
           if (temp) {
             this.selectedTemplate = temp;
           }
@@ -454,7 +454,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       })
     } else if (this.model) {
       this.customServiceTemplate.loadTemplatesbyCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
-        this.dialogService.show(SelectTemplatePopupComponent, { list: data, showSelectBtn: false })
+        this.dialogService.show(SelectCustomServiceTemplatePopupComponent, { list: data, showSelectBtn: false })
       })
 
     }
@@ -467,7 +467,13 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       } else {
         uploadedTemplate = file[0];
       }
-      this.customServiceTemplate.uploadCaseDoc(this.model?.getCaseType(), { documentDTO: this.selectedTemplate, caseId: this.model?.getCaseId() }, uploadedTemplate).subscribe((result) => {
+      this.customServiceTemplate.uploadCaseDoc(this.model?.getCaseType(), {
+        documentDTO: {
+          arabicName: this.selectedTemplate.arabicName,
+          englishName: this.selectedTemplate.englishName,
+          approvalTemplateType: this.selectedTemplate.approvalTemplateType,
+        }, caseId: this.model?.getCaseId()
+      }, uploadedTemplate).subscribe((result) => {
         this.dialogService.success(this.lang.map.file_have_been_uploaded_successfully);
       })
     }

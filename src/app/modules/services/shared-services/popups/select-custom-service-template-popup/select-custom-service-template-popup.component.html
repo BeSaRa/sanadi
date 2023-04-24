@@ -21,6 +21,10 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.arabicName}} </td>
         </ng-container>
+        <ng-container cdkColumnDef="approvalTemplateType">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.template_type}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.approvalTemplateTypeInfo ? row.approvalTemplateTypeInfo.getName() : ''}} </td>
+        </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">

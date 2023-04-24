@@ -1,13 +1,15 @@
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import { AdminResult } from '@app/models/admin-result';
 import { CustomServiceTemplate } from '@app/models/custom-service-template';
 
 export class CustomServiceTemplateInterceptor implements IModelInterceptor<CustomServiceTemplate> {
   receive(model: CustomServiceTemplate): any {
+    model.approvalTemplateTypeInfo && (model.approvalTemplateTypeInfo = AdminResult.createInstance(model.approvalTemplateTypeInfo));
+
     return model;
   }
 
   send(model: CustomServiceTemplate): any {
-    console.log(model)
     CustomServiceTemplateInterceptor._deleteBeforeSend(model);
     return model
   }

@@ -32,6 +32,7 @@ export class CustomServiceTemplateService {
   }
 
   _getServiceURLByCaseType(caseType: number) {
+    console.log(caseType)
     if (caseType == CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
       return this.urlService.URLS.AWARENESS_ACTIVITY_SUGGESTION;
     } else { // caseType == CaseTypes.ORGANIZATION_ENTITIES_SUPPORT
