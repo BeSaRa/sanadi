@@ -3,7 +3,7 @@ import {UrgentInterventionAttachment} from '@models/urgent-intervention-attachme
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@contracts/i-dialog-data';
 import {LangService} from '@services/lang.service';
-import {BehaviorSubject, Subject} from 'rxjs';
+import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
 import {filter, map, switchMap, take, takeUntil} from 'rxjs/operators';
@@ -19,6 +19,8 @@ import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {SharedService} from '@services/shared.service';
 import {EmployeeService} from '@services/employee.service';
 import {InternalUser} from '@models/internal-user';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { BlobModel } from '@app/models/blob-model';
 
 @Component({
   selector: 'urgent-intervention-report-attachment-popup',
@@ -65,7 +67,8 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
   destroy$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
   filterControl: UntypedFormControl = new UntypedFormControl('');
-  displayedColumns: string[] = ['status', 'documentTitle', 'createdOn', 'actions'];
+  displayedColumns: string[] = ['status', 'documentTitle','justification', 'createdOn', 'actions'];
+
 
   sortingCallbacks = {
     createdOn: (a: UrgentInterventionAttachment, b: UrgentInterventionAttachment, dir: SortEvent): number => {
@@ -108,7 +111,22 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
         return this.isCurrentRequestReport && item.isApproved === null;
       },
       onClick: (item) => this.rejectAttachment(item)
-    }
+    },
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: 'mdi-pen',
+      show: (item) => !this.readonly && this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser),
+      onClick: (item) => this.edit(item)
+    },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      show: (item) => !this.readonly && this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser),
+      onClick: (item) => this.deleteAttachmentFile(item)
+    },
   ];
 
   ngOnInit(): void {
@@ -139,6 +157,7 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
       takeUntil(this.destroy$),
     ).subscribe(() => {
       this.viewOnly = false;
+      this.editItem = undefined;
       this.recordChanged$.next(new UrgentInterventionAttachment());
     });
   }
@@ -195,6 +214,10 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
         });
       }),
       switchMap((value) => {
+        if(!!this.editItem){
+          return this.urgentInterventionLicenseFollowupService.updateAttachment(this.caseId, value, this.attachmentFile);
+
+        }
         return this.urgentInterventionLicenseFollowupService.saveAttachment(this.caseId, value, this.attachmentFile);
       })
     ).subscribe((result: UrgentInterventionAttachment) => {
@@ -245,15 +268,38 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
       this.attachmentFile = file[0];
     }
   }
+  deleteAttachmentFile(record: UrgentInterventionAttachment): void {
+    const message = this.lang.map.msg_confirm_delete_x.change({x: record.documentTitle});
+    this.dialogService.confirm(message)
+      .onAfterClose$.subscribe((click: UserClickOn) => {
+      if (click === UserClickOn.YES) {
+        const sub = this.urgentInterventionLicenseFollowupService.deleteAttachment(record.id,record.vsId).subscribe(() => {
+          // @ts-ignore
+          this.toastService.success(this.lang.map.msg_delete_x_success.change({x: record.documentTitle}));
+          this.reload$.next(null);
+          sub.unsubscribe();
+        });
 
+      }
+    });
+  }
   downloadAttachment(record: UrgentInterventionAttachment): void {
-    this.urgentInterventionLicenseFollowupService.loadAttachmentAsBlob(record.id)
-      .pipe(takeUntil(this.destroy$))
+   this.loadAttachmentBlob(record)
       .subscribe((data) => {
         this.sharedService.downloadFileToSystem(data.blob, 'UrgentInterventionAttachment');
       });
   }
-
+  showAttachmentPopup(record: UrgentInterventionAttachment){
+    this.loadAttachmentBlob(record)
+      .subscribe((data) => {
+        this.sharedService.openViewContentDialog(data, record);
+      });
+  }
+  private loadAttachmentBlob(record: UrgentInterventionAttachment): Observable<BlobModel> {
+   return this.urgentInterventionLicenseFollowupService.loadAttachmentAsBlob(record.id)
+      .pipe(takeUntil(this.destroy$))
+      ;
+  }
   approveAttachment(record: UrgentInterventionAttachment): void {
     this.urgentInterventionLicenseFollowupService.approveAttachment(record.id).onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.reload$.next(null);

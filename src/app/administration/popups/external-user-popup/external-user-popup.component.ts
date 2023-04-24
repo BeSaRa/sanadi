@@ -28,14 +28,18 @@ import {TabMap} from '@app/types/types';
 import {DialogService} from '@services/dialog.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
+import {
+  CustomMenuPermissionComponent
+} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
 import {BaseModel} from '@app/models/base-model';
 import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
 import {ExternalUserUpdateRequestService} from '@services/external-user-update-request.service';
 import {ExternalUserUpdateRequestStatusEnum} from '@app/enums/external-user-update-request-status.enum';
 import {ExternalUserUpdateRequestTypeEnum} from '@app/enums/external-user-update-request-type.enum';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
-import {UserSecurityExternalComponent} from '@app/administration/shared/user-security-external/user-security-external.component';
+import {
+  UserSecurityExternalComponent
+} from '@app/administration/shared/user-security-external/user-security-external.component';
 
 @Component({
   selector: 'app-external-user-popup',
@@ -98,7 +102,8 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   validateFieldsVisible = true;
   saveVisible: boolean = true;
   canSaveDirectly!: boolean;
-  superAdminPermissions: string[] = [PermissionsEnum.SUB_ADMIN, PermissionsEnum.APPROVAL_ADMIN];
+  superAdminOnlyPermissions: string[] = [PermissionsEnum.SUB_ADMIN, PermissionsEnum.APPROVAL_ADMIN];
+  internalUserOnlyPermissions: string[] = [PermissionsEnum.SANADI_SEARCH_BENEFICIARY, PermissionsEnum.SANADI_SEARCH_BENEFICIARY_BY_NAME];
   requestSaveType: 'SAVE_REQUEST' | 'SAVE_USER' | undefined = undefined;
 
   constructor(public dialogRef: DialogRef,
@@ -132,8 +137,14 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   }
 
   isChangePermissionAllowed(permission: Permission): boolean {
-    if (this.superAdminPermissions.includes(permission.permissionKey)) {
+    if (this.readonly) {
+      return false;
+    }
+    if (this.superAdminOnlyPermissions.includes(permission.permissionKey)) {
       return this.employeeService.userRolesManageUser.isSuperAdmin(this.operation);
+    }
+    if (this.internalUserOnlyPermissions.includes(permission.permissionKey)) {
+      return this.employeeService.isInternalUser();
     }
     return true;
   }
@@ -290,11 +301,17 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   }
 
   onGroupClicked(group: CheckGroup<Permission>): void {
+    if (this.readonly) {
+      return;
+    }
     group.toggleSelection();
     this.updatePermissionFormField();
   }
 
   onPermissionClicked($event: Event, permission: Permission, group: CheckGroup<Permission>): void {
+    if (!this.isChangePermissionAllowed(permission)) {
+      return;
+    }
     const checkBox = $event.target as HTMLInputElement;
     checkBox.checked ? group.addToSelection(Number(checkBox.value)) : group.removeFromSelection(Number(checkBox.value));
     checkBox.checked ? this.addToSelection(Number(checkBox.value)) : this.removeFromSelection(Number(checkBox.value));
@@ -338,7 +355,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
           return of([]);
         })
       )
-      .pipe(map(res=>res.filter(jobTitle=>jobTitle.isActive())))
+      .pipe(map(res => res.filter(jobTitle => jobTitle.isActive())))
       .subscribe((result) => this.jobTitleList = result);
   }
 

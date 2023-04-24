@@ -248,7 +248,7 @@ export class UrgentInterventionLicenseFollowupComponent extends EServicesGeneric
     if (!id) {
       return;
     }
-    this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(id)
+    this.licenseService.loadUrgentInterventionAnnouncementByLicenseVsId(id)
       .pipe(
         filter(license => !!license),
         takeUntil(this.destroy$)

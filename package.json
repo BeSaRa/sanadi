@@ -1,6 +1,6 @@
 {
   "name": "sanadi",
-  "version": "2.2.11",
+  "version": "2.2.14",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --hmr",

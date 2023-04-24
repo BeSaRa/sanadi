@@ -23,7 +23,15 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
   @Input() set list(_list: WorkArea[]) {
     this._list = _list;
   }
-  @Input() countries: Country[] = [];
+  // @Input() countries: Country[] = [];
+  private _countries: Country[] = []
+  get countries() {
+    return this._countries;
+  }
+  @Input() set countries(value: Country[]) {
+    this._countries = value;
+    this._prepareControls();
+  }
   @Input() readonly!: boolean;
   form!: UntypedFormGroup;
   filterControl: UntypedFormControl = new UntypedFormControl('');
@@ -62,13 +70,13 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
       onClick: (item: WorkArea) => this.selectOne(item),
     }
   ];
+
   constructor(private fb: UntypedFormBuilder, public lang: LangService) {
     super(WorkArea);
-
   }
-  protected _initComponent(): void {
-    this.controls = [
 
+  private _prepareControls() {
+    this.controls = [
       {
         controlName: 'country',
         load: this.countries,
@@ -85,6 +93,10 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
         type: 'text'
       },
     ];
+  }
+
+  protected _initComponent(): void {
+    this._prepareControls();
     this.form = this.fb.group(this.model.buildForm());
   }
   _beforeAdd(model: WorkArea): WorkArea | null {

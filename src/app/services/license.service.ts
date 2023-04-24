@@ -193,8 +193,13 @@ export class LicenseService {
 
   @CastResponse(() => PartnerApproval)
   partnerApprovalLicenseSearch(criteria: Partial<PartnerApprovalSearchCriteria>): Observable<PartnerApproval[]> {
-    // const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined}
     return this.http.post<PartnerApproval[]>(this.getServiceUrlByCaseType(CaseTypes.PARTNER_APPROVAL) + '/license/search', {...criteria})
+  }
+
+  @CastResponse(() => PartnerApproval)
+  partnerApprovalLicenseSearchByOrgId(criteria: Partial<PartnerApprovalSearchCriteria>): Observable<PartnerApproval[]> {
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined}
+    return this.http.post<PartnerApproval[]>(this.getServiceUrlByCaseType(CaseTypes.PARTNER_APPROVAL) + '/license/search', {...criteria,...orgId})
   }
 
   @CastResponse(() => Fundraising)
@@ -413,6 +418,15 @@ export class LicenseService {
 
   loadUrgentInterventionAnnouncementByLicenseId(licenseId: string): Observable<UrgentInterventionAnnouncement> {
     return this._loadUrgentInterventionAnnouncementByLicenseId(licenseId);
+  }
+
+  @CastResponse(() => UrgentInterventionAnnouncement)
+  private _loadUrgentInterventionAnnouncementByLicenseVsId(licenseVsId: string): Observable<UrgentInterventionAnnouncement> {
+    return this.http.get<UrgentInterventionAnnouncement>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) + '/document/latest/' + licenseVsId + '/details');
+  }
+
+  loadUrgentInterventionAnnouncementByLicenseVsId(licenseVsId: string): Observable<UrgentInterventionAnnouncement> {
+    return this._loadUrgentInterventionAnnouncementByLicenseVsId(licenseVsId);
   }
 
   loadUrgentInterventionInterventionLicense() {

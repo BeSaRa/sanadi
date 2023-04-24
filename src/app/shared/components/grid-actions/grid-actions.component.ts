@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {LangService} from '@app/services/lang.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, merge, Subject} from 'rxjs';
 import {delay} from 'rxjs/operators';
 
 @Component({
@@ -13,6 +13,7 @@ import {delay} from 'rxjs/operators';
 export class GridActionsComponent implements OnInit {
   filteredActions: IMenuItem<any>[] = [];
   private _record: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  private _rebindTrigger$: Subject<boolean> = new Subject<boolean>();
 
   @Input() actions: IMenuItem<any>[] = [];
   @Input() itemIndex: number = -1;
@@ -24,6 +25,11 @@ export class GridActionsComponent implements OnInit {
 
   get record(): any {
     return this._record.value;
+  }
+
+  @Input()
+  set rebindTrigger(value: any) {
+    this._rebindTrigger$.next(true);
   }
 
   constructor(public lang: LangService) {
@@ -133,7 +139,8 @@ export class GridActionsComponent implements OnInit {
   }
 
   private onRecordChange() {
-    this._record.pipe(delay(100)).subscribe(() => {
+    merge(this._record, this._rebindTrigger$).pipe(delay(100)).subscribe(() => {
+      // this._record.pipe(delay(100)).subscribe(() => {
       this.filteredActions = this._filterActions();
     })
   }

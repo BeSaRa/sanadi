@@ -169,7 +169,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.INTERNAL_PROJECT_LICENSE,
     CaseTypes.URGENT_INTERVENTION_LICENSING,
     CaseTypes.PROJECT_FUNDRAISING,
-    CaseTypes.FINANCIAL_TRANSFERS_LICENSING
+    // CaseTypes.FINANCIAL_TRANSFERS_LICENSING
   ];
 
   canShowMatrixNotification: boolean = false;
@@ -241,9 +241,15 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   checkForFinalApproveByMatrixNotification(): void {
+    let isValidManager = (this.employeeService.isLicensingManager() || this.employeeService.isLicensingChiefManager());
+
+    if(this.model?.getCaseType() ===  CaseTypes.FINANCIAL_TRANSFERS_LICENSING){
+      isValidManager = (isValidManager || this.employeeService.isLicensingGeneralManager())
+    }
+
     let canShowNotification: boolean = (!!this.model && this.finalApproveByMatrixServices.includes(this.model.getCaseType()))
       && (this.openFrom === OpenFrom.USER_INBOX || (this.openFrom === OpenFrom.TEAM_INBOX && this.model.taskDetails.isClaimed()))
-      && (this.employeeService.isLicensingManager() || this.employeeService.isLicensingChiefManager());
+      && isValidManager;
 
     if (canShowNotification) {
       this.component.service.checkFinalApproveNotificationByMatrix(this.model!.id)
