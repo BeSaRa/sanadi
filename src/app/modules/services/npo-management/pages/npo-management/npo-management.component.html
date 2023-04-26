@@ -353,8 +353,7 @@
   </ng-template>
 
   <ng-template #founderMemberTabTemplate>
-    <founder-members [readonly]="readonly || isViewOnly" #founderMemberTab [list]="model?.founderMemberList || []"
-                     (readyEvent)="founderMemberTabStatus = $event">
+    <founder-members [readonly]="readonly || isViewOnly" #founderMemberTab [founderMemberList]="model?.founderMemberList || []">
     </founder-members>
   </ng-template>
 
