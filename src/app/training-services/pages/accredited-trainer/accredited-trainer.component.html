@@ -5,12 +5,17 @@
                  [columns]="displayedColumns"
                  [data]="models"
                  [useSearchToFilter]="true"
-                 [filter]="filterControl.value">
+                 [filter]="filterControl.value"
+                 >
         <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
           <ng-container cdkColumnDef="extra-header">
             <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-              <table-header tableTitle="menu_accredited_trainers" [reload$]="reload$" [add$]="add$"
-                            (textChange)="filterControl.setValue($event)">
+              <table-header tableTitle="menu_accredited_trainers" 
+                            [reload$]="reload$" 
+                            [add$]="add$"
+                            (textChange)="filterControl.setValue($event)"
+                            [sort]="table.dataSource.sort"
+                            >
               </table-header>
             </th>
           </ng-container>

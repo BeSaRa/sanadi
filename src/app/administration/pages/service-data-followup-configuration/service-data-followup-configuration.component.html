@@ -15,7 +15,9 @@
                             [allowAdd]="!readonly"
                             [useReloadValue]="true"
                             (textChange)="filterControl.setValue($event)"
-                            ></table-header>
+                            [sort]="table.dataSource.sort"
+                            >
+              </table-header>
             </th>
           </ng-container>
           <ng-container cdkColumnDef="name">

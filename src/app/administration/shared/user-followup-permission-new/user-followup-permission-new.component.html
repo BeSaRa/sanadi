@@ -29,7 +29,9 @@
         <ng-container cdkColumnDef="extra-header">
           <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
             <table-header (textChange)="filterControl.setValue($event)"
-            [customTemplate]="customHeaderTemplate">
+                          [customTemplate]="customHeaderTemplate"
+                          [sort]="table.dataSource.sort"
+            >
             </table-header>
           </th>
         </ng-container>

@@ -5,6 +5,7 @@ import {DialogService} from '@services/dialog.service';
 import {LangService} from '@services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Officer} from '@app/models/officer';
+import { Subject } from 'rxjs';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -17,7 +18,7 @@ export class ProfileOfficersComponent implements OnInit {
   @Input() selectedOfficers: Officer[] = [];
   @Input() addLabel!: keyof ILanguageKeys;
   @Output() officerListChanged: EventEmitter<Officer[]> = new EventEmitter<Officer[]>();
-
+  addOfficerForm$: Subject<any> = new Subject<any>();
   addOfficerFormActive!: boolean;
 
   selectedOfficer!: Officer | null;
@@ -40,6 +41,12 @@ export class ProfileOfficersComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildOfficerForm();
+    this.listenToAdd()
+  }
+  
+  listenToAdd(): void {
+    this.addOfficerForm$
+      .subscribe(() => this.openAddOfficerForm())
   }
 
   buildOfficerForm(): void {

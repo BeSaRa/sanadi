@@ -13,7 +13,9 @@
                           [reload$]="reload$"
                           [add$]="add$"
                           [allowAdd]="!readonly"
-                          (textChange)="filterControl.setValue($event)">
+                          (textChange)="filterControl.setValue($event)"
+                          [sort]="table.dataSource.sort"
+                          >
             </table-header>
           </th>
         </ng-container>

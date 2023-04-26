@@ -13,6 +13,7 @@
               <table-header tableTitle="menu_localization"
                             [reload$]="reload$"
                             (textChange)="filterControl.setValue($event)"
+                            [sort]="table.dataSource.sort"
                             ></table-header>
             </th>
           </ng-container>

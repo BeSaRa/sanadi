@@ -21,7 +21,7 @@ import {UserTypes} from '@app/enums/user-types.enum';
 @Component({
   selector: 'app-custom-menu-popup',
   templateUrl: './custom-menu-popup.component.html',
-  styleUrls: ['./custom-menu-popup.component.css'],
+  styleUrls: ['./custom-menu-popup.component.scss'],
 })
 export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> implements AfterViewInit {
   form!: UntypedFormGroup;

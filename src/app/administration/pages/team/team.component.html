@@ -22,7 +22,9 @@
           <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
             <table-header tableTitle="menu_teams"
                           [reload$]="reload$"
-                          (textChange)="filterControl.setValue($event)">
+                          (textChange)="filterControl.setValue($event)"
+                          [sort]="table.dataSource.sort"
+                          >
               <ng-container *ngTemplateOutlet="bulk"></ng-container>
             </table-header>
           </th>
