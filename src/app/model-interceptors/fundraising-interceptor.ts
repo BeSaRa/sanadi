@@ -11,6 +11,7 @@ export class FundraisingInterceptor implements IModelInterceptor<Fundraising> {
     receive(model: Fundraising): Fundraising {
         model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
         model.licenseStatusInfo = AdminResult.createInstance(model.licenseStatusInfo);
+        model.licenseDurationTypeInfo = AdminResult.createInstance(model.licenseDurationTypeInfo);
         return model;
     }
 }

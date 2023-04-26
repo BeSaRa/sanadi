@@ -59,6 +59,9 @@ import { AuditFinancialTransfersLicensingComponent } from '@app/modules/services
 import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
 import { ForeignCountriesProjectsInterceptor } from '@app/model-interceptors/foriegn-countries-projects-interceptor';
 import { AuditForeignCountriesProjectsComponent } from '@app/modules/services/foreign-countries-projects/audit/audit-foreign-countries-projects/audit-foreign-countries-projects.component';
+import { Fundraising } from '@app/models/fundraising';
+import { FundraisingInterceptor } from '@app/model-interceptors/fundraising-interceptor';
+import { AuditFundraisingChannelLicensingComponent } from '@app/modules/services/fundraising-channel-licensing/audit/audit-fundraising-channel-licensing/audit-fundraising-channel-licensing.component';
 import { Consultation } from '@app/models/consultation';
 import { AuditConsultationComponent } from '@app/modules/services/consultation/audit/audit-consultation/audit-consultation.component';
 import { FinalExternalOfficeApprovalInterceptor } from '@app/model-interceptors/final-external-office-approval-interceptor';
@@ -116,6 +119,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApproval,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensing,
     [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: ForeignCountriesProjects,
+    [CaseTypes.FUNDRAISING_LICENSING]: Fundraising,
     [CaseTypes.CONSULTATION]: Consultation,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: UrgentInterventionLicense,
     [CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION]: UrgentInterventionFinancialNotification,
@@ -141,6 +145,8 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApprovalInterceptor,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensingInterceptor,
     [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: ForeignCountriesProjectsInterceptor,
+    [CaseTypes.FUNDRAISING_LICENSING]: FundraisingInterceptor,
+
 
 
     [CaseTypes.CONSULTATION]: ConsultationInterceptor,
@@ -167,7 +173,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: AuditFinalExternalOfficeApprovalComponent,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: AuditFinancialTransfersLicensingComponent,
     [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: AuditForeignCountriesProjectsComponent,
-
+    [CaseTypes.FUNDRAISING_LICENSING]: AuditFundraisingChannelLicensingComponent,
 
     [CaseTypes.CONSULTATION]: AuditConsultationComponent,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: AuditUrgentInterventionLicenseComponent,
