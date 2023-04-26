@@ -31,7 +31,7 @@
                        placeholder="{{lang.map.select}}" id="requestType"
                        [notFoundText]="lang.map.msg_not_found"
                        appendTo="body"
-                       [readonly]="!isEditAllowed()"
+                       [readonly]="readonly"
                        (change)="handleRequestTypeChange($event, true)"
                        formControlName="requestType"
                        validationClasses="requestType">
@@ -45,12 +45,12 @@
             <label for="urgentAnnouncementFullSerial" asteriskIfRequired="urgentAnnouncementFullSerial"
                    class="form-label">{{lang.map.urgent_intervention_declaration_license_number}}</label>
             <div class="input-group">
-              <input (keydown.enter)="isEditAllowed() && licenseSearch($event)"
+              <input (keydown.enter)="!readonly && licenseSearch($event)"
                      formControlName="urgentAnnouncementFullSerial"
-                     type="text" [readOnly]="!isEditAllowed()"
+                     type="text" [readOnly]="readonly"
                      validationClasses="urgentAnnouncementFullSerial" [onlyInvalid]="false" class="form-control"
                      id="urgentAnnouncementFullSerial" trimInput>
-              <button type="button" *ngIf="isEditAllowed()" (click)="licenseSearch($event)" class="input-group-text">
+              <button type="button" *ngIf="!readonly" (click)="licenseSearch($event)" class="input-group-text">
                 <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i>
               </button>
               <app-field-error-message controlName="urgentAnnouncementFullSerial"></app-field-error-message>
@@ -65,7 +65,7 @@
         <div *ngIf="selectedLicense">
           <selected-license-table [caseType]="caseTypes.URGENT_INTERVENTION_ANNOUNCEMENT"
                                   [caseTypeViewLicense]="caseTypes.URGENT_INTERVENTION_ANNOUNCEMENT"
-                                  [ignoreDelete]="!isEditAllowed()"
+                                  [ignoreDelete]="!readonly"
                                   [licenseList]="[selectedLicense]"
                                   (clearLicense)="resetLicence()"
                                   [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
@@ -149,7 +149,7 @@
                      [notFoundText]="lang.map.msg_not_found"
                      [clearable]="false"
                      appendTo="body"
-                     [readonly]="!isEditAllowed()"
+                     [readonly]="readonly"
                      (change)="handleImplementingAgencyTypeChanges()"
                      formControlName="implementingAgencyType"
                      validationClasses="implementingAgencyType">
@@ -165,7 +165,7 @@
           <ng-select [selectOnTab]="true" labelForId="implementingAgency"
                      placeholder="{{lang.map.select}}" id="implementingAgency"
                      [notFoundText]="lang.map.msg_not_found"
-                     [readonly]="!isEditAllowed()"
+                     [readonly]="readonly"
                      appendTo="body"
                      formControlName="implementingAgency"
                      (change)="handleImplementingAgencyNameChanges()"
@@ -182,7 +182,7 @@
           <ng-select [selectOnTab]="true" labelForId="implementingAgency"
                      placeholder="{{lang.map.select}}" id="implementingAgency"
                      [notFoundText]="lang.map.msg_not_found"
-                     [readonly]="!isEditAllowed()"
+                     [readonly]="readonly"
                      appendTo="body"
                      formControlName="implementingAgency"
                      (change)="handleImplementingAgencyNameChanges()"
@@ -199,7 +199,7 @@
           <ng-select [selectOnTab]="true" labelForId="accountType"
                      placeholder="{{lang.map.select}}" id="accountType"
                      [notFoundText]="lang.map.msg_not_found"
-                     [readonly]="!isEditAllowed()"
+                     [readonly]="readonly"
                      appendTo="body"
                      (change)="_handleChangeAccountType()"
                      formControlName="accountType"
@@ -216,7 +216,7 @@
           <ng-select [selectOnTab]="true" labelForId="accountNumber"
                      placeholder="{{lang.map.select}}" id="accountNumber"
                      [notFoundText]="lang.map.msg_not_found"
-                     [readonly]="!isEditAllowed()"
+                     [readonly]="readonly"
                      appendTo="body"
                      formControlName="accountNumber"
                      validationClasses="accountNumber">
@@ -234,7 +234,7 @@
           <label for="amount" asteriskIfRequired="amount"
                  class="form-label">{{lang.map.amount}}</label>
           <input formControlName="amount" class="form-control" type="text"
-                 [readonly]="!isEditAllowed()" validationClasses="amount" id="amount" trimInput
+                 [readonly]="readonly" validationClasses="amount" id="amount" trimInput
                  [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
                  prefix="$"
                  [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">

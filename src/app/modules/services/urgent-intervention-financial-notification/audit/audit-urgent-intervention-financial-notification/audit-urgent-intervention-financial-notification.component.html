@@ -1,0 +1,32 @@
+<div class="row">
+  <tabs-list>
+    <tab name="basicInfo" [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+    <tab name="entities" [template]="entitiesTabTemplate" [title]="lang.map.entities"></tab>
+    <tab name="interventionAreas" [template]="interventionAreasTabTemplate" [title]="lang.map.intervention_areas"></tab>
+    <tab name="interventionFields" [template]="interventionFieldsTabTemplate" [title]="lang.map.intervention_fields">
+    </tab>
+    <tab name="transferData" [template]="transferDataTabTemplate" [title]="lang.map.transfer_data">
+    </tab>
+  </tabs-list>
+</div>
+<ng-template #basicInfoTabTemplate>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #entitiesTabTemplate>
+  <audit-intervention-implementing-agency-list [newVersionList]="newVersion.implementingAgencyList"
+    [oldVersionList]="oldVersion.implementingAgencyList" [caseType]="newVersion.caseType">
+  </audit-intervention-implementing-agency-list>
+</ng-template>
+<ng-template #interventionAreasTabTemplate>
+  <audit-intervention-region-list [newVersionList]="newVersion.interventionRegionList"
+    [oldVersionList]="oldVersion.interventionRegionList" [caseType]="newVersion.caseType">
+  </audit-intervention-region-list>
+</ng-template>
+<ng-template #interventionFieldsTabTemplate>
+  <audit-intervention-field-list [newVersionList]="newVersion.interventionFieldList"
+    [oldVersionList]="oldVersion.interventionFieldList" [caseType]="newVersion.caseType">
+  </audit-intervention-field-list>
+</ng-template>
+<ng-template #transferDataTabTemplate>
+  <value-differences-list [differenceList]="transferDataDifferences"></value-differences-list>
+</ng-template>
