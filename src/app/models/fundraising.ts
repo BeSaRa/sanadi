@@ -172,7 +172,7 @@ export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraisin
      }
   }
   buildExplanation(controls: boolean = false): any {
-    const { description } =  ObjectUtils.getControlValues<Fundraising>(this.getExplanationValuesWithLabels());;
+    const { description } =  ObjectUtils.getControlValues<Fundraising>(this.getExplanationValuesWithLabels());
     return {
       description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description
     };

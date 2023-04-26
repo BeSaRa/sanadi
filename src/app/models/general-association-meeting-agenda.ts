@@ -7,26 +7,17 @@ import { ControlValueLabelLangKey } from '@app/types/types';
 import { FactoryService } from '@services/factory.service';
 import { LangService } from '@services/lang.service';
 
-export class GeneralAssociationExternalMember extends SearchableCloneable<GeneralAssociationExternalMember>  implements IAuditModelProperties<GeneralAssociationExternalMember>{
-  id?: number;
-  arabicName!: string;
-  englishName!: string;
-  jobTitleId!: number;
-  identificationNumber!: number;
-  jobTitleInfo!: AdminResult;
-  langService!: LangService;
+export class GeneralAssociationAgenda extends SearchableCloneable<GeneralAssociationAgenda>  implements IAuditModelProperties<GeneralAssociationAgenda>{
+  description!: string;
 
   constructor() {
     super();
-    this.langService = FactoryService.getService('LangService');
   }
 // don't delete (used in case audit history)
-getAdminResultByProperty(property: keyof GeneralAssociationExternalMember): AdminResult {
+getAdminResultByProperty(property: keyof GeneralAssociationAgenda): AdminResult {
   let adminResultValue: AdminResult;
   switch (property) {
-    case 'jobTitleId':
-      adminResultValue = this.jobTitleInfo;
-      break;
+
     default:
       let value: any = this[property];
       if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
@@ -40,14 +31,9 @@ getAdminResultByProperty(property: keyof GeneralAssociationExternalMember): Admi
  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
   return {
-    id:{langKey: 'id_number', value: this.id},
-    arabicName:{langKey: 'arabic_name', value: this.arabicName},
-    englishName:{langKey: 'english_name', value: this.englishName},
-    jobTitleId:{langKey: 'job_title', value: this.jobTitleId},
-    identificationNumber:{langKey: 'identification_number', value: this.identificationNumber},
+    description:{langKey: 'lbl_description', value: this.description},
+
   };
 }
-  getName(): string {
-    return this.langService.map.lang === 'ar' ? this.arabicName : this.englishName;
-  }
+
 }
