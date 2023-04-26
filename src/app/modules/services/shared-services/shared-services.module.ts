@@ -26,6 +26,9 @@ import {AuditWorkAreasComponent} from './audit/audit-work-areas/audit-work-areas
 import { AuditExecutiveManagementComponent } from './audit/audit-executive-management/audit-executive-management.component';
 import { AuditContactOfficersComponent } from './audit/audit-contact-officers/audit-contact-officers.component';
 import { AuditBankBranchComponent } from './audit/audit-bank-branch/audit-bank-branch.component';
+import { AuditInterventionImplementingAgencyListComponent } from './audit/audit-intervention-implementing-agency-list copy/audit-intervention-implementing-agency-list.component';
+import { AuditInterventionFieldListComponent } from './audit/audit-intervention-field-list/audit-intervention-field-list.component';
+import { AuditInterventionRegionListComponent } from './audit/audit-intervention-region-list/audit-intervention-region-list.component';
 
 
 @NgModule({
@@ -42,8 +45,10 @@ import { AuditBankBranchComponent } from './audit/audit-bank-branch/audit-bank-b
     AuditWorkAreasComponent,
     AuditExecutiveManagementComponent,
     AuditContactOfficersComponent,
-    AuditBankBranchComponent
-
+    AuditBankBranchComponent,
+    AuditInterventionImplementingAgencyListComponent,
+    AuditInterventionFieldListComponent,
+    AuditInterventionRegionListComponent
   ],
   imports: [
     CommonModule,
@@ -62,8 +67,10 @@ import { AuditBankBranchComponent } from './audit/audit-bank-branch/audit-bank-b
     AuditWorkAreasComponent,
     AuditExecutiveManagementComponent,
     AuditContactOfficersComponent,
-    AuditBankBranchComponent
-
+    AuditBankBranchComponent,
+    AuditInterventionImplementingAgencyListComponent,
+    AuditInterventionFieldListComponent,
+    AuditInterventionRegionListComponent
   ]
 })
 export class SharedServicesModule { }

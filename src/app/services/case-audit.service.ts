@@ -61,6 +61,9 @@ import { FinalExternalOfficeApprovalInterceptor } from '@app/model-interceptors/
 import { UrgentInterventionLicense } from '@app/models/urgent-intervention-license';
 import { UrgentInterventionLicenseInterceptor } from '@app/model-interceptors/urgent-intervention-license-interceptor';
 import { AuditUrgentInterventionLicenseComponent } from '@app/modules/services/urgent-intervention-licensing/audit/audit-urgent-intervention-license/audit-urgent-intervention-license.component';
+import { UrgentInterventionFinancialNotification } from '@app/models/urgent-intervention-financial-notification';
+import { UrgentInterventionFinancialNotificationInterceptor } from '@app/model-interceptors/urgent-intervention-financial-notification-interceptor';
+import { AuditUrgentInterventionFinancialNotificationComponent } from '@app/modules/services/urgent-intervention-financial-notification/audit/audit-urgent-intervention-financial-notification/audit-urgent-intervention-financial-notification.component';
 
 @CastResponseContainer({
   $default: {
@@ -90,6 +93,8 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensing,
     [CaseTypes.CONSULTATION]: Consultation,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: UrgentInterventionLicense,
+    [CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION]: UrgentInterventionFinancialNotification,
+
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -105,6 +110,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensingInterceptor,
     [CaseTypes.CONSULTATION]: ConsultationInterceptor,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: UrgentInterventionLicenseInterceptor,
+    [CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION]: UrgentInterventionFinancialNotificationInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -120,6 +126,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: AuditFinancialTransfersLicensingComponent,
     [CaseTypes.CONSULTATION]: AuditConsultationComponent,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: AuditUrgentInterventionLicenseComponent,
+    [CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION]: AuditUrgentInterventionFinancialNotificationComponent,
   };
 
   constructor(public http: HttpClient,
