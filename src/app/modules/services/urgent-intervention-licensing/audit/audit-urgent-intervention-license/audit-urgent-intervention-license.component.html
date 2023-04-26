@@ -1,0 +1,14 @@
+<tabs-list>
+  <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
+  <tab name="emergencyFund" [template]="emergencyFundTemplate" [title]="lang.map.emergency_funds_info"></tab>
+  <tab name="projectSummary" [template]="projectSummaryTemplate" [title]="lang.map.project_summary_info"></tab>
+ </tabs-list>
+<ng-template #basicInfoTemplate>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #emergencyFundTemplate>
+  <value-differences-list [differenceList]="emergencyFundDifferences"></value-differences-list>
+</ng-template>
+<ng-template #projectSummaryTemplate>
+  <value-differences-list [differenceList]="projectSummaryDifferences"></value-differences-list>
+</ng-template>
