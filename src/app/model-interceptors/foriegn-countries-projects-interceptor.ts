@@ -28,6 +28,7 @@ export class ForeignCountriesProjectsInterceptor implements IModelInterceptor<Fo
   receive(model: ForeignCountriesProjects): ForeignCountriesProjects {
     model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.projectNeeds = model.projectNeeds.map(e => (new ProjectNeed()).clone({ ...e }));
+    model.projectNeedList = model.projectNeeds.map(e => (new ProjectNeed()).clone({ ...e }));
     model.followUpDate = DateUtils.changeDateToDatepicker(model.followUpDate);
 
     return model;
