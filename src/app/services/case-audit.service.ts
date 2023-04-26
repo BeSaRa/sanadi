@@ -58,6 +58,9 @@ import { AuditFinancialTransfersLicensingComponent } from '@app/modules/services
 import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
 import { ForeignCountriesProjectsInterceptor } from '@app/model-interceptors/foriegn-countries-projects-interceptor';
 import { AuditForeignCountriesProjectsComponent } from '@app/modules/services/foreign-countries-projects/audit/audit-foreign-countries-projects/audit-foreign-countries-projects.component';
+import { Fundraising } from '@app/models/fundraising';
+import { FundraisingInterceptor } from '@app/model-interceptors/fundraising-interceptor';
+import { AuditFundraisingChannelLicensingComponent } from '@app/modules/services/fundraising-channel-licensing/audit/audit-fundraising-channel-licensing/audit-fundraising-channel-licensing.component';
 
 @CastResponseContainer({
   $default: {
@@ -86,6 +89,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApproval,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensing,
     [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: ForeignCountriesProjects,
+    [CaseTypes.FUNDRAISING_LICENSING]: Fundraising,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -100,6 +104,8 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApprovalInterceptor,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensingInterceptor,
     [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: ForeignCountriesProjectsInterceptor,
+    [CaseTypes.FUNDRAISING_LICENSING]: FundraisingInterceptor,
+
 
 
   };
@@ -116,7 +122,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: AuditFinalExternalOfficeApprovalComponent,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: AuditFinancialTransfersLicensingComponent,
     [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: AuditForeignCountriesProjectsComponent,
-
+    [CaseTypes.FUNDRAISING_LICENSING]: AuditFundraisingChannelLicensingComponent,
 
   };
 

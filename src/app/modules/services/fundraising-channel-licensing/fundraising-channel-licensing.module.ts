@@ -11,13 +11,15 @@ import {
 import {
   FundraisingApproveTaskPopupComponent
 } from '@modules/services/fundraising-channel-licensing/popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component';
+import { AuditFundraisingChannelLicensingComponent } from './audit/audit-fundraising-channel-licensing/audit-fundraising-channel-licensing.component';
 
 
 @NgModule({
   declarations: [
     FundraisingComponent,
     FundraisingChannelLicensingOutputsComponent,
-    FundraisingApproveTaskPopupComponent
+    FundraisingApproveTaskPopupComponent,
+    AuditFundraisingChannelLicensingComponent
   ],
   imports: [
     CommonModule,

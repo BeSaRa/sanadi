@@ -87,6 +87,12 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
       case 'caseStatus':
         adminResultValue = this.caseStatusInfo;
         break;
+      case 'country':
+        adminResultValue = this.countryInfo;
+        break;
+      case 'externalCooperationAuthority':
+        adminResultValue = this.externalCooperationAuthorityInfo;
+        break;
 
       default:
         let value: any = this[property];
@@ -126,7 +132,7 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
       organizationId: withControls ? [organizationId, [CustomValidators.required]] : organizationId,
       externalCooperationAuthority: withControls ? [externalCooperationAuthority, [CustomValidators.required]] : externalCooperationAuthority,
       requestType: withControls ? [requestType, [CustomValidators.required]] : requestType,
-      country: withControls ? [country, []] : country,
+      country: withControls ? [country, [CustomValidators.required]] : country,
       needSubject: withControls ? [needSubject, [CustomValidators.required, CustomValidators.maxLength(300)]] : needSubject,
       justification: withControls ? [justification, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : justification,
       recommendation: withControls ? [recommendation, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : recommendation
