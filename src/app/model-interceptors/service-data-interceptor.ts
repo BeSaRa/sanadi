@@ -19,7 +19,6 @@ export class ServiceDataInterceptor implements IModelInterceptor<ServiceData> {
   }
 
   send(model: Partial<ServiceData>): Partial<ServiceData> {
-    console.log(model)
     model.caseType = Number(model.caseType);
     ServiceDataInterceptor._stringifyConcernedDepartmentIds(model);
 
@@ -87,9 +86,7 @@ export class ServiceDataInterceptor implements IModelInterceptor<ServiceData> {
         delete customSettings.maxTargetAmount;
         delete customSettings.maxElementsCount;
         delete customSettings.activateDevelopmentField;
-      } else if (record.isAwarenessActivitySuggesion() || record.isOrgEntitySupport()) {
       }
-
       model.customSettings = JSON.stringify(customSettings);
     }
   }
