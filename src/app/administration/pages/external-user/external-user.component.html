@@ -91,13 +91,14 @@
 
 <ng-template #profileHeaderTemplate>
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-4">
-        <div class="d-flex align-items-center">
-          <div class="col-2"> 
+    <div class="row justify-content-start">
+      
+        
+          <div class="col-1 d-flex justify-content-center align-items-center "> 
             <label for="profileId">{{langService.map.menu_profile}}:</label>
           </div>
-          <div class="col-10">
+
+          <div class="col-6">
             <ng-select [selectOnTab]="true" [clearable]="false"
             placeholder="{{langService.map.select}}" id="profileId"
             [notFoundText]="langService.map.msg_not_found" appendTo="body"
@@ -109,8 +110,8 @@
               </ng-option>
             </ng-select>
           </div>
-        </div>
-      </div>
+        
+      
     </div>
   </div>
 </ng-template>
