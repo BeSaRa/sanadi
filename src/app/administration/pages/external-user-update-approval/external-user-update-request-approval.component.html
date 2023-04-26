@@ -10,7 +10,9 @@
                             [reload$]="reload$"
                             [add$]="add$"
                             (textChange)="filterControl.setValue($event)"
-                            [allowAdd]="service.canAddUser()">
+                            [allowAdd]="service.canAddUser()"
+                            [sort]="table.dataSource.sort"
+                            >
                 <ng-container *ngTemplateOutlet="bulk"></ng-container>
               </table-header>
             </th>

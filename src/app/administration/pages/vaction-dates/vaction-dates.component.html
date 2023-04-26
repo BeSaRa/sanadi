@@ -21,7 +21,9 @@
                         [reload$]="reload$"
                         [add$]="add$"
                         (textChange)="filterControl.setValue($event)"
-                        ></table-header>
+                        [sort]="table.dataSource.sort"
+                        >
+          </table-header>
         </th>
       </ng-container>
         <ng-container cdkColumnDef="rowSelection">

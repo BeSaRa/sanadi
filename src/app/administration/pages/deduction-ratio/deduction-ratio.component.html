@@ -22,7 +22,9 @@
             <table-header tableTitle="menu_deduction_ratio"
                           [reload$]="reload$"
                           [add$]="add$"
-                          (textChange)="filterControl.setValue($event)">
+                          (textChange)="filterControl.setValue($event)"
+                          [sort]="table.dataSource.sort"
+                          >
               <ng-container *ngTemplateOutlet="bulk"></ng-container>
             </table-header>
           </th>

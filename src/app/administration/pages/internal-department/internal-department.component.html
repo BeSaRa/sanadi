@@ -10,7 +10,9 @@
               <table-header tableTitle="menu_internal_department"
                             [reload$]="reload$"
                             (textChange)="searchText = $event"
-                            ></table-header>
+                            [sort]="table.dataSource.sort"
+                            >
+              </table-header>
             </th>
           </ng-container>
           <ng-container *ngFor="let column of searchColumns" [cdkColumnDef]="column">

@@ -17,7 +17,9 @@
                             [add$]="add$"
                             (textChange)="filterControl.setValue($event)"
                             [allowAdd]="externalUserUpdateRequestService.canAddUser()"
-                            ></table-header>
+                            [sort]="table.dataSource.sort"
+                            >
+              </table-header>
             </th>
           </ng-container>
           <ng-container *ngFor="let column of searchColumns" [cdkColumnDef]="column">
