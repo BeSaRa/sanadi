@@ -117,9 +117,8 @@ export class PartnerApprovalInterceptor
       'PartnerApprovalService'
     );
     model.bankAccountList = model.bankAccountList?.map((x: BankAccount) => {
-      // @ts-ignore
       delete x.category;
-      return service.bankAccountInterceptor.send(x) as BankAccount;
+      return service.bankAccountInterceptor.send(new BankAccount().clone(x)) as BankAccount;
     });
     model.goalsList = model.goalsList?.map((x: GoalList) => {
       return service.goalListInterceptor.send(x) as GoalList;

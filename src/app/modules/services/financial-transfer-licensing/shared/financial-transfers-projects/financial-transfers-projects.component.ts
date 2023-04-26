@@ -18,6 +18,7 @@ import {BehaviorSubject, of, Subject} from 'rxjs';
 import {CustomValidators} from '@app/validators/custom-validators';
 import { FinancialTransferRequestTypes } from '@app/enums/service-request-types';
 import { FinancialTransfersProjectsPopupComponent } from '../../popups/financial-transfers-projects-popup/financial-transfers-projects-popup.component';
+import { SubmissionMechanisms } from '@app/enums/submission-mechanisms.enum';
 
 @Component({
   selector: 'financial-transfers-projects',
@@ -226,7 +227,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
           return isProjectSelected;
         }),
         filter(() => {
-          const isQatariTransactionAmountValid = this.qatariTransactionAmount.value <= this.selectedProject!.dueAmount
+          const isQatariTransactionAmountValid = this.submissionMechanism === SubmissionMechanisms.NOTIFICATION  || (this.qatariTransactionAmount.value <= this.selectedProject!.dueAmount)
           if (!isQatariTransactionAmountValid) {
             this.toastService.error(this.lang.map.msg_qatari_transaction_should_not_exceed_due_amount);
           }

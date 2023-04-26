@@ -51,7 +51,7 @@ export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor
 
     let service = FactoryService.getService<FinalExternalOfficeApprovalService>('FinalExternalOfficeApprovalService');
     model.bankAccountList = model.bankAccountList?.map(x => {
-      return service.bankAccountInterceptor.send(x) as BankAccount;
+      return service.bankAccountInterceptor.send(new BankAccount().clone(x)) as BankAccount;
     });
     model.executiveManagementList = model.executiveManagementList?.map(x => {
       return service.executiveManagementInterceptor.send(x) as ExecutiveManagement;

@@ -1623,6 +1623,7 @@ export interface ILanguageKeys {
   all_employees: string;
   lbl_add_x: string;
   lbl_edit_x: string;
+  lbl_view_x: string;
   lbl_children_x: string;
   email_for_working_authority: string;
   phone_for_working_authority: string;
@@ -1842,6 +1843,11 @@ export interface ILanguageKeys {
   msg_record_is_linked:string;
   previews_replays:string;
   sub_meeting_point_name:string;
+  template_type:string;
+  template_file:string;
+  lbl_beneficiaries_count:string;
+  download_templat:string;
+  uploaded_templates:string;
   student_info_lbl:string;
   student_QID:string;
   grade_level_english:string;
@@ -1881,4 +1887,10 @@ export interface ILanguageKeys {
   no_atarization_no_lbl:string;
   certificate_code_lbl:string;
   leased_contract_lbl:string;
+  msg_added_in_list_success:string;
+  msg_updated_in_list_success:string;
+  msg_deleted_in_list_success:string;
+  msg_added_in_list_x_success:string;
+  msg_updated_in_list_x_success:string;
+  msg_deleted_in_list_x_success:string;
 }

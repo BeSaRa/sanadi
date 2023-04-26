@@ -8,22 +8,18 @@ export class AwarenessActivitySuggestionInterceptor implements IModelInterceptor
   receive(model: AwarenessActivitySuggestion): AwarenessActivitySuggestion {
 
     model.licenseStatusInfo = AdminResult.createInstance(isValidAdminResult(model.licenseStatusInfo) ? model.licenseStatusInfo : {});
-    model.expectedDate = DateUtils.changeDateToDatepicker(model.expectedDate);
     model.followUpDate = DateUtils.changeDateToDatepicker(model.followUpDate);
-    model.agreementWithRACA = model.agreementWithRACA ? 1 : 2;
 
     return model;
   }
 
-  send(model: any) {
-    (model.expectedDate && (model.expectedDate = DateUtils.getDateStringFromDate(model.expectedDate)));
+  send(model: AwarenessActivitySuggestion) {
     (model.followUpDate && (model.followUpDate = DateUtils.getDateStringFromDate(model.followUpDate)));
-    model.agreementWithRACA = (model.agreementWithRACA == 1)
     AwarenessActivitySuggestionInterceptor._deleteBeforeSend(model);
     return model;
   }
 
-  private static _deleteBeforeSend(model: any) {
+  private static _deleteBeforeSend(model: Partial<AwarenessActivitySuggestion>) {
     delete model.requestTypeInfo;
     delete model.licenseStatusInfo;
     delete model.searchFields;

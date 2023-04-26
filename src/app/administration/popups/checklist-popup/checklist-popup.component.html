@@ -19,8 +19,10 @@
               <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
                 <table-header tableTitle="checklist_items"
                               (textChange)="filterControl.setValue($event)"
-                              [add$]="add$" [reload$]="reload$"
+                              [add$]="add$" 
+                              [reload$]="reload$"
                               [allowAdd]="!readonly"
+                              [sort]="table.dataSource.sort"
                 ></table-header>
               </th>
             </ng-container>

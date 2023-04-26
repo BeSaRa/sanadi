@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, TemplateRef} from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 
@@ -14,6 +14,7 @@ export class HeadingRowComponent {
   @Input() labelKey: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   @Input() label: string = '';
   @Input() hideHorizontalLine: boolean = false;
+  @Input() extraButtonsTemplate?: TemplateRef<any>;
 
   get headingText(): string {
     if (this.label) {

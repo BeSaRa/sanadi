@@ -1,3 +1,4 @@
+import { SelectCustomServiceTemplatePopupComponent } from './popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
@@ -27,6 +28,8 @@ import { BankAccountPopupComponent } from './popups/bank-account-popup/bank-acco
 import { InterventionImplementingAgencyListPopupComponent } from './popups/intervention-implementing-agency-list-popup/intervention-implementing-agency-list-popup.component';
 import { InterventionRegionListPopupComponent } from './popups/intervention-region-list-popup/intervention-region-list-popup.component';
 import { InterventionFieldListPopupComponent } from './popups/intervention-field-list-popup/intervention-field-list-popup.component';
+import { BankAccountNewComponent } from './components/bank-account-new/bank-account-new.component';
+import { BankAccountNewPopupComponent } from './popups/bank-account-new-popup/bank-account-new-popup.component';
 
 
 @NgModule({
@@ -44,7 +47,10 @@ import { InterventionFieldListPopupComponent } from './popups/intervention-field
     InterventionRegionListPopupComponent,
     InterventionFieldListComponent,
     InterventionFieldListPopupComponent,
-    BankAccountPopupComponent
+    BankAccountPopupComponent,
+    SelectCustomServiceTemplatePopupComponent,
+    BankAccountNewComponent,
+    BankAccountNewPopupComponent
   ],
   imports: [
     CommonModule,
@@ -60,7 +66,8 @@ import { InterventionFieldListPopupComponent } from './popups/intervention-field
     ApprovalFormComponent,
     InterventionImplementingAgencyListComponent,
     InterventionRegionListComponent,
-    InterventionFieldListComponent
+    InterventionFieldListComponent,
+    BankAccountNewComponent
   ]
 })
 export class SharedServicesModule { }

@@ -1,6 +1,6 @@
-import { EventEmitter, Injectable, OnDestroy, QueryList } from '@angular/core';
-import { TabComponent } from '../tab/tab.component';
-import { Observable, Subject } from 'rxjs';
+import {EventEmitter, Injectable, OnDestroy, QueryList} from '@angular/core';
+import {TabComponent} from '../tab/tab.component';
+import {Observable, Subject} from 'rxjs';
 
 @Injectable()
 export class TabListService implements OnDestroy {
@@ -51,7 +51,7 @@ export class TabListService implements OnDestroy {
 
   selectTabByIndex(index: number): void {
     const tab = this.findTabByIndex(index);
-    tab && (tab.expanded = 'open');
+    tab && !tab.disabled && (tab.expansionState = 'open');
     this.changeSelectedTabTo$.next(tab);
     this.onTabChangeEvent.emit(tab);
   }

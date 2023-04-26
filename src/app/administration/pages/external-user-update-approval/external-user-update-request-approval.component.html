@@ -10,7 +10,9 @@
                             [reload$]="reload$"
                             [add$]="add$"
                             (textChange)="filterControl.setValue($event)"
-                            [allowAdd]="service.canAddUser()">
+                            [allowAdd]="service.canAddUser()"
+                            [sort]="table.dataSource.sort"
+                            >
                 <ng-container *ngTemplateOutlet="bulk"></ng-container>
               </table-header>
             </th>
@@ -112,27 +114,25 @@
 <ng-template #profileHeaderTemplate>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-4 d-flex flex-row align-items-center">
-        <div class="col-2">
-          <label for="profileId">{{lang.map.menu_profile}}:</label>
-        </div>
-        <div class="col-10">
-          <ng-select [selectOnTab]="true" [clearable]="false" placeholder="{{lang.map.select}}" id="profileId"
-          [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="profileIdControl"
-          (change)="handleProfileChange()">
+      <div class="col-5 d-flex flex-row align-items-center">
+        <div class="row w-100 justify-content-start">
+          <div class="col-2 d-flex align-items-center">
+            <label for="profileId">{{lang.map.menu_profile}}:</label>
+          </div>
+          <div class="col-10">
+            <ng-select [selectOnTab]="true" [clearable]="false" placeholder="{{lang.map.select}}" id="profileId"
+            [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="profileIdControl"
+            (change)="handleProfileChange()">
             <ng-option value="">{{lang.map.lbl_all}}</ng-option>
             <ng-option *ngFor="let option of profiles$|async" [value]="option.id">
               {{option.getName()}}
             </ng-option>
-          </ng-select>
+            </ng-select>
+          </div>
         </div>
       </div>
-      <div class="col-8">
+      <div class="col-7">
         <div class="d-flex flex-row">
-         <!-- <ng-container *ngIf="table">
-            <app-bulk-actions class="w-auto" *ngIf="table.selection && table.selection.selected.length"
-            [selectedRecords]="table.selection.selected" [actionsList]="bulkActionsList"></app-bulk-actions>
-          </ng-container>-->
           <div class="d-flex ms-auto" *ngIf="selectedFilter">
             <button (click)="selectFilter(undefined)" class="btn btn-sm"
               [ngClass]="requestStatusClasses[selectedFilter.lookupKey]">
@@ -156,6 +156,8 @@
     </div>
   </div>
 </ng-template>
+
+
 <ng-template #bulk>
   <app-bulk-actions *ngIf="table && table.selection && table.selection.selected.length"
                     [selectedRecords]="table.selection.selected"
