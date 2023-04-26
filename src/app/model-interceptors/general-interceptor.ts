@@ -26,6 +26,8 @@ export class GeneralInterceptor {
     delete model.caseStatusInfo;
     delete model.creatorInfo;
     delete model.ouInfo;
+    delete model.auditOperation;
+
     if(model.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
       if(!!model.taskDetails?.piid && !model.taskDetails.isMain){
         model.taskDetails={  piid:model.taskDetails.piid };
