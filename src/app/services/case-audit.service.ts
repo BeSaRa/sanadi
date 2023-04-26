@@ -1,4 +1,4 @@
-import { FinalExternalOfficeApprovalInterceptor } from './../model-interceptors/final-external-office-approval-interceptor';
+import { ConsultationInterceptor } from '@app/model-interceptors/consultation-interceptor';
 import {Injectable} from '@angular/core';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import {Pagination} from '@models/pagination';
@@ -55,6 +55,9 @@ import { AuditFinalExternalOfficeApprovalComponent } from '@app/modules/services
 import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
 import { FinancialTransferLicensingInterceptor } from '@app/model-interceptors/financial-transfer-licensing-interceptor';
 import { AuditFinancialTransfersLicensingComponent } from '@app/modules/services/financial-transfer-licensing/audit/audit-financial-transfers-licensing/audit-financial-transfers-licensing.component';
+import { Consultation } from '@app/models/consultation';
+import { AuditConsultationComponent } from '@app/modules/services/consultation/audit/audit-consultation/audit-consultation.component';
+import { FinalExternalOfficeApprovalInterceptor } from '@app/model-interceptors/final-external-office-approval-interceptor';
 
 @CastResponseContainer({
   $default: {
@@ -82,6 +85,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: ExternalOrgAffiliation,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApproval,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensing,
+    [CaseTypes.CONSULTATION]: Consultation,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -95,7 +99,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: ExternalOrgAffiliationInterceptor,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApprovalInterceptor,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensingInterceptor,
-
+    [CaseTypes.CONSULTATION]: ConsultationInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -109,7 +113,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: AuditExternalOrganizationAffiliationComponent,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: AuditFinalExternalOfficeApprovalComponent,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: AuditFinancialTransfersLicensingComponent,
-
+    [CaseTypes.CONSULTATION]: AuditConsultationComponent,
   };
 
   constructor(public http: HttpClient,

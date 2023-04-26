@@ -23,6 +23,7 @@ export class ConsultationInterceptor implements IModelInterceptor<Consultation> 
     delete model.ouInfo;
     delete model.employeeService;
     delete model.organizationInfo;
+    delete model.auditOperation;
     return model;
   }
 
