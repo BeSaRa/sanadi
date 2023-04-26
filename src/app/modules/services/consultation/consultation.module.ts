@@ -5,12 +5,14 @@ import {ConsultationRoutingModule} from './consultation-routing.module';
 import {EServicesMainModule} from '@modules/e-services-main/e-services-main.module';
 import {ConsultationComponent} from '@modules/services/consultation/pages/consultation/consultation.component';
 import {ConsultationOutputsComponent} from './pages/consultation-outputs/consultation-outputs.component';
+import { AuditConsultationComponent } from './audit/audit-consultation/audit-consultation.component';
 
 
 @NgModule({
   declarations: [
     ConsultationComponent,
-    ConsultationOutputsComponent
+    ConsultationOutputsComponent,
+    AuditConsultationComponent
   ],
   imports: [
     CommonModule,
