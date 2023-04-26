@@ -1,3 +1,4 @@
+import { ControlValueLabelLangKey } from './../types/types';
 import { UrgentInterventionLicensingService } from '@app/services/urgent-intervention-licensing.service';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { FactoryService } from '@app/services/factory.service';
@@ -24,12 +25,15 @@ import { isValidAdminResult } from "@app/helpers/utils";
 import { DateUtils } from '@app/helpers/date-utils';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { UrgentInterventionLicenseInterceptor } from "@app/model-interceptors/urgent-intervention-license-interceptor";
+import { CommonUtils } from '@app/helpers/common-utils';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
 const { send, receive } = new UrgentInterventionLicenseInterceptor();
 
 @InterceptModel({ send, receive })
 export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<UrgentInterventionLicensingService, UrgentInterventionLicense> implements HasLicenseApprovalMonthly, HasRequestType {
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   caseType: number = CaseTypes.URGENT_INTERVENTION_LICENSING;
   domain: number = DomainTypes.HUMANITARIAN; // fixed value, so info will also be fixed always
   licenseDuration: number = 12; // fixed value
@@ -106,6 +110,17 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
     }
   }
 
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: { langKey: 'request_type', value: this.requestType },
+      arName: { langKey: 'arabic_name', value: this.arName },
+      enName: { langKey: 'english_name', value: this.enName },
+      year: { langKey: 'year', value: this.year },
+      oldLicenseFullSerial: { langKey: 'license_number', value: this.oldLicenseFullSerial },
+      domain: { langKey: 'domain', value: this.domain },
+      mainUNOCHACategory: { langKey: 'main_unocha_category', value: this.mainUNOCHACategory },
+    };
+  }
   getBasicFormFields(control: boolean = false): any {
     const {
       arName,
@@ -120,18 +135,30 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
     } = this;
 
     return {
-      arName: control ? [{value: arName,  disabled: true}, [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]] : arName,
-      enName: control ? [{value: enName,  disabled: true}, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : enName,
+      arName: control ? [{ value: arName, disabled: true }, [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]] : arName,
+      enName: control ? [{ value: enName, disabled: true }, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : enName,
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
-      year: control ? [{value: enName,  disabled: true}, [CustomValidators.number, CustomValidators.maxLength(4)]] : year,
+      year: control ? [{ value: enName, disabled: true }, [CustomValidators.number, CustomValidators.maxLength(4)]] : year,
       oldLicenseFullSerial: control ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
       oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
       oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
       domain: control ? [domain, CustomValidators.required] : domain,
-      mainUNOCHACategory: control ? [{value: mainUNOCHACategory, disabled: true}] : mainUNOCHACategory
+      mainUNOCHACategory: control ? [{ value: mainUNOCHACategory, disabled: true }] : mainUNOCHACategory
     }
   }
 
+  getEmergencyFundValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      deductionPercent: { langKey: 'deduction_ratio', value: this.deductionPercent },
+      accountNumber: { langKey: 'account_number', value: this.accountNumber },
+      iBan: { langKey: 'iban', value: this.iBan },
+      currency: { langKey: 'currency', value: this.currency },
+      targetAmount: { langKey: 'target_cost', value: this.targetAmount },
+      bankName: { langKey: 'bank_name', value: this.bankName },
+      licenseDuration: { langKey: 'license_duration', value: this.licenseDuration },
+      licenseStartDate: { langKey: 'license_start_date', value: this.licenseStartDate },
+    };
+  }
   getEmergencyFundFields(control: boolean = false): any {
     const {
       deductionPercent,
@@ -149,13 +176,21 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
       deductionPercent: control ? [deductionPercent, [CustomValidators.required, CustomValidators.decimal(2), Validators.min(0), Validators.max(100)]] : deductionPercent,
       accountNumber: control ? [accountNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : accountNumber,
       iBan: control ? [iBan, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : iBan,
-      currency: control ? [{values: currency, disabled: true}] : currency,
+      currency: control ? [{ values: currency, disabled: true }] : currency,
       targetAmount: control ? [targetAmount, [CustomValidators.required, CustomValidators.decimal(2)]] : targetAmount,
-      licenseDuration: control ? [{value: licenseDuration, disabled: true}] : licenseDuration,
-      licenseStartDate: control ? [{value: DateUtils.changeDateToDatepicker(licenseStartDate), disabled: true}] : DateUtils.changeDateToDatepicker(licenseStartDate)
+      licenseDuration: control ? [{ value: licenseDuration, disabled: true }] : licenseDuration,
+      licenseStartDate: control ? [{ value: DateUtils.changeDateToDatepicker(licenseStartDate), disabled: true }] : DateUtils.changeDateToDatepicker(licenseStartDate)
     }
   }
 
+  getProjectSummaryValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      goals: { langKey: 'project_goals', value: this.goals },
+      successItems: { langKey: 'project_success_items', value: this.successItems },
+      outputs: { langKey: 'project_outputs', value: this.outputs },
+      expectedResults: { langKey: 'project_expected_results', value: this.expectedResults },
+    };
+  }
   getProjectSummaryFields(control: boolean = false): any {
     const {
       goals,
@@ -173,7 +208,7 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
   }
 
   getDomainInfo(): AdminResult {
-    if(this.domainInfo && isValidAdminResult(this.domainInfo)){
+    if (this.domainInfo && isValidAdminResult(this.domainInfo)) {
       return this.domainInfo;
     }
 
@@ -186,7 +221,7 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
   }
 
   getCurrencyInfo(): AdminResult {
-    if(this.currencyInfo && isValidAdminResult(this.currencyInfo)){
+    if (this.currencyInfo && isValidAdminResult(this.currencyInfo)) {
       return this.currencyInfo;
     }
 
@@ -205,5 +240,21 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
 
   finalApprove(): DialogRef {
     return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+  }
+  getAdminResultByProperty(property: keyof UrgentInterventionLicense): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'caseStatus':
+        adminResultValue = this.caseStatusInfo;
+        break;
+
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
   }
 }

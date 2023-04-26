@@ -1,31 +1,31 @@
 import { ConsultationInterceptor } from '@app/model-interceptors/consultation-interceptor';
-import {Injectable} from '@angular/core';
-import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
-import {Pagination} from '@models/pagination';
-import {CaseAudit} from '@models/case-audit';
-import {CrudGenericService} from '@app/generics/crud-generic-service';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {UrlService} from '@services/url.service';
-import {DialogService} from '@services/dialog.service';
-import {FactoryService} from '@services/factory.service';
-import {Observable, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {CaseModel} from '@models/case-model';
-import {CaseTypes} from '@enums/case-types.enum';
-import {ComponentType} from '@angular/cdk/overlay';
-import {CaseAuditPopupComponent} from '@modules/e-services-main/popups/case-audit-popup/case-audit-popup.component';
-import {CustomsExemptionRemittance} from '@models/customs-exemption-remittance';
-import {CustomsExemptionRemittanceInterceptor} from '@model-interceptors/customs-exemption-remittance-interceptor';
+import { Injectable } from '@angular/core';
+import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
+import { Pagination } from '@models/pagination';
+import { CaseAudit } from '@models/case-audit';
+import { CrudGenericService } from '@app/generics/crud-generic-service';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { UrlService } from '@services/url.service';
+import { DialogService } from '@services/dialog.service';
+import { FactoryService } from '@services/factory.service';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { CaseModel } from '@models/case-model';
+import { CaseTypes } from '@enums/case-types.enum';
+import { ComponentType } from '@angular/cdk/overlay';
+import { CaseAuditPopupComponent } from '@modules/e-services-main/popups/case-audit-popup/case-audit-popup.component';
+import { CustomsExemptionRemittance } from '@models/customs-exemption-remittance';
+import { CustomsExemptionRemittanceInterceptor } from '@model-interceptors/customs-exemption-remittance-interceptor';
 import {
   AuditCustomsExemptionComponent
 } from '@modules/services/customs-exemption-remittance/audit/audit-customs-exemption/audit-customs-exemption.component';
 import {
   CaseAuditDifferencesPopupComponent
 } from '@modules/e-services-main/popups/case-audit-differences-popup/case-audit-differences-popup.component';
-import {AdminResult} from '@models/admin-result';
-import {IValueDifference} from '@contracts/i-value-difference';
-import {PartnerApproval} from '@models/partner-approval';
-import {PartnerApprovalInterceptor} from '@model-interceptors/partner-approval-interceptor';
+import { AdminResult } from '@models/admin-result';
+import { IValueDifference } from '@contracts/i-value-difference';
+import { PartnerApproval } from '@models/partner-approval';
+import { PartnerApprovalInterceptor } from '@model-interceptors/partner-approval-interceptor';
 import {
   AuditPartnerApprovalComponent
 } from '@modules/services/partner-approval/audit/audit-partner-approval/audit-partner-approval.component';
@@ -58,6 +58,9 @@ import { AuditFinancialTransfersLicensingComponent } from '@app/modules/services
 import { Consultation } from '@app/models/consultation';
 import { AuditConsultationComponent } from '@app/modules/services/consultation/audit/audit-consultation/audit-consultation.component';
 import { FinalExternalOfficeApprovalInterceptor } from '@app/model-interceptors/final-external-office-approval-interceptor';
+import { UrgentInterventionLicense } from '@app/models/urgent-intervention-license';
+import { UrgentInterventionLicenseInterceptor } from '@app/model-interceptors/urgent-intervention-license-interceptor';
+import { AuditUrgentInterventionLicenseComponent } from '@app/modules/services/urgent-intervention-licensing/audit/audit-urgent-intervention-license/audit-urgent-intervention-license.component';
 
 @CastResponseContainer({
   $default: {
@@ -65,7 +68,7 @@ import { FinalExternalOfficeApprovalInterceptor } from '@app/model-interceptors/
   },
   $pagination: {
     model: () => Pagination,
-    shape: {'rs.*': () => CaseAudit}
+    shape: { 'rs.*': () => CaseAudit }
   }
 })
 @Injectable({
@@ -86,6 +89,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApproval,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensing,
     [CaseTypes.CONSULTATION]: Consultation,
+    [CaseTypes.URGENT_INTERVENTION_LICENSING]: UrgentInterventionLicense,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -100,6 +104,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApprovalInterceptor,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensingInterceptor,
     [CaseTypes.CONSULTATION]: ConsultationInterceptor,
+    [CaseTypes.URGENT_INTERVENTION_LICENSING]: UrgentInterventionLicenseInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -114,11 +119,12 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: AuditFinalExternalOfficeApprovalComponent,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: AuditFinancialTransfersLicensingComponent,
     [CaseTypes.CONSULTATION]: AuditConsultationComponent,
+    [CaseTypes.URGENT_INTERVENTION_LICENSING]: AuditUrgentInterventionLicenseComponent,
   };
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              public dialog: DialogService) {
+    private urlService: UrlService,
+    public dialog: DialogService) {
     super();
     FactoryService.registerService('CaseAuditService', this);
   }
@@ -134,7 +140,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
   @CastResponse(undefined)
   private _loadByCriteria(criteria: Partial<{ caseId: string, version: number }>) {
     return this.http.get<CaseAudit[]>(this._getServiceURL() + '/criteria', {
-      params: new HttpParams({fromObject: criteria})
+      params: new HttpParams({ fromObject: criteria })
     }).pipe(catchError(() => of([] as CaseAudit[])));
   }
 
@@ -142,7 +148,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     if (!caseId) {
       return of([]);
     }
-    return this._loadByCriteria({caseId: caseId})
+    return this._loadByCriteria({ caseId: caseId })
       .pipe(catchError(() => of([])));
   }
 
@@ -150,7 +156,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     this.dialog.show(CaseAuditPopupComponent, {
       newVersion: newVersion,
       caseAudit: caseAudit
-    }, {fullscreen: true})
+    }, { fullscreen: true })
   }
 
   showDifferencesPopup(differencesList: IValueDifference[], titleInfo?: AdminResult): void {

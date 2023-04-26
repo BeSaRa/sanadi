@@ -1,3 +1,4 @@
+import { AuditUrgentInterventionLicenseComponent } from './audit/audit-urgent-intervention-license/audit-urgent-intervention-license.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
@@ -19,7 +20,8 @@ import {SharedServicesModule} from '@modules/services/shared-services/shared-ser
   declarations: [
     UrgentInterventionLicenseComponent,
     UrgentInterventionLicensingOutputsComponent,
-    UrgentInterventionApproveTaskPopupComponent
+    UrgentInterventionApproveTaskPopupComponent,
+    AuditUrgentInterventionLicenseComponent
   ],
   imports: [
     CommonModule,
