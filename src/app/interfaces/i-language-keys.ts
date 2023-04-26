@@ -1618,6 +1618,7 @@ export interface ILanguageKeys {
   all_employees: string;
   lbl_add_x: string;
   lbl_edit_x: string;
+  lbl_view_x: string;
   lbl_children_x: string;
   email_for_working_authority: string;
   phone_for_working_authority: string;
@@ -1881,4 +1882,10 @@ export interface ILanguageKeys {
   no_atarization_no_lbl:string;
   certificate_code_lbl:string;
   leased_contract_lbl:string;
+  msg_added_in_list_success:string;
+  msg_updated_in_list_success:string;
+  msg_deleted_in_list_success:string;
+  msg_added_in_list_x_success:string;
+  msg_updated_in_list_x_success:string;
+  msg_deleted_in_list_x_success:string;
 }
