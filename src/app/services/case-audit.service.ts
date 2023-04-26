@@ -1,3 +1,4 @@
+import { AuditGeneralAssociationMeetingAttendanceComponent } from './../modules/services/general-association-meeting-attendance/audit/audit-general-association-meeting-attendance/audit-general-association-meeting-attendance.component';
 import { UrgentInterventionClosureInterceptor } from './../model-interceptors/urgent-intervention-closure-interceptor';
 import { ConsultationInterceptor } from '@app/model-interceptors/consultation-interceptor';
 import { Injectable } from '@angular/core';
@@ -62,6 +63,8 @@ import { AuditForeignCountriesProjectsComponent } from '@app/modules/services/fo
 import { Fundraising } from '@app/models/fundraising';
 import { FundraisingInterceptor } from '@app/model-interceptors/fundraising-interceptor';
 import { AuditFundraisingChannelLicensingComponent } from '@app/modules/services/fundraising-channel-licensing/audit/audit-fundraising-channel-licensing/audit-fundraising-channel-licensing.component';
+import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
+import { GeneralAssociationMeetingAttendanceInterceptor } from '@app/model-interceptors/general-association-meeting-attendance-interceptor';
 import { Consultation } from '@app/models/consultation';
 import { AuditConsultationComponent } from '@app/modules/services/consultation/audit/audit-consultation/audit-consultation.component';
 import { FinalExternalOfficeApprovalInterceptor } from '@app/model-interceptors/final-external-office-approval-interceptor';
@@ -120,6 +123,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensing,
     [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: ForeignCountriesProjects,
     [CaseTypes.FUNDRAISING_LICENSING]: Fundraising,
+    [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: GeneralAssociationMeetingAttendance,
     [CaseTypes.CONSULTATION]: Consultation,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: UrgentInterventionLicense,
     [CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION]: UrgentInterventionFinancialNotification,
@@ -146,8 +150,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensingInterceptor,
     [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: ForeignCountriesProjectsInterceptor,
     [CaseTypes.FUNDRAISING_LICENSING]: FundraisingInterceptor,
-
-
+    [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: GeneralAssociationMeetingAttendanceInterceptor,
 
     [CaseTypes.CONSULTATION]: ConsultationInterceptor,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: UrgentInterventionLicenseInterceptor,
@@ -174,6 +177,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: AuditFinancialTransfersLicensingComponent,
     [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: AuditForeignCountriesProjectsComponent,
     [CaseTypes.FUNDRAISING_LICENSING]: AuditFundraisingChannelLicensingComponent,
+    [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: AuditGeneralAssociationMeetingAttendanceComponent,
 
     [CaseTypes.CONSULTATION]: AuditConsultationComponent,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: AuditUrgentInterventionLicenseComponent,

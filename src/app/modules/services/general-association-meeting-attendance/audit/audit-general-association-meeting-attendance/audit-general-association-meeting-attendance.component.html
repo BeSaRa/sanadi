@@ -1,0 +1,36 @@
+<tabs-list>
+  <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
+  <tab name="administrativeBoardMembers" [template]="administrativeBoardMembersTemplate" [title]="lang.map.administrative_board_members"></tab>
+  <tab name="generalAssociationMembers" [template]="generalAssociationMembersTemplate" [title]="lang.map.general_association_members"></tab>
+  <tab name="meetingAgenda" [template]="meetingAgendaTemplate" [title]="lang.map.meeting_agenda"></tab>
+  <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
+</tabs-list>
+<ng-template #basicInfoTemplate>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #administrativeBoardMembersTemplate>
+  <audit-general-association-external-member [newVersionList]="newVersion.administrativeBoardMembers"
+                                             [oldVersionList]="oldVersion.administrativeBoardMembers"
+                                             [caseType]="newVersion.caseType"
+  >
+  </audit-general-association-external-member>
+</ng-template>
+<ng-template #generalAssociationMembersTemplate>
+  <audit-general-association-external-member [newVersionList]="newVersion.generalAssociationMembers"
+                                             [oldVersionList]="oldVersion.generalAssociationMembers"
+                                             [caseType]="newVersion.caseType"
+>
+</audit-general-association-external-member>
+</ng-template>
+<ng-template #meetingAgendaTemplate>
+  <audit-meeting-agenda [newVersionList]="newVersion.agendaList"
+                        [oldVersionList]="oldVersion.agendaList"
+                        [caseType]="newVersion.caseType"
+>
+</audit-meeting-agenda>
+</ng-template>
+
+<ng-template #specialExplanationTemplate>
+  <value-differences-list [differenceList]="explanationDifferences"></value-differences-list>
+</ng-template>
+

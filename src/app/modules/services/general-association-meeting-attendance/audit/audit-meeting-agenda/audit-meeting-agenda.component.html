@@ -8,14 +8,12 @@
               <ng-container [ngTemplateOutlet]="legendHeaderTemplate"></ng-container>
             </th>
           </ng-container>
-          <ng-container cdkColumnDef="services">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_services}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.services}} </td>
+          <ng-container cdkColumnDef="description">
+            <th *cdkHeaderCellDef cdk-header-cell
+               > {{lang.map.lbl_description}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.description}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="targetedGroup">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.targeted_groups}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.targetedGroup}} </td>
-          </ng-container>
+
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions audit-actions">
