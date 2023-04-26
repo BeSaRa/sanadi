@@ -282,7 +282,7 @@
     <ng-template #bankAccountsTemplate>
       <bank-account #bankAccountsTab [countriesList]="countries" [list]="model?.bankAccountList || []"
                     [caseType]="model?.caseType" [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                    (readyEvent)="bankDetailsTabStatus = $event"></bank-account>
+                    ></bank-account>
     </ng-template>
 
     <ng-template #tradeLicenseData>
