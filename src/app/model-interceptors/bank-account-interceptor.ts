@@ -7,6 +7,7 @@ export class BankAccountInterceptor implements IModelInterceptor<BankAccount> {
     delete model.searchFields;
     delete model.countryInfo;
     delete model.currencyInfo;
+    delete model.bankCategoryInfo;
     return model;
   }
 
