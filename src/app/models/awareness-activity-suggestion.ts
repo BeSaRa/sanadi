@@ -23,6 +23,7 @@ import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties'
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ObjectUtils } from '@app/helpers/object-utils';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { DateUtils } from '@app/helpers/date-utils';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new AwarenessActivitySuggestionInterceptor();

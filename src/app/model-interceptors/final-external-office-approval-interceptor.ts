@@ -1,21 +1,16 @@
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {Consultation} from '../models/consultation';
-import {TaskDetails} from '../models/task-details';
-import {AdminResult} from '../models/admin-result';
-import {FinalExternalOfficeApproval} from '../models/final-external-office-approval';
-import {BankAccount} from '@app/models/bank-account';
-import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
-import {BankAccountInterceptor} from '@app/model-interceptors/bank-account-interceptor';
-import {BankBranchInterceptor} from '@app/model-interceptors/bank-branch-interceptor';
-import {ExecutiveManagementInterceptor} from '@app/model-interceptors/executive-management-interceptor';
-import {ExecutiveManagement} from '@app/models/executive-management';
-import {BankBranch} from '@app/models/bank-branch';
-import {FactoryService} from '@app/services/factory.service';
-import {FinalExternalOfficeApprovalService} from '@app/services/final-external-office-approval.service';
-import {DateUtils} from '@app/helpers/date-utils';
-import {IMyDateModel} from 'angular-mydatepicker';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {isValidAdminResult} from '@app/helpers/utils';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { DateUtils } from '@app/helpers/date-utils';
+import { isValidAdminResult } from '@app/helpers/utils';
+import { BankAccount } from '@app/models/bank-account';
+import { BankBranch } from '@app/models/bank-branch';
+import { ExecutiveManagement } from '@app/models/executive-management';
+import { FactoryService } from '@app/services/factory.service';
+import { FinalExternalOfficeApprovalService } from '@app/services/final-external-office-approval.service';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { IModelInterceptor } from '../interfaces/i-model-interceptor';
+import { AdminResult } from '../models/admin-result';
+import { FinalExternalOfficeApproval } from '../models/final-external-office-approval';
+import { TaskDetails } from '../models/task-details';
 
 export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor<FinalExternalOfficeApproval> {
 
@@ -38,6 +33,11 @@ export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor
     model.bankAccountList = model.bankAccountList.map(x => service.bankAccountInterceptor.receive(new BankAccount().clone(x)));
     model.executiveManagementList = model.executiveManagementList.map(x => service.executiveManagementInterceptor.receive(new ExecutiveManagement().clone(x)));
     model.branchList = model.branchList.map(x => service.bankBranchInterceptor.receive(new BankBranch().clone(x)));
+    model.establishmentDateTimeStamp = !model.establishmentDate ? null : DateUtils.getTimeStampFromDate(model.establishmentDate);
+    model.countriesInfo = model.countriesInfo.map(x=>AdminResult.createInstance(x))
+    model.headQuarterTypeInfo = AdminResult.createInstance(model.headQuarterTypeInfo);
+    model.countryInfo = AdminResult.createInstance(model.countryInfo);
+    model.licenseDurationTypeInfo = AdminResult.createInstance(model.licenseDurationTypeInfo);
     return model;
   }
 
@@ -81,6 +81,10 @@ export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor
     delete model.reviewerDepartmentDecisionInfo;
     delete model.deductionPercent;
     delete model.licenseStatusInfo;
+    delete model.countriesInfo;
+    delete model.countryInfo;
+    delete model.licenseDurationTypeInfo;
+    delete model.headQuarterTypeInfo;
   }
 
 }
