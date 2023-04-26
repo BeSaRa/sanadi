@@ -13,9 +13,8 @@ import { switchMap } from 'rxjs/operators';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 import { ComponentType } from '@angular/cdk/portal';
-import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
+import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
 import { Pagination } from "@app/models/pagination";
-
 @CastResponseContainer({
   $default: {
     model: () => ServiceData
@@ -23,7 +22,7 @@ import { Pagination } from "@app/models/pagination";
   $pagination: {
     model: () => Pagination,
     shape: { 'rs.*': () => ServiceData }
-  }
+  },
 })
 @Injectable({
   providedIn: 'root'
@@ -32,8 +31,8 @@ export class ServiceDataService extends CrudWithDialogGenericService<ServiceData
   list: ServiceData[] = [];
 
   constructor(public http: HttpClient,
-              public dialog: DialogService,
-              private urlService: UrlService) {
+    public dialog: DialogService,
+    private urlService: UrlService) {
     super();
     FactoryService.registerService('ServiceDataService', this);
   }
@@ -49,7 +48,6 @@ export class ServiceDataService extends CrudWithDialogGenericService<ServiceData
   _getServiceURL(): string {
     return this.urlService.URLS.SERVICE_DATA;
   }
-
   editDialog(model: ServiceData): Observable<DialogRef> {
     return this.getById(model.id).pipe(
       switchMap((serviceData: ServiceData) => {

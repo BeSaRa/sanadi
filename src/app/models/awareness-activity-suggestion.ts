@@ -37,25 +37,15 @@ export class AwarenessActivitySuggestion
 
   followUpDate!: string | IMyDateModel;
 
-  identificationNumber!: string;
-  enName!: string;
-  jobTitle!: string;
-  address!: string;
-  email!: string;
-  phone!: string;
-  mobileNo!: string;
-
   contactQID!: string;
   contactName!: string;
   contactEmail!: string;
   contactPhone!: string;
   contactExtraPhone!: string;
+  jobTitle!: string;
 
-  agreementWithRACA!: boolean | number;
   subject!: string;
-  expectedDate!: string | IMyDateModel;
   goal!: string;
-  activityName!: string;
 
   oldLicenseFullSerial!: string;
   oldLicenseId!: string;
@@ -63,6 +53,9 @@ export class AwarenessActivitySuggestion
   ouInfo!: AdminResult;
   licenseStatusInfo!: AdminResult;
   profileType!: number;
+
+  beneficiaries!: string;
+  beneficiariesNumber!: number;
 
   searchFields: ISearchFieldsMap<AwarenessActivitySuggestion> = {
     ...dateSearchFields(['createdOn']),
@@ -86,40 +79,28 @@ export class AwarenessActivitySuggestion
     const {
       requestType, description,
 
-      identificationNumber,
-      enName,
-      jobTitle,
-      address,
-      email,
-      phone,
-      mobileNo,
-
       contactQID,
       contactName,
       contactEmail,
       contactPhone,
       contactExtraPhone,
+      jobTitle,
 
-      agreementWithRACA,
       subject,
-      expectedDate,
       goal,
-      activityName,
 
-      oldLicenseFullSerial
+      oldLicenseFullSerial,
+
+      beneficiaries,
+      beneficiariesNumber,
     } = this;
     return {
-      requestType: controls ? [requestType, Validators.required] : requestType,
-      oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       description: controls ? [description, Validators.required] : description,
-      dataOfApplicant: {
-        identificationNumber: controls ? [identificationNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : identificationNumber,
-        enName: controls ? [enName, [CustomValidators.required, Validators.maxLength(300)]] : enName,
-        jobTitle: controls ? [jobTitle, [Validators.required, CustomValidators.maxLength(100)]] : jobTitle,
-        address: controls ? [address, [Validators.required, CustomValidators.maxLength(100)]] : address,
-        email: controls ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
-        phone: controls ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
-        mobileNo: controls ? [mobileNo, CustomValidators.commonValidations.phone] : mobileNo,
+      basicInfo: {
+        requestType: controls ? [requestType, Validators.required] : requestType,
+        oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
+        subject: controls ? [subject, [Validators.required]] : subject,
+        goal: controls ? [goal, [Validators.required]] : goal,
       },
       contactOfficer: {
         contactQID: controls ? [contactQID, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : contactQID,
@@ -127,13 +108,11 @@ export class AwarenessActivitySuggestion
         contactEmail: controls ? [contactEmail, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : contactEmail,
         contactPhone: controls ? [contactPhone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : contactPhone,
         contactExtraPhone: controls ? [contactExtraPhone, CustomValidators.commonValidations.phone] : contactExtraPhone,
+        jobTitle: controls ? [jobTitle, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : jobTitle,
       },
-      activity: {
-        activityName: controls ? [activityName, [Validators.required, Validators.maxLength(300)]] : activityName,
-        agreementWithRACA: controls ? [agreementWithRACA, Validators.required] : agreementWithRACA,
-        subject: controls ? [subject, [Validators.required]] : subject,
-        expectedDate: controls ? [expectedDate, [Validators.required]] : expectedDate,
-        goal: controls ? [goal, [Validators.required]] : goal
+      beneficiariesNature: {
+        beneficiaries: controls ? [beneficiaries, [CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : beneficiaries,
+        beneficiariesNumber: controls ? [beneficiariesNumber, [CustomValidators.required]] : beneficiariesNumber,
       },
     };
   }
@@ -147,7 +126,6 @@ export class AwarenessActivitySuggestion
     }
   }
   approveWithSave(form: UntypedFormGroup): DialogRef {
-    this.expectedDate = form.value.activity.expectedDate;
     return this.service.approve(this, WFResponseType.APPROVE)
   }
   finalApprove(): DialogRef {

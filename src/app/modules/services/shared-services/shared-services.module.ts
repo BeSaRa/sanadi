@@ -21,6 +21,7 @@ import {
 import {
   InterventionFieldListComponent
 } from '@modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
+import { SelectCustomServiceTemplatePopupComponent } from './popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import {
     ApprovalFormComponent,
     InterventionImplementingAgencyListComponent,
     InterventionRegionListComponent,
-    InterventionFieldListComponent
+    InterventionFieldListComponent,
+    SelectCustomServiceTemplatePopupComponent
   ],
   imports: [
     CommonModule,

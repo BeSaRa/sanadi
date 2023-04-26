@@ -1837,6 +1837,11 @@ export interface ILanguageKeys {
   msg_record_is_linked:string;
   previews_replays:string;
   sub_meeting_point_name:string;
+  template_type:string;
+  template_file:string;
+  lbl_beneficiaries_count:string;
+  download_templat:string;
+  uploaded_templates:string;
   student_info_lbl:string;
   student_QID:string;
   grade_level_english:string;
