@@ -97,6 +97,9 @@ import { NpoManagement } from '@app/models/npo-management';
 import { AuditNpoManagementComponent } from '@app/modules/services/npo-management/audit/audit-npo-management/audit-npo-management.component';
 import { NpoManagementInterceptor } from '@app/model-interceptors/npo-management-interceptor';
 import { AuditProjectFundraisingComponent } from '@app/modules/services/project-fundraising/audit/audit-project-fundraising/audit-project-fundraising.component';
+import { InternalBankAccountApproval } from '@app/models/internal-bank-account-approval';
+import { InternalBankAccountApprovalInterceptor } from '@app/model-interceptors/internal-bank-account-approval-interceptor';
+import { AuditInternalBankAccountApprovalComponent } from '@app/modules/services/internal-bank-account-approval/audit/audit-internal-bank-account-approval/audit-internal-bank-account-approval.component';
 
 @CastResponseContainer({
   $default: {
@@ -139,6 +142,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: UrgentJointReliefCampaign,
     [CaseTypes.NPO_MANAGEMENT]: NpoManagement,
 
+    [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApproval,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -156,6 +160,8 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FUNDRAISING_LICENSING]: FundraisingInterceptor,
     [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: GeneralAssociationMeetingAttendanceInterceptor,
     [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: GeneralProcessNotificationInterceptor,
+    [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApprovalInterceptor,
+
 
     [CaseTypes.CONSULTATION]: ConsultationInterceptor,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: UrgentInterventionLicenseInterceptor,
@@ -184,6 +190,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FUNDRAISING_LICENSING]: AuditFundraisingChannelLicensingComponent,
     [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: AuditGeneralAssociationMeetingAttendanceComponent,
     [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: AuditGeneralProcessNotificationComponent,
+    [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: AuditInternalBankAccountApprovalComponent,
 
     [CaseTypes.CONSULTATION]: AuditConsultationComponent,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: AuditUrgentInterventionLicenseComponent,
