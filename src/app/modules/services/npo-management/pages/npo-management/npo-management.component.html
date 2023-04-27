@@ -359,9 +359,11 @@
   </ng-template>
 
   <ng-template #bankAccountTabTemplate>
-    <npo-bank-account #bankAccountsTab [caseType]="model?.caseType" [readonly]="readonly || isViewOnly"
-                      [list]="model?.bankAccountList || []" [bankList]="bankList"
-                      (readyEvent)="bankDetailsTabStatus = $event">
+    <npo-bank-account #bankAccountsTab 
+                      [caseType]="model?.caseType" 
+                      [readonly]="readonly || isViewOnly"
+                      [bankAccountList]="model?.bankAccountList || []"
+                      >
     </npo-bank-account>
   </ng-template>
 

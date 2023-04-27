@@ -16,7 +16,6 @@ import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {
   RealBeneficiariesComponent
 } from '@modules/services/shared-services/components/real-beneficiaries/real-beneficiaries.component';
-import {BankService} from '@services/bank.service';
 import {NpoBankAccountComponent} from './npo-bank-account/npo-bank-account.component';
 import {FounderMembersComponent} from './founder-members/founder-members.component';
 import {NpoContactOfficerComponent} from './npo-contact-officer/npo-contact-officer.component';
@@ -44,7 +43,6 @@ import {Observable, of} from 'rxjs';
 import {EmployeeService} from '@app/services/employee.service';
 import {AdminLookupService} from '@app/services/admin-lookup.service';
 import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
-import {Bank} from '@app/models/bank';
 import {ProfileTypes} from '@app/enums/profile-types.enum';
 
 @Component({
@@ -56,9 +54,7 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
   NPORequestTypes = NPORequestType;
   NPORequestTypesList: Lookup[] = this.lookupService.listByCategory.NPORequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   activityTypesList: AdminLookup[] = [];
-  bankList: Bank[] = [];
   NpoList: NpoData[] = [];
-  // Clearance Type & Disbandment Type
   NPODecisionsList: Lookup[] = this.lookupService.listByCategory.NPODecisions;
   registrationAuthoritiesList: Profile[] = []
   form!: UntypedFormGroup;
@@ -131,7 +127,6 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
               private adminLookupService: AdminLookupService,
               private cd: ChangeDetectorRef,
               private npoDataService: NpoDataService,
-              private bankService: BankService,
               private dialog: DialogService,
               private employeeService: EmployeeService,
               private profileService: ProfileService,
@@ -187,9 +182,6 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
     })
     this.npoDataService.loadActiveAsLookup().subscribe(data => {
       this.NpoList = data.filter(npo => !this.isRegistrationAuthority || npo.profileInfo.registrationAuthority == this.employeeService.getProfile()?.id)
-    })
-    this.bankService.loadAsLookups().subscribe((data) => {
-      this.bankList = data;
     })
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.ACTIVITY_TYPE).subscribe((data: never[] | AdminLookup[]) => {
       this.activityTypesList = data;
