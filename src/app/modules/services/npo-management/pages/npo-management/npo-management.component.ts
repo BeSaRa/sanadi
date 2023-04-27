@@ -64,8 +64,6 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
   form!: UntypedFormGroup;
   npoIdField: UntypedFormControl = new UntypedFormControl();
   bankDetailsTabStatus: ReadinessStatus = 'READY';
-  contactOfficersTabStatus: ReadinessStatus = 'READY';
-  founderMemberTabStatus: ReadinessStatus = 'READY';
   realBeneficiaryTabStatus: ReadinessStatus = 'READY';
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: NpoBankAccountComponent;
   @ViewChild('contactOfficersTab') contactOfficerComponentRef!: NpoContactOfficerComponent;
@@ -81,20 +79,20 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
     contectInfo: {
       name: "contectInfoTab",
       langKey: "lbl_contact_info" as keyof ILanguageKeys,
-      validStatus: () => this.contectInfo.valid && (!this.contactOfficerComponentRef || (this.contactOfficersTabStatus === 'READY' && this.contactOfficerComponentRef.list.length > 0)),
+      validStatus: () => this.contectInfo.valid && (!this.contactOfficerComponentRef || this.contactOfficerComponentRef.list.length > 0),
     },
     founderMember: {
       name: "founderMemberTab",
       langKey: "lbl_founder_members" as keyof ILanguageKeys,
       validStatus: () => {
-        return !this.founderMemberComponentRef || (this.founderMemberTabStatus === 'READY' && this.founderMemberComponentRef.list.length > 0);
+        return !this.founderMemberComponentRef || this.founderMemberComponentRef.list.length > 0;
       }
     },
     bankAccount: {
       name: "bankAccountTab",
       langKey: "bank_accounts" as keyof ILanguageKeys,
       validStatus: () => {
-        return !this.bankAccountComponentRef || (this.bankDetailsTabStatus === 'READY' && this.bankAccountComponentRef.list.length > 0);
+        return !this.bankAccountComponentRef || this.bankAccountComponentRef.list.length > 0;
       }
     },
     realBeneficiary: {

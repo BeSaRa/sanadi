@@ -362,9 +362,8 @@
 
     <!-- Contact Officers -->
     <ng-template #contactOfficersTemplate>
-      <contact-officer #contactOfficersTab [list]="model?.contactOfficerList || []"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                       (readyEvent)="contactOfficersTabStatus = $event">
+      <contact-officer #contactOfficersTab [contactOfficerList]="model?.contactOfficerList || []"
+                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
       </contact-officer>
     </ng-template>
     <!-- Approval Reasons -->
