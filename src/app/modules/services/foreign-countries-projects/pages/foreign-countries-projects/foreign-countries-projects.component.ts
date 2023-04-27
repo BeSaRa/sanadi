@@ -30,7 +30,6 @@ import {LangService} from '@services/lang.service';
 import {LicenseService} from '@services/license.service';
 import {LookupService} from '@services/lookup.service';
 import {ToastService} from '@services/toast.service';
-import {ReadinessStatus} from '@app/types/types';
 import {Observable, of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap,} from 'rxjs/operators';
 import {UserClickOn} from '@enums/user-click-on.enum';
@@ -56,7 +55,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   countries: ProfileCountry[] = [];
 
   selectedLicense?: ForeignCountriesProjects;
-  projectNeedsTabStatus: ReadinessStatus = 'READY';
+
 
 
   @ViewChildren('tabContent', { read: TemplateRef })

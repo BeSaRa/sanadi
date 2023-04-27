@@ -1,55 +1,117 @@
 import { Component, Inject } from '@angular/core';
-import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { UiCrudDialogGenericComponent } from '@app/generics/ui-crud-dialog-generic-component.directive';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { ProjectNeed } from '@app/models/project-needs';
+import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
+import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'project-needs-popup',
   templateUrl: './project-needs-popup.component.html',
   styleUrls: ['./project-needs-popup.component.scss']
 })
-export class ProjectNeedsPopupComponent {
-  form: UntypedFormGroup;
-  viewOnly: boolean;
-  readonly: boolean;
-  editRecord: ProjectNeed;
+export class ProjectNeedsPopupComponent extends UiCrudDialogGenericComponent<ProjectNeed>  {
   model: ProjectNeed;
-  projectNeedsForm: UntypedFormArray;
-  customValidators = CustomValidators
-  inputMaskPatterns = CustomValidators.inputMaskPatterns
-
-  constructor(@Inject(DIALOG_DATA_TOKEN)
-  public data: {
-    form: UntypedFormGroup,
-    viewOnly: boolean,
-    readonly: boolean,
-    editRecord: ProjectNeed,
-    model: ProjectNeed,
-    projectNeedsForm: UntypedFormArray,
-  },
-    public lang: LangService,
-    private dialogRef: DialogRef) {
-    this.form = data.form;
-    this.viewOnly = data.viewOnly;
-    this.readonly = data.readonly;
-    this.editRecord = data.editRecord;
-    this.model = data.model;
-    this.projectNeedsForm = data.projectNeedsForm;
+  form!: UntypedFormGroup;
+  operation: OperationTypes;
+  popupTitleKey!: keyof ILanguageKeys;
+  _getNewInstance(override?: Partial<ProjectNeed> | undefined): ProjectNeed {
+    return new ProjectNeed().clone(override ?? {});
   }
-  mapFormTo(form: any): ProjectNeed {
-    const model: ProjectNeed = new ProjectNeed().clone(form);
-
-    return model;
+  initPopup(): void {
+    this.popupTitleKey = 'project_needs'
   }
-
-  cancel() {
-    this.dialogRef.close(null)
+  destroyPopup(): void {
   }
+  afterSave(savedModel: ProjectNeed, originalModel: ProjectNeed): void {
+    this.toast.success(this.operation === OperationTypes.CREATE
+      ? this.lang.map.msg_added_in_list_success : this.lang.map.msg_updated_in_list_success);
+    this.dialogRef.close(savedModel);
+  }
+  beforeSave(model: ProjectNeed, form: UntypedFormGroup): boolean | Observable<boolean> {
+    if (this.form.invalid) {
+      this.displayRequiredFieldsMessage();
+      return false;
+    }
+    const isDuplicate = this.list.some((x) => x === form.getRawValue());
+    if (isDuplicate) {
+      this.displayDuplicatedItemMessage();
+      return false;
+    }
+    return true;
+  }
+  prepareModel(model: ProjectNeed, form: UntypedFormGroup): ProjectNeed | Observable<ProjectNeed> {
+    let formValue = form.getRawValue();
+    return this._getNewInstance({
+      ...this.model,
+      ...formValue,
+    });
+  }
+  saveFail(error: Error): void {
+    throw new Error(error.message);
+  }
+  buildForm(): void {
+    this.form = this.fb.group(this.model.buildForm(true));
+  }
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ProjectNeed>,
+               public lang: LangService,
+               public dialogRef: DialogRef,
+               public dialogService: DialogService,
+               public fb: UntypedFormBuilder,
+               public toast: ToastService,
+               private lookupService: LookupService) {
+     super();
+     this.model = data.model;
+     this.operation = data.operation;
+     this.list = data.list;
+   }
+  // form: UntypedFormGroup;
+  // viewOnly: boolean;
+  // readonly: boolean;
+  // editRecord: ProjectNeed;
+  // model: ProjectNeed;
+  // projectNeedsForm: UntypedFormArray;
+  // customValidators = CustomValidators
+  // inputMaskPatterns = CustomValidators.inputMaskPatterns
+
+  // constructor(@Inject(DIALOG_DATA_TOKEN)
+  // public data: {
+  //   form: UntypedFormGroup,
+  //   viewOnly: boolean,
+  //   readonly: boolean,
+  //   editRecord: ProjectNeed,
+  //   model: ProjectNeed,
+  //   projectNeedsForm: UntypedFormArray,
+  // },
+  //   public lang: LangService,
+  //   private dialogRef: DialogRef) {
+  //   this.form = data.form;
+  //   this.viewOnly = data.viewOnly;
+  //   this.readonly = data.readonly;
+  //   this.editRecord = data.editRecord;
+  //   this.model = data.model;
+  //   this.projectNeedsForm = data.projectNeedsForm;
+  // }
+  // mapFormTo(form: any): ProjectNeed {
+  //   const model: ProjectNeed = new ProjectNeed().clone(form);
+
+  //   return model;
+  // }
+
+  // cancel() {
+  //   this.dialogRef.close(null)
+  // }
   
-  save() {
-    this.dialogRef.close(this.mapFormTo(this.form.getRawValue()))
-  }
+  // save() {
+  //   this.dialogRef.close(this.mapFormTo(this.form.getRawValue()))
+  // }
 }

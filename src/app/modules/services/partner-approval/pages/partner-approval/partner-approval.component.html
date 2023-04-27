@@ -319,9 +319,10 @@
         </div>
 
 
-        <commercial-activity #commercialActivityTab [list]="model?.commercialActivitiesList || []"
+        <commercial-activity #commercialActivityTab 
+                             [commercialActivitiesList]="model?.commercialActivitiesList || []"
                              [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                             (readyEvent)="commercialActivityTabStatus = $event">
+                             >
         </commercial-activity>
 
       </div>

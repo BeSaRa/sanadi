@@ -72,7 +72,6 @@ export class PartnerApprovalComponent
   managementCouncilsTabStatus: ReadinessStatus = 'READY';
   targetGroupsTabStatus: ReadinessStatus = 'READY';
   approvalReasonsTabStatus: ReadinessStatus = 'READY';
-  commercialActivityTabStatus: ReadinessStatus = 'READY';
   workAreasTabStatus: ReadinessStatus = 'READY';
   loadAttachments: boolean = false;
   formProperties = {
@@ -132,9 +131,8 @@ export class PartnerApprovalComponent
       validStatus: () => {
         return (
           !this.commercialActivityTabComponentRef ||
-          (this.commercialActivityTabStatus === 'READY' &&
             this.commercialActivityTabComponentRef.list.length > 0 &&
-            this.form.controls.trade.valid)
+            this.form.controls.trade.valid
         );
       },
     },

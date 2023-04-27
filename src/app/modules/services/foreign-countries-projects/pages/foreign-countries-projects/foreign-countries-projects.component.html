@@ -109,8 +109,8 @@
       </div>
     </ng-template>
     <ng-template #tabContent>
-      <project-needs [caseType]="model?.caseType" [list]="model?.projectNeeds || []"
-                     [readonly]="readonly || isCancelRequestType" (readyEvent)="projectNeedsTabStatus = $event">
+      <project-needs [caseType]="model?.caseType" [projectNeedsList]="model?.projectNeeds || []"
+        [readonly]="readonly || isCancelRequestType">
       </project-needs>
     </ng-template>
     <ng-template #tabContent>
