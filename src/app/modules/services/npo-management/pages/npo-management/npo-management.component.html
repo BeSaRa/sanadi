@@ -343,8 +343,9 @@
         </div>
         <div class="col-12">
           <h6>{{lang.map.contact_officers}}</h6>
-          <npo-contact-officer #contactOfficersTab [readonly]="readonly || isViewOnly"
-                               [list]="model?.contactOfficerList || []"
+          <npo-contact-officer #contactOfficersTab 
+                               [readonly]="readonly || isViewOnly"
+                               [contactOfficerList]="model?.contactOfficerList || []"
                                >
           </npo-contact-officer>
         </div>
