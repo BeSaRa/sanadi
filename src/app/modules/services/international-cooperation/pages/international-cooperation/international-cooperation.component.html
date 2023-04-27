@@ -26,7 +26,7 @@
                        [readonly]="readonly" appendTo="body"
                        formControlName="competentDepartmentID" validationClasses="competentDepartmentID">
               <ng-option [value]="department.id" [disabled]="!department.isActive()"
-                         *ngFor="let department of departments">{{department.getName()}}</ng-option>
+                         *ngFor="let department of service.departments">{{department.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="competentDepartmentID"></app-field-error-message>
           </div>
