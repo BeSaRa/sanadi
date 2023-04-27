@@ -70,7 +70,6 @@ export class PartnerApprovalComponent
   goalsTabStatus: ReadinessStatus = 'READY';
   goalsListTabStatus: ReadinessStatus = 'READY';
   managementCouncilsTabStatus: ReadinessStatus = 'READY';
-  executiveManagementsTabStatus: ReadinessStatus = 'READY';
   targetGroupsTabStatus: ReadinessStatus = 'READY';
   approvalReasonsTabStatus: ReadinessStatus = 'READY';
   commercialActivityTabStatus: ReadinessStatus = 'READY';
@@ -176,8 +175,7 @@ export class PartnerApprovalComponent
       validStatus: () => {
         return (
           !this.executiveManagementComponentRef ||
-          (this.executiveManagementsTabStatus === 'READY' &&
-            this.executiveManagementComponentRef.list.length > 0)
+            this.executiveManagementComponentRef.list.length > 0
         );
       },
     },

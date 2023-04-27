@@ -244,10 +244,10 @@
                       ></bank-account>
       </ng-template>
       <ng-template #managersTabTemplate>
-        <executive-management #managersTab [nationalities]="nationalities"
+        <executive-management #managersTab
                               [readonly]="(isExtendOrCancelRequestType() || readonly)"
                               [list]="model?.executiveManagementList || []"
-                              (readyEvent)="managersTabStatus = $event"></executive-management>
+                              ></executive-management>
       </ng-template>
       <ng-template #branchesTabTemplate>
         <bank-branch #branchesTab [readonly]="(isExtendOrCancelRequestType() || readonly)"
