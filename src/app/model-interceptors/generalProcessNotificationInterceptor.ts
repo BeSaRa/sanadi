@@ -9,6 +9,10 @@ export class GeneralProcessNotificationInterceptor implements IModelInterceptor<
     model.subTeam && (model.subTeam = AdminResult.createInstance(model.subTeam));
     model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.followUpDate = DateUtils.changeDateToDatepicker(model.followUpDate);
+    model.departmentInfo && (model.departmentInfo = AdminResult.createInstance(model.departmentInfo));
+    model.mainClassInfo && (model.mainClassInfo = AdminResult.createInstance(model.mainClassInfo));
+    model.subClassInfo && (model.subClassInfo = AdminResult.createInstance(model.subClassInfo));
+    model.processTypeInfo && (model.processTypeInfo = AdminResult.createInstance(model.processTypeInfo));
 
     return model;
   }
@@ -22,5 +26,9 @@ export class GeneralProcessNotificationInterceptor implements IModelInterceptor<
     delete model.subTeam;
     delete model.searchFields;
     delete model.requestTypeInfo;
+    delete model.departmentInfo;
+    delete model.mainClassInfo;
+    delete model.subClassInfo;
+    delete model.processTypeInfo;
   }
 }
