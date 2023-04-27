@@ -243,7 +243,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   checkForFinalApproveByMatrixNotification(): void {
     let isValidManager = (this.employeeService.isLicensingManager() || this.employeeService.isLicensingChiefManager());
 
-    if(this.model?.getCaseType() ===  CaseTypes.FINANCIAL_TRANSFERS_LICENSING){
+    if (this.model?.getCaseType() === CaseTypes.FINANCIAL_TRANSFERS_LICENSING) {
       isValidManager = (isValidManager || this.employeeService.isLicensingGeneralManager())
     }
 
@@ -347,6 +347,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         label: 'save_as_draft',
         show: (item) => {
+          if (!this.internal) {
+            return false;
+          }
           if (item.isCancelled() || this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
             return false;
           }
@@ -498,6 +501,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         // icon: 'mdi-rocket-launch-outline',
         label: 'save_as_draft',
         show: (item) => {
+          if (!this.internal) {
+            return false;
+          }
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
             return false;
           }
