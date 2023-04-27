@@ -7,8 +7,9 @@
            [hasError]="getTabInvalidStatus('bankAccounts')"></tab>
       <tab [name]="tabsData.tradeLicenseData.name" *ngIf="showLicenseTrade" [template]="tradeLicenseData"
            [title]="lang.map.trade_license" [hasError]="getTabInvalidStatus('tradeLicenseData')"></tab>
-      <tab [name]="tabsData.goals.name" *ngIf="showLicenseTrade === false" [template]="goalsTemplate"
+      <tab [name]="tabsData.goals.name" [template]="goalsTemplate"
            [title]="lang.map.goals" [hasError]="getTabInvalidStatus('goals')"></tab>
+           <!-- *ngIf="showLicenseTrade === false"  -->
       <tab [name]="tabsData.managementCouncils.name" [template]="managementCouncilsTemplate"
            [title]="lang.map.management_council" [hasError]="getTabInvalidStatus('managementCouncils')"></tab>
       <tab [name]="tabsData.executiveManagements.name" [template]="executiveManagementsTemplate"
