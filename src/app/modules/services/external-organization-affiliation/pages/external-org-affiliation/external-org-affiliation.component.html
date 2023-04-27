@@ -315,10 +315,8 @@
       <bank-account
         #bankAccountsTab
         [caseType]="model?.caseType"
-        [countriesList]="countriesList"
-        [list]="model?.bankAccountDTOs || []"
+        [bankAccountDTOsList]="model?.bankAccountDTOs || []"
         [readonly]="isCancelRequestType() || readonly"
-        (readyEvent)="bankDetailsTabStatus = $event"
       ></bank-account>
     </ng-template>
     <ng-template #executive_management>

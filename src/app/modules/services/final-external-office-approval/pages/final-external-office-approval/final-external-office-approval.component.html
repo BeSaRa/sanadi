@@ -239,9 +239,9 @@
         </div>
       </ng-template>
       <ng-template #bankAccountsTemplate>
-        <bank-account #bankAccountsTab [countriesList]="countriesList" [list]="model?.bankAccountList || []"
+        <bank-account #bankAccountsTab [list]="model?.bankAccountList || []"
                       [caseType]="model?.caseType" [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                      (readyEvent)="bankDetailsTabStatus = $event"></bank-account>
+                      ></bank-account>
       </ng-template>
       <ng-template #managersTabTemplate>
         <executive-management #managersTab [nationalities]="nationalities"

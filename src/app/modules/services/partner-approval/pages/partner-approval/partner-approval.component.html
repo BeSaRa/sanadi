@@ -280,7 +280,8 @@
     </ng-template>
     <!-- Bank accounts -->
     <ng-template #bankAccountsTemplate>
-      <bank-account #bankAccountsTab [countriesList]="countries" [list]="model?.bankAccountList || []"
+      <bank-account #bankAccountsTab
+                    [list]="model?.bankAccountList || []"
                     [caseType]="model?.caseType" [readonly]="(isExtendOrCancelRequestType() || readonly)"
                     ></bank-account>
     </ng-template>
