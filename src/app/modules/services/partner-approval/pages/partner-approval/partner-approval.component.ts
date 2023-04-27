@@ -72,7 +72,6 @@ export class PartnerApprovalComponent
   managementCouncilsTabStatus: ReadinessStatus = 'READY';
   executiveManagementsTabStatus: ReadinessStatus = 'READY';
   targetGroupsTabStatus: ReadinessStatus = 'READY';
-  contactOfficersTabStatus: ReadinessStatus = 'READY';
   approvalReasonsTabStatus: ReadinessStatus = 'READY';
   commercialActivityTabStatus: ReadinessStatus = 'READY';
   workAreasTabStatus: ReadinessStatus = 'READY';
@@ -187,9 +186,7 @@ export class PartnerApprovalComponent
       langKey: 'contact_officers',
       validStatus: () => {
         return (
-          !this.contactOfficerComponentRef ||
-          (this.contactOfficersTabStatus === 'READY' &&
-            this.contactOfficerComponentRef.list.length > 0)
+          !this.contactOfficerComponentRef || this.contactOfficerComponentRef.list.length > 0
         );
       },
     },
