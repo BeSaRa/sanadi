@@ -67,6 +67,9 @@ import { GeneralAssociationMeetingAttendanceInterceptor } from '@app/model-inter
 import { GeneralProcessNotification } from '@app/models/general-process-notification';
 import { GeneralProcessNotificationInterceptor } from '@app/model-interceptors/generalProcessNotificationInterceptor';
 import { AuditGeneralProcessNotificationComponent } from '@app/modules/services/general-process-notification/audit/audit-general-process-notification/audit-general-process-notification.component';
+import { InternalBankAccountApproval } from '@app/models/internal-bank-account-approval';
+import { InternalBankAccountApprovalInterceptor } from '@app/model-interceptors/internal-bank-account-approval-interceptor';
+import { AuditInternalBankAccountApprovalComponent } from '@app/modules/services/internal-bank-account-approval/audit/audit-internal-bank-account-approval/audit-internal-bank-account-approval.component';
 
 @CastResponseContainer({
   $default: {
@@ -98,6 +101,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FUNDRAISING_LICENSING]: Fundraising,
     [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: GeneralAssociationMeetingAttendance,
     [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: GeneralProcessNotification,
+    [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApproval,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -115,6 +119,8 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FUNDRAISING_LICENSING]: FundraisingInterceptor,
     [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: GeneralAssociationMeetingAttendanceInterceptor,
     [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: GeneralProcessNotificationInterceptor,
+    [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApprovalInterceptor,
+
 
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
@@ -133,6 +139,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.FUNDRAISING_LICENSING]: AuditFundraisingChannelLicensingComponent,
     [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: AuditGeneralAssociationMeetingAttendanceComponent,
     [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: AuditGeneralProcessNotificationComponent,
+    [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: AuditInternalBankAccountApprovalComponent,
 
   };
 
