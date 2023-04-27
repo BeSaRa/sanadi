@@ -1,25 +1,28 @@
-import {CaseModel} from '@app/models/case-model';
-import {TransferringIndividualFundsAbroadService} from '@services/transferring-individual-funds-abroad.service';
-import {TransferringIndividualFundsAbroadInterceptor} from '@app/model-interceptors/transferring-individual-funds-abroad-interceptor';
-import {InterceptModel} from '@decorators/intercept-model';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {AdminResult} from '@app/models/admin-result';
-import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {UntypedFormGroup, Validators} from '@angular/forms';
-import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
-import {FactoryService} from '@services/factory.service';
-import {IMyDateModel} from 'angular-mydatepicker';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {mixinRequestType} from '@app/mixins/mixin-request-type';
-import {HasRequestType} from '@contracts/has-request-type';
-import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
-import {ISearchFieldsMap} from '@app/types/types';
-import {dateSearchFields} from '@helpers/date-search-fields';
-import {infoSearchFields} from '@helpers/info-search-fields';
-import {normalSearchFields} from '@helpers/normal-search-fields';
-import {Payment} from '@app/models/payment';
+import { ControlValueLabelLangKey } from './../types/types';
+import { CaseModel } from '@app/models/case-model';
+import { TransferringIndividualFundsAbroadService } from '@services/transferring-individual-funds-abroad.service';
+import { TransferringIndividualFundsAbroadInterceptor } from '@app/model-interceptors/transferring-individual-funds-abroad-interceptor';
+import { InterceptModel } from '@decorators/intercept-model';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { AdminResult } from '@app/models/admin-result';
+import { TransferFundsExecutiveManagement } from '@app/models/transfer-funds-executive-management';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { UntypedFormGroup, Validators } from '@angular/forms';
+import { TransferFundsCharityPurpose } from '@app/models/transfer-funds-charity-purpose';
+import { FactoryService } from '@services/factory.service';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { mixinRequestType } from '@app/mixins/mixin-request-type';
+import { HasRequestType } from '@contracts/has-request-type';
+import { ITransferIndividualFundsAbroadComplete } from '@contracts/i-transfer-individual-funds-abroad-complete';
+import { ISearchFieldsMap } from '@app/types/types';
+import { dateSearchFields } from '@helpers/date-search-fields';
+import { infoSearchFields } from '@helpers/info-search-fields';
+import { normalSearchFields } from '@helpers/normal-search-fields';
+import { Payment } from '@app/models/payment';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new TransferringIndividualFundsAbroadInterceptor();
@@ -29,7 +32,8 @@ const interceptor = new TransferringIndividualFundsAbroadInterceptor();
   send: interceptor.send
 })
 
-export class TransferringIndividualFundsAbroad extends _RequestType<TransferringIndividualFundsAbroadService, TransferringIndividualFundsAbroad> implements HasRequestType, ITransferIndividualFundsAbroadComplete{
+export class TransferringIndividualFundsAbroad extends _RequestType<TransferringIndividualFundsAbroadService, TransferringIndividualFundsAbroad> implements HasRequestType, ITransferIndividualFundsAbroadComplete {
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   service!: TransferringIndividualFundsAbroadService;
   caseType = CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD;
   licenseApprovedDate!: string;
@@ -157,8 +161,15 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
     this.employeeService = FactoryService.getService('EmployeeService');
   }
 
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: { langKey: 'request_type', value: this.requestType },
+      oldLicenseFullSerial: { langKey: 'serial_number', value: this.oldLicenseFullSerial },
+      transfereeType: { langKey: 'transferee_type', value: this.transfereeType },
+    };
+  }
   buildBasicInfo(controls: boolean = false): any {
-    const {oldLicenseFullSerial, requestType, transfereeType} = this;
+    const { oldLicenseFullSerial, requestType, transfereeType } = this;
     return {
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
@@ -166,8 +177,20 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
     };
   }
 
+  getRequesterInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      identificationNumber: { langKey: 'identification_number', value: this.identificationNumber },
+      arName: { langKey: 'arabic_name', value: this.arName },
+      enName: { langKey: 'english_name', value: this.enName },
+      nationality: { langKey: 'lbl_nationality', value: this.nationality },
+      address: { langKey: 'lbl_address', value: this.address },
+      phone: { langKey: 'lbl_phone', value: this.phone },
+      mobileNo: { langKey: 'mobile_number', value: this.mobileNo },
+      email: { langKey: 'lbl_email', value: this.email },
+    };
+  }
   buildRequesterInfo(controls: boolean = false): any {
-    const {identificationNumber, arName, enName, nationality, address, phone, mobileNo, email} = this;
+    const { identificationNumber, arName, enName, nationality, address, phone, mobileNo, email } = this;
     return {
       identificationNumber: controls ? [identificationNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : identificationNumber,
       arName: controls ? [arName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')]] : arName,
@@ -180,6 +203,24 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
     };
   }
 
+  getReceiverOrganizationInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      organizationArabicName: { langKey: 'organization_arabic_name', value: this.organizationArabicName },
+      organizationEnglishName: { langKey: 'organization_english_name', value: this.organizationEnglishName },
+      headQuarterType: { langKey: 'headquarter_type', value: this.headQuarterType },
+      establishmentDate: { langKey: 'establishment_date', value: this.establishmentDate },
+      country: { langKey: 'country', value: this.country },
+      region: { langKey: 'region', value: this.region },
+      city: { langKey: 'city', value: this.city },
+      detailsAddress: { langKey: 'lbl_address', value: this.detailsAddress },
+      postalCode: { langKey: 'postal_code', value: this.postalCode },
+      website: { langKey: 'website', value: this.website },
+      organizationEmail: { langKey: 'lbl_email', value: this.organizationEmail },
+      firstSocialMedia: { langKey: 'social_media_1', value: this.firstSocialMedia },
+      secondSocialMedia: { langKey: 'social_media_2', value: this.secondSocialMedia },
+      thirdSocialMedia: { langKey: 'social_media_3', value: this.thirdSocialMedia },
+    };
+  }
   buildRequiredReceiverOrganizationInfo(controls: boolean = false): any {
     const {
       organizationArabicName, organizationEnglishName, headQuarterType, establishmentDate, country, region, city,
@@ -188,9 +229,9 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
     return {
       organizationArabicName: controls ? [organizationArabicName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')]] : organizationArabicName,
       organizationEnglishName: controls ? [organizationEnglishName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : organizationEnglishName,
-      headQuarterType: controls ? [headQuarterType, [CustomValidators.required ]] : headQuarterType,
-      establishmentDate: controls ? [establishmentDate, [CustomValidators.required ]] : establishmentDate,
-      country: controls ? [country, [CustomValidators.required ]] : country,
+      headQuarterType: controls ? [headQuarterType, [CustomValidators.required]] : headQuarterType,
+      establishmentDate: controls ? [establishmentDate, [CustomValidators.required]] : establishmentDate,
+      country: controls ? [country, [CustomValidators.required]] : country,
       region: controls ? [region, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : region,
       city: controls ? [city, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : city,
       detailsAddress: controls ? [detailsAddress, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : detailsAddress,
@@ -203,6 +244,18 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
     };
   }
 
+  getReceiverPersonInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      receiverNameLikePassport: { langKey: 'name_in_local_language_like_passport', value: this.receiverNameLikePassport },
+      receiverEnglishNameLikePassport: { langKey: 'name_in_English_language_like_passport', value: this.receiverEnglishNameLikePassport },
+      receiverJobTitle: { langKey: 'job_title', value: this.receiverJobTitle },
+      receiverNationality: { langKey: 'lbl_nationality', value: this.receiverNationality },
+      receiverIdentificationNumber: { langKey: 'national_id_number', value: this.receiverIdentificationNumber },
+      receiverPassportNumber: { langKey: 'passport_number', value: this.receiverPassportNumber },
+      receiverPhone1: { langKey: 'lbl_phone_1', value: this.receiverPhone1 },
+      receiverPhone2: { langKey: 'lbl_phone_2', value: this.receiverPhone2 },
+    };
+  }
   buildRequiredReceiverPersonInfo(controls: boolean = false): any {
     const {
       receiverNameLikePassport, receiverEnglishNameLikePassport, receiverJobTitle, receiverNationality,
@@ -220,6 +273,19 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
     };
   }
 
+  getFinancialTransactionInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      qatariTransactionAmount: { langKey: 'qatari_riyal_transaction_amount', value: this.qatariTransactionAmount },
+      currencyTransferTransactionAmount: { langKey: 'transaction_amount_in_transfer_currency', value: this.currencyTransferTransactionAmount },
+      currency: { langKey: 'currency', value: this.currency },
+      transferMethod: { langKey: 'transfer_method', value: this.transferMethod },
+      transferringEntityName: { langKey: 'transferring_entity_name', value: this.transferringEntityName },
+      transferType: { langKey: 'transfer_type', value: this.transferType },
+      transferFromIBAN: { langKey: 'transfer_from_iban', value: this.transferFromIBAN },
+      transfereeIBAN: { langKey: 'transferee_iban', value: this.transfereeIBAN },
+      transferCountry: { langKey: 'transfer_to_country', value: this.transferCountry },
+    };
+  }
   buildFinancialTransactionInfo(controls: boolean = false): any {
     const {
       qatariTransactionAmount, currencyTransferTransactionAmount, currency, transferMethod,
@@ -231,7 +297,7 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
       currency: controls ? [currency, [CustomValidators.required]] : currency,
       transferMethod: controls ? [transferMethod, [CustomValidators.required]] : transferMethod,
       transferringEntityName: controls ? [transferringEntityName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : transferringEntityName,
+      CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : transferringEntityName,
       transferType: controls ? [transferType, [CustomValidators.required]] : transferType,
       transferFromIBAN: controls ? [transferFromIBAN, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : transferFromIBAN,
       transfereeIBAN: controls ? [transfereeIBAN, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : transfereeIBAN,
@@ -240,7 +306,7 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
   }
 
   buildExplanation(controls: boolean = false): any {
-    const {description} = this;
+    const { description } = this;
     return {
       description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : description,
     };
@@ -256,7 +322,7 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
     return {
       followUpDate: controls ? [followUpDate, [CustomValidators.required]] : followUpDate,
       licenseEndDate: controls ? [licenseEndDate, [CustomValidators.required]] : licenseEndDate,
-      publicTerms: controls ? [{value: publicTerms, disabled: true}] : publicTerms,
+      publicTerms: controls ? [{ value: publicTerms, disabled: true }] : publicTerms,
       customTerms: controls ? [customTerms] : customTerms
     }
   }
@@ -271,5 +337,82 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
 
   completeWithForm(form: UntypedFormGroup, selectedExecutives: TransferFundsExecutiveManagement[], selectedPurposes: TransferFundsCharityPurpose[]): DialogRef {
     return this.service!.completeTask(this, WFResponseType.COMPLETE, form, selectedExecutives, selectedPurposes);
+  }
+  getAdminResultByProperty(property: keyof TransferringIndividualFundsAbroad): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'managerDecision':
+        adminResultValue = this.managerDecisionInfo;
+        break;
+      case 'reviewerDepartmentDecision':
+        adminResultValue = this.reviewerDepartmentDecisionInfo;
+        break;
+      case 'specialistDecision':
+        adminResultValue = this.specialistDecisionInfo;
+        break;
+      case 'chiefDecision':
+        adminResultValue = this.chiefDecisionInfo;
+        break;
+      case 'chiefDecision':
+        adminResultValue = this.chiefDecisionInfo;
+        break;
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
+      case 'transfereeType':
+        adminResultValue = this.transfereeTypeInfo;
+        break;
+      case 'domain':
+        adminResultValue = this.domainInfo;
+        break;
+      case 'mainDACCategory':
+        adminResultValue = this.mainDACCategoryInfo;
+        break;
+      case 'mainUNOCHACategory':
+        adminResultValue = this.mainUNOCHACategoryInfo;
+        break;
+      case 'beneficiaryCountry':
+        adminResultValue = this.beneficiaryCountryInfo;
+        break;
+      case 'executionCountry':
+        adminResultValue = this.executionCountryInfo;
+        break;
+      case 'country':
+        adminResultValue = this.countryInfo;
+        break;
+      case 'transferCountry':
+        adminResultValue = this.transferCountryInfo;
+        break;
+      case 'nationality':
+        adminResultValue = this.nationalityInfo;
+        break;
+      case 'headQuarterType':
+        adminResultValue = this.headQuarterTypeInfo;
+        break;
+      case 'currency':
+        adminResultValue = this.currencyInfo;
+        break;
+      case 'projectType':
+        adminResultValue = this.projectTypeInfo;
+        break;
+      case 'transferMethod':
+        adminResultValue = this.transferMethodInfo;
+        break;
+      case 'transferType':
+        adminResultValue = this.transferTypeInfo;
+        break;
+      case 'receiverNationality':
+        adminResultValue = this.receiverNationalityInfo;
+        break;
+
+
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
   }
 }

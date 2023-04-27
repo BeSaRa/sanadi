@@ -8,25 +8,27 @@
               <ng-container [ngTemplateOutlet]="legendHeaderTemplate"></ng-container>
             </th>
           </ng-container>
-          <ng-container cdkColumnDef="fullName">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.full_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.fullName}} </td>
+          <ng-container cdkColumnDef="localName">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.name_in_local_language_like_passport}}
+            </th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.nameLikePassport}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="email">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_email}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.email}} </td>
+          <ng-container cdkColumnDef="englishName">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.name_in_English_language_like_passport}}
+            </th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.englishNameLikePassport}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="fax">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.fax_number}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.fax}} </td>
+          <ng-container cdkColumnDef="jobTitle">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.job_title}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.jobTitle}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="phone">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_phone}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.phone}} </td>
+          <ng-container cdkColumnDef="nationality">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_nationality}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.executiveNationalityInfo?.getName() || ''}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="recordNo">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.record_number}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.recordNo}} </td>
+          <ng-container cdkColumnDef="identificationNumber">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.national_id_number}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.executiveIdentificationNumber}} </td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
@@ -37,7 +39,7 @@
           <tr cdk-header-row *cdkHeaderRowDef="['legendHeader']"></tr>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"
-              class="{{getAuditRowClass(row.auditOperation)}}"></tr>
+            class="{{getAuditRowClass(row.auditOperation)}}"></tr>
           <tr *cdkNoDataRow>
             <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
           </tr>
@@ -50,11 +52,10 @@
 </div>
 <ng-template #legendHeaderTemplate>
   <div class="d-flex align-items-center justify-content-end gap-1">
-    <div
-      class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.ADDED)}}">{{lang.map.lbl_record_added}}</div>
-    <div
-      class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.UPDATED)}}">{{lang.map.lbl_record_updated}}</div>
-    <div
-      class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.DELETED)}}">{{lang.map.lbl_record_deleted}}</div>
+    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.ADDED)}}">{{lang.map.lbl_record_added}}</div>
+    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.UPDATED)}}">{{lang.map.lbl_record_updated}}
+    </div>
+    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.DELETED)}}">{{lang.map.lbl_record_deleted}}
+    </div>
   </div>
 </ng-template>
