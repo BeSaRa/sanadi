@@ -45,7 +45,6 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
   notificationRequestTypeList: Lookup[] = this.lookupService.listByCategory
     .AllRequestTypes.filter(rt => rt.lookupKey == AllRequestTypesEnum.NEW || rt.lookupKey == AllRequestTypesEnum.UPDATE).sort((a, b) => a.lookupKey - b.lookupKey);
   GeneralProcessTypeList: Lookup[] = this.lookupService.listByCategory.GeneralProcessType;
-  processList: GeneralProcess[] = [];
   processFieldBuilder: ProcessFieldBuilder;
   otherProcess: GeneralProcess = new GeneralProcess().clone({
     id: -1,
@@ -215,7 +214,7 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
           return of([this.otherProcess])
         })
       ).subscribe((data: GeneralProcess[]) => {
-        this.processList = [...data, this.otherProcess];
+        this.service.processList = [...data, this.otherProcess];
       })
   }
 
@@ -226,7 +225,7 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
   }
 
   handleProcessChange(id: number) {
-    const process = this.processList.find(p => p.id == id);
+    const process = this.service.processList.find(p => p.id == id);
     this.departmentField.setValidators([]);
     if (!this.isOtherProcess) {
       this.projectNameField.setValue(process?.arName);

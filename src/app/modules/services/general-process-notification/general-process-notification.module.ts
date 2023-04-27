@@ -21,13 +21,15 @@ import {
 import {
   GeneralProcessNotificationApprovalPopupComponent
 } from '@modules/services/general-process-notification/popups/general-process-notification-approval-popup/general-process-notification-approval-popup.component';
+import { AuditGeneralProcessNotificationComponent } from './audit/audit-general-process-notification/audit-general-process-notification.component';
 
 
 @NgModule({
   declarations: [
     GeneralProcessNotificationComponent,
     GeneralProcessNotificationOutputsComponent,
-    GeneralProcessNotificationApprovalPopupComponent
+    GeneralProcessNotificationApprovalPopupComponent,
+    AuditGeneralProcessNotificationComponent
   ],
   imports: [
     CommonModule,
