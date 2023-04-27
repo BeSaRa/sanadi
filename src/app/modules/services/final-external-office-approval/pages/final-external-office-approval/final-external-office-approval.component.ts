@@ -69,7 +69,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       name: 'managersTab',
       langKey: 'managers',
       validStatus: () => {
-        return !this.executiveManagementComponentRef || (this.managersTabStatus === 'READY' && this.executiveManagementComponentRef.list.length > 0);
+        return !this.executiveManagementComponentRef ||  this.executiveManagementComponentRef.list.length > 0;
       }
     },
     branches: {
@@ -120,7 +120,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     }
   }
 
-  managersTabStatus: ReadinessStatus = 'READY';
   branchesTabStatus: ReadinessStatus = 'READY';
   loadAttachments: boolean = false;
 

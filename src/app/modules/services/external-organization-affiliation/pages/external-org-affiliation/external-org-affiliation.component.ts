@@ -43,7 +43,6 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   CurrencyDropDown: Lookup[] = this.lookupService.listByCategory.Currency;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   countriesList: Country[] = [];
-  managersTabStatus: ReadinessStatus = 'READY';
   licenseSearch$: Subject<string> = new Subject<string>();
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
   @ViewChild('managersTab') executiveManagementComponentRef!: ExecutiveManagementComponent;
@@ -67,7 +66,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       langKey: 'managers',
       validStatus: () => {
         return !this.executiveManagementComponentRef ||
-          (this.managersTabStatus === 'READY' && this.executiveManagementComponentRef.list.length > 0);
+           this.executiveManagementComponentRef.list.length > 0;
       }
     },
     contactOfficer: {
