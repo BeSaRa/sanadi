@@ -1,3 +1,4 @@
+import { ControlValueLabelLangKey } from './../types/types';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { LangService } from '@app/services/lang.service';
 import { EmployeeService } from '@app/services/employee.service';
@@ -18,6 +19,7 @@ import { HasRequestType } from '@contracts/has-request-type';
 import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { UrgentInterventionAnnouncementInterceptor } from "@app/model-interceptors/urgent-intervention-announcement-interceptor";
+import { CommonUtils } from '@app/helpers/common-utils';
 
 const _RequestType = mixinRequestType(CaseModel);
 const { send, receive } = new UrgentInterventionAnnouncementInterceptor();
@@ -79,7 +81,18 @@ export class UrgentInterventionAnnouncement extends _RequestType<UrgentIntervent
     this.employeeService = FactoryService.getService('EmployeeService');
     this.finalizeSearchFields();
   }
-
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: { langKey: 'request_type', value: this.requestType },
+      oldLicenseFullSerial: { langKey: 'notification_request_number', value: this.oldLicenseFullSerial },
+      interventionName: { langKey: 'intervention_name', value: this.interventionName },
+      projectDescription: { langKey: 'lbl_description', value: this.projectDescription },
+      beneficiaryCountry: { langKey: 'country', value: this.beneficiaryCountry },
+      beneficiaryRegion: { langKey: 'region', value: this.beneficiaryRegion },
+      executionCountry: { langKey: 'country', value: this.executionCountry },
+      executionRegion: { langKey: 'region', value: this.executionRegion },
+    };
+  }
   getBasicFormFields(controls: boolean = false): any {
     const {
       requestType,
@@ -127,4 +140,23 @@ export class UrgentInterventionAnnouncement extends _RequestType<UrgentIntervent
     });
   }
 
+  getAdminResultByProperty(property: keyof UrgentInterventionAnnouncement): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'beneficiaryCountry':
+        adminResultValue = this.beneficiaryCountryInfo;
+        break;
+      case 'executionCountry':
+        adminResultValue = this.executionCountryInfo;
+        break;
+
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
 }
