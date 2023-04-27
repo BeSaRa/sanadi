@@ -2,19 +2,35 @@
   <div class="col-12">
     <div class="table-responsive">
       <app-table #table [paginator]="paginator" [data]="list" [columns]="displayColumns">
-        <table class="table caption-top" cdk-table [dataSource]="table.dataSource">
+        <table class="table table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
           <ng-container cdkColumnDef="legendHeader">
             <th cdk-header-cell colspan="100" *cdkHeaderCellDef="let row">
               <ng-container [ngTemplateOutlet]="legendHeaderTemplate"></ng-container>
             </th>
           </ng-container>
-          <ng-container cdkColumnDef="mainOcha">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.main_unocha_category}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.mainUNOCHACategoryInfo?.getName() || ''}} </td>
+          <ng-container cdkColumnDef="projectName">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.project_name}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.projectName}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="subOcha">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.sub_unocha_category}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.subUNOCHACategoryInfo?.getName() || ''}} </td>
+          <ng-container cdkColumnDef="projectType">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.project_type}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.projectTypeInfo?.getName() || ''}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="domain">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.domain}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.domainInfo?.getName() || ''}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="totalCost">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.total_cost}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.totalCost}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="beneficiaryCountry">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.beneficiary_country}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.beneficiaryCountryInfo?.getName() || ''}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="executionCountry">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.execution_country}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.executionCountryInfo?.getName() || ''}} </td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>

@@ -1,45 +1,45 @@
-import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
-import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {SaveTypes} from '@enums/save-types';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {TransferringIndividualFundsAbroad} from '@models/transferring-individual-funds-abroad';
-import {LangService} from '@services/lang.service';
-import {TransferringIndividualFundsAbroadService} from '@services/transferring-individual-funds-abroad.service';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {LookupService} from '@services/lookup.service';
-import {DialogService} from '@services/dialog.service';
-import {ToastService} from '@services/toast.service';
-import {LicenseService} from '@services/license.service';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {OpenFrom} from '@enums/open-from.enum';
-import {EmployeeService} from '@services/employee.service';
-import {Lookup} from '@models/lookup';
-import {DatepickerControlsMap, DatepickerOptionsMap, FieldControlAndLabelKey} from '@app/types/types';
-import {DateUtils} from '@helpers/date-utils';
-import {FormManager} from '@models/form-manager';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {TransferFundsExecutiveManagement} from '@models/transfer-funds-executive-management';
-import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {TransfereeTypeEnum} from '@enums/transferee-type-enum';
-import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
-import {AdminLookup} from '@models/admin-lookup';
-import {TransferFundsCharityPurpose} from '@models/transfer-funds-charity-purpose';
-import {AdminResult} from '@models/admin-result';
-import {DacOchaService} from '@services/dac-ocha.service';
-import {DomainTypes} from '@enums/domain-types';
-import {SelectedLicenseInfo} from '@contracts/selected-license-info';
-import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@enums/service-request-types';
-import {CountryService} from '@services/country.service';
-import {Country} from '@models/country';
-import {InternalProjectLicenseResult} from '@models/internal-project-license-result';
-import {SharedService} from '@services/shared.service';
-import {ReceiverOrganization} from '@models/receiver-organization';
-import {ReceiverPerson} from '@models/receiver-person';
-import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
-import {UserClickOn} from '@enums/user-click-on.enum'
-import {Payment} from '@models/payment';
-import {TransferTypeEnum} from '@enums/transfer-type-enum';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { SaveTypes } from '@enums/save-types';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { TransferringIndividualFundsAbroad } from '@models/transferring-individual-funds-abroad';
+import { LangService } from '@services/lang.service';
+import { TransferringIndividualFundsAbroadService } from '@services/transferring-individual-funds-abroad.service';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { LookupService } from '@services/lookup.service';
+import { DialogService } from '@services/dialog.service';
+import { ToastService } from '@services/toast.service';
+import { LicenseService } from '@services/license.service';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { OpenFrom } from '@enums/open-from.enum';
+import { EmployeeService } from '@services/employee.service';
+import { Lookup } from '@models/lookup';
+import { DatepickerControlsMap, DatepickerOptionsMap, FieldControlAndLabelKey } from '@app/types/types';
+import { DateUtils } from '@helpers/date-utils';
+import { FormManager } from '@models/form-manager';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { TransferFundsExecutiveManagement } from '@models/transfer-funds-executive-management';
+import { exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { TransfereeTypeEnum } from '@enums/transferee-type-enum';
+import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
+import { AdminLookup } from '@models/admin-lookup';
+import { TransferFundsCharityPurpose } from '@models/transfer-funds-charity-purpose';
+import { AdminResult } from '@models/admin-result';
+import { DacOchaService } from '@services/dac-ocha.service';
+import { DomainTypes } from '@enums/domain-types';
+import { SelectedLicenseInfo } from '@contracts/selected-license-info';
+import { TransferringIndividualFundsAbroadRequestTypeEnum } from '@enums/service-request-types';
+import { CountryService } from '@services/country.service';
+import { Country } from '@models/country';
+import { InternalProjectLicenseResult } from '@models/internal-project-license-result';
+import { SharedService } from '@services/shared.service';
+import { ReceiverOrganization } from '@models/receiver-organization';
+import { ReceiverPerson } from '@models/receiver-person';
+import { ITransferFundsAbroadComponent } from '@contracts/i-transfer-funds-abroad-component';
+import { UserClickOn } from '@enums/user-click-on.enum'
+import { Payment } from '@models/payment';
+import { TransferTypeEnum } from '@enums/transfer-type-enum';
 
 @Component({
   selector: 'transferring-individual-funds-abroad',
@@ -79,8 +79,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap: DatepickerOptionsMap = {
-    establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
-    dueDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
+    establishmentDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
+    dueDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' })
   };
   formProperties = {
     requestType: () => {
@@ -137,17 +137,17 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   totalPaymentsAmount = 0;
 
   constructor(public lang: LangService,
-              public fb: UntypedFormBuilder,
-              private cd: ChangeDetectorRef,
-              public service: TransferringIndividualFundsAbroadService,
-              private lookupService: LookupService,
-              private dialog: DialogService,
-              private toast: ToastService,
-              private licenseService: LicenseService,
-              private employeeService: EmployeeService,
-              private dacOchaService: DacOchaService,
-              private countryService: CountryService,
-              private sharedService: SharedService) {
+    public fb: UntypedFormBuilder,
+    private cd: ChangeDetectorRef,
+    public service: TransferringIndividualFundsAbroadService,
+    private lookupService: LookupService,
+    private dialog: DialogService,
+    private toast: ToastService,
+    private licenseService: LicenseService,
+    private employeeService: EmployeeService,
+    private dacOchaService: DacOchaService,
+    private countryService: CountryService,
+    private sharedService: SharedService) {
     super();
   }
 
@@ -362,7 +362,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       return;
     }
 
-    this.model = new TransferringIndividualFundsAbroad().clone({...this.model, ...model});
+    this.model = new TransferringIndividualFundsAbroad().clone({ ...this.model, ...model });
     this.form.patchValue({
       basicInfo: this.model?.buildBasicInfo(),
       requesterInfo: this.model?.buildRequesterInfo(),
@@ -424,11 +424,11 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   private _isValidDraftData(): boolean {
     const draftFields: FieldControlAndLabelKey[] = [
-      {control: this.requestType, labelKey: 'request_type'},
+      { control: this.requestType, labelKey: 'request_type' },
     ];
     const invalidDraftField = this.getInvalidDraftField(draftFields);
     if (invalidDraftField) {
-      this.dialog.error(this.lang.map.msg_please_validate_x_to_continue.change({x: this.lang.map[invalidDraftField.labelKey]}));
+      this.dialog.error(this.lang.map.msg_please_validate_x_to_continue.change({ x: this.lang.map[invalidDraftField.labelKey] }));
       invalidDraftField.control.markAsTouched();
       return false;
     }
@@ -487,7 +487,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -567,7 +567,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   searchForLicense() {
     this.licenseService
-      .transferringIndividualFundsAbroadSearch<TransferringIndividualFundsAbroad>({fullSerial: this.oldLicenseFullSerialField.value})
+      .transferringIndividualFundsAbroadSearch<TransferringIndividualFundsAbroad>({ fullSerial: this.oldLicenseFullSerialField.value })
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(licenses => !!licenses.length))
@@ -576,7 +576,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       }))
       .pipe(
         filter<null | SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>, SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>>
-        ((info): info is SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad> => !!info))
+          ((info): info is SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad> => !!info))
       .subscribe((_info) => {
         this.selectedLicenses = [_info.details];
         let value: any = new TransferringIndividualFundsAbroad().clone(_info.details);
@@ -598,23 +598,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
         delete value.licenseEndDate;
 
         this._updateForm(value);
-
-
-        /*// set oldLicenseId property from validated object id
-        _info.details.oldLicenseId = _info.details.id;
-
-        // delete id property
-        let tempObj = _info.details as any;
-        delete tempObj.id;
-        delete tempObj.followUpDate;
-        delete tempObj.licenseEndDate;
-        _info.details = new TransferringIndividualFundsAbroad().clone(tempObj);
-
-        this.hasSearchedForLicense = true;
-        this.selectedLicenses = [_info.details];
-        _info.details.requestType = this.model?.requestType!;
-        this._updateForm(_info.details);
-        this.oldLicenseFullSerialField.patchValue(_info.details.fullSerial);*/
       });
   }
 
@@ -637,39 +620,18 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   buildExecutiveManagementForm(): void {
-    this.executiveManagementForm = this.fb.group({
-      nameLikePassport: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      englishNameLikePassport: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      jobTitle: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      executiveNationality: [null, [CustomValidators.required]],
-      executiveIdentificationNumber: [null, [CustomValidators.required, CustomValidators.maxLength(20)]],
-      passportNumber: [null, [CustomValidators.required, ...CustomValidators.commonValidations.passport]],
-      executivephone1: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
-      executivephone2: [null, CustomValidators.commonValidations.phone]
-    });
+    const model = new TransferFundsExecutiveManagement();
+    this.executiveManagementForm = this.fb.group(model.buildForm());
   }
 
   buildTransferPurposeForm(): void {
-    this.transferPurposeForm = this.fb.group({
-      projectName: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      projectType: [null, [CustomValidators.required]],
-      domain: [null, [CustomValidators.required]],
-      mainUNOCHACategory: [null, []],
-      mainDACCategory: [null, []],
-      beneficiaryCountry: [null, [CustomValidators.required]],
-      executionCountry: [null, [CustomValidators.required]],
-      totalCost: [null, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]],
-      projectImplementationPeriod: [null, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]]
-    });
+    const model = new TransferFundsCharityPurpose();
+    this.transferPurposeForm = this.fb.group(model.buildForm());
   }
 
   buildPaymentForm(): void {
-    this.paymentForm = this.fb.group({
-      paymentNo: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      dueDate: [null, [CustomValidators.required]],
-      totalCost: [null, [CustomValidators.required]],
-      notes: [null, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]]
-    });
+    const model = new Payment();
+    this.paymentForm = this.fb.group(model.buildForm());
   }
 
   listenToTransfereeTypeChange() {
@@ -1364,7 +1326,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   paymentHasError() {
     return ((this.selectedPayments && this.selectedPayments.length === 0) ||
-        (this.selectedPayments && this.selectedPayments.length > 0) && this.totalPaymentsAmount > +this.qatariTransactionAmount.value) &&
+      (this.selectedPayments && this.selectedPayments.length > 0) && this.totalPaymentsAmount > +this.qatariTransactionAmount.value) &&
       !this.isCancel
   }
 }

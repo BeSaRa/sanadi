@@ -1,0 +1,51 @@
+<tabs-list>
+  <tab [template]="basic_info" [title]="lang.map.lbl_basic_info" name="basic_info">
+  </tab>
+  <tab [template]="requester_info" [title]="lang.map.requester_info" name="requester_info">
+  </tab>
+  <tab [template]="receiver_organization_info" [title]="lang.map.receiver_organization_info"
+    name="receiver_organization_info">
+  </tab>
+  <tab [template]="executive_management_info" [title]="lang.map.executive_management_info"
+    name="executive_management_info">
+  </tab>
+  <tab [template]="receiver_person_info" [title]="lang.map.receiver_person_info" name="receiver_person_info">
+  </tab>
+  <tab [template]="transfer_purpose_info" [title]="lang.map.transfer_purpose" name="transfer_purpose_info">
+  </tab>
+  <tab [template]="financial_transaction_info" [title]="lang.map.financial_transaction_info"
+    name="financial_transaction_info">
+  </tab>
+  <tab [template]="payment_info" [title]="lang.map.payments" name="payment_info">
+  </tab>
+</tabs-list>
+<ng-template #basic_info>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #requester_info>
+  <value-differences-list [differenceList]="requesterInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #receiver_organization_info>
+  <value-differences-list [differenceList]="receiverOrganizationInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #executive_management_info>
+  <audit-transfer-funds-executive-management [newVersionList]="newVersion.executiveManagementList"
+    [oldVersionList]="oldVersion.executiveManagementList" [caseType]="newVersion.caseType">
+  </audit-transfer-funds-executive-management>
+</ng-template>
+<ng-template #receiver_person_info>
+  <value-differences-list [differenceList]="receiverPersonInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #transfer_purpose_info>
+  <audit-transfer-purpose [newVersionList]="newVersion.charityPurposeTransferList"
+    [oldVersionList]="oldVersion.charityPurposeTransferList" [caseType]="newVersion.caseType">
+  </audit-transfer-purpose>
+</ng-template>
+<ng-template #financial_transaction_info>
+  <value-differences-list [differenceList]="financialTransactionInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #payment_info>
+  <audit-payment [newVersionList]="newVersion.payment"
+    [oldVersionList]="oldVersion.payment" [caseType]="newVersion.caseType">
+  </audit-payment>
+</ng-template>
