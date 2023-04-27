@@ -21,5 +21,7 @@ export interface IMenuItem<T> {
   translatedLabel?: string;
   disabled?: ((model: T) => boolean) | boolean,
   runBefore?: (model: T) => void,
-  runBeforeShouldSuccess?: (model: T) => boolean | Observable<boolean>
+  runBeforeShouldSuccess?: (model: T) => boolean | Observable<boolean>,
+  tooltip?:  keyof ILanguageKeys | ((item: T) => string),
+  translatedTooltip?: string
 }

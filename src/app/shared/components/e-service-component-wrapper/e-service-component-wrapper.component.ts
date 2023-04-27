@@ -63,7 +63,7 @@ import {
 } from '@contracts/i-general-association-meeting-attendance-final-approve';
 import {ProjectImplementation} from '@models/project-implementation';
 import {CommonUtils} from '@helpers/common-utils';
-import {CharityViewButtonsGroupEnum} from '@app/enums/charity-view-buttons-group-enum';
+import {WrapperButtonsGroupEnum} from '@enums/wrapper-buttons-group-enum';
 import {UrgentInterventionLicenseFollowup} from '@models/urgent-intervention-license-followup';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
@@ -106,8 +106,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   checklistComponent!: StepCheckListComponent;
 
   actions: IMenuItem<CaseModel<any, any>>[] = [];
-  groupedActions?: Map<CharityViewButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]>;
-  charityViewButtonsGroupEnum = CharityViewButtonsGroupEnum;
+  groupedActions: Map<WrapperButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]> =
+    new Map<WrapperButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]>([
+      [WrapperButtonsGroupEnum.ONE, []],
+      [WrapperButtonsGroupEnum.TWO, []],
+      [WrapperButtonsGroupEnum.THREE, []],
+      [WrapperButtonsGroupEnum.FOUR, []],
+    ]);
+  charityViewButtonsGroupEnum = WrapperButtonsGroupEnum;
   service!: BaseGenericEService<CaseModel<any, any>>;
   model?: CaseModel<any, any>;
   component!: EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<CaseModel<any, any>>>;
@@ -175,6 +181,23 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   canShowMatrixNotification: boolean = false;
   matrixNotificationType!: 'success' | 'danger';
   matrixNotificationMsg!: string;
+
+  /**
+   * @description Number of buttons to show before dropdown
+   */
+  buttonGroupCount: { [key in WrapperButtonsGroupEnum]: number } = {
+    [WrapperButtonsGroupEnum.ONE]: 0,
+    [WrapperButtonsGroupEnum.TWO]: 2,
+    [WrapperButtonsGroupEnum.THREE]: 2,
+    [WrapperButtonsGroupEnum.FOUR]: 0,
+  }
+
+  private buttonGroupLangKeys: { [key in WrapperButtonsGroupEnum]: (keyof ILanguageKeys | undefined) } = {
+    [WrapperButtonsGroupEnum.ONE]: undefined,
+    [WrapperButtonsGroupEnum.TWO]: 'btn_group_decision_actions',
+    [WrapperButtonsGroupEnum.THREE]: 'btn_group_consultation_actions',
+    [WrapperButtonsGroupEnum.FOUR]: undefined
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next('Destroy');
@@ -323,9 +346,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.FINAL);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
-          groupOrder: 3
-        }
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 1
+        },
+        tooltip: 'btn_info_save'
       },
       // launch
       {
@@ -340,7 +364,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         onClick: (_item: CaseModel<any, any>) => {
           this.launchAction(true);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 2
+        },
+        tooltip: 'btn_info_launch'
       },
       // save as draft
       {
@@ -373,9 +402,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.DRAFT);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
-          groupOrder: 5
-        }
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 1
+        },
+        tooltip: 'btn_info_save_as_draft'
       },
       // save as draft and continue
       {
@@ -405,9 +435,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.DRAFT_CONTINUE);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
-          groupOrder: 5
-        }
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 2
+        },
+        tooltip: 'btn_info_save_as_draft_and_continue'
       },
       // view logs
       {
@@ -419,9 +450,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           item.viewLogs();
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
-          groupOrder: 3
-        }
+          buttonGroup: WrapperButtonsGroupEnum.FOUR,
+          groupOrder: 2
+        },
+        tooltip: 'btn_info_logs'
       },
       // print
       {
@@ -432,9 +464,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: () => !this.model || !this.model.id,
         onClick: () => this.print(),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
-          groupOrder: 2
-        }
+          buttonGroup: WrapperButtonsGroupEnum.FOUR,
+          groupOrder: 1
+        },
+        tooltip: 'btn_info_print'
       },
       // back
       {
@@ -444,9 +477,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => true,
         onClick: () => this.navigateToSamePageThatUserCameFrom(),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          buttonGroup: WrapperButtonsGroupEnum.ONE,
           groupOrder: 1
-        }
+        },
+        tooltip: 'btn_info_back'
       }
     ];
   }
@@ -476,9 +510,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.FINAL);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
-          groupOrder: 3
-        }
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 1
+        },
+        tooltip: 'btn_info_save'
       },
       // launch
       {
@@ -493,7 +528,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         onClick: () => {
           // this.component.launch();
           this.launchAction(false);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 2
+        },
+        tooltip: 'btn_info_launch'
       },
       // save as draft
       {
@@ -514,9 +554,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.DRAFT);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
-          groupOrder: 5
-        }
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 1
+        },
+        tooltip: 'btn_info_save_as_draft'
       },
       // save as draft and continue
       {
@@ -537,9 +578,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.DRAFT_CONTINUE);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
-          groupOrder: 5
-        }
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 2
+        },
+        tooltip: 'btn_info_save_as_draft_and_continue'
       },
       // reset
       {
@@ -550,7 +592,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => (!this.model?.id),
         onClick: () => {
           this.component.resetForm$.next(true);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.ONE,
+          groupOrder: 1
+        },
+        tooltip: 'btn_info_reset'
       }
     ];
   }
@@ -597,9 +644,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.claimAction(item);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
-          groupOrder: 1
-        }
+          buttonGroup: WrapperButtonsGroupEnum.ONE,
+          groupOrder: 2
+        },
+        tooltip: 'btn_info_claim'
       },
       // view logs
       {
@@ -609,9 +657,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => !this.internal,
         onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
-          groupOrder: 3
-        }
+          buttonGroup: WrapperButtonsGroupEnum.FOUR,
+          groupOrder: 2
+        },
+        tooltip: 'btn_info_logs'
       },
       // print
       {
@@ -622,9 +671,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: () => !this.model || !this.model.id,
         onClick: () => this.print(),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
-          groupOrder: 2
-        }
+          buttonGroup: WrapperButtonsGroupEnum.FOUR,
+          groupOrder: 1
+        },
+        tooltip: 'btn_info_print'
       },
       // mark as unread
       {
@@ -634,9 +684,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: (_item) => true,
         onClick: (item) => this.markAsUnreadAction(item),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
-          groupOrder: 4
-        }
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 1
+        },
+        tooltip: 'btn_info_mark_as_unread'
       },
       // back
       {
@@ -646,9 +697,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => true,
         onClick: () => this.navigateToSamePageThatUserCameFrom(),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          buttonGroup: WrapperButtonsGroupEnum.ONE,
           groupOrder: 1
-        }
+        },
+        tooltip: 'btn_info_back'
       }
     ];
   }
@@ -681,9 +733,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.FINAL);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
-          groupOrder: 3
-        }
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 1
+        },
+        tooltip: 'btn_info_save'
       },
       // release
       {
@@ -694,9 +747,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: item => item.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM),
         onClick: (item: CaseModel<any, any>) => this.releaseAction(item),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          buttonGroup: WrapperButtonsGroupEnum.ONE,
           groupOrder: 2
-        }
+        },
+        tooltip: 'btn_info_release_task'
       },
       // send to competent department
       {
@@ -710,7 +764,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToDepartmentAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_send_to_competent_dep'
       },
       // Return to specific organization
       {
@@ -724,7 +783,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.returnToSpecificOrganizationAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_return_to_org_task'
       },
       // send to multi department
       {
@@ -749,48 +813,24 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToMultiDepartmentsAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_send_to_multi_departments'
       },
       // send to single department (Supervision and control, risk and compliance, license department)
       {
         type: 'action',
         icon: 'mdi-send-circle',
         label: (item: CaseModel<any, any>) => {
-          let isSendToRiskAndCompliance: boolean = (item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.FINANCIAL_TRANSFER_SEND_TO_SINGLE_DEPARTMENT)
-          );
-          let isSendToLicenseDepartment = item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT);
-
-          if (isSendToRiskAndCompliance) {
-            return this.lang.map.send_to_risk_and_compliance_department;
-          } else if (isSendToLicenseDepartment) {
-            return this.lang.map.send_to_license_department;
-          }
-          return this.lang.map.send_to_supervision_and_control_department;
+          return this.getSendToSingleDepartmentLabelTooltip(item).label;
         },
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.COLLECTOR_LICENSING_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.PROJECT_IMPLEMENTATION_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.FINANCIAL_TRANSFER_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)
-            ;
+          return this.isSendToSingleDepartmentAllowed(item);
         },
         onClick: (item: CaseModel<any, any>) => {
           if (item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)) {
@@ -798,6 +838,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             return;
           }
           this.sendToSingleDepartmentAction(item);
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 4
+        },
+        tooltip: (item: CaseModel<any, any>) => {
+          return this.getSendToSingleDepartmentLabelTooltip(item).tooltip;
         }
       },
       // send to user
@@ -812,7 +859,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToUserAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_send_to_user'
       },
       // send to structural expert
       {
@@ -826,7 +878,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToStructureExpertAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_send_to_structure_expert'
       },
       // send to developmental expert
       {
@@ -840,7 +897,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToDevelopmentExpertAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_send_to_development_expert'
       },
       // send to Manager
       {
@@ -854,7 +916,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToManagerAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_send_to_manager'
       },
       // send to Chief
       {
@@ -868,7 +935,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToChiefAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_send_to_chief'
       },
       // send to general Manager
       {
@@ -882,7 +954,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToGeneralManagerAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_send_to_general_manager'
       },
       // send to general Manager
       {
@@ -896,7 +973,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToGMAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_send_to_general_manager'
       },
       // complete
       {
@@ -912,9 +994,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.completeAction(item);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.CENTER,
-          groupOrder: 1
-        }
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 2
+        },
+        tooltip: 'btn_info_task_complete'
       },
       // approve
       {
@@ -928,7 +1011,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.approveAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_approve_task'
       },
       // send to general meeting members
       {
@@ -942,7 +1030,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToGeneralMeetingMembersAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_send_to_members'
       },
       // download final report
       {
@@ -957,7 +1050,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         onClick: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
           model.downloadFinalReport();
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_generate_final_report'
       },
       // initial approve
       {
@@ -971,7 +1069,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.initialApproveAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_initial_approve_task'
       },
       // organization approve
       {
@@ -986,7 +1089,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.organizationApproveAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_org_approve_task'
       },
       // organization final approve
       {
@@ -1000,7 +1108,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.organizationFinalApproveAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_organization_final_approve'
       },
       // organization final reject
       {
@@ -1013,7 +1126,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.organizationFinalRejectAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_organization_final_reject'
       },
       // validate approve
       {
@@ -1027,7 +1145,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.validateApproveAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_validate_approve_task'
       },
       // knew
       {
@@ -1041,7 +1164,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.knewAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_task_complete'
       },
       // seen
       {
@@ -1055,7 +1183,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.seenAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_task_seen'
       },
       // final approve
       {
@@ -1069,6 +1202,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.finalApproveAction(item);
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: (item) => {
+          return this.finalApproveByMatrixServices.includes(item.getCaseType()) ? this.lang.map.btn_info_final_approve_task_based_on_matrix : this.lang.map.btn_info_final_approve_task;
         }
       },
       // final notification
@@ -1083,7 +1223,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.finalNotification(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_final_notification'
       },
       // ask for consultation
       {
@@ -1097,7 +1242,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.askForConsultationAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_ask_for_consultation_task'
       },
       // postpone
       {
@@ -1111,7 +1261,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.postponeAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_postpone_task'
       },
       // return
       {
@@ -1127,9 +1282,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.returnAction(item);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.CENTER,
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
           groupOrder: 2
-        }
+        },
+        tooltip: 'btn_info_return_task'
       },
       // final reject
       {
@@ -1143,7 +1299,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.finalRejectAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_final_reject_task'
       },
       // organization reject
       {
@@ -1157,7 +1318,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.organizationRejectAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_organization_reject_task'
       },
       // validate reject
       {
@@ -1171,7 +1337,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.validateRejectAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_validate_reject_task'
       },
       // return to organization
       {
@@ -1185,7 +1356,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.returnToOrganizationAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_return_to_org_task'
       },
       // reject
       {
@@ -1199,7 +1375,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.rejectAction(item);
-        }
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_reject_task'
       },
       //close/cancel task
       {
@@ -1217,9 +1398,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.closeAction(item);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.CENTER,
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
           groupOrder: 3
-        }
+        },
+        tooltip: 'btn_info_cancel_task'
       },
       // view logs
       {
@@ -1229,9 +1411,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => !this.internal,
         onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
-          groupOrder: 3
-        }
+          buttonGroup: WrapperButtonsGroupEnum.FOUR,
+          groupOrder: 2
+        },
+        tooltip: 'btn_info_logs'
       },
       // print
       {
@@ -1242,9 +1425,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: () => !this.model || !this.model.id,
         onClick: () => this.print(),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
-          groupOrder: 2
-        }
+          buttonGroup: WrapperButtonsGroupEnum.FOUR,
+          groupOrder: 1
+        },
+        tooltip: 'btn_info_print'
       },
       // mark as unread
       {
@@ -1254,9 +1438,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: (_item) => true,
         onClick: (item) => this.markAsUnreadAction(item),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
           groupOrder: 4
-        }
+        },
+        tooltip: 'btn_info_mark_as_unread'
       },
       // back
       {
@@ -1266,11 +1451,54 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => true,
         onClick: () => this.navigateToSamePageThatUserCameFrom(),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          buttonGroup: WrapperButtonsGroupEnum.ONE,
           groupOrder: 1
-        }
+        },
+        tooltip: 'btn_info_back'
       }
     ];
+  }
+
+  private isSendToSingleDepartmentAllowed(item: CaseModel<any, any>): boolean {
+    return item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.COLLECTOR_LICENSING_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.PROJECT_IMPLEMENTATION_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.FINANCIAL_TRANSFER_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)
+      ;
+  }
+
+  private getSendToSingleDepartmentLabelTooltip(item: CaseModel<any, any>): { label: string, tooltip: string } {
+    let isSendToRiskAndCompliance: boolean = (item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.FINANCIAL_TRANSFER_SEND_TO_SINGLE_DEPARTMENT)
+    );
+    let isSendToLicenseDepartment = item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT);
+    let result: { label: string, tooltip: string } = {label: '', tooltip: ''};
+    if (isSendToRiskAndCompliance) {
+      result.label = this.lang.map.send_to_risk_and_compliance_department;
+      result.tooltip = this.lang.map.btn_info_send_to_risk_and_compliance_department;
+    } else if (isSendToLicenseDepartment) {
+      result.label = this.lang.map.send_to_license_department;
+      result.tooltip = this.lang.map.btn_info_send_to_license_department;
+    } else {
+      result.label = this.lang.map.send_to_supervision_and_control_department;
+      result.tooltip = this.lang.map.btn_info_send_to_supervision_and_control_department;
+    }
+    return result;
   }
 
   private navigateToSamePageThatUserCameFrom(): void {
@@ -1315,38 +1543,37 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         this.buildAddAction();
         this.actions = this.actionShowFilter(this.addActions);
     }
-    this._groupActionsIcons()
+    this.actions = this.translateActions(this.actions);
+    this._groupActions();
   }
 
-  private _hasValidCharityButtonGroup(action: IMenuItem<CaseModel<any, any>>): boolean {
+  private _hasValidButtonGroup(action: IMenuItem<CaseModel<any, any>>): boolean {
     return (CommonUtils.isValidValue(action.data)
-      && CommonUtils.isValidValue(action.data!.charityButtonsGroup)
-      && Object.values(CharityViewButtonsGroupEnum).includes(action.data!.charityButtonsGroup)
+      && CommonUtils.isValidValue(action.data!.buttonGroup)
+      && Object.values(WrapperButtonsGroupEnum).includes(action.data!.buttonGroup)
     )
   }
 
-  private _groupActionsIcons(): void {
-    if (!this.internal) {
-      this.groupedActions = new Map<CharityViewButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]>([
-        [CharityViewButtonsGroupEnum.LEFT, []],
-        [CharityViewButtonsGroupEnum.CENTER, []],
-        [CharityViewButtonsGroupEnum.RIGHT, []],
-      ]);
-      this.actions.forEach(action => {
-        if (!this._hasValidCharityButtonGroup(action)) {
-          if (!('data' in action)) {
-            action.data = {};
-          }
-          action.data!.charityButtonsGroup = CharityViewButtonsGroupEnum.CENTER;
-          action.data!.groupOrder = action.data!.groupOrder ?? this.actions.length + 1; // setting the highest number for sort (same for all actions which don't have sortOrder defined)
+  private _groupActions(): void {
+    this.groupedActions.set(WrapperButtonsGroupEnum.ONE, []);
+    this.groupedActions.set(WrapperButtonsGroupEnum.TWO, []);
+    this.groupedActions.set(WrapperButtonsGroupEnum.THREE, []);
+    this.groupedActions.set(WrapperButtonsGroupEnum.FOUR, []);
+
+    this.actions.forEach(action => {
+      if (!this._hasValidButtonGroup(action)) {
+        if (!('data' in action)) {
+          action.data = {};
         }
-        this.groupedActions!.set(action.data!.charityButtonsGroup, [...this.groupedActions!.get(action.data!.charityButtonsGroup)!, action]);
-      })
-      for (let [key, value] of this.groupedActions!) {
-        this.groupedActions!.set(key, value.sort((a: IMenuItem<CaseModel<any, any>>, b: IMenuItem<CaseModel<any, any>>) => {
-          return (a.data!.groupOrder ?? 0) - (b.data!.groupOrder ?? 0)
-        }));
+        action.data!.buttonGroup = WrapperButtonsGroupEnum.TWO;
+        action.data!.groupOrder = action.data!.groupOrder ?? this.actions.length + 1; // setting the highest number for sort (same for all actions which don't have sortOrder defined)
       }
+      this.groupedActions.set(action.data!.buttonGroup, [...this.groupedActions.get(action.data!.buttonGroup)!, action]);
+    })
+    for (let [key, value] of this.groupedActions) {
+      this.groupedActions.set(key, value.sort((a: IMenuItem<CaseModel<any, any>>, b: IMenuItem<CaseModel<any, any>>) => {
+        return (a.data!.groupOrder ?? 0) - (b.data!.groupOrder ?? 0)
+      }));
     }
   }
 
@@ -1374,7 +1601,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       this.toast.success(this.lang.map.task_have_been_released_successfully);
       item.addReleaseAction();
       this.displayRightActions(OpenFrom.TEAM_INBOX); // update actions to be same as team inbox
-      this.actions = this.translateActions(this.actions);
+      // this.actions = this.translateActions(this.actions);
       this.component.allowEditRecommendations = false;
       this.component.readonly = true;
       const component = (this.component as IESComponent<any>);
@@ -1390,7 +1617,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       this.toast.success(this.lang.map.task_have_been_claimed_successfully);
       item.addClaimAction((this.employeeService.getCurrentUser() as (ExternalUser | InternalUser)).getUniqueName());
       this.displayRightActions(OpenFrom.USER_INBOX);
-      this.actions = this.translateActions(this.actions);
+      // this.actions = this.translateActions(this.actions);
       this.component.allowEditRecommendations = this.internal;
       const component = (this.component as IESComponent<any>);
       if (component.handleReadonly && typeof component.handleReadonly === 'function') {
@@ -1749,7 +1976,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     this.model = model;
     this.model.setInboxService(this.inboxService);
     this.displayRightActions(this.info?.openFrom || OpenFrom.ADD_SCREEN);
-    this.translateActions(this.actions);
+    // this.translateActions(this.actions);
   }
 
   private listenToModelChange(): void {
@@ -1778,6 +2005,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private translateActions(actions: IMenuItem<CaseModel<any, any>>[]): IMenuItem<CaseModel<any, any>>[] {
     return actions.map((action) => {
       action.translatedLabel = (typeof action.label === 'function' && this.model) ? action.label(this.model) : this.lang.map[action.label as keyof ILanguageKeys];
+      action.translatedTooltip = !action.tooltip ? '' : ((typeof action.tooltip === 'function' && this.model) ? action.tooltip(this.model) : this.lang.map[action.tooltip as keyof ILanguageKeys]);
       return action;
     });
   }
@@ -1893,7 +2121,32 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     return false;
   }
 
-  actionClass(action: IMenuItem<any>): string {
-    return (!action.class ? '' : (typeof action.class === 'function' ? action.class(this.model) : action.class)) || '';
+  actionClass(action: IMenuItem<any>, isDropdownItem: boolean): string {
+    return this._dropdownItemClasses(isDropdownItem);
+    //return (!action.class ? '' : (typeof action.class === 'function' ? action.class(this.model) : action.class)) || '';
+  }
+
+  getButtonGroupClass(groupKey: WrapperButtonsGroupEnum): string {
+    return 'button-group-' + (groupKey + '');
+  }
+
+  getGroupDropdownButtonText(groupKey: WrapperButtonsGroupEnum): string {
+    return !this.buttonGroupLangKeys[groupKey] ? 'Button Group ' + groupKey : (this.lang.map[this.buttonGroupLangKeys[groupKey]!] ?? '');
+  }
+
+  private _dropdownItemClasses(isDropdownItem: boolean): string {
+    return (isDropdownItem ? 'dropdown-item br-0' : '');
+  }
+
+  isButtonGroupDropdownDisabled(groupKey: WrapperButtonsGroupEnum): boolean {
+    const maxCount = this.buttonGroupCount[groupKey];
+    // maxCount = 0 means, dropdown will not be visible. So, consider it disabled
+    if (maxCount === 0) {
+      return true;
+    }
+    // filter all actions greater than equal to maxCount before dropdown and enabled
+    return (this.groupedActions.get(groupKey) ?? []).filter((item, index) => {
+      return index >= maxCount && !this.isDisabled(item);
+    }).length === 0;
   }
 }
