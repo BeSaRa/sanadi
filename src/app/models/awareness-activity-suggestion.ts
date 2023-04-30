@@ -23,6 +23,7 @@ import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties'
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ObjectUtils } from '@app/helpers/object-utils';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { DateUtils } from '@app/helpers/date-utils';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new AwarenessActivitySuggestionInterceptor();
@@ -58,6 +59,7 @@ export class AwarenessActivitySuggestion
   agreementWithRACA!: boolean | number;
   subject!: string;
   expectedDate!: string | IMyDateModel;
+  expectedDateTimeStamp!: number|null;
   goal!: string;
   activityName!: string;
 
@@ -91,7 +93,10 @@ export class AwarenessActivitySuggestion
       case 'organizationId':
         adminResultValue = this.ouInfo;
         break;
-
+      case 'expectedDate':
+        const dateValue = DateUtils.getDateStringFromDate(this.expectedDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({arName: dateValue, enName: dateValue});
+        break;
       default:
         let value: any = this[property];
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
@@ -113,7 +118,7 @@ export class AwarenessActivitySuggestion
       description:{langKey: 'special_explanations', value: this.description},
       agreementWithRACA:{langKey: 'does_organization_have_agreement_with_RACA', value: this.agreementWithRACA},
       subject:{langKey: 'subject', value: this.subject},
-      expectedDate:{langKey: 'expected_date', value: this.expectedDate},
+      expectedDate:{langKey: 'expected_date', value: this.expectedDate,comparisonValue: this.expectedDateTimeStamp},
       goal:{langKey: 'goal', value: this.goal},
       activityName:{langKey: 'activity_name', value: this.activityName},
       oldLicenseFullSerial:{langKey: 'license_number', value: this.oldLicenseFullSerial},

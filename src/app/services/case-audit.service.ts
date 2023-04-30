@@ -1,3 +1,5 @@
+import { InternationalCooperationInterceptor } from './../model-interceptors/international-cooperation-interceptor';
+import { AuditGeneralAssociationMeetingAttendanceComponent } from './../modules/services/general-association-meeting-attendance/audit/audit-general-association-meeting-attendance/audit-general-association-meeting-attendance.component';
 import { FinalExternalOfficeApprovalInterceptor } from './../model-interceptors/final-external-office-approval-interceptor';
 import {Injectable} from '@angular/core';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
@@ -55,6 +57,25 @@ import { AuditFinalExternalOfficeApprovalComponent } from '@app/modules/services
 import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
 import { FinancialTransferLicensingInterceptor } from '@app/model-interceptors/financial-transfer-licensing-interceptor';
 import { AuditFinancialTransfersLicensingComponent } from '@app/modules/services/financial-transfer-licensing/audit/audit-financial-transfers-licensing/audit-financial-transfers-licensing.component';
+import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
+import { ForeignCountriesProjectsInterceptor } from '@app/model-interceptors/foriegn-countries-projects-interceptor';
+import { AuditForeignCountriesProjectsComponent } from '@app/modules/services/foreign-countries-projects/audit/audit-foreign-countries-projects/audit-foreign-countries-projects.component';
+import { Fundraising } from '@app/models/fundraising';
+import { FundraisingInterceptor } from '@app/model-interceptors/fundraising-interceptor';
+import { AuditFundraisingChannelLicensingComponent } from '@app/modules/services/fundraising-channel-licensing/audit/audit-fundraising-channel-licensing/audit-fundraising-channel-licensing.component';
+import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
+import { GeneralAssociationMeetingAttendanceInterceptor } from '@app/model-interceptors/general-association-meeting-attendance-interceptor';
+import { GeneralProcessNotification } from '@app/models/general-process-notification';
+import { GeneralProcessNotificationInterceptor } from '@app/model-interceptors/generalProcessNotificationInterceptor';
+import { AuditGeneralProcessNotificationComponent } from '@app/modules/services/general-process-notification/audit/audit-general-process-notification/audit-general-process-notification.component';
+import { InternalBankAccountApproval } from '@app/models/internal-bank-account-approval';
+import { InternalBankAccountApprovalInterceptor } from '@app/model-interceptors/internal-bank-account-approval-interceptor';
+import { AuditInternalBankAccountApprovalComponent } from '@app/modules/services/internal-bank-account-approval/audit/audit-internal-bank-account-approval/audit-internal-bank-account-approval.component';
+import { InternationalCooperation } from '@app/models/international-cooperation';
+import { AuditInternationalCooperationComponent } from '@app/modules/services/international-cooperation/audit/audit-international-cooperation/audit-international-cooperation.component';
+import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
+import { CoordinationWithOrganizationsRequestInterceptor } from '@app/model-interceptors/coordination-with-organizations-request-interceptor';
+import { AuditCoordinationWithOrganizationRequestComponent } from '@app/modules/services/coordination-with-organization-request/audit/audit-coordination-with-organization-request/audit-coordination-with-organization-request.component';
 
 @CastResponseContainer({
   $default: {
@@ -82,6 +103,13 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: ExternalOrgAffiliation,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApproval,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensing,
+    [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: ForeignCountriesProjects,
+    [CaseTypes.FUNDRAISING_LICENSING]: Fundraising,
+    [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: GeneralAssociationMeetingAttendance,
+    [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: GeneralProcessNotification,
+    [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApproval,
+    [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCooperation,
+    [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequest,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -95,6 +123,13 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: ExternalOrgAffiliationInterceptor,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalExternalOfficeApprovalInterceptor,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: FinancialTransferLicensingInterceptor,
+    [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: ForeignCountriesProjectsInterceptor,
+    [CaseTypes.FUNDRAISING_LICENSING]: FundraisingInterceptor,
+    [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: GeneralAssociationMeetingAttendanceInterceptor,
+    [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: GeneralProcessNotificationInterceptor,
+    [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApprovalInterceptor,
+    [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCooperationInterceptor,
+    [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequestInterceptor,
 
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
@@ -109,6 +144,13 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: AuditExternalOrganizationAffiliationComponent,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: AuditFinalExternalOfficeApprovalComponent,
     [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: AuditFinancialTransfersLicensingComponent,
+    [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: AuditForeignCountriesProjectsComponent,
+    [CaseTypes.FUNDRAISING_LICENSING]: AuditFundraisingChannelLicensingComponent,
+    [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: AuditGeneralAssociationMeetingAttendanceComponent,
+    [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: AuditGeneralProcessNotificationComponent,
+    [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: AuditInternalBankAccountApprovalComponent,
+    [CaseTypes.INTERNATIONAL_COOPERATION]: AuditInternationalCooperationComponent,
+    [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: AuditCoordinationWithOrganizationRequestComponent,
 
   };
 

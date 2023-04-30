@@ -18,6 +18,7 @@ import {DynamicOptionsService} from './dynamic-options.service';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {CastResponseContainer} from '@decorators/cast-response';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import { InternalDepartment } from '@app/models/internal-department';
 
 @CastResponseContainer({
   $default: {
@@ -48,6 +49,7 @@ export class InternationalCooperationService extends BaseGenericEService<Interna
   searchService: SearchService = new SearchService(this);
 
   serviceKey: keyof ILanguageKeys = 'menu_international_cooperation';
+  departments: InternalDepartment[] = [];
 
   constructor(private urlService: UrlService,
               public dialog: DialogService,

@@ -1,0 +1,21 @@
+<tabs-list>
+  <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
+  <tab name="projectNeeds" [template]="projectNeedsTemplate" [title]="lang.map.project_needs"></tab>
+   <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
+</tabs-list>
+<ng-template #basicInfoTemplate>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #projectNeedsTemplate>
+  <audit-project-need [newVersionList]="newVersion.projectNeedList"
+                      [oldVersionList]="oldVersion.projectNeedList"
+                      [caseType]="newVersion.caseType"
+                >
+  </audit-project-need>
+</ng-template>
+
+
+<ng-template #specialExplanationTemplate>
+  <value-differences-list [differenceList]="explanationDifferences"></value-differences-list>
+</ng-template>
+

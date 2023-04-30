@@ -14,6 +14,7 @@ import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { DialogService } from './dialog.service';
 import { DynamicOptionsService } from './dynamic-options.service';
 import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { GeneralProcess } from '@app/models/genral-process';
 
 
 @CastResponseContainer({
@@ -30,6 +31,7 @@ export class GeneralProcessNotificationService extends BaseGenericEService<Gener
   caseStatusIconMap: Map<number, string> = new Map();
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'subject', 'creatorInfo'];
   selectLicenseDisplayColumns: string[] = ['projectName', 'licenseNumber', 'needSubject', 'actions'];
+  processList: GeneralProcess[] = [];
 
   constructor(
     public http: HttpClient,

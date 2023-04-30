@@ -15,13 +15,18 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { CaseModel } from './case-model';
-import { ProjectNeeds } from './project-needs';
+import { ProjectNeed, ProjectNeeds } from './project-needs';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { ControlValueLabelLangKey } from '@app/types/types';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const { send, receive } = new ForeignCountriesProjectsInterceptor();
 
 @InterceptModel({ send, receive })
-export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProjectsService, ForeignCountriesProjects> implements HasRequestType, HasExternalCooperationAuthority, HasFollowUpDate {
+export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProjectsService, ForeignCountriesProjects> implements HasRequestType, HasExternalCooperationAuthority, HasFollowUpDate,IAuditModelProperties<ForeignCountriesProjects> {
   public service!: ForeignCountriesProjectsService;
   constructor() {
     super();
@@ -37,6 +42,7 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
   country!: number;
   countryInfo!: AdminResult;
   projectNeeds: ProjectNeeds = [];
+  projectNeedList: ProjectNeed[] = this.projectNeeds as ProjectNeed[];
   oldLicenseId!: string;
   oldLicenseSerial!: number;
   oldLicenseFullSerial!: string;
@@ -60,25 +66,67 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
   getRequestType(): number {
     return this.requestType;
   }
-
+  getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      description: {langKey: 'special_explanations', value: this.description},
+     }
+  }
   buildExplanation(controls: boolean = false): any {
-    const { description } = this;
+    const { description } = ObjectUtils.getControlValues<ForeignCountriesProjects>(this.getExplanationValuesWithLabels());
+    ;
     return {
       description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     };
   }
+  getAdminResultByProperty(property: keyof ForeignCountriesProjects): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
+      case 'caseStatus':
+        adminResultValue = this.caseStatusInfo;
+        break;
+      case 'country':
+        adminResultValue = this.countryInfo;
+        break;
+      case 'externalCooperationAuthority':
+        adminResultValue = this.externalCooperationAuthorityInfo;
+        break;
 
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: {langKey: 'request_type', value: this.requestType},
+      oldLicenseFullSerial:{langKey: 'serial_number', value: this.oldLicenseFullSerial},
+      externalCooperationAuthority:{langKey: 'external_cooperation_authority', value: this.externalCooperationAuthority},
+      organizationId:{langKey: 'lbl_organization', value: this.organizationId},
+      country:{langKey: 'country', value: this.country},
+      justification:{langKey: 'lbl_justification', value: this.justification},
+      recommendation:{langKey: 'recommendation', value: this.recommendation},
+      needSubject:{langKey: 'lbl_description', value: this.needSubject}};
+  }
   buildForm(withControls: boolean): IKeyValue {
     const {
-      requestType,
-      oldLicenseFullSerial,
+      requestType, oldLicenseFullSerial,
       externalCooperationAuthority,
       organizationId,
       country,
       justification,
       recommendation,
-      needSubject
-    } = this;
+      needSubject} = ObjectUtils.getControlValues<ForeignCountriesProjects>(this.getBasicInfoValuesWithLabels());
+
+
     return {
       oldLicenseFullSerial: withControls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       organizationId: withControls ? [organizationId, [CustomValidators.required]] : organizationId,

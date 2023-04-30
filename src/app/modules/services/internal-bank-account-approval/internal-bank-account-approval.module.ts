@@ -15,6 +15,7 @@ import {
 import {
   SelectEmployeePopupComponent
 } from '@modules/services/internal-bank-account-approval/popups/select-employee-popup/select-employee-popup.component';
+import { AuditInternalBankAccountApprovalComponent } from './audit/audit-internal-bank-account-approval/audit-internal-bank-account-approval.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {
     InternalBankAccountApprovalComponent,
     InternalBankAccountApprovalOutputsComponent,
     InternalBankApprovalApproveTaskPopupComponent,
-    SelectEmployeePopupComponent
+    SelectEmployeePopupComponent,
+    AuditInternalBankAccountApprovalComponent
   ],
   imports: [
     CommonModule,

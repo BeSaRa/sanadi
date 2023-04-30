@@ -1,3 +1,4 @@
+import { AuditForeignCountriesProjectsComponent } from './audit/audit-foreign-countries-projects/audit-foreign-countries-projects.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
@@ -15,6 +16,7 @@ import {
 import {
   ProjectNeedsComponent
 } from '@modules/services/foreign-countries-projects/shared/project-needs/project-needs.component';
+import { AuditProjectNeedComponent } from './audit/audit-project-need/audit-project-need.component';
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import {
     ForeignCountriesProjectsComponent,
     ForeignCountriesProjectOutputsComponent,
     ForeignCountriesProjectsApprovalPopupComponent,
-    ProjectNeedsComponent
+    ProjectNeedsComponent,
+    AuditForeignCountriesProjectsComponent,
+    AuditProjectNeedComponent
   ],
   imports: [
     CommonModule,

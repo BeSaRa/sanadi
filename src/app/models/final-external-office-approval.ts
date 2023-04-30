@@ -44,6 +44,7 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   managerDecision?: number;
   reviewerDepartmentDecision?: number;
   establishmentDate: string = '';
+  establishmentDateTimeStamp!: number|null;
   address: string = '';
   email: string = '';
   externalOfficeName: string = '';
@@ -55,6 +56,8 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   licenseDuration!: number;
   licenseDurationType!: number;
   countries: number[] = [];
+  countriesInfo: AdminResult[] = [];
+
 
   executiveManagementList: ExecutiveManagement[] = [];
   branchList: BankBranch[] = [];
@@ -66,6 +69,9 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   generalManagerDecisionInfo!: AdminResult;
   reviewerDepartmentDecisionInfo!: AdminResult;
   licenseStatusInfo!: AdminResult;
+  headQuarterTypeInfo!: AdminResult;
+  countryInfo!: AdminResult;
+  licenseDurationTypeInfo!: AdminResult;
 
   service: FinalExternalOfficeApprovalService;
 
@@ -98,7 +104,7 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
       country:{langKey: 'country', value: this.country},
       region:{langKey: 'region', value: this.region},
       externalOfficeName:{langKey: 'external_office_name', value: this.externalOfficeName},
-      establishmentDate:{langKey: 'establishment_date', value: this.establishmentDate},
+      establishmentDate:{langKey: 'establishment_date', value: this.establishmentDate,comparisonValue: this.establishmentDateTimeStamp},
       recordNo:{langKey: 'record_number', value: this.recordNo},
       address:{langKey: 'lbl_address', value: this.address},
       phone:{langKey: 'lbl_phone', value: this.phone},
@@ -106,7 +112,7 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
       postalCode:{langKey: 'postal_code', value: this.postalCode},
       email:{langKey: 'lbl_email', value: this.email},
       description:{langKey: 'special_explanations', value: this.description},
-      headQuarterType:{langKey: 'headquarter_type', value: this.headQuarterType},
+      headQuarterType:{langKey: 'office_type', value: this.headQuarterType},
       licenseDuration:{langKey: 'license_duration', value: this.licenseDuration},
       licenseDurationType:{langKey: 'license_duration_type', value: this.licenseDurationType},
       countries:{langKey: 'states', value: this.countries}
@@ -146,7 +152,23 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
       case 'caseStatus':
         adminResultValue = this.caseStatusInfo;
         break;
-
+      case 'headQuarterType':
+        adminResultValue = this.headQuarterTypeInfo;
+        break;
+      case 'country':
+        adminResultValue = this.countryInfo;
+        break;
+      case 'licenseDurationType':
+        adminResultValue = this.licenseDurationTypeInfo;
+        break;
+      case 'establishmentDate':
+        const dateValue = DateUtils.getDateStringFromDate(this.establishmentDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({arName: dateValue, enName: dateValue});
+        break;
+      case 'countries':
+        const countriesValue = this.countriesInfo.filter(x=>this.countries.includes(x.id!)).map(x=>x.getName()).toString();
+        adminResultValue = AdminResult.createInstance({arName: countriesValue, enName: countriesValue});
+        break;
       default:
         let value: any = this[property];
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {

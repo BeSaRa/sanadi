@@ -11,6 +11,7 @@ export class AwarenessActivitySuggestionInterceptor implements IModelInterceptor
     model.expectedDate = DateUtils.changeDateToDatepicker(model.expectedDate);
     model.followUpDate = DateUtils.changeDateToDatepicker(model.followUpDate);
     model.agreementWithRACA = model.agreementWithRACA ? 1 : 2;
+    model.expectedDateTimeStamp = !model.expectedDate ? null : DateUtils.getTimeStampFromDate(model.expectedDate);
 
     return model;
   }
