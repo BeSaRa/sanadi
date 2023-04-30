@@ -1,3 +1,4 @@
+import { ControlValueLabelLangKey } from './../types/types';
 import { ISearchFieldsMap } from '@app/types/types';
 import { dateSearchFields } from '@helpers/date-search-fields';
 import { infoSearchFields } from '@helpers/info-search-fields';
@@ -23,11 +24,14 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { InterceptModel } from "@decorators/intercept-model";
 import { UrgentInterventionClosureInterceptor } from "@app/model-interceptors/urgent-intervention-closure-interceptor";
+import { CommonUtils } from '@app/helpers/common-utils';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 
 const { send, receive } = new UrgentInterventionClosureInterceptor();
 
 @InterceptModel({ send, receive })
 export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterventionClosureService, UrgentInterventionClosure> {
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   caseType: number = CaseTypes.URGENT_INTERVENTION_CLOSURE;
   organizationId!: number;
   requestType!: number; //ServiceRequestTypes.NEW; (always NEW)
@@ -92,7 +96,20 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
     this.employeeService = FactoryService.getService('EmployeeService');
     this.finalizeSearchFields();
   }
-
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: { langKey: 'request_type', value: this.requestType },
+      fullName: { langKey: 'entity_name', value: this.fullName },
+      year: { langKey: 'year', value: this.year },
+      duration: { langKey: 'days', value: this.duration },
+      oldLicenseFullSerial: { langKey: 'license_number', value: this.oldLicenseFullSerial },
+      beneficiaryCountry: { langKey: 'country', value: this.beneficiaryCountry },
+      beneficiaryRegion: { langKey: 'region', value: this.beneficiaryRegion },
+      executionCountry: { langKey: 'country', value: this.executionCountry },
+      executionRegion: { langKey: 'region', value: this.executionRegion },
+      projectDescription: { langKey: 'lbl_description', value: this.projectDescription },
+    };
+  }
   getBasicFormFields(controls?: boolean) {
     const {
       requestType,
@@ -122,7 +139,20 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
       description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     };
   }
-
+  getBeneficiaryAnalysisValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      directFemaleBeneficiaries: { langKey: 'female_beneficiaries_number', value: this.directFemaleBeneficiaries },
+      directMaleBeneficiaries: { langKey: 'male_beneficiaries_number', value: this.directMaleBeneficiaries },
+      indirectFemaleBeneficiaries: { langKey: 'female_beneficiaries_number', value: this.indirectFemaleBeneficiaries },
+      indirectMaleBeneficiaries: { langKey: 'male_beneficiaries_number', value: this.indirectMaleBeneficiaries },
+      handicappedFemaleBeneficiary: { langKey: 'female_beneficiaries_number', value: this.handicappedFemaleBeneficiary },
+      handicappedMaleBeneficiary: { langKey: 'male_beneficiaries_number', value: this.handicappedMaleBeneficiary },
+      beneficiaries0to5: { langKey: 'number_of_0_to_5', value: this.beneficiaries0to5 },
+      beneficiaries5to18: { langKey: 'number_of_5_to_18', value: this.beneficiaries5to18 },
+      beneficiaries19to60: { langKey: 'number_of_19_to_60', value: this.beneficiaries19to60 },
+      beneficiariesOver60: { langKey: 'number_of_above_60', value: this.beneficiariesOver60 },
+    };
+  }
   getBeneficiaryFields(controls?: boolean) {
     const {
       directFemaleBeneficiaries,
@@ -163,5 +193,18 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
 
   finalApprove(): DialogRef {
     return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+  }
+  getAdminResultByProperty(property: keyof UrgentInterventionClosure): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
   }
 }

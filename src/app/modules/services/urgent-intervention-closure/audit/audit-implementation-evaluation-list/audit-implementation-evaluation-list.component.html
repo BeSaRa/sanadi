@@ -8,21 +8,17 @@
               <ng-container [ngTemplateOutlet]="legendHeaderTemplate"></ng-container>
             </th>
           </ng-container>
-          <ng-container cdkColumnDef="bankName">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.bank_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.bankName}} </td>
+          <ng-container cdkColumnDef="evaluationHub">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.evaluation_hub}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.evaluationHubInfo?.getName() || ''}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="accountNumber">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.account_number}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.accountNumber}} </td>
+          <ng-container cdkColumnDef="evaluationResult">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.evaluation_result}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.evaluationResultInfo?.getName() || ''}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="iBan">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.iban}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.iBan}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="country">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.country}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo?.getName() || ''}} </td>
+          <ng-container cdkColumnDef="notes">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.notes}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.notes}} </td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
@@ -33,7 +29,7 @@
           <tr cdk-header-row *cdkHeaderRowDef="['legendHeader']"></tr>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"
-              class="{{getAuditRowClass(row.auditOperation)}}"></tr>
+            class="{{getAuditRowClass(row.auditOperation)}}"></tr>
           <tr *cdkNoDataRow>
             <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
           </tr>
@@ -47,7 +43,9 @@
 <ng-template #legendHeaderTemplate>
   <div class="d-flex align-items-center justify-content-end gap-1">
     <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.ADDED)}}">{{lang.map.lbl_record_added}}</div>
-    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.UPDATED)}}">{{lang.map.lbl_record_updated}}</div>
-    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.DELETED)}}">{{lang.map.lbl_record_deleted}}</div>
+    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.UPDATED)}}">{{lang.map.lbl_record_updated}}
+    </div>
+    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.DELETED)}}">{{lang.map.lbl_record_deleted}}
+    </div>
   </div>
 </ng-template>

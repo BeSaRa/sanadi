@@ -52,7 +52,7 @@ export class ResultListComponent implements OnInit, OnDestroy {
     return this._list;
   }
 
-  displayedColumns = ['outputs', 'expectedResults', 'expectedImpact', 'actions'];
+  displayedColumns = ['actions'];
   editItem?: Result;
   viewOnly: boolean = false;
   customValidators = CustomValidators;
