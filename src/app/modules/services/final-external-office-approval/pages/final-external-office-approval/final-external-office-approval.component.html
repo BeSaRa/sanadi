@@ -247,10 +247,11 @@
         ></bank-account>
       </ng-template>
       <ng-template #managersTabTemplate>
-        <executive-management #managersTab
-                              [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                              [list]="model?.executiveManagementList || []"
-                              ></executive-management>
+      <executive-management 
+        #managersTab            
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+        [list]="model?.executiveManagementList || []"
+      ></executive-management>
       </ng-template>
       <ng-template #branchesTabTemplate>
         <bank-branch #branchesTab [readonly]="(isExtendOrCancelRequestType() || readonly)"
