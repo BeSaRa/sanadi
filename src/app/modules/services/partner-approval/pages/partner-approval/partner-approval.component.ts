@@ -67,7 +67,7 @@ export class PartnerApprovalComponent
   readonly: boolean = false;
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: PartnerApproval;
-  goalsTabStatus: ReadinessStatus = 'READY';
+  
   goalsListTabStatus: ReadinessStatus = 'READY';
   managementCouncilsTabStatus: ReadinessStatus = 'READY';
   targetGroupsTabStatus: ReadinessStatus = 'READY';
@@ -142,8 +142,7 @@ export class PartnerApprovalComponent
       validStatus: () => {
         return (
           (!this.goalsComponentRef ||
-            (this.goalsTabStatus === 'READY' &&
-              this.goalsComponentRef.list.length > 0)) &&
+              this.goalsComponentRef.list.length > 0) &&
           (!this.goalsListComponentRef ||
             (this.goalsListTabStatus === 'READY' &&
               this.goalsListComponentRef.list.length > 0)) &&
