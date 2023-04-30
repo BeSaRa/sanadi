@@ -365,11 +365,12 @@
     </ng-template>
     <!-- Executive Managements -->
     <ng-template #executiveManagementsTemplate>
-      <executive-management #executiveManagementsTab
-                            [pageTitleKey]="'executive_management'" 
-                            [list]="model?.executiveManagementList || []"
-                            [readonly]="(isExtendOrCancelRequestType() || readonly)">
-      </executive-management>
+      <executive-management 
+        #executiveManagementsTab
+        [pageTitleKey]="'executive_management'" 
+        [list]="model?.executiveManagementList || []"
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+      ></executive-management>
     </ng-template>
 
     <!-- Contact Officers -->
