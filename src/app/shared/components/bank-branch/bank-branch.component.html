@@ -1,10 +1,10 @@
 <div class="table-responsive">
-  <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
+  <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="displayColumns"
     [filter]="filterControl.value" [useSearchToFilter]="true">
     <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
       <ng-container cdkColumnDef="extra-header">
         <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-          <table-header [hidden]="!showHeader" tableTitle="branches" [add$]="add$" [allowAdd]="addBranchAllowed()"
+          <table-header [hidden]="!showHeader" tableTitle="branches" [add$]="add$" [allowAdd]="!readonly"
             [skipClearSort]="true" (textChange)="filterControl.setValue($event)">
           </table-header>
         </th>
@@ -36,8 +36,8 @@
         </td>
       </ng-container>
       <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-      <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
-      <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="displayColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: displayColumns;"></tr>
       <tr *cdkNoDataRow>
         <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
       </tr>

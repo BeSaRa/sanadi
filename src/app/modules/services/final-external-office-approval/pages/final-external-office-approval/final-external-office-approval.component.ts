@@ -76,7 +76,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       name: 'branchesTab',
       langKey: 'branches',
       validStatus: () => {
-        return !this.bankAccountComponentRef || (this.branchesTabStatus === 'READY' && this.bankBranchComponentRef.list.length > 0) || !this.isRenewOrUpdateRequestType();
+        return !this.bankAccountComponentRef || this.bankBranchComponentRef.list.length > 0 || !this.isRenewOrUpdateRequestType();
       }
     },
     comments: {
@@ -120,7 +120,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     }
   }
 
-  branchesTabStatus: ReadinessStatus = 'READY';
   loadAttachments: boolean = false;
 
   constructor(public lang: LangService,
