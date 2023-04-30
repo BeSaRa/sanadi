@@ -331,8 +331,12 @@
 
     <!-- Goals -->
     <ng-template #goalsTemplate>
-      <goal #goalsTab [list]="model?.displayGoals  || []" [readonly]="(isExtendOrCancelRequestType() || readonly)"
-            (readyEvent)="goalsTabStatus = $event"></goal>
+      <goal 
+        #goalsTab 
+        [displayGoals]="model?.displayGoals  || []" 
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+      ></goal>
+
       <goals-list #goalsListTab [list]="model?.goalsList || []" [readonly]="(isExtendOrCancelRequestType() || readonly)"
                   (readyEvent)="goalsListTabStatus = $event"></goals-list>
 
