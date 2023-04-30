@@ -177,6 +177,9 @@ export class LicenseService {
       case CaseTypes.PROJECT_IMPLEMENTATION:
         url = this.urlService.URLS.PROJECT_IMPLEMENTATION;
         break;
+      case CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST:
+        url = this.urlService.URLS.E_COORDINATION_WITH_ORGANIZATION_REQUEST;
+        break;
     }
     return url;
   }
