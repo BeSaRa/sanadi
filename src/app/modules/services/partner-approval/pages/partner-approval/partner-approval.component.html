@@ -375,10 +375,13 @@
 
     <!-- Contact Officers -->
     <ng-template #contactOfficersTemplate>
-      <contact-officer #contactOfficersTab [contactOfficerList]="model?.contactOfficerList || []"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
+      <contact-officer 
+        #contactOfficersTab 
+        [contactOfficerList]="model?.contactOfficerList || []"
+        [readonly]="(isExtendOrCancelRequestType() || readonly)">
       </contact-officer>
     </ng-template>
+
     <!-- Approval Reasons -->
     <ng-template #approvalReasonsTemplate>
       <approval-reason #approvalReasonsTab [list]="model?.approvalReasonList || []"
