@@ -53,7 +53,7 @@ export class StageListComponent implements OnInit, OnDestroy {
   }
 
   totalInterventionCost: number = 0;
-  displayedColumns = ['stage', 'duration', 'interventionCost', 'actions'];
+  displayedColumns = ['actions'];
   footerColumns: string[] = ['totalInterventionCostLabel', 'totalInterventionCost'];
   editItem?: Stage;
   viewOnly: boolean = false;

@@ -1,0 +1,62 @@
+<tabs-list>
+  <tab name="basicInfo" [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+  <tab name="beneficiaryAnalysis" [template]="beneficiaryAnalysisTabTemplate" [title]="lang.map.beneficiary_analysis">
+  </tab>
+  <tab name="entities" [template]="entitiesTabTemplate" [title]="lang.map.entities"></tab>
+  <tab name="interventionAreas" [template]="interventionAreasTabTemplate" [title]="lang.map.intervention_areas"></tab>
+  <tab name="interventionFields" [template]="interventionFieldsTabTemplate" [title]="lang.map.intervention_fields">
+  </tab>
+  <tab name="phasesAndOutcomes" [template]="phasesAndOutcomesTabTemplate" [title]="lang.map.phases_and_outcomes"></tab>
+  <tab name="outputAndImpactAnalysis" [template]="outputAndImpactAnalysisTabTemplate"
+    [title]="lang.map.output_and_impact_analysis"></tab>
+  <tab name="implementationEvaluation" [template]="implementationEvaluationTabTemplate"
+    [title]="lang.map.implementation_evaluation"></tab>
+  <tab name="bestPractices" [template]="bestPracticesTabTemplate" [title]="lang.map.best_practices"></tab>
+  <tab name="lessonsLearnt" [template]="lessonsLearntTabTemplate" [title]="lang.map.lessons_learnt"></tab>
+</tabs-list>
+<ng-template #basicInfoTabTemplate>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #beneficiaryAnalysisTabTemplate>
+  <value-differences-list [differenceList]="beneficiaryAnalysisDifferences"></value-differences-list>
+</ng-template>
+<ng-template #entitiesTabTemplate>
+  <audit-intervention-implementing-agency-list [newVersionList]="newVersion.implementingAgencyList"
+    [oldVersionList]="oldVersion.implementingAgencyList" [caseType]="newVersion.caseType">
+  </audit-intervention-implementing-agency-list>
+</ng-template>
+<ng-template #interventionAreasTabTemplate>
+  <audit-intervention-region-list [newVersionList]="newVersion.interventionRegionList"
+    [oldVersionList]="oldVersion.interventionRegionList" [caseType]="newVersion.caseType">
+  </audit-intervention-region-list>
+</ng-template>
+<ng-template #interventionFieldsTabTemplate>
+  <audit-intervention-field-list [newVersionList]="newVersion.interventionFieldList"
+    [oldVersionList]="oldVersion.interventionFieldList" [caseType]="newVersion.caseType">
+  </audit-intervention-field-list>
+</ng-template>
+<ng-template #phasesAndOutcomesTabTemplate>
+  <audit-stage-list [newVersionList]="newVersion.stageList" [oldVersionList]="oldVersion.stageList"
+    [caseType]="newVersion.caseType">
+  </audit-stage-list>
+</ng-template>
+<ng-template #outputAndImpactAnalysisTabTemplate>
+  <audit-result-list [newVersionList]="newVersion.resultList" [oldVersionList]="oldVersion.resultList"
+    [caseType]="newVersion.caseType">
+  </audit-result-list>
+</ng-template>
+<ng-template #implementationEvaluationTabTemplate>
+  <audit-implementation-evaluation-list [newVersionList]="newVersion.officeEvaluationList"
+    [oldVersionList]="oldVersion.officeEvaluationList" [caseType]="newVersion.caseType">
+  </audit-implementation-evaluation-list>
+</ng-template>
+<ng-template #bestPracticesTabTemplate>
+  <audit-best-practices-list [newVersionList]="newVersion.bestPracticesList"
+    [oldVersionList]="oldVersion.bestPracticesList" [caseType]="newVersion.caseType">
+  </audit-best-practices-list>
+</ng-template>
+<ng-template #lessonsLearntTabTemplate>
+  <audit-lessons-learnt-list [newVersionList]="newVersion.lessonsLearnedList"
+    [oldVersionList]="oldVersion.lessonsLearnedList" [caseType]="newVersion.caseType">
+  </audit-lessons-learnt-list>
+</ng-template>

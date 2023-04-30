@@ -26,6 +26,12 @@ import {
 import {
   UrgentInterventionClosureApproveTaskPopupComponent
 } from '@modules/services/urgent-intervention-closure/popups/urgent-intervention-closure-approve-task-popup/urgent-intervention-closure-approve-task-popup.component';
+import { AuditUrgentInterventionClosureComponent } from './audit/audit-urgent-intervention-closure/audit-urgent-intervention-closure.component';
+import { AuditStageListComponent } from './audit/audit-stage-list/audit-stage-list.component';
+import { AuditResultListComponent } from './audit/audit-result-list/audit-result-list.component';
+import { AuditImplementationEvaluationListComponent } from './audit/audit-implementation-evaluation-list/audit-implementation-evaluation-list.component';
+import { AuditBestPracticesListComponent } from './audit/audit-best-practices-list/audit-best-practices-list.component';
+import { AuditLessonsLearntListComponent } from './audit/audit-lessons-learnt-list/audit-lessons-learnt-list.component';
 
 
 @NgModule({
@@ -37,7 +43,14 @@ import {
     ImplementationEvaluationListComponent,
     BestPracticesListComponent,
     LessonsLearntListComponent,
-    UrgentInterventionClosureApproveTaskPopupComponent
+    UrgentInterventionClosureApproveTaskPopupComponent,
+    AuditUrgentInterventionClosureComponent,
+    AuditStageListComponent,
+    AuditResultListComponent,
+    AuditImplementationEvaluationListComponent,
+    AuditBestPracticesListComponent,
+    AuditLessonsLearntListComponent,
+
   ],
   imports: [
     CommonModule,

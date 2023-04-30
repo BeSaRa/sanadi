@@ -2,27 +2,23 @@
   <div class="col-12">
     <div class="table-responsive">
       <app-table #table [paginator]="paginator" [data]="list" [columns]="displayColumns">
-        <table class="table caption-top" cdk-table [dataSource]="table.dataSource">
+        <table class="table table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
           <ng-container cdkColumnDef="legendHeader">
             <th cdk-header-cell colspan="100" *cdkHeaderCellDef="let row">
               <ng-container [ngTemplateOutlet]="legendHeaderTemplate"></ng-container>
             </th>
           </ng-container>
-          <ng-container cdkColumnDef="bankName">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.bank_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.bankName}} </td>
+          <ng-container cdkColumnDef="outputs">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.outputs}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.outputs}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="accountNumber">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.account_number}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.accountNumber}} </td>
+          <ng-container cdkColumnDef="expectedResults">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.project_expected_results}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.expectedResults}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="iBan">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.iban}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.iBan}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="country">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.country}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo?.getName() || ''}} </td>
+          <ng-container cdkColumnDef="expectedImpact">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.project_expected_impacts}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.expectedImpact}} </td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
@@ -46,8 +42,11 @@
 </div>
 <ng-template #legendHeaderTemplate>
   <div class="d-flex align-items-center justify-content-end gap-1">
-    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.ADDED)}}">{{lang.map.lbl_record_added}}</div>
-    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.UPDATED)}}">{{lang.map.lbl_record_updated}}</div>
-    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.DELETED)}}">{{lang.map.lbl_record_deleted}}</div>
+    <div
+      class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.ADDED)}}">{{lang.map.lbl_record_added}}</div>
+    <div
+      class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.UPDATED)}}">{{lang.map.lbl_record_updated}}</div>
+    <div
+      class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.DELETED)}}">{{lang.map.lbl_record_deleted}}</div>
   </div>
 </ng-template>
