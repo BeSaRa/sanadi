@@ -67,7 +67,6 @@ export class PartnerApprovalComponent
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: PartnerApproval;
   
-  approvalReasonsTabStatus: ReadinessStatus = 'READY';
   workAreasTabStatus: ReadinessStatus = 'READY';
   loadAttachments: boolean = false;
   formProperties = {

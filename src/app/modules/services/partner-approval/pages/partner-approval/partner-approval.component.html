@@ -384,10 +384,11 @@
 
     <!-- Approval Reasons -->
     <ng-template #approvalReasonsTemplate>
-      <approval-reason #approvalReasonsTab [list]="model?.approvalReasonList || []"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                       (readyEvent)="approvalReasonsTabStatus = $event">
-      </approval-reason>
+      <approval-reason 
+        #approvalReasonsTab 
+        [list]="model?.approvalReasonList || []"
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+      ></approval-reason>
     </ng-template>
     <ng-template #commentsTemplate>
       <div class="d-flex flex-row align-items-center justify-content-start">
