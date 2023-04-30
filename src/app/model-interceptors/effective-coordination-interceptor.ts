@@ -37,6 +37,8 @@ export class EffectiveCoordinationInterceptor
     model.eventStartDate = DateUtils.changeDateToDatepicker(
       model.eventStartDate
     );
+    model.eventStartDateStamp = !model.eventStartDate ? null : DateUtils.getTimeStampFromDate(model.eventStartDate);
+
     return model;
   }
 }

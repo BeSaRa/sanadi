@@ -103,6 +103,9 @@ import { InternalBankAccountApprovalInterceptor } from '@app/model-interceptors/
 import { AuditInternalBankAccountApprovalComponent } from '@app/modules/services/internal-bank-account-approval/audit/audit-internal-bank-account-approval/audit-internal-bank-account-approval.component';
 import { InternationalCooperation } from '@app/models/international-cooperation';
 import { AuditInternationalCooperationComponent } from '@app/modules/services/international-cooperation/audit/audit-international-cooperation/audit-international-cooperation.component';
+import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
+import { CoordinationWithOrganizationsRequestInterceptor } from '@app/model-interceptors/coordination-with-organizations-request-interceptor';
+import { AuditCoordinationWithOrganizationRequestComponent } from '@app/modules/services/coordination-with-organization-request/audit/audit-coordination-with-organization-request/audit-coordination-with-organization-request.component';
 
 @CastResponseContainer({
   $default: {
@@ -144,9 +147,9 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.PROJECT_IMPLEMENTATION]: ProjectImplementation,
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: UrgentJointReliefCampaign,
     [CaseTypes.NPO_MANAGEMENT]: NpoManagement,
-
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApproval,
     [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCooperation,
+    [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequest,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -166,8 +169,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: GeneralProcessNotificationInterceptor,
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApprovalInterceptor,
     [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCooperationInterceptor,
-
-
+    [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequestInterceptor,
     [CaseTypes.CONSULTATION]: ConsultationInterceptor,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: UrgentInterventionLicenseInterceptor,
     [CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION]: UrgentInterventionFinancialNotificationInterceptor,
@@ -197,7 +199,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: AuditGeneralProcessNotificationComponent,
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: AuditInternalBankAccountApprovalComponent,
     [CaseTypes.INTERNATIONAL_COOPERATION]: AuditInternationalCooperationComponent,
-
+    [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: AuditCoordinationWithOrganizationRequestComponent,
     [CaseTypes.CONSULTATION]: AuditConsultationComponent,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: AuditUrgentInterventionLicenseComponent,
     [CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION]: AuditUrgentInterventionFinancialNotificationComponent,

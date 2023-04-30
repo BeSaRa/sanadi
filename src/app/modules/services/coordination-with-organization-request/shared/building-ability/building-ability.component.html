@@ -123,7 +123,7 @@
               [notFoundText]="lang.map.msg_not_found" appendTo="body" id="timeFrom" validationClasses="timeFrom"
               labelForId="timeFrom"
               formControlName="timeFrom">
-              <ng-option *ngFor="let option of times" [value]="option.value">{{ option.text }}
+              <ng-option *ngFor="let option of times" [value]="option.key">{{ option.key }}
               </ng-option>
             </ng-select>
             <app-field-error-message controlName="timeFrom"></app-field-error-message>
@@ -135,7 +135,7 @@
               [notFoundText]="lang.map.msg_not_found" appendTo="body" id="timeTo" validationClasses="timeTo"
               formControlName="timeTo"
               labelForId="timeTo">
-              <ng-option *ngFor="let option of times" [value]="option.value">{{ option.text }}
+              <ng-option *ngFor="let option of times" [value]="option.key">{{ option.key }}
               </ng-option>
             </ng-select>
             <app-field-error-message controlName="timeTo"></app-field-error-message>

@@ -32,6 +32,9 @@ export class BuildingAbilityInterceptor implements IModelInterceptor<BuildingAbi
     model.trainingActivityTypeInfo= AdminResult.createInstance(isValidAdminResult(model.trainingActivityTypeInfo)? model.trainingActivityTypeInfo :{});
     model.trainingLanguageInfo= AdminResult.createInstance(isValidAdminResult(model.trainingLanguageInfo)? model.trainingLanguageInfo :{});
     model.trainingWayInfo= AdminResult.createInstance(isValidAdminResult(model.trainingWayInfo)? model.trainingWayInfo :{});
+    model.filtrationMethodInfo= AdminResult.createInstance(isValidAdminResult(model.filtrationMethodInfo)? model.filtrationMethodInfo :{});
+    model.otherFiltrationMethodInfo= AdminResult.createInstance(isValidAdminResult(model.otherFiltrationMethodInfo)? model.otherFiltrationMethodInfo :{});
+
     model.suggestedActivityDateFrom = DateUtils.changeDateToDatepicker(
       model.suggestedActivityDateFrom
     );
@@ -40,6 +43,9 @@ export class BuildingAbilityInterceptor implements IModelInterceptor<BuildingAbi
     );
     model.timeFrom= new Date(model.timeFrom).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit',timeZone:'UTC'})
     model.timeTo= new Date(model.timeTo).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit',timeZone:'UTC'})
+
+    model.suggestedActivityDateFromStamp = !model.suggestedActivityDateFrom ? null : DateUtils.getTimeStampFromDate(model.suggestedActivityDateFrom);
+    model.suggestedActivityDateToStamp = !model.suggestedActivityDateTo ? null : DateUtils.getTimeStampFromDate(model.suggestedActivityDateTo);
     return model;
   }
 

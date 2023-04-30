@@ -29,6 +29,9 @@ export class ResearchAndStudiesInterceptor
     model.searchSubmissionDeadline = DateUtils.changeDateToDatepicker(
       model.searchSubmissionDeadline
     );
+    model.searchStartDateStamp = !model.searchStartDate ? null : DateUtils.getTimeStampFromDate(model.searchStartDate);
+    model.searchSubmissionDeadlineStamp = !model.searchSubmissionDeadline ? null : DateUtils.getTimeStampFromDate(model.searchSubmissionDeadline);
+
     return model;
   }
 }
