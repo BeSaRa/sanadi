@@ -7,9 +7,8 @@
            [hasError]="getTabInvalidStatus('bankAccounts')"></tab>
       <tab [name]="tabsData.tradeLicenseData.name" *ngIf="showLicenseTrade" [template]="tradeLicenseData"
            [title]="lang.map.trade_license" [hasError]="getTabInvalidStatus('tradeLicenseData')"></tab>
-      <tab [name]="tabsData.goals.name" [template]="goalsTemplate"
+      <tab [name]="tabsData.goals.name" *ngIf="showLicenseTrade === false" [template]="goalsTemplate"
            [title]="lang.map.goals" [hasError]="getTabInvalidStatus('goals')"></tab>
-           <!-- *ngIf="showLicenseTrade === false"  -->
       <tab [name]="tabsData.managementCouncils.name" [template]="managementCouncilsTemplate"
            [title]="lang.map.management_council" [hasError]="getTabInvalidStatus('managementCouncils')"></tab>
       <tab [name]="tabsData.executiveManagements.name" [template]="executiveManagementsTemplate"
@@ -344,10 +343,11 @@
       ></goals-list>
 
       <!-- Target Groups -->
-      <target-group #targetGroupsTab [list]="model?.targetGroupList || []"
-                    [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                    (readyEvent)="targetGroupsTabStatus = $event">
-      </target-group>
+      <target-group 
+        #targetGroupsTab 
+        [targetGroupList]="model?.targetGroupList || []"
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+      ></target-group>
 
       <!-- Work Area -->
       <work-areas [countries]="countries" #workAreasTab [readonly]="(isExtendOrCancelRequestType() || readonly)"
