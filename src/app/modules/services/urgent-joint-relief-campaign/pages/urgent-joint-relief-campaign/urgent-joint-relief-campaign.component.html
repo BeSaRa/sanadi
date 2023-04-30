@@ -204,9 +204,12 @@
       </ng-template>
     </ng-container>
     <ng-template #organization_officers>
-      <urgent-join-organization-officer #organizationOfficersTab [isExternalUser]="isExternalUser"
-        [list]="model?.organizaionOfficerList || []" [readonly]="readonly" (readyEvent)="organizationOfficersTabStatus = $event">
-      </urgent-join-organization-officer>
+    <urgent-join-organization-officer 
+      #organizationOfficersTab 
+      [isExternalUser]="isExternalUser"
+      [list]="model?.organizaionOfficerList || []" 
+      [readonly]="readonly" 
+    ></urgent-join-organization-officer>
     </ng-template>
     <ng-container formGroupName="explanation">
       <ng-template #special_explanations>
