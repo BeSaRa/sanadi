@@ -1,51 +1,75 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { UiCrudDialogGenericComponent } from '@app/generics/ui-crud-dialog-generic-component.directive';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { ApprovalReason } from '@app/models/approval-reason';
+import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
+import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-approval-reason-popup',
   templateUrl: './approval-reason-popup.component.html',
   styleUrls: ['./approval-reason-popup.component.scss']
 })
-export class ApprovalReasonPopupComponent implements OnInit {
-  form: UntypedFormGroup;
-  readonly: boolean;
-  editItem: number;
+export class ApprovalReasonPopupComponent extends UiCrudDialogGenericComponent<ApprovalReason> {
   model: ApprovalReason;
-  viewOnly: boolean;
-
-  constructor(@Inject(DIALOG_DATA_TOKEN)
-  public data: {
-    form: UntypedFormGroup,
-    readonly: boolean,
-    editItem: number,
-    model: ApprovalReason,
-    viewOnly: boolean,
-  },
-    public lang: LangService,
-    private dialogRef: DialogRef) {
-    this.form = data.form;
-    this.readonly = data.readonly;
-    this.editItem = data.editItem;
-    this.model = data.model;
-    this.viewOnly = data.viewOnly;
+  form!: UntypedFormGroup;
+  operation: OperationTypes;
+  popupTitleKey!: keyof ILanguageKeys;
+  _getNewInstance(override?: Partial<ApprovalReason> | undefined): ApprovalReason {
+    return new ApprovalReason().clone(override ?? {});
   }
-  ngOnInit() {
-    this.form.patchValue(this.model);
+  initPopup(): void {
+    this.popupTitleKey = 'approval_reasons';
   }
-  mapFormTo(form: any): ApprovalReason {
-    const model: ApprovalReason = new ApprovalReason().clone({ ...this.model, ...form });
-
-    return model;
+  destroyPopup(): void {
   }
-  cancel() {
-    this.dialogRef.close(null)
+  afterSave(savedModel: ApprovalReason, originalModel: ApprovalReason): void {
+    this.toast.success(this.operation === OperationTypes.CREATE
+      ? this.lang.map.msg_added_in_list_success : this.lang.map.msg_updated_in_list_success);
+    this.dialogRef.close(savedModel);
   }
-  save() {
-    this.dialogRef.close(this.mapFormTo(this.form.getRawValue()))
+  beforeSave(model: ApprovalReason, form: UntypedFormGroup): boolean | Observable<boolean> {
+    if (this.form.invalid) {
+      this.displayRequiredFieldsMessage();
+      return false;
+    }
+    const isDuplicate = this.list.some((x) => x === form.getRawValue());
+    if (isDuplicate) {
+      this.displayDuplicatedItemMessage();
+      return false;
+    }
+    return true;
   }
+  prepareModel(model: ApprovalReason, form: UntypedFormGroup): ApprovalReason | Observable<ApprovalReason> {
+    let formValue = form.getRawValue();
+     return this._getNewInstance({
+       ...this.model,
+       ...formValue
+      });
+  }
+  saveFail(error: Error): void {
+    throw new Error(error.message);
+  }
+  buildForm(): void {
+    this.form = this.fb.group(this.model.getApprovalReasonFields(true));
+  }
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ApprovalReason>,
+               public lang: LangService,
+               public dialogRef: DialogRef,
+               public dialogService: DialogService,
+               public fb: UntypedFormBuilder,
+               public toast: ToastService) {
+     super();
+     this.model = data.model;
+     this.operation = data.operation;
+     this.list = data.list;
+   }
 
 }
