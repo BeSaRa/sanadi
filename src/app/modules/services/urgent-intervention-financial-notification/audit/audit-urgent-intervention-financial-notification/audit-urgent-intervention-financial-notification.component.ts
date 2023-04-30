@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditCaseProperties } from '@app/interfaces/i-audit-case-properties';
 import { IValueDifference } from '@app/interfaces/i-value-difference';
 import { UrgentInterventionFinancialNotification } from '@app/models/urgent-intervention-financial-notification';
 import { LangService } from '@app/services/lang.service';
@@ -9,7 +10,7 @@ import { LangService } from '@app/services/lang.service';
   templateUrl: './audit-urgent-intervention-financial-notification.component.html',
   styleUrls: ['./audit-urgent-intervention-financial-notification.component.scss']
 })
-export class AuditUrgentInterventionFinancialNotificationComponent implements OnInit {
+export class AuditUrgentInterventionFinancialNotificationComponent  implements IAuditCaseProperties<UrgentInterventionFinancialNotification>, OnInit {
   newVersion!: UrgentInterventionFinancialNotification; // don't delete or rename the property
   oldVersion!: UrgentInterventionFinancialNotification; // don't delete or rename the property
 
