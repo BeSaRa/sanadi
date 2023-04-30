@@ -73,6 +73,9 @@ import { UrgentInterventionAnnouncementInterceptor } from '@app/model-intercepto
 import { AuditUrgentInterventionAnnouncementComponent } from '@app/modules/services/urgent-intervention-announcement/audit/audit-urgent-intervention-announcement/audit-urgent-intervention-announcement.component';
 import { AuditUrgentInterventionClosureComponent } from '@app/modules/services/urgent-intervention-closure/audit/audit-urgent-intervention-closure/audit-urgent-intervention-closure.component';
 import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
+import { AuditProjectFundraisingComponent } from '@app/modules/services/project-fundraising/pages/project-fundraising/audit/audit-project-fundraising/audit-project-fundraising.component';
+import { ProjectFundraisingInterceptor } from '@app/model-interceptors/project-fundraising-interceptor';
+import { ProjectFundraising } from '@app/models/project-fundraising';
 
 @CastResponseContainer({
   $default: {
@@ -106,6 +109,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: TransferringIndividualFundsAbroad,
     [CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT]: UrgentInterventionAnnouncement,
     [CaseTypes.URGENT_INTERVENTION_CLOSURE]: UrgentInterventionClosure,
+    [CaseTypes.PROJECT_FUNDRAISING]: ProjectFundraising,
 
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
@@ -126,6 +130,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: TransferringIndividualFundsAbroadInterceptor,
     [CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT]: UrgentInterventionAnnouncementInterceptor,
     [CaseTypes.URGENT_INTERVENTION_CLOSURE]: UrgentInterventionClosureInterceptor,
+    [CaseTypes.PROJECT_FUNDRAISING]: ProjectFundraisingInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -145,6 +150,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: AuditTransferringIndividualFundsAbroadComponent,
     [CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT]: AuditUrgentInterventionAnnouncementComponent,
     [CaseTypes.URGENT_INTERVENTION_CLOSURE]: AuditUrgentInterventionClosureComponent,
+    [CaseTypes.PROJECT_FUNDRAISING]: AuditProjectFundraisingComponent,
 
   };
 

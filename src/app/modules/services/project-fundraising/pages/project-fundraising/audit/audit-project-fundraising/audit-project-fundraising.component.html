@@ -1,0 +1,27 @@
+<tabs-list>
+  <tab name="basic_info" [template]="basic_info" [title]="lang.map.lbl_basic_info">
+  </tab>
+  <tab name="templates" [template]="template_deduction_ratio_info" [title]="lang.map.template_deduction_ratio_info">
+  </tab>
+</tabs-list>
+<ng-template #basic_info>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+
+<ng-template #template_deduction_ratio_info>
+  <audit-template-list [newVersionList]="newVersion.templateList"
+    [oldVersionList]="oldVersion.templateList" [caseType]="newVersion.caseType">
+  </audit-template-list>
+
+  <audit-deduction-ratio-manager [newVersionList]="newVersion.deductedPercentagesItemList"
+    [oldVersionList]="oldVersion.deductedPercentagesItemList" [caseType]="newVersion.caseType">
+  </audit-deduction-ratio-manager>
+
+  <audit-targeted-countries-distribution [newVersionList]="newVersion.amountOverCountriesList"
+    [oldVersionList]="oldVersion.amountOverCountriesList" [caseType]="newVersion.caseType">
+  </audit-targeted-countries-distribution>
+
+  <audit-targeted-years-distribution [newVersionList]="newVersion.amountOverYearsList"
+    [oldVersionList]="oldVersion.amountOverYearsList" [caseType]="newVersion.caseType">
+  </audit-targeted-years-distribution>
+</ng-template>

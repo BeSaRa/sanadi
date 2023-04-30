@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditCaseProperties } from '@app/interfaces/i-audit-case-properties';
 import { IValueDifference } from '@app/interfaces/i-value-difference';
 import { TransferringIndividualFundsAbroad } from '@app/models/transferring-individual-funds-abroad';
 import { LangService } from '@app/services/lang.service';
@@ -9,7 +10,7 @@ import { LangService } from '@app/services/lang.service';
   templateUrl: './audit-transferring-individual-funds-abroad.component.html',
   styleUrls: ['./audit-transferring-individual-funds-abroad.component.scss']
 })
-export class AuditTransferringIndividualFundsAbroadComponent implements OnInit {
+export class AuditTransferringIndividualFundsAbroadComponent implements IAuditCaseProperties<TransferringIndividualFundsAbroad>, OnInit {
   newVersion!: TransferringIndividualFundsAbroad; // don't delete or rename the property
   oldVersion!: TransferringIndividualFundsAbroad; // don't delete or rename the property
 

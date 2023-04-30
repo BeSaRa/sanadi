@@ -1747,6 +1747,7 @@ export interface ILanguageKeys {
   office_type: string;
   lbl_beneficiaries_nature: string;
   menu_deduction_ratio: string;
+  deduction_type: string;
   lbl_add_deduction_ratio_item: string;
   lbl_edit_deduction_ratio_item: string;
   lbl_profile: string;

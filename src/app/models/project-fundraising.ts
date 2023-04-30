@@ -1,40 +1,44 @@
-import {AdminResult} from "@app/models/admin-result";
-import {CaseModel} from "@app/models/case-model";
-import {ProjectFundraisingService} from "@services/project-fundraising.service";
-import {CaseTypes} from "@app/enums/case-types.enum";
-import {FactoryService} from "@services/factory.service";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {ProjectTemplate} from "@app/models/projectTemplate";
-import {DeductedPercentage} from "@app/models/deducted-percentage";
-import {AmountOverYear} from "@app/models/amount-over-year";
-import {AmountOverCountry} from "@app/models/amount-over-country";
-import {ProjectFundraisingInterceptor} from "@app/model-interceptors/project-fundraising-interceptor";
-import {InterceptModel} from "@decorators/intercept-model";
-import {EmployeeService} from "@services/employee.service";
+import { ControlValueLabelLangKey } from './../types/types';
+import { AdminResult } from "@app/models/admin-result";
+import { CaseModel } from "@app/models/case-model";
+import { ProjectFundraisingService } from "@services/project-fundraising.service";
+import { CaseTypes } from "@app/enums/case-types.enum";
+import { FactoryService } from "@services/factory.service";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { ProjectTemplate } from "@app/models/projectTemplate";
+import { DeductedPercentage } from "@app/models/deducted-percentage";
+import { AmountOverYear } from "@app/models/amount-over-year";
+import { AmountOverCountry } from "@app/models/amount-over-country";
+import { ProjectFundraisingInterceptor } from "@app/model-interceptors/project-fundraising-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
+import { EmployeeService } from "@services/employee.service";
 import currency from "currency.js";
-import {DialogRef} from "@app/shared/models/dialog-ref";
-import {WFResponseType} from "@app/enums/wfresponse-type.enum";
-import {mixinApprovalLicenseWithMonthly} from "@app/mixins/mixin-approval-license-with-monthly";
-import {mixinRequestType} from "@app/mixins/mixin-request-type";
-import {ICaseModel} from "@contracts/icase-model";
-import {HasLicenseApprovalMonthly} from "@contracts/has-license-approval-monthly";
-import {CaseModelContract} from "@contracts/case-model-contract";
-import {DomainTypes} from "@app/enums/domain-types";
-import {ProjectPermitTypes} from "@app/enums/project-permit-types";
-import {TemplateStatus} from "@app/enums/template-status";
-import {ServiceRequestTypes} from "@app/enums/service-request-types";
-import {PublicTemplateStatus} from "@app/enums/public-template-status";
-import {ImplementationFundraising} from "@models/implementation-fundraising";
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { WFResponseType } from "@app/enums/wfresponse-type.enum";
+import { mixinApprovalLicenseWithMonthly } from "@app/mixins/mixin-approval-license-with-monthly";
+import { mixinRequestType } from "@app/mixins/mixin-request-type";
+import { ICaseModel } from "@contracts/icase-model";
+import { HasLicenseApprovalMonthly } from "@contracts/has-license-approval-monthly";
+import { CaseModelContract } from "@contracts/case-model-contract";
+import { DomainTypes } from "@app/enums/domain-types";
+import { ProjectPermitTypes } from "@app/enums/project-permit-types";
+import { TemplateStatus } from "@app/enums/template-status";
+import { ServiceRequestTypes } from "@app/enums/service-request-types";
+import { PublicTemplateStatus } from "@app/enums/public-template-status";
+import { ImplementationFundraising } from "@models/implementation-fundraising";
+import { AuditOperationTypes } from "@app/enums/audit-operation-types";
+import { CommonUtils } from "@app/helpers/common-utils";
 
-const {send, receive} = new ProjectFundraisingInterceptor()
+const { send, receive } = new ProjectFundraisingInterceptor()
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
 
-@InterceptModel({send, receive})
+@InterceptModel({ send, receive })
 export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundraisingService, ProjectFundraising>
   implements HasLicenseApprovalMonthly,
-    ICaseModel<ProjectFundraising>,
-    CaseModelContract<ProjectFundraisingService, ProjectFundraising> {
+  ICaseModel<ProjectFundraising>,
+  CaseModelContract<ProjectFundraisingService, ProjectFundraising> {
 
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   service: ProjectFundraisingService;
   caseType: number = CaseTypes.PROJECT_FUNDRAISING
   licenseDuration!: number
@@ -116,6 +120,81 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
     }
   }
 
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: { langKey: 'request_type', value: this.requestType },
+      permitType: { langKey: 'permit_type', value: this.permitType },
+      projectWorkArea: { langKey: 'project_work_area', value: this.projectWorkArea },
+      countries: { langKey: 'country_countries', value: this.countries },
+      domain: { langKey: 'domain', value: this.domain },
+      mainDACCategory: { langKey: 'main_dac_category', value: this.mainDACCategory },
+      subDACCategory: { langKey: 'sub_dac_category', value: this.subDACCategory },
+      mainUNOCHACategory: { langKey: 'main_unocha_category', value: this.mainUNOCHACategory },
+      subUNOCHACategory: { langKey: 'sub_unocha_category', value: this.subUNOCHACategory },
+      projectType: { langKey: 'project_type', value: this.projectType },
+      internalProjectClassification: { langKey: 'internal_projects_classification', value: this.internalProjectClassification },
+      sanadiDomain: { langKey: 'sanady_domain', value: this.sanadiDomain },
+      sanadiMainClassification: { langKey: 'sanady_main_classification', value: this.sanadiMainClassification },
+      licenseDuration: { langKey: 'license_duration', value: this.licenseDuration },
+      oldLicenseFullSerial: { langKey: 'license_number', value: this.oldLicenseFullSerial },
+      projectTotalCost: { langKey: 'project_total_cost', value: this.projectTotalCost },
+    };
+  }
+  getAdminResultByProperty(property: keyof ProjectFundraising): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'domain':
+        adminResultValue = this.domainInfo;
+        break;
+      case 'projectWorkArea':
+        adminResultValue = this.workAreaInfo;
+        break;
+      case 'permitType':
+        adminResultValue = this.permitTypeInfo;
+        break;
+      case 'projectType':
+        adminResultValue = this.projectTypeInfo;
+        break;
+      case 'mainDACCategory':
+        adminResultValue = this.mainDACCategoryInfo;
+        break;
+      case 'mainUNOCHACategory':
+        adminResultValue = this.mainUNOCHACategoryInfo;
+        break;
+      case 'subUNOCHACategory':
+        adminResultValue = this.subUNOCHACategoryInfo;
+        break;
+      case 'subDACCategory':
+        adminResultValue = this.subDACCategoryInfo;
+        break;
+      case 'internalProjectClassification':
+        adminResultValue = this.internalProjectClassificationInfo;
+        break;
+      case 'sanadiDomain':
+        adminResultValue = this.sanadiDomainInfo;
+        break;
+      case 'sanadiMainClassification':
+        adminResultValue = this.sanadiMainClassificationInfo;
+        break;
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
+      case 'countries':
+        adminResultValue = new AdminResult();
+        this.countriesInfo.forEach(bp => {
+          adminResultValue.arName += bp.arName;
+          adminResultValue.enName += bp.enName;
+        })
+        break;
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
   buildBasicInfo(controls: boolean = false): any {
     const {
       requestType,
@@ -160,7 +239,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   }
 
   buildExplanation(controls: boolean = false): any {
-    const {description} = this;
+    const { description } = this;
     return {
       description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     }
@@ -342,7 +421,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   getDacOchaId(): number | null {
     return this.domain === DomainTypes.DEVELOPMENT ? this.mainDACCategory :
       this.domain === DomainTypes.HUMANITARIAN &&
-      this.permitType !== ProjectPermitTypes.SECTIONAL_BASKET ?
+        this.permitType !== ProjectPermitTypes.SECTIONAL_BASKET ?
         this.mainUNOCHACategory : null;
   }
 
