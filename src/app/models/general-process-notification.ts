@@ -22,6 +22,7 @@ import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { FormalyTemplate } from './formaly-template';
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new GeneralProcessNotificationInterceptor();
 
@@ -62,6 +63,7 @@ export class GeneralProcessNotification
   mainClassInfo!: AdminResult;
   subClassInfo!: AdminResult;
   processTypeInfo!: AdminResult;
+  dynamicForm:FormalyTemplate[]=[];
 
 
   searchFields: ISearchFieldsMap<GeneralProcessNotification> = {
