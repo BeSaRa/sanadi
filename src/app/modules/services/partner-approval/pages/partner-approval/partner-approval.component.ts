@@ -69,7 +69,6 @@ export class PartnerApprovalComponent
   selectedLicense?: PartnerApproval;
   
   managementCouncilsTabStatus: ReadinessStatus = 'READY';
-  targetGroupsTabStatus: ReadinessStatus = 'READY';
   approvalReasonsTabStatus: ReadinessStatus = 'READY';
   workAreasTabStatus: ReadinessStatus = 'READY';
   loadAttachments: boolean = false;
@@ -145,8 +144,7 @@ export class PartnerApprovalComponent
           (!this.goalsListComponentRef ||
               this.goalsListComponentRef.list.length > 0) &&
           (!this.targetGroupComponentRef ||
-            (this.targetGroupsTabStatus === 'READY' &&
-              this.targetGroupComponentRef.list.length > 0)) &&
+              this.targetGroupComponentRef.list.length > 0) &&
           (!this.workAreasTabComponentRef ||
             (this.workAreasTabStatus === 'READY' &&
               this.workAreasTabComponentRef.list.length > 0))
