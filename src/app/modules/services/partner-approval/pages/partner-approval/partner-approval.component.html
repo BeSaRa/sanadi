@@ -356,9 +356,11 @@
     </ng-template>
     <!-- Management Councils -->
     <ng-template #managementCouncilsTemplate>
-      <management-council #managementCouncilsTab [nationalities]="nationalities" [list]="model?.managementCouncilList || []"
-                          [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                          (readyEvent)="managementCouncilsTabStatus = $event">
+      <management-council 
+        #managementCouncilsTab
+        [managementCouncilList]="model?.managementCouncilList || []"
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+      >
       </management-council>
     </ng-template>
     <!-- Executive Managements -->

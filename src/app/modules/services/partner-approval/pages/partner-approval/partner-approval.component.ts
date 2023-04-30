@@ -53,7 +53,6 @@ export class PartnerApprovalComponent
   implements AfterViewInit {
   form!: UntypedFormGroup;
   serviceRequestTypes = ServiceRequestTypes;
-  nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   countries: Country[] = [];
   requestTypes: Lookup[] =
     this.requestTypeFollowupService.serviceRequestTypes[CaseTypes.PARTNER_APPROVAL].slice().sort(
@@ -68,7 +67,6 @@ export class PartnerApprovalComponent
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: PartnerApproval;
   
-  managementCouncilsTabStatus: ReadinessStatus = 'READY';
   approvalReasonsTabStatus: ReadinessStatus = 'READY';
   workAreasTabStatus: ReadinessStatus = 'READY';
   loadAttachments: boolean = false;
@@ -157,8 +155,7 @@ export class PartnerApprovalComponent
       validStatus: () => {
         return (
           !this.managementCouncilComponentRef ||
-          (this.managementCouncilsTabStatus === 'READY' &&
-            this.managementCouncilComponentRef.list.length > 0)
+            this.managementCouncilComponentRef.list.length > 0
         );
       },
     },
