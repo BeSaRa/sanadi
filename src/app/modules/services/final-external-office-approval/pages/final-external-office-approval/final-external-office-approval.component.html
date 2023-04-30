@@ -254,8 +254,11 @@
       ></executive-management>
       </ng-template>
       <ng-template #branchesTabTemplate>
-        <bank-branch #branchesTab [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                     [list]="model?.branchList || []" (readyEvent)="branchesTabStatus = $event"></bank-branch>
+        <bank-branch 
+          #branchesTab 
+          [readonly]="(isExtendOrCancelRequestType() || readonly)"
+          [branchList]="model?.branchList || []"
+        ></bank-branch>
       </ng-template>
       <ng-template #commentsTabTemplate>
         <div class="d-flex flex-row align-items-center justify-content-start">
