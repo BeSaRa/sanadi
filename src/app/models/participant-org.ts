@@ -6,14 +6,18 @@ import { AdminResult } from '@app/models/admin-result';
 import { SearchableCloneable } from '@app/models/searchable-cloneable';
 import { EmployeeService } from '@app/services/employee.service';
 import { FactoryService } from '@app/services/factory.service';
-import { ISearchFieldsMap } from '@app/types/types';
+import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '../validators/custom-validators';
 import { ParticipatingOrgInterceptor } from './../model-interceptors/participating-org-interceptor';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { DateUtils } from '@app/helpers/date-utils';
 
 const {send, receive} = new ParticipatingOrgInterceptor();
 
 @InterceptModel({send, receive})
-export class ParticipantOrg extends SearchableCloneable<ParticipantOrg> {
+export class ParticipantOrg extends SearchableCloneable<ParticipantOrg> implements IAuditModelProperties<ParticipantOrg> {
   organizationId!: number;
   arabicName!: string;
   englishName!: string;
@@ -43,7 +47,36 @@ export class ParticipantOrg extends SearchableCloneable<ParticipantOrg> {
       delete this.searchFields.organization;
     }
   }
+  getAdminResultByProperty(property: keyof ParticipantOrg): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'managerDecision':
+        adminResultValue = this.managerDecisionInfo;
+        break;
 
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      organizationId:{ langKey: 'organization', value: this.organizationId },
+      arabicName:{ langKey: 'arabic_name', value: this.arabicName },
+      englishName:{ langKey: 'english_name', value: this.englishName },
+      value:{ langKey: 'participating_value', value: this.value },
+      notes:{ langKey: 'notes', value: this.notes },
+      managerDecision:{ langKey: 'request_state', value: this.managerDecision },
+
+
+     };
+  }
   BuildForm(controls?: boolean) {
     const {organizationId, arabicName, englishName} = this;
     return {

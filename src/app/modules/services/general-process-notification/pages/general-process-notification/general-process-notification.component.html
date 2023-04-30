@@ -135,7 +135,7 @@
           <ng-select [selectOnTab]="true" labelForId="processid" [clearable]="true" placeholder="{{ lang.map.select }}"
                      id="processid" [readonly]="readonly" [notFoundText]="lang.map.msg_not_found" appendTo="body"
                      (change)="handleProcessChange($event)" validationClasses="processid" formControlName="processid">
-            <ng-option *ngFor="let process of service.processList" [value]="process.id">{{ process.getName() }}
+            <ng-option *ngFor="let process of processList" [value]="process.id">{{ process.getName() }}
             </ng-option>
           </ng-select>
           <app-field-error-message controlName="processid"></app-field-error-message>

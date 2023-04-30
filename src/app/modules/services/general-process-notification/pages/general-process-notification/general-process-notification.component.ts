@@ -51,6 +51,7 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
     arName: 'عمليات أخرى',
     enName: 'Other Process'
   })
+  processList: GeneralProcess[] = [];
   mainClassificationsList: AdminLookup[] = [];
   subClassificationsList: AdminLookup[] = [];
   _subClassificationsList: AdminLookup[] = [];
@@ -214,7 +215,9 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
           return of([this.otherProcess])
         })
       ).subscribe((data: GeneralProcess[]) => {
-        this.service.processList = [...data, this.otherProcess];
+
+        this.processList = [...data, this.otherProcess];
+        this.service.processList = this.processList
       })
   }
 
@@ -225,7 +228,7 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
   }
 
   handleProcessChange(id: number) {
-    const process = this.service.processList.find(p => p.id == id);
+    const process = this.processList.find(p => p.id == id);
     this.departmentField.setValidators([]);
     if (!this.isOtherProcess) {
       this.projectNameField.setValue(process?.arName);

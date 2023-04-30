@@ -1,3 +1,4 @@
+import { AuditOrganizationOfficerComponent } from './audit/audit-organization-officer/audit-organization-officer.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -42,6 +43,11 @@ import {
 import {
   ResearchAndStudiesComponent
 } from '@modules/services/coordination-with-organization-request/shared/research-and-studies/research-and-studies.component';
+import { AuditCoordinationWithOrganizationRequestComponent } from './audit/audit-coordination-with-organization-request/audit-coordination-with-organization-request.component';
+import { AuditBuildingAbilityComponent } from './audit/audit-building-ability/audit-building-ability.component';
+import { AuditEffectiveCoordinationCapabilitiesComponent } from './audit/audit-effective-coordination-capabilities/audit-effective-coordination-capabilities.component';
+import { AuditResearchAndStudiesComponent } from './audit/audit-research-and-studies/audit-research-and-studies.component';
+import { AuditParticipantOrganizationComponent } from './audit/audit-participant-organization/audit-participant-organization.component';
 
 
 @NgModule({
@@ -55,7 +61,13 @@ import {
     BuildingAbilityComponent,
     EffectiveCoordinationCapabilitiesComponent,
     OrganizationOfficerComponent,
-    ResearchAndStudiesComponent
+    ResearchAndStudiesComponent,
+    AuditCoordinationWithOrganizationRequestComponent,
+    AuditBuildingAbilityComponent,
+    AuditEffectiveCoordinationCapabilitiesComponent,
+    AuditResearchAndStudiesComponent,
+    AuditParticipantOrganizationComponent,
+    AuditOrganizationOfficerComponent
   ],
   imports: [
     CommonModule,

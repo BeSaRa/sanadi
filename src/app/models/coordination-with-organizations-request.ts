@@ -14,7 +14,7 @@ import { OrganizationOfficer } from '@app/models/organization-officer';
 import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
 import { FactoryService } from '@app/services/factory.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { ISearchFieldsMap } from '@app/types/types';
+import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { CoordinationTypes } from './../enums/coordination-types-enum';
@@ -26,6 +26,10 @@ import { EffectiveCoordinationCapabilities } from './effective-coordination-capa
 import { ParticipantOrg } from './participant-org';
 import { ResearchAndStudies } from './research-and-studies';
 import { TaskAdminResult } from './task-admin-result';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { DateUtils } from '@app/helpers/date-utils';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new CoordinationWithOrganizationsRequestInterceptor();
@@ -39,7 +43,7 @@ export class CoordinationWithOrganizationsRequest
   CoordinationWithOrganizationsRequestService,
   CoordinationWithOrganizationsRequest
   >
-  implements HasRequestType, HasLicenseDurationType {
+  implements HasRequestType, HasLicenseDurationType,IAuditModelProperties<CoordinationWithOrganizationsRequest> {
   caseType: number = CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST;
   fullName!: string;
   domain!: number;
@@ -66,6 +70,10 @@ export class CoordinationWithOrganizationsRequest
   coordinationReportVSId?:string;
   approved = false;
   domainInfo!: AdminResult;
+
+  licenseStartDateStamp!:number |null;
+  licenseEndDateStamp!:number | null;
+
   searchFields: ISearchFieldsMap<CoordinationWithOrganizationsRequest> = {
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['domainInfo', 'caseStatusInfo']),
@@ -94,6 +102,53 @@ export class CoordinationWithOrganizationsRequest
       }
     }
     return false;
+  }
+  getAdminResultByProperty(property: keyof CoordinationWithOrganizationsRequest): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
+      case 'caseStatus':
+        adminResultValue = this.caseStatusInfo;
+        break;
+      case 'domain':
+        adminResultValue = this.domainInfo;
+        break;
+      case 'licenseStartDate':
+        const startDateValue = DateUtils.getDateStringFromDate(this.licenseStartDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({arName: startDateValue, enName: startDateValue});
+        break;
+      case 'licenseEndDate':
+        const endDateValue = DateUtils.getDateStringFromDate(this.licenseEndDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({arName: endDateValue, enName: endDateValue});
+        break;
+
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: { langKey: 'request_type', value: this.requestType },
+      processId: { langKey: 'lbl_template', value: this.processId },
+      fullName: { langKey: 'campaign_name', value: this.fullName },
+      domain: { langKey: 'domain', value: this.domain },
+      licenseStartDate: { langKey: 'license_start_date', value: this.licenseStartDate,comparisonValue : this.licenseStartDateStamp },
+      licenseEndDate: { langKey: 'license_end_date', value: this.licenseEndDate, comparisonValue: this.licenseEndDateStamp },
+      }
+  }
+  getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      description: {langKey: 'special_explanations', value: this.description},
+     }
   }
   formBuilder(controls?: boolean) {
     const { fullName, domain, processId, licenseStartDate, licenseEndDate, description } =
