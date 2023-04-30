@@ -337,8 +337,11 @@
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
       ></goal>
 
-      <goals-list #goalsListTab [list]="model?.goalsList || []" [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                  (readyEvent)="goalsListTabStatus = $event"></goals-list>
+      <goals-list 
+        #goalsListTab 
+        [goalsList]="model?.goalsList || []" 
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+      ></goals-list>
 
       <!-- Target Groups -->
       <target-group #targetGroupsTab [list]="model?.targetGroupList || []"

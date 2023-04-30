@@ -68,7 +68,6 @@ export class PartnerApprovalComponent
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: PartnerApproval;
   
-  goalsListTabStatus: ReadinessStatus = 'READY';
   managementCouncilsTabStatus: ReadinessStatus = 'READY';
   targetGroupsTabStatus: ReadinessStatus = 'READY';
   approvalReasonsTabStatus: ReadinessStatus = 'READY';
@@ -144,8 +143,7 @@ export class PartnerApprovalComponent
           (!this.goalsComponentRef ||
               this.goalsComponentRef.list.length > 0) &&
           (!this.goalsListComponentRef ||
-            (this.goalsListTabStatus === 'READY' &&
-              this.goalsListComponentRef.list.length > 0)) &&
+              this.goalsListComponentRef.list.length > 0) &&
           (!this.targetGroupComponentRef ||
             (this.targetGroupsTabStatus === 'READY' &&
               this.targetGroupComponentRef.list.length > 0)) &&
