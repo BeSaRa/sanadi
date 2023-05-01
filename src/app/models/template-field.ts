@@ -10,7 +10,14 @@ import { INames } from '@contracts/i-names';
 import { LangService } from '@app/services/lang.service';
 import { FactoryService } from '@app/services/factory.service';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
-export class TemplateField extends Cloneable<TemplateField>{
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { ControlValueLabelLangKey } from '@app/types/types';
+import { AdminResult } from './admin-result';
+import { FormlyTemplate } from './formly-template';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+export class TemplateField extends Cloneable<TemplateField> implements IAuditModelProperties<TemplateField>{
   id!: string;
   identifyingName!: string;
   arName!: string;
@@ -27,6 +34,8 @@ export class TemplateField extends Cloneable<TemplateField>{
   value!: number | string | IMyDateModel;
   status: number = 1;
   showOnTable: number = 1;
+  comparisonValue: any;
+
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');
@@ -36,6 +45,35 @@ export class TemplateField extends Cloneable<TemplateField>{
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
+  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      value: {
+        langKey: {} as keyof ILanguageKeys, value: this.value,
+        comparisonValue: this.comparisonValue, label: () => this.getName()
+      },
+    };
+  }
+
+  // extra properties
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  // don't delete (used in case audit history)
+  getAdminResultByProperty(property: keyof TemplateField): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        } else {
+          if (this.type === TemplateFieldTypes.selectField || this.type === TemplateFieldTypes.yesOrNo) {
+            value = this.options.find(x => x.id === value)?.name;
+          }
+        }
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
+    }
+    return adminResultValue ?? new AdminResult();
+  }
   buildForm(): any {
     const {
       identifyingName,

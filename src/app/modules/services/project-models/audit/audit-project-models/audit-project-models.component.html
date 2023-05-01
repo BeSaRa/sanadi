@@ -1,0 +1,57 @@
+<tabs-list>
+  <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
+  <tab name="projectCategory" [template]="projectCategoryTemplate" [title]="lang.map.project_category_info"></tab>
+  <tab name="projectSummary" [template]="projectSummaryTemplate" [title]="lang.map.project_summary_info"></tab>
+  <tab name="projectComponentsAndBudget" [template]="projectComponentsAndBudgetTemplate"
+    [title]="lang.map.project_components_budgets"></tab>
+  <tab name="evaluationIndicators" [template]="evaluationIndicatorsTemplate"
+    [title]="lang.map.project_evaluation_indicators"></tab>
+  <tab name="projectAddresses" [template]="projectAddressesTemplate" [title]="lang.map.project_addresses"></tab>
+  <tab name="foreignCountriesProjects" [template]="foreignCountriesProjectsTemplate"
+    [title]="lang.map.project_model_foreign_countries_projects"></tab>
+  <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
+</tabs-list>
+<ng-template #basicInfoTemplate>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+
+<ng-template #projectCategoryTemplate>
+  <value-differences-list [differenceList]="categoryDifferences"></value-differences-list>
+  <value-differences-list [differenceList]="categoryGoalPercentDifferences"></value-differences-list>
+</ng-template>
+
+<ng-template #projectSummaryTemplate>
+  <value-differences-list [differenceList]="summaryDifferences"></value-differences-list>
+  <value-differences-list [differenceList]="summaryPercentDifferences"></value-differences-list>
+</ng-template>
+
+<ng-template #projectComponentsAndBudgetTemplate>
+  <audit-project-component [newVersionList]="newVersion.componentList" [oldVersionList]="oldVersion.componentList"
+    [caseType]="newVersion.caseType">
+  </audit-project-component>
+</ng-template>
+
+<ng-template #evaluationIndicatorsTemplate>
+
+  <audit-evaluation-indicator [newVersionList]="newVersion.evaluationIndicatorList"
+    [oldVersionList]="oldVersion.evaluationIndicatorList" [caseType]="newVersion.caseType"></audit-evaluation-indicator>
+</ng-template>
+
+<ng-template #projectAddressesTemplate>
+
+  <audit-project-address [newVersionList]="newVersion.projectAddressList"
+    [oldVersionList]="oldVersion.projectAddressList" [caseType]="newVersion.caseType"></audit-project-address>
+
+</ng-template>
+
+<ng-template #foreignCountriesProjectsTemplate>
+
+  <audit-project-model-foreign-countries-project [newVersionList]="newVersion.foreignCountriesProjectList"
+    [oldVersionList]="oldVersion.foreignCountriesProjectList"
+    [caseType]="newVersion.caseType"></audit-project-model-foreign-countries-project>
+
+</ng-template>
+
+<ng-template #specialExplanationTemplate>
+  <value-differences-list [differenceList]="explanationDifferences"></value-differences-list>
+</ng-template>
