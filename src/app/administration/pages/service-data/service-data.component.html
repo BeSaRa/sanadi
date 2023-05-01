@@ -13,7 +13,9 @@
             <table-header tableTitle="menu_services_data"
                           [reload$]="reload$"
                           (textChange)="filterControl.setValue($event)"
-                          ></table-header>
+                          [sort]="table.dataSource.sort"
+                          >
+            </table-header>
           </th>
         </ng-container>
         <ng-container *ngFor="let column of searchColumns" [cdkColumnDef]="column">

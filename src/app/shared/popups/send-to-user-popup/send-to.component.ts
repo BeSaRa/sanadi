@@ -1,27 +1,27 @@
-import { AdminstrationDepartmentCodes } from './../../../enums/department-code.enum';
-import { CaseTypes } from './../../../enums/case-types.enum';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { DIALOG_DATA_TOKEN } from '../../tokens/tokens';
-import { InboxService } from '@app/services/inbox.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { TeamService } from '@app/services/team.service';
-import { InternalUser } from '@app/models/internal-user';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
-import { InternalDepartmentService } from '@app/services/internal-department.service';
-import { of, Subject } from 'rxjs';
-import { InternalDepartment } from '@app/models/internal-department';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { ToastService } from '@app/services/toast.service';
-import { DialogService } from '@app/services/dialog.service';
-import { DialogRef } from '../../models/dialog-ref';
-import { QueryResult } from '@app/models/query-result';
-import { IWFResponse } from '@app/interfaces/i-w-f-response';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { CaseModel } from "@app/models/case-model";
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import {AdminstrationDepartmentCodes} from './../../../enums/department-code.enum';
+import {CaseTypes} from './../../../enums/case-types.enum';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
+import {InboxService} from '@app/services/inbox.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {TeamService} from '@app/services/team.service';
+import {InternalUser} from '@app/models/internal-user';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {filter, switchMap, take, takeUntil} from 'rxjs/operators';
+import {InternalDepartmentService} from '@app/services/internal-department.service';
+import {of, Subject} from 'rxjs';
+import {InternalDepartment} from '@app/models/internal-department';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {ToastService} from '@app/services/toast.service';
+import {DialogService} from '@app/services/dialog.service';
+import {DialogRef} from '../../models/dialog-ref';
+import {QueryResult} from '@app/models/query-result';
+import {IWFResponse} from '@app/interfaces/i-w-f-response';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {CaseModel} from "@app/models/case-model";
+import {BaseGenericEService} from "@app/generics/base-generic-e-service";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -75,6 +75,7 @@ export class SendToComponent implements OnInit, OnDestroy {
         this.title = 'send_to_manager';
         break;
       case WFResponseType.SEND_TO_GM:
+      case WFResponseType.TO_GM:
         this.title = 'send_to_general_manager';
         break;
       case WFResponseType.TO_DEVELOPMENT_EXPERT:

@@ -15,7 +15,9 @@
             <table-header tableTitle="menu_general_process_template"
                           [reload$]="reload$"
                           [add$]="add$"
-                          (textChange)="filterControl.setValue($event)">
+                          (textChange)="filterControl.setValue($event)"
+                          [sort]="table.dataSource.sort"
+                          >
               <ng-container *ngTemplateOutlet="bulk"></ng-container>
             </table-header>
           </th>

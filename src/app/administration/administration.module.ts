@@ -127,6 +127,8 @@ import {
   UserFollowupPermissionNewComponent
 } from './shared/user-followup-permission-new/user-followup-permission-new.component';
 import { FieldAssessmentServiceLinkComponen } from './shared/field-assessment-service-link/field-assessment-service-link.component';
+import { CustomServiceTemplateComponent } from './shared/custom-service-template/custom-service-template.component';
+import { CustomServiceTemplatePopupComponent } from './popups/custom-service-template-popup/custom-service-template-popup.component';
 
 @NgModule({
   declarations: [
@@ -146,6 +148,8 @@ import { FieldAssessmentServiceLinkComponen } from './shared/field-assessment-se
     TeamPopupComponent,
     ServiceDataComponent,
     ServiceDataPopupComponent,
+    CustomServiceTemplateComponent,
+    CustomServiceTemplatePopupComponent,
     CountryComponent,
     ChangeCountryParentPopupComponent,
     AttachmentTypeServiceDataPopupComponent,

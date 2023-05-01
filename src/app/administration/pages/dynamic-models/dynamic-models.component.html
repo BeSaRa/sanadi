@@ -18,7 +18,9 @@
             <table-header tableTitle="menu_coordination_with_organizations_template"
                           [reload$]="reload$"
                           [add$]="add$"
-                          (textChange)="filterControl.setValue($event)">
+                          (textChange)="filterControl.setValue($event)"
+                          [sort]="table.dataSource.sort"
+                          >
               <ng-container *ngTemplateOutlet="bulk"></ng-container>
             </table-header>
           </th>

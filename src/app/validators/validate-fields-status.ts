@@ -5,6 +5,7 @@ import * as dayjs from 'dayjs';
 import { FactoryService } from '@services/factory.service';
 import { ConfigurationService } from '@services/configuration.service';
 import { CommonUtils } from '@app/helpers/common-utils';
+import {DateUtils} from "@helpers/date-utils";
 
 export const validationPatterns: any = {
   ENG_NUM: new RegExp(/^[a-zA-Z0-9\- ]+$/),
@@ -174,7 +175,7 @@ export function maxDateValidator(maxDate: string | Date, format: string = ''): V
     format = format || configService.CONFIG.DATEPICKER_FORMAT;
 
     const formattedControlValue = dayjs(value).format(format);
-    if (formattedControlValue === 'Invalid Date' || dayjs(value, format).isAfter(dayjs(maxDate, format))) {
+    if (formattedControlValue === 'Invalid Date' || dayjs(value, format).isAfter(dayjs(DateUtils.setEndOfDay(maxDate), format))) {
       return {
         maxDate: {
           invalidDateFormat: formattedControlValue === 'Invalid Date',
@@ -206,7 +207,7 @@ export function minDateValidator(minDate: string | Date, format: string = ''): V
     format = format || configService.CONFIG.DATEPICKER_FORMAT;
 
     const formattedControlValue = dayjs(value).format(format);
-    if (formattedControlValue === 'Invalid Date' || dayjs(value, format).isBefore(dayjs(minDate, format))) {
+    if (formattedControlValue === 'Invalid Date' || dayjs(value, format).isBefore(dayjs(DateUtils.setStartOfDay(minDate), format))) {
       return {
         minDate: {
           invalidDateFormat: formattedControlValue === 'Invalid Date',

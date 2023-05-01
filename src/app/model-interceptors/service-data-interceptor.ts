@@ -87,7 +87,6 @@ export class ServiceDataInterceptor implements IModelInterceptor<ServiceData> {
         delete customSettings.maxElementsCount;
         delete customSettings.activateDevelopmentField;
       }
-
       model.customSettings = JSON.stringify(customSettings);
     }
   }

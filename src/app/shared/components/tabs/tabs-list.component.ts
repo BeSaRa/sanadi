@@ -9,7 +9,8 @@ import {
   OnInit,
   Output,
   QueryList,
-  Self
+  Self,
+  TemplateRef
 } from '@angular/core';
 import {TabComponent} from '../tab/tab.component';
 import {Subject} from 'rxjs';
@@ -31,6 +32,8 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   @Input() accordionView: boolean = false;
   @Input() hasForm: boolean = false;
   @Input() scrollToViewPort: boolean = true;
+  @Input() extraButtonsTemplate?: TemplateRef<any>;
+  @Input() extraButtonsPositioning: 'relative' | 'flex' = 'flex';
 
   private _collapse: boolean = false;
   @Input()
@@ -51,6 +54,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
 
   tabContainerId: string = '';
   tabContainerNumber: number = 0;
+  accordionContainerId: string = '';
 
   @ContentChildren(TabComponent) tabs!: QueryList<TabComponent>;
   @Output() onTabChange: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
@@ -58,6 +62,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   constructor(@Self() public tabListService: TabListService, private employeeService: EmployeeService) {
     this.tabContainerNumber = this.tabListService.containerId;
     this.tabContainerId = 'tab-list-' + this.tabContainerNumber;
+    this.accordionContainerId = 'accordion-' + this.tabContainerNumber;
   }
 
   ngOnInit(): void {

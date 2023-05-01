@@ -26,7 +26,7 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
     private globalSettingsService: GlobalSettingsService
   ){
     this.setAllowedFiles();
-    
+
   }
   ngOnInit(): void {
     this.listenToReload();
@@ -43,11 +43,11 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
   destroy$: Subject<any> = new Subject<any>();
   private loadingStatus: BehaviorSubject<any> = new BehaviorSubject(false);
   loadedStatus$: BehaviorSubject<boolean | null> = new BehaviorSubject<boolean | null>(null);
-  
+
   private reload$ = this.loadingStatus.asObservable().pipe(filter(v => !!v));
-  
+
   @Input() profileId!: string;
-  
+
   selectedFile?: FileNetDocument;
   attachments: FileNetDocument[] = [];
   displayedColumns: string[] = ['title', 'name', 'description', 'date', 'actions'];
@@ -59,14 +59,14 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
   private selectedIndex!: number;
 
   setAllowedFiles() {
-    
+
     this.globalSettingsService.getAllowedFileTypes()
       .pipe(
         map(fileTypes => fileTypes.map(fileType => '.' + (fileType.extension ?? '').toLowerCase()))
       )
       .subscribe(list => {
         this.allowedExtensions = list;
-        
+
       })
   }
 
@@ -117,7 +117,7 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
   canShowActionButtons(attachment: FileNetDocument, buttonType: 'view' | 'delete' | 'upload' | 'publish') {
     return attachment.id ? true : (attachment.attachmentTypeStatus);
   }
-  
+
   viewFile(file: FileNetDocument): void {
     this.service.downloadDocument(file.id)
       .pipe(
@@ -126,11 +126,11 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
       .subscribe();
   }
   uploadAttachment(row: FileNetDocument, uploader: HTMLInputElement): void {
-    
+
     if (this.isDisabledActionButtons(row, 'upload')) {
       return;
     }
-    
+
     uploader.click();
     this.selectedFile = row;
     this.selectedIndex = this.attachments.indexOf(row);
@@ -141,7 +141,7 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
       return !attachment.id;
     } else if (buttonType === 'upload') {
       return !attachment.attachmentTypeStatus;
-    } 
+    }
     return true;
   }
 
@@ -169,5 +169,5 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
         this.loadedStatus$.next(true);
       });
   }
-  
+
 }
