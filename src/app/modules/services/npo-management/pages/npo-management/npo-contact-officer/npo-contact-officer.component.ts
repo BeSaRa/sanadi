@@ -10,6 +10,7 @@ import { BehaviorSubject, Subject } from "rxjs";
 import { filter, map, take, takeUntil } from "rxjs/operators";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { NpoContactOfficer } from "@app/models/npo-contact-officer";
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 
 @Component({
   selector: 'npo-contact-officer',
@@ -17,6 +18,7 @@ import { NpoContactOfficer } from "@app/models/npo-contact-officer";
   styleUrls: ['./npo-contact-officer.component.scss']
 })
 export class NpoContactOfficerComponent implements OnInit, OnDestroy {
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   jobTitleAdminLookup: JobTitle[] = [];
   constructor(public lang: LangService,
     private toastService: ToastService,

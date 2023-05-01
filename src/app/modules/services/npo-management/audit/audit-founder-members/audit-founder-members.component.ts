@@ -1,20 +1,20 @@
-import { ControlValueLabelLangKey } from './../../../../../../../types/types';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { AuditListGenericComponent } from '@app/generics/audit-list-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { FounderMembers } from '@app/models/founder-members';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { CaseAuditService } from '@app/services/case-audit.service';
 import { LangService } from '@app/services/lang.service';
-import { AmountOverCountry } from '@app/models/amount-over-country';
+import { ControlValueLabelLangKey } from '@app/types/types';
 
 @Component({
-  selector: 'audit-targeted-countries-distribution',
-  templateUrl: './audit-targeted-countries-distribution.component.html',
-  styleUrls: ['./audit-targeted-countries-distribution.component.scss']
+  selector: 'audit-founder-members',
+  templateUrl: './audit-founder-members.component.html',
+  styleUrls: ['./audit-founder-members.component.scss']
 })
-export class AuditTargetedCountriesDistributionComponent extends AuditListGenericComponent<AmountOverCountry> {
+export class AuditFounderMembersComponent extends AuditListGenericComponent<FounderMembers> {
 
   constructor(public lang: LangService,
     public caseAuditService: CaseAuditService) {
@@ -22,8 +22,8 @@ export class AuditTargetedCountriesDistributionComponent extends AuditListGeneri
   }
 
   @Input()
-  displayColumns: string[] = ['arName', 'enName', 'amount', 'actions'];
-  actions: IMenuItem<AmountOverCountry>[] = [
+  displayColumns: string[] = ['idNumber', 'fullName', 'email', 'phone', 'extraPhone', 'actions'];
+  actions: IMenuItem<FounderMembers>[] = [
     // show difference
     {
       type: 'action',
@@ -34,16 +34,15 @@ export class AuditTargetedCountriesDistributionComponent extends AuditListGeneri
     }
   ];
 
-  _getNewInstance(override: Partial<AmountOverCountry> | undefined): AmountOverCountry {
+  _getNewInstance(override: Partial<FounderMembers> | undefined): FounderMembers {
     if (CommonUtils.isValidValue(override)) {
-      return new AmountOverCountry().clone(override)
+      return new FounderMembers().clone(override)
     }
-    return new AmountOverCountry();
+    return new FounderMembers();
   }
 
-  getControlLabels(item: AmountOverCountry): { [p: string]: ControlValueLabelLangKey } {
+  getControlLabels(item: FounderMembers): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
   }
-
 
 }

@@ -18,6 +18,10 @@ import {
   NpoManagementApprovePopupComponent
 } from '@modules/services/npo-management/popups/npo-management-approve-popup/npo-management-approve-popup.component';
 import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
+import { AuditNpoManagementComponent } from './audit/audit-npo-management/audit-npo-management.component';
+import { AuditNpoBankAccountComponent } from './audit/audit-npo-bank-account/audit-npo-bank-account.component';
+import { AuditFounderMembersComponent } from './audit/audit-founder-members/audit-founder-members.component';
+import { AuditNpoContactOfficerComponent } from './audit/audit-npo-contact-officer/audit-npo-contact-officer.component';
 
 
 @NgModule({
@@ -27,7 +31,11 @@ import {SharedServicesModule} from '@modules/services/shared-services/shared-ser
     FounderMembersComponent,
     NpoBankAccountComponent,
     NpoContactOfficerComponent,
-    NpoManagementApprovePopupComponent
+    NpoManagementApprovePopupComponent,
+    AuditFounderMembersComponent,
+    AuditNpoBankAccountComponent,
+    AuditNpoManagementComponent,
+    AuditNpoContactOfficerComponent
   ],
   imports: [
     CommonModule,

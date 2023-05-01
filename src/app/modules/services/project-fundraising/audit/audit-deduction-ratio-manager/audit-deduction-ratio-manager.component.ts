@@ -1,4 +1,3 @@
-import { ControlValueLabelLangKey } from './../../../../../../../types/types';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
@@ -8,6 +7,7 @@ import { DeductedPercentage } from '@app/models/deducted-percentage';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { CaseAuditService } from '@app/services/case-audit.service';
 import { LangService } from '@app/services/lang.service';
+import { ControlValueLabelLangKey } from '@app/types/types';
 
 @Component({
   selector: 'audit-deduction-ratio-manager',

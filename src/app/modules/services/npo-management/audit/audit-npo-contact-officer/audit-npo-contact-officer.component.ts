@@ -1,31 +1,29 @@
-import { ControlValueLabelLangKey } from './../../../../../../../types/types';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { AuditListGenericComponent } from '@app/generics/audit-list-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { NpoContactOfficer } from '@app/models/npo-contact-officer';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { CaseAuditService } from '@app/services/case-audit.service';
 import { LangService } from '@app/services/lang.service';
-import { AmountOverYear } from '@app/models/amount-over-year';
-import { CustomValidators } from '@app/validators/custom-validators';
+import { ControlValueLabelLangKey } from '@app/types/types';
 
 @Component({
-  selector: 'audit-targeted-years-distribution',
-  templateUrl: './audit-targeted-years-distribution.component.html',
-  styleUrls: ['./audit-targeted-years-distribution.component.scss']
+  selector: 'audit-npo-contact-officer',
+  templateUrl: './audit-npo-contact-officer.component.html',
+  styleUrls: ['./audit-npo-contact-officer.component.scss']
 })
-export class AuditTargetedYearsDistributionComponent extends AuditListGenericComponent<AmountOverYear> {
+export class AuditNpoContactOfficerComponent extends AuditListGenericComponent<NpoContactOfficer> {
 
   constructor(public lang: LangService,
     public caseAuditService: CaseAuditService) {
     super();
   }
 
-  maskPattern = CustomValidators.inputMaskPatterns;
   @Input()
-  displayColumns: string[] = ['year', 'amount', 'actions'];
-  actions: IMenuItem<AmountOverYear>[] = [
+  displayColumns: string[] = ['idNumber', 'fullName', 'email', 'phone', 'extraPhone', 'actions'];
+  actions: IMenuItem<NpoContactOfficer>[] = [
     // show difference
     {
       type: 'action',
@@ -36,14 +34,14 @@ export class AuditTargetedYearsDistributionComponent extends AuditListGenericCom
     }
   ];
 
-  _getNewInstance(override: Partial<AmountOverYear> | undefined): AmountOverYear {
+  _getNewInstance(override: Partial<NpoContactOfficer> | undefined): NpoContactOfficer {
     if (CommonUtils.isValidValue(override)) {
-      return new AmountOverYear().clone(override)
+      return new NpoContactOfficer().clone(override)
     }
-    return new AmountOverYear();
+    return new NpoContactOfficer();
   }
 
-  getControlLabels(item: AmountOverYear): { [p: string]: ControlValueLabelLangKey } {
+  getControlLabels(item: NpoContactOfficer): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
   }
 

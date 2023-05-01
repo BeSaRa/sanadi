@@ -1,30 +1,31 @@
-import { ControlValueLabelLangKey } from './../../../../../../../types/types';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { AuditListGenericComponent } from '@app/generics/audit-list-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { CaseAuditService } from '@app/services/case-audit.service';
 import { LangService } from '@app/services/lang.service';
-import { AuditListGenericComponent } from '@app/generics/audit-list-generic-component';
-import { ProjectTemplate } from '@app/models/projectTemplate';
+import { AmountOverYear } from '@app/models/amount-over-year';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { ControlValueLabelLangKey } from '@app/types/types';
 
 @Component({
-  selector: 'audit-template-list',
-  templateUrl: './audit-template-list.component.html',
-  styleUrls: ['./audit-template-list.component.scss']
+  selector: 'audit-targeted-years-distribution',
+  templateUrl: './audit-targeted-years-distribution.component.html',
+  styleUrls: ['./audit-targeted-years-distribution.component.scss']
 })
-export class AuditTemplateListComponent extends AuditListGenericComponent<ProjectTemplate> {
+export class AuditTargetedYearsDistributionComponent extends AuditListGenericComponent<AmountOverYear> {
 
   constructor(public lang: LangService,
     public caseAuditService: CaseAuditService) {
     super();
   }
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+
+  maskPattern = CustomValidators.inputMaskPatterns;
   @Input()
-  displayColumns: string[] = ['public_status', 'review_status', 'name', 'serial', 'totalCost', 'actions'];
-  actions: IMenuItem<ProjectTemplate>[] = [
+  displayColumns: string[] = ['year', 'amount', 'actions'];
+  actions: IMenuItem<AmountOverYear>[] = [
     // show difference
     {
       type: 'action',
@@ -35,14 +36,14 @@ export class AuditTemplateListComponent extends AuditListGenericComponent<Projec
     }
   ];
 
-  _getNewInstance(override: Partial<ProjectTemplate> | undefined): ProjectTemplate {
+  _getNewInstance(override: Partial<AmountOverYear> | undefined): AmountOverYear {
     if (CommonUtils.isValidValue(override)) {
-      return new ProjectTemplate().clone(override)
+      return new AmountOverYear().clone(override)
     }
-    return new ProjectTemplate();
+    return new AmountOverYear();
   }
 
-  getControlLabels(item: ProjectTemplate): { [p: string]: ControlValueLabelLangKey } {
+  getControlLabels(item: AmountOverYear): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
   }
 
