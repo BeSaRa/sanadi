@@ -319,10 +319,11 @@
                                     (readyEvent)="implementationEvaluationTabStatus = $event"></implementation-evaluation-list>
   </ng-template>
   <ng-template #bestPracticesTabTemplate>
-    <best-practices-list #bestPracticesListComponent
-                         [list]="(!model ? [] : model.bestPracticesList)"
-                         [readonly]="readonly"
-                         (readyEvent)="bestPracticesTabStatus = $event"></best-practices-list>
+    <best-practices-list 
+      #bestPracticesListComponent
+      [list]="(!model ? [] : model.bestPracticesList)"
+      [readonly]="readonly"
+    ></best-practices-list>
   </ng-template>
   <ng-template #lessonsLearntTabTemplate>
     <lessons-learnt-list #lessonsLearntListComponent
