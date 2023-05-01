@@ -1880,6 +1880,7 @@ export interface ILanguageKeys {
   please_select_service_to_link:string;
   template_type: string;
   template_file: string;
+  msg_added_in_list_success: string;
   lbl_beneficiaries_count: string;
   download_templat: string;
   uploaded_templates: string;
