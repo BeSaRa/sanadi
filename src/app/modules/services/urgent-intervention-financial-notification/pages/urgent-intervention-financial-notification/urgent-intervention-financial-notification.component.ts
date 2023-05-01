@@ -55,7 +55,6 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   urgentFinancialNotificationAccountType: Lookup[] = this.lookupService.listByCategory.UrgentFinancialNotificationAccountType;
 
   accountsTypesList: any[] = [];
-  entitiesTabStatus: ReadinessStatus = 'READY';
   interventionAreasTabStatus: ReadinessStatus = 'READY';
   interventionFieldsTabStatus: ReadinessStatus = 'READY';
   implementingAgencies: ImplementingAgency[] = [];
@@ -87,7 +86,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       isTouchedOrDirty: () => true,
       show: () => true,
       validStatus: () => {
-        return !this.implementingAgencyListComponentRef || (this.entitiesTabStatus === 'READY' && this.implementingAgencyListComponentRef.list.length > 0);
+        return !this.implementingAgencyListComponentRef || this.implementingAgencyListComponentRef.list.length > 0;
       }
     },
     interventionAreas: {
