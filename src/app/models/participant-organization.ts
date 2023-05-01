@@ -1,10 +1,15 @@
-import {SearchableCloneable} from '@app/models/searchable-cloneable';
-import {IMyDateModel} from 'angular-mydatepicker';
-import {LangService} from '@services/lang.service';
-import {FactoryService} from '@services/factory.service';
-import {Lookup} from '@app/models/lookup';
+import { ControlValueLabelLangKey } from './../types/types';
+import { SearchableCloneable } from '@app/models/searchable-cloneable';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { LangService } from '@services/lang.service';
+import { FactoryService } from '@services/factory.service';
+import { Lookup } from '@app/models/lookup';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { AdminResult } from './admin-result';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 export class ParticipantOrganization extends SearchableCloneable<ParticipantOrganization>{
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   organizationId!: number;
   arabicName!: string;
   englishName!: string;
@@ -20,5 +25,26 @@ export class ParticipantOrganization extends SearchableCloneable<ParticipantOrga
 
   getName() {
     return this.langService?.map.lang == 'ar' ? this.arabicName : this.englishName;
+  }
+
+  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      arabicName: { langKey: 'campaign_name', value: this.arabicName },
+      englishName: { langKey: 'campaign_name', value: this.englishName },
+      donation: { langKey: 'campaign_name', value: this.donation },
+      workStartDate: { langKey: 'campaign_name', value: this.workStartDate },
+    };
+  }
+  getAdminResultByProperty(property: keyof ParticipantOrganization): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
   }
 }
