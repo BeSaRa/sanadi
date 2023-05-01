@@ -1,0 +1,31 @@
+<tabs-list>
+  <tab name="basic_info" [template]="basic_info" [title]="lang.map.lbl_basic_info">
+  </tab>
+  <tab name="project_info" [template]="project_info" [title]="lang.map.project_info">
+  </tab>
+  <tab name="fundingResources" [template]="funding_sources" [title]="lang.map.funding_resources"></tab>
+</tabs-list>
+<ng-template #basic_info>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #project_info>
+  <!-- <implementation-template [requestType]="requestType.value" [caseId]="model!.id"
+    formControlName="implementationTemplate" [criteria]="getCriteria"></implementation-template>
+  <implementing-agency-list [country]="beneficiaryCountry.value" [type]="implementingAgencyType.value"
+    formControlName="implementingAgencyList">
+  </implementing-agency-list> -->
+</ng-template>
+<ng-template #funding_sources>
+  <!-- <implementation-fundraising (amountConsumed)="onAmountConsumed($event)" [remainingAmount]="remainingAmount"
+    [currentTemplate]="implementationTemplate.value" [criteria]="getCriteria"
+    [projectTotalCost]="projectTotalCost.value" [caseId]="model!.getCaseId()" [requestType]="requestType.value"
+    formControlName="implementationFundraising"></implementation-fundraising>
+  <fund-source [permitAmountConsumed]="permitAmountConsumed" [remainingAmount]="remainingAmount"
+    [type]="FundSourceType.GRANT" [projectTotalCost]="projectTotalCost.value" formControlName="financialGrant">
+  </fund-source>
+  <fund-source [permitAmountConsumed]="permitAmountConsumed" [remainingAmount]="remainingAmount"
+    [type]="FundSourceType.SELF" [projectTotalCost]="projectTotalCost.value" formControlName="selfFinancing">
+  </fund-source>
+  <payments [projectTotalCost]="projectTotalCost.value" formControlName="payment"></payments> -->
+</ng-template>
+
