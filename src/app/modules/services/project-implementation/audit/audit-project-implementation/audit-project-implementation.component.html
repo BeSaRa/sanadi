@@ -20,12 +20,12 @@
     [currentTemplate]="implementationTemplate.value" [criteria]="getCriteria"
     [projectTotalCost]="projectTotalCost.value" [caseId]="model!.getCaseId()" [requestType]="requestType.value"
     formControlName="implementationFundraising"></implementation-fundraising>
-  <fund-source [permitAmountConsumed]="permitAmountConsumed" [remainingAmount]="remainingAmount"
-    [type]="FundSourceType.GRANT" [projectTotalCost]="projectTotalCost.value" formControlName="financialGrant">
-  </fund-source>
-  <fund-source [permitAmountConsumed]="permitAmountConsumed" [remainingAmount]="remainingAmount"
-    [type]="FundSourceType.SELF" [projectTotalCost]="projectTotalCost.value" formControlName="selfFinancing">
-  </fund-source>
   <payments [projectTotalCost]="projectTotalCost.value" formControlName="payment"></payments> -->
+  <audit-fund-source [newVersionList]="newVersion.selfFinancing"
+    [oldVersionList]="oldVersion.selfFinancing" [caseType]="newVersion.caseType">
+  </audit-fund-source>
+  <audit-fund-source [isGrant]="true" [newVersionList]="newVersion.financialGrant"
+    [oldVersionList]="oldVersion.financialGrant" [caseType]="newVersion.caseType">
+  </audit-fund-source>
 </ng-template>
 
