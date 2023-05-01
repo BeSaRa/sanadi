@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { ObjectUtils } from '@app/helpers/object-utils';
-import { IAuditCaseProperties } from '@app/interfaces/i-audit-case-properties';
-import { IValueDifference } from '@app/interfaces/i-value-difference';
-import { GeneralProcessNotification } from '@app/models/general-process-notification';
-import { LangService } from '@app/services/lang.service';
+import {Component, OnInit} from '@angular/core';
+import {ObjectUtils} from '@app/helpers/object-utils';
+import {IAuditCaseProperties} from '@app/interfaces/i-audit-case-properties';
+import {IValueDifference} from '@app/interfaces/i-value-difference';
+import {GeneralProcessNotification} from '@app/models/general-process-notification';
+import {LangService} from '@app/services/lang.service';
+import {FormlyTemplate} from "@models/formly-template";
 
 @Component({
-    selector: 'audit-general-process-notification',
-    templateUrl: 'audit-general-process-notification.component.html',
-    styleUrls: ['audit-general-process-notification.component.scss']
+  selector: 'audit-general-process-notification',
+  templateUrl: 'audit-general-process-notification.component.html',
+  styleUrls: ['audit-general-process-notification.component.scss']
 })
 export class AuditGeneralProcessNotificationComponent implements IAuditCaseProperties<GeneralProcessNotification>, OnInit {
   newVersion!: GeneralProcessNotification; // don't delete or rename the property
@@ -16,7 +17,7 @@ export class AuditGeneralProcessNotificationComponent implements IAuditCasePrope
 
   basicInfoDifferences: IValueDifference[] = [];
   dSNNNDifferences: IValueDifference[] = [];
-  explanationDifferences: IValueDifference[]= [];
+  explanationDifferences: IValueDifference[] = [];
 
   constructor(public lang: LangService) {
   }
@@ -33,6 +34,7 @@ export class AuditGeneralProcessNotificationComponent implements IAuditCasePrope
     const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getBasicInfoValuesWithLabels());
     this.basicInfoDifferences = ObjectUtils.getValueDifferencesList<GeneralProcessNotification, GeneralProcessNotification>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
+
   private _getDSNNNDifferences(): void {
     const newVersionDataModel: Partial<GeneralProcessNotification> = ObjectUtils.getControlComparisonValues<GeneralProcessNotification>(this.newVersion.getDSNNNValuesWithLabels());
     const oldVersionDataModel: Partial<GeneralProcessNotification> = ObjectUtils.getControlComparisonValues<GeneralProcessNotification>(this.oldVersion.getDSNNNValuesWithLabels());
