@@ -23,6 +23,7 @@ import { normalSearchFields } from '@helpers/normal-search-fields';
 import { Payment } from '@app/models/payment';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { DateUtils } from '@app/helpers/date-utils';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new TransferringIndividualFundsAbroadInterceptor();
@@ -404,7 +405,10 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
       case 'receiverNationality':
         adminResultValue = this.receiverNationalityInfo;
         break;
-
+      case 'establishmentDate':
+        const establishmentDate = DateUtils.getDateStringFromDate(this.establishmentDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: establishmentDate, enName: establishmentDate });
+        break;
 
       default:
         let value: any = this[property];
