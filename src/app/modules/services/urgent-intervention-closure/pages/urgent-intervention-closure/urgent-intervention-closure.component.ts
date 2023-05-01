@@ -106,7 +106,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       isTouchedOrDirty: () => true,
       show: () => true,
       validStatus: () => {
-        return !this.implementingAgencyListComponentRef || (this.entitiesTabStatus === 'READY' && this.implementingAgencyListComponentRef.list.length > 0);
+        return !this.implementingAgencyListComponentRef || this.implementingAgencyListComponentRef.list.length > 0;
       }
     },
     interventionAreas: {
@@ -207,7 +207,6 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   @ViewChild('bestPracticesListComponent') bestPracticesListComponentRef!: BestPracticesListComponent;
   @ViewChild('lessonsLearntListComponent') lessonsLearntListComponentRef!: BestPracticesListComponent;
 
-  entitiesTabStatus: ReadinessStatus = 'READY';
   interventionAreasTabStatus: ReadinessStatus = 'READY';
   interventionFieldsTabStatus: ReadinessStatus = 'READY';
   phasesAndOutcomesTabStatus: ReadinessStatus = 'READY';
