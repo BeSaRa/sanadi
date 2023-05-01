@@ -76,6 +76,9 @@ import { AuditInternationalCooperationComponent } from '@app/modules/services/in
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
 import { CoordinationWithOrganizationsRequestInterceptor } from '@app/model-interceptors/coordination-with-organizations-request-interceptor';
 import { AuditCoordinationWithOrganizationRequestComponent } from '@app/modules/services/coordination-with-organization-request/audit/audit-coordination-with-organization-request/audit-coordination-with-organization-request.component';
+import { ProjectModel } from '@app/models/project-model';
+import { ProjectModelInterceptor } from '@app/model-interceptors/project-model-interceptor';
+import { AuditProjectModelsComponent } from '@app/modules/services/project-models/audit/audit-project-models/audit-project-models.component';
 
 @CastResponseContainer({
   $default: {
@@ -110,6 +113,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApproval,
     [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCooperation,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequest,
+    [CaseTypes.EXTERNAL_PROJECT_MODELS]: ProjectModel,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -130,6 +134,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApprovalInterceptor,
     [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCooperationInterceptor,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequestInterceptor,
+    [CaseTypes.EXTERNAL_PROJECT_MODELS]: ProjectModelInterceptor,
 
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
@@ -151,6 +156,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: AuditInternalBankAccountApprovalComponent,
     [CaseTypes.INTERNATIONAL_COOPERATION]: AuditInternationalCooperationComponent,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: AuditCoordinationWithOrganizationRequestComponent,
+    [CaseTypes.EXTERNAL_PROJECT_MODELS]: AuditProjectModelsComponent,
 
   };
 
