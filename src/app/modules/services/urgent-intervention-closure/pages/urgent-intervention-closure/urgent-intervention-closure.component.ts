@@ -172,7 +172,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        return !this.bestPracticesListComponentRef || (this.bestPracticesTabStatus === 'READY' && this.bestPracticesListComponentRef.list.length > 0);
+        return !this.bestPracticesListComponentRef || this.bestPracticesListComponentRef.list.length > 0;
       }
     },
     lessonsLearnt: {
@@ -213,7 +213,6 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   phasesAndOutcomesTabStatus: ReadinessStatus = 'READY';
   outputAndImpactAnalysisTabStatus: ReadinessStatus = 'READY';
   implementationEvaluationTabStatus: ReadinessStatus = 'READY';
-  bestPracticesTabStatus: ReadinessStatus = 'READY';
   lessonsLearntTabStatus: ReadinessStatus = 'READY';
 
   onTabChange($event: TabComponent) {
