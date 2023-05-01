@@ -1,11 +1,12 @@
-import { IModelInterceptor } from '@contracts/i-model-interceptor';
-import { GeneralProcessNotification } from '@app/models/general-process-notification';
-import { DateUtils } from '@app/helpers/date-utils';
-import { AdminResult } from '@app/models/admin-result';
-import { FormalyTemplateInterceptor } from './formaly-template-interceptor';
-import { FormalyTemplate } from '@app/models/formaly-template';
+import { TemplateFieldInterceptor } from './formly-template-interceptor';
+import {IModelInterceptor} from '@contracts/i-model-interceptor';
+import {GeneralProcessNotification} from '@app/models/general-process-notification';
+import {DateUtils} from '@app/helpers/date-utils';
+import {AdminResult} from '@app/models/admin-result';
+import {FormlyTemplate} from '@models/formly-template';
+import { TemplateField } from '@app/models/template-field';
 
-const formalyTemplateInterceptor = new FormalyTemplateInterceptor();
+const templateFieldInterceptor = new TemplateFieldInterceptor();
 
 export class GeneralProcessNotificationInterceptor implements IModelInterceptor<GeneralProcessNotification> {
   receive(model: GeneralProcessNotification): GeneralProcessNotification {
@@ -16,9 +17,10 @@ export class GeneralProcessNotificationInterceptor implements IModelInterceptor<
     model.mainClassInfo && (model.mainClassInfo = AdminResult.createInstance(model.mainClassInfo));
     model.subClassInfo && (model.subClassInfo = AdminResult.createInstance(model.subClassInfo));
     model.processTypeInfo && (model.processTypeInfo = AdminResult.createInstance(model.processTypeInfo));
-    GeneralProcessNotificationInterceptor.getDynamicTemplate(model);
+    GeneralProcessNotificationInterceptor.parseTemplates(model);
     return model;
   }
+
   send(model: any): GeneralProcessNotification {
     (model.followUpDate && (model.followUpDate = DateUtils.getDateStringFromDate(model.followUpDate)));
     GeneralProcessNotificationInterceptor._deleteBeforeSend(model);
@@ -33,14 +35,15 @@ export class GeneralProcessNotificationInterceptor implements IModelInterceptor<
     delete model.mainClassInfo;
     delete model.subClassInfo;
     delete model.processTypeInfo;
+    delete model.parsedTemplates;
   }
 
-  private static getDynamicTemplate(model: GeneralProcessNotification){
+  private static parseTemplates(model: GeneralProcessNotification) {
     try {
-      model.dynamicForm = JSON.parse(model.template);
+      model.parsedTemplates = JSON.parse(model.template);
     } catch (error) {
-      model.dynamicForm =[];
+      model.parsedTemplates = [];
     }
-    model.dynamicForm = model.dynamicForm.map(x=>formalyTemplateInterceptor.receive(new FormalyTemplate().clone(x)))
+    model.parsedTemplates = model.parsedTemplates.map(x => templateFieldInterceptor.receive(new TemplateField().clone(x)))
   }
 }

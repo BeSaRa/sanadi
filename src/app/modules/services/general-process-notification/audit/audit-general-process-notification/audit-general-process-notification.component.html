@@ -1,6 +1,7 @@
 <tabs-list>
   <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
-  <tab name="dSNNN" [template]="dSNNNTemplate" [title]="lang.map.disclosure_statements_notices_notifications_notices"></tab>
+  <tab name="dSNNN" [template]="dSNNNTemplate"
+       [title]="lang.map.disclosure_statements_notices_notifications_notices"></tab>
   <tab name="sampleData" [template]="sampleDataTemplate" [title]="lang.map.sample_data_for_operations"></tab>
   <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
 </tabs-list>
@@ -13,11 +14,11 @@
 </ng-template>
 
 <ng-template #sampleDataTemplate>
-  <audit-sample-data [newVersionList]="newVersion.dynamicForm"
-  [oldVersionList]="oldVersion.dynamicForm"
-  [caseType]="newVersion.caseType"
->
-</audit-sample-data>
+  <audit-sample-data [newVersionList]="newVersion.parsedTemplates"
+                     [oldVersionList]="oldVersion.parsedTemplates"
+                     [caseType]="newVersion.caseType"
+                     [newVersion]="newVersion"
+                     [oldVersion]="oldVersion"></audit-sample-data>
 </ng-template>
 
 <ng-template #specialExplanationTemplate>
