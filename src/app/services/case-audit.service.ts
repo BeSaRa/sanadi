@@ -76,6 +76,9 @@ import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closu
 import { AuditProjectFundraisingComponent } from '@app/modules/services/project-fundraising/pages/project-fundraising/audit/audit-project-fundraising/audit-project-fundraising.component';
 import { ProjectFundraisingInterceptor } from '@app/model-interceptors/project-fundraising-interceptor';
 import { ProjectFundraising } from '@app/models/project-fundraising';
+import { ProjectImplementation } from '@app/models/project-implementation';
+import { ProjectImplementationInterceptor } from '@app/model-interceptors/project-implementation-interceptor';
+import { AuditProjectImplementationComponent } from '@app/modules/services/project-implementation/audit/audit-project-implementation/audit-project-implementation.component';
 
 @CastResponseContainer({
   $default: {
@@ -110,6 +113,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT]: UrgentInterventionAnnouncement,
     [CaseTypes.URGENT_INTERVENTION_CLOSURE]: UrgentInterventionClosure,
     [CaseTypes.PROJECT_FUNDRAISING]: ProjectFundraising,
+    [CaseTypes.PROJECT_IMPLEMENTATION]: ProjectImplementation,
 
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
@@ -131,6 +135,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT]: UrgentInterventionAnnouncementInterceptor,
     [CaseTypes.URGENT_INTERVENTION_CLOSURE]: UrgentInterventionClosureInterceptor,
     [CaseTypes.PROJECT_FUNDRAISING]: ProjectFundraisingInterceptor,
+    [CaseTypes.PROJECT_IMPLEMENTATION]: ProjectImplementationInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -151,6 +156,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT]: AuditUrgentInterventionAnnouncementComponent,
     [CaseTypes.URGENT_INTERVENTION_CLOSURE]: AuditUrgentInterventionClosureComponent,
     [CaseTypes.PROJECT_FUNDRAISING]: AuditProjectFundraisingComponent,
+    [CaseTypes.PROJECT_IMPLEMENTATION]: AuditProjectImplementationComponent,
 
   };
 
