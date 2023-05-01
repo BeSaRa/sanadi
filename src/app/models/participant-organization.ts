@@ -7,6 +7,7 @@ import { Lookup } from '@app/models/lookup';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { AdminResult } from './admin-result';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { DateUtils } from '@app/helpers/date-utils';
 
 export class ParticipantOrganization extends SearchableCloneable<ParticipantOrganization>{
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -38,6 +39,10 @@ export class ParticipantOrganization extends SearchableCloneable<ParticipantOrga
   getAdminResultByProperty(property: keyof ParticipantOrganization): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
+      case 'workStartDate':
+        const licenseEndDate = DateUtils.getDateStringFromDate(this.workStartDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: licenseEndDate, enName: licenseEndDate });
+        break;
       default:
         let value: any = this[property];
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {

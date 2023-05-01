@@ -231,8 +231,26 @@ export class NpoManagement
       case 'disbandmentType':
         adminResultValue = this.disbandmentInfo;
         break;
-
-
+      case 'establishmentDate':
+        const establishmentDate = DateUtils.getDateStringFromDate(this.establishmentDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: establishmentDate, enName: establishmentDate });
+        break;
+      case 'registrationDate':
+        const registrationDate = DateUtils.getDateStringFromDate(this.registrationDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: registrationDate, enName: registrationDate });
+        break;
+      case 'disbandmentDate':
+        const disbandmentDate = DateUtils.getDateStringFromDate(this.disbandmentDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: disbandmentDate, enName: disbandmentDate });
+        break;
+      case 'clearanceDate':
+        const clearanceDate = DateUtils.getDateStringFromDate(this.clearanceDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: clearanceDate, enName: clearanceDate });
+        break;
+      case 'followUpDate':
+        const followUpDate = DateUtils.getDateStringFromDate(this.followUpDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: followUpDate, enName: followUpDate });
+        break;
       default:
         let value: any = this[property];
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {

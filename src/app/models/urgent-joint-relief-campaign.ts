@@ -20,6 +20,7 @@ import { infoSearchFields } from '@helpers/info-search-fields';
 import { normalSearchFields } from '@helpers/normal-search-fields';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { DateUtils } from '@app/helpers/date-utils';
 
 const interceptor = new UrgentJointReliefCampaignInterceptor();
 
@@ -151,6 +152,18 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
         break;
       case 'beneficiaryCountry':
         adminResultValue = this.beneficiaryCountryInfo;
+        break;
+      case 'licenseEndDate':
+        const licenseEndDate = DateUtils.getDateStringFromDate(this.licenseEndDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: licenseEndDate, enName: licenseEndDate });
+        break;
+      case 'licenseStartDate':
+        const licenseStartDate = DateUtils.getDateStringFromDate(this.licenseStartDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: licenseStartDate, enName: licenseStartDate });
+        break;
+      case 'workStartDate':
+        const workStartDate = DateUtils.getDateStringFromDate(this.workStartDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: workStartDate, enName: workStartDate });
         break;
       default:
         let value: any = this[property];
