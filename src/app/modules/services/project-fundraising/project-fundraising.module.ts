@@ -1,4 +1,3 @@
-import { AuditTemplateListComponent } from './pages/project-fundraising/audit/audit-template-list/audit-template-list.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
@@ -23,10 +22,11 @@ import {
   ProjectFundraisingApproveTaskPopupComponent
 } from '@modules/services/project-fundraising/popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component';
 import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
-import { AuditDeductionRatioManagerComponent } from './pages/project-fundraising/audit/audit-deduction-ratio-manager/audit-deduction-ratio-manager.component';
-import { AuditTargetedCountriesDistributionComponent } from './pages/project-fundraising/audit/audit-targeted-countries-distribution/audit-targeted-countries-distribution.component';
-import { AuditTargetedYearsDistributionComponent } from './pages/project-fundraising/audit/audit-targeted-years-distribution/audit-targeted-years-distribution.component';
-import { AuditProjectFundraisingComponent } from './pages/project-fundraising/audit/audit-project-fundraising/audit-project-fundraising.component';
+import { AuditProjectFundraisingComponent } from './audit/audit-project-fundraising/audit-project-fundraising.component';
+import { AuditDeductionRatioManagerComponent } from './audit/audit-deduction-ratio-manager/audit-deduction-ratio-manager.component';
+import { AuditTargetedCountriesDistributionComponent } from './audit/audit-targeted-countries-distribution/audit-targeted-countries-distribution.component';
+import { AuditTargetedYearsDistributionComponent } from './audit/audit-targeted-years-distribution/audit-targeted-years-distribution.component';
+import { AuditTemplateListComponent } from './audit/audit-template-list/audit-template-list.component';
 
 
 @NgModule({

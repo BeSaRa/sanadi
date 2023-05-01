@@ -73,7 +73,6 @@ import { UrgentInterventionAnnouncementInterceptor } from '@app/model-intercepto
 import { AuditUrgentInterventionAnnouncementComponent } from '@app/modules/services/urgent-intervention-announcement/audit/audit-urgent-intervention-announcement/audit-urgent-intervention-announcement.component';
 import { AuditUrgentInterventionClosureComponent } from '@app/modules/services/urgent-intervention-closure/audit/audit-urgent-intervention-closure/audit-urgent-intervention-closure.component';
 import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
-import { AuditProjectFundraisingComponent } from '@app/modules/services/project-fundraising/pages/project-fundraising/audit/audit-project-fundraising/audit-project-fundraising.component';
 import { ProjectFundraisingInterceptor } from '@app/model-interceptors/project-fundraising-interceptor';
 import { ProjectFundraising } from '@app/models/project-fundraising';
 import { ProjectImplementation } from '@app/models/project-implementation';
@@ -82,6 +81,10 @@ import { AuditProjectImplementationComponent } from '@app/modules/services/proje
 import { UrgentJointReliefCampaign } from '@app/models/urgent-joint-relief-campaign';
 import { UrgentJointReliefCampaignInterceptor } from '@app/model-interceptors/urgent-joint-relief-campaign-interceptor';
 import { AuditUrgentJointReliefCampaignComponent } from '@app/modules/services/urgent-joint-relief-campaign/audit/audit-urgent-joint-relief-campaign/audit-urgent-joint-relief-campaign.component';
+import { NpoManagement } from '@app/models/npo-management';
+import { AuditNpoManagementComponent } from '@app/modules/services/npo-management/audit/audit-npo-management/audit-npo-management.component';
+import { NpoManagementInterceptor } from '@app/model-interceptors/npo-management-interceptor';
+import { AuditProjectFundraisingComponent } from '@app/modules/services/project-fundraising/audit/audit-project-fundraising/audit-project-fundraising.component';
 
 @CastResponseContainer({
   $default: {
@@ -118,6 +121,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.PROJECT_FUNDRAISING]: ProjectFundraising,
     [CaseTypes.PROJECT_IMPLEMENTATION]: ProjectImplementation,
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: UrgentJointReliefCampaign,
+    [CaseTypes.NPO_MANAGEMENT]: NpoManagement,
 
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
@@ -141,6 +145,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.PROJECT_FUNDRAISING]: ProjectFundraisingInterceptor,
     [CaseTypes.PROJECT_IMPLEMENTATION]: ProjectImplementationInterceptor,
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: UrgentJointReliefCampaignInterceptor,
+    [CaseTypes.NPO_MANAGEMENT]: NpoManagementInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -163,7 +168,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.PROJECT_FUNDRAISING]: AuditProjectFundraisingComponent,
     [CaseTypes.PROJECT_IMPLEMENTATION]: AuditProjectImplementationComponent,
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: AuditUrgentJointReliefCampaignComponent,
-
+    [CaseTypes.NPO_MANAGEMENT]: AuditNpoManagementComponent,
   };
 
   constructor(public http: HttpClient,

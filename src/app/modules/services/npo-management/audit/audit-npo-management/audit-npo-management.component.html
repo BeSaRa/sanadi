@@ -1,0 +1,36 @@
+<tabs-list>
+  <tab name="basicInfo" [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+  <tab name="contectInfo" [template]="contectInfoTabTemplate" [title]="lang.map.lbl_contact_info"></tab>
+  <tab name="founderMember" [template]="founderMemberTabTemplate" [title]="lang.map.lbl_founder_members"></tab>
+  <tab name="bankAccount" [template]="bankAccountTabTemplate" [title]="lang.map.bank_accounts"></tab>
+  <tab name="realBeneficiary" [template]="realBeneficiaryTabTemplate" [title]="lang.map.lbl_real_beneficiary"></tab>
+</tabs-list>
+
+<ng-template #basicInfoTabTemplate>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+
+<ng-template #contectInfoTabTemplate>
+  <value-differences-list [differenceList]="ContectInfoDifferences"></value-differences-list>
+  <audit-npo-contact-officer [newVersionList]="newVersion.contactOfficerList"
+    [oldVersionList]="oldVersion.contactOfficerList" [caseType]="newVersion.caseType">
+  </audit-npo-contact-officer>
+</ng-template>
+
+<ng-template #founderMemberTabTemplate>
+  <audit-founder-members [newVersionList]="newVersion.founderMemberList" [oldVersionList]="oldVersion.founderMemberList"
+    [caseType]="newVersion.caseType">
+  </audit-founder-members>
+</ng-template>
+
+<ng-template #bankAccountTabTemplate>
+  <audit-npo-bank-account [newVersionList]="newVersion.bankAccountList" [oldVersionList]="oldVersion.bankAccountList"
+    [caseType]="newVersion.caseType">
+  </audit-npo-bank-account>
+</ng-template>
+
+<ng-template #realBeneficiaryTabTemplate>
+  <!-- <audit-real-beneficiaries [newVersionList]="newVersion.realBeneficiaryList"
+    [oldVersionList]="oldVersion.realBeneficiaryList" [caseType]="newVersion.caseType">
+  </audit-real-beneficiaries> -->
+</ng-template>

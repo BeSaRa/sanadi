@@ -14,7 +14,7 @@ import { Validators } from '@angular/forms';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { CustomValidators } from './../validators/custom-validators';
 import { FactoryService } from './../services/factory.service';
-import { ISearchFieldsMap } from './../types/types';
+import { ControlValueLabelLangKey, ISearchFieldsMap } from './../types/types';
 import { CaseModel } from '@app/models/case-model';
 import { mixinRequestType } from '@app/mixins/mixin-request-type';
 import { mixinLicenseDurationType } from '@app/mixins/mixin-license-duration';
@@ -25,6 +25,8 @@ import { CaseModelContract } from './../contracts/case-model-contract';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { NpoManagementInterceptor } from '@app/model-interceptors/npo-management-interceptor';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new NpoManagementInterceptor();
 
@@ -36,6 +38,7 @@ export class NpoManagement
   extends _RequestType<NpoManagementService, NpoManagement>
   implements HasRequestType, HasLicenseDurationType, CaseModelContract<NpoManagementService, NpoManagement> {
   service!: NpoManagementService;
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   caseType: number = CaseTypes.NPO_MANAGEMENT;
   // basic data
   requestType!: number;
@@ -105,6 +108,42 @@ export class NpoManagement
     }
   }
 
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: { langKey: 'request_type', value: this.requestType },
+      arabicName: { langKey: 'lbl_arabic_name', value: this.arabicName },
+      englishName: { langKey: 'lbl_english_name', value: this.englishName },
+      clearanceName: { langKey: 'lbl_clearance_name', value: this.clearanceName },
+      registrationNumber: { langKey: 'lbl_registration_number', value: this.registrationNumber },
+      unifiedEconomicRecord: { langKey: 'unified_economic_record', value: this.unifiedEconomicRecord },
+      registrationAuthority: { langKey: 'registration_authority', value: this.registrationAuthority },
+      activityType: { langKey: 'activity_type', value: this.activityType },
+      clearanceType: { langKey: 'lbl_clearance_type', value: this.clearanceType },
+      disbandmentType: { langKey: 'lbl_disbandment_type', value: this.disbandmentType },
+      establishmentDate: { langKey: 'establishment_date', value: this.establishmentDate },
+      clearanceDate: { langKey: 'clearance_date', value: this.clearanceDate },
+      registrationDate: { langKey: 'first_registration_date', value: this.registrationDate },
+      oldLicenseFullSerial: { langKey: 'license_number', value: this.oldLicenseFullSerial },
+    };
+  }
+  getContectInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      address: { langKey: 'lbl_address', value: this.address },
+      phone: { langKey: 'lbl_phone', value: this.phone },
+      fax: { langKey: 'fax_number', value: this.fax },
+      website: { langKey: 'website', value: this.website },
+      email: { langKey: 'lbl_email', value: this.email },
+      zoneNumber: { langKey: 'lbl_zone', value: this.zoneNumber },
+      buildingNumber: { langKey: 'building_number', value: this.buildingNumber },
+      streetNumber: { langKey: 'lbl_street', value: this.streetNumber },
+      facebook: { langKey: 'lbl_facebook', value: this.facebook },
+      twitter: { langKey: 'lbl_twitter', value: this.twitter },
+      instagram: { langKey: 'lbl_instagram', value: this.instagram },
+      snapChat: { langKey: 'lbl_snapchat', value: this.snapChat },
+      youTube: { langKey: 'lbl_youtube', value: this.youTube },
+      hotline: { langKey: 'hotline', value: this.hotline },
+    };
+  }
   buildForm(controls?: boolean) {
     const {
       requestType,
@@ -122,7 +161,8 @@ export class NpoManagement
       clearanceDate,
       registrationDate,
       //
-      email, phone,
+      email,
+      phone,
       zoneNumber,
       streetNumber,
       buildingNumber,
@@ -175,6 +215,33 @@ export class NpoManagement
       },
     };
   }
+  // don't delete (used in case audit history)
+  getAdminResultByProperty(property: keyof NpoManagement): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'activityType':
+        adminResultValue = this.activityTypeInfo;
+        break;
+      case 'registrationAuthority':
+        adminResultValue = this.registrationAuthorityInfo;
+        break;
+      case 'clearanceName':
+        adminResultValue = this.clearanceInfo;
+        break;
+      case 'disbandmentType':
+        adminResultValue = this.disbandmentInfo;
+        break;
+
+
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
   buildApprovalForm(control: boolean = false): any {
     const {
       followUpDate
@@ -190,6 +257,6 @@ export class NpoManagement
     return this.service.approve(this, WFResponseType.FINAL_APPROVE)
   }
   validateApprove(): DialogRef {
-    return this.service.approve(this, WFResponseType. VALIDATE_APPROVE)
+    return this.service.approve(this, WFResponseType.VALIDATE_APPROVE)
   }
 }
