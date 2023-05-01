@@ -1,5 +1,4 @@
-import {ControlValueLabelLangKey} from '@app/types/types';
-import {ILanguageKeys} from '@contracts/i-language-keys';
+import {ControlValueLabelLangKey, LabelTextLangKey} from '@app/types/types';
 import {IValueDifference} from '@contracts/i-value-difference';
 import {AdminResult} from '@models/admin-result';
 import {LangService} from '@services/lang.service';
@@ -17,15 +16,22 @@ export class ObjectUtils {
     return values;
   }
 
-  static getControlLabels(controlValuesWithLabels: { [key: string]: ControlValueLabelLangKey }): { [key: string]: keyof ILanguageKeys } {
-    let values: { [key: string]: keyof ILanguageKeys } = {};
+  static getControlLabels(controlValuesWithLabels: { [key: string]: ControlValueLabelLangKey }): {
+    [key: string]: LabelTextLangKey
+  } {
+    let values: { [key: string]: LabelTextLangKey } = {};
     for (const [controlKey, valueObj] of Object.entries(controlValuesWithLabels)) {
-      values[controlKey] = valueObj.langKey;
+      values[controlKey] = {
+        labelText: (valueObj.label && valueObj.label()) ?? undefined,
+        langKey: valueObj.langKey
+      };
     }
     return values;
   }
 
-  static getControlComparisonValues<M>(controlValuesWithLabels: { [key: string]: ControlValueLabelLangKey }): Partial<M> {
+  static getControlComparisonValues<M>(controlValuesWithLabels: {
+    [key: string]: ControlValueLabelLangKey
+  }): Partial<M> {
     let values: Partial<M> = {};
     for (const [controlKey, valueObj] of Object.entries(controlValuesWithLabels)) {
       if ('comparisonValue' in valueObj) {
@@ -68,7 +74,9 @@ export class ObjectUtils {
                                                                                                            oldVersionFullObject: V,
                                                                                                            newVersionDataObject: Partial<M>,
                                                                                                            oldVersionDataObject: Partial<V>,
-                                                                                                           labelLangKeys: { [p: string]: keyof ILanguageKeys }): IValueDifference[] {
+                                                                                                           labelTextLangKeys: {
+                                                                                                             [p: string]: LabelTextLangKey
+                                                                                                           }): IValueDifference[] {
     const langService: LangService = FactoryService.getService('LangService');
     let differencesList: IValueDifference[] = [];
 
@@ -80,13 +88,19 @@ export class ObjectUtils {
           continue;
         }
         if (oldValue !== currentValue) {
+          const labelInfo = AdminResult.createInstance({});
+          if (labelTextLangKeys[key].labelText) {
+            labelInfo.arName = labelTextLangKeys[key].labelText!;
+            labelInfo.enName = labelTextLangKeys[key].labelText!;
+          } else {
+            labelInfo.arName = langService.getArabicLocalByKey(labelTextLangKeys[key].langKey) ?? '';
+            labelInfo.enName = langService.getEnglishLocalByKey(labelTextLangKeys[key].langKey) ?? ''
+          }
+
           differencesList.push({
             oldValueInfo: oldVersionFullObject.getAdminResultByProperty(key as keyof V),
             newValueInfo: newVersionFullObject.getAdminResultByProperty(key as keyof M),
-            labelInfo: AdminResult.createInstance({
-              arName: langService.getArabicLocalByKey(labelLangKeys[key]),
-              enName: langService.getEnglishLocalByKey(labelLangKeys[key])
-            })
+            labelInfo: labelInfo
           });
         }
       }
