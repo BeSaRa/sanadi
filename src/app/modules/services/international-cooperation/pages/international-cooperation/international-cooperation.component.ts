@@ -41,7 +41,6 @@ export class InternationalCooperationComponent extends EServicesGenericComponent
 
   form!: UntypedFormGroup;
   countries: Country[] = [];
-  departments: InternalDepartment[] = [];
   internationalCooperationAllowedDepartments = [AdminstrationDepartmentCodes.SVC, AdminstrationDepartmentCodes.LCN, AdminstrationDepartmentCodes.RC, AdminstrationDepartmentCodes.IN];
   allowEditRecommendations: boolean = true;
   loadAttachments: boolean = false;
@@ -161,7 +160,7 @@ export class InternationalCooperationComponent extends EServicesGenericComponent
   }
 
   onCompetentDepChange(depId: number): void {
-    const dep = this.departments.find(item => item.id === depId);
+    const dep = this.service.departments.find(item => item.id === depId);
     dep ? this.setAuthName(dep) : this.setAuthName(null);
   }
 
@@ -202,7 +201,7 @@ export class InternationalCooperationComponent extends EServicesGenericComponent
   private loadDepartments(): void {
     this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => this.departments = deps.filter(dep => this.internationalCooperationAllowedDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
+      .subscribe(deps => this.service.departments = deps.filter(dep => this.internationalCooperationAllowedDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
   }
 
   private loadCountries() {

@@ -5,17 +5,21 @@ import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { EmployeeService } from '@app/services/employee.service';
 import { FactoryService } from '@app/services/factory.service';
 import { LangService } from '@app/services/lang.service';
-import { ISearchFieldsMap } from '@app/types/types';
+import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { EffectiveCoordinationInterceptor } from './../model-interceptors/effective-coordination-interceptor';
 import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { DateUtils } from '@app/helpers/date-utils';
 
 const { send, receive } = new EffectiveCoordinationInterceptor();
 
 @InterceptModel({ send, receive })
-export class EffectiveCoordinationCapabilities extends SearchableCloneable<EffectiveCoordinationCapabilities> {
+export class EffectiveCoordinationCapabilities extends SearchableCloneable<EffectiveCoordinationCapabilities> implements IAuditModelProperties<EffectiveCoordinationCapabilities> {
   organizationId!: number | undefined;
   eventTopic!: string;
   motivesAndRationale!: string;
@@ -31,6 +35,8 @@ export class EffectiveCoordinationCapabilities extends SearchableCloneable<Effec
   organizationRequiredRole!: string;
   organizationWayInfo!: AdminResult;
   langService?: LangService;
+
+  eventStartDateStamp!:number|null;
 
   constructor() {
     super();
@@ -77,6 +83,43 @@ export class EffectiveCoordinationCapabilities extends SearchableCloneable<Effec
       'organizationRequiredRole',
       'actions',
     ];
+  }
+  getAdminResultByProperty(property: keyof EffectiveCoordinationCapabilities): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'organizationWay':
+        adminResultValue = this.organizationWayInfo;
+        break;
+      case 'eventStartDate':
+        const eventStartDateValue = DateUtils.getDateStringFromDate(this.eventStartDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({arName: eventStartDateValue, enName: eventStartDateValue});
+        break;
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      eventTopic:{ langKey: 'lbl_event_topic', value: this.eventTopic },
+      motivesAndRationale:{ langKey: 'lbl_motives_and_rationale', value: this.motivesAndRationale },
+      eventObjectives:{ langKey: 'lbl_event_objectivese', value: this.eventObjectives },
+      expectedOutcomes:{ langKey: 'lbl_expected_outcomes', value: this.expectedOutcomes },
+      axes:{ langKey: 'lbl_axes', value: this.axes },
+      eventStartDate:{ langKey: 'lbl_event_start_date', value: this.eventStartDate, comparisonValue : this.eventStartDateStamp },
+      daysNumber:{ langKey: 'lbl_days_number_for_event', value: this.daysNumber },
+      hoursNumber:{ langKey: 'lbl_hours_number_for_event', value: this.hoursNumber },
+      organizationWay:{ langKey: 'lbl_organization_way', value: this.organizationWay },
+      sponsorsAndOrganizingPartners:{ langKey: 'lbl_sponsors_and_organizing_partners', value: this.sponsorsAndOrganizingPartners },
+      financialAllotment:{ langKey: 'lbl_financial_allotment', value: this.financialAllotment },
+      organizationRequiredRole:{ langKey: 'lbl_organization_required_role', value: this.organizationRequiredRole },
+    };
   }
   BuildForm(controls?: boolean) {
     const {

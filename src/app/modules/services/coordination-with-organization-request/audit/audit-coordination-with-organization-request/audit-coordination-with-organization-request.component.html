@@ -1,0 +1,53 @@
+<tabs-list>
+  <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
+  <tab name="participantOrg" [template]="participantOrgTemplate" [title]="lang.map.participant_organizations"></tab>
+  <tab name="organizationOfficer" [template]="organizationOfficerTemplate" [title]="lang.map.organization_officers"></tab>
+  <tab name="buildingAbility" [template]="buildingAbilityTemplate" [title]="lang.map.building_abilities"></tab>
+  <tab name="effectiveCoordinationCapabilities" [template]="effectiveCoordinationCapabilitiesTemplate" [title]="lang.map.effective_coordination_capabilities"></tab>
+  <tab name="researchAndStudies" [template]="researchAndStudiesTemplate" [title]="lang.map.research_and_studies"></tab>
+   <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
+</tabs-list>
+<ng-template #basicInfoTemplate>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #participantOrgTemplate>
+  <audit-participant-organization [newVersionList]="newVersion.participatingOrganizaionList"
+                      [oldVersionList]="oldVersion.participatingOrganizaionList"
+                      [caseType]="newVersion.caseType"
+                >
+  </audit-participant-organization>
+</ng-template>
+<ng-template #organizationOfficerTemplate>
+  <audit-organization-officer [newVersionList]="newVersion.organizaionOfficerList"
+                      [oldVersionList]="oldVersion.organizaionOfficerList"
+                      [caseType]="newVersion.caseType"
+                >
+  </audit-organization-officer>
+</ng-template>
+<ng-template #buildingAbilityTemplate>
+  <audit-building-ability [newVersionList]="newVersion.buildingAbilitiesList"
+                      [oldVersionList]="oldVersion.buildingAbilitiesList"
+                      [caseType]="newVersion.caseType"
+                >
+  </audit-building-ability>
+</ng-template>
+<ng-template #effectiveCoordinationCapabilitiesTemplate>
+  <audit-effective-coordination-capabilities [newVersionList]="newVersion.effectiveCoordinationCapabilities"
+                      [oldVersionList]="oldVersion.effectiveCoordinationCapabilities"
+                      [caseType]="newVersion.caseType"
+                >
+  </audit-effective-coordination-capabilities>
+</ng-template>
+<ng-template #researchAndStudiesTemplate>
+  <audit-research-and-studies [newVersionList]="newVersion.researchAndStudies"
+                      [oldVersionList]="oldVersion.researchAndStudies"
+                      [caseType]="newVersion.caseType"
+                >
+  </audit-research-and-studies>
+</ng-template>
+
+
+<ng-template #specialExplanationTemplate>
+  <value-differences-list [differenceList]="explanationDifferences"></value-differences-list>
+</ng-template>
+

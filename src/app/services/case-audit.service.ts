@@ -18,9 +18,6 @@ import { CaseAuditPopupComponent } from '@modules/e-services-main/popups/case-au
 import { CustomsExemptionRemittance } from '@models/customs-exemption-remittance';
 import { CustomsExemptionRemittanceInterceptor } from '@model-interceptors/customs-exemption-remittance-interceptor';
 import {
-  AuditCustomsExemptionComponent
-} from '@modules/services/customs-exemption-remittance/audit/audit-customs-exemption/audit-customs-exemption.component';
-import {
   CaseAuditDifferencesPopupComponent
 } from '@modules/e-services-main/popups/case-audit-differences-popup/case-audit-differences-popup.component';
 import { AdminResult } from '@models/admin-result';
@@ -85,6 +82,28 @@ import { NpoManagement } from '@app/models/npo-management';
 import { AuditNpoManagementComponent } from '@app/modules/services/npo-management/audit/audit-npo-management/audit-npo-management.component';
 import { NpoManagementInterceptor } from '@app/model-interceptors/npo-management-interceptor';
 import { AuditProjectFundraisingComponent } from '@app/modules/services/project-fundraising/audit/audit-project-fundraising/audit-project-fundraising.component';
+import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
+import { ForeignCountriesProjectsInterceptor } from '@app/model-interceptors/foriegn-countries-projects-interceptor';
+import { AuditForeignCountriesProjectsComponent } from '@app/modules/services/foreign-countries-projects/audit/audit-foreign-countries-projects/audit-foreign-countries-projects.component';
+import { Fundraising } from '@app/models/fundraising';
+import { FundraisingInterceptor } from '@app/model-interceptors/fundraising-interceptor';
+import { AuditFundraisingChannelLicensingComponent } from '@app/modules/services/fundraising-channel-licensing/audit/audit-fundraising-channel-licensing/audit-fundraising-channel-licensing.component';
+import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
+import { GeneralAssociationMeetingAttendanceInterceptor } from '@app/model-interceptors/general-association-meeting-attendance-interceptor';
+import { GeneralProcessNotification } from '@app/models/general-process-notification';
+import { GeneralProcessNotificationInterceptor } from '@app/model-interceptors/generalProcessNotificationInterceptor';
+import { AuditGeneralProcessNotificationComponent } from '@app/modules/services/general-process-notification/audit/audit-general-process-notification/audit-general-process-notification.component';
+import { InternalBankAccountApproval } from '@app/models/internal-bank-account-approval';
+import { InternalBankAccountApprovalInterceptor } from '@app/model-interceptors/internal-bank-account-approval-interceptor';
+import { AuditInternalBankAccountApprovalComponent } from '@app/modules/services/internal-bank-account-approval/audit/audit-internal-bank-account-approval/audit-internal-bank-account-approval.component';
+import { InternationalCooperation } from '@app/models/international-cooperation';
+import { AuditInternationalCooperationComponent } from '@app/modules/services/international-cooperation/audit/audit-international-cooperation/audit-international-cooperation.component';
+import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
+import { CoordinationWithOrganizationsRequestInterceptor } from '@app/model-interceptors/coordination-with-organizations-request-interceptor';
+import { AuditCoordinationWithOrganizationRequestComponent } from '@app/modules/services/coordination-with-organization-request/audit/audit-coordination-with-organization-request/audit-coordination-with-organization-request.component';
+import { InternationalCooperationInterceptor } from '@app/model-interceptors/international-cooperation-interceptor';
+import { AuditCustomsExemptionComponent } from '@app/modules/services/customs-exemption-remittance/audit/audit-customs-exemption/audit-customs-exemption.component';
+import { AuditGeneralAssociationMeetingAttendanceComponent } from '@app/modules/services/general-association-meeting-attendance/audit/audit-general-association-meeting-attendance/audit-general-association-meeting-attendance.component';
 
 @CastResponseContainer({
   $default: {
@@ -122,7 +141,13 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.PROJECT_IMPLEMENTATION]: ProjectImplementation,
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: UrgentJointReliefCampaign,
     [CaseTypes.NPO_MANAGEMENT]: NpoManagement,
-
+    [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: ForeignCountriesProjects,
+    [CaseTypes.FUNDRAISING_LICENSING]: Fundraising,
+    [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: GeneralAssociationMeetingAttendance,
+    [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: GeneralProcessNotification,
+    [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApproval,
+    [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCooperation,
+    [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequest,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -146,6 +171,13 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.PROJECT_IMPLEMENTATION]: ProjectImplementationInterceptor,
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: UrgentJointReliefCampaignInterceptor,
     [CaseTypes.NPO_MANAGEMENT]: NpoManagementInterceptor,
+    [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: ForeignCountriesProjectsInterceptor,
+    [CaseTypes.FUNDRAISING_LICENSING]: FundraisingInterceptor,
+    [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: GeneralAssociationMeetingAttendanceInterceptor,
+    [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: GeneralProcessNotificationInterceptor,
+    [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApprovalInterceptor,
+    [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCooperationInterceptor,
+    [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequestInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -169,6 +201,13 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.PROJECT_IMPLEMENTATION]: AuditProjectImplementationComponent,
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: AuditUrgentJointReliefCampaignComponent,
     [CaseTypes.NPO_MANAGEMENT]: AuditNpoManagementComponent,
+    [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: AuditForeignCountriesProjectsComponent,
+    [CaseTypes.FUNDRAISING_LICENSING]: AuditFundraisingChannelLicensingComponent,
+    [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: AuditGeneralAssociationMeetingAttendanceComponent,
+    [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: AuditGeneralProcessNotificationComponent,
+    [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: AuditInternalBankAccountApprovalComponent,
+    [CaseTypes.INTERNATIONAL_COOPERATION]: AuditInternationalCooperationComponent,
+    [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: AuditCoordinationWithOrganizationRequestComponent,
   };
 
   constructor(public http: HttpClient,

@@ -2,7 +2,7 @@
   <div class="col-12">
     <div class="table-responsive">
       <app-table #table [paginator]="paginator" [data]="list" [columns]="displayColumns">
-        <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+        <table class="table table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
           <ng-container cdkColumnDef="legendHeader">
             <th cdk-header-cell colspan="100" *cdkHeaderCellDef="let row">
               <ng-container [ngTemplateOutlet]="legendHeaderTemplate"></ng-container>

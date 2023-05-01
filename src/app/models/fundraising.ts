@@ -14,19 +14,23 @@ import { DialogService } from "@app/services/dialog.service";
 import { FactoryService } from "@app/services/factory.service";
 import { FundraisingService } from "@app/services/fundraising.service";
 import { DialogRef } from "@app/shared/models/dialog-ref";
-import { ISearchFieldsMap } from "@app/types/types";
+import { ControlValueLabelLangKey, ISearchFieldsMap } from "@app/types/types";
 import { CustomValidators } from "@app/validators/custom-validators";
 import { AdminResult } from "./admin-result";
 import { CaseModel } from "./case-model";
 import { TaskDetails } from "./task-details";
 import { InterceptModel } from "@decorators/intercept-model";
 import { FundraisingInterceptor } from "@app/model-interceptors/fundraising-interceptor";
+import { AuditOperationTypes } from "@app/enums/audit-operation-types";
+import { CommonUtils } from "@app/helpers/common-utils";
+import { IAuditModelProperties } from "@app/interfaces/i-audit-model-properties";
+import { ObjectUtils } from "@app/helpers/object-utils";
 
 const _ApprovalLicense = mixinApprovalLicenseWithDuration(mixinRequestType(CaseModel));
 const { send, receive } = new FundraisingInterceptor();
 
 @InterceptModel({ send, receive })
-export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraising> implements HasLicenseApproval, HasRequestType {
+export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraising> implements HasLicenseApproval, HasRequestType, IAuditModelProperties<Fundraising> {
   service: FundraisingService;
   id!: string;
   createdOn!: string;
@@ -76,6 +80,7 @@ export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraisin
   managerDecisionInfo!: AdminResult;
   reviewerDepartmentDecisionInfo!: AdminResult;
   licenseStatusInfo!: AdminResult;
+  licenseDurationTypeInfo!: AdminResult;
   specialistDecisionInfo!: AdminResult;
   chiefDecisionInfo!: AdminResult;
   riskAssessment!: string;
@@ -95,7 +100,42 @@ export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraisin
     this.service = FactoryService.getService("FundraisingService");
     this.dialog = FactoryService.getService("DialogService");
   }
+  getAdminResultByProperty(property: keyof Fundraising): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
+      case 'caseStatus':
+        adminResultValue = this.caseStatusInfo;
+        break;
+      case 'licenseDurationType':
+        adminResultValue = this.licenseDurationTypeInfo;
+        break;
 
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: { langKey: 'request_type', value: this.requestType },
+      oldLicenseFullSerial: { langKey: 'serial_number', value: this.oldLicenseFullSerial },
+      licenseDurationType: { langKey: 'license_duration_type', value: this.licenseDurationType },
+      arName: { langKey: 'arabic_name', value: this.arName },
+      enName: { langKey: 'english_name', value: this.enName },
+      about: { langKey: 'about_channel', value: this.about },
+      workingMechanism: { langKey: 'working_mechanism', value: this.workingMechanism },
+      riskAssessment: { langKey: 'risk_assessment', value: this.riskAssessment },
+    }
+  }
   buildBasicInfo(controls: boolean = false): any {
     const {
       requestType,
@@ -106,7 +146,7 @@ export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraisin
       about,
       workingMechanism,
       riskAssessment,
-    } = this;
+    } =  ObjectUtils.getControlValues<Fundraising>(this.getBasicInfoValuesWithLabels());;
     return {
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       licenseDurationType: controls ? [licenseDurationType, [CustomValidators.required]] : licenseDurationType,
@@ -126,9 +166,13 @@ export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraisin
       riskAssessment: controls ? [riskAssessment, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : riskAssessment,
     };
   }
-
+  getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      description: {langKey: 'special_explanations', value: this.description},
+     }
+  }
   buildExplanation(controls: boolean = false): any {
-    const { description } = this;
+    const { description } =  ObjectUtils.getControlValues<Fundraising>(this.getExplanationValuesWithLabels());
     return {
       description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description
     };

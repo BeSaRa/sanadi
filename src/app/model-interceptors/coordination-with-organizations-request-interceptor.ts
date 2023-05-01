@@ -167,6 +167,8 @@ export class CoordinationWithOrganizationsRequestInterceptor
         new CoordinationWithOrganizationTemplate().clone(item)
       );
     }) ?? [];
+    model.licenseStartDateStamp = !model.licenseStartDate ? null: DateUtils.getTimeStampFromDate(model.licenseStartDate);
+    model.licenseEndDateStamp = !model.licenseEndDate ? null: DateUtils.getTimeStampFromDate(model.licenseEndDate);
     return model;
   }
 

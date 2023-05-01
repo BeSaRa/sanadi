@@ -7,12 +7,14 @@ import {
   InternationalCooperationComponent
 } from '@modules/services/international-cooperation/pages/international-cooperation/international-cooperation.component';
 import {EServicesMainModule} from '@modules/e-services-main/e-services-main.module';
+import { AuditInternationalCooperationComponent } from './audit/audit-international-cooperation/audit-international-cooperation.component';
 
 
 @NgModule({
   declarations: [
     InternationalCooperationComponent,
-    InternationCooperationOutputsComponent
+    InternationCooperationOutputsComponent,
+    AuditInternationalCooperationComponent
   ],
   imports: [
     CommonModule,

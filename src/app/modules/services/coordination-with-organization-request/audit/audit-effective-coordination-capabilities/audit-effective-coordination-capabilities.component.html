@@ -1,0 +1,85 @@
+<div class="row">
+  <div class="col-12">
+    <div class="table-responsive">
+      <app-table #table [paginator]="paginator" [data]="list" [columns]="displayColumns">
+        <table class="table table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+          <ng-container cdkColumnDef="legendHeader">
+            <th cdk-header-cell colspan="100" *cdkHeaderCellDef="let row">
+              <ng-container [ngTemplateOutlet]="legendHeaderTemplate"></ng-container>
+            </th>
+          </ng-container>
+          <ng-container cdkColumnDef="eventTopic">
+            <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.lbl_event_topic}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.eventTopic}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="motivesAndRationale">
+            <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.lbl_motives_and_rationale}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.motivesAndRationale}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="eventObjectives">
+            <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.lbl_event_objectivese}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.eventObjectives}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="expectedOutcomes">
+            <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.lbl_expected_outcomes}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.expectedOutcomes}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="axes">
+            <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.lbl_axes}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.axes}} </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="daysNumber">
+            <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.lbl_days_number_for_event}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.daysNumber}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="hoursNumber">
+            <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.lbl_hours_number_for_event}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.hoursNumber}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="organizationWay">
+            <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.lbl_organization_way}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.organizationWayInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="sponsorsAndOrganizingPartners">
+            <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.lbl_sponsors_and_organizing_partners}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.sponsorsAndOrganizingPartners}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="financialAllotment">
+            <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.lbl_financial_allotment}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.financialAllotment}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="organizationRequiredRole">
+            <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.lbl_organization_required_role}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.organizationRequiredRole}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="actions">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+            <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions audit-actions">
+              <grid-actions [record]="row" [actions]="actions" [itemIndex]="i"></grid-actions>
+            </td>
+          </ng-container>
+          <tr cdk-header-row *cdkHeaderRowDef="['legendHeader']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
+          <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"
+              class="{{getAuditRowClass(row.auditOperation)}}"></tr>
+          <tr *cdkNoDataRow>
+            <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
+          </tr>
+        </table>
+        <app-paginator #paginator></app-paginator>
+      </app-table>
+      <context-menu-item #menu [actions]="actions"></context-menu-item>
+    </div>
+  </div>
+</div>
+<ng-template #legendHeaderTemplate>
+  <div class="d-flex align-items-center justify-content-end gap-1">
+    <div
+      class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.ADDED)}}">{{lang.map.lbl_record_added}}</div>
+    <div
+      class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.UPDATED)}}">{{lang.map.lbl_record_updated}}</div>
+    <div
+      class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.DELETED)}}">{{lang.map.lbl_record_deleted}}</div>
+  </div>
+</ng-template>

@@ -12,16 +12,20 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { InternalBankAccountApprovalInterceptor } from '@app/model-interceptors/internal-bank-account-approval-interceptor';
 import { InterceptModel } from '@decorators/intercept-model';
-import { ISearchFieldsMap } from '@app/types/types';
+import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
 import { dateSearchFields } from '@helpers/date-search-fields';
 import { infoSearchFields } from '@helpers/info-search-fields';
 import { normalSearchFields } from '@helpers/normal-search-fields';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const _RequestType = mixinRequestType(CaseModel);
 
 const { send, receive } = new InternalBankAccountApprovalInterceptor();
 @InterceptModel({ send, receive })
-export class InternalBankAccountApproval extends _RequestType<InternalBankAccountApprovalService, InternalBankAccountApproval> implements HasRequestType {
+export class InternalBankAccountApproval extends _RequestType<InternalBankAccountApprovalService, InternalBankAccountApproval> implements HasRequestType, IAuditModelProperties<InternalBankAccountApproval> {
   caseType: number = CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL;
   serviceSteps!: string[];
   organizationId!: number;
@@ -77,11 +81,66 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
     super();
     this.service = FactoryService.getService('InternalBankAccountApprovalService');
   }
+  getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      description: { langKey: 'special_explanations', value: this.description },
+    }
+  }
+  getAdminResultByProperty(property: keyof InternalBankAccountApproval): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
+      case 'caseStatus':
+        adminResultValue = this.caseStatusInfo;
+        break;
+      case 'category':
+        adminResultValue = this.bankCategoryInfo;
+        break;
+      case 'currency':
+        adminResultValue = this.currencyInfo;
+        break;
+      case 'operationType':
+        adminResultValue = this.operationTypeInfo;
+        break;
+      case 'bankId':
+        adminResultValue = this.bankInfo;
+        break;
 
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      requestType: { langKey: 'request_type', value: this.requestType },
+      oldLicenseFullSerial: { langKey: 'serial_number', value: this.oldLicenseFullSerial },
+      operationType:{ langKey: 'bank_operation_type', value: this.operationType },
+      purpose:{ langKey: 'bank_account_purpose', value: this.purpose },
+      bankId:{ langKey: 'bank_name', value: this.bankId },
+      category:{ langKey: 'account_type', value: this.category },
+      currency:{ langKey: 'currency', value: this.currency },
+      mainAccount:{ langKey: 'main_account', value: this.mainAccount },
+      accountNumber:{ langKey: 'account_number', value: this.accountNumber },
+      iBan:{ langKey: 'iban', value: this.iBan },
+      swiftCode:{ langKey: 'swift_code', value: this.swiftCode },
+      selectedBankAccountToMerge:{ langKey: 'bank_name', value: this.selectedBankAccountToMerge },
+      ownerOfMergedBankAccounts:{ langKey: 'merge_to_account', value: this.ownerOfMergedBankAccounts },
+      selectedResponsiblePerson:{ langKey: 'authorized_signatories', value: this.selectedResponsiblePerson },
+    }
+  }
   buildBasicInfo(controls: boolean = false): any {
     const { oldLicenseFullSerial, requestType, operationType, purpose, bankId, category,
       currency, mainAccount, accountNumber, iBan, swiftCode, selectedBankAccountToMerge,
-      ownerOfMergedBankAccounts, selectedResponsiblePerson } = this;
+      ownerOfMergedBankAccounts, selectedResponsiblePerson } = ObjectUtils.getControlValues<InternalBankAccountApproval>(this.getBasicInfoValuesWithLabels());;
     return {
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
@@ -101,7 +160,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   }
 
   buildExplanation(controls: boolean = false): any {
-    const { description } = this;
+    const { description } = ObjectUtils.getControlValues<InternalBankAccountApproval>(this.getExplanationValuesWithLabels());;
     return {
       description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : description,
     }
