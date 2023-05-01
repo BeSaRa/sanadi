@@ -38,6 +38,7 @@ import {
   SelectProjectFundraisingPopupComponent
 } from '@modules/services/project-implementation/popups/select-project-fundraising-popup/select-project-fundraising-popup.component';
 import { AuditProjectImplementationComponent } from './audit/audit-project-implementation/audit-project-implementation.component';
+import { AuditFundSourceComponent } from './audit/audit-fund-source/audit-fund-source.component';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { AuditProjectImplementationComponent } from './audit/audit-project-imple
     ImplementationTemplatePopupComponent,
     SelectProjectFundraisingPopupComponent,
     ProjectImplementationApproveTaskPopupComponent,
-    AuditProjectImplementationComponent
+    AuditProjectImplementationComponent,
+    AuditFundSourceComponent,
   ],
   imports: [
     CommonModule,

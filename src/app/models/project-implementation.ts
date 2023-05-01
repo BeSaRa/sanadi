@@ -13,7 +13,6 @@ import { AdminResult } from "@models/admin-result";
 import { CaseModelContract } from "@contracts/case-model-contract";
 import { ImplementationTemplate } from "@models/implementation-template";
 import { ImplementationFundraising } from "@models/implementation-fundraising";
-import { FundingResourceContract } from "@contracts/funding-resource-contract";
 import { Payment } from "@models/payment";
 import { ImplementingAgency } from "@models/implementing-agency";
 import { CustomValidators } from "@app/validators/custom-validators";
@@ -34,6 +33,7 @@ import { SubmissionMechanisms } from '@app/enums/submission-mechanisms.enum';
 import { AllRequestTypesEnum } from "@app/enums/all-request-types-enum";
 import { AuditOperationTypes } from "@app/enums/audit-operation-types";
 import { CommonUtils } from '@app/helpers/common-utils';
+import { FundSource } from './fund-source';
 
 const _Approval = mixinApprovalLicenseWithMonthly(mixinRequestType(CaseModel))
 const { send, receive } = new ProjectImplementationInterceptor()
@@ -64,8 +64,8 @@ export class ProjectImplementation
   implementationTemplate: ImplementationTemplate[] = []
   implementingAgencyList: ImplementingAgency[] = []
   implementationFundraising: ImplementationFundraising[] = []
-  financialGrant: FundingResourceContract[] = []
-  selfFinancing: FundingResourceContract[] = []
+  financialGrant: FundSource[] = []
+  selfFinancing: FundSource[] = []
   payment: Payment[] = []
   beneficiaryCountryInfo!: AdminResult
   domainInfo!: AdminResult
