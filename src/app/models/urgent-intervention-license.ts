@@ -151,7 +151,7 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
     };
   }
   getEmergencyFundFields(control: boolean = false): any {
-    const values = ObjectUtils.getControlValues<UrgentInterventionLicense>(this.getBasicInfoValuesWithLabels())
+    const values = ObjectUtils.getControlValues<UrgentInterventionLicense>(this.getEmergencyFundValuesWithLabels())
 
     return {
       bankName: control ? [values.bankName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.bankName,
