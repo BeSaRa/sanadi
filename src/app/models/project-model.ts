@@ -1,30 +1,33 @@
-import {CaseModel} from '@app/models/case-model';
-import {ProjectModelService} from '@app/services/project-model.service';
-import {AdminResult} from '@app/models/admin-result';
-import {ProjectComponent} from '@app/models/project-component';
-import {FactoryService} from '@app/services/factory.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {Validators} from '@angular/forms';
-import {ISearchFieldsMap} from '@app/types/types';
-import {dateSearchFields} from '@app/helpers/date-search-fields';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {ProjectModelInterceptor} from '@app/model-interceptors/project-model-interceptor';
-import {InterceptModel} from '@decorators/intercept-model';
-import {EvaluationIndicator} from '@app/models/evaluation-indicator';
-import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
-import {ProjectAddress} from '@app/models/project-address';
-import {EmployeeService} from '@services/employee.service';
-import {ProjectTemplate} from "@app/models/projectTemplate";
-import {ImplementationTemplate} from "@models/implementation-template";
+import { CaseModel } from '@app/models/case-model';
+import { ProjectModelService } from '@app/services/project-model.service';
+import { AdminResult } from '@app/models/admin-result';
+import { ProjectComponent } from '@app/models/project-component';
+import { FactoryService } from '@app/services/factory.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { Validators } from '@angular/forms';
+import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
+import { dateSearchFields } from '@app/helpers/date-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { ProjectModelInterceptor } from '@app/model-interceptors/project-model-interceptor';
+import { InterceptModel } from '@decorators/intercept-model';
+import { EvaluationIndicator } from '@app/models/evaluation-indicator';
+import { ProjectModelForeignCountriesProject } from '@app/models/project-model-foreign-countries-project';
+import { ProjectAddress } from '@app/models/project-address';
+import { EmployeeService } from '@services/employee.service';
+import { ProjectTemplate } from "@app/models/projectTemplate";
+import { ImplementationTemplate } from "@models/implementation-template";
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 // noinspection JSUnusedGlobalSymbols
-const {send, receive} = new ProjectModelInterceptor();
+const { send, receive } = new ProjectModelInterceptor();
 
-@InterceptModel({send, receive})
-export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
+@InterceptModel({ send, receive })
+export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> implements IAuditModelProperties<ProjectModel> {
   caseType: number = CaseTypes.EXTERNAL_PROJECT_MODELS;
   organizationId!: number;
   requestType!: number;
@@ -93,6 +96,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   firstSDGoalInfo!: AdminResult;
   secondSDGoalInfo!: AdminResult;
   thirdSDGoalInfo!: AdminResult;
+  exitMechanismInfo!: AdminResult;
   service!: ProjectModelService;
   targetAmount?: number
 
@@ -115,7 +119,92 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       delete this.searchFields.organization;
     }
   }
+  getAdminResultByProperty(property: keyof ProjectModel): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
+      case 'projectType':
+        adminResultValue = this.projectTypeInfo;
+        break;
+      case 'projectWorkArea':
+        adminResultValue = this.projectWorkAreaInfo;
+        break;
+      case 'executionCountry':
+        adminResultValue = this.executionCountryInfo;
+        break;
+      case 'beneficiaryCountry':
+        adminResultValue = this.beneficiaryCountryInfo;
+        break;
+      case 'domain':
+        adminResultValue = this.domainInfo;
+        break;
+      case 'mainDACCategory':
+        adminResultValue = this.mainDACCategoryInfo;
+        break;
+      case 'subDACCategory':
+        adminResultValue = this.subDACCategoryInfo;
+        break;
+      case 'mainUNOCHACategory':
+        adminResultValue = this.mainDACCategoryInfo;
+        break;
+      case 'subUNOCHACategory':
+        adminResultValue = this.subUNOCHACategoryInfo;
+        break;
+      case 'internalProjectClassification':
+        adminResultValue = this.internalProjectClassificationInfo;
+        break;
+      case 'firstSDGoal':
+        adminResultValue = this.firstSDGoalInfo;
+        break;
+      case 'secondSDGoal':
+        adminResultValue = this.secondSDGoalInfo;
+        break;
+      case 'thirdSDGoal':
+        adminResultValue = this.thirdSDGoalInfo;
+        break;
+      case 'exitMechanism':
+        adminResultValue = this.exitMechanismInfo;
+        break;
+      case 'sanadiDomain':
+        adminResultValue = this.sanadiDomainInfo;
+        break;
+      case 'sanadiMainClassification':
+        adminResultValue = this.sanadiMainClassificationInfo;
+        break;
 
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      projectType: { langKey: 'project_type', value: this.projectType },
+      requestType: { langKey: 'request_type', value: this.requestType },
+      isConstructional: { langKey: 'constructional', value: this.isConstructional },
+      projectName: { langKey: 'project_name', value: this.projectName },
+      projectDescription: { langKey: 'project_description', value: this.projectDescription },
+      projectWorkArea: { langKey: 'execution_field', value: this.projectWorkArea },
+      beneficiaryCountry: { langKey: 'beneficiary_country_info', value: this.beneficiaryCountry },
+      beneficiaryRegion: { langKey: 'region', value: this.beneficiaryRegion },
+      executionCountry: { langKey: 'country', value: this.executionCountry },
+      executionRegion: { langKey: 'region', value: this.executionRegion }
+
+    };
+  }
+  getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      description: { langKey: 'special_explanations', value: this.description },
+    }
+  }
   buildBasicInfoTab(controls: boolean = false): any {
     const {
       projectType,
@@ -128,7 +217,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       beneficiaryRegion,
       executionCountry,
       executionRegion
-    } = this;
+    } = ObjectUtils.getControlValues<ProjectModel>(this.getBasicInfoValuesWithLabels());
     return {
       requestType: controls ? [requestType, CustomValidators.required] : requestType,
       isConstructional: controls ? [isConstructional] : isConstructional,
@@ -153,6 +242,22 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     };
   }
 
+  getCategoryValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      domain: { langKey: 'the_domain', value: this.domain },
+      mainDACCategory: { langKey: 'main_dac_category', value: this.mainDACCategory },
+      subDACCategory: { langKey: 'sub_dac_category', value: this.subDACCategory },
+      mainUNOCHACategory: { langKey: 'main_unocha_category', value: this.mainUNOCHACategory },
+      subUNOCHACategory: { langKey: 'sub_unocha_category', value: this.subUNOCHACategory },
+      firstSDGoal: { langKey: 'first_sd_goal', value: this.firstSDGoal },
+      secondSDGoal: { langKey: 'second_sd_goal', value: this.secondSDGoal },
+      thirdSDGoal: { langKey: 'third_sd_goal', value: this.thirdSDGoal },
+      internalProjectClassification: { langKey: 'internal_project_classification', value: this.internalProjectClassification },
+      sanadiDomain: { langKey: 'sanadi_classification', value: this.sanadiDomain },
+      sanadiMainClassification: { langKey: 'sanadi_main_classification', value: this.sanadiMainClassification }
+
+    };
+  }
   buildCategoryTab(controls: boolean = false): any {
     const {
       domain,
@@ -166,7 +271,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       internalProjectClassification,
       sanadiDomain,
       sanadiMainClassification
-    } = this;
+    } = ObjectUtils.getControlValues<ProjectModel>(this.getCategoryValuesWithLabels());
     return {
       domain: controls ? [domain, CustomValidators.required] : domain,
       mainDACCategory: controls ? [mainDACCategory] : mainDACCategory,
@@ -181,13 +286,19 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       sanadiMainClassification: controls ? [sanadiMainClassification] : sanadiMainClassification
     };
   }
-
+  getCategoryGoalPercentValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      firstSDGoalPercentage: { langKey: 'first_sd_goal_percentage', value: this.firstSDGoalPercentage },
+      secondSDGoalPercentage: { langKey: 'second_sd_goal_percentage', value: this.secondSDGoalPercentage },
+      thirdSDGoalPercentage: { langKey: 'third_sd_goal_percentage', value: this.thirdSDGoalPercentage }
+    };
+  }
   buildCategoryGoalPercentGroup(controls: boolean = false): any {
     const {
       firstSDGoalPercentage,
       secondSDGoalPercentage,
       thirdSDGoalPercentage
-    } = this;
+    } = ObjectUtils.getControlValues<ProjectModel>(this.getCategoryGoalPercentValuesWithLabels());
     return {
       firstSDGoalPercentage: controls ? [firstSDGoalPercentage, [CustomValidators.decimal(2), Validators.max(100)]] : firstSDGoalPercentage,
       secondSDGoalPercentage: controls ? [secondSDGoalPercentage, [CustomValidators.decimal(2), Validators.max(100)]] : secondSDGoalPercentage,
@@ -195,6 +306,21 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     };
   }
 
+  getSummaryValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      needsAssessment: { langKey: 'project_needs_assessment', value: this.needsAssessment },
+      goals: { langKey: 'project_goals', value: this.goals },
+      directBeneficiaryNumber: { langKey: 'direct_beneficiary_count', value: this.directBeneficiaryNumber },
+      indirectBeneficiaryNumber: { langKey: 'indirect_beneficiary_count', value: this.indirectBeneficiaryNumber },
+      beneficiaryFamiliesNumber: { langKey: 'beneficiary_families_count', value: this.beneficiaryFamiliesNumber },
+      successItems: { langKey: 'project_success_items', value: this.successItems },
+      outputs: { langKey: 'project_outputs', value: this.outputs },
+      expectedImpact: { langKey: 'project_expected_impacts', value: this.expectedImpact },
+      expectedResults: { langKey: 'project_expected_results', value: this.expectedResults },
+      sustainabilityItems: { langKey: 'project_sustainability_items', value: this.sustainabilityItems },
+      exitMechanism: { langKey: 'exit_mechanism', value: this.exitMechanism }
+    };
+  }
   buildSummaryTab(controls: boolean = false): any {
     const employeeService: EmployeeService = FactoryService.getService('EmployeeService');
     const profile = {
@@ -254,14 +380,21 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       notes: [null]
     };
   }
-
+  getSummaryPercentValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      beneficiaries0to5:{ langKey: 'number_of_0_to_5', value: this.beneficiaries0to5 },
+      beneficiaries5to18:{ langKey: 'number_of_5_to_18', value: this.beneficiaries5to18 },
+      beneficiaries19to60:{ langKey: 'number_of_19_to_60', value: this.beneficiaries19to60 },
+      beneficiariesOver60:{ langKey: 'number_of_above_60', value: this.beneficiariesOver60 }
+    }
+  }
   buildSummaryPercentGroup(controls: boolean = false): any {
     const {
       beneficiaries0to5,
       beneficiaries5to18,
       beneficiaries19to60,
       beneficiariesOver60
-    } = this;
+    } = ObjectUtils.getControlValues<ProjectModel>(this.getSummaryPercentValuesWithLabels());
     return {
       beneficiaries0to5: controls ? [beneficiaries0to5, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries0to5,
       beneficiaries5to18: controls ? [beneficiaries5to18, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries5to18,

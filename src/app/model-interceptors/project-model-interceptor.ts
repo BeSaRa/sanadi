@@ -50,6 +50,7 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     delete model.internalProjectClassificationInfo;
     delete model.sanadiDomainInfo;
     delete model.sanadiMainClassificationInfo;
+    delete model.exitMechanismInfo;
     return model;
   }
 
@@ -75,6 +76,7 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.internalProjectClassificationInfo = AdminResult.createInstance(model.internalProjectClassificationInfo);
     model.sanadiDomainInfo = AdminResult.createInstance(model.sanadiDomainInfo);
     model.sanadiMainClassificationInfo = AdminResult.createInstance(model.sanadiMainClassificationInfo);
+    model.exitMechanismInfo = AdminResult.createInstance(model.exitMechanismInfo);
     model.evaluationIndicatorList = model.evaluationIndicatorList.map(item => {
       item.indicatorInfo = item.indicatorInfo ? AdminResult.createInstance(item.indicatorInfo) : AdminResult.createInstance({});
       return new EvaluationIndicator().clone(item);

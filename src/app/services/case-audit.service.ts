@@ -104,6 +104,9 @@ import { AuditCoordinationWithOrganizationRequestComponent } from '@app/modules/
 import { InternationalCooperationInterceptor } from '@app/model-interceptors/international-cooperation-interceptor';
 import { AuditCustomsExemptionComponent } from '@app/modules/services/customs-exemption-remittance/audit/audit-customs-exemption/audit-customs-exemption.component';
 import { AuditGeneralAssociationMeetingAttendanceComponent } from '@app/modules/services/general-association-meeting-attendance/audit/audit-general-association-meeting-attendance/audit-general-association-meeting-attendance.component';
+import { ProjectModel } from '@app/models/project-model';
+import { ProjectModelInterceptor } from '@app/model-interceptors/project-model-interceptor';
+import { AuditProjectModelsComponent } from '@app/modules/services/project-models/audit/audit-project-models/audit-project-models.component';
 
 @CastResponseContainer({
   $default: {
@@ -148,6 +151,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApproval,
     [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCooperation,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequest,
+    [CaseTypes.EXTERNAL_PROJECT_MODELS]: ProjectModel,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -178,6 +182,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: InternalBankAccountApprovalInterceptor,
     [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCooperationInterceptor,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequestInterceptor,
+    [CaseTypes.EXTERNAL_PROJECT_MODELS]: ProjectModelInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -208,6 +213,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: AuditInternalBankAccountApprovalComponent,
     [CaseTypes.INTERNATIONAL_COOPERATION]: AuditInternationalCooperationComponent,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: AuditCoordinationWithOrganizationRequestComponent,
+    [CaseTypes.EXTERNAL_PROJECT_MODELS]: AuditProjectModelsComponent,
   };
 
   constructor(public http: HttpClient,
