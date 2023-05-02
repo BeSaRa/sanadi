@@ -4,6 +4,7 @@ import { SearchableCloneable } from '@app/models/searchable-cloneable';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ControlValueLabelLangKey } from '@app/types/types';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 export class NpoBankAccount extends SearchableCloneable<NpoBankAccount> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -19,17 +20,13 @@ export class NpoBankAccount extends SearchableCloneable<NpoBankAccount> {
   }
 
   getBankAccountFields(control: boolean = false): any {
-    const {
-      currency,
-      accountNumber,
-      iban,
-      bankId
-    } = this;
+    const values = ObjectUtils.getControlValues<NpoBankAccount>(this.getValuesWithLabels())
+
     return {
-      bankId: control ? [bankId, [CustomValidators.required]] : bankId,
-      accountNumber: control ? [accountNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : accountNumber,
-      iban: control ? [iban, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : iban,
-      currency: control ? [currency, [CustomValidators.required]] : currency
+      bankId: control ? [values.bankId, [CustomValidators.required]] : values.bankId,
+      accountNumber: control ? [values.accountNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : values.accountNumber,
+      iban: control ? [values.iban, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : values.iban,
+      currency: control ? [values.currency, [CustomValidators.required]] : values.currency
     };
   }
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {

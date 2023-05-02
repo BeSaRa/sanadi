@@ -45,17 +45,15 @@ export class ImplementationFundraising extends Cloneable<ImplementationFundraisi
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      arabicName: { langKey: 'total_cost', value: this.arabicName },
-      englishName: { langKey: 'total_cost', value: this.englishName },
-      projectLicenseFullSerial: { langKey: 'total_cost', value: this.projectLicenseFullSerial },
-      projectLicenseSerial: { langKey: 'total_cost', value: this.projectLicenseSerial },
-      projectLicenseId: { langKey: 'total_cost', value: this.projectLicenseId },
-      permitType: { langKey: 'total_cost', value: this.permitType },
-      projectTotalCost: { langKey: 'total_cost', value: this.projectTotalCost },
+      arabicName: { langKey: 'lbl_arabic_name', value: this.arabicName },
+      englishName: { langKey: 'lbl_english_name', value: this.englishName },
+      projectLicenseFullSerial: { langKey: 'license_number', value: this.projectLicenseFullSerial },
+      permitType: { langKey: 'permit_type', value: this.permitType },
+      projectTotalCost: { langKey: 'project_total_cost', value: this.projectTotalCost },
       totalCost: { langKey: 'total_cost', value: this.totalCost },
-      remainingAmount: { langKey: 'total_cost', value: this.remainingAmount },
-      consumedAmount: { langKey: 'total_cost', value: this.consumedAmount },
-      templateId: { langKey: 'total_cost', value: this.templateId },
+      remainingAmount: { langKey: 'remaining_amount', value: this.remainingAmount },
+      consumedAmount: { langKey: 'consumed_amount', value: this.consumedAmount },
+      templateId: { langKey: 'lbl_template', value: this.templateId },
       notes: { langKey: 'notes', value: this.notes },
     };
   }

@@ -8,6 +8,7 @@ import { FactoryService } from '@services/factory.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 export class LessonsLearned extends SearchableCloneable<LessonsLearned> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -54,10 +55,11 @@ export class LessonsLearned extends SearchableCloneable<LessonsLearned> {
     };
   }
   buildForm(controls?: boolean): any {
-    const { lessonsLearned, statement } = this;
+    const values = ObjectUtils.getControlValues<LessonsLearned>(this.getValuesWithLabels())
+
     return {
-      lessonsLearned: controls ? [lessonsLearned, [CustomValidators.required]] : lessonsLearned,
-      statement: controls ? [statement, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : statement,
+      lessonsLearned: controls ? [values.lessonsLearned, [CustomValidators.required]] : values.lessonsLearned,
+      statement: controls ? [values.statement, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.statement,
     };
   }
 

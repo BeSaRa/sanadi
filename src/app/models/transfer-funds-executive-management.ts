@@ -4,6 +4,7 @@ import { AdminResult } from '@app/models/admin-result';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 export class TransferFundsExecutiveManagement extends SearchableCloneable<TransferFundsExecutiveManagement>{
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -29,25 +30,17 @@ export class TransferFundsExecutiveManagement extends SearchableCloneable<Transf
     };
   }
   buildForm(control: boolean = false) {
-    const {
-      nameLikePassport,
-      englishNameLikePassport,
-      jobTitle,
-      executiveNationality,
-      executiveIdentificationNumber,
-      passportNumber,
-      executivephone1,
-      executivephone2,
-    } = this
+    const values = ObjectUtils.getControlValues<TransferFundsExecutiveManagement>(this.getValuesWithLabels())
+
     return {
-      nameLikePassport: control ? [nameLikePassport, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : nameLikePassport,
-      englishNameLikePassport: control ? [englishNameLikePassport, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : englishNameLikePassport,
-      jobTitle: control ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : jobTitle,
-      executiveNationality: control ? [executiveNationality, [CustomValidators.required]] : executiveNationality,
-      executiveIdentificationNumber: control ? [executiveIdentificationNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : executiveIdentificationNumber,
-      passportNumber: control ? [passportNumber, [CustomValidators.required, ...CustomValidators.commonValidations.passport]] : passportNumber,
-      executivephone1: control ? [executivephone1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : executivephone1,
-      executivephone2: control ? [executivephone2, CustomValidators.commonValidations.phone] : executivephone2
+      nameLikePassport: control ? [values.nameLikePassport, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.nameLikePassport,
+      englishNameLikePassport: control ? [values.englishNameLikePassport, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.englishNameLikePassport,
+      jobTitle: control ? [values.jobTitle, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.jobTitle,
+      executiveNationality: control ? [values.executiveNationality, [CustomValidators.required]] : values.executiveNationality,
+      executiveIdentificationNumber: control ? [values.executiveIdentificationNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : values.executiveIdentificationNumber,
+      passportNumber: control ? [values.passportNumber, [CustomValidators.required, ...CustomValidators.commonValidations.passport]] : values.passportNumber,
+      executivephone1: control ? [values.executivephone1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.executivephone1,
+      executivephone2: control ? [values.executivephone2, CustomValidators.commonValidations.phone] : values.executivephone2
     }
   }
   getAdminResultByProperty(property: keyof TransferFundsExecutiveManagement): AdminResult {

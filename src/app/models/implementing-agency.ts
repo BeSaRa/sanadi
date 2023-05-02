@@ -8,6 +8,7 @@ import { ImplementingAgencyInterceptor } from "@model-interceptors/implementing-
 import { InterceptModel } from "@decorators/intercept-model";
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const { send, receive } = new ImplementingAgencyInterceptor()
 
@@ -33,10 +34,11 @@ export class ImplementingAgency extends SearchableCloneable<ImplementingAgency> 
     };
   }
   getAgencyFields(control: boolean = false) {
-    const { implementingAgency, implementingAgencyType } = this;
+    const values = ObjectUtils.getControlValues<ImplementingAgency>(this.getValuesWithLabels())
+
     return {
-      implementingAgencyType: control ? [implementingAgencyType, [CustomValidators.required]] : implementingAgencyType,
-      implementingAgency: control ? [implementingAgency, [CustomValidators.required]] : implementingAgency,
+      implementingAgencyType: control ? [values.implementingAgencyType, [CustomValidators.required]] : values.implementingAgencyType,
+      implementingAgency: control ? [values.implementingAgency, [CustomValidators.required]] : values.implementingAgency,
     }
   }
   // don't delete (used in case audit history)

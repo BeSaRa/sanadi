@@ -26,6 +26,7 @@ import { InterceptModel } from "@decorators/intercept-model";
 import { UrgentInterventionClosureInterceptor } from "@app/model-interceptors/urgent-intervention-closure-interceptor";
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const { send, receive } = new UrgentInterventionClosureInterceptor();
 
@@ -111,31 +112,19 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
     };
   }
   getBasicFormFields(controls?: boolean) {
-    const {
-      requestType,
-      fullName,
-      year,
-      duration,
-      oldLicenseFullSerial,
-      beneficiaryCountry,
-      beneficiaryRegion,
-      executionCountry,
-      executionRegion,
-      projectDescription,
-      description,
-    } = this;
-
+    const values = ObjectUtils.getControlValues<UrgentInterventionClosure>(this.getBasicInfoValuesWithLabels())
+    const {description} = this;
     return {
-      requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
-      fullName: controls ? [fullName, [CustomValidators.required, CustomValidators.maxLength(100)]] : fullName,
-      year: controls ? [year, [CustomValidators.required, CustomValidators.minLength(4), CustomValidators.maxLength(4), Validators.max(new Date().getFullYear())]] : year,
-      duration: controls ? [duration, [CustomValidators.required, CustomValidators.number, Validators.max(30)]] : duration,
-      oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial, // always required as request type is only NEW
-      beneficiaryCountry: controls ? [beneficiaryCountry, [CustomValidators.required]] : beneficiaryCountry,
-      beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.maxLength(50)]] : beneficiaryRegion,
-      executionCountry: controls ? [executionCountry, [CustomValidators.required]] : executionCountry,
-      executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(50)]] : executionRegion,
-      projectDescription: controls ? [projectDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : projectDescription,
+      requestType: controls ? [values.requestType, [CustomValidators.required]] : values.requestType,
+      fullName: controls ? [values.fullName, [CustomValidators.required, CustomValidators.maxLength(100)]] : values.fullName,
+      year: controls ? [values.year, [CustomValidators.required, CustomValidators.minLength(4), CustomValidators.maxLength(4), Validators.max(new Date().getFullYear())]] : values.year,
+      duration: controls ? [values.duration, [CustomValidators.required, CustomValidators.number, Validators.max(30)]] : values.duration,
+      oldLicenseFullSerial: controls ? [values.oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : values.oldLicenseFullSerial, // always required as request type is only NEW
+      beneficiaryCountry: controls ? [values.beneficiaryCountry, [CustomValidators.required]] : values.beneficiaryCountry,
+      beneficiaryRegion: controls ? [values.beneficiaryRegion, [CustomValidators.maxLength(50)]] : values.beneficiaryRegion,
+      executionCountry: controls ? [values.executionCountry, [CustomValidators.required]] : values.executionCountry,
+      executionRegion: controls ? [values.executionRegion, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.executionRegion,
+      projectDescription: controls ? [values.projectDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.projectDescription,
       description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     };
   }
@@ -154,36 +143,26 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
     };
   }
   getBeneficiaryFields(controls?: boolean) {
-    const {
-      directFemaleBeneficiaries,
-      directMaleBeneficiaries,
-      indirectFemaleBeneficiaries,
-      indirectMaleBeneficiaries,
-      handicappedFemaleBeneficiary,
-      handicappedMaleBeneficiary,
-    } = this;
+    const values = ObjectUtils.getControlValues<UrgentInterventionClosure>(this.getBeneficiaryAnalysisValuesWithLabels())
+
     return {
-      directFemaleBeneficiaries: controls ? [directFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : directFemaleBeneficiaries,
-      directMaleBeneficiaries: controls ? [directMaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : directMaleBeneficiaries,
-      indirectFemaleBeneficiaries: controls ? [indirectFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : indirectFemaleBeneficiaries,
-      indirectMaleBeneficiaries: controls ? [indirectMaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : indirectMaleBeneficiaries,
-      handicappedFemaleBeneficiary: controls ? [handicappedFemaleBeneficiary, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : handicappedFemaleBeneficiary,
-      handicappedMaleBeneficiary: controls ? [handicappedMaleBeneficiary, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : handicappedMaleBeneficiary,
+      directFemaleBeneficiaries: controls ? [values.directFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : values.directFemaleBeneficiaries,
+      directMaleBeneficiaries: controls ? [values.directMaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : values.directMaleBeneficiaries,
+      indirectFemaleBeneficiaries: controls ? [values.indirectFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : values.indirectFemaleBeneficiaries,
+      indirectMaleBeneficiaries: controls ? [values.indirectMaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : values.indirectMaleBeneficiaries,
+      handicappedFemaleBeneficiary: controls ? [values.handicappedFemaleBeneficiary, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : values.handicappedFemaleBeneficiary,
+      handicappedMaleBeneficiary: controls ? [values.handicappedMaleBeneficiary, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : values.handicappedMaleBeneficiary,
     }
   }
 
   getBeneficiaryByAgeFields(controls?: boolean) {
-    const {
-      beneficiaries0to5,
-      beneficiaries5to18,
-      beneficiaries19to60,
-      beneficiariesOver60
-    } = this;
+    const values = ObjectUtils.getControlValues<UrgentInterventionClosure>(this.getBeneficiaryAnalysisValuesWithLabels())
+
     return {
-      beneficiaries0to5: controls ? [beneficiaries0to5, [CustomValidators.required, CustomValidators.number]] : beneficiaries0to5,
-      beneficiaries5to18: controls ? [beneficiaries5to18, [CustomValidators.required, CustomValidators.number]] : beneficiaries5to18,
-      beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.number]] : beneficiaries19to60,
-      beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.number]] : beneficiariesOver60
+      beneficiaries0to5: controls ? [values.beneficiaries0to5, [CustomValidators.required, CustomValidators.number]] : values.beneficiaries0to5,
+      beneficiaries5to18: controls ? [values.beneficiaries5to18, [CustomValidators.required, CustomValidators.number]] : values.beneficiaries5to18,
+      beneficiaries19to60: controls ? [values.beneficiaries19to60, [CustomValidators.required, CustomValidators.number]] : values.beneficiaries19to60,
+      beneficiariesOver60: controls ? [values.beneficiariesOver60, [CustomValidators.required, CustomValidators.number]] : values.beneficiariesOver60
     };
   }
 

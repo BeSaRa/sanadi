@@ -4,6 +4,7 @@ import { SearchableCloneable } from "@app/models/searchable-cloneable";
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ControlValueLabelLangKey } from '@app/types/types';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer>{
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -18,16 +19,16 @@ export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer>{
   jobInfo!: AdminResult;
 
   getContactOfficerFields(control: boolean): any {
-    const { identificationNumber, fullName, email, phone, extraPhone, jobTitleId } = this;
+    const values = ObjectUtils.getControlValues<NpoContactOfficer>(this.getValuesWithLabels())
 
     return {
-      identificationNumber: control ? [identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]] : identificationNumber,
-      fullName: control ? [fullName, [CustomValidators.required, CustomValidators.maxLength(300),
-      CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : fullName,
-      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
-      phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
-      extraPhone: control ? [extraPhone, CustomValidators.commonValidations.phone] : extraPhone,
-      jobTitleId: control ? [jobTitleId, [CustomValidators.required]] : jobTitleId,
+      identificationNumber: control ? [values.identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]] : values.identificationNumber,
+      fullName: control ? [values.fullName, [CustomValidators.required, CustomValidators.maxLength(300),
+      CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : values.fullName,
+      email: control ? [values.email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : values.email,
+      phone: control ? [values.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phone,
+      extraPhone: control ? [values.extraPhone, CustomValidators.commonValidations.phone] : values.extraPhone,
+      jobTitleId: control ? [values.jobTitleId, [CustomValidators.required]] : values.jobTitleId,
     };
   }
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {

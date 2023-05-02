@@ -28,6 +28,7 @@ import { PublicTemplateStatus } from "@app/enums/public-template-status";
 import { ImplementationFundraising } from "@models/implementation-fundraising";
 import { AuditOperationTypes } from "@app/enums/audit-operation-types";
 import { CommonUtils } from "@app/helpers/common-utils";
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const { send, receive } = new ProjectFundraisingInterceptor()
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
@@ -196,45 +197,27 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
     return adminResultValue ?? new AdminResult();
   }
   buildBasicInfo(controls: boolean = false): any {
-    const {
-      requestType,
-      permitType,
-      projectWorkArea,
-      countries,
-      domain,
-      mainDACCategory,
-      subDACCategory,
-      mainUNOCHACategory,
-      subUNOCHACategory,
-      projectType,
-      internalProjectClassification,
-      sanadiDomain,
-      sanadiMainClassification,
-      licenseDuration,
-      oldLicenseFullSerial,
-      projectTotalCost,
-      oldLicenseId,
-      oldLicenseSerial
-    } = this;
+    const values = ObjectUtils.getControlValues<ProjectFundraising>(this.getBasicInfoValuesWithLabels())
+
     return {
-      requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
-      permitType: controls ? [permitType, [CustomValidators.required]] : permitType,
-      projectWorkArea: controls ? [projectWorkArea, [CustomValidators.required]] : projectWorkArea,
-      countries: controls ? [countries] : countries,
-      domain: controls ? [domain] : domain,
-      oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
-      oldLicenseId: controls ? [oldLicenseId] : oldLicenseId,
-      oldLicenseSerial: controls ? [oldLicenseSerial] : oldLicenseSerial,
-      mainDACCategory: controls ? [mainDACCategory] : mainDACCategory,
-      subDACCategory: controls ? [subDACCategory] : subDACCategory,
-      mainUNOCHACategory: controls ? [mainUNOCHACategory] : mainUNOCHACategory,
-      subUNOCHACategory: controls ? [subUNOCHACategory] : subUNOCHACategory,
-      projectType: controls ? [projectType] : projectType,
-      internalProjectClassification: controls ? [internalProjectClassification] : internalProjectClassification,
-      sanadiDomain: controls ? [sanadiDomain] : sanadiDomain,
-      sanadiMainClassification: controls ? [sanadiMainClassification] : sanadiMainClassification,
-      licenseDuration: controls ? [licenseDuration, [CustomValidators.required]] : licenseDuration,
-      projectTotalCost: controls ? [projectTotalCost, [CustomValidators.required]] : projectTotalCost,
+      requestType: controls ? [values.requestType, [CustomValidators.required]] : values.requestType,
+      permitType: controls ? [values.permitType, [CustomValidators.required]] : values.permitType,
+      projectWorkArea: controls ? [values.projectWorkArea, [CustomValidators.required]] : values.projectWorkArea,
+      countries: controls ? [values.countries] : values.countries,
+      domain: controls ? [values.domain] : values.domain,
+      oldLicenseFullSerial: controls ? [values.oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : values.oldLicenseFullSerial,
+      oldLicenseId: controls ? [values.oldLicenseId] : values.oldLicenseId,
+      oldLicenseSerial: controls ? [values.oldLicenseSerial] : values.oldLicenseSerial,
+      mainDACCategory: controls ? [values.mainDACCategory] : values.mainDACCategory,
+      subDACCategory: controls ? [values.subDACCategory] : values.subDACCategory,
+      mainUNOCHACategory: controls ? [values.mainUNOCHACategory] : values.mainUNOCHACategory,
+      subUNOCHACategory: controls ? [values.subUNOCHACategory] : values.subUNOCHACategory,
+      projectType: controls ? [values.projectType] : values.projectType,
+      internalProjectClassification: controls ? [values.internalProjectClassification] : values.internalProjectClassification,
+      sanadiDomain: controls ? [values.sanadiDomain] : values.sanadiDomain,
+      sanadiMainClassification: controls ? [values.sanadiMainClassification] : values.sanadiMainClassification,
+      licenseDuration: controls ? [values.licenseDuration, [CustomValidators.required]] : values.licenseDuration,
+      projectTotalCost: controls ? [values.projectTotalCost, [CustomValidators.required]] : values.projectTotalCost,
     }
   }
 
