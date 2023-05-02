@@ -140,4 +140,5 @@ export const urlsList: Partial<IAppUrls> = {
   GLOBAL_SETTINGS:'/admin/global-setting',
   USER_PREFERENCES: '/admin/user-preferences',
   TRAINING_PROGRAM_PARTNER: '/admin/training-program-partner',
+  FIELD_ASSESSMENT_SERVICE: '/admin/field-assessment-service',
 };
