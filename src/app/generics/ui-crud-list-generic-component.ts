@@ -1,9 +1,9 @@
 import {AfterViewInit, Directive, Input, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
-import {BehaviorSubject, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {UntypedFormControl} from '@angular/forms';
-import {exhaustMap, filter, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {ComponentType} from '@angular/cdk/portal';
 import {DialogService} from '@services/dialog.service';
 import {IDialogData} from '@contracts/i-dialog-data';
@@ -120,6 +120,9 @@ export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterView
           extras: this.getExtraDataForPopup()
         }).onAfterClose$;
       }))
+      .pipe(switchMap((savedRecord: M) => {
+        return this.onClosePopup(savedRecord);
+      }))
       .subscribe((savedRecord: M) => {
         if (!savedRecord) {
           return;
@@ -140,6 +143,9 @@ export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterView
           caseType: this.caseType,
           extras: this.getExtraDataForPopup()
         }).onAfterClose$;
+      }))
+      .pipe(switchMap((savedRecord: M) => {
+        return this.onClosePopup(savedRecord);
       }))
       .subscribe((savedRecord: M) => {
         if (!savedRecord) {
@@ -182,6 +188,10 @@ export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterView
           this.reload$.next({operation: OperationTypes.DELETE});
         }
       })
+  }
+
+  onClosePopup(savedRecord: M): Observable<M> {
+    return of(savedRecord)
   }
 
   forceClearComponent() {
