@@ -37,6 +37,7 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
   caseTypes = CaseTypes;
   list: M[] = [];
   readonly: boolean = false;
+  hideFullScreen: boolean = false;
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
