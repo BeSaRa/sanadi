@@ -1,3 +1,4 @@
+import { ObjectUtils } from './../helpers/object-utils';
 import { CaseModel } from './case-model';
 import { ConsultationService } from '@services/consultation.service';
 import { FactoryService } from '@services/factory.service';
@@ -62,29 +63,20 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> i
     };
   }
   getFormFields(control: boolean = false): any {
-    const {
-      category,
-      organizationId,
-      fullName,
-      mobileNo,
-      email,
-      requestBody,
-      competentDepartmentID,
-      competentDepartmentAuthName
-    } = this;
+    const values = ObjectUtils.getControlValues<Consultation>(this.getBasicInfoValuesWithLabels())
 
     return {
-      category: control ? [category, [CustomValidators.required]] : category,
-      organizationId: control ? [organizationId, [CustomValidators.required]] : organizationId,
-      fullName: control ? [fullName, [CustomValidators.required,
+      category: control ? [values.category, [CustomValidators.required]] : values.category,
+      organizationId: control ? [values.organizationId, [CustomValidators.required]] : values.organizationId,
+      fullName: control ? [values.fullName, [CustomValidators.required,
       CustomValidators.minLength(4),
       CustomValidators.maxLength(100),
-      CustomValidators.pattern('ENG_AR_NUM_ONLY')]] : fullName,
-      mobileNo: control ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
-      email: control ? [email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : email,
-      requestBody: control ? [requestBody, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : requestBody,
-      competentDepartmentID: control ? [competentDepartmentID] : competentDepartmentID,
-      competentDepartmentAuthName: control ? [competentDepartmentAuthName] : competentDepartmentAuthName
+      CustomValidators.pattern('ENG_AR_NUM_ONLY')]] : values.fullName,
+      mobileNo: control ? [values.mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : values.mobileNo,
+      email: control ? [values.email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : values.email,
+      requestBody: control ? [values.requestBody, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.requestBody,
+      competentDepartmentID: control ? [values.competentDepartmentID] : values.competentDepartmentID,
+      competentDepartmentAuthName: control ? [values.competentDepartmentAuthName] : values.competentDepartmentAuthName
     };
   }
 

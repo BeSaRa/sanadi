@@ -34,6 +34,7 @@ import { AllRequestTypesEnum } from "@app/enums/all-request-types-enum";
 import { AuditOperationTypes } from "@app/enums/audit-operation-types";
 import { CommonUtils } from '@app/helpers/common-utils';
 import { FundSource } from './fund-source';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const _Approval = mixinApprovalLicenseWithMonthly(mixinRequestType(CaseModel))
 const { send, receive } = new ProjectImplementationInterceptor()
@@ -119,30 +120,19 @@ export class ProjectImplementation
     };
   }
   buildBasicInfo(controls: boolean = false) {
-    const {
-      requestType,
-      oldLicenseFullSerial,
-      projectWorkArea,
-      beneficiaryCountry,
-      domain,
-      mainDACCategory,
-      mainUNOCHACategory,
-      subDACCategory,
-      subUNOCHACategory,
-      internalProjectClassification,
-    } = this;
+    const values = ObjectUtils.getControlValues<ProjectImplementation>(this.getBasicInfoValuesWithLabels())
 
     return {
-      requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
-      oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
-      projectWorkArea: controls ? [projectWorkArea, [CustomValidators.required], []] : projectWorkArea,
-      beneficiaryCountry: controls ? [beneficiaryCountry, [CustomValidators.required], []] : beneficiaryCountry,
-      domain: controls ? [domain] : domain,
-      mainDACCategory: controls ? [mainDACCategory] : mainDACCategory,
-      mainUNOCHACategory: controls ? [mainUNOCHACategory] : mainUNOCHACategory,
-      subDACCategory: controls ? [subDACCategory] : subDACCategory,
-      subUNOCHACategory: controls ? [subUNOCHACategory] : subUNOCHACategory,
-      internalProjectClassification: controls ? [internalProjectClassification] : internalProjectClassification,
+      requestType: controls ? [values.requestType, [CustomValidators.required]] : values.requestType,
+      oldLicenseFullSerial: controls ? [values.oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : values.oldLicenseFullSerial,
+      projectWorkArea: controls ? [values.projectWorkArea, [CustomValidators.required], []] : values.projectWorkArea,
+      beneficiaryCountry: controls ? [values.beneficiaryCountry, [CustomValidators.required], []] : values.beneficiaryCountry,
+      domain: controls ? [values.domain] : values.domain,
+      mainDACCategory: controls ? [values.mainDACCategory] : values.mainDACCategory,
+      mainUNOCHACategory: controls ? [values.mainUNOCHACategory] : values.mainUNOCHACategory,
+      subDACCategory: controls ? [values.subDACCategory] : values.subDACCategory,
+      subUNOCHACategory: controls ? [values.subUNOCHACategory] : values.subUNOCHACategory,
+      internalProjectClassification: controls ? [values.internalProjectClassification] : values.internalProjectClassification,
     }
   }
 

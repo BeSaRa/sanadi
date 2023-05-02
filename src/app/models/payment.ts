@@ -5,6 +5,7 @@ import { SearchableCloneable } from '@app/models/searchable-cloneable';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 export class Payment extends SearchableCloneable<Payment> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -35,17 +36,13 @@ export class Payment extends SearchableCloneable<Payment> {
     };
   }
   buildForm(control: boolean = false) {
-    const {
-      paymentNo,
-      dueDate,
-      totalCost,
-      notes,
-    } = this
+    const values = ObjectUtils.getControlValues<Payment>(this.getValuesWithLabels())
+
     return {
-      paymentNo: control ? [paymentNo, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : paymentNo,
-      dueDate: control ? [dueDate, [CustomValidators.required]] : dueDate,
-      totalCost: control ? [totalCost, [CustomValidators.required]] : totalCost,
-      notes: control ? [notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : notes
+      paymentNo: control ? [values.paymentNo, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.paymentNo,
+      dueDate: control ? [values.dueDate, [CustomValidators.required]] : values.dueDate,
+      totalCost: control ? [values.totalCost, [CustomValidators.required]] : values.totalCost,
+      notes: control ? [values.notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : values.notes
     }
   }
   getAdminResultByProperty(property: keyof Payment): AdminResult {

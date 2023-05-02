@@ -6,6 +6,7 @@ import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 export class InterventionField extends SearchableCloneable<InterventionField> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -25,10 +26,11 @@ export class InterventionField extends SearchableCloneable<InterventionField> {
     };
   }
   getInterventionFieldForm(controls: boolean = false) {
-    const { mainUNOCHACategory, subUNOCHACategory } = this;
+    const values = ObjectUtils.getControlValues<InterventionField>(this.getValuesWithLabels())
+
     return {
-      mainUNOCHACategory: controls ? [mainUNOCHACategory, [CustomValidators.required]] : mainUNOCHACategory,
-      subUNOCHACategory: controls ? [subUNOCHACategory, [CustomValidators.required]] : subUNOCHACategory
+      mainUNOCHACategory: controls ? [values.mainUNOCHACategory, [CustomValidators.required]] : values.mainUNOCHACategory,
+      subUNOCHACategory: controls ? [values.subUNOCHACategory, [CustomValidators.required]] : values.subUNOCHACategory
     }
   }
   // don't delete (used in case audit history)

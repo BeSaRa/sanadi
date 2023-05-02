@@ -6,6 +6,7 @@ import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AdminResult } from './admin-result';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 export class InterventionRegion extends SearchableCloneable<InterventionRegion>{
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -27,10 +28,11 @@ export class InterventionRegion extends SearchableCloneable<InterventionRegion>{
     };
   }
   getRegionFields(controls: boolean = false) {
-    const {region, description} = this;
+    const values = ObjectUtils.getControlValues<InterventionRegion>(this.getValuesWithLabels())
+
     return {
-      region: controls ? [region, [CustomValidators.required, CustomValidators.maxLength(50)]] : region,
-      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
+      region: controls ? [values.region, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.region,
+      description: controls ? [values.description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.description,
     }
   }
   // don't delete (used in case audit history)

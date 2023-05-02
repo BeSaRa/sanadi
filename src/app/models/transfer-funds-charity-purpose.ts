@@ -4,6 +4,7 @@ import { AdminResult } from '@app/models/admin-result';
 import { SearchableCloneable } from '@app/models/searchable-cloneable';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 export class TransferFundsCharityPurpose extends SearchableCloneable<TransferFundsCharityPurpose> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -57,27 +58,18 @@ export class TransferFundsCharityPurpose extends SearchableCloneable<TransferFun
     };
   }
   buildForm(control: boolean = false) {
-    const {
-      projectName,
-      projectType,
-      domain,
-      mainUNOCHACategory,
-      mainDACCategory,
-      beneficiaryCountry,
-      executionCountry,
-      totalCost,
-      projectImplementationPeriod,
-    } = this
+    const values = ObjectUtils.getControlValues<TransferFundsCharityPurpose>(this.getValuesWithLabels())
+
     return {
-      projectName: control ? [projectName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : projectName,
-      projectType: control ? [projectType, [CustomValidators.required]] : projectType,
-      domain: control ? [domain, [CustomValidators.required]] : domain,
-      mainUNOCHACategory: control ? [mainUNOCHACategory, []] : mainUNOCHACategory,
-      mainDACCategory: control ? [mainDACCategory, []] : mainDACCategory,
-      beneficiaryCountry: control ? [beneficiaryCountry, [CustomValidators.required]] : beneficiaryCountry,
-      executionCountry: control ? [executionCountry, [CustomValidators.required]] : executionCountry,
-      totalCost: control ? [totalCost, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : totalCost,
-      projectImplementationPeriod: control ? [projectImplementationPeriod, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]] : projectImplementationPeriod
+      projectName: control ? [values.projectName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.projectName,
+      projectType: control ? [values.projectType, [CustomValidators.required]] : values.projectType,
+      domain: control ? [values.domain, [CustomValidators.required]] : values.domain,
+      mainUNOCHACategory: control ? [values.mainUNOCHACategory, []] : values.mainUNOCHACategory,
+      mainDACCategory: control ? [values.mainDACCategory, []] : values.mainDACCategory,
+      beneficiaryCountry: control ? [values.beneficiaryCountry, [CustomValidators.required]] : values.beneficiaryCountry,
+      executionCountry: control ? [values.executionCountry, [CustomValidators.required]] : values.executionCountry,
+      totalCost: control ? [values.totalCost, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : values.totalCost,
+      projectImplementationPeriod: control ? [values.projectImplementationPeriod, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]] : values.projectImplementationPeriod
     }
   }
   getAdminResultByProperty(property: keyof TransferFundsCharityPurpose): AdminResult {

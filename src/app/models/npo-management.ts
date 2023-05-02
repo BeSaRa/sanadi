@@ -27,6 +27,7 @@ import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { NpoManagementInterceptor } from '@app/model-interceptors/npo-management-interceptor';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { ObjectUtils } from '@app/helpers/object-utils';
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new NpoManagementInterceptor();
 
@@ -145,73 +146,44 @@ export class NpoManagement
     };
   }
   buildForm(controls?: boolean) {
-    const {
-      requestType,
-      arabicName,
-      englishName,
-      clearanceName,
-      registrationNumber,
-      unifiedEconomicRecord,
-      activityType,
-      registrationAuthority,
-      clearanceType,
-      disbandmentType,
-      establishmentDate,
-      disbandmentDate,
-      clearanceDate,
-      registrationDate,
-      //
-      email,
-      phone,
-      zoneNumber,
-      streetNumber,
-      buildingNumber,
-      address,
-      website,
-      facebook,
-      twitter,
-      instagram,
-      snapChat,
-      youTube,
-      fax,
-      hotline
-    } = this;
+    const values = ObjectUtils.getControlValues<NpoManagement>(this.getBasicInfoValuesWithLabels())
+
     return {
       basicInfo: {
-        requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
-        arabicName: controls ? [arabicName, [
+        requestType: controls ? [values.requestType, [CustomValidators.required]] : values.requestType,
+        arabicName: controls ? [values.arabicName, [
           CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')]] : arabicName,
-        englishName: controls ? [englishName, [
+          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')]] : values.arabicName,
+        englishName: controls ? [values.englishName, [
           CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : englishName,
-        unifiedEconomicRecord: controls ? [unifiedEconomicRecord, [Validators.required, Validators.maxLength(150)]] : unifiedEconomicRecord,
-        activityType: controls ? [activityType, [Validators.required]] : activityType,
-        registrationNumber: controls ? [registrationNumber, []] : registrationNumber,
-        registrationAuthority: controls ? [registrationAuthority, []] : registrationAuthority,
-        clearanceName: controls ? [clearanceName, []] : clearanceName,
-        clearanceType: controls ? [clearanceType, []] : clearanceType,
-        clearanceDate: controls ? [clearanceDate, []] : clearanceDate,
-        disbandmentType: controls ? [disbandmentType, []] : disbandmentType,
-        disbandmentDate: controls ? [disbandmentDate, []] : disbandmentDate,
-        establishmentDate: controls ? [establishmentDate, []] : establishmentDate,
-        registrationDate: controls ? [registrationDate, []] : registrationDate,
+          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : values.englishName,
+        unifiedEconomicRecord: controls ? [values.unifiedEconomicRecord, [Validators.required, Validators.maxLength(150)]] : values.unifiedEconomicRecord,
+        activityType: controls ? [values.activityType, [Validators.required]] : values.activityType,
+        registrationNumber: controls ? [values.registrationNumber, []] : values.registrationNumber,
+        registrationAuthority: controls ? [values.registrationAuthority, []] : values.registrationAuthority,
+        clearanceName: controls ? [values.clearanceName, []] : values.clearanceName,
+        clearanceType: controls ? [values.clearanceType, []] : values.clearanceType,
+        clearanceDate: controls ? [values.clearanceDate, []] : values.clearanceDate,
+        disbandmentType: controls ? [values.disbandmentType, []] : values.disbandmentType,
+        disbandmentDate: controls ? [values.disbandmentDate, []] : values.disbandmentDate,
+        establishmentDate: controls ? [values.establishmentDate, []] : values.establishmentDate,
+        registrationDate: controls ? [values.registrationDate, []] : values.registrationDate,
       },
       contectInfo: {
-        email: controls ? [email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : email,
-        phone: controls ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
-        zoneNumber: controls ? [zoneNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : zoneNumber,
-        streetNumber: controls ? [streetNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : streetNumber,
-        buildingNumber: controls ? [buildingNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : buildingNumber,
-        fax: controls ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
-        address: controls ? [address, [CustomValidators.required, CustomValidators.maxLength(100)]] : address,
-        website: controls ? [website, [CustomValidators.required, CustomValidators.pattern('WEBSITE')]] : website,
-        facebook: controls ? [facebook, [CustomValidators.maxLength(350)]] : facebook,
-        twitter: controls ? [twitter, [CustomValidators.maxLength(350)]] : twitter,
-        instagram: controls ? [instagram, [CustomValidators.maxLength(350)]] : instagram,
-        snapChat: controls ? [snapChat, [CustomValidators.maxLength(350)]] : snapChat,
-        youTube: controls ? [youTube, [CustomValidators.maxLength(350)]] : youTube,
-        hotline: controls ? [hotline, [CustomValidators.number, Validators.maxLength(10)]] : hotline
+        email: controls ? [values.email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : values.email,
+        phone: controls ? [values.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phone,
+        zoneNumber: controls ? [values.zoneNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : values.zoneNumber,
+        streetNumber: controls ? [values.streetNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : values.streetNumber,
+        buildingNumber: controls ? [values.buildingNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : values.buildingNumber,
+        fax: controls ? [values.fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : values.fax,
+        address: controls ? [values.address, [CustomValidators.required, CustomValidators.maxLength(100)]] : values.address,
+        website: controls ? [values.website, [CustomValidators.required, CustomValidators.pattern('WEBSITE')]] : values.website,
+        facebook: controls ? [values.facebook, [CustomValidators.maxLength(350)]] : values.facebook,
+        twitter: controls ? [values.twitter, [CustomValidators.maxLength(350)]] : values.twitter,
+        instagram: controls ? [values.instagram, [CustomValidators.maxLength(350)]] : values.instagram,
+        snapChat: controls ? [values.snapChat, [CustomValidators.maxLength(350)]] : values.snapChat,
+        youTube: controls ? [values.youTube, [CustomValidators.maxLength(350)]] : values.youTube,
+        hotline: controls ? [values.hotline, [CustomValidators.number, Validators.maxLength(10)]] : values.hotline
       },
     };
   }

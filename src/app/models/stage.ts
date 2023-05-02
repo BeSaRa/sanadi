@@ -7,6 +7,7 @@ import {Validators} from '@angular/forms';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { AdminResult } from './admin-result';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 export class Stage extends SearchableCloneable<Stage> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -41,12 +42,13 @@ export class Stage extends SearchableCloneable<Stage> {
     };
   }
   buildForm(controls: boolean = false) {
-    const {stage, duration, interventionCost, notes} = this;
+    const values = ObjectUtils.getControlValues<Stage>(this.getValuesWithLabels())
+
     return {
-      stage: controls ? [stage, [CustomValidators.required, CustomValidators.maxLength(200)]] : stage,
-      duration: controls ? [duration, [CustomValidators.required, CustomValidators.number, Validators.max(30)]] : duration,
-      interventionCost: controls ? [interventionCost, [CustomValidators.required, CustomValidators.decimal(2), CustomValidators.maxLength(20)]] : interventionCost,
-      notes: controls ? [notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]]: notes
+      stage: controls ? [values.stage, [CustomValidators.required, CustomValidators.maxLength(200)]] : values.stage,
+      duration: controls ? [values.duration, [CustomValidators.required, CustomValidators.number, Validators.max(30)]] : values.duration,
+      interventionCost: controls ? [values.interventionCost, [CustomValidators.required, CustomValidators.decimal(2), CustomValidators.maxLength(20)]] : values.interventionCost,
+      notes: controls ? [values.notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]]: values.notes
     };
   }
 }

@@ -19,6 +19,7 @@ import {
 import { InterceptModel } from '@decorators/intercept-model';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const { send, receive } = new UrgentInterventionFinancialNotificationInterceptor();
 
@@ -80,13 +81,11 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
     };
   }
   buildForm(control: boolean = false) {
-    const {
-      requestType,
-      urgentAnnouncementFullSerial,
-    } = this;
+    const values = ObjectUtils.getControlValues<UrgentInterventionFinancialNotification>(this.getBasicInfoValuesWithLabels())
+
     return {
-      requestType: control ? [requestType, [CustomValidators.required]] : requestType,
-      urgentAnnouncementFullSerial: control ? [urgentAnnouncementFullSerial, [CustomValidators.required, CustomValidators.maxLength(250)]] : urgentAnnouncementFullSerial,
+      requestType: control ? [values.requestType, [CustomValidators.required]] : values.requestType,
+      urgentAnnouncementFullSerial: control ? [values.urgentAnnouncementFullSerial, [CustomValidators.required, CustomValidators.maxLength(250)]] : values.urgentAnnouncementFullSerial,
     };
   }
 
@@ -100,19 +99,14 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
     };
   }
   buildTransferDataForm(control: boolean = false) {
-    const {
-      implementingAgencyType,
-      accountType,
-      implementingAgency,
-      accountNumber,
-      amount
-    } = this;
+    const values = ObjectUtils.getControlValues<UrgentInterventionFinancialNotification>(this.getTransferDataValuesWithLabels())
+
     return {
-      implementingAgencyType: control ? [implementingAgencyType, [CustomValidators.required]] : implementingAgencyType,
-      implementingAgency: control ? [implementingAgency, [CustomValidators.required]] : implementingAgency,
-      accountType: control ? [accountType] : accountType,
-      accountNumber: control ? [accountNumber, [CustomValidators.required]] : accountNumber,
-      amount: control ? [amount, [CustomValidators.required]] : amount,
+      implementingAgencyType: control ? [values.implementingAgencyType, [CustomValidators.required]] : values.implementingAgencyType,
+      implementingAgency: control ? [values.implementingAgency, [CustomValidators.required]] : values.implementingAgency,
+      accountType: control ? [values.accountType] : values.accountType,
+      accountNumber: control ? [values.accountNumber, [CustomValidators.required]] : values.accountNumber,
+      amount: control ? [values.amount, [CustomValidators.required]] : values.amount,
     };
   }
   getAdminResultByProperty(property: keyof UrgentInterventionFinancialNotification): AdminResult {

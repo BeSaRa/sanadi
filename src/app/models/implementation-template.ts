@@ -13,6 +13,7 @@ import { InterceptModel } from "@decorators/intercept-model";
 import { ControlValueLabelLangKey } from '@app/types/types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const { send, receive } = new ImplementationTemplateInterceptor()
 
@@ -46,33 +47,26 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
   }
 
   buildForm(controls: boolean) {
-    const {
-      arabicName,
-      englishName,
-      latitude,
-      longitude,
-      beneficiaryRegion,
-      projectTotalCost,
-      notes
-    } = this;
+    const values = ObjectUtils.getControlValues<ImplementationTemplate>(this.getValuesWithLabels())
+
     return {
-      arabicName: controls ? [arabicName, [
+      arabicName: controls ? [values.arabicName, [
         CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('AR_NUM_ONE_AR')
-      ]] : arabicName,
-      englishName: controls ? [englishName, [
+      ]] : values.arabicName,
+      englishName: controls ? [values.englishName, [
         CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
-      ]] : englishName,
-      latitude: controls ? [latitude, CustomValidators.required] : latitude,
-      longitude: controls ? [longitude, CustomValidators.required] : longitude,
-      beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(300)]] : beneficiaryRegion,
-      notes: controls ? [notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS),]] : notes,
-      projectTotalCost: controls ? [projectTotalCost, CustomValidators.required] : projectTotalCost
+      ]] : values.englishName,
+      latitude: controls ? [values.latitude, CustomValidators.required] : values.latitude,
+      longitude: controls ? [values.longitude, CustomValidators.required] : values.longitude,
+      beneficiaryRegion: controls ? [values.beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(300)]] : values.beneficiaryRegion,
+      notes: controls ? [values.notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS),]] :values. notes,
+      projectTotalCost: controls ? [values.projectTotalCost, CustomValidators.required] : values.projectTotalCost
     };
   }
 

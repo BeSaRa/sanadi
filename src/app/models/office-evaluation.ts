@@ -7,6 +7,7 @@ import { infoSearchFields } from '@helpers/info-search-fields';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 export class OfficeEvaluation extends SearchableCloneable<OfficeEvaluation>{
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -52,11 +53,12 @@ export class OfficeEvaluation extends SearchableCloneable<OfficeEvaluation>{
     };
   }
   buildForm(controls?: boolean) {
-    const { evaluationHub, evaluationResult, notes } = this;
+    const values = ObjectUtils.getControlValues<OfficeEvaluation>(this.getValuesWithLabels())
+
     return {
-      evaluationHub: controls ? [evaluationHub, [CustomValidators.required]] : evaluationHub,
-      evaluationResult: controls ? [evaluationResult, [CustomValidators.required]] : evaluationResult,
-      notes: controls ? [notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : notes
+      evaluationHub: controls ? [values.evaluationHub, [CustomValidators.required]] : values.evaluationHub,
+      evaluationResult: controls ? [values.evaluationResult, [CustomValidators.required]] : values.evaluationResult,
+      notes: controls ? [values.notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.notes
     };
   }
 }

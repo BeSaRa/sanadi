@@ -20,6 +20,7 @@ import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closu
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { UrgentInterventionAnnouncementInterceptor } from "@app/model-interceptors/urgent-intervention-announcement-interceptor";
 import { CommonUtils } from '@app/helpers/common-utils';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const _RequestType = mixinRequestType(CaseModel);
 const { send, receive } = new UrgentInterventionAnnouncementInterceptor();
@@ -94,27 +95,17 @@ export class UrgentInterventionAnnouncement extends _RequestType<UrgentIntervent
     };
   }
   getBasicFormFields(controls: boolean = false): any {
-    const {
-      requestType,
-      oldLicenseFullSerial,
-      interventionName,
-      projectDescription,
-      beneficiaryCountry,
-      beneficiaryRegion,
-      executionCountry,
-      executionRegion,
-      description,
-    } = this;
-
+    const values = ObjectUtils.getControlValues<UrgentInterventionAnnouncement>(this.getBasicInfoValuesWithLabels())
+    const { description } = this;
     return {
-      requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
-      oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
-      interventionName: controls ? [interventionName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : interventionName,
-      projectDescription: controls ? [projectDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : projectDescription,
-      beneficiaryCountry: controls ? [beneficiaryCountry, [CustomValidators.required]] : beneficiaryCountry,
-      beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(50)]] : beneficiaryRegion,
-      executionCountry: controls ? [executionCountry, [CustomValidators.required]] : executionCountry,
-      executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(50)]] : executionRegion,
+      requestType: controls ? [values.requestType, [CustomValidators.required]] : values.requestType,
+      oldLicenseFullSerial: controls ? [values.oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : values.oldLicenseFullSerial,
+      interventionName: controls ? [values.interventionName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.interventionName,
+      projectDescription: controls ? [values.projectDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.projectDescription,
+      beneficiaryCountry: controls ? [values.beneficiaryCountry, [CustomValidators.required]] : values.beneficiaryCountry,
+      beneficiaryRegion: controls ? [values.beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.beneficiaryRegion,
+      executionCountry: controls ? [values.executionCountry, [CustomValidators.required]] : values.executionCountry,
+      executionRegion: controls ? [values.executionRegion, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.executionRegion,
       description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     };
   }

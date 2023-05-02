@@ -21,6 +21,7 @@ import { normalSearchFields } from '@helpers/normal-search-fields';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { DateUtils } from '@app/helpers/date-utils';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const interceptor = new UrgentJointReliefCampaignInterceptor();
 
@@ -91,8 +92,9 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
     }
   }
   buildMainInfo(controls: boolean = false): any {
-    const { totalCost } = this;
-    return controls ? [totalCost] : totalCost
+    const values = ObjectUtils.getControlValues<UrgentJointReliefCampaign>(this.getMainInfoValuesWithLabels())
+
+    return controls ? [values.totalCost] : values.totalCost
   }
 
   getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
@@ -109,16 +111,16 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
   }
   buildBasicInfo(controls: boolean = false): any {
     const internalUserValidation = !this.employeeService.isExternalUser() ? [CustomValidators.required] : [];
-    const { fullName, licenseStartDate, licenseEndDate, phone, extraPhone, approvalPeriod, beneficiaryCountry, targetAmount } = this;
+    const values = ObjectUtils.getControlValues<UrgentJointReliefCampaign>(this.getBasicInfoValuesWithLabels())
     return {
-      fullName: controls ? [fullName, internalUserValidation.concat([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)])] : fullName,
-      licenseStartDate: controls ? [licenseStartDate, internalUserValidation] : licenseStartDate,
-      licenseEndDate: controls ? [licenseEndDate, internalUserValidation] : licenseEndDate,
-      phone: controls ? [phone, internalUserValidation.concat(CustomValidators.commonValidations.phone)] : phone,
-      extraPhone: controls ? [extraPhone, CustomValidators.commonValidations.phone] : extraPhone,
-      approvalPeriod: controls ? [approvalPeriod, internalUserValidation.concat(CustomValidators.number, CustomValidators.maxLength(2))] : approvalPeriod,
-      beneficiaryCountry: controls ? [beneficiaryCountry, internalUserValidation] : beneficiaryCountry,
-      targetAmount: controls ? [targetAmount, internalUserValidation.concat([CustomValidators.number, CustomValidators.maxLength(20)])] : targetAmount
+      fullName: controls ? [values.fullName, internalUserValidation.concat([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)])] : values.fullName,
+      licenseStartDate: controls ? [values.licenseStartDate, internalUserValidation] : values.licenseStartDate,
+      licenseEndDate: controls ? [values.licenseEndDate, internalUserValidation] : values.licenseEndDate,
+      phone: controls ? [values.phone, internalUserValidation.concat(CustomValidators.commonValidations.phone)] : values.phone,
+      extraPhone: controls ? [values.extraPhone, CustomValidators.commonValidations.phone] : values.extraPhone,
+      approvalPeriod: controls ? [values.approvalPeriod, internalUserValidation.concat(CustomValidators.number, CustomValidators.maxLength(2))] : values.approvalPeriod,
+      beneficiaryCountry: controls ? [values.beneficiaryCountry, internalUserValidation] : values.beneficiaryCountry,
+      targetAmount: controls ? [values.targetAmount, internalUserValidation.concat([CustomValidators.number, CustomValidators.maxLength(20)])] : values.targetAmount
     }
   }
 
@@ -137,10 +139,11 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
   }
   buildExternalUserData(controls: boolean = false): any {
     const externalUserValidation = this.employeeService.isExternalUser() ? [CustomValidators.required] : [];
-    const { donation, workStartDate } = this;
+    const values = ObjectUtils.getControlValues<UrgentJointReliefCampaign>(this.getExternalUserDataValuesWithLabels())
+
     return {
-      donation: controls ? [donation, externalUserValidation.concat([CustomValidators.number, CustomValidators.maxLength(20)])] : donation,
-      workStartDate: controls ? [workStartDate, externalUserValidation] : workStartDate
+      donation: controls ? [values.donation, externalUserValidation.concat([CustomValidators.number, CustomValidators.maxLength(20)])] : values.donation,
+      workStartDate: controls ? [values.workStartDate, externalUserValidation] : values.workStartDate
     }
   }
 

@@ -6,6 +6,7 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AdminResult } from './admin-result';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 export class Result extends SearchableCloneable<Result> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -42,11 +43,12 @@ export class Result extends SearchableCloneable<Result> {
     };
   }
   buildForm(controls: boolean = false) {
-    const { outputs, expectedResults, expectedImpact } = this;
+    const values = ObjectUtils.getControlValues<Result>(this.getValuesWithLabels())
+
     return {
-      outputs: controls ? [outputs, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : outputs,
-      expectedImpact: controls ? [expectedImpact, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedImpact,
-      expectedResults: controls ? [expectedResults, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedResults
+      outputs: controls ? [values.outputs, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.outputs,
+      expectedImpact: controls ? [values.expectedImpact, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.expectedImpact,
+      expectedResults: controls ? [values.expectedResults, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.expectedResults
     };
   }
 }

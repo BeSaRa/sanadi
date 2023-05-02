@@ -27,6 +27,7 @@ import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { UrgentInterventionLicenseInterceptor } from "@app/model-interceptors/urgent-intervention-license-interceptor";
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
 const { send, receive } = new UrgentInterventionLicenseInterceptor();
@@ -122,28 +123,18 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
     };
   }
   getBasicFormFields(control: boolean = false): any {
-    const {
-      arName,
-      enName,
-      requestType,
-      oldLicenseFullSerial,
-      oldLicenseId,
-      oldLicenseSerial,
-      domain,
-      mainUNOCHACategory,
-      year
-    } = this;
+    const values = ObjectUtils.getControlValues<UrgentInterventionLicense>(this.getBasicInfoValuesWithLabels())
 
     return {
-      arName: control ? [{ value: arName, disabled: true }, [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]] : arName,
-      enName: control ? [{ value: enName, disabled: true }, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : enName,
-      requestType: control ? [requestType, [CustomValidators.required]] : requestType,
-      year: control ? [{ value: enName, disabled: true }, [CustomValidators.number, CustomValidators.maxLength(4)]] : year,
-      oldLicenseFullSerial: control ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
-      oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
-      oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
-      domain: control ? [domain, CustomValidators.required] : domain,
-      mainUNOCHACategory: control ? [{ value: mainUNOCHACategory, disabled: true }] : mainUNOCHACategory
+      arName: control ? [{ value: values.arName, disabled: true }, [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]] : values.arName,
+      enName: control ? [{ value: values.enName, disabled: true }, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.enName,
+      requestType: control ? [values.requestType, [CustomValidators.required]] : values.requestType,
+      year: control ? [{ value: values.enName, disabled: true }, [CustomValidators.number, CustomValidators.maxLength(4)]] : values.year,
+      oldLicenseFullSerial: control ? [values.oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : values.oldLicenseFullSerial,
+      oldLicenseId: control ? [values.oldLicenseId] : values.oldLicenseId,
+      oldLicenseSerial: control ? [values.oldLicenseSerial] : values.oldLicenseSerial,
+      domain: control ? [values.domain, CustomValidators.required] : values.domain,
+      mainUNOCHACategory: control ? [{ value: values.mainUNOCHACategory, disabled: true }] : values.mainUNOCHACategory
     }
   }
 
@@ -160,26 +151,17 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
     };
   }
   getEmergencyFundFields(control: boolean = false): any {
-    const {
-      deductionPercent,
-      accountNumber,
-      iBan,
-      currency,
-      targetAmount,
-      bankName,
-      licenseDuration,
-      licenseStartDate
-    } = this;
+    const values = ObjectUtils.getControlValues<UrgentInterventionLicense>(this.getBasicInfoValuesWithLabels())
 
     return {
-      bankName: control ? [bankName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : bankName,
-      deductionPercent: control ? [deductionPercent, [CustomValidators.required, CustomValidators.decimal(2), Validators.min(0), Validators.max(100)]] : deductionPercent,
-      accountNumber: control ? [accountNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : accountNumber,
-      iBan: control ? [iBan, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : iBan,
-      currency: control ? [{ values: currency, disabled: true }] : currency,
-      targetAmount: control ? [targetAmount, [CustomValidators.required, CustomValidators.decimal(2)]] : targetAmount,
-      licenseDuration: control ? [{ value: licenseDuration, disabled: true }] : licenseDuration,
-      licenseStartDate: control ? [{ value: DateUtils.changeDateToDatepicker(licenseStartDate), disabled: true }] : DateUtils.changeDateToDatepicker(licenseStartDate)
+      bankName: control ? [values.bankName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.bankName,
+      deductionPercent: control ? [values.deductionPercent, [CustomValidators.required, CustomValidators.decimal(2), Validators.min(0), Validators.max(100)]] : values.deductionPercent,
+      accountNumber: control ? [values.accountNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : values.accountNumber,
+      iBan: control ? [values.iBan, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : values.iBan,
+      currency: control ? [{ values: values.currency, disabled: true }] : values.currency,
+      targetAmount: control ? [values.targetAmount, [CustomValidators.required, CustomValidators.decimal(2)]] : values.targetAmount,
+      licenseDuration: control ? [{ value: values.licenseDuration, disabled: true }] : values.licenseDuration,
+      licenseStartDate: control ? [{ value: DateUtils.changeDateToDatepicker(values.licenseStartDate), disabled: true }] : DateUtils.changeDateToDatepicker(values.licenseStartDate)
     }
   }
 
@@ -192,18 +174,14 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
     };
   }
   getProjectSummaryFields(control: boolean = false): any {
-    const {
-      goals,
-      successItems,
-      outputs,
-      expectedResults
-    } = this;
+    const values = ObjectUtils.getControlValues<UrgentInterventionLicense>(this.getBasicInfoValuesWithLabels())
+
 
     return {
-      goals: control ? [goals, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : goals,
-      outputs: control ? [outputs, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : outputs,
-      successItems: control ? [successItems, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : successItems,
-      expectedResults: control ? [expectedResults, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedResults,
+      goals: control ? [values.goals, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.goals,
+      outputs: control ? [values.outputs, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.outputs,
+      successItems: control ? [values.successItems, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.successItems,
+      expectedResults: control ? [values.expectedResults, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.expectedResults,
     }
   }
 

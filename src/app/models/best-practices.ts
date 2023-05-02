@@ -8,6 +8,7 @@ import { normalSearchFields } from '@helpers/normal-search-fields';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { ObjectUtils } from '@app/helpers/object-utils';
 
 export class BestPractices extends SearchableCloneable<BestPractices> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -55,10 +56,11 @@ export class BestPractices extends SearchableCloneable<BestPractices> {
   }
 
   buildForm(controls?: boolean): any {
-    const { bestPractices, statement } = this;
+    const values = ObjectUtils.getControlValues<BestPractices>(this.getValuesWithLabels())
+
     return {
-      bestPractices: controls ? [bestPractices, [CustomValidators.required]] : bestPractices,
-      statement: controls ? [statement, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : statement,
+      bestPractices: controls ? [values.bestPractices, [CustomValidators.required]] : values.bestPractices,
+      statement: controls ? [values.statement, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.statement,
     }
   }
 
