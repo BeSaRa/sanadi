@@ -21,7 +21,7 @@ import {
 import { AuditTransferringIndividualFundsAbroadComponent } from './audit/audit-transferring-individual-funds-abroad/audit-transferring-individual-funds-abroad.component';
 import { AuditTransferFundsExecutiveManagementComponent } from './audit/audit-transfer-funds-executive-management/audit-transfer-funds-executive-management.component';
 import { AuditTransferPurposeComponent } from './audit/audit-transfer-purpose/audit-transfer-purpose.component';
-import { AuditPaymentComponent } from './audit/audit-payment/audit-payment.component';
+import { SharedServicesModule } from '../shared-services/shared-services.module';
 
 
 @NgModule({
@@ -33,11 +33,11 @@ import { AuditPaymentComponent } from './audit/audit-payment/audit-payment.compo
     TransferFundsAbroadCompleteTaskPopupComponent,
     AuditTransferringIndividualFundsAbroadComponent,
     AuditTransferFundsExecutiveManagementComponent,
-    AuditTransferPurposeComponent,
-    AuditPaymentComponent
+    AuditTransferPurposeComponent
   ],
   imports: [
     CommonModule,
+    SharedServicesModule,
     EServicesMainModule,
     TransferringIndividualFundsAbroadRoutingModule
   ]

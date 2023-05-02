@@ -15,11 +15,14 @@ export class AuditProjectImplementationComponent implements IAuditCaseProperties
   oldVersion!: ProjectImplementation; // don't delete or rename the property
 
   basicInfoDifferences: IValueDifference[] = [];
+  implementingAgencyTypeDifferences: IValueDifference[] = [];
+
   constructor(public lang: LangService) {
   }
 
   ngOnInit() {
     this._getBasicInfoDifferences();
+    this._getimplementingAgencyTypeDifferences();
   }
 
   private _getBasicInfoDifferences(): void {
@@ -27,6 +30,12 @@ export class AuditProjectImplementationComponent implements IAuditCaseProperties
     const oldVersionDataModel: Partial<ProjectImplementation> = ObjectUtils.getControlComparisonValues<ProjectImplementation>(this.oldVersion.getBasicInfoValuesWithLabels());
     const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getBasicInfoValuesWithLabels());
     this.basicInfoDifferences = ObjectUtils.getValueDifferencesList<ProjectImplementation, ProjectImplementation>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+  }
+  private _getimplementingAgencyTypeDifferences(): void {
+    const newVersionDataModel: Partial<ProjectImplementation> = ObjectUtils.getControlComparisonValues<ProjectImplementation>(this.newVersion.getimplementingAgencyTypeValuesWithLabels());
+    const oldVersionDataModel: Partial<ProjectImplementation> = ObjectUtils.getControlComparisonValues<ProjectImplementation>(this.oldVersion.getimplementingAgencyTypeValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getimplementingAgencyTypeValuesWithLabels());
+    this.implementingAgencyTypeDifferences = ObjectUtils.getValueDifferencesList<ProjectImplementation, ProjectImplementation>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
 
 }

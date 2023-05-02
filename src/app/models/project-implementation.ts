@@ -146,10 +146,15 @@ export class ProjectImplementation
     }
   }
 
+
+  getimplementingAgencyTypeValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      implementingAgencyType: { langKey: 'implementation_agency_type', value: this.implementingAgencyType },
+    }
+  }
   getBuildProjectInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       implementationTemplate: { langKey: 'templates', value: this.implementationTemplate },
-      implementingAgencyType: { langKey: 'implementation_agency_type', value: this.implementingAgencyType },
       licenseStartDate: { langKey: 'license_start_date', value: this.licenseStartDate },
       projectEvaluationSLA: { langKey: 'project_evaluation_sla', value: this.projectEvaluationSLA },
       licenseDuration: { langKey: 'license_duration', value: this.licenseDuration },
