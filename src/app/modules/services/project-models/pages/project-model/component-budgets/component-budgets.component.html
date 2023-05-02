@@ -1,66 +1,53 @@
-<fieldset [disabled]="readonly">
-    <app-table
-    #table
-    [filter]="filterControl.value"
-    [useSearchToFilter]="true"
-    [data]="(model?.componentList)!"
-    >
-        <table *ngIf="model" class="table mt-3 table-striped table-bordered caption-top"
-            cdk-table [dataSource]="table.dataSource">
-            <ng-container cdkColumnDef="extra-header">
-            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef >
-                <table-header tableTitle="project_components" [add$]="add$" [skipClearSort]="true" (textChange)="filterControl.setValue($event)">
-                </table-header>
-            </th>
-            </ng-container>
-            <ng-container cdkColumnDef="componentName">
-                <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.component_name}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{row.componentName}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="details">
-                <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.details}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{row.details}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="totalCost">
-                <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
-                <td cdk-cell *cdkCellDef="let row" class="text-end"> {{row.totalCost}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="totalComponentCostLabel">
-                <td cdk-footer-cell colspan="2" class="text-end" *cdkFooterCellDef="let row">
-                <span><b> {{lang.map.total_cost}}: </b></span>
-                </td>
-            </ng-container>
-            <ng-container cdkColumnDef="totalComponentCost">
-                <td cdk-footer-cell class="text-end" *cdkFooterCellDef="let row">
-                <span><b>{{projectTotalCostField ? projectTotalCostField.value : 0}}</b></span>
-                </td>
-            </ng-container>
-            <ng-container cdkColumnDef="actions">
-                <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-                <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-                <div class="d-flex flex-row">
-                    <button (click)="onClickDeleteProjectComponent(row)" class="btn btn-link outline-none"
-                            [disabled]="readonly"
-                            tooltip="{{lang.map.btn_delete}}">
-                    <i class="mdi mdi-close-box"></i>
-                    </button>
-                    <button (click)="onClickEditProjectComponent(row)" class="btn btn-link outline-none"
-                            [disabled]="readonly"
-                            tooltip="{{lang.map.btn_edit}}">
-                    <i class="mdi mdi-pen"></i>
-                    </button>
-                </div>
-                </td>
-            </ng-container>
-            <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-            <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
-            <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
-            <tr cdk-footer-row *cdkFooterRowDef="footerColumns"
-                [hidden]="model && model.componentList && model.componentList.length === 0"></tr>
-            <tr *cdkNoDataRow>
-                <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-            </tr>
-        </table>
-        <!-- <app-paginator #paginator [length]="(model?.componentList)!.length"></app-paginator> -->
+<div class="row">
+  <div class="col-12">
+    <app-table #table [filter]="filterControl.value"
+               [useSearchToFilter]="true" [data]="list"
+               [columns]="displayColumns">
+      <table class="table mt-3 table-striped table-bordered caption-top"
+             cdk-table [dataSource]="table.dataSource">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="project_components" [add$]="add$" [skipClearSort]="true"
+                          (textChange)="filterControl.setValue($event)">
+            </table-header>
+          </th>
+        </ng-container>
+        <ng-container cdkColumnDef="componentName">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.component_name}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.componentName}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="details">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.details}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.details}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="totalCost">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
+          <td cdk-cell *cdkCellDef="let row" class="text-end"> {{row.totalCost}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="totalComponentCostLabel">
+          <td cdk-footer-cell colspan="2" class="text-end" *cdkFooterCellDef="let row">
+            <span><b> {{lang.map.total_cost}}: </b></span>
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="totalComponentCost">
+          <td cdk-footer-cell class="text-end" *cdkFooterCellDef="let row">
+            <span><b>{{projectTotalCostField ? projectTotalCostField.value : 0}}</b></span>
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="actions">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+          <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="i" [rebindTrigger]="readonly"></grid-actions>
+          </td>
+        </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+        <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
+        <tr cdk-footer-row *cdkFooterRowDef="footerColumns" [hidden]="list.length === 0"></tr>
+        <tr *cdkNoDataRow>
+          <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+        </tr>
+      </table>
     </app-table>
-</fieldset>
+  </div>
+</div>

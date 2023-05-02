@@ -9,7 +9,7 @@ import {ProjectAddress} from '@app/models/project-address';
 
 export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> {
   send(model: Partial<ProjectModel>): Partial<ProjectModel> {
-    model.componentList = model.componentList?.map(item => {
+    model.componentList = (model.componentList || []).map(item => {
       delete (item as Partial<ProjectComponent>).searchFields;
       return item;
     });
@@ -87,7 +87,7 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.projectAddressList = model.projectAddressList.map(item => {
       return new ProjectAddress().clone(item);
     });
-    model.componentList = model.componentList.map(item => {
+    model.componentList = (model.componentList || []).map(item => {
       return new ProjectComponent().clone(item);
     });
     return model;
