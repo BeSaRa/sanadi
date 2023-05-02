@@ -128,6 +128,7 @@ import {
 } from './shared/user-followup-permission-new/user-followup-permission-new.component';
 import { CustomServiceTemplateComponent } from './shared/custom-service-template/custom-service-template.component';
 import { CustomServiceTemplatePopupComponent } from './popups/custom-service-template-popup/custom-service-template-popup.component';
+import { UserPermissionInternalComponent } from '@app/administration/shared/user-permission-internal/user-permission-internal.component';
 
 @NgModule({
   declarations: [
@@ -217,7 +218,8 @@ import { CustomServiceTemplatePopupComponent } from './popups/custom-service-tem
     ProfileAttachmentsComponent,
     GlobalSettingsComponent,
     AdminLicenseComponent,
-    UserFollowupPermissionNewComponent
+    UserFollowupPermissionNewComponent,
+    UserPermissionInternalComponent
   ],
   imports: [
     SharedModule,
