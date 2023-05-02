@@ -1,20 +1,24 @@
-import {AdminResult} from '@app/models/admin-result';
-import {Cloneable} from "@models/cloneable";
-import {CustomValidators} from "@app/validators/custom-validators";
+import { AdminResult } from '@app/models/admin-result';
+import { Cloneable } from "@models/cloneable";
+import { CustomValidators } from "@app/validators/custom-validators";
 import currency from "currency.js";
-import {DialogRef} from "@app/shared/models/dialog-ref";
-import {FactoryService} from "@services/factory.service";
-import {ProjectImplementationService} from "@services/project-implementation.service";
-import {Observable, of} from "rxjs";
-import {switchMap} from "rxjs/operators";
-import {ImplementationFundraising} from "@models/implementation-fundraising";
-import {ImplementationTemplateInterceptor} from "@model-interceptors/implementation-template-interceptor";
-import {InterceptModel} from "@decorators/intercept-model";
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { FactoryService } from "@services/factory.service";
+import { ProjectImplementationService } from "@services/project-implementation.service";
+import { Observable, of } from "rxjs";
+import { switchMap } from "rxjs/operators";
+import { ImplementationFundraising } from "@models/implementation-fundraising";
+import { ImplementationTemplateInterceptor } from "@model-interceptors/implementation-template-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
+import { ControlValueLabelLangKey } from '@app/types/types';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 
-const {send, receive} = new ImplementationTemplateInterceptor()
+const { send, receive } = new ImplementationTemplateInterceptor()
 
-@InterceptModel({send, receive})
+@InterceptModel({ send, receive })
 export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   templateId!: string
   templateName!: string
   arabicName!: string
@@ -72,6 +76,39 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
     };
   }
 
+  getAdminResultByProperty(property: keyof ImplementationTemplate): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'executionCountry':
+        adminResultValue = this.executionCountryInfo;
+        break;
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+
+  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+
+      templateName: { langKey: 'name', value: this.templateName },
+      executionCountry: { langKey: 'execution_country', value: this.executionCountry },
+      templateCost: { langKey: 'total_cost', value: this.templateCost },
+      longitude: { langKey: 'longitude', value: this.longitude },
+      latitude: { langKey: 'latitude', value: this.latitude },
+      beneficiaryRegion: { langKey: 'beneficiary_country', value: this.beneficiaryRegion },
+      region: { langKey: 'region', value: this.region },
+      targetAmount: { langKey: 'target_amount', value: this.targetAmount },
+      arabicName: { langKey: 'lbl_arabic_name', value: this.arabicName },
+      englishName: { langKey: 'lbl_english_name', value: this.englishName },
+      projectTotalCost: { langKey: 'project_total_cost', value: this.projectTotalCost },
+      notes: { langKey: 'notes', value: this.notes },
+    };
+  }
   setProjectTotalCost(value: number): void {
     this.projectTotalCost = currency(value).value
   }
@@ -99,9 +136,9 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
     return this.service.openImplementationTemplateDialog(this, true)
   }
 
-  loadImplementationFundraising(requestType: number , caseId?: string): Observable<ImplementationFundraising | undefined> {
+  loadImplementationFundraising(requestType: number, caseId?: string): Observable<ImplementationFundraising | undefined> {
     return this.service
-      .loadRelatedPermitByTemplate(requestType , this.templateId, caseId)
+      .loadRelatedPermitByTemplate(requestType, this.templateId, caseId)
       .pipe(switchMap((license) => {
         return license ? of(license.convertToFundraisingTemplate().clone({
           projectTotalCost: license.targetAmount,

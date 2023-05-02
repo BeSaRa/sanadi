@@ -39,6 +39,8 @@ import {
 } from '@modules/services/project-implementation/popups/select-project-fundraising-popup/select-project-fundraising-popup.component';
 import { AuditProjectImplementationComponent } from './audit/audit-project-implementation/audit-project-implementation.component';
 import { AuditFundSourceComponent } from './audit/audit-fund-source/audit-fund-source.component';
+import { AuditImplementationFundraisingComponent } from './audit/audit-implementation-fundraising/audit-implementation-fundraising.component';
+import { AuditImplementationTemplateComponent } from './audit/audit-implementation-template/audit-implementation-template.component';
 
 
 @NgModule({
@@ -57,11 +59,13 @@ import { AuditFundSourceComponent } from './audit/audit-fund-source/audit-fund-s
     ProjectImplementationApproveTaskPopupComponent,
     AuditProjectImplementationComponent,
     AuditFundSourceComponent,
+    AuditImplementationFundraisingComponent,
+    AuditImplementationTemplateComponent
   ],
   imports: [
     CommonModule,
-    EServicesMainModule,
     SharedServicesModule,
+    EServicesMainModule,
     MapsModule,
     ProjectImplementationRoutingModule
   ]
