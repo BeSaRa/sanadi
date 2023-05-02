@@ -1,71 +1,65 @@
-import {Component, ViewChild} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
-  ValidatorFn,
-  Validators
+  ValidatorFn
 } from '@angular/forms';
-import {ProjectModelProjectTypes} from '@app/enums/project-model-project-types';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {FieldControlAndLabelKey} from '@app/types/types';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {IKeyValue} from '@contracts/i-key-value';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {ICoordinates} from '@contracts/ICoordinates';
-import {IDacOchaFields} from '@contracts/idac-ocha-fields';
-import {IInternalExternalExecutionFields} from '@contracts/iinternal-external-execution-fields';
-import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
-import {CaseTypes} from '@enums/case-types.enum';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {DomainTypes} from '@enums/domain-types';
-import {ExecutionFields} from '@enums/execution-fields';
-import {FileIconsEnum} from '@enums/file-extension-mime-types-icons.enum';
-import {OpenFrom} from '@enums/open-from.enum';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {SaveTypes} from '@enums/save-types';
-import {ProjectModelRequestType} from '@enums/service-request-types';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {CommonUtils} from '@helpers/common-utils';
-import {AdminLookup} from '@models/admin-lookup';
-import {AidLookup} from '@models/aid-lookup';
-import {CollectionItem} from '@models/collection-item';
-import {Country} from '@models/country';
-import {EvaluationIndicator} from '@models/evaluation-indicator';
-import {ForeignCountriesProjectsNeed} from '@models/foreign-countries-projects-need';
-import {Lookup} from '@models/lookup';
-import {ProjectAddress} from '@models/project-address';
-import {ProjectComponent} from '@models/project-component';
-import {ProjectModel} from '@models/project-model';
-import {ProjectModelForeignCountriesProject} from '@models/project-model-foreign-countries-project';
-import {SDGoal} from '@models/sdgoal';
-import {AdminLookupService} from '@services/admin-lookup.service';
-import {AidLookupService} from '@services/aid-lookup.service';
-import {CountryService} from '@services/country.service';
-import {DacOchaService} from '@services/dac-ocha.service';
-import {DialogService} from '@services/dialog.service';
-import {EmployeeService} from '@services/employee.service';
-import {ForeignCountriesProjectsService} from '@services/foreign-countries-projects.service';
-import {LangService} from '@services/lang.service';
-import {LookupService} from '@services/lookup.service';
-import {ProjectModelService} from '@services/project-model.service';
-import {SDGoalService} from '@services/sdgoal.service';
-import {ServiceDataService} from '@services/service-data.service';
-import {ToastService} from '@services/toast.service';
-import {Observable, of, Subject} from 'rxjs';
-import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {ComponentBudgetsComponent} from './component-budgets/component-budgets.component';
-import {
-  EvaluationIndicatorsPopupComponent
-} from '../../popups/evaluation-indicators-popup/evaluation-indicators-popup.component';
+import { ProjectModelProjectTypes } from '@app/enums/project-model-project-types';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { FieldControlAndLabelKey } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { IKeyValue } from '@contracts/i-key-value';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { ICoordinates } from '@contracts/ICoordinates';
+import { IDacOchaFields } from '@contracts/idac-ocha-fields';
+import { IInternalExternalExecutionFields } from '@contracts/iinternal-external-execution-fields';
+import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
+import { CaseTypes } from '@enums/case-types.enum';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { DomainTypes } from '@enums/domain-types';
+import { ExecutionFields } from '@enums/execution-fields';
+import { FileIconsEnum } from '@enums/file-extension-mime-types-icons.enum';
+import { OpenFrom } from '@enums/open-from.enum';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { SaveTypes } from '@enums/save-types';
+import { ProjectModelRequestType } from '@enums/service-request-types';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { CommonUtils } from '@helpers/common-utils';
+import { AdminLookup } from '@models/admin-lookup';
+import { AidLookup } from '@models/aid-lookup';
+import { CollectionItem } from '@models/collection-item';
+import { Country } from '@models/country';
+import { ForeignCountriesProjectsNeed } from '@models/foreign-countries-projects-need';
+import { Lookup } from '@models/lookup';
+import { ProjectAddress } from '@models/project-address';
+import { ProjectModel } from '@models/project-model';
+import { ProjectModelForeignCountriesProject } from '@models/project-model-foreign-countries-project';
+import { SDGoal } from '@models/sdgoal';
+import { AdminLookupService } from '@services/admin-lookup.service';
+import { AidLookupService } from '@services/aid-lookup.service';
+import { CountryService } from '@services/country.service';
+import { DacOchaService } from '@services/dac-ocha.service';
+import { DialogService } from '@services/dialog.service';
+import { EmployeeService } from '@services/employee.service';
+import { ForeignCountriesProjectsService } from '@services/foreign-countries-projects.service';
+import { LangService } from '@services/lang.service';
+import { LookupService } from '@services/lookup.service';
+import { ProjectModelService } from '@services/project-model.service';
+import { SDGoalService } from '@services/sdgoal.service';
+import { ServiceDataService } from '@services/service-data.service';
+import { ToastService } from '@services/toast.service';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ComponentBudgetsComponent } from './component-budgets/component-budgets.component';
 import {
   ForeignCountriesProjectPopupComponent
 } from '../../popups/foreign-countries-project-popup/foreign-countries-project-popup.component';
+import { EvaluationIndicatorsComponent } from './evaluation-indicators/evaluation-indicators.component';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'project-model',
   templateUrl: './project-model.component.html',
@@ -73,13 +67,15 @@ import {
 })
 export class ProjectModelComponent extends EServicesGenericComponent<ProjectModel, ProjectModelService> {
   form!: UntypedFormGroup;
-  evaluationIndicatorForm!: UntypedFormGroup;
-  addIndicatorFormActive!: boolean;
-  selectedEvaluationIndicator!: EvaluationIndicator | null;
-  selectedIndicatorIndex!: number | null;
-  evaluationIndicators: EvaluationIndicator[] = [];
-  indicators: AdminLookup[] = [];
-  indicatorsDisplayedColumns: string[] = ['index', 'indicator', 'percentage', 'notes', 'actions'];
+  _saveFail(error: any): void {
+    // throw new Error('Method not implemented.');
+  }
+  _launchFail(error: any): void {
+    // throw new Error('Method not implemented.');
+  }
+  _destroyComponent(): void {
+    // throw new Error('Method not implemented.');
+  }
 
   pMForeignCountriesProjectForm!: UntypedFormGroup;
   addPMForeignCountriesProjectFormActive!: boolean;
@@ -133,6 +129,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   @ViewChild('componentBudgetsTap')
   componentBudgetsRef!: ComponentBudgetsComponent
 
+  @ViewChild('evaluationIndicatorsRef')
+  evaluationIndicatorsRef!: EvaluationIndicatorsComponent
+
   selectedModel?: ProjectModel;
   displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn'];
   displayTemplateSerialField: boolean = false;
@@ -145,7 +144,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   searchTemplate$: Subject<string> = new Subject<string>();
-  addIndicatorForm$: Subject<any> = new Subject<any>();
   addPMForeignCountriesProjectForm$: Subject<any> = new Subject<any>();
   tabsData: IKeyValue = {
     basicInfo: {
@@ -184,7 +182,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       name: 'evaluationIndicatorsTab',
       langKey: 'project_evaluation_indicators',
       index: 4,
-      validStatus: () => (this.model && this.evaluationIndicators && this.evaluationIndicators.length > 0)
+      validStatus: () => (this.model && this.model.evaluationIndicatorList && this.model.evaluationIndicatorList.length > 0)
     },
     projectAddresses: {
       name: 'projectAddressesTab',
@@ -252,8 +250,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   _initComponent(): void {
     this.setUserProfiles();
     this.getQatarId();
-    this.loadIndicators();
-    this.buildEvaluationIndicatorForm();
     this.buildProjectAddressForm();
     this.buildForeignCountriesProjectForm();
     this.loadExitMechanisms();
@@ -265,7 +261,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   listenToAdd() {
-    this.addIndicatorForm$.pipe(takeUntil(this.destroy$)).subscribe(() => this.openAddIndicatorForm());
     this.addPMForeignCountriesProjectForm$.pipe(takeUntil(this.destroy$)).subscribe(() => this.openAddPMForeignCountriesProjectForm());
   }
 
@@ -420,38 +415,19 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       if (saveType === SaveTypes.DRAFT) {
         return this._isValidDraftData();
       }
-
-      // if (this.evaluationIndicators && this.evaluationIndicators.length < 1) {
-      //   this.dialog.error(this.lang.map.you_should_add_at_least_one_evaluation_indicator);
-      //   return false;
-      // }
-      //
-      // if (this.pMForeignCountriesProjects && this.pMForeignCountriesProjects.length < 1) {
-      //   this.dialog.error(this.lang.map.you_should_add_at_least_one_foreign_project_need);
-      //   return false;
-      // }
-
       const invalidTabs = this._getInvalidTabs();
       if (invalidTabs.length > 0) {
         const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
         this.dialog.error(listHtml.outerHTML);
         return false;
       } else {
-        // if project component total cost is 0, mark it invalid
         if (!this.projectTotalCostField || !CommonUtils.isValidValue(this.projectTotalCostField.value) || this.projectTotalCostField.value === 0) {
           this.toast.error(this.lang.map.err_invalid_project_component_total_x.change({value: this.projectTotalCostField.value || 0}));
           return false;
         }
       }
-
       const validAttachments$ = this.attachmentComponent.attachments.length ? of(true) : this.attachmentComponent.reload();
       return (this.model?.id ? validAttachments$ : of(true));
-
-
-      /*return of(this.form.valid)
-        .pipe(
-          switchMap((valid) => iif(() => !!(valid && this.model?.id), validAttachments$, of(valid)))
-        )*/
     }
   }
 
@@ -474,8 +450,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       ...this.summaryInfoTab.getRawValue(),
       ...this.summaryPercentGroup.getRawValue(),
       componentList: this.componentBudgetsRef.list,
+      evaluationIndicatorList: this.evaluationIndicatorsRef.list,
       projectTotalCost: this.projectTotalCostField.value,
-      evaluationIndicatorList: this.evaluationIndicators,
       foreignCountriesProjectList: this.pMForeignCountriesProjects,
       projectAddressList: this.projectAddresses,
       description: this.descriptionTab.value
@@ -510,17 +486,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     }
   }
 
-  _saveFail(error: any): void {
-    // throw new Error('Method not implemented.');
-  }
 
-  _launchFail(error: any): void {
-    // throw new Error('Method not implemented.');
-  }
-
-  _destroyComponent(): void {
-    // throw new Error('Method not implemented.');
-  }
 
   _updateForm(model: ProjectModel): void {
     this.model = model;
@@ -533,7 +499,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       description: model.description
     });
 
-    this.evaluationIndicators = this.model?.evaluationIndicatorList;
     this.pMForeignCountriesProjects = this.model?.foreignCountriesProjectList;
     this.projectAddresses = this.model?.projectAddressList;
     this.handleRequestTypeChange(model.requestType, false);
@@ -546,6 +511,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   _resetForm(): void {
     this.form.reset();
     this.componentBudgetsRef.forceClearComponent();
+    this.evaluationIndicatorsRef.forceClearComponent();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
     this.templateSerialControl.setValue('');
@@ -555,10 +521,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.displayTemplateSerialField = false;
     this.setDefaultValues();
   }
-
-  /**
-   *  list of getters for most used FormController/FormGroup
-   */
 
   get requestType(): AbstractControl {
     return this.form.get('basicInfo')?.get('requestType') as AbstractControl;
@@ -846,10 +808,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.isConstructional.valueChanges.subscribe(val => {
       if (val) {
         this.showProjectAddressesTab = true;
-        // if (this.projectWorkArea.value === ExecutionFields.OutsideQatar) {
-        // } else {
-        //   this.hideProjectAddressesTabAndClearProjectAddressesList();
-        // }
       } else {
         this.hideProjectAddressesTabAndClearProjectAddressesList();
       }
@@ -1102,16 +1060,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
-  loadIndicators(): void {
-    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.TEMPLATE_INDICATOR).subscribe(list => {
-      this.indicators = list;
-    });
-  }
-
-  getIndicatorInfo(id: number): AdminLookup {
-    return this.indicators.find(x => x.id === id) ?? new AdminLookup();
-  }
-
   loadForeignCountriesProjectsNeeds(): void {
     let countryId = this.beneficiaryCountry.value;
     if (!countryId) {
@@ -1123,13 +1071,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
-  buildEvaluationIndicatorForm(): void {
-    this.evaluationIndicatorForm = this.fb.group({
-      indicator: [null, [CustomValidators.required]],
-      percentage: [null, [CustomValidators.required, Validators.max(100), CustomValidators.decimal(2)]],
-      notes: [null]
-    });
-  }
 
   buildForeignCountriesProjectForm(): void {
     this.pMForeignCountriesProjectForm = this.fb.group({
@@ -1147,34 +1088,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
-  ///////// indicators functionality
-  openAddIndicatorForm() {
-    this.addIndicatorFormActive = true;
-    this.openEvaluationIndicatorsFormPopup()
-  }
-
-  _getEvaluationIndicatorsPopupComponent() {
-    return EvaluationIndicatorsPopupComponent;
-  }
-
   _getForeignCountriesPopupComponent() {
     return ForeignCountriesProjectPopupComponent;
-  }
-
-  openEvaluationIndicatorsFormPopup() {
-    this.dialog.show(this._getEvaluationIndicatorsPopupComponent(), {
-      form: this.evaluationIndicatorForm,
-      readonly: this.readonly,
-      indicators: this.indicators,
-      editIndex: this.selectedIndicatorIndex,
-      model: this.evaluationIndicators,
-    }).onAfterClose$.subscribe((data) => {
-      if (data) {
-        this.saveIndicator()
-      } else {
-        this.cancelAddIndicator();
-      }
-    })
   }
 
   openForeignCountriesFormPopup() {
@@ -1192,81 +1107,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     })
   }
 
-  selectIndicator(event: MouseEvent, model: EvaluationIndicator) {
-    this.addIndicatorFormActive = true;
-    this.openEvaluationIndicatorsFormPopup();
-    event.preventDefault();
-    this.selectedEvaluationIndicator = model;
-    this.evaluationIndicatorForm.patchValue(this.selectedEvaluationIndicator!);
-    this.selectedIndicatorIndex = this.evaluationIndicators
-      .findIndex(x => x.indicator === model.indicator && x.percentage === model.percentage && x.notes === model.notes);
-  }
-
-  _saveIndicator(evaluationIndicator: EvaluationIndicator) {
-    if (!this.selectedEvaluationIndicator) {
-      if (!this.isExistIndicatorInCaseOfAdd(this.evaluationIndicators, evaluationIndicator)) {
-        this.evaluationIndicators = this.evaluationIndicators.concat(evaluationIndicator);
-        this.resetEvaluationIndicatorForm();
-        this.addIndicatorFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    } else {
-      if (!this.isExistIndicatorInCaseOfEdit(this.evaluationIndicators, evaluationIndicator, this.selectedIndicatorIndex!)) {
-        let newList = this.evaluationIndicators.slice();
-        newList.splice(this.selectedIndicatorIndex!, 1);
-        newList.splice(this.selectedIndicatorIndex!, 0, evaluationIndicator);
-        this.evaluationIndicators = newList;
-        this.resetEvaluationIndicatorForm();
-        this.addIndicatorFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    }
-  }
-
-  saveIndicator() {
-    const evaluationIndicator = new EvaluationIndicator().clone(this.evaluationIndicatorForm.getRawValue());
-    evaluationIndicator.indicatorInfo = evaluationIndicator.indicatorInfo ? evaluationIndicator.indicatorInfo : this.getIndicatorInfo(evaluationIndicator.indicator).convertToAdminResult();
-
-    this._saveIndicator(evaluationIndicator);
-  }
-
-  cancelAddIndicator() {
-    this.resetEvaluationIndicatorForm();
-    this.addIndicatorFormActive = false;
-  }
-
-  resetEvaluationIndicatorForm() {
-    this.selectedEvaluationIndicator = null;
-    this.selectedIndicatorIndex = null;
-    this.evaluationIndicatorForm.reset();
-  }
-
-  removeIndicator(event: MouseEvent, model: EvaluationIndicator) {
-    event.preventDefault();
-    this.evaluationIndicators = this.evaluationIndicators.filter(x => !(x.indicator === model.indicator && x.percentage === model.percentage && x.notes === model.notes));
-    this.resetEvaluationIndicatorForm();
-  }
-
-  isExistIndicatorInCaseOfAdd(evaluationIndicators: EvaluationIndicator[], toBeAddedIndicator: EvaluationIndicator): boolean {
-    return evaluationIndicators.some(x => x.indicator === toBeAddedIndicator.indicator && x.percentage === toBeAddedIndicator.percentage && x.notes === toBeAddedIndicator.notes);
-  }
-
-  isExistIndicatorInCaseOfEdit(evaluationIndicators: EvaluationIndicator[], toBeEditedIndicator: EvaluationIndicator, selectedIndex: number): boolean {
-    for (let i = 0; i < evaluationIndicators.length; i++) {
-      if (i === selectedIndex) {
-        continue;
-      }
-
-      if (evaluationIndicators[i].indicator === toBeEditedIndicator.indicator && evaluationIndicators[i].percentage === toBeEditedIndicator.percentage && evaluationIndicators[i].notes === toBeEditedIndicator.notes) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  ///////// foreign countries project functionality
   openAddPMForeignCountriesProjectForm() {
     this.addPMForeignCountriesProjectFormActive = true;
     this.openForeignCountriesFormPopup()

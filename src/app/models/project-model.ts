@@ -6,7 +6,7 @@ import { FactoryService } from '@app/services/factory.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { Validators } from '@angular/forms';
-import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
+import { ControlValueLabelLangKey,ISearchFieldsMap } from '@app/types/types';
 import { dateSearchFields } from '@app/helpers/date-search-fields';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
@@ -18,12 +18,10 @@ import { ProjectModelForeignCountriesProject } from '@app/models/project-model-f
 import { ProjectAddress } from '@app/models/project-address';
 import { EmployeeService } from '@services/employee.service';
 import { ProjectTemplate } from "@app/models/projectTemplate";
-import { ImplementationTemplate } from "@models/implementation-template";
-import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { ImplementationTemplate } from "@models/implementation-template";import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ObjectUtils } from '@app/helpers/object-utils';
 
-// noinspection JSUnusedGlobalSymbols
 const { send, receive } = new ProjectModelInterceptor();
 
 @InterceptModel({ send, receive })
@@ -227,7 +225,6 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
           CustomValidators.required,
           CustomValidators.minLength(4),
           CustomValidators.maxLength(100),
-          //CustomValidators.pattern('ENG_AR_NUM_ONLY')
         ]
       ] : projectName,
       projectDescription: controls ? [projectDescription, [
