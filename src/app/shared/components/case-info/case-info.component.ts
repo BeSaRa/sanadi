@@ -21,6 +21,7 @@ import {GeneralAssociationMeetingAttendanceService} from '@services/general-asso
 import {SubmissionMechanisms} from '@app/enums/submission-mechanisms.enum';
 import {ProjectImplementation} from '@models/project-implementation';
 import {EmployeeService} from '@services/employee.service';
+import {AllRequestTypesEnum} from "@enums/all-request-types-enum";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -237,12 +238,11 @@ export class CaseInfoComponent {
   }
 
   private _setShowVersionHistory(): void {
-    this.canShowVersionHistory = true;
-    /*// @ts-ignore
+    // @ts-ignore
     const requestType = this.model.requestType;
     if (this.employeeService.isExternalUser() || !requestType) {
       return;
     }
-    this.canShowVersionHistory = [AllRequestTypesEnum.RENEW, AllRequestTypesEnum.CANCEL, AllRequestTypesEnum.UPDATE].includes(requestType) || this.model.isReturned();*/
+    this.canShowVersionHistory = [AllRequestTypesEnum.RENEW, AllRequestTypesEnum.CANCEL, AllRequestTypesEnum.UPDATE].includes(requestType) || this.model.isReturned();
   }
 }
