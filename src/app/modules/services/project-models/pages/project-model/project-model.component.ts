@@ -14,7 +14,6 @@ import { FieldControlAndLabelKey } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IKeyValue } from '@contracts/i-key-value';
 import { ILanguageKeys } from '@contracts/i-language-keys';
-import { ICoordinates } from '@contracts/ICoordinates';
 import { IDacOchaFields } from '@contracts/idac-ocha-fields';
 import { IInternalExternalExecutionFields } from '@contracts/iinternal-external-execution-fields';
 import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
@@ -31,7 +30,6 @@ import { UserClickOn } from '@enums/user-click-on.enum';
 import { CommonUtils } from '@helpers/common-utils';
 import { AdminLookup } from '@models/admin-lookup';
 import { AidLookup } from '@models/aid-lookup';
-import { CollectionItem } from '@models/collection-item';
 import { Country } from '@models/country';
 import { ForeignCountriesProjectsNeed } from '@models/foreign-countries-projects-need';
 import { Lookup } from '@models/lookup';
@@ -59,6 +57,7 @@ import {
   ForeignCountriesProjectPopupComponent
 } from '../../popups/foreign-countries-project-popup/foreign-countries-project-popup.component';
 import { EvaluationIndicatorsComponent } from './evaluation-indicators/evaluation-indicators.component';
+import { ProjectAddressesComponent } from './project-addresses/project-addresses.component';
 
 @Component({
   selector: 'project-model',
@@ -85,12 +84,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   foreignCountriesProjectsNeeds: ForeignCountriesProjectsNeed[] = [];
   pMForeignCountriesProjectsDisplayedColumns: string[] = ['index', 'projectName', 'notes', 'actions'];
 
-  projectAddressForm!: UntypedFormGroup;
-  addProjectAddressFormActive!: boolean;
-  selectedProjectAddress!: ProjectAddress | null;
-  selectedProjectAddressIndex!: number | null;
-  projectAddresses: ProjectAddress[] = [];
-  projectAddressesDisplayedColumns: string[] = ['index', 'beneficiaryRegion', 'address', 'location', 'actions'];
 
   domainTypes: typeof DomainTypes = DomainTypes;
   countries: Country[] = [];
@@ -131,6 +124,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   @ViewChild('evaluationIndicatorsRef')
   evaluationIndicatorsRef!: EvaluationIndicatorsComponent
+
+  @ViewChild('projectAddressesRef')
+  projectAddressesRef!: ProjectAddressesComponent
 
   selectedModel?: ProjectModel;
   displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn'];
@@ -217,7 +213,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   };
 
   isValidProjectAddresses() {
-    return (this.model && this.projectAddresses && this.projectAddresses.length > 0) || !this.showProjectAddressesTab
+    return (this.model && this.model.projectAddressList && this.model.projectAddressList.length > 0) || !this.showProjectAddressesTab
   }
 
   getTabInvalidStatus(tabName: string): boolean {
@@ -250,7 +246,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   _initComponent(): void {
     this.setUserProfiles();
     this.getQatarId();
-    this.buildProjectAddressForm();
     this.buildForeignCountriesProjectForm();
     this.loadExitMechanisms();
     this.loadSanadiDomains();
@@ -273,7 +268,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.serviceDataService.loadByCaseType(CaseTypes.EXTERNAL_PROJECT_MODELS).subscribe(serviceData => {
       let settings: { QatarId: number } = JSON.parse(serviceData.customSettings);
       this.qatarId = settings.QatarId;
-      // console.log('qatarId', this.qatarId);
     });
   }
 
@@ -453,7 +447,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       evaluationIndicatorList: this.evaluationIndicatorsRef.list,
       projectTotalCost: this.projectTotalCostField.value,
       foreignCountriesProjectList: this.pMForeignCountriesProjects,
-      projectAddressList: this.projectAddresses,
+      projectAddressList: this.projectAddressesRef.list,
       description: this.descriptionTab.value
     });
     if (model.getCaseStatus() === CommonCaseStatus.DRAFT) {
@@ -500,7 +494,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
 
     this.pMForeignCountriesProjects = this.model?.foreignCountriesProjectList;
-    this.projectAddresses = this.model?.projectAddressList;
     this.handleRequestTypeChange(model.requestType, false);
 
     if (model.domain === DomainTypes.DEVELOPMENT) {
@@ -512,6 +505,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.form.reset();
     this.componentBudgetsRef.forceClearComponent();
     this.evaluationIndicatorsRef.forceClearComponent();
+    this.projectAddressesRef.forceClearComponent();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
     this.templateSerialControl.setValue('');
@@ -634,14 +628,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   get sustainabilityItems(): AbstractControl {
     return this.summaryInfoTab.get('sustainabilityItems') as AbstractControl;
-  }
-
-  get longitude(): AbstractControl {
-    return this.projectAddressForm.get('longitude')!;
-  }
-
-  get latitude(): AbstractControl {
-    return this.projectAddressForm.get('latitude')!;
   }
 
   getPercentageSumValidation(): ValidatorFn {
@@ -816,7 +802,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   hideProjectAddressesTabAndClearProjectAddressesList() {
     this.showProjectAddressesTab = false;
-    this.projectAddresses = [];
+    this.projectAddressesRef.forceClearComponent()
   }
 
   applyNotOutsideQatarChanges() {
@@ -1079,15 +1065,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
-  buildProjectAddressForm(): void {
-    this.projectAddressForm = this.fb.group({
-      beneficiaryRegion: [null, [CustomValidators.required]],
-      address: [null],
-      latitude: [{value: null, disabled: true}, [CustomValidators.required]],
-      longitude: [{value: null, disabled: true}, [CustomValidators.required]]
-    });
-  }
-
   _getForeignCountriesPopupComponent() {
     return ForeignCountriesProjectPopupComponent;
   }
@@ -1186,68 +1163,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return false;
   }
 
-  ///////// project addresses functionality
-  openAddProjectAddressForm() {
-    this.addProjectAddressFormActive = true;
-    this.selectedProjectAddress = new ProjectAddress();
-  }
-
-  _saveProjectAddress(projectAddress: ProjectAddress) {
-    if (this.selectedProjectAddressIndex === null) {
-      if (!this.isExistProjectAddressInCaseOfAdd(this.projectAddresses, projectAddress)) {
-        this.projectAddresses = this.projectAddresses.concat(projectAddress);
-        this.resetProjectAddressForm();
-        this.addProjectAddressFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    } else {
-      if (!this.isExistProjectAddressInCaseOfEdit(this.projectAddresses, projectAddress, this.selectedProjectAddressIndex!)) {
-        let newList = this.projectAddresses.slice();
-        newList.splice(this.selectedProjectAddressIndex!, 1);
-        newList.splice(this.selectedProjectAddressIndex!, 0, projectAddress);
-        this.projectAddresses = newList;
-        this.resetProjectAddressForm();
-        this.addProjectAddressFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    }
-  }
-
-  selectProjectAddress(event: MouseEvent, model: ProjectAddress) {
-    this.addProjectAddressFormActive = true;
-    event.preventDefault();
-    this.selectedProjectAddress = model;
-    this.projectAddressForm.patchValue(this.selectedProjectAddress!);
-    this.selectedProjectAddressIndex = this.projectAddresses
-      .findIndex(x => x.beneficiaryRegion === model.beneficiaryRegion && x.address === model.address);
-  }
-
-  saveProjectAddress() {
-    console.log('form', this.projectAddressForm);
-    const projectAddress = new ProjectAddress().clone(this.projectAddressForm.getRawValue());
-
-    this._saveProjectAddress(projectAddress);
-  }
-
-  cancelAddProjectAddress() {
-    this.resetProjectAddressForm();
-    this.addProjectAddressFormActive = false;
-  }
-
-  resetProjectAddressForm() {
-    this.selectedProjectAddress = null;
-    this.selectedProjectAddressIndex = null;
-    this.projectAddressForm.reset();
-  }
-
-  removeProjectAddress(event: MouseEvent, model: ProjectAddress) {
-    event.preventDefault();
-    this.projectAddresses = this.projectAddresses.filter(x => !(x.beneficiaryRegion === model.beneficiaryRegion && x.address === model.address));
-    this.resetProjectAddressForm();
-  }
-
   isExistProjectAddressInCaseOfAdd(projectAddresses: ProjectAddress[], toBeAddedProjectAddress: ProjectAddress): boolean {
     return projectAddresses.some(x => x.beneficiaryRegion === toBeAddedProjectAddress.beneficiaryRegion && x.address === toBeAddedProjectAddress.address);
   }
@@ -1265,25 +1180,4 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return false;
   }
 
-  ///////// location implementation
-  openMapMarker() {
-    (this.selectedProjectAddress!).openMap(this.readonly)
-      .onAfterClose$
-      .subscribe(({click, value}: { click: UserClickOn, value: ICoordinates }) => {
-        if (click === UserClickOn.YES) {
-          this.selectedProjectAddress!.latitude = value.latitude;
-          this.selectedProjectAddress!.longitude = value.longitude;
-          this.latitude.patchValue(value.latitude);
-          this.longitude.patchValue(value.longitude);
-        }
-      });
-  }
-
-  openLocationMap(item: CollectionItem) {
-    item.openMap(true);
-  }
-
-  isDisabledSaveAddress() {
-    return this.projectAddressForm.invalid || !CommonUtils.isValidValue(this.latitude.value) || !CommonUtils.isValidValue(this.longitude.value);
-  }
 }

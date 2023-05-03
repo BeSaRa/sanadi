@@ -10,6 +10,8 @@ import { ComponentBudgetsPopupComponent } from './popups/component-budgets-popup
 import { EvaluationIndicatorsPopupComponent } from './popups/evaluation-indicators-popup/evaluation-indicators-popup.component';
 import { ForeignCountriesProjectPopupComponent } from './popups/foreign-countries-project-popup/foreign-countries-project-popup.component';
 import { EvaluationIndicatorsComponent } from './pages/project-model/evaluation-indicators/evaluation-indicators.component';
+import { ProjectAddressesComponent } from './pages/project-model/project-addresses/project-addresses.component';
+import { ProjectAddressesPopupComponent } from './popups/project-addresses-popup/project-addresses-popup.component';
 
 
 @NgModule({
@@ -21,6 +23,8 @@ import { EvaluationIndicatorsComponent } from './pages/project-model/evaluation-
     EvaluationIndicatorsPopupComponent,
     ForeignCountriesProjectPopupComponent,
     EvaluationIndicatorsComponent,
+    ProjectAddressesComponent,
+    ProjectAddressesPopupComponent,
   ],
   imports: [
     CommonModule,
