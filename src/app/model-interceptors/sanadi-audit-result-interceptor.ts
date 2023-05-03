@@ -8,7 +8,7 @@ export class SanadiAuditResultInterceptor implements IModelInterceptor<SanadiAud
   receive(model: SanadiAuditResult): SanadiAuditResult {
     model.operationInfo = AdminResult.createInstance(isValidAdminResult(model.operationInfo) ? model.operationInfo : {});
     model.orgInfo = AdminResult.createInstance(isValidAdminResult(model.orgInfo) ? model.orgInfo : {});
-    model.orgUserInfo = AdminResult.createInstance(isValidAdminResult(model.orgUserInfo) ? model.orgUserInfo : {});
+    model.userInfo = AdminResult.createInstance(isValidAdminResult(model.userInfo) ? model.userInfo : {});
     model.statusInfo = AdminResult.createInstance(isValidAdminResult(model.statusInfo) ? model.statusInfo : {});
     model.statusDateModifiedString = model.statusDateModified ? DateUtils.getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
     model.updatedOnString = model.updatedOn ? DateUtils.getDateStringFromDate(model.updatedOn, 'TIMESTAMP') : '';
