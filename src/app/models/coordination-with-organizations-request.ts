@@ -115,6 +115,9 @@ export class CoordinationWithOrganizationsRequest
       case 'domain':
         adminResultValue = this.domainInfo;
         break;
+      case 'processId':
+        adminResultValue = this.service.formsList.find(x=>x.id === this.processId)?.createAdminResult()?? AdminResult.createInstance({});
+        break;
       case 'licenseStartDate':
         const startDateValue = DateUtils.getDateStringFromDate(this.licenseStartDate, 'DATEPICKER_FORMAT');
         adminResultValue = AdminResult.createInstance({arName: startDateValue, enName: startDateValue});

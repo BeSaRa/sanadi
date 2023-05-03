@@ -7,8 +7,9 @@ import { SearchableCloneable } from './searchable-cloneable';
 import {AuditOperationTypes} from '@enums/audit-operation-types';
 import {CommonUtils} from '@helpers/common-utils';
 import {ObjectUtils} from '@helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class WorkArea extends SearchableCloneable<WorkArea> {
+export class WorkArea extends SearchableCloneable<WorkArea> implements IAuditModelProperties<WorkArea> {
   arabicName!: string;
   englishName!: string;
   country!: number;

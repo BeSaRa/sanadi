@@ -1,0 +1,24 @@
+<ng-container *ngIf="!isProcessChanged; else formsTemplate">
+  <value-differences-list [differenceList]="differencesList"></value-differences-list>
+</ng-container>
+
+<ng-template #formsTemplate>
+  <div class="row" *ngIf="formReady">
+    <div class="col-sm-12 col-md-6">
+      <div class="border p-2">
+        <heading-row labelKey="old_value"></heading-row>
+        <form [formGroup]="oldForm" autocomplete="off">
+          <formly-form [form]="oldForm" [fields]="oldProcessFieldBuilder.fieldsGroups"></formly-form>
+        </form>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-6">
+      <div class="border p-2">
+        <heading-row labelKey="new_value"></heading-row>
+        <form [formGroup]="newForm" autocomplete="off">
+          <formly-form [form]="newForm" [fields]="newProcessFieldBuilder.fieldsGroups"></formly-form>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

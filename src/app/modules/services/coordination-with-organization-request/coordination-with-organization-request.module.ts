@@ -1,4 +1,5 @@
-import { AuditOrganizationOfficerComponent } from './audit/audit-organization-officer/audit-organization-officer.component';
+import { AuditTemplatesComponent } from './audit/audit-templates/audit-templates.component';
+import { AuditOrganizationOfficerComponent } from '../shared-services/audit/audit-organization-officer/audit-organization-officer.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -48,6 +49,7 @@ import { AuditBuildingAbilityComponent } from './audit/audit-building-ability/au
 import { AuditEffectiveCoordinationCapabilitiesComponent } from './audit/audit-effective-coordination-capabilities/audit-effective-coordination-capabilities.component';
 import { AuditResearchAndStudiesComponent } from './audit/audit-research-and-studies/audit-research-and-studies.component';
 import { AuditParticipantOrganizationComponent } from './audit/audit-participant-organization/audit-participant-organization.component';
+import { SharedServicesModule } from '../shared-services/shared-services.module';
 
 
 @NgModule({
@@ -67,12 +69,13 @@ import { AuditParticipantOrganizationComponent } from './audit/audit-participant
     AuditEffectiveCoordinationCapabilitiesComponent,
     AuditResearchAndStudiesComponent,
     AuditParticipantOrganizationComponent,
-    AuditOrganizationOfficerComponent
+    AuditTemplatesComponent
   ],
   imports: [
     CommonModule,
     EServicesMainModule,
     CoordinationWithOrganizationRequestRoutingModule,
+    SharedServicesModule,
     FormlyModule.forChild({
       types: [
         { name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['custom-wrapper'] },

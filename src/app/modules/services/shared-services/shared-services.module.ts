@@ -26,6 +26,8 @@ import {AuditWorkAreasComponent} from './audit/audit-work-areas/audit-work-areas
 import { AuditExecutiveManagementComponent } from './audit/audit-executive-management/audit-executive-management.component';
 import { AuditContactOfficersComponent } from './audit/audit-contact-officers/audit-contact-officers.component';
 import { AuditBankBranchComponent } from './audit/audit-bank-branch/audit-bank-branch.component';
+import { AuditOrganizationOfficerComponent } from './audit/audit-organization-officer/audit-organization-officer.component';
+import { AuditRealBeneficiaryComponent } from './audit/audit-real-beneficiary/audit-real-beneficiary.component';
 
 
 @NgModule({
@@ -42,7 +44,9 @@ import { AuditBankBranchComponent } from './audit/audit-bank-branch/audit-bank-b
     AuditWorkAreasComponent,
     AuditExecutiveManagementComponent,
     AuditContactOfficersComponent,
-    AuditBankBranchComponent
+    AuditBankBranchComponent,
+    AuditOrganizationOfficerComponent,
+    AuditRealBeneficiaryComponent
 
   ],
   imports: [
@@ -62,7 +66,9 @@ import { AuditBankBranchComponent } from './audit/audit-bank-branch/audit-bank-b
     AuditWorkAreasComponent,
     AuditExecutiveManagementComponent,
     AuditContactOfficersComponent,
-    AuditBankBranchComponent
+    AuditBankBranchComponent,
+    AuditOrganizationOfficerComponent,
+    AuditRealBeneficiaryComponent
 
   ]
 })

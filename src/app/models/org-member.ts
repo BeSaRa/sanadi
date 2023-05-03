@@ -1,14 +1,16 @@
-import {InterceptModel} from '@app/decorators/decorators/intercept-model';
-import {DateUtils} from '@app/helpers/date-utils';
-import {OrgMemberInterceptor} from '@app/model-interceptors/org-member-interceptor';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {IMyDateModel} from 'angular-mydatepicker';
-import {AdminResult} from './admin-result';
-import {SearchableCloneable} from './searchable-cloneable';
-import {AuditOperationTypes} from '@enums/audit-operation-types';
-import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { DateUtils } from '@app/helpers/date-utils';
+import { OrgMemberInterceptor } from '@app/model-interceptors/org-member-interceptor';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { AdminResult } from './admin-result';
+import { SearchableCloneable } from './searchable-cloneable';
+import { AuditOperationTypes } from '@enums/audit-operation-types';
+import { IAuditModelProperties } from '@contracts/i-audit-model-properties';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { ControlValueLabelLangKey } from '@app/types/types';
 
-const {send, receive} = new OrgMemberInterceptor();
+const { send, receive } = new OrgMemberInterceptor();
 
 @InterceptModel({
   receive,
@@ -28,16 +30,49 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   extraPhone!: string;
   jobTitleInfo!: AdminResult;
   nationalityInfo!: AdminResult;
-
-  // extra properties
-  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  joinDateStamp!: number | null;
 
   getAdminResultByProperty(property: keyof OrgMember): AdminResult {
-    return AdminResult.createInstance({});
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'jobTitleId':
+        adminResultValue = this.jobTitleInfo;
+        break;
+      case 'nationality':
+        adminResultValue = this.nationalityInfo;
+        break;
+      case 'joinDate':
+        const joinDateValue = DateUtils.getDateStringFromDate(this.joinDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({arName: joinDateValue, enName: joinDateValue});
+        break;
+
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      fullName: { langKey: 'full_name', value: this.fullName },
+      identificationNumber: { langKey: 'identification_number', value: this.identificationNumber },
+      jobTitleId: { langKey: 'job_title', value: this.jobTitleId },
+      email:{ langKey: 'lbl_email', value: this.email },
+      phone:{ langKey: 'lbl_phone', value: this.phone },
+      joinDate:{ langKey: 'first_join_date', value: this.joinDate ,comparisonValue:this.joinDateStamp},
+      nationality:{ langKey: 'lbl_nationality', value: this.nationality },
+      extraPhone:{ langKey: 'lbl_extra_phone_number', value: this.extraPhone },
+    };
+
   }
 
   buildForm(controls = true) {
-    const {fullName, identificationNumber, jobTitleId} = this;
+    const { fullName, identificationNumber, jobTitleId } = this;
     return {
       fullName: controls
         ? [
@@ -65,7 +100,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   buildExtendedBoardMembersForm(controls = true) {
 
     const form = this.buildForm(controls);
-    const {joinDate} = this;
+    const { joinDate } = this;
     return {
       ...form,
       joinDate: controls ? [joinDate, [CustomValidators.required]] : joinDate,
@@ -75,7 +110,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
 
   bulildExtendedForm(controls = true) {
     const form = this.buildForm(controls);
-    const {joinDate, email, phone} = this;
+    const { joinDate, email, phone } = this;
     return {
       ...form,
       joinDate: controls ? [joinDate, [CustomValidators.required]] : joinDate,
