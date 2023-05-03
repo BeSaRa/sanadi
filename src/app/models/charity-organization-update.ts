@@ -1,3 +1,4 @@
+import { LookupService } from './../services/lookup.service';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
@@ -22,6 +23,10 @@ import { OrgMember } from './org-member';
 import { OrganizationOfficer } from './organization-officer';
 import { RealBeneficiary } from './real-beneficiary';
 import { WorkArea } from './work-area';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { ControlValueLabelLangKey } from '@app/types/types';
 
 const interceptor = new CharityOrganizationUpdateInterceptor();
 
@@ -30,14 +35,16 @@ const interceptor = new CharityOrganizationUpdateInterceptor();
   receive: interceptor.receive,
 })
 export class CharityOrganizationUpdate extends CaseModel<
-CharityOrganizationUpdateService,
-CharityOrganizationUpdate
-> implements HasFollowUpDate {
+  CharityOrganizationUpdateService,
+  CharityOrganizationUpdate
+> implements HasFollowUpDate, IAuditModelProperties<CharityOrganizationUpdate> {
   service: CharityOrganizationUpdateService = FactoryService.getService(
     'CharityOrganizationUpdateService'
   );
   employeeService: EmployeeService = FactoryService.getService('EmployeeService');
   followUpService: FollowupDateService = FactoryService.getService('FollowupDateService');
+  lookupService: LookupService = FactoryService.getService('LookupService');
+
   caseType: number = CaseTypes.CHARITY_ORGANIZATION_UPDATE;
 
   followUpDate!: string | IMyDateModel;
@@ -100,6 +107,92 @@ CharityOrganizationUpdate
 
   incomingDecisionList: CharityDecision[] = [];
   outgoingDecisionList: CharityDecision[] = [];
+
+  publishDateStamp!: number | null;
+  registrationDateStamp!: number | null;
+  establishmentDateStamp!: number | null;
+  firstReleaseDateStamp!: number | null;
+  lastUpdateDateStamp!: number | null;
+
+  getAdminResultByProperty(property: keyof CharityOrganizationUpdate): AdminResult {
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'updateSection':
+        adminResultValue = this.lookupService.listByCategory.CharityUpdateSection
+                                .find(x => x.lookupKey === this.updateSection)?.createAdminResult() ??
+                                                                        AdminResult.createInstance({});
+        break;
+      case 'charityId':
+        adminResultValue = this.service.charityOrganizations
+                                       .find(x=>x.id === this.charityId)?.createAdminResult()??
+                                                                         AdminResult.createInstance({});
+        break;
+      case 'activityType':
+        adminResultValue = this.activityTypeInfo;
+        break;
+      case 'organizationId':
+        adminResultValue = this.ouInfo;
+        break;
+      case 'registrationAuthority':
+        adminResultValue = this.registrationAuthorityInfo;
+        break;
+      case 'charityWorkArea':
+        adminResultValue = this.charityWorkAreaInfo;
+        break;
+
+      case 'publishDate':
+        const publishDateValue = DateUtils.getDateStringFromDate(this.publishDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: publishDateValue, enName: publishDateValue });
+        break;
+      case 'registrationDate':
+        const registrationDateValue = DateUtils.getDateStringFromDate(this.registrationDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: registrationDateValue, enName: registrationDateValue });
+        break;
+      case 'establishmentDate':
+        const establishmentDateValue = DateUtils.getDateStringFromDate(this.establishmentDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: establishmentDateValue, enName: establishmentDateValue });
+        break;
+      case 'firstReleaseDate':
+        const firstReleaseDateValue = DateUtils.getDateStringFromDate(this.firstReleaseDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: firstReleaseDateValue, enName: firstReleaseDateValue });
+        break;
+      case 'lastUpdateDate':
+        const lastUpdateDateValue = DateUtils.getDateStringFromDate(this.lastUpdateDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: lastUpdateDateValue, enName: lastUpdateDateValue });
+        break;
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getSectionValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      updateSection: { langKey: 'section', value: this.updateSection },
+      charityId: { langKey: 'organization', value: this.charityId },
+     }
+  }
+  getMetaDataValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      arabicName: { langKey: 'arabic_name', value: this.arabicName },
+      englishName: { langKey: 'english_name', value: this.englishName },
+      shortName: { langKey: 'short_name', value: this.shortName },
+      activityType: { langKey: 'activity_type', value: this.activityType },
+      regulatingLaw: { langKey: 'regulating_law', value: this.regulatingLaw },
+      registrationAuthority: { langKey: 'registration_authority', value: this.registrationAuthority },
+      taxCardNo: { langKey: 'tax_card_number', value: this.taxCardNo },
+      unifiedEconomicRecord: { langKey: 'unified_economic_record', value: this.unifiedEconomicRecord },
+      publishDate: { langKey: 'publish_date', value: this.publishDate },
+      registrationDate: { langKey: 'registration_date', value: this.registrationDate },
+      establishmentDate: { langKey: 'establishment_date', value: this.establishmentDate },
+      establishmentID: { langKey: 'establishment_id', value: this.establishmentID },
+    }
+  }
   buildMetaDataForm(controls = true) {
     const {
       arabicName,
@@ -198,6 +291,22 @@ CharityOrganizationUpdate
 
     };
   }
+  getContactInformationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      phone: { langKey: 'lbl_phone', value: this.phone },
+      email: { langKey: 'lbl_email', value: this.email },
+      website: { langKey: 'website', value: this.website },
+      zoneNumber: { langKey: 'lbl_zone', value: this.zoneNumber },
+      streetNumber: { langKey: 'lbl_street', value: this.streetNumber },
+      buildingNumber: { langKey: 'building_number', value: this.buildingNumber },
+      address: { langKey: 'lbl_address', value: this.address },
+      facebook: { langKey: 'facebook', value: this.facebook },
+      twitter: { langKey: 'twitter', value: this.twitter },
+      instagram: { langKey: 'instagram', value: this.instagram },
+      youTube: { langKey: 'youtube', value: this.youTube },
+      snapChat: { langKey: 'snapchat', value: this.snapChat },
+    }
+  }
   buildContactInformationForm(controls = true) {
     const {
       phone,
@@ -286,6 +395,16 @@ CharityOrganizationUpdate
       youTube: controls ? [youTube, [CustomValidators.maxLength(350)]] : youTube,
       snapChat: controls ? [snapChat, [CustomValidators.maxLength(350)]] : snapChat,
     };
+  }
+  getPrimaryLawValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      domain: { langKey: 'domain', value: this.domain },
+      country: { langKey: 'country', value: this.country },
+      firstReleaseDate: { langKey: 'first_realase_date', value: this.firstReleaseDate },
+      lastUpdateDate: { langKey: 'last_update_date', value: this.lastUpdateDate },
+      goals: { langKey: 'goals', value: this.goals },
+      charityWorkArea: { langKey: 'work_area', value: this.charityWorkArea },
+    }
   }
   buildPrimaryLawForm(controls = true) {
     const {

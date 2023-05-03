@@ -13,6 +13,7 @@ export class CharityReportInterceptor implements IModelInterceptor<CharityReport
     delete model.langService;
     delete model.searchFields;
     delete model.auditOperation;
+    delete model.generalDateStamp;
     return model;
   }
   receive(model: CharityReport): CharityReport {
@@ -20,6 +21,7 @@ export class CharityReportInterceptor implements IModelInterceptor<CharityReport
     (model.riskTypeInfo && (model.riskTypeInfo = AdminResult.createInstance(model.riskTypeInfo)));
     (model.reportStatusInfo && (model.reportStatusInfo = AdminResult.createInstance(model.reportStatusInfo)));
     model.generalDate = DateUtils.getDateStringFromDate(model.generalDate);
+    model.generalDateStamp = !model.generalDate ? null : DateUtils.getTimeStampFromDate(model.generalDate);
     return model;
   }
 }

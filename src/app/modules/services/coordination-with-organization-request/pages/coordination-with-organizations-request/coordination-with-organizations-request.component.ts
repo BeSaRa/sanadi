@@ -332,6 +332,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   loadCoordForms() {
     this.dynamicModelService.loadActive().subscribe((forms) => {
       this.formsList = forms;
+      this.service.formsList = forms;
     });
   }
   _buildForm(): void {

@@ -29,6 +29,8 @@ import {AuditWorkAreasComponent} from './audit/audit-work-areas/audit-work-areas
 import { AuditExecutiveManagementComponent } from './audit/audit-executive-management/audit-executive-management.component';
 import { AuditContactOfficersComponent } from './audit/audit-contact-officers/audit-contact-officers.component';
 import { AuditBankBranchComponent } from './audit/audit-bank-branch/audit-bank-branch.component';
+import { AuditOrganizationOfficerComponent } from './audit/audit-organization-officer/audit-organization-officer.component';
+import { AuditRealBeneficiaryComponent } from './audit/audit-real-beneficiary/audit-real-beneficiary.component';
 import { AuditInterventionImplementingAgencyListComponent } from './audit/audit-intervention-implementing-agency-list copy/audit-intervention-implementing-agency-list.component';
 import { AuditInterventionFieldListComponent } from './audit/audit-intervention-field-list/audit-intervention-field-list.component';
 import { AuditInterventionRegionListComponent } from './audit/audit-intervention-region-list/audit-intervention-region-list.component';
@@ -53,6 +55,8 @@ import { AuditPaymentComponent } from '../transferring-individual-funds-abroad/a
     AuditExecutiveManagementComponent,
     AuditContactOfficersComponent,
     AuditBankBranchComponent,
+    AuditOrganizationOfficerComponent,
+    AuditRealBeneficiaryComponent,
     AuditInterventionImplementingAgencyListComponent,
     AuditInterventionFieldListComponent,
     AuditInterventionRegionListComponent,
@@ -77,6 +81,8 @@ import { AuditPaymentComponent } from '../transferring-individual-funds-abroad/a
     AuditExecutiveManagementComponent,
     AuditContactOfficersComponent,
     AuditBankBranchComponent,
+    AuditOrganizationOfficerComponent,
+    AuditRealBeneficiaryComponent,
     AuditInterventionImplementingAgencyListComponent,
     AuditInterventionFieldListComponent,
     AuditInterventionRegionListComponent,

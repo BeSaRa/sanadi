@@ -16,6 +16,7 @@ import {DynamicOptionsService} from './dynamic-options.service';
 import {FactoryService} from './factory.service';
 import {FollowupDateService} from './follow-up-date.service';
 import {UrlService} from './url.service';
+import { CharityOrganization } from '@app/models/charity-organization';
 
 @CastResponseContainer({
   $default: {
@@ -33,6 +34,8 @@ export class CharityOrganizationUpdateService extends BaseGenericEService<Charit
   serviceKey: keyof ILanguageKeys = 'menu_charity_organization_update';
   caseStatusIconMap: Map<number, string> = new Map();
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'subject', 'ouInfo'];
+  charityOrganizations: CharityOrganization[] = [];
+
   constructor(
     // For complete the request with a follow up
     private _: FollowupDateService,

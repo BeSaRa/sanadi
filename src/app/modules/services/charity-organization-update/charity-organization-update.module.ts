@@ -30,6 +30,13 @@ import {
 import {
   FollowupDateApprovePopupComponent
 } from '@modules/services/charity-organization-update/popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
+import { AuditCharityOrganizationUpdateComponent } from './audit/audit-charity-organization-update/audit-charity-organization-update.component';
+import { AuditCharityBranchComponent } from './audit/audit-charity-branch/audit-charity-branch.component';
+import { AuditForeignAidClassificationsComponent } from './audit/audit-foreign-aid-classifications/audit-foreign-aid-classifications.component';
+import { AuditCharityReportsComponent } from './audit/audit-charity-reports/audit-charity-reports.component';
+import { AuditCharityDecisionsComponent } from './audit/audit-charity-decisions/audit-charity-decisions.component';
+import { AuditBylawsComponent } from './audit/audit-bylaws/audit-bylaws.component';
+import { AuditOrgMemberComponent } from './audit/audit-org-member/audit-org-member.component';
 
 
 @NgModule({
@@ -43,7 +50,14 @@ import {
     MembersComponent,
     CharityReportsComponent,
     OrganizationOfficersComponent,
-    FollowupDateApprovePopupComponent
+    FollowupDateApprovePopupComponent,
+    AuditCharityOrganizationUpdateComponent,
+    AuditCharityBranchComponent,
+    AuditForeignAidClassificationsComponent,
+    AuditCharityReportsComponent,
+    AuditCharityDecisionsComponent,
+    AuditBylawsComponent,
+    AuditOrgMemberComponent
   ],
   imports: [
     CommonModule,

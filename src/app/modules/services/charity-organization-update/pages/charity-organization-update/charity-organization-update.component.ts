@@ -218,6 +218,7 @@ export class CharityOrganizationUpdateComponent
       )
     ).subscribe(e => {
       this.charityOrganizations = e;
+      this.service.charityOrganizations = e;
     });
   }
 

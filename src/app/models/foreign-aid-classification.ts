@@ -5,6 +5,8 @@ import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';
 import {AuditOperationTypes} from '@enums/audit-operation-types';
 import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { ControlValueLabelLangKey } from '@app/types/types';
 
 const { send, receive } = new ForeignAidClassificationInterceptor();
 
@@ -37,10 +39,54 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
   domain?: number;
   domainInfo!: AdminResult;
 
-  // extra properties
-  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   getAdminResultByProperty(property: keyof ForeignAidClassification): AdminResult {
-    return AdminResult.createInstance({});
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'aidClassification':
+        adminResultValue = this.aidClassificationInfo;
+        break;
+      case 'governanceDomain':
+        adminResultValue = this.governanceDomainInfo;
+        break;
+      case 'mainDACCategory':
+        adminResultValue = this.mainDACCategoryInfo;
+        break;
+      case 'subDACCategory':
+        adminResultValue = this.subDACCategoryInfo;
+        break;
+      case 'mainUNOCHACategory':
+        adminResultValue = this.mainUNOCHACategoryInfo;
+        break;
+      case 'subUNOCHACategory':
+        adminResultValue = this.subUNOCHACategoryInfo;
+        break;
+      case 'domain':
+        adminResultValue = this.domainInfo;
+        break;
+
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      charityWorkArea:{ langKey: 'work_area', value: this.charityWorkArea },
+      aidClassification:{ langKey: 'menu_aid_class', value: this.aidClassification },
+      governanceDomain:{ langKey: 'domain', value: this.governanceDomain },
+      mainDACCategory:{ langKey: 'classification_of_DAC', value: this.mainDACCategory },
+      mainUNOCHACategory:{ langKey: 'OCHA_main_classification', value: this.mainUNOCHACategory },
+      subDACCategory:{ langKey: 'DAC_subclassification', value: this.subDACCategory },
+      subUNOCHACategory:{ langKey: 'OCHA_subclassification', value: this.subUNOCHACategory },
+      domain:{ langKey: 'domain', value: this.domain },
+
+    };
   }
 
   toCharityOrgnizationUpdate() {

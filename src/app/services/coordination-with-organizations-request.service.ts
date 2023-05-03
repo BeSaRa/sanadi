@@ -29,6 +29,7 @@ import { InboxService } from './inbox.service';
 import { LangService } from './lang.service';
 import { SearchService } from './search.service';
 import { UrlService } from './url.service';
+import { DynamicModel } from '@app/models/dynamic-model';
 
 @CastResponseContainer({
   $default: {
@@ -54,7 +55,7 @@ export class CoordinationWithOrganizationsRequestService
     'caseStatus',
     'createdOn',
   ];
-
+  formsList: DynamicModel[] = [];
   constructor(public domSanitizer: DomSanitizer,
     public lang: LangService,
     public http: HttpClient,

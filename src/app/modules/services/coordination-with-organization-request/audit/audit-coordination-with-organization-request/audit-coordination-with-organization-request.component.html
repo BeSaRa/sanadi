@@ -5,7 +5,8 @@
   <tab name="buildingAbility" [template]="buildingAbilityTemplate" [title]="lang.map.building_abilities"></tab>
   <tab name="effectiveCoordinationCapabilities" [template]="effectiveCoordinationCapabilitiesTemplate" [title]="lang.map.effective_coordination_capabilities"></tab>
   <tab name="researchAndStudies" [template]="researchAndStudiesTemplate" [title]="lang.map.research_and_studies"></tab>
-   <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
+  <tab name="templates" [template]="templatesTemplate" [title]="lang.map.lbl_template"></tab>
+  <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
 </tabs-list>
 <ng-template #basicInfoTemplate>
   <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
@@ -25,25 +26,54 @@
   </audit-organization-officer>
 </ng-template>
 <ng-template #buildingAbilityTemplate>
-  <audit-building-ability [newVersionList]="newVersion.buildingAbilitiesList"
+  <audit-building-ability *ngIf="!isExternalUser()" [newVersionList]="newVersion.buildingAbilitiesList"
                       [oldVersionList]="oldVersion.buildingAbilitiesList"
+                      [caseType]="newVersion.caseType"
+                >
+  </audit-building-ability>
+  <audit-building-ability *ngIf="isExternalUser()" [newVersionList]="newVersion.temporaryBuildingAbilitiesList"
+                      [oldVersionList]="oldVersion.temporaryBuildingAbilitiesList"
                       [caseType]="newVersion.caseType"
                 >
   </audit-building-ability>
 </ng-template>
 <ng-template #effectiveCoordinationCapabilitiesTemplate>
-  <audit-effective-coordination-capabilities [newVersionList]="newVersion.effectiveCoordinationCapabilities"
+  <audit-effective-coordination-capabilities *ngIf="!isExternalUser()"  [newVersionList]="newVersion.effectiveCoordinationCapabilities"
                       [oldVersionList]="oldVersion.effectiveCoordinationCapabilities"
+                      [caseType]="newVersion.caseType"
+                >
+  </audit-effective-coordination-capabilities>
+  <audit-effective-coordination-capabilities *ngIf="isExternalUser()" [newVersionList]="newVersion.temporaryEffectiveCoordinationCapabilities"
+                      [oldVersionList]="oldVersion.temporaryEffectiveCoordinationCapabilities"
                       [caseType]="newVersion.caseType"
                 >
   </audit-effective-coordination-capabilities>
 </ng-template>
 <ng-template #researchAndStudiesTemplate>
-  <audit-research-and-studies [newVersionList]="newVersion.researchAndStudies"
+  <audit-research-and-studies *ngIf="!isExternalUser()" [newVersionList]="newVersion.researchAndStudies"
                       [oldVersionList]="oldVersion.researchAndStudies"
                       [caseType]="newVersion.caseType"
                 >
   </audit-research-and-studies>
+  <audit-research-and-studies *ngIf="isExternalUser()" [newVersionList]="newVersion.temporaryResearchAndStudies"
+                      [oldVersionList]="oldVersion.temporaryResearchAndStudies"
+                      [caseType]="newVersion.caseType"
+                >
+  </audit-research-and-studies>
+</ng-template>
+<ng-template #templatesTemplate>
+  <audit-templates *ngIf="!isExternalUser()" [newVersionList]="newVersion.templateList"
+                      [oldVersionList]="oldVersion.templateList"
+                      [caseType]="newVersion.caseType"
+                      [templateId]="getTemplateId()"
+                >
+  </audit-templates>
+  <audit-templates *ngIf="isExternalUser()" [newVersionList]="newVersion.temporaryTemplateList"
+                      [oldVersionList]="oldVersion.temporaryTemplateList"
+                      [caseType]="newVersion.caseType"
+                      [templateId]="getTemplateId()"
+                >
+  </audit-templates>
 </ng-template>
 
 
