@@ -19,7 +19,7 @@
           </ng-container>
           <ng-container cdkColumnDef="user">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.user}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.orgUserInfo ? row.orgUserInfo.getName() : ''}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.userInfo ? row.userInfo.getName() : ''}} </td>
           </ng-container>
           <ng-container cdkColumnDef="userOrganization">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.user_organization}}</th>
