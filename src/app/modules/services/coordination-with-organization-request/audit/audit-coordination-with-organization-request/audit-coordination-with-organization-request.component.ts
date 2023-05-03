@@ -1,3 +1,4 @@
+import { EmployeeService } from '@services/employee.service';
 import { Component, OnInit } from '@angular/core';
 import { ObjectUtils } from '@app/helpers/object-utils';
 import { IAuditCaseProperties } from '@app/interfaces/i-audit-case-properties';
@@ -17,7 +18,8 @@ export class AuditCoordinationWithOrganizationRequestComponent implements IAudit
   basicInfoDifferences: IValueDifference[] = [];
   explanationDifferences: IValueDifference[]= [];
 
-  constructor(public lang: LangService) {
+  constructor(public lang: LangService,
+              private employeeService:EmployeeService) {
   }
 
   ngOnInit() {
@@ -37,5 +39,18 @@ export class AuditCoordinationWithOrganizationRequestComponent implements IAudit
     const oldVersionDataModel: Partial<CoordinationWithOrganizationsRequest> = ObjectUtils.getControlComparisonValues<CoordinationWithOrganizationsRequest>(this.oldVersion.getExplanationValuesWithLabels());
     const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getExplanationValuesWithLabels());
     this.explanationDifferences = ObjectUtils.getValueDifferencesList<CoordinationWithOrganizationsRequest, CoordinationWithOrganizationsRequest>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+  }
+  getTemplateId(){
+    let templateId ;
+    if(!!this.newVersion){
+      templateId = this.newVersion.processId;
+    }
+    if(!!this.oldVersion){
+      templateId = this.oldVersion.processId;
+    }
+    return templateId
+  }
+  isExternalUser(){
+    return this.employeeService.getCurrentUser().isExternal();
   }
 }

@@ -79,6 +79,11 @@ import { AuditCoordinationWithOrganizationRequestComponent } from '@app/modules/
 import { ProjectModel } from '@app/models/project-model';
 import { ProjectModelInterceptor } from '@app/model-interceptors/project-model-interceptor';
 import { AuditProjectModelsComponent } from '@app/modules/services/project-models/audit/audit-project-models/audit-project-models.component';
+import { IHasParsedTemplates } from '@app/interfaces/i-has-parsed-templates';
+import { CaseTemplateFieldsPopupComponent } from '@app/modules/e-services-main/popups/case-template-fields-popup/case-template-fields-popup.component';
+import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
+import { CharityOrganizationUpdateInterceptor } from '@app/model-interceptors/charity-organization-update-interceptor';
+import { AuditCharityOrganizationUpdateComponent } from '@app/modules/services/charity-organization-update/audit/audit-charity-organization-update/audit-charity-organization-update.component';
 
 @CastResponseContainer({
   $default: {
@@ -114,6 +119,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCooperation,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequest,
     [CaseTypes.EXTERNAL_PROJECT_MODELS]: ProjectModel,
+    [CaseTypes.CHARITY_ORGANIZATION_UPDATE]: CharityOrganizationUpdate,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -135,6 +141,8 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCooperationInterceptor,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequestInterceptor,
     [CaseTypes.EXTERNAL_PROJECT_MODELS]: ProjectModelInterceptor,
+    [CaseTypes.CHARITY_ORGANIZATION_UPDATE]: CharityOrganizationUpdateInterceptor,
+
 
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
@@ -157,6 +165,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.INTERNATIONAL_COOPERATION]: AuditInternationalCooperationComponent,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: AuditCoordinationWithOrganizationRequestComponent,
     [CaseTypes.EXTERNAL_PROJECT_MODELS]: AuditProjectModelsComponent,
+    [CaseTypes.CHARITY_ORGANIZATION_UPDATE]: AuditCharityOrganizationUpdateComponent,
 
   };
 
@@ -200,6 +209,13 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
   showDifferencesPopup(differencesList: IValueDifference[], titleInfo?: AdminResult): void {
     this.dialog.show(CaseAuditDifferencesPopupComponent, {
       differencesList: differencesList,
+      titleInfo: titleInfo
+    }).onAfterClose$.subscribe();
+  }
+  showTemplateFieldsDifferencesPopup(newItem: IHasParsedTemplates,oldItem: IHasParsedTemplates, titleInfo?: AdminResult): void {
+    this.dialog.show(CaseTemplateFieldsPopupComponent, {
+      newItem: newItem,
+      oldItem: oldItem,
       titleInfo: titleInfo
     }).onAfterClose$.subscribe();
   }

@@ -9,6 +9,9 @@ import { AdminResult } from './admin-result';
 import { BaseModel } from './base-model';
 import {AuditOperationTypes} from '@enums/audit-operation-types';
 import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { ControlValueLabelLangKey } from '@app/types/types';
+import { DateUtils } from '@app/helpers/date-utils';
 
 const interceptor = new CharityReportInterceptor();
 
@@ -40,16 +43,52 @@ export class CharityReport extends BaseModel<
   categoryInfo!: AdminResult;
   reportStatusInfo!: AdminResult;
   riskTypeInfo!: AdminResult;
+  generalDateStamp!:number|null;
 
-  // extra properties
-  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   getAdminResultByProperty(property: keyof CharityReport): AdminResult {
-    return AdminResult.createInstance({});
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'category':
+        adminResultValue = this.categoryInfo;
+        break;
+      case 'reportStatus':
+        adminResultValue = this.reportStatusInfo;
+        break;
+      case 'riskType':
+        adminResultValue = this.riskTypeInfo;
+        break;
+      case 'generalDate':
+        const generalDateValue = DateUtils.getDateStringFromDate(this.generalDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({arName: generalDateValue, enName: generalDateValue});
+        break;
+
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      fullName: { langKey: 'report_title', value: this.fullName },
+      reportType:{ langKey: 'report_subject', value: this.reportType },
+      subject:{ langKey: 'report_subject', value: this.subject },
+      generalDate:{ langKey: 'date', value: this.generalDate, comparisonValue : this.generalDateStamp },
+      category:{ langKey: 'main_category', value: this.category },
+      feedback:{ langKey: 'feedback', value: this.feedback },
+      reportStatus:{ langKey: 'status', value: this.reportStatus },
+     };
   }
 
   getName(): string {
     return this.langService.map.lang === 'en' ? this.enName : this.arName;
   }
+
   buildForm(controls = true) {
     const {
       fullName,
