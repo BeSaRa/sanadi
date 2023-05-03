@@ -17,8 +17,7 @@ export class GuestGuard implements CanActivate {
       map((authenticated) => {
         // return authenticated ? this.router.parseUrl('home') : true;
         if (authenticated) {
-          this.router.parseUrl('home');
-          return false;
+          return this.router.parseUrl('home');
         } else {
           if (route.data.isLoginPage) {
             return this.isCorrectNavigationByLoginInstance(state);
@@ -29,16 +28,14 @@ export class GuestGuard implements CanActivate {
     );
   }
 
-  private isCorrectNavigationByLoginInstance(state: RouterStateSnapshot): boolean {
+  private isCorrectNavigationByLoginInstance(state: RouterStateSnapshot): boolean | UrlTree {
     if (this.configService.isExternalLoginInstance()) {
       if (state.url === '/login') {
-        this.router.navigate(['login-external']).then();
-        return false;
+        return this.router.parseUrl('login-external');
       }
     } else if (this.configService.isInternalLoginInstance()) {
       if (state.url === '/login-external') {
-        this.router.navigate(['login']).then();
-        return false;
+        return this.router.parseUrl('login');
       }
     }
     return true;
