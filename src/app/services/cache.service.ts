@@ -26,13 +26,13 @@ export class CacheService {
     }));
   }
 
-  refreshCache(logOutAfterSuccess: boolean = false): void {
+  refreshCache(isExternalUser: boolean, logOutAfterSuccess: boolean = false): void {
     const refreshSub = this._refreshCache().subscribe(() => {
       refreshSub.unsubscribe();
       if (logOutAfterSuccess) {
         this.authService.logout()
           .subscribe(() => {
-            this.router.navigate(['/login']).then();
+            this.router.navigate([isExternalUser ? '/login-external' : '/login']).then();
           })
       }
     });

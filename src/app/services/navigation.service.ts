@@ -26,7 +26,7 @@ export class NavigationService {
   }
 
   hasBackUrl(): boolean {
-    return !!(this.previousPath && this.previousPath !== '/' && this.previousPath !== '/login');
+    return !!(this.previousPath && this.previousPath !== '/' && this.previousPath !== '/login' && this.previousPath !== '/login-external');
   }
 
   goToBack(): void {
