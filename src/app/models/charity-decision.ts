@@ -10,6 +10,8 @@ import {BaseModel} from './base-model';
 import {AuditOperationTypes} from '@enums/audit-operation-types';
 import {AdminResult} from '@models/admin-result';
 import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { ControlValueLabelLangKey } from '@app/types/types';
 
 const interceptor = new CharityDecisionInterceptor();
 
@@ -33,14 +35,41 @@ export class CharityDecision extends BaseModel<
   id!: number;
   objectDBId?: number;
   category?: number;
-
-  // extra properties
-  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  categoryInfo!: AdminResult;
+  generalDateStamp!: number |null;
 
   getAdminResultByProperty(property: keyof CharityDecision): AdminResult {
-    return AdminResult.createInstance({});
-  }
+    let adminResultValue: AdminResult;
+    switch (property) {
+      case 'category':
+        adminResultValue = this.categoryInfo;
+        break;
+      case 'generalDate':
+        const generalDateValue = DateUtils.getDateStringFromDate(this.generalDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({arName: generalDateValue, enName: generalDateValue});
+        break;
 
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+    }
+    return adminResultValue ?? new AdminResult();
+  }
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      referenceNumber:{ langKey: 'decision_reference_number', value: this.referenceNumber },
+      generalDate:{ langKey: 'date', value: this.generalDate, comparisonValue: this.generalDateStamp },
+      subject:{ langKey: 'subject', value: this.subject },
+      organization:{ langKey: 'issuer', value: this.organization },
+      category:{ langKey: 'decision_category', value: this.category },
+
+     };
+  }
   buildForm(controls = true, withOrg = true) {
     const {referenceNumber, generalDate, category, subject, organization} =
       this;

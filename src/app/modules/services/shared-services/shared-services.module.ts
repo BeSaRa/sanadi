@@ -30,6 +30,8 @@ import { AuditInterventionImplementingAgencyListComponent } from './audit/audit-
 import { AuditInterventionFieldListComponent } from './audit/audit-intervention-field-list/audit-intervention-field-list.component';
 import { AuditInterventionRegionListComponent } from './audit/audit-intervention-region-list/audit-intervention-region-list.component';
 import { AuditPaymentComponent } from '../transferring-individual-funds-abroad/audit/audit-payment/audit-payment.component';
+import { AuditOrganizationOfficerComponent } from './audit/audit-organization-officer/audit-organization-officer.component';
+import { AuditRealBeneficiaryComponent } from './audit/audit-real-beneficiary/audit-real-beneficiary.component';
 
 
 @NgModule({
@@ -50,7 +52,9 @@ import { AuditPaymentComponent } from '../transferring-individual-funds-abroad/a
     AuditInterventionImplementingAgencyListComponent,
     AuditInterventionFieldListComponent,
     AuditInterventionRegionListComponent,
-    AuditPaymentComponent
+    AuditPaymentComponent,
+    AuditOrganizationOfficerComponent,
+    AuditRealBeneficiaryComponent
   ],
   imports: [
     CommonModule,
@@ -73,7 +77,9 @@ import { AuditPaymentComponent } from '../transferring-individual-funds-abroad/a
     AuditInterventionImplementingAgencyListComponent,
     AuditInterventionFieldListComponent,
     AuditInterventionRegionListComponent,
-    AuditPaymentComponent
+    AuditPaymentComponent,
+    AuditOrganizationOfficerComponent,
+    AuditRealBeneficiaryComponent
   ]
 })
 export class SharedServicesModule { }

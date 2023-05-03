@@ -25,6 +25,7 @@ import {
 } from '@app/services-search/components/formly-select-field/formly-select-field.component';
 import { CaseAuditPopupComponent } from './popups/case-audit-popup/case-audit-popup.component';
 import { CaseAuditDifferencesPopupComponent } from './popups/case-audit-differences-popup/case-audit-differences-popup.component';
+import { CaseTemplateFieldsPopupComponent } from './popups/case-template-fields-popup/case-template-fields-popup.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { CaseAuditDifferencesPopupComponent } from './popups/case-audit-differen
     SelectedLicenseTableComponent,
     SelectBankAccountPopupComponent,
     CaseAuditPopupComponent,
-    CaseAuditDifferencesPopupComponent
+    CaseAuditDifferencesPopupComponent,
+    CaseTemplateFieldsPopupComponent
   ],
   imports: [
     CommonModule,
