@@ -666,113 +666,11 @@
     ></evaluation-indicators>
   </ng-template>
   <ng-template #projectAddressesTab>
-    <fieldset [disabled]="readonly">
-      <div class="row">
-        <div class="d-flex align-items-center justify-content-start">
-          <h2 class="h6 text-primary">{{lang.map.project_addresses}}</h2>
-          <button (click)="openAddProjectAddressForm()" class="btn text-primary icon-btn"><i
-            class="mdi mdi-plus-box"></i></button>
-        </div>
-      </div>
-      <ng-container [formGroup]="projectAddressForm" *ngIf="addProjectAddressFormActive">
-        <div class="row">
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="beneficiaryRegion"
-                   for="addressBeneficiaryRegion">{{lang.map.region}}</label>
-            <input id="addressBeneficiaryRegion" validationClasses="beneficiaryRegion"
-                   formControlName="beneficiaryRegion"
-                   class="form-control">
-            <app-field-error-message controlName="beneficiaryRegion"></app-field-error-message>
-          </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="address"
-                   for="projectAddress">{{lang.map.address_details}}</label>
-            <input id="projectAddress" validationClasses="address" formControlName="address"
-                   class="form-control" maxlength="250">
-            <app-field-error-message controlName="address"></app-field-error-message>
-          </div>
-          <div class="col-sm-4 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="latitude"
-                   for="latitude">{{lang.map.latitude}} / {{lang.map.longitude}}</label>
-            <div class="input-group">
-              <input id="latitude" validationClasses="latitude" formControlName="latitude" class="form-control">
-              <button type="button" (click)="openMapMarker()" class="input-group-text">
-                <i class="mdi mdi-map-marker text-primary"></i>
-              </button>
-              <input id="longitude" validationClasses="longitude" formControlName="longitude" class="form-control">
-            </div>
-            <app-field-error-message controlName="latitude"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12 text-center action-container mb-3">
-            <button [disabled]="isDisabledSaveAddress()" (click)="saveProjectAddress()"
-                    class="btn btn-primary">{{lang.map.btn_save}}</button>
-            <button class="btn btn-secondary"
-                    (click)="cancelAddProjectAddress()">{{lang.map.btn_cancel}}</button>
-          </div>
-        </div>
-      </ng-container>
-      <div class="row">
-        <div class="col-12">
-          <app-table #table [columns]="projectAddressesDisplayedColumns"
-                     [data]="projectAddresses" [selectable]="true"
-                     [useSearchToFilter]="true"
-                     sortableTable>
-            <table [dataSource]="table.dataSource" cdk-table
-                   class="table table-striped table-bordered caption-top">
-              <ng-container cdkColumnDef="index">
-                <th *cdkHeaderCellDef cdk-header-cell
-                    sortable-header> #
-                </th>
-                <td *cdkCellDef="let row; let i = index;" cdk-cell> {{i + 1}} </td>
-              </ng-container>
-              <ng-container cdkColumnDef="beneficiaryRegion">
-                <th *cdkHeaderCellDef cdk-header-cell
-                    sortable-header> {{lang.map.region}}</th>
-                <td *cdkCellDef="let row" cdk-cell> {{row.beneficiaryRegion}} </td>
-              </ng-container>
-              <ng-container cdkColumnDef="address">
-                <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.address_details}}</th>
-                <td *cdkCellDef="let row" cdk-cell> {{row.address}} </td>
-              </ng-container>
-              <ng-container cdkColumnDef="location">
-                <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.item_location}}</th>
-                <td cdk-cell *cdkCellDef="let row">
-                  <button (click)="openLocationMap(row)" [tooltip]="lang.map.show_location_on_map" class="btn icon-btn">
-                    <i
-                      class="mdi mdi-map-marker text-primary"></i>
-                  </button>
-                </td>
-              </ng-container>
-              <ng-container cdkColumnDef="actions">
-                <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
-                <td *cdkCellDef="let row" cdk-cell class="table-actions">
-                  <div class="d-flex flex-row">
-                    <button (click)="removeProjectAddress($event, row)"
-                            [disabled]="(readonly || addProjectAddressFormActive)"
-                            class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
-                      <i class="mdi mdi-close-box"></i>
-                    </button>
-                    <button (click)="selectProjectAddress($event, row)"
-                            [disabled]="(readonly || addProjectAddressFormActive)"
-                            class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
-                      <i class="mdi mdi-pen"></i>
-                    </button>
-                  </div>
-                </td>
-              </ng-container>
-              <tr *cdkHeaderRowDef="projectAddressesDisplayedColumns" cdk-header-row></tr>
-              <tr *cdkRowDef="let row; columns: projectAddressesDisplayedColumns;" cdk-row></tr>
-              <!--suppress HtmlUnknownBooleanAttribute -->
-              <tr *cdkNoDataRow>
-                <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
-              </tr>
-            </table>
-          </app-table>
-        </div>
-      </div>
-    </fieldset>
+    <project-addresses
+      #projectAddressesRef
+      [readonly]="readonly"
+      [list]="(!model || !model.projectAddressList || model.projectAddressList.length === 0) ? []: model!.projectAddressList!"
+    ></project-addresses>
   </ng-template>
   <ng-template #foreignCountriesProjectsTab>
     <fieldset [disabled]="readonly">

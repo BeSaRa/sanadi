@@ -3,6 +3,7 @@ import { CommonUtils } from '@app/helpers/common-utils';
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import { CustomValidators } from '@app/validators/custom-validators';
 import { ControlValueLabelLangKey } from '@app/types/types';
 import {FactoryService} from '@services/factory.service';
 import {MapService} from '@services/map.service';
@@ -66,5 +67,19 @@ export class ProjectAddress extends SearchableCloneable<ProjectAddress> implemen
       center: this.hasMarker() ? this.getLngLat() : this.defaultLatLng!,
       marker: this.hasMarker() ? this.getLngLat() : undefined
     })
+  }
+
+  buildForm(controls?: boolean) {
+    const { beneficiaryRegion,
+            address,
+            latitude,
+            longitude,
+    } = this;
+    return {
+      beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.required]] : beneficiaryRegion,
+      address: controls ? [address] : address,
+      latitude: controls ? [latitude, [CustomValidators.required]] : latitude,
+      longitude: controls ? [longitude, [CustomValidators.required]] : longitude,
+    };
   }
 }
