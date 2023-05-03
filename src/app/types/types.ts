@@ -16,6 +16,7 @@ export type PermissionGroupsMapType = { [key in PermissionGroupsEnum]: (Permissi
 export type PermissionGroupsMapResponseType = (PermissionsEnum[] | EServicePermissionsEnum[] | string[]);
 
 export type ConfigurationMergingScope = 'limited' | 'extended' | 'open';
+export type LoginInstances = 'EXTERNAL' | 'INTERNAL' | 'BOTH';
 
 export type customValidationTypes =
   'ENG_NUM'
