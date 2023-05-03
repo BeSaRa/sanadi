@@ -12,6 +12,7 @@ import { ForeignCountriesProjectPopupComponent } from './popups/foreign-countrie
 import { EvaluationIndicatorsComponent } from './pages/project-model/evaluation-indicators/evaluation-indicators.component';
 import { ProjectAddressesComponent } from './pages/project-model/project-addresses/project-addresses.component';
 import { ProjectAddressesPopupComponent } from './popups/project-addresses-popup/project-addresses-popup.component';
+import { ForeignCountriesProjectsComponent } from './pages/project-model/foreign-countries-projects/foreign-countries-projects.component';
 import { AuditProjectModelsComponent } from './audit/audit-project-models/audit-project-models.component';
 import { AuditEvaluationIndicatorComponent } from './audit/audit-evaluation-indicator/audit-evaluation-indicator.component';
 import { AuditProjectAddressComponent } from './audit/audit-project-address/audit-project-address.component';
@@ -30,6 +31,7 @@ import { AuditProjectModelForeignCountriesProjectComponent } from './audit/audit
     EvaluationIndicatorsComponent,
     ProjectAddressesComponent,
     ProjectAddressesPopupComponent,
+    ForeignCountriesProjectsComponent,
     AuditProjectModelsComponent,
     AuditEvaluationIndicatorComponent,
     AuditProjectAddressComponent,

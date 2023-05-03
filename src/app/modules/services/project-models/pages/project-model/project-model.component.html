@@ -673,66 +673,12 @@
     ></project-addresses>
   </ng-template>
   <ng-template #foreignCountriesProjectsTab>
-    <fieldset [disabled]="readonly">
-      <div class="row">
-        <div class="col-12">
-          <app-table #table [columns]="pMForeignCountriesProjectsDisplayedColumns"
-                     [data]="pMForeignCountriesProjects" [selectable]="true"
-                     [useSearchToFilter]="true"
-                     sortableTable>
-            <table [dataSource]="table.dataSource" cdk-table
-                   class="table table-striped table-bordered caption-top">
-              <ng-container cdkColumnDef="extra-header">
-                <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-                  <table-header tableTitle="project_model_foreign_countries_projects"
-                                [add$]="addPMForeignCountriesProjectForm$" [skipClearSort]="true" [skipSearch]="true">
-                  </table-header>
-                </th>
-              </ng-container>
-              <ng-container cdkColumnDef="index">
-                <th *cdkHeaderCellDef cdk-header-cell
-                    sortable-header> #
-                </th>
-                <td *cdkCellDef="let row; let i = index;" cdk-cell> {{i + 1}} </td>
-              </ng-container>
-              <ng-container cdkColumnDef="projectName">
-                <th *cdkHeaderCellDef cdk-header-cell
-                    sortable-header> {{lang.map.project_name}}</th>
-                <td *cdkCellDef="let row" cdk-cell> {{row.projectName}} </td>
-              </ng-container>
-              <ng-container cdkColumnDef="notes">
-                <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.notes}}</th>
-                <td *cdkCellDef="let row" cdk-cell> {{row.notes}} </td>
-              </ng-container>
-              <ng-container cdkColumnDef="actions">
-                <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
-                <td *cdkCellDef="let row" cdk-cell class="table-actions">
-                  <div class="d-flex flex-row">
-                    <button (click)="removePMForeignCountriesProject($event, row)"
-                            [disabled]="(readonly || addPMForeignCountriesProjectFormActive)"
-                            class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
-                      <i class="mdi mdi-close-box"></i>
-                    </button>
-                    <button (click)="selectPMForeignCountriesProject($event, row)"
-                            [disabled]="(readonly || addPMForeignCountriesProjectFormActive)"
-                            class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
-                      <i class="mdi mdi-pen"></i>
-                    </button>
-                  </div>
-                </td>
-              </ng-container>
-              <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-              <tr *cdkHeaderRowDef="pMForeignCountriesProjectsDisplayedColumns" cdk-header-row></tr>
-              <tr *cdkRowDef="let row; columns: pMForeignCountriesProjectsDisplayedColumns;" cdk-row></tr>
-              <!--suppress HtmlUnknownBooleanAttribute -->
-              <tr *cdkNoDataRow>
-                <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
-              </tr>
-            </table>
-          </app-table>
-        </div>
-      </div>
-    </fieldset>
+    <foreign-countries-projects
+      #foreignCountriesProjectsRef
+      [readonly]="readonly"
+      [ForeignCountriesProjectsNeeds]="foreignCountriesProjectsNeeds"
+      [list]="(!model || !model.foreignCountriesProjectList || model.foreignCountriesProjectList.length === 0) ? []: model!.foreignCountriesProjectList!"
+    ></foreign-countries-projects>
   </ng-template>
   <ng-template #specialExplanationTab>
     <fieldset [disabled]="readonly">

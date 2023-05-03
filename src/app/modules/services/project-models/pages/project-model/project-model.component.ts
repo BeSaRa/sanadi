@@ -33,7 +33,6 @@ import { AidLookup } from '@models/aid-lookup';
 import { Country } from '@models/country';
 import { ForeignCountriesProjectsNeed } from '@models/foreign-countries-projects-need';
 import { Lookup } from '@models/lookup';
-import { ProjectAddress } from '@models/project-address';
 import { ProjectModel } from '@models/project-model';
 import { ProjectModelForeignCountriesProject } from '@models/project-model-foreign-countries-project';
 import { SDGoal } from '@models/sdgoal';
@@ -53,11 +52,9 @@ import { ToastService } from '@services/toast.service';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ComponentBudgetsComponent } from './component-budgets/component-budgets.component';
-import {
-  ForeignCountriesProjectPopupComponent
-} from '../../popups/foreign-countries-project-popup/foreign-countries-project-popup.component';
 import { EvaluationIndicatorsComponent } from './evaluation-indicators/evaluation-indicators.component';
 import { ProjectAddressesComponent } from './project-addresses/project-addresses.component';
+import { ForeignCountriesProjectsComponent } from './foreign-countries-projects/foreign-countries-projects.component';
 
 @Component({
   selector: 'project-model',
@@ -80,9 +77,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   addPMForeignCountriesProjectFormActive!: boolean;
   selectedPMForeignCountriesProject!: ProjectModelForeignCountriesProject | null;
   selectedPMForeignCountriesProjectIndex!: number | null;
-  pMForeignCountriesProjects: ProjectModelForeignCountriesProject[] = [];
   foreignCountriesProjectsNeeds: ForeignCountriesProjectsNeed[] = [];
-  pMForeignCountriesProjectsDisplayedColumns: string[] = ['index', 'projectName', 'notes', 'actions'];
 
 
   domainTypes: typeof DomainTypes = DomainTypes;
@@ -127,6 +122,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   @ViewChild('projectAddressesRef')
   projectAddressesRef!: ProjectAddressesComponent
+
+  @ViewChild('foreignCountriesProjectsRef')
+  foreignCountriesProjectsRef!: ForeignCountriesProjectsComponent
 
   selectedModel?: ProjectModel;
   displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn'];
@@ -246,17 +244,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   _initComponent(): void {
     this.setUserProfiles();
     this.getQatarId();
-    this.buildForeignCountriesProjectForm();
     this.loadExitMechanisms();
     this.loadSanadiDomains();
     this.loadCountries();
     this.loadGoals();
     this.listenToTemplateSearch();
-    this.listenToAdd();
-  }
-
-  listenToAdd() {
-    this.addPMForeignCountriesProjectForm$.pipe(takeUntil(this.destroy$)).subscribe(() => this.openAddPMForeignCountriesProjectForm());
   }
 
   setUserProfiles(): void {
@@ -446,7 +438,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       componentList: this.componentBudgetsRef.list,
       evaluationIndicatorList: this.evaluationIndicatorsRef.list,
       projectTotalCost: this.projectTotalCostField.value,
-      foreignCountriesProjectList: this.pMForeignCountriesProjects,
+      foreignCountriesProjectList: this.foreignCountriesProjectsRef.list,
       projectAddressList: this.projectAddressesRef.list,
       description: this.descriptionTab.value
     });
@@ -492,10 +484,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       summaryPercentGroup: model.buildSummaryPercentGroup(false),
       description: model.description
     });
-
-    this.pMForeignCountriesProjects = this.model?.foreignCountriesProjectList;
     this.handleRequestTypeChange(model.requestType, false);
-
     if (model.domain === DomainTypes.DEVELOPMENT) {
       this.displayDevGoals = true;
     }
@@ -505,6 +494,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.form.reset();
     this.componentBudgetsRef.forceClearComponent();
     this.evaluationIndicatorsRef.forceClearComponent();
+    this.foreignCountriesProjectsRef.forceClearComponent();
     this.projectAddressesRef.forceClearComponent();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
@@ -1056,128 +1046,4 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.foreignCountriesProjectsNeeds = list;
     });
   }
-
-
-  buildForeignCountriesProjectForm(): void {
-    this.pMForeignCountriesProjectForm = this.fb.group({
-      objectDBId: [null, [CustomValidators.required]],
-      notes: [null]
-    });
-  }
-
-  _getForeignCountriesPopupComponent() {
-    return ForeignCountriesProjectPopupComponent;
-  }
-
-  openForeignCountriesFormPopup() {
-    this.dialog.show(this._getForeignCountriesPopupComponent(), {
-      form: this.pMForeignCountriesProjectForm,
-      readonly: this.readonly,
-      editIndex: this.selectedPMForeignCountriesProjectIndex,
-      foreignCountriesProjectsNeeds: this.foreignCountriesProjectsNeeds
-    }).onAfterClose$.subscribe((data) => {
-      if (data) {
-        this.savePMForeignCountriesProject()
-      } else {
-        this.cancelAddPMForeignCountriesProject();
-      }
-    })
-  }
-
-  openAddPMForeignCountriesProjectForm() {
-    this.addPMForeignCountriesProjectFormActive = true;
-    this.openForeignCountriesFormPopup()
-  }
-
-  selectPMForeignCountriesProject(event: MouseEvent, model: ProjectModelForeignCountriesProject) {
-    this.addPMForeignCountriesProjectFormActive = true;
-    this.openForeignCountriesFormPopup()
-    event.preventDefault();
-    this.selectedPMForeignCountriesProject = model;
-    this.pMForeignCountriesProjectForm.patchValue(this.selectedPMForeignCountriesProject!);
-    this.selectedPMForeignCountriesProjectIndex = this.pMForeignCountriesProjects
-      .findIndex(x => x.objectDBId === model.objectDBId && x.notes === model.notes);
-  }
-
-  _savePMForeignCountriesProject(projectModelForeignCountriesProject: ProjectModelForeignCountriesProject) {
-    if (!this.selectedPMForeignCountriesProject) {
-      if (!this.isExistPMForeignCountriesProjectInCaseOfAdd(this.pMForeignCountriesProjects, projectModelForeignCountriesProject)) {
-        this.pMForeignCountriesProjects = this.pMForeignCountriesProjects.concat(projectModelForeignCountriesProject);
-        this.resetPMForeignCountriesProjectForm();
-        this.addPMForeignCountriesProjectFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    } else {
-      if (!this.isExistPMForeignCountriesProjectInCaseOfEdit(this.pMForeignCountriesProjects, projectModelForeignCountriesProject, this.selectedPMForeignCountriesProjectIndex!)) {
-        let newList = this.pMForeignCountriesProjects.slice();
-        newList.splice(this.selectedPMForeignCountriesProjectIndex!, 1);
-        newList.splice(this.selectedPMForeignCountriesProjectIndex!, 0, projectModelForeignCountriesProject);
-        this.pMForeignCountriesProjects = newList;
-        this.resetPMForeignCountriesProjectForm();
-        this.addPMForeignCountriesProjectFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    }
-  }
-
-  savePMForeignCountriesProject() {
-    const pMForeignCountriesProject = new ProjectModelForeignCountriesProject().clone(this.pMForeignCountriesProjectForm.getRawValue());
-    pMForeignCountriesProject.projectName = (this.foreignCountriesProjectsNeeds.find(x => x.id === pMForeignCountriesProject.objectDBId)! as any).projectName;
-
-    this._savePMForeignCountriesProject(pMForeignCountriesProject);
-  }
-
-  cancelAddPMForeignCountriesProject() {
-    this.resetPMForeignCountriesProjectForm();
-    this.addPMForeignCountriesProjectFormActive = false;
-  }
-
-  resetPMForeignCountriesProjectForm() {
-    this.selectedPMForeignCountriesProject = null;
-    this.selectedPMForeignCountriesProjectIndex = null;
-    this.pMForeignCountriesProjectForm.reset();
-  }
-
-  removePMForeignCountriesProject(event: MouseEvent, model: ProjectModelForeignCountriesProject) {
-    event.preventDefault();
-    this.pMForeignCountriesProjects = this.pMForeignCountriesProjects.filter(x => !(x.objectDBId === model.objectDBId && x.notes === model.notes));
-    this.resetPMForeignCountriesProjectForm();
-  }
-
-  isExistPMForeignCountriesProjectInCaseOfAdd(list: ProjectModelForeignCountriesProject[], toBeAddedItem: ProjectModelForeignCountriesProject): boolean {
-    return list.some(x => x.objectDBId === toBeAddedItem.objectDBId && x.notes === toBeAddedItem.notes);
-  }
-
-  isExistPMForeignCountriesProjectInCaseOfEdit(list: ProjectModelForeignCountriesProject[], toBeEditedItem: ProjectModelForeignCountriesProject, selectedIndex: number): boolean {
-    for (let i = 0; i < list.length; i++) {
-      if (i === selectedIndex) {
-        continue;
-      }
-
-      if (list[i].objectDBId === toBeEditedItem.objectDBId && list[i].notes === toBeEditedItem.notes) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  isExistProjectAddressInCaseOfAdd(projectAddresses: ProjectAddress[], toBeAddedProjectAddress: ProjectAddress): boolean {
-    return projectAddresses.some(x => x.beneficiaryRegion === toBeAddedProjectAddress.beneficiaryRegion && x.address === toBeAddedProjectAddress.address);
-  }
-
-  isExistProjectAddressInCaseOfEdit(projectAddresses: ProjectAddress[], toBeEditedProjectAddress: ProjectAddress, selectedIndex: number): boolean {
-    for (let i = 0; i < projectAddresses.length; i++) {
-      if (i === selectedIndex) {
-        continue;
-      }
-
-      if (projectAddresses[i].beneficiaryRegion === toBeEditedProjectAddress.beneficiaryRegion && projectAddresses[i].address === toBeEditedProjectAddress.address) {
-        return true;
-      }
-    }
-    return false;
-  }
-
 }
