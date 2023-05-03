@@ -5,7 +5,9 @@
   </button>
   <ul class="dropdown-menu dropdown-menu-end p-0 shadow" aria-labelledby="caseHistoryDropdown">
     <ng-container *ngIf="auditList.length === 0; else auditListTemplate">
-      <li class="text-center">{{lang.map.msg_not_found}}</li>
+      <li class="text-center">
+        <ng-container [ngTemplateOutlet]="notFoundTemplate"></ng-container>
+      </li>
     </ng-container>
   </ul>
 </div>
@@ -19,6 +21,12 @@
       <hr class="dropdown-divider m-0">
     </li>
   </ng-container>
+</ng-template>
+
+<ng-template #notFoundTemplate>
+  <div class="d-flex justify-content-center p-2 text-primary">
+    <span class="text-truncate">{{lang.map.msg_not_found}}</span>
+  </div>
 </ng-template>
 
 <ng-template #historyTemplate let-auditItem="data">
