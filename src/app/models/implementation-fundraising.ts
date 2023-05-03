@@ -5,11 +5,12 @@ import { InterceptModel } from "@decorators/intercept-model";
 import { AuditOperationTypes } from "@app/enums/audit-operation-types";
 import { CommonUtils } from "@app/helpers/common-utils";
 import { ControlValueLabelLangKey } from "@app/types/types";
+import { IAuditModelProperties } from "@app/interfaces/i-audit-model-properties";
 
 const { send, receive } = new ImplementationFundraisingInterceptor()
 
 @InterceptModel({ send, receive })
-export class ImplementationFundraising extends Cloneable<ImplementationFundraising> {
+export class ImplementationFundraising extends Cloneable<ImplementationFundraising> implements IAuditModelProperties<ImplementationFundraising> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   arabicName!: string
   englishName!: string

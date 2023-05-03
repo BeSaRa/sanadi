@@ -28,6 +28,7 @@ import { NpoManagementInterceptor } from '@app/model-interceptors/npo-management
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new NpoManagementInterceptor();
 
@@ -37,7 +38,7 @@ const interceptor = new NpoManagementInterceptor();
 })
 export class NpoManagement
   extends _RequestType<NpoManagementService, NpoManagement>
-  implements HasRequestType, HasLicenseDurationType, CaseModelContract<NpoManagementService, NpoManagement> {
+  implements IAuditModelProperties<NpoManagement>, HasRequestType, HasLicenseDurationType, CaseModelContract<NpoManagementService, NpoManagement> {
   service!: NpoManagementService;
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   caseType: number = CaseTypes.NPO_MANAGEMENT;
@@ -199,6 +200,12 @@ export class NpoManagement
         break;
       case 'clearanceName':
         adminResultValue = this.clearanceInfo;
+        break;
+      case 'profileId':
+        adminResultValue = AdminResult.createInstance({
+          arName: this.profileInfo.arName,
+          enName: this.profileInfo.enName
+        });
         break;
       case 'disbandmentType':
         adminResultValue = this.disbandmentInfo;

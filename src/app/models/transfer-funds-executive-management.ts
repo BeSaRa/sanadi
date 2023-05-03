@@ -5,8 +5,9 @@ import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class TransferFundsExecutiveManagement extends SearchableCloneable<TransferFundsExecutiveManagement>{
+export class TransferFundsExecutiveManagement extends SearchableCloneable<TransferFundsExecutiveManagement> implements IAuditModelProperties<TransferFundsExecutiveManagement> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   nameLikePassport!: string;
   englishNameLikePassport!: string;

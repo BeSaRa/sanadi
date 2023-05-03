@@ -4,8 +4,9 @@ import {FundingResourceContract} from "@contracts/funding-resource-contract";
 import { AuditOperationTypes } from "@app/enums/audit-operation-types";
 import { AdminResult } from "./admin-result";
 import { CommonUtils } from '@app/helpers/common-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class FundSource extends Cloneable<FundSource> implements FundingResourceContract {
+export class FundSource extends Cloneable<FundSource> implements IAuditModelProperties<FundSource>, FundingResourceContract {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   fullName!: string;
   totalCost!: number;

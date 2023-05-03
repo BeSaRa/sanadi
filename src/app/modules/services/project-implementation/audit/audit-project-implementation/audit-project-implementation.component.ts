@@ -16,6 +16,7 @@ export class AuditProjectImplementationComponent implements IAuditCaseProperties
 
   basicInfoDifferences: IValueDifference[] = [];
   implementingAgencyTypeDifferences: IValueDifference[] = [];
+  explanationDifferences: IValueDifference[] = [];
 
   constructor(public lang: LangService) {
   }
@@ -23,6 +24,7 @@ export class AuditProjectImplementationComponent implements IAuditCaseProperties
   ngOnInit() {
     this._getBasicInfoDifferences();
     this._getimplementingAgencyTypeDifferences();
+    this._getExplanationDifferences();
   }
 
   private _getBasicInfoDifferences(): void {
@@ -38,4 +40,10 @@ export class AuditProjectImplementationComponent implements IAuditCaseProperties
     this.implementingAgencyTypeDifferences = ObjectUtils.getValueDifferencesList<ProjectImplementation, ProjectImplementation>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
 
+  private _getExplanationDifferences(): void {
+    const newVersionDataModel: Partial<ProjectImplementation> = ObjectUtils.getControlComparisonValues<ProjectImplementation>(this.newVersion.getExplanationValuesWithLabels());
+    const oldVersionDataModel: Partial<ProjectImplementation> = ObjectUtils.getControlComparisonValues<ProjectImplementation>(this.oldVersion.getExplanationValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getExplanationValuesWithLabels());
+    this.explanationDifferences = ObjectUtils.getValueDifferencesList<ProjectImplementation, ProjectImplementation>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+  }
 }

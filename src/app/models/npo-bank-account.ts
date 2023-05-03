@@ -5,8 +5,9 @@ import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ControlValueLabelLangKey } from '@app/types/types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class NpoBankAccount extends SearchableCloneable<NpoBankAccount> {
+export class NpoBankAccount extends SearchableCloneable<NpoBankAccount> implements IAuditModelProperties<NpoBankAccount> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   objectDBId!: number;
   currency!: number;

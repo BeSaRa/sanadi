@@ -25,6 +25,7 @@ import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { DateUtils } from '@app/helpers/date-utils';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new TransferringIndividualFundsAbroadInterceptor();
@@ -34,7 +35,7 @@ const interceptor = new TransferringIndividualFundsAbroadInterceptor();
   send: interceptor.send
 })
 
-export class TransferringIndividualFundsAbroad extends _RequestType<TransferringIndividualFundsAbroadService, TransferringIndividualFundsAbroad> implements HasRequestType, ITransferIndividualFundsAbroadComplete {
+export class TransferringIndividualFundsAbroad extends _RequestType<TransferringIndividualFundsAbroadService, TransferringIndividualFundsAbroad> implements IAuditModelProperties<TransferringIndividualFundsAbroad>, HasRequestType, ITransferIndividualFundsAbroadComplete {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   service!: TransferringIndividualFundsAbroadService;
   caseType = CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD;
@@ -302,11 +303,15 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
       transferCountry: controls ? [values.transferCountry, [CustomValidators.required]] : values.transferCountry
     };
   }
-
-  buildExplanation(controls: boolean = false): any {
-    const { description } = this;
+  getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : description,
+      description: { langKey: 'transfer_to_country', value: this.description },
+    };
+  }
+  buildExplanation(controls: boolean = false): any {
+    const values = ObjectUtils.getControlValues<TransferringIndividualFundsAbroad>(this.getExplanationValuesWithLabels())
+    return {
+      description: controls ? [values.description, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : values.description,
     };
   }
 

@@ -27,11 +27,12 @@ import { UrgentInterventionClosureInterceptor } from "@app/model-interceptors/ur
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
 const { send, receive } = new UrgentInterventionClosureInterceptor();
 
 @InterceptModel({ send, receive })
-export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterventionClosureService, UrgentInterventionClosure> {
+export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterventionClosureService, UrgentInterventionClosure> implements IAuditModelProperties<UrgentInterventionClosure> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   caseType: number = CaseTypes.URGENT_INTERVENTION_CLOSURE;
   organizationId!: number;
@@ -109,11 +110,11 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
       executionCountry: { langKey: 'country', value: this.executionCountry },
       executionRegion: { langKey: 'region', value: this.executionRegion },
       projectDescription: { langKey: 'lbl_description', value: this.projectDescription },
+      description: { langKey: 'special_explanations', value: this.description },
     };
   }
   getBasicFormFields(controls?: boolean) {
     const values = ObjectUtils.getControlValues<UrgentInterventionClosure>(this.getBasicInfoValuesWithLabels())
-    const {description} = this;
     return {
       requestType: controls ? [values.requestType, [CustomValidators.required]] : values.requestType,
       fullName: controls ? [values.fullName, [CustomValidators.required, CustomValidators.maxLength(100)]] : values.fullName,
@@ -125,7 +126,7 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
       executionCountry: controls ? [values.executionCountry, [CustomValidators.required]] : values.executionCountry,
       executionRegion: controls ? [values.executionRegion, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.executionRegion,
       projectDescription: controls ? [values.projectDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.projectDescription,
-      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
+      description: controls ? [values.description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.description,
     };
   }
   getBeneficiaryAnalysisValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
@@ -176,7 +177,15 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
   getAdminResultByProperty(property: keyof UrgentInterventionClosure): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
-
+      case 'beneficiaryCountry':
+        adminResultValue = this.beneficiaryCountryInfo;
+        break;
+      case 'executionCountry':
+        adminResultValue = this.executionCountryInfo;
+        break;
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
       default:
         let value: any = this[property];
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {

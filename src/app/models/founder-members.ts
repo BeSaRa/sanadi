@@ -5,8 +5,9 @@ import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ControlValueLabelLangKey } from '@app/types/types';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class FounderMembers extends SearchableCloneable<FounderMembers>{
+export class FounderMembers extends SearchableCloneable<FounderMembers> implements IAuditModelProperties<FounderMembers> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   objectDBId!: number;
   identificationNumber!: string;

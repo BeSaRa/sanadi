@@ -8,8 +8,9 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class OfficeEvaluation extends SearchableCloneable<OfficeEvaluation>{
+export class OfficeEvaluation extends SearchableCloneable<OfficeEvaluation> implements IAuditModelProperties<OfficeEvaluation>{
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   evaluationHub!: number;
   evaluationResult!: number;

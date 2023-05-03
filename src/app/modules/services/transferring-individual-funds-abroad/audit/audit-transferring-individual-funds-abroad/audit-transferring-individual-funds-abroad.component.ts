@@ -19,6 +19,8 @@ export class AuditTransferringIndividualFundsAbroadComponent implements IAuditCa
   receiverOrganizationInfoDifferences: IValueDifference[] = [];
   receiverPersonInfoDifferences: IValueDifference[] = [];
   financialTransactionInfoDifferences: IValueDifference[] = [];
+  explanationDifferences: IValueDifference[] = [];
+
   constructor(public lang: LangService) {
   }
 
@@ -28,6 +30,7 @@ export class AuditTransferringIndividualFundsAbroadComponent implements IAuditCa
     this._getReceiverOrganizationInfoDifferences();
     this._getReceiverPersonInfoDifferences();
     this._getFinancialTransactionInfoDifferences();
+    this._getExplanationDifferences()
   }
 
   private _getBasicInfoDifferences(): void {
@@ -60,4 +63,11 @@ export class AuditTransferringIndividualFundsAbroadComponent implements IAuditCa
     const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getFinancialTransactionInfoValuesWithLabels());
     this.financialTransactionInfoDifferences = ObjectUtils.getValueDifferencesList<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
+  private _getExplanationDifferences(): void {
+    const newVersionDataModel: Partial<TransferringIndividualFundsAbroad> = ObjectUtils.getControlComparisonValues<TransferringIndividualFundsAbroad>(this.newVersion.getExplanationValuesWithLabels());
+    const oldVersionDataModel: Partial<TransferringIndividualFundsAbroad> = ObjectUtils.getControlComparisonValues<TransferringIndividualFundsAbroad>(this.oldVersion.getExplanationValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getExplanationValuesWithLabels());
+    this.explanationDifferences = ObjectUtils.getValueDifferencesList<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+  }
+
 }

@@ -108,7 +108,7 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
       basicInfo: this.fb.group(objUrgentIntervention.getBasicFormFields(true)),
       emergencyFunds: this.fb.group(objUrgentIntervention.getEmergencyFundFields(true)),
       projectSummary: this.fb.group(objUrgentIntervention.getProjectSummaryFields(true)),
-      description: this.fb.control(objUrgentIntervention.description, CustomValidators.required)
+      description: objUrgentIntervention.buildSpecialInfo(true),
     });
     this._setDefaultValues();
   }

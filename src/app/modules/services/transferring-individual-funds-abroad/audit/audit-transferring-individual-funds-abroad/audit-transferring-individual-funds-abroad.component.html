@@ -18,6 +18,7 @@
   </tab>
   <tab [template]="payment_info" [title]="lang.map.payments" name="payment_info">
   </tab>
+  <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
 </tabs-list>
 <ng-template #basic_info>
   <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
@@ -45,7 +46,10 @@
   <value-differences-list [differenceList]="financialTransactionInfoDifferences"></value-differences-list>
 </ng-template>
 <ng-template #payment_info>
-  <audit-payment [newVersionList]="newVersion.payment"
-    [oldVersionList]="oldVersion.payment" [caseType]="newVersion.caseType">
+  <audit-payment [newVersionList]="newVersion.payment" [oldVersionList]="oldVersion.payment"
+    [caseType]="newVersion.caseType">
   </audit-payment>
+</ng-template>
+<ng-template #specialExplanationTemplate>
+  <value-differences-list [differenceList]="explanationDifferences"></value-differences-list>
 </ng-template>

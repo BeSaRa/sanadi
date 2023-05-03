@@ -1,3 +1,4 @@
+import { IAuditModelProperties } from './../interfaces/i-audit-model-properties';
 import { ControlValueLabelLangKey } from './../types/types';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { AdminResult } from '@app/models/admin-result';
@@ -6,7 +7,7 @@ import { CommonUtils } from '@app/helpers/common-utils';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { ObjectUtils } from '@app/helpers/object-utils';
 
-export class TransferFundsCharityPurpose extends SearchableCloneable<TransferFundsCharityPurpose> {
+export class TransferFundsCharityPurpose extends SearchableCloneable<TransferFundsCharityPurpose> implements IAuditModelProperties<TransferFundsCharityPurpose> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   mainDACCategory!: number;
   mainUNOCHACategory!: number;

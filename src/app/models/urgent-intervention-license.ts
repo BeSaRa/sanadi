@@ -28,12 +28,13 @@ import { UrgentInterventionLicenseInterceptor } from "@app/model-interceptors/ur
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
 const { send, receive } = new UrgentInterventionLicenseInterceptor();
 
 @InterceptModel({ send, receive })
-export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<UrgentInterventionLicensingService, UrgentInterventionLicense> implements HasLicenseApprovalMonthly, HasRequestType {
+export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<UrgentInterventionLicensingService, UrgentInterventionLicense> implements IAuditModelProperties<UrgentInterventionLicense>, HasLicenseApprovalMonthly, HasRequestType {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   caseType: number = CaseTypes.URGENT_INTERVENTION_LICENSING;
   domain: number = DomainTypes.HUMANITARIAN; // fixed value, so info will also be fixed always
@@ -185,6 +186,15 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
     }
   }
 
+  getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      description: { langKey: 'special_explanations', value: this.description },
+    }
+  }
+  buildSpecialInfo(controls: boolean = false) {
+    const values = ObjectUtils.getControlValues<UrgentInterventionLicense>(this.getExplanationValuesWithLabels())
+    return controls ? [values.description, [CustomValidators.required]] : values.description
+  }
   getDomainInfo(): AdminResult {
     if (this.domainInfo && isValidAdminResult(this.domainInfo)) {
       return this.domainInfo;
@@ -224,6 +234,36 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
     switch (property) {
       case 'caseStatus':
         adminResultValue = this.caseStatusInfo;
+        break;
+      case 'managerDecision':
+        adminResultValue = this.managerDecisionInfo;
+        break;
+      case 'reviewerDepartmentDecision':
+        adminResultValue = this.reviewerDepartmentDecisionInfo;
+        break;
+      case 'reviewerDepartmentDecision':
+        adminResultValue = this.reviewerDepartmentDecisionInfo;
+        break;
+      case 'specialistDecision':
+        adminResultValue = this.specialistDecisionInfo;
+        break;
+      case 'secondSpecialistDecision':
+        adminResultValue = this.secondSpecialistDecisionInfo;
+        break;
+      case 'chiefDecision':
+        adminResultValue = this.chiefDecisionInfo;
+        break;
+      case 'generalManagerDecision':
+        adminResultValue = this.generalManagerDecisionInfo;
+        break;
+      case 'domain':
+        adminResultValue = this.domainInfo;
+        break;
+      case 'mainUNOCHACategory':
+        adminResultValue = this.mainUNOCHAInfo;
+        break;
+      case 'currency':
+        adminResultValue = this.currencyInfo;
         break;
 
       default:

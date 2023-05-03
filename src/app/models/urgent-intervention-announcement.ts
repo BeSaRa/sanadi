@@ -21,12 +21,15 @@ import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { UrgentInterventionAnnouncementInterceptor } from "@app/model-interceptors/urgent-intervention-announcement-interceptor";
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 
 const _RequestType = mixinRequestType(CaseModel);
 const { send, receive } = new UrgentInterventionAnnouncementInterceptor();
 
 @InterceptModel({ send, receive })
-export class UrgentInterventionAnnouncement extends _RequestType<UrgentInterventionAnnouncementService, UrgentInterventionAnnouncement> implements HasRequestType {
+export class UrgentInterventionAnnouncement extends _RequestType<UrgentInterventionAnnouncementService, UrgentInterventionAnnouncement> implements IAuditModelProperties<UrgentInterventionAnnouncement>, HasRequestType {
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   caseType: number = CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT;
   serviceSteps: string[] = [];
   organizationId!: number;
@@ -92,11 +95,11 @@ export class UrgentInterventionAnnouncement extends _RequestType<UrgentIntervent
       beneficiaryRegion: { langKey: 'region', value: this.beneficiaryRegion },
       executionCountry: { langKey: 'country', value: this.executionCountry },
       executionRegion: { langKey: 'region', value: this.executionRegion },
+      description: { langKey: 'special_explanations', value: this.description },
     };
   }
   getBasicFormFields(controls: boolean = false): any {
     const values = ObjectUtils.getControlValues<UrgentInterventionAnnouncement>(this.getBasicInfoValuesWithLabels())
-    const { description } = this;
     return {
       requestType: controls ? [values.requestType, [CustomValidators.required]] : values.requestType,
       oldLicenseFullSerial: controls ? [values.oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : values.oldLicenseFullSerial,
@@ -106,7 +109,7 @@ export class UrgentInterventionAnnouncement extends _RequestType<UrgentIntervent
       beneficiaryRegion: controls ? [values.beneficiaryRegion, [CustomValidators.maxLength(50)]] : values.beneficiaryRegion,
       executionCountry: controls ? [values.executionCountry, [CustomValidators.required]] : values.executionCountry,
       executionRegion: controls ? [values.executionRegion, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.executionRegion,
-      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
+      description: controls ? [values.description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.description,
     };
   }
 
@@ -139,6 +142,9 @@ export class UrgentInterventionAnnouncement extends _RequestType<UrgentIntervent
         break;
       case 'executionCountry':
         adminResultValue = this.executionCountryInfo;
+        break;
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
         break;
 
       default:

@@ -16,6 +16,7 @@ export class AuditUrgentJointReliefCampaignComponent implements IAuditCaseProper
 
   basicInfoDifferences: IValueDifference[] = [];
   mainInfoDifferences: IValueDifference[] = [];
+  explanationDifferences: IValueDifference[] = [];
 
   constructor(public lang: LangService) {
   }
@@ -23,6 +24,7 @@ export class AuditUrgentJointReliefCampaignComponent implements IAuditCaseProper
   ngOnInit() {
     this._getBasicInfoDifferences();
     this._getMainInfoDifferences();
+    this._getExplanationDifferences();
   }
 
   private _getBasicInfoDifferences(): void {
@@ -36,5 +38,11 @@ export class AuditUrgentJointReliefCampaignComponent implements IAuditCaseProper
     const oldVersionDataModel: Partial<UrgentJointReliefCampaign> = ObjectUtils.getControlComparisonValues<UrgentJointReliefCampaign>(this.oldVersion.getMainInfoValuesWithLabels());
     const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getMainInfoValuesWithLabels());
     this.mainInfoDifferences = ObjectUtils.getValueDifferencesList<UrgentJointReliefCampaign, UrgentJointReliefCampaign>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+  }
+  private _getExplanationDifferences(): void {
+    const newVersionDataModel: Partial<UrgentJointReliefCampaign> = ObjectUtils.getControlComparisonValues<UrgentJointReliefCampaign>(this.newVersion.getExplanationValuesWithLabels());
+    const oldVersionDataModel: Partial<UrgentJointReliefCampaign> = ObjectUtils.getControlComparisonValues<UrgentJointReliefCampaign>(this.oldVersion.getExplanationValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getExplanationValuesWithLabels());
+    this.explanationDifferences = ObjectUtils.getValueDifferencesList<UrgentJointReliefCampaign, UrgentJointReliefCampaign>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
 }

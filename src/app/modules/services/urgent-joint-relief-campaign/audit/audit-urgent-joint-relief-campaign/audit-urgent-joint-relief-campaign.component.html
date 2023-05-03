@@ -4,7 +4,8 @@
   <tab name="externalUserData" [template]="participant_organizations" [title]="lang.map.participant_organizations">
   </tab>
   <tab name="organizationOfficer" [template]="organization_officers" [title]="lang.map.organization_officers"></tab>
-</tabs-list>
+   <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
+  </tabs-list>
 <ng-template #basic_info>
   <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
 </ng-template>
@@ -18,4 +19,8 @@
   <audit-organization-officers [newVersionList]="newVersion.organizaionOfficerList"
     [oldVersionList]="oldVersion.organizaionOfficerList" [caseType]="newVersion.caseType">
   </audit-organization-officers>
+</ng-template>
+
+<ng-template #specialExplanationTemplate>
+  <value-differences-list [differenceList]="explanationDifferences"></value-differences-list>
 </ng-template>

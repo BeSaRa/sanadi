@@ -9,8 +9,9 @@ import { ProjectFundraisingService } from "@services/project-fundraising.service
 import { Observable } from "rxjs";
 import { CommonUtils } from "@app/helpers/common-utils";
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class ProjectTemplate extends SearchableCloneable<ProjectTemplate> {
+export class ProjectTemplate extends SearchableCloneable<ProjectTemplate> implements IAuditModelProperties<ProjectTemplate> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   templateId!: string;
   projectName!: string
