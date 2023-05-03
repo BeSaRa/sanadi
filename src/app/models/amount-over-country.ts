@@ -3,8 +3,9 @@ import { AdminResult } from "./admin-result";
 import { Cloneable } from "@app/models/cloneable";
 import { AuditOperationTypes } from "@app/enums/audit-operation-types";
 import { CommonUtils } from "@app/helpers/common-utils";
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class AmountOverCountry extends Cloneable<AmountOverCountry> {
+export class AmountOverCountry extends Cloneable<AmountOverCountry> implements IAuditModelProperties<AmountOverCountry> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   targetAmount!: number;
   country!: number;

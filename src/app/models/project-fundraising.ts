@@ -29,13 +29,14 @@ import { ImplementationFundraising } from "@models/implementation-fundraising";
 import { AuditOperationTypes } from "@app/enums/audit-operation-types";
 import { CommonUtils } from "@app/helpers/common-utils";
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
 const { send, receive } = new ProjectFundraisingInterceptor()
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
 
 @InterceptModel({ send, receive })
 export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundraisingService, ProjectFundraising>
-  implements HasLicenseApprovalMonthly,
+  implements HasLicenseApprovalMonthly, IAuditModelProperties<ProjectFundraising>,
   ICaseModel<ProjectFundraising>,
   CaseModelContract<ProjectFundraisingService, ProjectFundraising> {
 
@@ -221,10 +222,15 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
     }
   }
 
-  buildExplanation(controls: boolean = false): any {
-    const { description } = this;
+  getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
+      description: { langKey: 'special_explanations', value: this.description },
+    }
+  }
+  buildExplanation(controls: boolean = false): any {
+    const values = ObjectUtils.getControlValues<ProjectFundraising>(this.getExplanationValuesWithLabels())
+    return {
+      description: controls ? [values.description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.description,
     }
   }
 

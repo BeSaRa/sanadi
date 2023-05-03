@@ -12,7 +12,7 @@ import { OrganizationOfficer } from '@app/models/organization-officer';
 @Component({
   selector: 'audit-organization-officers',
   templateUrl: './audit-organization-officers.component.html',
-  styleUrls: ['./audit-organization-officers.component.css']
+  styleUrls: ['./audit-organization-officers.component.scss']
 })
 export class AuditOrganizationOfficersComponent extends AuditListGenericComponent<OrganizationOfficer> {
   constructor(public lang: LangService,

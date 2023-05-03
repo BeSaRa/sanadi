@@ -14,11 +14,12 @@ import { ControlValueLabelLangKey } from '@app/types/types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
 const { send, receive } = new ImplementationTemplateInterceptor()
 
 @InterceptModel({ send, receive })
-export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
+export class ImplementationTemplate extends Cloneable<ImplementationTemplate> implements IAuditModelProperties<ImplementationTemplate> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   templateId!: string
   templateName!: string

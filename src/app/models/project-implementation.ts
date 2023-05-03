@@ -35,6 +35,7 @@ import { AuditOperationTypes } from "@app/enums/audit-operation-types";
 import { CommonUtils } from '@app/helpers/common-utils';
 import { FundSource } from './fund-source';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
 const _Approval = mixinApprovalLicenseWithMonthly(mixinRequestType(CaseModel))
 const { send, receive } = new ProjectImplementationInterceptor()
@@ -42,7 +43,7 @@ const { send, receive } = new ProjectImplementationInterceptor()
 @InterceptModel({ send, receive })
 export class ProjectImplementation
   extends _Approval<ProjectImplementationService, ProjectImplementation>
-  implements CaseModelContract<ProjectImplementationService, ProjectImplementation>, HasLicenseApprovalMonthly, HasRequestType {
+  implements IAuditModelProperties<ProjectImplementation>, CaseModelContract<ProjectImplementationService, ProjectImplementation>, HasLicenseApprovalMonthly, HasRequestType {
   service: ProjectImplementationService;
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   caseType = CaseTypes.PROJECT_IMPLEMENTATION;
@@ -153,23 +154,16 @@ export class ProjectImplementation
     };
   }
   buildProjectInfo(controls: boolean = false) {
-    const {
-      implementationTemplate,
-      implementingAgencyType,
-      licenseStartDate,
-      projectEvaluationSLA,
-      licenseDuration,
-      implementingAgencyList,
-      projectTotalCost
-    } = this
+    const values = ObjectUtils.getControlValues<ProjectImplementation>(this.getBuildProjectInfoValuesWithLabels())
+
     return {
-      licenseStartDate: controls ? [licenseStartDate, CustomValidators.required] : licenseStartDate,
-      licenseDuration: controls ? [licenseDuration, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(3)]] : licenseDuration,
-      projectEvaluationSLA: controls ? [projectEvaluationSLA, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(3)]] : projectEvaluationSLA,
-      implementingAgencyType: controls ? [implementingAgencyType, CustomValidators.required] : implementingAgencyType,
-      implementationTemplate: controls ? [implementationTemplate, CustomValidators.requiredArray] : implementationTemplate,
-      implementingAgencyList: controls ? [implementingAgencyList, CustomValidators.requiredArray] : implementingAgencyList,
-      projectTotalCost: controls ? [projectTotalCost, [CustomValidators.required, Validators.min(1)]] : projectTotalCost
+      licenseStartDate: controls ? [values.licenseStartDate, CustomValidators.required] : values.licenseStartDate,
+      licenseDuration: controls ? [values.licenseDuration, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(3)]] : values.licenseDuration,
+      projectEvaluationSLA: controls ? [values.projectEvaluationSLA, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(3)]] : values.projectEvaluationSLA,
+      implementingAgencyType: controls ? [values.implementingAgencyType, CustomValidators.required] : values.implementingAgencyType,
+      implementationTemplate: controls ? [values.implementationTemplate, CustomValidators.requiredArray] : values.implementationTemplate,
+      implementingAgencyList: controls ? [values.implementingAgencyList, CustomValidators.requiredArray] : values.implementingAgencyList,
+      projectTotalCost: controls ? [values.projectTotalCost, [CustomValidators.required, Validators.min(1)]] : values.projectTotalCost
     }
   }
 
@@ -182,17 +176,13 @@ export class ProjectImplementation
     };
   }
   buildFundingResources(controls: boolean = false) {
-    const {
-      implementationFundraising,
-      financialGrant,
-      selfFinancing,
-      payment
-    } = this
+    const values = ObjectUtils.getControlValues<ProjectImplementation>(this.getBuildFundingResourcesValuesWithLabels())
+
     return {
-      implementationFundraising: controls ? [implementationFundraising] : implementationFundraising,
-      financialGrant: controls ? [financialGrant] : financialGrant,
-      selfFinancing: controls ? [selfFinancing] : selfFinancing,
-      payment: controls ? [payment, CustomValidators.requiredArray] : payment,
+      implementationFundraising: controls ? [values.implementationFundraising] : values.implementationFundraising,
+      financialGrant: controls ? [values.financialGrant] : values.financialGrant,
+      selfFinancing: controls ? [values.selfFinancing] : values.selfFinancing,
+      payment: controls ? [values.payment, CustomValidators.requiredArray] : values.payment,
     };
   }
 
@@ -238,9 +228,16 @@ export class ProjectImplementation
     }
     return adminResultValue ?? new AdminResult();
   }
-  buildSpecialInfo(controls: boolean = false) {
+
+  getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      description: controls ? [this.description, [CustomValidators.required]] : this.description
+      description: { langKey: 'special_explanations', value: this.description },
+    }
+  }
+  buildSpecialInfo(controls: boolean = false) {
+    const values = ObjectUtils.getControlValues<ProjectImplementation>(this.getExplanationValuesWithLabels())
+    return {
+      description: controls ? [values.description, [CustomValidators.required]] : values.description
     };
   }
 

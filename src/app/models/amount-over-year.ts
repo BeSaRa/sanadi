@@ -3,8 +3,9 @@ import { AuditOperationTypes } from "@app/enums/audit-operation-types";
 import { CommonUtils } from "@app/helpers/common-utils";
 import { Cloneable } from "@app/models/cloneable";
 import { AdminResult } from "./admin-result";
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class AmountOverYear extends Cloneable<AmountOverYear> {
+export class AmountOverYear extends Cloneable<AmountOverYear> implements IAuditModelProperties<AmountOverYear> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   year!: string;
   targetAmount!: number;

@@ -6,8 +6,9 @@ import { IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class Payment extends SearchableCloneable<Payment> {
+export class Payment extends SearchableCloneable<Payment> implements IAuditModelProperties<Payment> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   paymentNo!: string;
   dueDate!: string | IMyDateModel;

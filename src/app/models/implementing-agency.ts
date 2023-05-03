@@ -9,11 +9,12 @@ import { InterceptModel } from "@decorators/intercept-model";
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
 const { send, receive } = new ImplementingAgencyInterceptor()
 
 @InterceptModel({ send, receive })
-export class ImplementingAgency extends SearchableCloneable<ImplementingAgency> {
+export class ImplementingAgency extends SearchableCloneable<ImplementingAgency> implements IAuditModelProperties<ImplementingAgency> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   implementingAgency!: string;
   implementingAgencyType!: number;

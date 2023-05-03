@@ -22,6 +22,7 @@ import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { DateUtils } from '@app/helpers/date-utils';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
 const interceptor = new UrgentJointReliefCampaignInterceptor();
 
@@ -30,7 +31,7 @@ const interceptor = new UrgentJointReliefCampaignInterceptor();
   send: interceptor.send
 })
 
-export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampaignService, UrgentJointReliefCampaign> {
+export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampaignService, UrgentJointReliefCampaign> implements IAuditModelProperties<UrgentJointReliefCampaign> {
   service!: UrgentJointReliefCampaignService;
   caseType = CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN;
 
@@ -124,10 +125,15 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
     }
   }
 
-  buildExplanation(controls: boolean = false): any {
-    const { description } = this;
+  getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      description: controls ? [description, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)] : description,
+      description: { langKey: 'special_explanations', value: this.description },
+    }
+  }
+  buildExplanation(controls: boolean = false): any {
+    const values = ObjectUtils.getControlValues<UrgentJointReliefCampaign>(this.getExplanationValuesWithLabels())
+    return {
+      description: controls ? [values.description, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)] : values.description,
     }
   }
 

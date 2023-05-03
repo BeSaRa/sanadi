@@ -7,8 +7,9 @@ import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AdminResult } from './admin-result';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class Result extends SearchableCloneable<Result> {
+export class Result extends SearchableCloneable<Result> implements IAuditModelProperties<Result> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   outputs!: string;
   expectedResults!: string;

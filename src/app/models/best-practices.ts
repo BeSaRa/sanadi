@@ -9,8 +9,9 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class BestPractices extends SearchableCloneable<BestPractices> {
+export class BestPractices extends SearchableCloneable<BestPractices> implements IAuditModelProperties<BestPractices> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   bestPractices: number[] = [];
   statement!: string;

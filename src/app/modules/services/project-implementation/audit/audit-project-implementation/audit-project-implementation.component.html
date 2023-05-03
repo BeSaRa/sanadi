@@ -4,6 +4,8 @@
   <tab name="project_info" [template]="project_info" [title]="lang.map.project_info">
   </tab>
   <tab name="fundingResources" [template]="funding_sources" [title]="lang.map.funding_resources"></tab>
+  <tab name="special_explanations" [template]="specialExplanationTemplate"
+         [title]="lang.map.special_explanations"></tab>
 </tabs-list>
 <ng-template #basic_info>
   <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
@@ -31,4 +33,7 @@
   <audit-fund-source [isGrant]="true" [newVersionList]="newVersion.financialGrant"
     [oldVersionList]="oldVersion.financialGrant" [caseType]="newVersion.caseType">
   </audit-fund-source>
+</ng-template>
+<ng-template #specialExplanationTemplate>
+  <value-differences-list [differenceList]="explanationDifferences"></value-differences-list>
 </ng-template>

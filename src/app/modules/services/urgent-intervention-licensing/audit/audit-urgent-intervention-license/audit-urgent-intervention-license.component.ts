@@ -17,6 +17,7 @@ export class AuditUrgentInterventionLicenseComponent implements IAuditCaseProper
   basicInfoDifferences: IValueDifference[] = [];
   emergencyFundDifferences: IValueDifference[] = [];
   projectSummaryDifferences: IValueDifference[] = [];
+  explanationDifferences: IValueDifference[] = [];
   constructor(public lang: LangService) {
   }
 
@@ -24,6 +25,7 @@ export class AuditUrgentInterventionLicenseComponent implements IAuditCaseProper
     this._getBasicInfoDifferences();
     this._getEmergencyFundDifferences();
     this._getProjectSummaryDifferences();
+    this._getExplanationDifferences();
   }
 
   private _getBasicInfoDifferences(): void {
@@ -43,5 +45,11 @@ export class AuditUrgentInterventionLicenseComponent implements IAuditCaseProper
     const oldVersionDataModel: Partial<UrgentInterventionLicense> = ObjectUtils.getControlComparisonValues<UrgentInterventionLicense>(this.oldVersion.getProjectSummaryValuesWithLabels());
     const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getProjectSummaryValuesWithLabels());
     this.projectSummaryDifferences = ObjectUtils.getValueDifferencesList<UrgentInterventionLicense, UrgentInterventionLicense>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+  }
+  private _getExplanationDifferences(): void {
+    const newVersionDataModel: Partial<UrgentInterventionLicense> = ObjectUtils.getControlComparisonValues<UrgentInterventionLicense>(this.newVersion.getExplanationValuesWithLabels());
+    const oldVersionDataModel: Partial<UrgentInterventionLicense> = ObjectUtils.getControlComparisonValues<UrgentInterventionLicense>(this.oldVersion.getExplanationValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getExplanationValuesWithLabels());
+    this.explanationDifferences = ObjectUtils.getValueDifferencesList<UrgentInterventionLicense, UrgentInterventionLicense>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
 }

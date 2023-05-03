@@ -3,8 +3,9 @@ import { AuditOperationTypes } from "@app/enums/audit-operation-types";
 import { CommonUtils } from "@app/helpers/common-utils";
 import { AdminResult } from "@app/models/admin-result";
 import { Cloneable } from "@app/models/cloneable";
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class DeductedPercentage extends Cloneable<DeductedPercentage> {
+export class DeductedPercentage extends Cloneable<DeductedPercentage> implements IAuditModelProperties<DeductedPercentage> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   deductionType!: number;
   deductionTypeInfo!: AdminResult;

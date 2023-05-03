@@ -8,8 +8,9 @@ import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { AdminResult } from './admin-result';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { DateUtils } from '@app/helpers/date-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class ParticipantOrganization extends SearchableCloneable<ParticipantOrganization>{
+export class ParticipantOrganization extends SearchableCloneable<ParticipantOrganization> implements IAuditModelProperties<ParticipantOrganization> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   organizationId!: number;
   arabicName!: string;
@@ -42,6 +43,9 @@ export class ParticipantOrganization extends SearchableCloneable<ParticipantOrga
       case 'workStartDate':
         const licenseEndDate = DateUtils.getDateStringFromDate(this.workStartDate, 'DATEPICKER_FORMAT');
         adminResultValue = AdminResult.createInstance({ arName: licenseEndDate, enName: licenseEndDate });
+        break;
+      case 'managerDecisionInfo':
+        adminResultValue = AdminResult.createInstance({ arName: this.managerDecisionInfo.arName, enName: this.managerDecisionInfo.enName });
         break;
       default:
         let value: any = this[property];

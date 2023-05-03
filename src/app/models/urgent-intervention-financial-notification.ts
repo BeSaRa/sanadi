@@ -20,11 +20,12 @@ import { InterceptModel } from '@decorators/intercept-model';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
 const { send, receive } = new UrgentInterventionFinancialNotificationInterceptor();
 
 @InterceptModel({ send, receive })
-export class UrgentInterventionFinancialNotification extends LicenseApprovalModel<UrgentInterventionFinancialNotificationService, UrgentInterventionFinancialNotification> {
+export class UrgentInterventionFinancialNotification extends LicenseApprovalModel<UrgentInterventionFinancialNotificationService, UrgentInterventionFinancialNotification> implements IAuditModelProperties<UrgentInterventionFinancialNotification> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   service!: UrgentInterventionFinancialNotificationService;
   caseType: number = CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION;
@@ -41,6 +42,7 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
   interventionFieldList: InterventionField[] = [];
   beneficiaryCountryInfo!: AdminResult;
   executionCountryInfo!: AdminResult;
+  requestTypeInfo!: AdminResult;
   implementingAgencyType!: number;
   implementingAgency!: string;
   subject!: string;
@@ -117,6 +119,9 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
         break;
       case 'executionCountry':
         adminResultValue = this.executionCountryInfo;
+        break;
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
         break;
 
       default:

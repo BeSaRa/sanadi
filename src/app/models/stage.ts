@@ -8,8 +8,9 @@ import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { AdminResult } from './admin-result';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class Stage extends SearchableCloneable<Stage> {
+export class Stage extends SearchableCloneable<Stage> implements IAuditModelProperties<Stage> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   stage!: string;
   notes!: string;

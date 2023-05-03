@@ -7,8 +7,9 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class InterventionField extends SearchableCloneable<InterventionField> {
+export class InterventionField extends SearchableCloneable<InterventionField> implements IAuditModelProperties<InterventionField> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   mainUNOCHACategory!: number;
   subUNOCHACategory!: number;

@@ -5,8 +5,9 @@ import { CommonUtils } from '@app/helpers/common-utils';
 import { ControlValueLabelLangKey } from '@app/types/types';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 
-export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer>{
+export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer> implements IAuditModelProperties<NpoContactOfficer> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   officerId!: number;
   identificationNumber!: string;
