@@ -25,7 +25,7 @@ import {
 } from '@modules/services/shared-services/components/intervention-region-list/intervention-region-list.component';
 import {LicenseService} from '@services/license.service';
 import {DialogService} from '@services/dialog.service';
-import {ReadinessStatus, TabMap} from '@app/types/types';
+import {TabMap} from '@app/types/types';
 import {Lookup} from '@models/lookup';
 import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
@@ -54,8 +54,6 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   urgentFinancialNotificationAccountType: Lookup[] = this.lookupService.listByCategory.UrgentFinancialNotificationAccountType;
 
   accountsTypesList: any[] = [];
-  interventionAreasTabStatus: ReadinessStatus = 'READY';
-  interventionFieldsTabStatus: ReadinessStatus = 'READY';
   implementingAgencies: ImplementingAgency[] = [];
   implementingAgenciesAdminRes: AdminResult[] = [];
   bankAccountList: BankAccount[] = [];
@@ -96,7 +94,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        return !this.interventionRegionListComponentRef || (this.interventionAreasTabStatus === 'READY' && this.interventionRegionListComponentRef.list.length > 0);
+        return !this.interventionRegionListComponentRef || (this.interventionRegionListComponentRef.list.length > 0);
       }
     },
     interventionFields: {
@@ -107,7 +105,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        return !this.interventionFieldListComponentRef || (this.interventionFieldsTabStatus === 'READY' && this.interventionFieldListComponentRef.list.length > 0);
+        return !this.interventionFieldListComponentRef || (this.interventionFieldListComponentRef.list.length > 0);
       }
     },
     transferData: {
