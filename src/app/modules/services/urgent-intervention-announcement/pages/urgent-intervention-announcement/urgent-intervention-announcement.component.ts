@@ -94,7 +94,7 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
         if (!this.isStartOrUpdateRequestType()) {
           return true;
         }
-        return !this.implementingAgencyListComponentRef || (this.entitiesTabStatus === 'READY' && this.implementingAgencyListComponentRef.list.length > 0);
+        return !this.implementingAgencyListComponentRef || this.implementingAgencyListComponentRef.list.length > 0;
       }
     },
     interventionAreas: {
@@ -148,7 +148,6 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
   @ViewChild('interventionRegionListComponent') interventionRegionListComponentRef!: InterventionRegionListComponent;
   @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent;
 
-  entitiesTabStatus: ReadinessStatus = 'READY';
   interventionAreasTabStatus: ReadinessStatus = 'READY';
   interventionFieldsTabStatus: ReadinessStatus = 'READY';
 

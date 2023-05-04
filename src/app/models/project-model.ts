@@ -1,26 +1,25 @@
-import {CaseModel} from '@app/models/case-model';
-import {ProjectModelService} from '@app/services/project-model.service';
-import {AdminResult} from '@app/models/admin-result';
-import {ProjectComponent} from '@app/models/project-component';
-import {FactoryService} from '@app/services/factory.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {Validators} from '@angular/forms';
-import {ISearchFieldsMap} from '@app/types/types';
-import {dateSearchFields} from '@app/helpers/date-search-fields';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {ProjectModelInterceptor} from '@app/model-interceptors/project-model-interceptor';
-import {InterceptModel} from '@decorators/intercept-model';
-import {EvaluationIndicator} from '@app/models/evaluation-indicator';
-import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
-import {ProjectAddress} from '@app/models/project-address';
-import {EmployeeService} from '@services/employee.service';
-import {ProjectTemplate} from "@app/models/projectTemplate";
-import {ImplementationTemplate} from "@models/implementation-template";
+import { CaseModel } from '@app/models/case-model';
+import { ProjectModelService } from '@app/services/project-model.service';
+import { AdminResult } from '@app/models/admin-result';
+import { ProjectComponent } from '@app/models/project-component';
+import { FactoryService } from '@app/services/factory.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { Validators } from '@angular/forms';
+import { ISearchFieldsMap } from '@app/types/types';
+import { dateSearchFields } from '@app/helpers/date-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { ProjectModelInterceptor } from '@app/model-interceptors/project-model-interceptor';
+import { InterceptModel } from '@decorators/intercept-model';
+import { EvaluationIndicator } from '@app/models/evaluation-indicator';
+import { ProjectModelForeignCountriesProject } from '@app/models/project-model-foreign-countries-project';
+import { ProjectAddress } from '@app/models/project-address';
+import { EmployeeService } from '@services/employee.service';
+import { ProjectTemplate } from "@app/models/projectTemplate";
+import { ImplementationTemplate } from "@models/implementation-template";
 
-// noinspection JSUnusedGlobalSymbols
 const {send, receive} = new ProjectModelInterceptor();
 
 @InterceptModel({send, receive})
@@ -138,7 +137,6 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
           CustomValidators.required,
           CustomValidators.minLength(4),
           CustomValidators.maxLength(100),
-          //CustomValidators.pattern('ENG_AR_NUM_ONLY')
         ]
       ] : projectName,
       projectDescription: controls ? [projectDescription, [
@@ -246,15 +244,6 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       };
     }
   }
-
-  buildEvaluationIndicatorForm(): any {
-    return {
-      indicator: [null, [CustomValidators.required]],
-      percentage: [null, [CustomValidators.required]],
-      notes: [null]
-    };
-  }
-
   buildSummaryPercentGroup(controls: boolean = false): any {
     const {
       beneficiaries0to5,

@@ -280,7 +280,8 @@
     </ng-template>
     <!-- Bank accounts -->
     <ng-template #bankAccountsTemplate>
-      <bank-account #bankAccountsTab [countriesList]="countries" [list]="model?.bankAccountList || []"
+      <bank-account #bankAccountsTab
+                    [list]="model?.bankAccountList || []"
                     [caseType]="model?.caseType" [readonly]="(isExtendOrCancelRequestType() || readonly)"
                     ></bank-account>
     </ng-template>
@@ -318,9 +319,10 @@
         </div>
 
 
-        <commercial-activity #commercialActivityTab [list]="model?.commercialActivitiesList || []"
+        <commercial-activity #commercialActivityTab 
+                             [commercialActivitiesList]="model?.commercialActivitiesList || []"
                              [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                             (readyEvent)="commercialActivityTabStatus = $event">
+                             >
         </commercial-activity>
 
       </div>
@@ -328,16 +330,24 @@
 
     <!-- Goals -->
     <ng-template #goalsTemplate>
-      <goal #goalsTab [list]="model?.displayGoals  || []" [readonly]="(isExtendOrCancelRequestType() || readonly)"
-            (readyEvent)="goalsTabStatus = $event"></goal>
-      <goals-list #goalsListTab [list]="model?.goalsList || []" [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                  (readyEvent)="goalsListTabStatus = $event"></goals-list>
+      <goal 
+        #goalsTab 
+        [displayGoals]="model?.displayGoals  || []" 
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+      ></goal>
+
+      <goals-list 
+        #goalsListTab 
+        [goalsList]="model?.goalsList || []" 
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+      ></goals-list>
 
       <!-- Target Groups -->
-      <target-group #targetGroupsTab [list]="model?.targetGroupList || []"
-                    [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                    (readyEvent)="targetGroupsTabStatus = $event">
-      </target-group>
+      <target-group 
+        #targetGroupsTab 
+        [targetGroupList]="model?.targetGroupList || []"
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+      ></target-group>
 
       <!-- Work Area -->
       <work-areas [countries]="countries" #workAreasTab [readonly]="(isExtendOrCancelRequestType() || readonly)"
@@ -346,33 +356,39 @@
     </ng-template>
     <!-- Management Councils -->
     <ng-template #managementCouncilsTemplate>
-      <management-council #managementCouncilsTab [nationalities]="nationalities" [list]="model?.managementCouncilList || []"
-                          [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                          (readyEvent)="managementCouncilsTabStatus = $event">
+      <management-council 
+        #managementCouncilsTab
+        [managementCouncilList]="model?.managementCouncilList || []"
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+      >
       </management-council>
     </ng-template>
     <!-- Executive Managements -->
     <ng-template #executiveManagementsTemplate>
-      <executive-management #executiveManagementsTab [nationalities]="nationalities"
-                            [pageTitleKey]="'executive_management'" [list]="model?.executiveManagementList || []"
-                            [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                            (readyEvent)="executiveManagementsTabStatus = $event">
-      </executive-management>
+      <executive-management 
+        #executiveManagementsTab
+        [pageTitleKey]="'executive_management'" 
+        [list]="model?.executiveManagementList || []"
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+      ></executive-management>
     </ng-template>
 
     <!-- Contact Officers -->
     <ng-template #contactOfficersTemplate>
-      <contact-officer #contactOfficersTab [list]="model?.contactOfficerList || []"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                       (readyEvent)="contactOfficersTabStatus = $event">
+      <contact-officer 
+        #contactOfficersTab 
+        [contactOfficerList]="model?.contactOfficerList || []"
+        [readonly]="(isExtendOrCancelRequestType() || readonly)">
       </contact-officer>
     </ng-template>
+
     <!-- Approval Reasons -->
     <ng-template #approvalReasonsTemplate>
-      <approval-reason #approvalReasonsTab [list]="model?.approvalReasonList || []"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                       (readyEvent)="approvalReasonsTabStatus = $event">
-      </approval-reason>
+      <approval-reason 
+        #approvalReasonsTab 
+        [list]="model?.approvalReasonList || []"
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+      ></approval-reason>
     </ng-template>
     <ng-template #commentsTemplate>
       <div class="d-flex flex-row align-items-center justify-content-start">

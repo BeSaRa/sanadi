@@ -52,7 +52,6 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   requestTypes: Lookup[] = this.lookupService.listByCategory.RequestTypeNewOnly;
   isExternalUser!: boolean;
   organizationStepNames: string[] = [CaseStepName.ORG_REV, CaseStepName.ORG_REW, CaseStepName.ORG_MNGR_REV];
-  organizationOfficersTabStatus: ReadinessStatus = 'READY';
   @ViewChild('organizationOfficersTab')
   organizationOfficerComponentRef!: UrgentJoinOrganizationOfficerComponent;
   tabsData: TabMap = {
@@ -82,9 +81,8 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        !this.organizationOfficerComponentRef || console.log(this.organizationOfficerComponentRef.list, this.organizationOfficersTabStatus)
         return (!this.isExternalUser ||
-          (!this.organizationOfficerComponentRef || (this.organizationOfficersTabStatus === 'READY' && this.organizationOfficerComponentRef.list.length > 0)
+          (!this.organizationOfficerComponentRef ||  this.organizationOfficerComponentRef.list.length > 0
           ));
       },
     },

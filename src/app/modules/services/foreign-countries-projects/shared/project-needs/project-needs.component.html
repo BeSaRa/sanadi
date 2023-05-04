@@ -1,11 +1,11 @@
 <div class="table-responsive">
-  <app-table #table sortableTable [paginator]="paginator" [data]="projectNeeds" [columns]="columns"
+  <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="displayColumns"
     [filter]="filterControl.value" [useSearchToFilter]="true">
     <!-- projectNeeds -->
     <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
       <ng-container cdkColumnDef="extra-header">
         <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-          <table-header tableTitle="project_needs" [add$]="add$" [allowAdd]="isAddingAllowed()" [skipClearSort]="true"
+          <table-header tableTitle="project_needs" [add$]="add$" [allowAdd]="!readonly" [skipClearSort]="true"
             (textChange)="filterControl.setValue($event)">
           </table-header>
         </th>
@@ -45,7 +45,7 @@
         </td>
       </ng-container>
       <ng-container cdkColumnDef="totalCostFooterLabel">
-        <td cdk-footer-cell [colSpan]="footerLabelColSpan" class="text-end" *cdkFooterCellDef="let row">
+        <td cdk-footer-cell class="text-end" *cdkFooterCellDef="let row">
           <span><b> {{lang.map.total_cost}}: </b></span>
         </td>
       </ng-container>
@@ -56,8 +56,8 @@
         </td>
       </ng-container>
       <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-      <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
-      <tr cdk-row *cdkRowDef="let row; columns: columns"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="displayColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: displayColumns"></tr>
       <tr cdk-footer-row *cdkFooterRowDef="footerColumns" [hidden]="!list || list.length === 0"></tr>
 
       <tr *cdkNoDataRow>

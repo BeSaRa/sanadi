@@ -62,21 +62,21 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       name: 'bankAccountsTab',
       langKey: 'bank_details',
       validStatus: () => {
-        return !this.bankAccountComponentRef || (this.bankDetailsTabStatus === 'READY' && this.bankAccountComponentRef.list.length > 0);
+        return !this.bankAccountComponentRef ||  this.bankAccountComponentRef.list.length > 0;
       }
     },
     managers: {
       name: 'managersTab',
       langKey: 'managers',
       validStatus: () => {
-        return !this.executiveManagementComponentRef || (this.managersTabStatus === 'READY' && this.executiveManagementComponentRef.list.length > 0);
+        return !this.executiveManagementComponentRef ||  this.executiveManagementComponentRef.list.length > 0;
       }
     },
     branches: {
       name: 'branchesTab',
       langKey: 'branches',
       validStatus: () => {
-        return !this.bankAccountComponentRef || (this.branchesTabStatus === 'READY' && this.bankBranchComponentRef.list.length > 0) || !this.isRenewOrUpdateRequestType();
+        return !this.bankAccountComponentRef || this.bankBranchComponentRef.list.length > 0 || !this.isRenewOrUpdateRequestType();
       }
     },
     comments: {
@@ -120,9 +120,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     }
   }
 
-  bankDetailsTabStatus: ReadinessStatus = 'READY';
-  managersTabStatus: ReadinessStatus = 'READY';
-  branchesTabStatus: ReadinessStatus = 'READY';
   loadAttachments: boolean = false;
 
   constructor(public lang: LangService,

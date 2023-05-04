@@ -53,7 +53,6 @@ export class PartnerApprovalComponent
   implements AfterViewInit {
   form!: UntypedFormGroup;
   serviceRequestTypes = ServiceRequestTypes;
-  nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   countries: Country[] = [];
   requestTypes: Lookup[] =
     this.requestTypeFollowupService.serviceRequestTypes[CaseTypes.PARTNER_APPROVAL].slice().sort(
@@ -67,14 +66,7 @@ export class PartnerApprovalComponent
   readonly: boolean = false;
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: PartnerApproval;
-  goalsTabStatus: ReadinessStatus = 'READY';
-  goalsListTabStatus: ReadinessStatus = 'READY';
-  managementCouncilsTabStatus: ReadinessStatus = 'READY';
-  executiveManagementsTabStatus: ReadinessStatus = 'READY';
-  targetGroupsTabStatus: ReadinessStatus = 'READY';
-  contactOfficersTabStatus: ReadinessStatus = 'READY';
-  approvalReasonsTabStatus: ReadinessStatus = 'READY';
-  commercialActivityTabStatus: ReadinessStatus = 'READY';
+  
   workAreasTabStatus: ReadinessStatus = 'READY';
   loadAttachments: boolean = false;
   formProperties = {
@@ -134,9 +126,8 @@ export class PartnerApprovalComponent
       validStatus: () => {
         return (
           !this.commercialActivityTabComponentRef ||
-          (this.commercialActivityTabStatus === 'READY' &&
             this.commercialActivityTabComponentRef.list.length > 0 &&
-            this.form.controls.trade.valid)
+            this.form.controls.trade.valid
         );
       },
     },
@@ -146,14 +137,11 @@ export class PartnerApprovalComponent
       validStatus: () => {
         return (
           (!this.goalsComponentRef ||
-            (this.goalsTabStatus === 'READY' &&
-              this.goalsComponentRef.list.length > 0)) &&
+              this.goalsComponentRef.list.length > 0) &&
           (!this.goalsListComponentRef ||
-            (this.goalsListTabStatus === 'READY' &&
-              this.goalsListComponentRef.list.length > 0)) &&
+              this.goalsListComponentRef.list.length > 0) &&
           (!this.targetGroupComponentRef ||
-            (this.targetGroupsTabStatus === 'READY' &&
-              this.targetGroupComponentRef.list.length > 0)) &&
+              this.targetGroupComponentRef.list.length > 0) &&
           (!this.workAreasTabComponentRef ||
             (this.workAreasTabStatus === 'READY' &&
               this.workAreasTabComponentRef.list.length > 0))
@@ -166,8 +154,7 @@ export class PartnerApprovalComponent
       validStatus: () => {
         return (
           !this.managementCouncilComponentRef ||
-          (this.managementCouncilsTabStatus === 'READY' &&
-            this.managementCouncilComponentRef.list.length > 0)
+            this.managementCouncilComponentRef.list.length > 0
         );
       },
     },
@@ -177,8 +164,7 @@ export class PartnerApprovalComponent
       validStatus: () => {
         return (
           !this.executiveManagementComponentRef ||
-          (this.executiveManagementsTabStatus === 'READY' &&
-            this.executiveManagementComponentRef.list.length > 0)
+            this.executiveManagementComponentRef.list.length > 0
         );
       },
     },
@@ -187,9 +173,7 @@ export class PartnerApprovalComponent
       langKey: 'contact_officers',
       validStatus: () => {
         return (
-          !this.contactOfficerComponentRef ||
-          (this.contactOfficersTabStatus === 'READY' &&
-            this.contactOfficerComponentRef.list.length > 0)
+          !this.contactOfficerComponentRef || this.contactOfficerComponentRef.list.length > 0
         );
       },
     },

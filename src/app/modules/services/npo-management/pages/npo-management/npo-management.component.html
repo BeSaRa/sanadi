@@ -343,9 +343,10 @@
         </div>
         <div class="col-12">
           <h6>{{lang.map.contact_officers}}</h6>
-          <npo-contact-officer #contactOfficersTab [readonly]="readonly || isViewOnly"
-                               [list]="model?.contactOfficerList || []"
-                               (readyEvent)="contactOfficersTabStatus = $event">
+          <npo-contact-officer #contactOfficersTab 
+                               [readonly]="readonly || isViewOnly"
+                               [contactOfficerList]="model?.contactOfficerList || []"
+                               >
           </npo-contact-officer>
         </div>
       </div>
@@ -353,15 +354,16 @@
   </ng-template>
 
   <ng-template #founderMemberTabTemplate>
-    <founder-members [readonly]="readonly || isViewOnly" #founderMemberTab [list]="model?.founderMemberList || []"
-                     (readyEvent)="founderMemberTabStatus = $event">
+    <founder-members [readonly]="readonly || isViewOnly" #founderMemberTab [founderMemberList]="model?.founderMemberList || []">
     </founder-members>
   </ng-template>
 
   <ng-template #bankAccountTabTemplate>
-    <npo-bank-account #bankAccountsTab [caseType]="model?.caseType" [readonly]="readonly || isViewOnly"
-                      [list]="model?.bankAccountList || []" [bankList]="bankList"
-                      (readyEvent)="bankDetailsTabStatus = $event">
+    <npo-bank-account #bankAccountsTab 
+                      [caseType]="model?.caseType" 
+                      [readonly]="readonly || isViewOnly"
+                      [bankAccountList]="model?.bankAccountList || []"
+                      >
     </npo-bank-account>
   </ng-template>
 

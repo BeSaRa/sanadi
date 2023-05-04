@@ -43,8 +43,6 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   CurrencyDropDown: Lookup[] = this.lookupService.listByCategory.Currency;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   countriesList: Country[] = [];
-  managersTabStatus: ReadinessStatus = 'READY';
-  bankDetailsTabStatus: ReadinessStatus = 'READY';
   licenseSearch$: Subject<string> = new Subject<string>();
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
   @ViewChild('managersTab') executiveManagementComponentRef!: ExecutiveManagementComponent;
@@ -60,7 +58,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       name: 'bankAccountsTab',
       langKey: 'bank_details',
       validStatus: () => {
-        return !this.bankAccountComponentRef || (this.bankDetailsTabStatus === 'READY' && this.bankAccountComponentRef.list.length > 0);
+        return !this.bankAccountComponentRef || this.bankAccountComponentRef.bankAccountDTOsList.length > 0;
       }
     },
     managers: {
@@ -68,7 +66,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       langKey: 'managers',
       validStatus: () => {
         return !this.executiveManagementComponentRef ||
-          (this.managersTabStatus === 'READY' && this.executiveManagementComponentRef.list.length > 0);
+           this.executiveManagementComponentRef.list.length > 0;
       }
     },
     contactOfficer: {
@@ -119,7 +117,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       ...this.specialExplanation.getRawValue()
     });
 
-    value.bankAccountDTOs = this.bankAccountComponentRef.list;
+    value.bankAccountDTOs = this.bankAccountComponentRef.bankAccountDTOsList;
     value.executiveManagementDTOs = this.executiveManagementComponentRef.list;
     value.contactOfficerDTOs = [this.contactOfficerTab.value];
     return value;
