@@ -78,6 +78,13 @@ export class SdGoalListComponent extends AdminGenericComponent<SDGoal, SDGoalSer
       icon: ActionIconsEnum.VIEW,
       onClick: (item: SDGoal) => this.view$.next(item)
     },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: SDGoal) => this.showAuditLogs(item)
+    },
     // children
     {
       type: 'action',
