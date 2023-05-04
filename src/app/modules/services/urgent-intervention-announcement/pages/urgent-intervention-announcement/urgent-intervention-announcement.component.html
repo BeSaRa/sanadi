@@ -141,7 +141,7 @@
     </div>
   </ng-template>
   <ng-template #entitiesTabTemplate>
-    <intervention-implementing-agency-list 
+    <intervention-implementing-agency-list
       #implementingAgencyListComponent
       [list]="(!model ? [] : model.implementingAgencyList)"
       [executionCountry]="executionCountryField.value"
@@ -151,14 +151,12 @@
   <ng-template #interventionAreasTabTemplate>
     <intervention-region-list #interventionRegionListComponent
                               [list]="(!model ? [] : model.interventionRegionList)"
-                              [readonly]="readonly"
-                              (readyEvent)="interventionAreasTabStatus = $event"></intervention-region-list>
+                              [readonly]="readonly"></intervention-region-list>
   </ng-template>
   <ng-template #interventionFieldsTabTemplate>
     <intervention-field-list #interventionFieldListComponent
                              [list]="(!model ? [] : model.interventionFieldList)"
-                             [readonly]="readonly"
-                             (readyEvent)="interventionFieldsTabStatus = $event"></intervention-field-list>
+                             [readonly]="readonly"></intervention-field-list>
   </ng-template>
   <ng-template #attachmentsTab>
     <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"

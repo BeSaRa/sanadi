@@ -59,6 +59,7 @@ import { AuditPaymentComponent } from '../transferring-individual-funds-abroad/a
     InterventionFieldListComponent,
     InterventionFieldListPopupComponent,
     BankAccountPopupComponent,
+    SelectCustomServiceTemplatePopupComponent
     SelectCustomServiceTemplatePopupComponent,
     BankAccountNewComponent,
     BankAccountNewPopupComponent,
@@ -88,6 +89,7 @@ import { AuditPaymentComponent } from '../transferring-individual-funds-abroad/a
     ApprovalFormComponent,
     InterventionImplementingAgencyListComponent,
     InterventionRegionListComponent,
+    InterventionFieldListComponent
     InterventionFieldListComponent,
     BankAccountNewComponent,
     AuditBankAccountComponent,

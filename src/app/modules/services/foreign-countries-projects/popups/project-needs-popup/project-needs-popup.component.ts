@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { UiCrudDialogGenericComponent } from '@app/generics/ui-crud-dialog-generic-component.directive';
@@ -11,7 +11,6 @@ import { LookupService } from '@app/services/lookup.service';
 import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { CustomValidators } from '@app/validators/custom-validators';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -19,7 +18,7 @@ import { Observable } from 'rxjs';
   templateUrl: './project-needs-popup.component.html',
   styleUrls: ['./project-needs-popup.component.scss']
 })
-export class ProjectNeedsPopupComponent extends UiCrudDialogGenericComponent<ProjectNeed>  {
+export class ProjectNeedsPopupComponent extends UiCrudDialogGenericComponent<ProjectNeed> {
   model: ProjectNeed;
   form!: UntypedFormGroup;
   operation: OperationTypes;
@@ -74,44 +73,4 @@ export class ProjectNeedsPopupComponent extends UiCrudDialogGenericComponent<Pro
      this.operation = data.operation;
      this.list = data.list;
    }
-  // form: UntypedFormGroup;
-  // viewOnly: boolean;
-  // readonly: boolean;
-  // editRecord: ProjectNeed;
-  // model: ProjectNeed;
-  // projectNeedsForm: UntypedFormArray;
-  // customValidators = CustomValidators
-  // inputMaskPatterns = CustomValidators.inputMaskPatterns
-
-  // constructor(@Inject(DIALOG_DATA_TOKEN)
-  // public data: {
-  //   form: UntypedFormGroup,
-  //   viewOnly: boolean,
-  //   readonly: boolean,
-  //   editRecord: ProjectNeed,
-  //   model: ProjectNeed,
-  //   projectNeedsForm: UntypedFormArray,
-  // },
-  //   public lang: LangService,
-  //   private dialogRef: DialogRef) {
-  //   this.form = data.form;
-  //   this.viewOnly = data.viewOnly;
-  //   this.readonly = data.readonly;
-  //   this.editRecord = data.editRecord;
-  //   this.model = data.model;
-  //   this.projectNeedsForm = data.projectNeedsForm;
-  // }
-  // mapFormTo(form: any): ProjectNeed {
-  //   const model: ProjectNeed = new ProjectNeed().clone(form);
-
-  //   return model;
-  // }
-
-  // cancel() {
-  //   this.dialogRef.close(null)
-  // }
-  
-  // save() {
-  //   this.dialogRef.close(this.mapFormTo(this.form.getRawValue()))
-  // }
 }
