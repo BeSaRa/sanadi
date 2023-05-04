@@ -41,14 +41,18 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
   get popupTitle(): string {
-    if (this.operation === OperationTypes.CREATE) {
-      return this.lang.map.lbl_add_x.change({x: this.lang.map[this.popupTitleKey]});
-    } else if (this.operation === OperationTypes.UPDATE) {
-      return this.lang.map.lbl_edit_x.change({x: this.lang.map[this.popupTitleKey]});
-    } else if (this.operation === OperationTypes.VIEW) {
-      return this.lang.map.lbl_view_x.change({x: this.lang.map[this.popupTitleKey]})
+    try {
+      if (this.operation === OperationTypes.CREATE) {
+        return this.lang.map.lbl_add_x.change({x: this.lang.map[this.popupTitleKey]});
+      } else if (this.operation === OperationTypes.UPDATE) {
+        return this.lang.map.lbl_edit_x.change({x: this.lang.map[this.popupTitleKey]});
+      } else if (this.operation === OperationTypes.VIEW) {
+        return this.lang.map.lbl_view_x.change({x: this.lang.map[this.popupTitleKey]})
+      }
+      return '';
+    } catch (e) {
+      return '';
     }
-    return '';
   }
 
   ngOnInit(): void {
