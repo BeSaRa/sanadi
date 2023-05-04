@@ -50,6 +50,7 @@ export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, 
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
+      show: () => false,
       onClick: (item: DynamicModel) => this.showAuditLogs(item)
     },
     // activate

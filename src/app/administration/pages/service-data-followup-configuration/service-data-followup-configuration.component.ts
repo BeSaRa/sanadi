@@ -85,6 +85,7 @@ export class ServiceDataFollowupConfigurationComponent extends AdminGenericCompo
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
+      show: () => false,
       onClick: (item: ServiceDataFollowupConfiguration) => this.showAuditLogs(item)
     },
     // delete

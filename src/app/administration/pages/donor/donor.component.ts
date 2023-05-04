@@ -104,6 +104,7 @@ export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
+      show: () => false,
       onClick: (item: Donor) => this.showAuditLogs(item)
     },
     // activate
