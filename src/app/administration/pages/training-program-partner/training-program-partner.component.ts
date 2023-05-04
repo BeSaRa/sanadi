@@ -80,6 +80,7 @@ export class TrainingProgramPartnerComponent extends AdminGenericComponent<Train
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
+      show: () => false,
       onClick: (item: TrainingProgramPartner) => this.showAuditLogs(item)
     },
     // activate

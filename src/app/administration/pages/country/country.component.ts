@@ -265,6 +265,7 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
         type: 'action',
         icon: ActionIconsEnum.HISTORY,
         label: 'show_logs',
+        show: () => false,
         onClick: (item: Country) => this.showAuditLogs(item)
       },
       // delete
