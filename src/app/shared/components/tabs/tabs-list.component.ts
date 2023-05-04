@@ -120,7 +120,35 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit, A
 
   getNextActiveTabIndex(): number {
     const currentActiveIndex = this.getActiveTabIndex();
-    const tabsStatus = this.tabs.toArray().map(x => !x.disabled);
-    return tabsStatus.findIndex((activeTab, index) => activeTab && index > currentActiveIndex) ?? 0;
+    return this._getAllTabsStatus().findIndex((activeTab, index) => activeTab && index > currentActiveIndex);
+  }
+
+  getPreviousActiveTabIndex(): number {
+    const currentActiveIndex = this.getActiveTabIndex();
+    return this._getAllTabsStatus().findIndex((activeTab, index) => activeTab && index < currentActiveIndex);
+  }
+
+  getFirstActiveTabIndex(): number {
+    return this._getAllTabsStatus().indexOf(true) ?? 0;
+  }
+
+  getLastActiveTabIndex(): number {
+    return this._getAllTabsStatus().lastIndexOf(true) ?? 0;
+  }
+
+  isFirstActiveTab(): boolean {
+    return this.getActiveTabIndex() === this.getFirstActiveTabIndex();
+  }
+
+  isLastActiveTab(): boolean {
+    return this.getActiveTabIndex() === this.getLastActiveTabIndex();
+  }
+
+  isIndexOutOfBound(index: number): boolean {
+    return index < 0 || index >= this.tabs.length;
+  }
+
+  private _getAllTabsStatus(): boolean[] {
+    return this.tabs.toArray().map(x => !x.disabled);
   }
 }
