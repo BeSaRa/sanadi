@@ -29,12 +29,12 @@ export class BestPracticesPopupComponent extends UiCrudDialogGenericComponent<Be
   bestPracticesList: AdminResult[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<BestPractices>,
-  public lang: LangService,
-  public dialogRef: DialogRef,
-  public dialogService: DialogService,
-  public fb: UntypedFormBuilder,
-  public toast: ToastService,
-  private fieldAssessmentService: FieldAssessmentService) {
+    public lang: LangService,
+    public dialogRef: DialogRef,
+    public dialogService: DialogService,
+    public fb: UntypedFormBuilder,
+    public toast: ToastService,
+    private fieldAssessmentService: FieldAssessmentService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -93,7 +93,7 @@ export class BestPracticesPopupComponent extends UiCrudDialogGenericComponent<Be
           return result.map(x => x.convertToAdminResult());
         })
       ).subscribe((result) => {
-      this.bestPracticesList = result;
-    });
+        this.bestPracticesList = result;
+      });
   }
 }

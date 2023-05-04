@@ -1,24 +1,21 @@
-<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-    <h1 class="h6 text-white">{{ editItem ? lang.map.btn_update : lang.map.btn_add }} {{
-      lang.map.lessons_learnt }}</h1>
-    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="null"
+      aria-label="Close"></button>
   </div>
-<div class="dialog-content no-fixed-height">
-
-<div [formGroup]="form">
+</div>
+<div class="dialog-content no-fixed-height" #dialogContent>
+  <div [formGroup]="form">
     <div class="row">
       <!-- Lessons Learnt -->
       <div class="col-12 mb-4 ng-select-wrapper">
         <label asteriskIfRequired="lessonsLearned" for="lessonsLearned"
-               class="form-label">{{lang.map.lessons_learnt}}</label>
-        <ng-select [selectOnTab]="true" [items]="lessonsLearntList" labelForId="lessonsLearned"
-                   bindValue="id" [clearable]="true"
-                   [searchFn]="searchNgSelect"
-                   placeholder="{{lang.map.select}}" id="lessonsLearned"
-                   [notFoundText]="lang.map.msg_not_found"
-                   [multiple]="true" [closeOnSelect]="false"
-                   [readonly]="readonly"
-                   formControlName="lessonsLearned" validationClasses="lessonsLearned">
+          class="form-label">{{lang.map.lessons_learnt}}</label>
+        <ng-select [selectOnTab]="true" [items]="lessonsLearntList" labelForId="lessonsLearned" bindValue="id"
+          [clearable]="true" [searchFn]="searchNgSelect" placeholder="{{lang.map.select}}" id="lessonsLearned"
+          [notFoundText]="lang.map.msg_not_found" [multiple]="true" [closeOnSelect]="false" [readonly]="readonly"
+          formControlName="lessonsLearned" validationClasses="lessonsLearned">
           <ng-template ng-option-tmp let-item="item">
             <span class="custom-option">{{item.getName()}}</span>
           </ng-template>
@@ -40,19 +37,22 @@
       </div>
       <!-- Statement -->
       <div class="col-12 mb-4 position-relative">
-        <label asteriskIfRequired="statement" for="statement"
-               class="form-label">{{lang.map.statement}}</label>
+        <label asteriskIfRequired="statement" for="statement" class="form-label">{{lang.map.statement}}</label>
         <textarea formControlName="statement" class="form-control" rows="4"
-                  [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
-                  validationClasses="statement" id="statement" trimInput></textarea>
+          [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly" validationClasses="statement"
+          id="statement" trimInput></textarea>
         <app-field-error-message controlName="statement"></app-field-error-message>
       </div>
     </div>
-</div>
+  </div>
 </div>
 <div class="dialog-actions">
-    <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly && !viewOnly"
-              class="btn btn-primary m-2">{{editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
-      <button (click)="cancel()"
-              class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+    class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>
