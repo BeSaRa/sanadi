@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AidLookup } from '../models/aid-lookup';
+import { AidLookup } from '@models/aid-lookup';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { UrlService } from './url.service';
 import { FactoryService } from './factory.service';
@@ -7,11 +7,10 @@ import { Observable, of } from 'rxjs';
 import { DialogRef } from '../shared/models/dialog-ref';
 import { switchMap } from 'rxjs/operators';
 import { IDialogData } from '@contracts/i-dialog-data';
-import { OperationTypes } from '../enums/operation-types.enum';
+import { OperationTypes } from '@enums/operation-types.enum';
 import { DialogService } from './dialog.service';
 import { AidLookupPopupComponent } from '../administration/popups/aid-lookup-popup/aid-lookup-popup.component';
 import { IAidLookupCriteria } from '@contracts/i-aid-lookup-criteria';
-import { AuditLogService } from './audit-log.service';
 import { ComponentType } from '@angular/cdk/portal';
 import { AidLookupStatusEnum } from '@app/enums/status.enum';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
@@ -35,8 +34,7 @@ export class AidLookupService extends CrudWithDialogGenericService<AidLookup> {
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              public dialog: DialogService,
-              private auditLogService: AuditLogService) {
+              public dialog: DialogService) {
     super();
     FactoryService.registerService('AidLookupService', this);
   }
@@ -127,9 +125,5 @@ export class AidLookupService extends CrudWithDialogGenericService<AidLookup> {
       queryParams = queryParams.append('status', criteria.status);
     }
     return queryParams;
-  }
-
-  openAuditLogsById(id: number): Observable<DialogRef> {
-    return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
   }
 }

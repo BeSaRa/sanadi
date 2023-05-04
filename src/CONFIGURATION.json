@@ -8,7 +8,8 @@
     "BAW_DEV": "http://100.100.15.216:9026/eservicesdev/api/",
     "BAW_QA": "http://eblaepm.no-ip.org:9096/eservices/api"
   },
-  "BASE_ENVIRONMENT": "BAW_QA",
+  "BASE_ENVIRONMENT": "BAW_UI",
+  "LOGIN_INSTANCE": "BOTH",
   "REPORTS_URL": "http://racabi/Reports/",
   "RESET_PASSWORD": "https://stgnas.gov.qa/self-service/reset/personal",
   "NOTIFICATIONS_URL": "http://eblaepm.no-ip.org:9026/notify/api/notifications"

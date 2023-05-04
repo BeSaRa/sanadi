@@ -248,13 +248,13 @@
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label for="arName" class="form-label" asteriskIfRequired="arName">{{langService.map.arabic_name}}</label>
           <input id="arName" validationClasses="arName" formControlName="arName"
-                 trimInput class="form-control" type="text" [readOnly]="!isEnquired || readOnly || isPartialRequest">
+                 trimInput class="form-control" type="text" [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest">
           <app-field-error-message controlName="arName"></app-field-error-message>
         </div>
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label for="enName" class="form-label" asteriskIfRequired="enName">{{langService.map.english_name}}</label>
           <input id="enName" validationClasses="enName" formControlName="enName"
-                 trimInput class="form-control" type="text" [readOnly]="!isEnquired || readOnly || isPartialRequest">
+                 trimInput class="form-control" type="text" [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest">
           <app-field-error-message controlName="enName"></app-field-error-message>
         </div>
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -263,9 +263,9 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="dateOfBirth"
-                 [ngClass]="{'input-disabled': (!isEnquired || readOnly || isPartialRequest)}"
+                 [ngClass]="{'input-disabled': (!isBeneficiaryEnquired || readOnly || isPartialRequest)}"
                  id="dateOfBirth" [options]="datepickerOptionsMap.dateOfBirth"
-                 (click)="isEnquired && !isPartialRequest && !readOnly && dpDateOfBirth.toggleCalendar()"
+                 (click)="isBeneficiaryEnquired && !isPartialRequest && !readOnly && dpDateOfBirth.toggleCalendar()"
                  #dpDateOfBirth="angular-mydatepicker"
                  angular-mydatepicker validationClasses="dateOfBirth"></div>
             <app-field-error-message controlName="dateOfBirth"></app-field-error-message>
@@ -278,7 +278,7 @@
           <ng-select [selectOnTab]="true" labelForId="gender" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="gender"
                      [notFoundText]="langService.map.msg_not_found"
-                     [readonly]="!isEnquired || readOnly || isPartialRequest" appendTo="body"
+                     [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest" appendTo="body"
                      formControlName="gender" validationClasses="gender">
             <ng-option *ngFor="let option of lookup.listByCategory.Gender" [value]="option.lookupKey">
               {{option.getName()}}
@@ -290,7 +290,7 @@
           <label for="phoneNumber1" class="form-label"
                  asteriskIfRequired="phoneNumber1">{{langService.map.mobile_number}}</label>
           <input id="phoneNumber1" validationClasses="phoneNumber1" formControlName="phoneNumber1"
-                 trimInput class="form-control" type="text" [readOnly]="!isEnquired || readOnly || isPartialRequest">
+                 trimInput class="form-control" type="text" [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest">
           <app-field-error-message controlName="phoneNumber1"></app-field-error-message>
         </div>
         <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
@@ -299,7 +299,7 @@
           <ng-select [selectOnTab]="true" labelForId="benNationality" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="benNationality"
                      [notFoundText]="langService.map.msg_not_found"
-                     [readonly]="!isEnquired || readOnly || isPartialRequest" appendTo="body"
+                     [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest" appendTo="body"
                      formControlName="benNationality" validationClasses="benNationality">
             <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
               {{option.getName()}}
@@ -313,7 +313,7 @@
           <label class="form-label"
                  for="isHandicapped">{{langService.map.special_needs_handicap}}</label>
           <div class="form-check form-switch form-switch-container">
-            <input class="form-check-input" [readonly]="!isEnquired" type="checkbox" id="isHandicapped"
+            <input class="form-check-input" [readonly]="!isBeneficiaryEnquired" type="checkbox" id="isHandicapped"
                    formControlName="isHandicapped">
             <label
               class="form-check-label">{{isHandicappedField.value ? langService.map.lbl_yes : langService.map.lbl_no}}</label>
@@ -324,7 +324,7 @@
                  asteriskIfRequired="benDependentsCount">{{langService.map.sponsors_count}}</label>
           <input id="benDependentsCount" validationClasses="benDependentsCount" formControlName="benDependentsCount"
                  [mask]="inputMaskPatterns.NUMBER_ONLY" maxlength="2"
-                 trimInput class="form-control" type="text" [readOnly]="!isEnquired || readOnly || isPartialRequest">
+                 trimInput class="form-control" type="text" [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest">
           <app-field-error-message controlName="benDependentsCount"></app-field-error-message>
         </div>
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -332,7 +332,7 @@
                  asteriskIfRequired="familyCount">{{langService.map.family_member_count}}</label>
           <input id="familyCount" validationClasses="familyCount" formControlName="familyCount"
                  [mask]="inputMaskPatterns.NUMBER_ONLY"
-                 trimInput class="form-control" type="text" [readOnly]="!isEnquired || readOnly || isPartialRequest">
+                 trimInput class="form-control" type="text" [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest">
           <app-field-error-message controlName="familyCount"></app-field-error-message>
         </div>
       </div>
@@ -343,7 +343,7 @@
           <ng-select [selectOnTab]="true" labelForId="maritalStatus" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="maritalStatus"
                      [notFoundText]="langService.map.msg_not_found"
-                     [readonly]="!isEnquired || readOnly || isPartialRequest" appendTo="body"
+                     [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest" appendTo="body"
                      formControlName="maritalStatus" validationClasses="maritalStatus">
             <ng-option *ngFor="let option of lookup.listByCategory.BenMaritialStatus" [value]="option.lookupKey">
               {{option.getName()}}
@@ -357,7 +357,7 @@
           <ng-select [selectOnTab]="true" labelForId="educationLevel" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="educationLevel"
                      [notFoundText]="langService.map.msg_not_found"
-                     [readonly]="!isEnquired || readOnly || isPartialRequest" appendTo="body"
+                     [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest" appendTo="body"
                      formControlName="educationLevel" validationClasses="educationLevel">
             <ng-option *ngFor="let option of lookup.listByCategory.BenEducationLevel" [value]="option.lookupKey">
               {{option.getName()}}
@@ -370,7 +370,7 @@
                  asteriskIfRequired="employeer">{{langService.map.employer}}</label>
           <input id="employeer" validationClasses="employeer" formControlName="employeer"
                  maxlength="100" trimInput class="form-control" type="text"
-                 [readOnly]="!isEnquired || readOnly || isPartialRequest">
+                 [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest">
           <app-field-error-message controlName="employeer"></app-field-error-message>
         </div>
       </div>
@@ -381,7 +381,7 @@
           <ng-select [selectOnTab]="true" labelForId="occuptionStatus" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="occuptionStatus"
                      [notFoundText]="langService.map.msg_not_found"
-                     [readonly]="!isEnquired || readOnly || isPartialRequest" appendTo="body"
+                     [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest" appendTo="body"
                      (change)="handleEmploymentStatusChange($event, true)"
                      formControlName="occuptionStatus" validationClasses="occuptionStatus">
             <ng-option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus" [value]="option.lookupKey">
@@ -395,7 +395,7 @@
                  asteriskIfRequired="occuption">{{langService.map.occupation}}</label>
           <input id="occuption" validationClasses="occuption" formControlName="occuption"
                  maxlength="100" trimInput class="form-control" type="text"
-                 [readOnly]="!isEnquired || readOnly || isPartialRequest">
+                 [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest">
           <app-field-error-message controlName="occuption"></app-field-error-message>
         </div>
         <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isBeneficiaryWorking()">
@@ -403,7 +403,7 @@
                  asteriskIfRequired="employeerAddress">{{langService.map.workplace}}</label>
           <input id="employeerAddress" validationClasses="employeerAddress" formControlName="employeerAddress"
                  maxlength="512" trimInput class="form-control" type="text"
-                 [readOnly]="!isEnquired || readOnly || isPartialRequest">
+                 [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest">
           <app-field-error-message controlName="employeerAddress"></app-field-error-message>
         </div>
       </div>
@@ -413,7 +413,7 @@
                  asteriskIfRequired="benNotes">{{langService.map.notes}}</label>
           <textarea id="benNotes" validationClasses="benNotes" formControlName="benNotes"
                     maxlength="3000" trimInput class="form-control" rows="5"
-                    [readOnly]="!isEnquired || readOnly || isPartialRequest"></textarea>
+                    [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"></textarea>
           <app-field-error-message controlName="benNotes"></app-field-error-message>
         </div>
       </div>

@@ -74,6 +74,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   signatureFile?: File;
   loadedSignature?: BlobModel;
   list: InternalUser[] = [];
+  customRoleChangedTrigger: boolean = false;
 
   tabsData: TabMap = {
     basic: {
@@ -391,12 +392,15 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     this.userPermissions?.markAsDirty();
   }
 
-  onCustomRoleChange() {
+  onCustomRoleChange(value: any, userInteraction: boolean = false) {
     let selectedRole = this.customRoles.find(role => role.id === this.customRoleId!.value);
     this.userCustomRoleId?.setValue(selectedRole ? selectedRole.id : null);
     this.groupHandler.setSelection(selectedRole ? selectedRole.permissionSet.map(p => p.permissionId) : []);
     this.updateUserPermissions(!!this.groupHandler.selection.length);
     this._updatePermissionValidations(true);
+    if (userInteraction) {
+      this.customRoleChangedTrigger = !this.customRoleChangedTrigger;
+    }
   }
 
   onTabChange($event: TabComponent) {

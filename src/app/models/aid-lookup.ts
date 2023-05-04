@@ -97,10 +97,6 @@ export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
-  showAuditLogs(): Observable<DialogRef> {
-    return this.service.openAuditLogsById(this.id);
-  }
-
   isActive(): boolean {
     return Number(this.status) === AidLookupStatusEnum.ACTIVE;
   }

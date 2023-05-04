@@ -11,6 +11,7 @@ import {CommonUtils} from '@helpers/common-utils';
 import {ToastService} from '@services/toast.service';
 import {Router} from '@angular/router';
 import {AuthService} from '@services/auth.service';
+import {EmployeeService} from "@services/employee.service";
 
 @Component({
   selector: 'global-settings',
@@ -29,6 +30,7 @@ export class GlobalSettingsComponent implements OnInit {
               public service: GlobalSettingsService,
               private toast: ToastService,
               private authService: AuthService,
+              private employeeService: EmployeeService,
               private router: Router) {
   }
 
@@ -115,7 +117,7 @@ export class GlobalSettingsComponent implements OnInit {
         this.toast.success(this.lang.map.msg_save_success);
         this.authService.logout()
           .subscribe(() => {
-            this.router.navigate(['/login']).then();
+            this.router.navigate([this.employeeService.isExternalUser() ? '/login-external' : '/login']).then();
           })
       });
   }

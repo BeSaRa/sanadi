@@ -6,7 +6,7 @@ import {IModelInterceptor} from '@contracts/i-model-interceptor';
 export class AuditLogInterceptor implements IModelInterceptor<AuditLog>{
   receive(model: AuditLog): AuditLog {
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
-    model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
+    model.userInfo = AdminResult.createInstance(model.userInfo);
     model.operationInfo = AdminResult.createInstance(model.operationInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
     model.statusDateModifiedString = DateUtils.getDateStringFromDate(model.statusDateModified);

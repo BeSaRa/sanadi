@@ -133,7 +133,7 @@
           <ng-container cdkColumnDef="user">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                 [sortCallback]="auditSortingCallbacks.user"> {{langService.map.user}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.orgUserInfo.getName()}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.userInfo.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="actionType">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"

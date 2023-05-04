@@ -103,7 +103,7 @@
                  class="form-label">{{lang.map.lbl_custom_role}}</label>
           <ng-select [selectOnTab]="true" labelForId="customRoleId" [clearable]="false"
                      placeholder="{{lang.map.select}}" id="customRoleId" [notFoundText]="lang.map.msg_not_found"
-                     formControlName="customRoleId" (change)="onCustomRoleChange()">
+                     formControlName="customRoleId" (change)="onCustomRoleChange($event, true)">
             <ng-option value="">{{lang.map.lbl_none}}</ng-option>
             <ng-option *ngFor="let option of customRoles" [value]="option.id" [disabled]="!option.status">
               {{option.getName()}}

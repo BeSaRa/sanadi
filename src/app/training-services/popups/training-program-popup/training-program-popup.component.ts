@@ -135,8 +135,11 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
 
   ngAfterViewInit() {
     Promise.resolve().then(() => {
-      if (this.operation !== OperationTypes.VIEW) {
+      if (this.operation === OperationTypes.UPDATE) {
         CommonUtils.displayFormValidity(this.form, this.dialogContent.nativeElement);
+      }
+      if(this.operation === OperationTypes.VIEW) {
+        this.validateFieldsVisible = false;
       }
     })
   }

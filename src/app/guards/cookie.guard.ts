@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router} from '@angular/router';
 import {Observable} from 'rxjs';
-import {LangService} from '../services/lang.service';
-import {ECookieService} from '../services/e-cookie.service';
-import {isValidValue} from '../helpers/utils';
-import {DialogService} from '../services/dialog.service';
-import {NavigationService} from '../services/navigation.service';
+import {LangService} from '@services/lang.service';
+import {ECookieService} from '@services/e-cookie.service';
+import {isValidValue} from '@helpers/utils';
+import {DialogService} from '@services/dialog.service';
+import {NavigationService} from '@services/navigation.service';
+import {EmployeeService} from "@services/employee.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class CookieGuard implements CanActivate {
               private dialogService: DialogService,
               private navigationService: NavigationService,
               private eCookieService: ECookieService,
+              private employeeService: EmployeeService,
               private router: Router) {
   }
 
@@ -34,7 +36,7 @@ export class CookieGuard implements CanActivate {
     if (!isValidCookie) {
       this.dialogService.info(this.langService.map.access_denied);
       if (!this.navigationService.currentPath || this.navigationService.currentPath === '/') {
-        this.router.navigate(['/login']).then();
+        this.router.navigate([this.employeeService.isExternalUser() ? '/login-external' : '/login']).then();
       }
     }
     return isValidCookie;

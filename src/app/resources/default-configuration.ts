@@ -25,11 +25,12 @@ export const defaultConfiguration: Partial<IAppConfig> = {
   E_SERVICE_ITEM_KEY: 'item',
   LOGIN_BACKGROUND_FALLBACK: 'login-background.png',
   LOGIN_BACKGROUND_INTERNAL: 'raca-login-background-2.jpg',
-  LOGIN_BACKGROUND_EXTERNAL: 'raca-login-background-2.jpg'
+  LOGIN_BACKGROUND_EXTERNAL: 'raca-login-background-2.jpg',
+  LOGIN_INSTANCE: 'EXTERNAL'
 };
 
 export const limitedConfigurableProperties: Array<keyof IAppConfig> = [
-  'ENVIRONMENTS_URLS', 'BASE_ENVIRONMENT', 'REPORTS_URL', 'RESET_PASSWORD', 'NOTIFICATIONS_URL'
+  'ENVIRONMENTS_URLS', 'BASE_ENVIRONMENT', 'REPORTS_URL', 'RESET_PASSWORD', 'NOTIFICATIONS_URL', 'LOGIN_INSTANCE'
 ];
 
 export const extendedConfigurableProperties: Array<keyof IAppConfig> = [

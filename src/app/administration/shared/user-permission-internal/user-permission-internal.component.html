@@ -1,0 +1,41 @@
+<div *ngIf="!customRoleId" class="d-flex text-danger justify-content-center">
+  {{lang.map.msg_no_permissions_available}}
+</div>
+<ng-container *ngIf="!!customRoleId">
+  <div class="row">
+    <div class="col-12 mb-4 text-end">
+      <button *ngIf="user.id"
+              (click)="printPermissions($event)" tooltip="{{lang.map.print}}"
+              class="btn icon-btn text-primary">
+        <i class="mdi mdi-printer"></i>
+      </button>
+    </div>
+  </div>
+  <div class="row" *ngFor="let checkBoxGroup of permissionGroups">
+    <div class="col-sm-12 mb-2">
+      <div class="p-2 border border-1">
+        <div class="form-check">
+          <input [indeterminate]="checkBoxGroup.isIndeterminate()" [disabled]="readonly"
+                 [checked]="checkBoxGroup.isFull()" type="checkbox" id="group-id-{{checkBoxGroup.group.id}}"
+                 (change)="groupHandler.onGroupClicked(checkBoxGroup)" class="form-check-input cursor-pointer">
+          <label for="group-id-{{checkBoxGroup.group.id}}"
+                 class="cursor-pointer fw-bold text-primary">{{checkBoxGroup.group.getName()}}</label>
+        </div>
+        <hr class="mt-0">
+        <div *ngFor="let row of checkBoxGroup.rows" class="row mx-2">
+          <ng-container *ngFor="let permission of row">
+            <div class="col-sm-12 col-md-4">
+              <div class="form-check">
+                <input type="checkbox" [disabled]="readonly" [checked]="checkBoxGroup.isSelected(permission.id)"
+                       [value]="permission.id" id="group-permission-id-{{permission.id}}"
+                       (change)="groupHandler.onCheckBoxClicked(permission , $event , checkBoxGroup)"
+                       class="form-check-input cursor-pointer">
+                <label for="group-permission-id-{{permission.id}}" class="cursor-pointer">{{permission.getName()}}</label>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

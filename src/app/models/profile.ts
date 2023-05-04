@@ -115,10 +115,6 @@ export class Profile extends BaseModel<Profile, ProfileService> {
     return profileServiceRelationService.getServicesByProfile(this.id);
   }
 
-  showAuditLogs(): Observable<DialogRef> {
-    return this.service.openAuditLogsById(this.id);
-  }
-
   getParsedPermitTypes(): number[] {
     let parsed: { ids: number[] };
     try {

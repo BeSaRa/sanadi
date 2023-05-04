@@ -288,14 +288,6 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
     }
   }
 
-  showAuditLogs(aidLookup: AidLookup, $event?: MouseEvent): void {
-    $event?.preventDefault();
-    aidLookup.showAuditLogs()
-      .subscribe((dialog: DialogRef) => {
-        dialog.onAfterClose$.subscribe();
-      });
-  }
-
   toggleStatus(aidLookup: AidLookup) {
     this.service.updateStatus(aidLookup.id, aidLookup.status!)
       .subscribe(() => {
