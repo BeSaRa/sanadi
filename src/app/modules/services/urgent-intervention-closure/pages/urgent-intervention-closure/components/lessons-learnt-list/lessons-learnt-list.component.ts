@@ -6,6 +6,9 @@ import { IKeyValue } from '@app/interfaces/i-key-value';
 import { Component } from '@angular/core';
 import { LessonsLearned } from '@app/models/lessons-learned';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { DialogService } from '@app/services/dialog.service';
+import { LangService } from '@app/services/lang.service';
+import { ToastService } from '@app/services/toast.service';
 
 @Component({
   selector: 'lessons-learnt-list',
@@ -38,6 +41,12 @@ export class LessonsLearntListComponent extends UiCrudListGenericComponent<Lesso
   ];
 
   displayColumns = ['lessonsLearntListString', 'statement', 'actions'];
+
+  constructor(public lang: LangService,
+    public toast: ToastService,
+    public dialog: DialogService) {
+    super();
+  }
   _getNewInstance(override?: Partial<LessonsLearned> | undefined): LessonsLearned {
     return new LessonsLearned().clone(override ?? {});
   }
