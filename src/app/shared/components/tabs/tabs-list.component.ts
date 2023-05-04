@@ -125,7 +125,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit, A
 
   getPreviousActiveTabIndex(): number {
     const currentActiveIndex = this.getActiveTabIndex();
-    return this._getAllTabsStatus().findIndex((activeTab, index) => activeTab && index < currentActiveIndex);
+    return this._getAllTabsStatus().findIndex((activeTab, index) => activeTab && currentActiveIndex - index === 1);
   }
 
   getFirstActiveTabIndex(): number {
