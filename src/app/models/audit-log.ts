@@ -16,7 +16,7 @@ export class AuditLog extends SearchableCloneable<AuditLog> {
   operationInfo!: AdminResult;
   status!: number;
   orgInfo!: AdminResult;
-  orgUserInfo!: AdminResult;
+  userInfo!: AdminResult;
   clientData: string = '';
   statusDateModified: string = '';
   statusInfo!: AdminResult;
@@ -29,7 +29,7 @@ export class AuditLog extends SearchableCloneable<AuditLog> {
 
   searchFields: ISearchFieldsMap<AuditLog> = {
     ...normalSearchFields(['qId', 'clientIP', 'updatedOnString']),
-    ...infoSearchFields(['orgUserInfo', 'orgInfo', 'operationInfo'])
+    ...infoSearchFields(['userInfo', 'orgInfo', 'operationInfo'])
   }
 
 }

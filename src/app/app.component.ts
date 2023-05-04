@@ -47,6 +47,6 @@ export class AppComponent {
 
   @HostListener('window:keydown.f2')
   refreshCache() {
-    this.employeeService.loggedIn() && this.cacheService.refreshCache(true)
+    this.employeeService.loggedIn() && this.cacheService.refreshCache(this.employeeService.isExternalUser(), true)
   }
 }

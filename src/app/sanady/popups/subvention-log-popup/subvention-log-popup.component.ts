@@ -105,8 +105,8 @@ export class SubventionLogPopupComponent implements OnInit, OnDestroy {
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     user: (a: SanadiAuditResult, b: SanadiAuditResult, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgUserInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgUserInfo?.getName().toLowerCase();
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.userInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.userInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     actionType: (a: SanadiAuditResult, b: SanadiAuditResult, dir: SortEvent): number => {

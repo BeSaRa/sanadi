@@ -1,22 +1,21 @@
 import {Injectable} from '@angular/core';
-import {ExternalUser} from '../models/external-user';
+import {ExternalUser} from '@models/external-user';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {FactoryService} from './factory.service';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {IDialogData} from '@contracts/i-dialog-data';
-import {OperationTypes} from '../enums/operation-types.enum';
+import {OperationTypes} from '@enums/operation-types.enum';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
 import {DialogService} from './dialog.service';
 import {ExternalUserPopupComponent} from '../administration/popups/external-user-popup/external-user-popup.component';
 import {ExternalUserCustomRoleService} from './external-user-custom-role.service';
 import {IExternalUserCriteria} from '@contracts/i-external-user-criteria';
-import {CustomRole} from '../models/custom-role';
+import {CustomRole} from '@models/custom-role';
 import {PermissionService} from './permission.service';
 import {ExternalUserPermissionService} from './external-user-permission.service';
-import {ExternalUserPermission} from '../models/external-user-permission';
-import {AuditLogService} from './audit-log.service';
+import {ExternalUserPermission} from '@models/external-user-permission';
 import {ComponentType} from '@angular/cdk/portal';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-generic-service';
@@ -50,8 +49,7 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
               private profileService: ProfileService,
               private permissionService: PermissionService,
               private externalUserPermissionService: ExternalUserPermissionService,
-              private employeeService: EmployeeService,
-              private auditLogService: AuditLogService) {
+              private employeeService: EmployeeService) {
     super();
     FactoryService.registerService('ExternalUserService', this);
   }
@@ -237,10 +235,6 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
     return this.http.get<Pagination<ExternalUser[]>>(this._getServiceURL() + '/profile-id', {
       params: queryParams,
     }).pipe(catchError(() => of(this._emptyPaginationListResponse)));
-  }
-
-  openAuditLogsById(id: number): Observable<DialogRef> {
-    return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
   }
 
   openUpdateUserRequest(userUpdateRequest: ExternalUserUpdateRequest): Observable<DialogRef> {

@@ -67,6 +67,18 @@ export class ConfigurationService {
     return this;
   }
 
+  isBothLoginInstance(): boolean {
+    return this.CONFIG.LOGIN_INSTANCE === 'BOTH';
+  }
+
+  isExternalLoginInstance(): boolean {
+    return this.CONFIG.LOGIN_INSTANCE === 'EXTERNAL';
+  }
+
+  isInternalLoginInstance(): boolean {
+    return this.CONFIG.LOGIN_INSTANCE === 'INTERNAL';
+  }
+
   private prepareBaseUrl(): string {
     if (
       !this.CONFIG.hasOwnProperty('ENVIRONMENTS_URLS') ||

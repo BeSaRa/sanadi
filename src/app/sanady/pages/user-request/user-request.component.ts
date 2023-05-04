@@ -177,7 +177,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   periodicityLookups: Record<number, Lookup> = {};
   editAidItem?: SubventionAid;
   editMode = false;
-  isEnquired = false;
+  isBeneficiaryEnquired = false;
 
   aidsActions: IMenuItem<SubventionAid>[] = [
     // edit
@@ -903,6 +903,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           if (!response.request.isUnderProcessing()) {
             this.readModeService.setReadOnly(response.request.id);
+          } else {
+            this.isBeneficiaryEnquired = true;
           }
           this.editMode = true;
         }
@@ -929,6 +931,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   getBeneficiaryData($event?: Event) {
     $event?.preventDefault();
     $event?.stopPropagation();
+    if (this.disableBeneficiarySearch()) {
+      return;
+    }
     const idType = this.primaryIdTypeField?.value;
     const primaryNumber = this.primaryIdNumberField?.value;
     const nationality = this.primaryNationalityField?.value;
@@ -937,8 +942,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.dialogService.info(this.langService.map.msg_invalid_search_criteria);
       return;
     }
-
-    this.isEnquired = true;
 
     this.beneficiaryService
       .loadByCriteria({
@@ -957,14 +960,15 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
             if (beneficiary instanceof Beneficiary) {
               let ben = this.deleteBeneficiaryIds(beneficiary);
               this.beneficiaryChanged$.next(ben);
+              this.isBeneficiaryEnquired = true;
             }
           });
         } else {
           let ben = this.deleteBeneficiaryIds(list[0]);
           this.beneficiaryChanged$.next(ben);
+          this.isBeneficiaryEnquired = true;
         }
       });
-    console.log(this.isEnquired)
   }
 
   deleteBeneficiaryIds(beneficiary: Beneficiary): Beneficiary {

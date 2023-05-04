@@ -105,6 +105,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   superAdminOnlyPermissions: string[] = [PermissionsEnum.SUB_ADMIN, PermissionsEnum.APPROVAL_ADMIN];
   internalUserOnlyPermissions: string[] = [PermissionsEnum.SANADI_SEARCH_BENEFICIARY, PermissionsEnum.SANADI_SEARCH_BENEFICIARY_BY_NAME];
   requestSaveType: 'SAVE_REQUEST' | 'SAVE_USER' | undefined = undefined;
+  itemInSaveOperation?: ExternalUserUpdateRequest;
 
   constructor(public dialogRef: DialogRef,
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<ExternalUser>,
@@ -460,6 +461,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   }
 
   saveFail(error: Error): void {
+    this.itemInSaveOperation = undefined
   }
 
   get isProfileValid(): boolean {
@@ -483,6 +485,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
         return isObservable(result) ? result : of(result);
       }))
       .pipe(exhaustMap((model: ExternalUserUpdateRequest) => {
+        this.itemInSaveOperation = model;
         let save$ = (model as BaseModel<any, any>).save();
         return save$.pipe(catchError(error => {
           this.saveFail(error);
@@ -500,7 +503,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
 
   afterSaveUserRequest(model: ExternalUserUpdateRequest, dialogRef: DialogRef): void {
     let _done: Observable<any>;
-    const isCurrentLoggedInUserUpdated = this.employeeService.isCurrentUser({generalUserId: model.generalUserId} as ExternalUser);
+    const isCurrentLoggedInUserUpdated = this.employeeService.isCurrentUser({generalUserId: this.itemInSaveOperation!.generalUserId} as ExternalUser);
     if (isCurrentLoggedInUserUpdated && this.canSaveDirectly && this.requestSaveType === 'SAVE_USER') {
       _done = this.authService.validateToken()
         .pipe(
@@ -524,7 +527,8 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
           ? this.langService.map.msg_create_request_x_success
           : this.langService.map.msg_update_request_x_success;
       }
-      this.toast.success(message.change({x: model.getName()}));
+      this.toast.success(message.change({x: this.itemInSaveOperation!.getName()}));
+      this.itemInSaveOperation = undefined;
       dialogRef.close(model);
     });
   }
