@@ -79,6 +79,13 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
       label: 'view',
       onClick: (item: AttachmentType) => this.view$.next(item)
     },
+    // logs
+    {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: AttachmentType) => this.showAuditLogs(item)
+    },
     // activate
     {
       type: 'action',
@@ -194,7 +201,7 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
         this.reload$.next(null);
       });
   }
-  
+
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
       arName: [''], enName: [''], status: [null]

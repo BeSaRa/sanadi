@@ -112,6 +112,13 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
       icon: 'mdi-eye',
       onClick: (item: FieldAssessment) => this.view$.next(item)
     },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: FieldAssessment) => this.showAuditLogs(item)
+    },
     // activate
     {
       type: 'action',

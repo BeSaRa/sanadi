@@ -17,6 +17,7 @@ import { FormBuilder } from '@angular/forms';
 import { LookupService } from '@app/services/lookup.service';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'survey-question',
@@ -81,6 +82,13 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
       onClick: (item) => {
         this.deleteQuestion(item);
       },
+    },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item) => this.showAuditLogs(item)
     },
   ];
 

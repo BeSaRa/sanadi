@@ -24,7 +24,7 @@ import { LookupService } from '@app/services/lookup.service';
 })
 export class InternalDepartmentComponent extends AdminGenericComponent<InternalDepartment, InternalDepartmentService> {
   constructor(
-    public lang: LangService, 
+    public lang: LangService,
     public service: InternalDepartmentService,
     private toast: ToastService,
     private fb: FormBuilder,
@@ -50,9 +50,16 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       label: 'view',
       icon: ActionIconsEnum.VIEW,
       onClick: (item) => this.view$.next(item)
-    }
+    },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item) => this.showAuditLogs(item)
+    },
   ];
-  
+
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
   searchColumns: string[] = ['search_arName', 'search_enName', 'search_status', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
@@ -82,7 +89,7 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       }
     }
   }
-  
+
 
   sortingCallbacks = {
     statusInfo: (a: InternalDepartment, b: InternalDepartment, dir: SortEvent): number => {
@@ -91,7 +98,7 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   }
-    
+
   protected _init(): void {
     this.listenToView();
     this.buildFilterForm();
@@ -113,7 +120,7 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
   }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: [''], enName: [''], status: [null]     
+      arName: [''], enName: [''], status: [null]
     })
   }
 }

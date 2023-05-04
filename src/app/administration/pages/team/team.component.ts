@@ -130,7 +130,14 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
         label: 'view',
         onClick: (item: Team) => this.viewTeam(item),
         show: () => true
-      }
+      },
+       // logs
+    {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: Team) => this.showAuditLogs(item)
+    },
     ];
   }
 
