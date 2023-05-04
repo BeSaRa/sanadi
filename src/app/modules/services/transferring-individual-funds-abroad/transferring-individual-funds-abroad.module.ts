@@ -21,6 +21,7 @@ import {
 import { TIFAExecutiveManagementPopupComponent } from './popups/TIFA-executive-management-popup/TIFA-executive-management-popup.component';
 import { TIFAPurposePopupComponent } from './popups/TIFB-purpose-popup/TIFA-purpose-popup.component';
 import { TIFAPaymentPopupComponent } from './popups/TIFA-payment-popup/TIFA-payment-popup.component';
+import { TransferPurposeComponent } from './pages/transferring-individual-funds-abroad/transfer-purpose/transfer-purpose.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { TIFAPaymentPopupComponent } from './popups/TIFA-payment-popup/TIFA-paym
     TransferringIndividualFundsAbroadOutputsComponent,
     TransferFundsAbroadApproveTaskPopupComponent,
     SelectReceiverEntityPopupComponent,
-    TransferFundsAbroadCompleteTaskPopupComponent
+    TransferFundsAbroadCompleteTaskPopupComponent,
+    TransferPurposeComponent
   ],
   imports: [
     CommonModule,

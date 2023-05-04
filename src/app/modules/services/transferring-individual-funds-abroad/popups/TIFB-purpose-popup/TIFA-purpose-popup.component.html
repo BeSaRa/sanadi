@@ -1,10 +1,15 @@
-<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-  <h1 class="h6 text-white">{{ editItem > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
-    lang.map.purpose }}</h1>
-  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
+  </div>
 </div>
-<div class="dialog-content no-fixed-height">
-  <div [formGroup]="form">
+<div class="dialog-content w800px no-fixed-height" #dialogContent>
+  <div [formGroup]="form" disabled="isCancel">
     <div class="row">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="projectName" class="form-label"
@@ -104,7 +109,12 @@
   </div>
 </div>
 <div class="dialog-actions">
-  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly"
-    class="btn btn-primary m-2">{{editItem > -1 ? lang.map.btn_save : lang.map.btn_add}}</button>
-  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

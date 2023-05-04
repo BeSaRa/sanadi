@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { OperationTypes } from '@enums/operation-types.enum';
 import { SaveTypes } from '@enums/save-types';
@@ -36,8 +36,8 @@ import { UserClickOn } from '@enums/user-click-on.enum'
 import { Payment } from '@models/payment';
 import { TransferTypeEnum } from '@enums/transfer-type-enum';
 import { TIFAExecutiveManagementPopupComponent } from '../../popups/TIFA-executive-management-popup/TIFA-executive-management-popup.component';
-import { TIFAPurposePopupComponent } from '../../popups/TIFB-purpose-popup/TIFA-purpose-popup.component';
 import { TIFAPaymentPopupComponent } from '../../popups/TIFA-payment-popup/TIFA-payment-popup.component';
+import { TransferPurposeComponent } from './transfer-purpose/transfer-purpose.component';
 @Component({
   selector: 'transferring-individual-funds-abroad',
   templateUrl: './transferring-individual-funds-abroad.component.html',
@@ -46,10 +46,10 @@ import { TIFAPaymentPopupComponent } from '../../popups/TIFA-payment-popup/TIFA-
 export class TransferringIndividualFundsAbroadComponent extends EServicesGenericComponent<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroadService> implements AfterViewInit, ITransferFundsAbroadComponent {
   form!: UntypedFormGroup;
   executiveManagementForm!: UntypedFormGroup;
-  transferPurposeForm!: UntypedFormGroup;
   paymentForm!: UntypedFormGroup;
   fm!: FormManager;
   filterControl: UntypedFormControl = new UntypedFormControl('');
+  @ViewChild('transferPurposeRef') transferPurposeRef!:TransferPurposeComponent
   requestTypes: Lookup[] = this.lookupService.listByCategory.TransferringIndividualRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
   transfereeTypes: Lookup[] = this.lookupService.listByCategory.TransfereeType
@@ -94,10 +94,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   selectedExecutiveIndex: number = -1;
   executiveDisplayedColumns: string[] = ['localName', 'englishName', 'jobTitle', 'nationality', 'identificationNumber', 'actions'];
 
-  selectedPurposes: TransferFundsCharityPurpose[] = [];
-  selectedPurpose!: TransferFundsCharityPurpose | null;
-  selectedPurposeIndex: number = -1;
-  purposeDisplayedColumns: string[] = ['projectName', 'projectType', 'domain', 'totalCost', 'beneficiaryCountry', 'executionCountry', 'actions'];
 
   selectedPayments: Payment[] = [];
   selectedPayment!: Payment | null;
@@ -142,6 +138,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     private sharedService: SharedService) {
     super();
   }
+  selectedPurposes!: TransferFundsCharityPurpose[];
 
   get basicInfo(): UntypedFormGroup {
     return this.form.get('basicInfo')! as UntypedFormGroup;
@@ -189,10 +186,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   get executiveManagement(): UntypedFormGroup {
     return this.executiveManagementForm! as UntypedFormGroup;
-  }
-
-  get transferPurpose(): UntypedFormGroup {
-    return this.transferPurposeForm! as UntypedFormGroup;
   }
 
   get payment(): UntypedFormGroup {
@@ -296,10 +289,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.loadCountries();
     this.isExternalUser = this.employeeService.isExternalUser();
     this.buildExecutiveManagementForm();
-    this.buildTransferPurposeForm();
     this.buildPaymentForm();
     this.listenToAddExecutive();
-    this.listenToAddPropose();
     this.listenToAddPayment();
   }
 
@@ -351,7 +342,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     });
 
     this.selectedExecutives = this.model?.executiveManagementList;
-    this.selectedPurposes = this.model?.charityPurposeTransferList;
     this.selectedPayments = this.model?.payment;
     this.sumPayments();
     this.transfereeTypeChanged.next(this.transfereeType.value);
@@ -376,6 +366,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   _prepareModel(): TransferringIndividualFundsAbroad | Observable<TransferringIndividualFundsAbroad> {
+
+    
     return new TransferringIndividualFundsAbroad().clone({
       ...this.model,
       ...this.basicInfo.getRawValue(),
@@ -385,7 +377,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       ...this.financialTransactionInfo.getRawValue(),
       ...this.specialExplanation.getRawValue(),
       executiveManagementList: this.selectedExecutives,
-      charityPurposeTransferList: this.selectedPurposes,
+      charityPurposeTransferList: this.transferPurposeRef.list,
       payment: this.selectedPayments
     });
   }
@@ -431,12 +423,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
         this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_executives_list);
         return false;
       }
-
-      if (this.selectedPurposes.length < 1 && !this.isCancel) {
-        this.dialog.error(this.lang.map.you_should_add_at_least_one_purpose_in_purposes);
-        return false;
-      }
-
       if (this.transferType.value === TransferTypeEnum.PERIODICAL) {
         if (this.selectedPayments && this.selectedPayments.length === 0 && !this.isCancel) {
           this.dialog.error(this.lang.map.you_should_add_at_least_one_payment_in_payments);
@@ -476,7 +462,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   _afterLaunch(): void {
     this._resetForm();
     this.selectedExecutives = [];
-    this.selectedPurposes = [];
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -489,7 +474,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   handleReadonly(): void {
-    // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
       return;
     }
@@ -620,20 +604,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     });
   }
 
-  buildTransferPurposeForm(): void {
-    this.transferPurposeForm = this.fb.group({
-      projectName: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      projectType: [null, [CustomValidators.required]],
-      domain: [null, [CustomValidators.required]],
-      mainUNOCHACategory: [null, []],
-      mainDACCategory: [null, []],
-      beneficiaryCountry: [null, [CustomValidators.required]],
-      executionCountry: [null, [CustomValidators.required]],
-      totalCost: [null, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]],
-      projectImplementationPeriod: [null, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]]
-    });
-  }
-
   buildPaymentForm(): void {
     this.paymentForm = this.fb.group({
       paymentNo: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
@@ -741,9 +711,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.executiveManagementForm.disable();
     this.executiveManagementForm.updateValueAndValidity();
 
-    this.transferPurposeForm.disable();
-    this.transferPurposeForm.updateValueAndValidity();
-
     this.paymentForm.disable();
     this.paymentForm.updateValueAndValidity();
 
@@ -758,7 +725,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.financialTransactionInfo.enable();
     this.specialExplanation.enable();
     this.executiveManagementForm.enable();
-    this.transferPurposeForm.enable();
     this.paymentForm.enable();
 
     this.form.updateValueAndValidity();
@@ -1015,105 +981,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.resetExecutiveForm();
   }
 
-  // add/edit purpose functionality
-  listenToAddPropose() {
-    this.addPropose$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.openPurposeForm();
-    });
-  }
-  _getPurposeFormDialog() {
-    return TIFAPurposePopupComponent;
-  }
-  openPurposeForm() {
-    this.dialog.show(this._getPurposeFormDialog(), {
-      form: this.transferPurposeForm,
-      editItem: this.selectedPurposeIndex,
-      model: this.selectedPurpose,
-      readonly: this.readonly,
-      projectTypes: this.projectTypes,
-      countries: this.countries,
-      domains: this.domains,
-    }).onAfterClose$.subscribe((data) => {
-      if (data) {
-        this.savePurpose(data)
-      } else {
-        this.resetPurposeForm()
-      }
-    })
-  }
-
-  selectPurpose(event: MouseEvent, model: TransferFundsCharityPurpose) {
-    event.preventDefault();
-    model = new TransferFundsCharityPurpose().clone(model);
-    this.selectedPurpose = model;
-    this.selectedPurposeIndex = this.getSelectedPurposeIndex(this.selectedPurposes, model);
-    this.openPurposeForm();
-  }
-
-  getSelectedPurposeIndex(purposes: TransferFundsCharityPurpose[], purpose: TransferFundsCharityPurpose): number {
-    for (let i = 0; i < purposes.length; i++) {
-      if (purposes[i].isEqual(purpose)) {
-        return i;
-      }
-    }
-
-    return -1;
-  }
-
-  savePurpose(purpose: TransferFundsCharityPurpose) {
-    if (!this.selectedPurpose) {
-      if (!this.isExistPurposeInCaseOfAdd(this.selectedPurposes, purpose)) {
-        this.selectedPurposes = this.selectedPurposes.concat(purpose);
-        this.resetPurposeForm();
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-        this.openPurposeForm();
-      }
-    } else {
-      if (!this.isExistPurposeInCaseOfEdit(this.selectedPurposes, purpose, this.selectedPurposeIndex!)) {
-        let newList = this.selectedPurposes.slice();
-        newList.splice(this.selectedPurposeIndex!, 1);
-        newList.splice(this.selectedPurposeIndex!, 0, purpose);
-        this.selectedPurposes = newList;
-        this.resetPurposeForm();
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-        this.openPurposeForm();
-      }
-    }
-  }
-
-  isExistPurposeInCaseOfAdd(selectedPurposes: TransferFundsCharityPurpose[], toBeAddedPurpose: TransferFundsCharityPurpose): boolean {
-    return selectedPurposes.some(x =>
-      x.isEqual(toBeAddedPurpose)
-    );
-  }
-
-  isExistPurposeInCaseOfEdit(selectedPurposes: TransferFundsCharityPurpose[], toBeEditedPurpose: TransferFundsCharityPurpose, selectedIndex: number): boolean {
-    for (let i = 0; i < selectedPurposes.length; i++) {
-      if (i === selectedIndex) {
-        continue;
-      }
-
-      if (selectedPurposes[i].isEqual(toBeEditedPurpose)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  resetPurposeForm() {
-    this.selectedPurpose = null;
-    this.selectedPurposeIndex = -1;
-    this.transferPurposeForm.reset();
-  }
-
-  removePurpose(event: MouseEvent, model: TransferFundsCharityPurpose) {
-    event.preventDefault();
-    this.selectedPurposes = this.selectedPurposes.filter(x => x.isNotEqual(model));
-    this.resetPurposeForm();
-  }
-
+  
   // add/edit payment functionality
   listenToAddPayment() {
     this.addPayment$.pipe(takeUntil(this.destroy$)).subscribe(() => {
