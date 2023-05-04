@@ -2,11 +2,11 @@
   <tabs-list [accordionView]="accordionView" [hasForm]="true">
     <tab [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info" name="basic_info">
     </tab>
-    <tab [hasError]="(selectedAdministrativeBoardMembers && selectedAdministrativeBoardMembers.length === 0)"
+    <tab [hasError]="(manageBoardMembersRef?.list && manageBoardMembersRef?.list?.length === 0)?? false"
       [template]="administrative_board_members" [title]="lang.map.administrative_board_members"
       name="administrativeBoardMembers">
     </tab>
-    <tab [hasError]="(selectedGeneralAssociationMembers && selectedGeneralAssociationMembers.length === 0)"
+    <tab [hasError]="(manageAssociationMembersRef?.list && manageAssociationMembersRef?.list?.length === 0)?? false"
       [template]="general_association_members" [title]="lang.map.general_association_members"
       name="generalAssociationMembers">
     </tab>
@@ -180,17 +180,25 @@
     </ng-container>
     <ng-container>
       <ng-template #administrative_board_members>
-        <manage-members (memberListChanged)="onAdministrativeBoardMembersChanged($event)"
-          [addLabel]="addAdministrativeBoardMembersLabel" [selectedMembers]="selectedAdministrativeBoardMembers"
-          [isExternalUser]="isExternalUser" [isGeneralAssociationMembers]="false" [readonly]="readonly || isCancel">
+        <manage-members
+          #manage_board_members
+          addLabel="administrative_board_members" 
+          [list]="model?.administrativeBoardMembers || []"
+          [isExternalUser]="isExternalUser"
+          [isGeneralAssociationMembers]="false"
+          [readonly]="readonly || isCancel">
         </manage-members>
       </ng-template>
     </ng-container>
     <ng-container>
       <ng-template #general_association_members>
-        <manage-members (memberListChanged)="onGeneralAssociationMembersChanged($event)"
-          [addLabel]="addGeneralAssociationMembersLabel" [selectedMembers]="selectedGeneralAssociationMembers"
-          [isExternalUser]="isExternalUser" [isGeneralAssociationMembers]="true" [readonly]="readonly || isCancel">
+        <manage-members
+          #manage_association_members
+          addLabel="general_association_members" 
+          [list]="model?.generalAssociationMembers || []"
+          [isExternalUser]="isExternalUser" 
+          [isGeneralAssociationMembers]="true" 
+          [readonly]="readonly || isCancel">
         </manage-members>
       </ng-template>
     </ng-container>

@@ -1,0 +1,62 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+    <h1 class="h6 text-white">{{popupTitle}}</h1>
+    <div>
+      <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+              tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+      <button type="button" class="btn-close btn-close-white"
+              tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
+    </div>
+</div>
+<div class="dialog-content w800px no-fixed-height" #dialogContent>
+    <form novalidate autocomplete="off" [formGroup]="form">
+        <ng-container>
+            <div class="row">
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                <label asteriskIfRequired="arabicName" class="form-label"
+                        for="arabicName">{{lang.map.arabic_name}}</label>
+                <input [readonly]="(readonly)" class="form-control"
+                        formControlName="arabicName"
+                        id="arabicName" validationClasses="arabicName">
+                <app-field-error-message controlName="arabicName"></app-field-error-message>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                <label asteriskIfRequired="englishName" class="form-label"
+                        for="englishName">{{lang.map.english_name}}</label>
+                <input [readonly]="(readonly)" class="form-control" formControlName="englishName"
+                        id="englishName" validationClasses="englishName">
+                <app-field-error-message controlName="englishName"></app-field-error-message>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                <label asteriskIfRequired="identificationNumber" class="form-label"
+                        for="identificationNumber">{{lang.map.identification_number}}</label>
+                <input [readonly]="(readonly)" class="form-control" formControlName="identificationNumber"
+                        id="identificationNumber" validationClasses="identificationNumber">
+                <app-field-error-message controlName="identificationNumber"></app-field-error-message>
+            </div>
+            </div>
+            <div class="row" *ngIf="isGeneralAssociationMembers">
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label asteriskIfRequired="jobTitleId" class="form-label"
+                            for="jobTitleId">{{lang.map.job_title}}</label>
+                    <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" formControlName="jobTitleId"
+                                id="jobTitleId" validationClasses="jobTitleId">
+                    <ng-option *ngFor="let option of jobTitles" [value]="option.id">{{option.getName()}}</ng-option>
+                    </ng-select>
+                    <app-field-error-message controlName="jobTitleId"></app-field-error-message>
+                </div>
+            </div>
+        </ng-container>
+    </form>
+</div>
+<div class="dialog-actions">
+    <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+            tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+      <i class="mdi mdi-information-outline text-info"></i>
+    </button>
+    <span class="flex-grow-1"></span>
+    <button (click)="searchMembers()"
+            class="btn btn-primary" *ngIf="searchVisible">{{lang.map.lbl_search}}</button>
+    <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+            class="btn btn-primary">{{lang.map.btn_save}}</button>
+    <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

@@ -15,7 +15,6 @@ import { FormManager } from '@models/form-manager';
 import { DatepickerControlsMap, DatepickerOptionsMap } from '@app/types/types';
 import { DateUtils } from '@helpers/date-utils';
 import { EmployeeService } from '@services/employee.service';
-import { GeneralAssociationExternalMember } from '@models/general-association-external-member';
 import { Lookup } from '@models/lookup';
 import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { SelectedLicenseInfo } from '@contracts/selected-license-info';
@@ -35,6 +34,7 @@ import { MeetingMemberTaskStatus } from '@models/meeting-member-task-status';
 import { MeetingPointMemberComment } from '@models/meeting-point-member-comment';
 import { UserClickOn } from '@enums/user-click-on.enum';
 import { CommonUtils } from '@helpers/common-utils';
+import { ManageMembersComponent } from '../../shared/manage-members/manage-members.component';
 
 @Component({
   selector: 'general-association-meeting-attendance',
@@ -47,8 +47,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   internalMembersForm!: FormGroup;
   fm!: FormManager;
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
-  addAdministrativeBoardMembersLabel: keyof ILanguageKeys = 'add_administrative_board_member';
-  addGeneralAssociationMembersLabel: keyof ILanguageKeys = 'add_general_association_members';
   importFinalReport$: Subject<void> = new Subject<void>();
 
   selectedLicenses: GeneralAssociationMeetingAttendance[] = [];
@@ -63,13 +61,13 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     .sort((a, b) => a.lookupKey - b.lookupKey);
   meetingClassifications: Lookup[] = this.lookupService.listByCategory.MeetingClassification
     .sort((a, b) => a.lookupKey - b.lookupKey);
+  @ViewChild('manage_board_members') manageBoardMembersRef!: ManageMembersComponent;
+  @ViewChild('manage_association_members') manageAssociationMembersRef!: ManageMembersComponent;
 
   datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap!: DatepickerOptionsMap;
 
   isExternalUser!: boolean;
-  selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[] = [];
-  selectedGeneralAssociationMembers: GeneralAssociationExternalMember[] = [];
   selectedInternalUsers: GeneralAssociationInternalMember[] = [];
   oldSelectedInternalUsers: GeneralAssociationInternalMember[] = [];
 
@@ -220,8 +218,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       explanation: this.model?.buildExplanation()
     });
 
-    this.selectedAdministrativeBoardMembers = this.model?.administrativeBoardMembers;
-    this.selectedGeneralAssociationMembers = this.model?.generalAssociationMembers;
     this.selectedInternalUsers = this.model?.internalMembersDTO;
     this.agendaItems = this.getAgendaItemsAsJson(this.model?.agenda);
 
@@ -377,8 +373,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   _resetForm(): void {
     this.form.reset();
-    this.selectedAdministrativeBoardMembers = [];
-    this.selectedGeneralAssociationMembers = [];
+    this.manageBoardMembersRef.forceClearComponent();
+    this.manageAssociationMembersRef.forceClearComponent()
     this.agendaItems = [];
     this.hasSearchedForLicense = false;
   }
@@ -388,8 +384,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       ...this.model,
       ...this.basicInfo.getRawValue(),
       ...this.specialExplanation.getRawValue(),
-      administrativeBoardMembers: this.selectedAdministrativeBoardMembers,
-      generalAssociationMembers: this.selectedGeneralAssociationMembers,
+      administrativeBoardMembers: this.manageBoardMembersRef.list,
+      generalAssociationMembers: this.manageAssociationMembersRef.list,
       internalMembersDTO: this.selectedInternalUsers,
       agenda: this.getAgendaItemsAsString(this.agendaItems)
     });
@@ -405,16 +401,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         return true;
       }
     } else {
-      if (this.selectedAdministrativeBoardMembers && this.selectedAdministrativeBoardMembers.length < 1) {
-        this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_administrative_board_members);
-        return false;
-      }
-
-      if (this.selectedGeneralAssociationMembers && this.selectedGeneralAssociationMembers.length < 1) {
-        this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_general_association_members);
-        return false;
-      }
-
       if (this.agendaItems && this.agendaItems.length < 1) {
         this.dialog.error(this.lang.map.you_should_add_at_least_one_item_to_meeting_agenda);
         return false;
@@ -640,14 +626,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       .subscribe((file) => {
         this.sharedService.openViewContentDialog(file, license);
       });
-  }
-
-  onAdministrativeBoardMembersChanged(memberList: GeneralAssociationExternalMember[]) {
-    this.selectedAdministrativeBoardMembers = memberList;
-  }
-
-  onGeneralAssociationMembersChanged(memberList: GeneralAssociationExternalMember[]) {
-    this.selectedGeneralAssociationMembers = memberList;
   }
 
   onInternalMembersChanged(memberList: GeneralAssociationInternalMember[]) {
