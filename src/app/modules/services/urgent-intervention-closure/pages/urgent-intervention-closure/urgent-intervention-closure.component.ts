@@ -13,7 +13,7 @@ import {UrgentInterventionClosureService} from '@services/urgent-intervention-cl
 import {SaveTypes} from '@enums/save-types';
 import {OperationTypes} from '@enums/operation-types.enum';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {ReadinessStatus, TabMap} from '@app/types/types';
+import {TabMap} from '@app/types/types';
 import {ServiceRequestTypes} from '@enums/service-request-types';
 import {CommonUtils} from '@helpers/common-utils';
 import {OpenFrom} from '@enums/open-from.enum';
@@ -117,7 +117,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        return !this.interventionRegionListComponentRef || (this.interventionAreasTabStatus === 'READY' && this.interventionRegionListComponentRef.list.length > 0);
+        return !this.interventionRegionListComponentRef || (this.interventionRegionListComponentRef.list.length > 0);
       }
     },
     interventionFields: {
@@ -128,7 +128,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        return !this.interventionFieldListComponentRef || (this.interventionFieldsTabStatus === 'READY' && this.interventionFieldListComponentRef.list.length > 0);
+        return !this.interventionFieldListComponentRef || (this.interventionFieldListComponentRef.list.length > 0);
       }
     },
     phasesAndOutcomes: {
@@ -139,7 +139,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        return !this.stageListComponentRef || (this.phasesAndOutcomesTabStatus === 'READY' && this.stageListComponentRef.list.length > 0 && this.stageListComponentRef.totalInterventionCost > 0);
+        return !this.stageListComponentRef || (this.stageListComponentRef.list.length > 0 && this.stageListComponentRef.totalInterventionCost > 0);
       }
     },
     outputAndImpactAnalysis: {
@@ -150,7 +150,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        return !this.resultListComponentRef || (this.outputAndImpactAnalysisTabStatus === 'READY' && this.resultListComponentRef.list.length > 0);
+        return !this.resultListComponentRef || (this.resultListComponentRef.list.length > 0);
       }
     },
     implementationEvaluation: {
@@ -161,7 +161,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        return !this.implementationEvaluationListComponentRef || (this.implementationEvaluationTabStatus === 'READY' && this.implementationEvaluationListComponentRef.list.length > 0);
+        return !this.implementationEvaluationListComponentRef || (this.implementationEvaluationListComponentRef.list.length > 0);
       }
     },
     bestPractices: {
@@ -183,7 +183,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        return !this.lessonsLearntListComponentRef || (this.lessonsLearntTabStatus === 'READY' && this.lessonsLearntListComponentRef.list.length > 0);
+        return !this.lessonsLearntListComponentRef || (this.lessonsLearntListComponentRef.list.length > 0);
       }
     },
     attachments: {
@@ -206,13 +206,6 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   @ViewChild('implementationEvaluationListComponent') implementationEvaluationListComponentRef!: ImplementationEvaluationListComponent;
   @ViewChild('bestPracticesListComponent') bestPracticesListComponentRef!: BestPracticesListComponent;
   @ViewChild('lessonsLearntListComponent') lessonsLearntListComponentRef!: BestPracticesListComponent;
-
-  interventionAreasTabStatus: ReadinessStatus = 'READY';
-  interventionFieldsTabStatus: ReadinessStatus = 'READY';
-  phasesAndOutcomesTabStatus: ReadinessStatus = 'READY';
-  outputAndImpactAnalysisTabStatus: ReadinessStatus = 'READY';
-  implementationEvaluationTabStatus: ReadinessStatus = 'READY';
-  lessonsLearntTabStatus: ReadinessStatus = 'READY';
 
   onTabChange($event: TabComponent) {
     this.loadAttachments = $event.name === this.tabsData.attachments.name;

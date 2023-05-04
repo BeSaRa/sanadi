@@ -125,7 +125,6 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   bankAccountsControl!: UntypedFormControl;
   approvedFinancialTransferProjectsList: ExternalProjectLicensing[] = [];
 
-  financialTransfersProjectsTabStatus: ReadinessStatus = 'READY';
   listenAllowed = true;
   @ViewChild('financialTransfersProjectsTab')
   financialTransfersProjectsComponentRef!: FinancialTransfersProjectsComponent;
@@ -1012,7 +1011,6 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   isFinancialProjectsRequired(): boolean {
     return (
       !!this.financialTransfersProjectsComponentRef &&
-      this.financialTransfersProjectsTabStatus === 'READY' &&
       this.financialTransfersProjectsComponentRef.list.length > 0
     );
   }
