@@ -239,7 +239,6 @@
   <ng-template #financialTransfersProjectsTabTemplate>
     <ng-container formGroupName="financialTransfersProjects">
       <financial-transfers-projects
-
       #financialTransfersProjectsTab [list]="model?.financialTransfersProjects  || []"
         [readonly]="readonly" (readyEvent)="financialTransfersProjectsTabStatus = $event"
         (listUpdated)="updateTransactionAmount($event)" [submissionMechanism]="submissionMechanism"
@@ -247,7 +246,6 @@
         [requestType]="model?.requestType || 0"
         >
       </financial-transfers-projects>
-
     </ng-container>
   </ng-template>
   <ng-template #affidavitOfCompletionTabTemplate>

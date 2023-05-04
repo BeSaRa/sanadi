@@ -1,22 +1,22 @@
 <div class="row">
   <tabs-list [accordionView]="accordionView" [hasForm]="true">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
-         [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
-    <tab [name]="tabsData.entities.name" [hasError]="getTabInvalidStatus('entities')"
-         [template]="entitiesTabTemplate" [title]="lang.map.entities"
-         [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense"></tab>
+      [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [name]="tabsData.entities.name" [hasError]="getTabInvalidStatus('entities')" [template]="entitiesTabTemplate"
+      [title]="lang.map.entities" [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense"></tab>
     <tab [name]="tabsData.interventionAreas.name" [hasError]="getTabInvalidStatus('interventionAreas')"
-         [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense"
-         [template]="interventionAreasTabTemplate" [title]="lang.map.intervention_areas"></tab>
+      [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense" [template]="interventionAreasTabTemplate"
+      [title]="lang.map.intervention_areas"></tab>
     <tab [name]="tabsData.interventionFields.name" [hasError]="getTabInvalidStatus('interventionFields')"
-         [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense"
-         [template]="interventionFieldsTabTemplate" [title]="lang.map.intervention_fields"></tab>
+      [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense"
+      [template]="interventionFieldsTabTemplate" [title]="lang.map.intervention_fields"></tab>
     <tab [name]="tabsData.transferData.name" [hasError]="getTabInvalidStatus('transferData')"
-         [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense || !requestTypeField.value"
-         [template]="transferDataTabTemplate" [title]="lang.map.transfer_data"></tab>
-    <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
-         [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense"
-         [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+      [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense || !requestTypeField.value"
+      [template]="transferDataTabTemplate" [title]="lang.map.transfer_data"></tab>
+    <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name"
+      [hasError]="getTabInvalidStatus('attachments')"
+      [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense" [template]="attachmentsTab"
+      [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>
 <ng-container [formGroup]="form">
@@ -26,15 +26,11 @@
         <div class="row mb-4">
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label for="requestType" asteriskIfRequired="requestType"
-                   class="form-label">{{lang.map.request_type}}</label>
-            <ng-select [selectOnTab]="true" labelForId="requestType"
-                       placeholder="{{lang.map.select}}" id="requestType"
-                       [notFoundText]="lang.map.msg_not_found"
-                       appendTo="body"
-                       [readonly]="!isEditAllowed()"
-                       (change)="handleRequestTypeChange($event, true)"
-                       formControlName="requestType"
-                       validationClasses="requestType">
+              class="form-label">{{lang.map.request_type}}</label>
+            <ng-select [selectOnTab]="true" labelForId="requestType" placeholder="{{lang.map.select}}" id="requestType"
+              [notFoundText]="lang.map.msg_not_found" appendTo="body" [readonly]="!isEditAllowed()"
+              (change)="handleRequestTypeChange($event, true)" formControlName="requestType"
+              validationClasses="requestType">
               <ng-option *ngFor="let option of requestTypesList" [value]="option.lookupKey">
                 {{option.getName()}}
               </ng-option>
@@ -43,13 +39,12 @@
           </div>
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label for="urgentAnnouncementFullSerial" asteriskIfRequired="urgentAnnouncementFullSerial"
-                   class="form-label">{{lang.map.urgent_intervention_declaration_license_number}}</label>
+              class="form-label">{{lang.map.urgent_intervention_declaration_license_number}}</label>
             <div class="input-group">
               <input (keydown.enter)="isEditAllowed() && licenseSearch($event)"
-                     formControlName="urgentAnnouncementFullSerial"
-                     type="text" [readOnly]="!isEditAllowed()"
-                     validationClasses="urgentAnnouncementFullSerial" [onlyInvalid]="false" class="form-control"
-                     id="urgentAnnouncementFullSerial" trimInput>
+                formControlName="urgentAnnouncementFullSerial" type="text" [readOnly]="!isEditAllowed()"
+                validationClasses="urgentAnnouncementFullSerial" [onlyInvalid]="false" class="form-control"
+                id="urgentAnnouncementFullSerial" trimInput>
               <button type="button" *ngIf="isEditAllowed()" (click)="licenseSearch($event)" class="input-group-text">
                 <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i>
               </button>
@@ -58,17 +53,14 @@
           </div>
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label for="interventionName" class="form-label">{{lang.map.intervention_name}}</label>
-            <input [value]="model!.interventionName" class="form-control" type="text"
-                   readonly id="interventionName">
+            <input [value]="model!.interventionName" class="form-control" type="text" readonly id="interventionName">
           </div>
         </div>
         <div *ngIf="selectedLicense">
           <selected-license-table [caseType]="caseTypes.URGENT_INTERVENTION_ANNOUNCEMENT"
-                                  [caseTypeViewLicense]="caseTypes.URGENT_INTERVENTION_ANNOUNCEMENT"
-                                  [ignoreDelete]="!isEditAllowed()"
-                                  [licenseList]="[selectedLicense]"
-                                  (clearLicense)="resetLicence()"
-                                  [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
+            [caseTypeViewLicense]="caseTypes.URGENT_INTERVENTION_ANNOUNCEMENT" [ignoreDelete]="!isEditAllowed()"
+            [licenseList]="[selectedLicense]" (clearLicense)="resetLicence()"
+            [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
         </div>
         <div class="row mb-4">
           <div class="col-sm-12">
@@ -78,7 +70,7 @@
           <div class="col-md-6 col-sm-12">
             <label for="beneficiaryCountry" class="form-label">{{lang.map.country}}</label>
             <input class="form-control" [value]="model?.beneficiaryCountryInfo?.getName()" type="text" readonly
-                   id="beneficiaryCountry">
+              id="beneficiaryCountry">
           </div>
           <div class="col-md-6 col-sm-12">
             <label class="form-label" for="beneficiaryRegion">{{lang.map.region}}</label>
@@ -106,7 +98,7 @@
           <div class="col-sm-12 mb-4 position-relative">
             <label for="projectDescription" class="form-label">{{lang.map.lbl_description}}</label>
             <textarea class="form-control" rows="4" readonly [value]="model!.projectDescription"
-                      id="projectDescription"></textarea>
+              id="projectDescription"></textarea>
           </div>
         </div>
         <div class="row">
@@ -119,40 +111,28 @@
     </ng-container>
   </ng-template>
   <ng-template #entitiesTabTemplate>
-    <intervention-implementing-agency-list 
-      #implementingAgencyListComponent
-      [list]="(!model ? [] : model.implementingAgencyList)"
-      [executionCountry]="model!.executionCountry"
-      [readonly]="true"
-    ></intervention-implementing-agency-list>
+    <intervention-implementing-agency-list #implementingAgencyListComponent
+      [list]="(!model ? [] : model.implementingAgencyList)" [executionCountry]="model!.executionCountry"
+      [readonly]="true"></intervention-implementing-agency-list>
   </ng-template>
   <ng-template #interventionAreasTabTemplate>
-    <intervention-region-list #interventionRegionListComponent
-                              [list]="(!model ? [] : model.interventionRegionList)"
-                              [readonly]="true"
-                              (readyEvent)="interventionAreasTabStatus = $event"></intervention-region-list>
+    <intervention-region-list #interventionRegionListComponent [list]="(!model ? [] : model.interventionRegionList)"
+      [readonly]="true"></intervention-region-list>
   </ng-template>
   <ng-template #interventionFieldsTabTemplate>
-    <intervention-field-list #interventionFieldListComponent
-                             [list]="(!model ? [] : model.interventionFieldList)"
-                             [readonly]="true"
-                             (readyEvent)="interventionFieldsTabStatus = $event"></intervention-field-list>
+    <intervention-field-list #interventionFieldListComponent [list]="(!model ? [] : model.interventionFieldList)"
+      [readonly]="true"></intervention-field-list>
   </ng-template>
   <ng-template #transferDataTabTemplate>
     <ng-container formGroupName="transferData">
       <div class="row">
         <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="isTransfer">
           <label for="implementingAgencyType" asteriskIfRequired="implementingAgencyType"
-                 class="form-label">{{lang.map.implementation_agency_type}}</label>
-          <ng-select [selectOnTab]="true" labelForId="implementingAgencyType"
-                     placeholder="{{lang.map.select}}" id="implementingAgencyType"
-                     [notFoundText]="lang.map.msg_not_found"
-                     [clearable]="false"
-                     appendTo="body"
-                     [readonly]="!isEditAllowed()"
-                     (change)="handleImplementingAgencyTypeChanges()"
-                     formControlName="implementingAgencyType"
-                     validationClasses="implementingAgencyType">
+            class="form-label">{{lang.map.implementation_agency_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="implementingAgencyType" placeholder="{{lang.map.select}}"
+            id="implementingAgencyType" [notFoundText]="lang.map.msg_not_found" [clearable]="false" appendTo="body"
+            [readonly]="!isEditAllowed()" (change)="handleImplementingAgencyTypeChanges()"
+            formControlName="implementingAgencyType" validationClasses="implementingAgencyType">
             <ng-option *ngFor="let option of implementingAgencyType" [value]="option.lookupKey">
               {{ option.getName() }}
             </ng-option>
@@ -161,15 +141,11 @@
         </div>
         <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="isTransfer">
           <label for="implementingAgency" asteriskIfRequired="implementingAgency"
-                 class="form-label">{{lang.map.implementation_agency}}</label>
-          <ng-select [selectOnTab]="true" labelForId="implementingAgency"
-                     placeholder="{{lang.map.select}}" id="implementingAgency"
-                     [notFoundText]="lang.map.msg_not_found"
-                     [readonly]="!isEditAllowed()"
-                     appendTo="body"
-                     formControlName="implementingAgency"
-                     (change)="handleImplementingAgencyNameChanges()"
-                     validationClasses="implementingAgency">
+            class="form-label">{{lang.map.implementation_agency}}</label>
+          <ng-select [selectOnTab]="true" labelForId="implementingAgency" placeholder="{{lang.map.select}}"
+            id="implementingAgency" [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditAllowed()"
+            appendTo="body" formControlName="implementingAgency" (change)="handleImplementingAgencyNameChanges()"
+            validationClasses="implementingAgency">
             <ng-option *ngFor="let option of implementingAgencies" [value]="option.implementingAgency">
               {{ option.implementingAgencyInfo.getName() }}
             </ng-option>
@@ -178,15 +154,11 @@
         </div>
         <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="isReceive">
           <label for="implementingAgency" asteriskIfRequired="implementingAgency"
-                 class="form-label">{{lang.map.external_office_name}}</label>
-          <ng-select [selectOnTab]="true" labelForId="implementingAgency"
-                     placeholder="{{lang.map.select}}" id="implementingAgency"
-                     [notFoundText]="lang.map.msg_not_found"
-                     [readonly]="!isEditAllowed()"
-                     appendTo="body"
-                     formControlName="implementingAgency"
-                     (change)="handleImplementingAgencyNameChanges()"
-                     validationClasses="implementingAgency">
+            class="form-label">{{lang.map.external_office_name}}</label>
+          <ng-select [selectOnTab]="true" labelForId="implementingAgency" placeholder="{{lang.map.select}}"
+            id="implementingAgency" [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditAllowed()"
+            appendTo="body" formControlName="implementingAgency" (change)="handleImplementingAgencyNameChanges()"
+            validationClasses="implementingAgency">
             <ng-option *ngFor="let option of implementingAgenciesAdminRes" [value]="option.fnId">
               {{ option.getName() }}
             </ng-option>
@@ -194,16 +166,10 @@
           <app-field-error-message controlName="implementingAgency"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="isReceive">
-          <label for="accountType" asteriskIfRequired="accountType"
-                 class="form-label">{{lang.map.account_type}}</label>
-          <ng-select [selectOnTab]="true" labelForId="accountType"
-                     placeholder="{{lang.map.select}}" id="accountType"
-                     [notFoundText]="lang.map.msg_not_found"
-                     [readonly]="!isEditAllowed()"
-                     appendTo="body"
-                     (change)="_handleChangeAccountType()"
-                     formControlName="accountType"
-                     validationClasses="accountType">
+          <label for="accountType" asteriskIfRequired="accountType" class="form-label">{{lang.map.account_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="accountType" placeholder="{{lang.map.select}}" id="accountType"
+            [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditAllowed()" appendTo="body"
+            (change)="_handleChangeAccountType()" formControlName="accountType" validationClasses="accountType">
             <ng-option *ngFor="let option of urgentFinancialNotificationAccountType" [value]="option.lookupKey">
               {{ option.getName() }}
             </ng-option>
@@ -212,14 +178,10 @@
         </div>
         <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="!boxAccountType">
           <label for="accountNumber" asteriskIfRequired="accountNumber"
-                 class="form-label">{{lang.map.account_number}}</label>
-          <ng-select [selectOnTab]="true" labelForId="accountNumber"
-                     placeholder="{{lang.map.select}}" id="accountNumber"
-                     [notFoundText]="lang.map.msg_not_found"
-                     [readonly]="!isEditAllowed()"
-                     appendTo="body"
-                     formControlName="accountNumber"
-                     validationClasses="accountNumber">
+            class="form-label">{{lang.map.account_number}}</label>
+          <ng-select [selectOnTab]="true" labelForId="accountNumber" placeholder="{{lang.map.select}}"
+            id="accountNumber" [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditAllowed()" appendTo="body"
+            formControlName="accountNumber" validationClasses="accountNumber">
             <ng-option *ngFor="let option of bankAccountList" [value]="option.accountNumber">
               {{ option.accountNumber }}
             </ng-option>
@@ -231,13 +193,10 @@
           <input [value]="accountNumberField.value" readonly class="form-control" id="boxAccountNumber">
         </div>
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
-          <label for="amount" asteriskIfRequired="amount"
-                 class="form-label">{{lang.map.amount}}</label>
-          <input formControlName="amount" class="form-control" type="text"
-                 [readonly]="!isEditAllowed()" validationClasses="amount" id="amount" trimInput
-                 [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
-                 prefix="$"
-                 [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+          <label for="amount" asteriskIfRequired="amount" class="form-label">{{lang.map.amount}}</label>
+          <input formControlName="amount" class="form-control" type="text" [readonly]="!isEditAllowed()"
+            validationClasses="amount" id="amount" trimInput [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+            prefix="$" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
           <app-field-error-message controlName="amount"></app-field-error-message>
         </div>
       </div>
@@ -245,7 +204,7 @@
   </ng-template>
   <ng-template #attachmentsTab>
     <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
-                 [service]="service.documentService" [model]="model"
-                 [load]="loadAttachments" [formProperties]="formProperties"></attachments>
+      [service]="service.documentService" [model]="model" [load]="loadAttachments" [formProperties]="formProperties">
+    </attachments>
   </ng-template>
 </ng-container>

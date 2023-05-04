@@ -1,12 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { LangService } from '@services/lang.service';
 import { ToastService } from '@services/toast.service';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ImplementingAgency } from '@models/implementing-agency';
-import { Subject } from 'rxjs';
-import { ReadinessStatus } from '@app/types/types';
-import { filter, take, takeUntil, tap } from 'rxjs/operators';
-import { UserClickOn } from '@enums/user-click-on.enum';
 import { DialogService } from '@services/dialog.service';
 import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
 import { ActionIconsEnum } from '@enums/action-icons-enum';
@@ -67,7 +62,7 @@ export class InterventionImplementingAgencyListComponent extends UiCrudListGener
   }
 
   @Input() executionCountry!: number;
-  
+
   sortingCallbacks = {
     implementingAgency: (a: ImplementingAgency, b: ImplementingAgency, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.implementingAgencyInfo.getName().toLowerCase(),

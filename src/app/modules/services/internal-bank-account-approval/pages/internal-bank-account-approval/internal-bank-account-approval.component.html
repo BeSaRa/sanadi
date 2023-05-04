@@ -270,10 +270,6 @@
                           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.job_title}}</th>
                           <td cdk-cell *cdkCellDef="let row"> {{row.jobTitleInfo.getName()}} </td>
                         </ng-container>
-                        <!--                      <ng-container cdkColumnDef="name">-->
-                        <!--                        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.bank_name}}</th>-->
-                        <!--                        <td cdk-cell *cdkCellDef="let row"> {{row.bankAccountInfo.getName()}} </td>-->
-                        <!--                      </ng-container>-->
                         <ng-container cdkColumnDef="actions">
                           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
                           <td cdk-cell *cdkCellDef="let row" class="table-actions">

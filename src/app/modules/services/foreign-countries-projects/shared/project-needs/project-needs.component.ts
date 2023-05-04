@@ -19,27 +19,27 @@ import { IKeyValue } from '@app/interfaces/i-key-value';
 export class ProjectNeedsComponent extends UiCrudListGenericComponent<ProjectNeed> {
   @Input() projectNeedsList: ProjectNeeds = [];
   actions: IMenuItem<ProjectNeed>[] = [
-      {
-        type: 'action',
-        icon: ActionIconsEnum.EDIT,
-        label: 'btn_edit',
-        onClick: (item: ProjectNeed) => this.edit$.next(item),
-        show: (_item: ProjectNeed) => !this.readonly
-      },
-      {
-        type: 'action',
-        icon: ActionIconsEnum.DELETE,
-        label: 'btn_delete',
-        onClick: (item: ProjectNeed) => this.confirmDelete$.next(item),
-        show: (_item: ProjectNeed) => !this.readonly
-      },
-      {
-        type: 'action',
-        icon: ActionIconsEnum.VIEW,
-        label: 'view',
-        onClick: (item: ProjectNeed) => this.view$.next(item),
-      }
-    ];
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: ProjectNeed) => this.edit$.next(item),
+      show: (_item: ProjectNeed) => !this.readonly
+    },
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: ProjectNeed) => this.confirmDelete$.next(item),
+      show: (_item: ProjectNeed) => !this.readonly
+    },
+    {
+      type: 'action',
+      icon: ActionIconsEnum.VIEW,
+      label: 'view',
+      onClick: (item: ProjectNeed) => this.view$.next(item),
+    }
+  ];
   displayColumns: string[] = ['projectName', 'projectDescription', 'beneficiaries', 'goals', 'totalCost', 'actions'];
   footerColumns: string[] = ['totalCostFooterLabel', 'totalCostFooter'];
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
@@ -71,7 +71,6 @@ export class ProjectNeedsComponent extends UiCrudListGenericComponent<ProjectNee
   constructor(public lang: LangService,
     public toast: ToastService,
     public dialog: DialogService) {
-    super();  
+    super();
   }
-
 }
