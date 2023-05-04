@@ -481,6 +481,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           groupOrder: 1
         },
         tooltip: 'btn_info_back'
+      },
+      // previous
+      {
+        type: 'action',
+        class: 'btn-secondary',
+        label: 'previous',
+        show: () => true,
+        onClick: () => this.component.goToPreviousActiveTab(),
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.ONE,
+          groupOrder: 1
+        },
+        tooltip: 'previous'
       }
     ];
   }
@@ -598,6 +611,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           groupOrder: 1
         },
         tooltip: 'btn_info_reset'
+      },
+      // previous
+      {
+        type: 'action',
+        class: 'btn-secondary',
+        label: 'previous',
+        show: () => true,
+        onClick: () => this.component.goToPreviousActiveTab(),
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.ONE,
+          groupOrder: 1
+        },
+        tooltip: 'previous'
       }
     ];
   }

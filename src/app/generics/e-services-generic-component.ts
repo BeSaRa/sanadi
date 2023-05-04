@@ -413,5 +413,22 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
     }
     return inValidItem;
   }
+  goToPreviousActiveTab() {
+    if (!CommonUtils.isValidValue(this.componentTabsListRef) || this.componentTabsListRef.isLastActiveTab()) {
+      return;
+    }
 
+    const currentActiveTabIndex = this.componentTabsListRef.getActiveTabIndex();
+    let previousActiveTabIndex: number = 0;
+    if (!this.componentTabsListRef.isIndexOutOfBound(currentActiveTabIndex)) {
+      previousActiveTabIndex = this.componentTabsListRef.getPreviousActiveTabIndex();
+      if (this.componentTabsListRef.isIndexOutOfBound(previousActiveTabIndex)) {
+        previousActiveTabIndex = 0;
+      }
+    }
+
+    if (currentActiveTabIndex !== previousActiveTabIndex) {
+      this.componentTabsListRef.tabListService.selectTabByIndex(previousActiveTabIndex);
+    }
+  }
 }
