@@ -41,7 +41,7 @@ export class InterventionFieldListComponent extends UiCrudListGenericComponent<I
       show: (_item: InterventionField) => this.readonly
     }
   ];
-  displayedColumns = ['mainOcha', 'subOcha', 'actions'];
+  displayColumns = ['mainOcha', 'subOcha', 'actions'];
 
   constructor(public lang: LangService,
     public toast: ToastService,
