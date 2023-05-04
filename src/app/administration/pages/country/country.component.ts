@@ -29,6 +29,7 @@ import { AdminGenericComponent } from "@app/generics/admin-generic-component";
 import { CustomValidators } from '@app/validators/custom-validators';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { FormBuilder } from '@angular/forms';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'country',
@@ -39,7 +40,7 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
   usePagination = true
   actions: IMenuItem<Country>[] = [];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'riskLevel', 'status', 'statusDateModified', 'actions'];
-  searchColumns: string[] = ['_', 'search_arName', 'search_enName','search_riskLevel', 'search_status','search_statusDateModified', 'search_actions'];
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_riskLevel', 'search_status', 'search_statusDateModified', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {
       key: 'arName',
@@ -82,12 +83,12 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
   @ViewChild('table') table!: TableComponent;
 
   constructor(public langService: LangService,
-              public service: CountryService,
-              private toast: ToastService,
-              private dialogService: DialogService,
-              private lookupService: LookupService,
-              private sharedService: SharedService,
-              private fb: FormBuilder) {
+    public service: CountryService,
+    private toast: ToastService,
+    private dialogService: DialogService,
+    private lookupService: LookupService,
+    private sharedService: SharedService,
+    private fb: FormBuilder) {
     super()
   }
 
@@ -188,19 +189,19 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
     if (this.table.selection.selected.length > 0) {
       this.dialogService.confirm(this.langService.map.msg_confirm_delete_selected)
         .onAfterClose$.subscribe((click: UserClickOn) => {
-        if (click === UserClickOn.YES) {
-          const ids = this.table.selection.selected.map((item) => {
-            return item.id;
-          });
-          const sub = this.service.deleteBulk(ids).subscribe((response) => {
-            this.sharedService.mapBulkResponseMessages(this.table.selection.selected, 'id', response)
-              .subscribe(() => {
-                this.reload$.next(null);
-                sub.unsubscribe();
-              });
-          });
-        }
-      });
+          if (click === UserClickOn.YES) {
+            const ids = this.table.selection.selected.map((item) => {
+              return item.id;
+            });
+            const sub = this.service.deleteBulk(ids).subscribe((response) => {
+              this.sharedService.mapBulkResponseMessages(this.table.selection.selected, 'id', response)
+                .subscribe(() => {
+                  this.reload$.next(null);
+                  sub.unsubscribe();
+                });
+            });
+          }
+        });
     }
   }
 
@@ -258,6 +259,13 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
         show: () => {
           return true;
         }
+      },
+      // logs
+      {
+        type: 'action',
+        icon: ActionIconsEnum.HISTORY,
+        label: 'show_logs',
+        onClick: (item: Country) => this.showAuditLogs(item)
       },
       // delete
       /*{
