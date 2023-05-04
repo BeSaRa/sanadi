@@ -81,7 +81,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
     [SaveTypes.DRAFT_CONTINUE]: 'draft',
   };
 
-  @ViewChild(TabsListComponent) mainTabsListRef!: TabsListComponent;
+  @ViewChild(TabsListComponent) componentTabsListRef!: TabsListComponent;
 
   ngOnDestroy(): void {
     this.destroy$.next(null);
@@ -147,7 +147,10 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
           }));
         }),
         // allow only success save
-        filter((model: { saveType: SaveTypes, model: M | null }): model is { saveType: SaveTypes, model: M } => !!model.model)
+        filter((model: { saveType: SaveTypes, model: M | null }): model is {
+          saveType: SaveTypes,
+          model: M
+        } => !!model.model)
       )
       .pipe(takeUntil(this.destroy$))
       .subscribe((result) => {
@@ -155,7 +158,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         this.operation = OperationTypes.UPDATE;
         this.afterSave$.emit(result.model);
         if (result.saveType === SaveTypes.DRAFT_CONTINUE) {
-          this.goToNextTab();
+          this.goToNextActiveTab();
         }
       });
   }
@@ -381,16 +384,22 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   }
 
-  goToNextTab() {
-    if (!CommonUtils.isValidValue(this.mainTabsListRef)) {
+  goToNextActiveTab() {
+    if (!CommonUtils.isValidValue(this.componentTabsListRef) || this.componentTabsListRef.isLastActiveTab()) {
       return;
     }
-    const activeTabIndex = this.mainTabsListRef.getActiveTabIndex();
-    if (activeTabIndex === -1) {
-      this.mainTabsListRef.tabListService.selectTabByIndex(0);
-    } else if (activeTabIndex < this.mainTabsListRef.tabs.length - 1) {
-      const nextActiveIndex = this.mainTabsListRef.getNextActiveTabIndex();
-      this.mainTabsListRef.tabListService.selectTabByIndex(nextActiveIndex <= 0 ? 0 : nextActiveIndex);
+
+    const currentActiveTabIndex = this.componentTabsListRef.getActiveTabIndex();
+    let nextActiveTabIndex: number = 0;
+    if (!this.componentTabsListRef.isIndexOutOfBound(currentActiveTabIndex)) {
+      nextActiveTabIndex = this.componentTabsListRef.getNextActiveTabIndex();
+      if (this.componentTabsListRef.isIndexOutOfBound(nextActiveTabIndex)) {
+        nextActiveTabIndex = 0;
+      }
+    }
+
+    if (currentActiveTabIndex !== nextActiveTabIndex) {
+      this.componentTabsListRef.tabListService.selectTabByIndex(nextActiveTabIndex);
     }
   }
 
