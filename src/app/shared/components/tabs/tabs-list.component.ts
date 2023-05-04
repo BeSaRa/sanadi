@@ -1,5 +1,6 @@
 import {
   AfterContentInit,
+  AfterViewInit,
   Component,
   ContentChildren,
   EventEmitter,
@@ -13,9 +14,9 @@ import {
   TemplateRef
 } from '@angular/core';
 import {TabComponent} from '../tab/tab.component';
-import {Subject} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {TabListService} from './tab-list-service';
-import {takeUntil} from 'rxjs/operators';
+import {delay, takeUntil} from 'rxjs/operators';
 import {EmployeeService} from '@app/services/employee.service';
 
 @Component({
@@ -26,12 +27,13 @@ import {EmployeeService} from '@app/services/employee.service';
     TabListService
   ]
 })
-export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
+export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit, AfterViewInit {
   @Input() activeTabIndex: number = 0;
   @Input() tabByIndex$!: Subject<number>;
   @Input() accordionView: boolean = false;
   @Input() hasForm: boolean = false;
   @Input() scrollToViewPort: boolean = true;
+  @Input() scrollOnInit: boolean = false;
   @Input() extraButtonsTemplate?: TemplateRef<any>;
   @Input() extraButtonsPositioning: 'relative' | 'flex' = 'flex';
 
@@ -88,7 +90,16 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   }
 
   ngAfterContentInit(): void {
-    this.tabListService.setTabs(this.tabs, this.activeTabIndex, this.collapse, this.scrollToViewPort, this.onTabChange);
+    this.tabListService.setTabs(this.tabs, this.activeTabIndex, this.collapse, this.scrollToViewPort, this.scrollOnInit, this.onTabChange);
+  }
+
+  ngAfterViewInit() {
+    of(this.tabs)
+      .pipe(takeUntil(this.destroy$))
+      .pipe(delay(200))
+      .subscribe((tabs) => {
+        tabs.forEach((tab) => tab.isReady = true);
+      });
   }
 
   /**

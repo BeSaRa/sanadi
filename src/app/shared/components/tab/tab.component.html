@@ -3,7 +3,7 @@
 </div>
 <div *ngIf="accordionView" class="accordion-item mb-3">
   <h2 class="accordion-header" id="title-{{tabId}}">
-    <button (click)="!disabled && toggleAccordion($event)" class="accordion-button" type="button"
+    <button #accordionButton (click)="!disabled && toggleAccordion($event)" class="accordion-button" type="button"
             [ngClass]="{'collapsed': expansionState === 'close'}"
             [attr.data-bs-target]="tabIdRef" [attr.data-bs-toggle]="disabled ? '' : 'collapse'"
             [attr.aria-expanded]="expansionState === 'open'" [attr.aria-controls]="('title'+tabId)">

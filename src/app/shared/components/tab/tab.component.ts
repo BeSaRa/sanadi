@@ -1,6 +1,16 @@
-import {AfterViewInit, Component, ElementRef, Host, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Host,
+  Input,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import {TabListService} from '../tabs/tab-list-service';
-import {delay, takeUntil} from 'rxjs/operators';
+import {delay, filter, takeUntil} from 'rxjs/operators';
 import {of, Subject} from 'rxjs';
 
 @Component({
@@ -29,6 +39,9 @@ export class TabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   accordionCollapsable: boolean = false;
   accordionIdRef: string = '';
+  isReady: boolean = false;
+
+  @ViewChild('accordionButton') accordionButtonRef!: ElementRef;
 
   constructor(@Host() private tabListService: TabListService,
               private elementRef: ElementRef) {
@@ -72,7 +85,25 @@ export class TabComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(delay(0))
       .subscribe((tab) => {
         this.active = this === tab;
+        if (this.accordionView && this.active) {
+          this.accordionCollapsable && this.collapseAllInactiveAccordionItems();
+          if (this.tabListService.scrollToViewPort) {
+            // if scroll on init is enabled, just scroll active tab to visible position
+            // otherwise wait until tab is ready
+            if (this.tabListService.scrollOnInit) {
+              this.scrollToVisiblePosition();
+            } else {
+              this.isReady && this.scrollToVisiblePosition();
+            }
+          }
+        }
       });
+  }
+
+  private collapseAllInactiveAccordionItems(): void {
+    this.tabListService.tabs.filter(x => x.tabId !== this.tabId).forEach((item) => {
+      item.expansionState = 'close';
+    });
   }
 
   toggleAccordion($event: any) {
@@ -86,27 +117,22 @@ export class TabComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.expansionState === 'open') {
       this.tabListService.changeSelectedTabTo$.next(this);
       this.tabListService.onTabChangeEvent.emit(this);
-
-      if (this.accordionCollapsable) {
-        this.tabListService.tabs.filter(x => x.tabId !== this.tabId).forEach((item) => {
-          item.expansionState = 'close';
-        });
-      }
-
-      if (this.tabListService.scrollToViewPort) {
-        this.scrollToVisiblePosition($event);
-      }
+      this.tabListService.scrollToViewPort && this.scrollToVisiblePosition();
     }
   }
 
-  private scrollToVisiblePosition($event: any) {
+  private scrollToVisiblePosition() {
     of(this.expansionState)
+      .pipe(filter(expansionState => expansionState === 'open'))
       .pipe(delay(200))
       .subscribe((_) => {
         let mainContent = this.elementRef.nativeElement.closest('.dialog-content') ?? document.getElementById('main-content')!;
-        let heightOfTabAccordion = $event.target.clientHeight + 10; //added margin/padding to the height
+        if (!this.accordionButtonRef) {
+          return;
+        }
+        let heightOfTabAccordion = this.accordionButtonRef.nativeElement.clientHeight + 10; //added margin/padding to the height
         mainContent.scrollTop = (this.elementRef.nativeElement as HTMLElement).offsetTop - heightOfTabAccordion;
-      })
+      });
   }
 
 }
