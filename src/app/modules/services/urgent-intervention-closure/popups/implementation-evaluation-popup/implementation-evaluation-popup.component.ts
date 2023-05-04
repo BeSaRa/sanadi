@@ -85,7 +85,6 @@ export class ImplementationEvaluationPopupComponent extends UiCrudDialogGenericC
     });
   }
   saveFail(error: Error): void {
-    throw new Error(error.message);
   }
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
