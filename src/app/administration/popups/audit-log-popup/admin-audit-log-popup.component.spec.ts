@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AuditLogPopupComponent } from './audit-log-popup.component';
+import { AdminAuditLogPopupComponent } from './admin-audit-log-popup.component';
 
 describe('AuditLogPopupComponent', () => {
-  let component: AuditLogPopupComponent;
-  let fixture: ComponentFixture<AuditLogPopupComponent>;
+  let component: AdminAuditLogPopupComponent;
+  let fixture: ComponentFixture<AdminAuditLogPopupComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AuditLogPopupComponent ]
+      declarations: [ AdminAuditLogPopupComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AuditLogPopupComponent);
+    fixture = TestBed.createComponent(AdminAuditLogPopupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

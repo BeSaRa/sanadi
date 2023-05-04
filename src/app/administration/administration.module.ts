@@ -27,7 +27,7 @@ import {AidLookupPopupComponent} from './popups/aid-lookup-popup/aid-lookup-popu
 import {AidLookupContainerComponent} from './pages/aid-lookup-container/aid-lookup-container.component';
 import {ExternalUserComponent} from './pages/external-user/external-user.component';
 import {ExternalUserPopupComponent} from './popups/external-user-popup/external-user-popup.component';
-import {AuditLogPopupComponent} from './popups/audit-log-popup/audit-log-popup.component';
+import {AdminAuditLogPopupComponent} from './popups/audit-log-popup/admin-audit-log-popup.component';
 import {AttachmentTypesComponent} from './pages/attachment-types/attachment-types.component';
 import {AttachmentTypesPopupComponent} from './popups/attachment-types-popup/attachment-types-popup.component';
 import {ServiceDataComponent} from './pages/service-data/service-data.component';
@@ -142,7 +142,7 @@ import { UserPermissionInternalComponent } from '@app/administration/shared/user
     AidLookupContainerComponent,
     ExternalUserComponent,
     ExternalUserPopupComponent,
-    AuditLogPopupComponent,
+    AdminAuditLogPopupComponent,
     AttachmentTypesComponent,
     AttachmentTypesPopupComponent,
     TeamComponent,

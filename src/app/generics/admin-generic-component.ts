@@ -2,7 +2,7 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {BehaviorSubject, Observable, of, Subject} from "rxjs";
 import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
 import {catchError, delay, exhaustMap, filter, map, switchMap, takeUntil} from "rxjs/operators";
-import {Directive, OnDestroy, OnInit} from "@angular/core";
+import {Directive, inject, OnDestroy, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {CrudWithDialogGenericService} from "@app/generics/crud-with-dialog-generic-service";
@@ -11,6 +11,7 @@ import {PageEvent} from "@contracts/page-event";
 import {CrudServiceInterface} from "@contracts/crud-service-interface";
 import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {SearchColumnConfigMap, SearchColumnEventType} from '@contracts/i-search-column-config';
+import {AdminAuditLogService} from "@services/admin-audit-log.service";
 
 @Directive()
 export abstract class AdminGenericComponent<M extends { id: number }, S extends CrudWithDialogGenericService<M>> implements OnInit, OnDestroy {
@@ -57,6 +58,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   commonStatusEnum = CommonStatusEnum;
   // permissions enum
   permissionsEnum = PermissionsEnum;
+  adminAuditLogService = inject(AdminAuditLogService);
 
   usePagination: boolean = false;
   count: number = 0;
@@ -292,6 +294,17 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
         this.columnFilter$.next('filter');
       }
     }
+  }
+
+  showAuditLogs(record: M): void {
+    if (!this.adminAuditLogService) {
+      console.error('Kindly inject "AdminAuditLogService"');
+      return;
+    }
+    this.adminAuditLogService.openAuditLogsDialog(record.id, this.service._getServiceURL())
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe();
+      });
   }
 
 }
