@@ -117,6 +117,7 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
+      show: () => false,
       onClick: (item: FieldAssessment) => this.showAuditLogs(item)
     },
     // activate

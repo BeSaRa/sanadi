@@ -88,11 +88,12 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
       icon: ActionIconsEnum.VIEW,
       onClick: (item: SubTeam) => this.view$.next(item)
     },
-     // logs
-     {
+    // logs
+    {
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
+      show: () => false,
       onClick: (item: SubTeam) => this.showAuditLogs(item)
     },
     // activate
@@ -165,7 +166,7 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
     private sharedService: SharedService,
     private toast: ToastService,
     private fb: FormBuilder,
-    private lookupService:LookupService) {
+    private lookupService: LookupService) {
     super();
   }
 

@@ -162,6 +162,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
+      show: () => false,
       onClick: (item) => this.showAuditLogs(item)
     },
     // accept

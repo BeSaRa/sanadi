@@ -50,6 +50,7 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
+      show: () => false,
       onClick: (item: GeneralProcess) => this.showAuditLogs(item)
     },
     // activate
