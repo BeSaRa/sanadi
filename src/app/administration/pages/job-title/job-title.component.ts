@@ -75,6 +75,13 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       icon: ActionIconsEnum.VIEW,
       onClick: (item: JobTitle) => this.view$.next(item)
     },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: JobTitle) => this.showAuditLogs(item)
+    },
     // activate
     {
       type: 'action',

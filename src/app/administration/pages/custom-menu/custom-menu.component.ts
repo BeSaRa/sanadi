@@ -112,6 +112,13 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       icon: ActionIconsEnum.VIEW,
       onClick: (item: CustomMenu) => this.view(item),
     },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: CustomMenu) => this.showAuditLogs(item)
+    },
     // delete
     {
       type: 'action',

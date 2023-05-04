@@ -80,6 +80,13 @@ export class ServiceDataFollowupConfigurationComponent extends AdminGenericCompo
       show: () => this.readonly,
       onClick: (item: ServiceDataFollowupConfiguration) => this.view$.next(item)
     },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: ServiceDataFollowupConfiguration) => this.showAuditLogs(item)
+    },
     // delete
     {
       type: 'action',

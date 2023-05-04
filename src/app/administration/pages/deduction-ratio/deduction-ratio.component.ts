@@ -99,6 +99,13 @@ export class DeductionRatioComponent extends AdminGenericComponent<DeductionRati
       icon: ActionIconsEnum.VIEW,
       onClick: (item: DeductionRatioItem) => this.view$.next(item)
     },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: DeductionRatioItem) => this.showAuditLogs(item)
+    },
     {
       type: 'action',
       icon: ActionIconsEnum.STATUS,

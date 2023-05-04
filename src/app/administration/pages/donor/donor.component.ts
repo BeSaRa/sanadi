@@ -99,6 +99,13 @@ export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
       icon: 'mdi-eye',
       onClick: (item: Donor) => this.view$.next(item)
     },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: Donor) => this.showAuditLogs(item)
+    },
     // activate
     {
       type: 'action',
@@ -238,7 +245,7 @@ export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
         this.reload$.next(null);
       });
   }
-  
+
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
       arName: [''], enName: [''], status: [null]

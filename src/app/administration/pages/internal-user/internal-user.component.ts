@@ -85,6 +85,13 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
       icon: ActionIconsEnum.VIEW,
       onClick: (user) => this.view$.next(user)
     },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item) => this.showAuditLogs(item)
+    },
     // activate
     {
       type: 'action',
@@ -194,7 +201,7 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
   }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      domainName: [''], arName: [''], enName: [''], qid:[null], status: [null] 
+      domainName: [''], arName: [''], enName: [''], qid:[null], status: [null]
     })
   }
 }

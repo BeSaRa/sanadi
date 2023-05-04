@@ -79,6 +79,13 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
       icon: ActionIconsEnum.EDIT,
       onClick: (item: CustomRole) => this.edit(item)
     },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: CustomRole) => this.showAuditLogs(item)
+    },
     // delete
     {
       type: 'action',

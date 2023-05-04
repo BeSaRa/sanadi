@@ -157,6 +157,13 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       onClick: (item) => this.editRequest(item),
       show: (item) => this.service.canEditUserRequest() && !item.isApproved()
     },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item) => this.showAuditLogs(item)
+    },
     // accept
     {
       type: 'action',

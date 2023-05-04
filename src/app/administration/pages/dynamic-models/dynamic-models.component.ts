@@ -45,6 +45,13 @@ export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, 
       icon: ActionIconsEnum.VIEW,
       onClick: (item: DynamicModel) => this.view$.next(item)
     },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: DynamicModel) => this.showAuditLogs(item)
+    },
     // activate
     {
       type: 'action',
@@ -165,7 +172,7 @@ export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, 
         this.reload$.next(null);
       });
   }
-  
+
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
       arName: [''], enName: [''], status: [null]
