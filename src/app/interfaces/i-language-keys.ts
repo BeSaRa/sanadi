@@ -1937,4 +1937,5 @@ export interface ILanguageKeys {
   btn_info_reject_task: string;
   btn_info_cancel_task: string;
   previous: string;
+  btn_info_previous: string;
 }

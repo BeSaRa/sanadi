@@ -490,10 +490,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => true,
         onClick: () => this.component.goToPreviousActiveTab(),
         data: {
-          buttonGroup: WrapperButtonsGroupEnum.ONE,
-          groupOrder: 1
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 0
         },
-        tooltip: 'previous'
+        tooltip: 'btn_info_previous'
       }
     ];
   }
@@ -620,10 +620,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => true,
         onClick: () => this.component.goToPreviousActiveTab(),
         data: {
-          buttonGroup: WrapperButtonsGroupEnum.ONE,
-          groupOrder: 1
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 0
         },
-        tooltip: 'previous'
+        tooltip: 'btn_info_previous'
       }
     ];
   }
