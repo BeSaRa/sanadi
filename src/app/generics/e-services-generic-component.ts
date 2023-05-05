@@ -414,7 +414,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
     return inValidItem;
   }
   goToPreviousActiveTab() {
-    if (!CommonUtils.isValidValue(this.componentTabsListRef) || this.componentTabsListRef.isLastActiveTab()) {
+    if (!CommonUtils.isValidValue(this.componentTabsListRef) || this.componentTabsListRef.isFirstActiveTab()) {
       return;
     }
 
