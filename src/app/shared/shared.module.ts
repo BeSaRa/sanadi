@@ -119,6 +119,9 @@ import {
   UserPreferencesPopupComponent
 } from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
 import { CountryPopupComponent } from '@app/shared/popups/country-popup/country-popup.component';
+import {
+  EServiceWrapperButtonsComponent
+} from "@app/shared/components/e-service-wrapper-buttons/e-service-wrapper-buttons.component";
 
 
 @NgModule({
@@ -230,7 +233,8 @@ import { CountryPopupComponent } from '@app/shared/popups/country-popup/country-
     HeaderNotificationsComponent,
     HeaderSearchFieldComponent,
     UserPreferencesPopupComponent,
-    CountryPopupComponent
+    CountryPopupComponent,
+    EServiceWrapperButtonsComponent
   ],
   imports: [
     CommonModule,

@@ -106,14 +106,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   checklistComponent!: StepCheckListComponent;
 
   actions: IMenuItem<CaseModel<any, any>>[] = [];
-  groupedActions: Map<WrapperButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]> =
-    new Map<WrapperButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]>([
-      [WrapperButtonsGroupEnum.ONE, []],
-      [WrapperButtonsGroupEnum.TWO, []],
-      [WrapperButtonsGroupEnum.THREE, []],
-      [WrapperButtonsGroupEnum.FOUR, []],
-    ]);
-  charityViewButtonsGroupEnum = WrapperButtonsGroupEnum;
   service!: BaseGenericEService<CaseModel<any, any>>;
   model?: CaseModel<any, any>;
   component!: EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<CaseModel<any, any>>>;
@@ -181,6 +173,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   canShowMatrixNotification: boolean = false;
   matrixNotificationType!: 'success' | 'danger';
   matrixNotificationMsg!: string;
+  viewReady: boolean = false;
+  actionsTrigger: boolean = false;
 
   /**
    * @description Number of buttons to show before dropdown
@@ -258,8 +252,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     Promise.resolve().then(() => {
       this.internal ? this.internalContainer.clear() : this.externalContainer.clear();
       this.internal ? this.internalContainer.insert(this.componentRef.hostView) : this.externalContainer.insert(this.componentRef.hostView);
-      this.displayRightActions(this.info?.openFrom ? (this.info.openFrom) : OpenFrom.ADD_SCREEN);
+      this.displayRightActions(this.info?.openFrom ? (this.info.openFrom) : OpenFrom.ADD_SCREEN, true);
       this.checkForFinalApproveByMatrixNotification();
+      this.viewReady = true;
     });
   }
 
@@ -376,9 +371,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         label: 'save_as_draft',
         show: (item) => {
-          if (!this.internal) {
-            return false;
-          }
           if (item.isCancelled() || this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
             return false;
           }
@@ -403,7 +395,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         data: {
           buttonGroup: WrapperButtonsGroupEnum.TWO,
-          groupOrder: 1
+          groupOrder: 1,
+          hideByTabIndex: () => {
+            return !this.component.componentTabsListRef || !this.component.componentTabsListRef.isLastActiveTab()
+          }
         },
         tooltip: 'btn_info_save_as_draft'
       },
@@ -436,7 +431,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         data: {
           buttonGroup: WrapperButtonsGroupEnum.TWO,
-          groupOrder: 2
+          groupOrder: 2,
+          hideByTabIndex: () => {
+            return !this.component.componentTabsListRef || this.component.componentTabsListRef.isLastActiveTab()
+          }
         },
         tooltip: 'btn_info_save_as_draft_and_continue'
       },
@@ -488,10 +486,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         class: 'btn-secondary',
         label: 'previous',
         show: () => true,
+        disabled: () => {
+          if (!this.component.componentTabsListRef) {
+            return true;
+          }
+          return this.component.componentTabsListRef.isFirstActiveTab();
+        },
         onClick: () => this.component.goToPreviousActiveTab(),
         data: {
           buttonGroup: WrapperButtonsGroupEnum.TWO,
-          groupOrder: 0
+          groupOrder: 0,
+          hideByTabIndex: () => {
+            return !this.component.componentTabsListRef || this.component.componentTabsListRef.isFirstActiveTab()
+          }
         },
         tooltip: 'btn_info_previous'
       }
@@ -554,9 +561,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         // icon: 'mdi-rocket-launch-outline',
         label: 'save_as_draft',
         show: (item) => {
-          if (!this.internal) {
-            return false;
-          }
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
             return false;
           }
@@ -568,7 +572,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         data: {
           buttonGroup: WrapperButtonsGroupEnum.TWO,
-          groupOrder: 1
+          groupOrder: 1,
+          hideByTabIndex: () => {
+            return !this.component.componentTabsListRef || !this.component.componentTabsListRef.isLastActiveTab()
+          }
         },
         tooltip: 'btn_info_save_as_draft'
       },
@@ -592,7 +599,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         data: {
           buttonGroup: WrapperButtonsGroupEnum.TWO,
-          groupOrder: 2
+          groupOrder: 2,
+          hideByTabIndex: () => {
+            return !this.component.componentTabsListRef || this.component.componentTabsListRef.isLastActiveTab()
+          }
         },
         tooltip: 'btn_info_save_as_draft_and_continue'
       },
@@ -617,11 +627,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         class: 'btn-secondary',
         label: 'previous',
-        show: () => true,
         onClick: () => this.component.goToPreviousActiveTab(),
         data: {
           buttonGroup: WrapperButtonsGroupEnum.TWO,
-          groupOrder: 0
+          groupOrder: 0,
+          hideByTabIndex: () => {
+            return !this.component.componentTabsListRef || this.component.componentTabsListRef.isFirstActiveTab()
+          }
         },
         tooltip: 'btn_info_previous'
       }
@@ -1546,7 +1558,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   }
 
-  private displayRightActions(openFrom: OpenFrom) {
+  private triggerActionsChanged(): void {
+    this.actionsTrigger = true;
+    setTimeout(() => {
+      this.actionsTrigger = false;
+    })
+  }
+
+  private displayRightActions(openFrom: OpenFrom, isInit: boolean = false) {
     if (!this.shouldFollowTheOpenFrom(openFrom)) {
       openFrom = this.getTheRightOpenForm();
     }
@@ -1570,37 +1589,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         this.actions = this.actionShowFilter(this.addActions);
     }
     this.actions = this.translateActions(this.actions);
-    this._groupActions();
-  }
-
-  private _hasValidButtonGroup(action: IMenuItem<CaseModel<any, any>>): boolean {
-    return (CommonUtils.isValidValue(action.data)
-      && CommonUtils.isValidValue(action.data!.buttonGroup)
-      && Object.values(WrapperButtonsGroupEnum).includes(action.data!.buttonGroup)
-    )
-  }
-
-  private _groupActions(): void {
-    this.groupedActions.set(WrapperButtonsGroupEnum.ONE, []);
-    this.groupedActions.set(WrapperButtonsGroupEnum.TWO, []);
-    this.groupedActions.set(WrapperButtonsGroupEnum.THREE, []);
-    this.groupedActions.set(WrapperButtonsGroupEnum.FOUR, []);
-
-    this.actions.forEach(action => {
-      if (!this._hasValidButtonGroup(action)) {
-        if (!('data' in action)) {
-          action.data = {};
-        }
-        action.data!.buttonGroup = WrapperButtonsGroupEnum.TWO;
-        action.data!.groupOrder = action.data!.groupOrder ?? this.actions.length + 1; // setting the highest number for sort (same for all actions which don't have sortOrder defined)
-      }
-      this.groupedActions.set(action.data!.buttonGroup, [...this.groupedActions.get(action.data!.buttonGroup)!, action]);
-    })
-    for (let [key, value] of this.groupedActions) {
-      this.groupedActions.set(key, value.sort((a: IMenuItem<CaseModel<any, any>>, b: IMenuItem<CaseModel<any, any>>) => {
-        return (a.data!.groupOrder ?? 0) - (b.data!.groupOrder ?? 0)
-      }));
-    }
+    !isInit && this.triggerActionsChanged();
   }
 
   private shouldFollowTheOpenFrom(openFrom: OpenFrom): boolean {
@@ -1632,7 +1621,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       this.component.readonly = true;
       const component = (this.component as IESComponent<any>);
       if (component.handleReadonly && typeof component.handleReadonly === 'function') {
-        console.log('released !!');
         component.handleReadonly();
       }
     });
@@ -2145,34 +2133,5 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       }
     }
     return false;
-  }
-
-  actionClass(action: IMenuItem<any>, isDropdownItem: boolean): string {
-    return this._dropdownItemClasses(isDropdownItem);
-    //return (!action.class ? '' : (typeof action.class === 'function' ? action.class(this.model) : action.class)) || '';
-  }
-
-  getButtonGroupClass(groupKey: WrapperButtonsGroupEnum): string {
-    return 'button-group-' + (groupKey + '');
-  }
-
-  getGroupDropdownButtonText(groupKey: WrapperButtonsGroupEnum): string {
-    return !this.buttonGroupLangKeys[groupKey] ? 'Button Group ' + groupKey : (this.lang.map[this.buttonGroupLangKeys[groupKey]!] ?? '');
-  }
-
-  private _dropdownItemClasses(isDropdownItem: boolean): string {
-    return (isDropdownItem ? 'dropdown-item br-0' : '');
-  }
-
-  isButtonGroupDropdownDisabled(groupKey: WrapperButtonsGroupEnum): boolean {
-    const maxCount = this.buttonGroupCount[groupKey];
-    // maxCount = 0 means, dropdown will not be visible. So, consider it disabled
-    if (maxCount === 0) {
-      return true;
-    }
-    // filter all actions greater than equal to maxCount before dropdown and enabled
-    return (this.groupedActions.get(groupKey) ?? []).filter((item, index) => {
-      return index >= maxCount && !this.isDisabled(item);
-    }).length === 0;
   }
 }

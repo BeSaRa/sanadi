@@ -81,7 +81,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
     [SaveTypes.DRAFT_CONTINUE]: 'draft',
   };
 
-  @ViewChild(TabsListComponent) componentTabsListRef!: TabsListComponent;
+  @ViewChild(TabsListComponent, {static: true}) componentTabsListRef!: TabsListComponent;
 
   ngOnDestroy(): void {
     this.destroy$.next(null);

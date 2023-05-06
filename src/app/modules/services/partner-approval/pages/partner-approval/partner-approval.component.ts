@@ -775,7 +775,6 @@ export class PartnerApprovalComponent
 
   handleReadonly(): void {
     // if record is new, no readonly (don't change as default is readonly = false)
-    console.log(this.isExtendOrCancelRequestType() || this.readonly)
     if (!this.model?.id) {
       return;
     }

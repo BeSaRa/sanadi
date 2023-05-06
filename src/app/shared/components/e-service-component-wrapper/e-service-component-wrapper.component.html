@@ -61,65 +61,8 @@
 
   <!--  </ng-template>-->
   <div class="mt-4 mb-3">
-    <div class="d-flex gap-2 flex-wrap">
-      <ng-container *ngFor="let group of groupedActions | keyvalue; let first = first; let last = last;">
-        <div *ngIf="group.value.length > 0" class="d-flex" [ngClass]="{'flex-grow-1 flex-shrink-1': !first && !last }">
-          <ng-container [ngTemplateOutlet]="buttonsGroupTemplate"
-                        [ngTemplateOutletContext]="{group: group, first: first, last: last, maxCount: buttonGroupCount[group.key]}">
-          </ng-container>
-        </div>
-        <ng-container *ngIf="group.key === charityViewButtonsGroupEnum.FOUR"
-                      [ngTemplateOutlet]="validateButtonTemplate"></ng-container>
-      </ng-container>
-    </div>
+    <e-service-wrapper-buttons *ngIf="viewReady" [component]="component" [model]="model!"
+                               [actions]="actions" [actionsTrigger]="actionsTrigger"
+                               (actionCallback)="actionCallback($event)"></e-service-wrapper-buttons>
   </div>
 </div>
-
-<ng-template #actionButtonTemplate let-action="action" let-isDropdownItem="isDropdownItem">
-  <button [ngClass]="actionClass(action, isDropdownItem)" [disabled]="isDisabled(action)"
-          (click)="actionCallback(action)" class="btn action-button">
-    <div class="d-flex flex-wrap" [ngClass]="{'justify-content-center': !isDropdownItem}">
-      <span class="flex-grow-1">{{action.translatedLabel}}</span>
-      <!--<span class="action-info" *ngIf="action.translatedTooltip">
-        <i class="mdi {{actionIconsEnum.INFO}} ms-2 icon-action-info" tooltip="{{action.translatedTooltip}}"></i>
-      </span>-->
-    </div>
-  </button>
-</ng-template>
-<ng-template #validateButtonTemplate>
-  <button class="btn btn-link" [tooltip]="lang.map.validate_fields"
-          *ngIf="component.formValidity$"
-          (click)="component.formValidity$.next('main-content')"><i
-    class="mdi mdi-information-outline text-info"></i></button>
-</ng-template>
-<ng-template #buttonsGroupTemplate let-group="group" let-maxCount="maxCount">
-  <div class="btn-group flex-fill {{getButtonGroupClass(group.key)}}" role="group" aria-label="Buttons group">
-    <ng-container *ngFor="let action of group.value; let index = index">
-      <!-- If max count is not available, all buttons will be rendered.
-      Otherwise, render buttons upto index < maxCount, remaining actions will be in button group -->
-      <ng-container *ngIf="!maxCount || maxCount === 0 || index < maxCount"
-                    [ngTemplateOutlet]="actionButtonTemplate"
-                    [ngTemplateOutletContext]="{action: action, isDropdownItem: false}"></ng-container>
-      <ng-container *ngIf="!!maxCount && maxCount > 0 && index === maxCount"
-                    [ngTemplateOutlet]="buttonsGroupDropdownTemplate"
-                    [ngTemplateOutletContext]="{group: group, maxCount: maxCount}"></ng-container>
-    </ng-container>
-  </div>
-</ng-template>
-<ng-template #buttonsGroupDropdownTemplate let-group="group" let-maxCount="maxCount">
-  <div class="btn-group dropup" role="group">
-    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
-            [disabled]="isButtonGroupDropdownDisabled(group.key)">
-      {{getGroupDropdownButtonText(group.key)}}
-    </button>
-    <ul class="dropdown-menu p-0 shadow">
-      <ng-container *ngFor="let action of group.value; let index = index">
-        <!-- skip the action until maxCount and draw remaining actions in dropdown menu -->
-        <li *ngIf="index >= maxCount">
-          <ng-container [ngTemplateOutlet]="actionButtonTemplate"
-                        [ngTemplateOutletContext]="{action: action, isDropdownItem: true}"></ng-container>
-        </li>
-      </ng-container>
-    </ul>
-  </div>
-</ng-template>
