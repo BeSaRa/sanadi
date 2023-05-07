@@ -233,6 +233,7 @@ implements AfterViewInit {
       ],
     },
   ];
+
   sortingCallbacks = {
     menuType: (a: CustomMenu, b: CustomMenu, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.menuTypeInfo?.getName().toLowerCase(),
@@ -242,6 +243,11 @@ implements AfterViewInit {
     statusInfo: (a: CustomMenu, b: CustomMenu, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    systemParent: (a: CustomMenu, b: CustomMenu, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.getSystemParent()?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.getSystemParent()?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   };
@@ -408,5 +414,9 @@ implements AfterViewInit {
     this.columnFilterForm = this.fb.group({
       arName: [''], enName: [''], menuType:[null], status: [null]
     })
+  }
+
+  isDefaultItem(item: CustomMenu){
+    return item.isDefaultItem()
   }
 }
