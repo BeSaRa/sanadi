@@ -1,9 +1,6 @@
-import { MenuItemService } from '@app/services/menu-item.service';
 import { MenuItem } from '@app/models/menu-item';
 import { Component, EventEmitter, Input, Output, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { MenuItemService } from '@app/services/menu-item.service';
-import { MenuItem } from '@app/models/menu-item';
-import { Component, EventEmitter, Input, Output, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
@@ -59,10 +56,7 @@ implements AfterViewInit {
   }
   ngAfterViewInit(){
     this.cd.detectChanges();
-  ngAfterViewInit(){
-    this.cd.detectChanges();
 
-  }
   }
   @Input() parent?: CustomMenu;
   @Input() readonly: boolean = false;
