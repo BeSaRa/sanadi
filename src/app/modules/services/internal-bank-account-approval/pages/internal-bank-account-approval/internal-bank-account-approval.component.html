@@ -53,7 +53,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="category" for="category">{{lang.map.account_type}}</label>
             <ng-select validationClasses="category" appendTo="body" [clearable]="true" id="category"
-              formControlName="category" [readonly]="(readonly)">
+              formControlName="category" [readonly]="(readonly || isUpdateAcount())">
               <ng-option [value]="option.lookupKey" *ngFor="let option of bankCategories">{{option.getName()}}
               </ng-option>
             </ng-select>
@@ -98,7 +98,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="bankId" for="bankId">{{lang.map.bank_name}}</label>
             <ng-select validationClasses="bankId" appendTo="body" [clearable]="false" id="bankId"
-              formControlName="bankId" [readonly]="(readonly)">
+              formControlName="bankId" [readonly]="(readonly || isUpdateAcount())">
               <ng-option [value]="option.id" *ngFor="let option of banks">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="bankId"></app-field-error-message>
@@ -106,7 +106,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="currency" for="currency">{{lang.map.currency}}</label>
             <ng-select validationClasses="currency" appendTo="body" [clearable]="false" id="currency"
-              formControlName="currency" [readonly]="(readonly)">
+              formControlName="currency" [readonly]="(readonly || isUpdateAcount())">
               <ng-option [value]="option.lookupKey" *ngFor="let option of currencies">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="currency"></app-field-error-message>
@@ -127,7 +127,7 @@
             <label class="form-label" asteriskIfRequired="purpose"
               for="purpose">{{lang.map.bank_account_purpose}}</label>
             <textarea rows="3" id="purpose" validationClasses="purpose" formControlName="purpose" class="form-control"
-              [readonly]="(readonly)">
+              [readonly]="(readonly || isUpdateAcount())">
             </textarea>
             <app-field-error-message controlName="purpose"></app-field-error-message>
           </div>
@@ -270,10 +270,6 @@
                           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.job_title}}</th>
                           <td cdk-cell *cdkCellDef="let row"> {{row.jobTitleInfo.getName()}} </td>
                         </ng-container>
-                        <!--                      <ng-container cdkColumnDef="name">-->
-                        <!--                        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.bank_name}}</th>-->
-                        <!--                        <td cdk-cell *cdkCellDef="let row"> {{row.bankAccountInfo.getName()}} </td>-->
-                        <!--                      </ng-container>-->
                         <ng-container cdkColumnDef="actions">
                           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
                           <td cdk-cell *cdkCellDef="let row" class="table-actions">

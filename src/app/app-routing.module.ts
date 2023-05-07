@@ -18,8 +18,8 @@ import {ICustomRouteData} from '@contracts/i-custom-route-data';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
-  {path: 'login', component: InternalLoginComponent, canActivate: [GuestGuard]},
-  {path: 'login-external', component: ExternalLoginComponent, canActivate: [GuestGuard]},
+  {path: 'login', component: InternalLoginComponent, canActivate: [GuestGuard], data: {isLoginPage: true}},
+  {path: 'login-external', component: ExternalLoginComponent, canActivate: [GuestGuard], data: {isLoginPage: true}},
   {
     path: 'home', component: HomeComponent,
     canActivate: [AuthGuard],

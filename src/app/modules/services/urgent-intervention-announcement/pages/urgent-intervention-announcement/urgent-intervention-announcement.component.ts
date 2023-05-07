@@ -11,7 +11,7 @@ import {EmployeeService} from '@services/employee.service';
 import {LicenseService} from '@services/license.service';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {Observable, of, Subject} from 'rxjs';
-import {ReadinessStatus, TabMap} from '@app/types/types';
+import {TabMap} from '@app/types/types';
 import {SaveTypes} from '@enums/save-types';
 import {OperationTypes} from '@enums/operation-types.enum';
 import {Lookup} from '@models/lookup';
@@ -109,7 +109,7 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
         if (!this.isStartOrUpdateRequestType()) {
           return true;
         }
-        return !this.interventionRegionListComponentRef || (this.interventionAreasTabStatus === 'READY' && this.interventionRegionListComponentRef.list.length > 0);
+        return !this.interventionRegionListComponentRef || (this.interventionRegionListComponentRef.list.length > 0);
       }
     },
     interventionFields: {
@@ -124,7 +124,7 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
         if (!this.isStartOrUpdateRequestType()) {
           return true;
         }
-        return !this.interventionFieldListComponentRef || (this.interventionFieldsTabStatus === 'READY' && this.interventionFieldListComponentRef.list.length > 0);
+        return !this.interventionFieldListComponentRef || (this.interventionFieldListComponentRef.list.length > 0);
       }
     },
     attachments: {
@@ -147,9 +147,6 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
   @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: InterventionImplementingAgencyListComponent;
   @ViewChild('interventionRegionListComponent') interventionRegionListComponentRef!: InterventionRegionListComponent;
   @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent;
-
-  interventionAreasTabStatus: ReadinessStatus = 'READY';
-  interventionFieldsTabStatus: ReadinessStatus = 'READY';
 
   _buildForm(): void {
     let objUrgentInterventionAnnouncement = this._getNewInstance();

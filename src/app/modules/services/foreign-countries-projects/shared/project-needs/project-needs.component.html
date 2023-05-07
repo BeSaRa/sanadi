@@ -22,7 +22,6 @@
         <td cdk-cell *cdkCellDef="let row">{{ row.projectDescription }}</td>
         <td cdk-footer-cell *cdkFooterCellDef></td>
       </ng-container>
-
       <ng-container cdkColumnDef="beneficiaries">
         <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_beneficiaries_nature }}</th>
         <td cdk-cell *cdkCellDef="let row">{{ row.beneficiaries }}</td>
@@ -59,7 +58,6 @@
       <tr cdk-header-row *cdkHeaderRowDef="displayColumns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: displayColumns"></tr>
       <tr cdk-footer-row *cdkFooterRowDef="footerColumns" [hidden]="!list || list.length === 0"></tr>
-
       <tr *cdkNoDataRow>
         <td colspan="100" class="text-center">
           {{ lang.map.no_records_to_display }}

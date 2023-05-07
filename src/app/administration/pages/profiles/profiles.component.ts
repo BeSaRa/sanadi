@@ -167,14 +167,6 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
     });
   }
 
-  showAuditLogs(model: Profile, $event?: MouseEvent): void {
-    $event?.preventDefault();
-    model.showAuditLogs()
-      .subscribe((dialog: DialogRef) => {
-        dialog.onAfterClose$.subscribe();
-      });
-  }
-
   editProfileExtraData(item: Profile) {
     switch (item.profileType) {
       case ProfileTypes.CHARITY: {
@@ -195,7 +187,7 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
   enableEditExtraData(item: Profile) {
     return item.profileType === ProfileTypes.CHARITY;
   }
-  
+
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
       arName: [''], enName: [''], profileType: [null], status: [null]

@@ -35,7 +35,7 @@ export class RequestTypeFollowupService {
     [CaseTypes.NPO_MANAGEMENT]: this.lookupService.listByCategory.NPORequestType,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: [this.getNewRequestType()],
     [CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP]: [this.getNewRequestType()],
-    [CaseTypes.CHARITY_ORGANIZATION_UPDATE]: this.lookupService.listByCategory.RequestTypeUpdateOnly,
+    [CaseTypes.CHARITY_ORGANIZATION_UPDATE]: this.lookupService.listByCategory.CharityUpdateSection,
     [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: this.lookupService.listByCategory.RequestTypeNewUpdate,
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: this.lookupService.listByCategory.CollectionRequestType,
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: this.lookupService.listByCategory.RequestTypeNewOnly,

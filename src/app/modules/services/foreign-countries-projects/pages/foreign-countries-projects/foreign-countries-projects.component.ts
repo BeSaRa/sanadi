@@ -53,10 +53,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   organizationUnits: Profile[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
   countries: ProfileCountry[] = [];
-
   selectedLicense?: ForeignCountriesProjects;
-
-
 
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
@@ -354,7 +351,6 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   _beforeLaunch(): boolean | Observable<boolean> {
     return !!this.model && this.form.valid && this.model.canStart();
   }
-
   _afterLaunch(): void {
     this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
@@ -387,7 +383,6 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   }
 
   _saveFail(error: any): void {
-
   }
 
   _launchFail(error: any): void {

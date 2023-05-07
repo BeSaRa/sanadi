@@ -97,10 +97,6 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
     return this.lookupService.findLookupByLookupKey(this.lookupService.listByCategory.CommonStatus, this.status);
   }*/
 
-  showAuditLogs(_$event?: MouseEvent): Observable<DialogRef> {
-    return this.service.openAuditLogsById(this.id);
-  }
-
   isExternal(): boolean {
     return true;
   }

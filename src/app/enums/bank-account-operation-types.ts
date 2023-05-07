@@ -6,5 +6,5 @@ export enum BankAccountOperationTypes {
 }
 export enum BankAccountEnNameKeys {
   Account = 'Account',
-  NEW_ACCOUNT = 'NEW_ACCOUNT'
+  NEW_ACCOUNT = 'New Account'
 }

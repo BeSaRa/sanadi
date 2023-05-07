@@ -27,7 +27,7 @@ import {AidLookupPopupComponent} from './popups/aid-lookup-popup/aid-lookup-popu
 import {AidLookupContainerComponent} from './pages/aid-lookup-container/aid-lookup-container.component';
 import {ExternalUserComponent} from './pages/external-user/external-user.component';
 import {ExternalUserPopupComponent} from './popups/external-user-popup/external-user-popup.component';
-import {AuditLogPopupComponent} from './popups/audit-log-popup/audit-log-popup.component';
+import {AdminAuditLogPopupComponent} from './popups/audit-log-popup/admin-audit-log-popup.component';
 import {AttachmentTypesComponent} from './pages/attachment-types/attachment-types.component';
 import {AttachmentTypesPopupComponent} from './popups/attachment-types-popup/attachment-types-popup.component';
 import {ServiceDataComponent} from './pages/service-data/service-data.component';
@@ -126,8 +126,10 @@ import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
 import {
   UserFollowupPermissionNewComponent
 } from './shared/user-followup-permission-new/user-followup-permission-new.component';
+import { FieldAssessmentServiceLinkComponen } from './shared/field-assessment-service-link/field-assessment-service-link.component';
 import { CustomServiceTemplateComponent } from './shared/custom-service-template/custom-service-template.component';
 import { CustomServiceTemplatePopupComponent } from './popups/custom-service-template-popup/custom-service-template-popup.component';
+import { UserPermissionInternalComponent } from '@app/administration/shared/user-permission-internal/user-permission-internal.component';
 
 @NgModule({
   declarations: [
@@ -140,7 +142,7 @@ import { CustomServiceTemplatePopupComponent } from './popups/custom-service-tem
     AidLookupContainerComponent,
     ExternalUserComponent,
     ExternalUserPopupComponent,
-    AuditLogPopupComponent,
+    AdminAuditLogPopupComponent,
     AttachmentTypesComponent,
     AttachmentTypesPopupComponent,
     TeamComponent,
@@ -189,6 +191,7 @@ import { CustomServiceTemplatePopupComponent } from './popups/custom-service-tem
     UserFollowupPermissionComponent,
     FieldAssessmentPopupComponent,
     FieldAssessmentComponent,
+    FieldAssessmentServiceLinkComponen,
     AdminLookupPopupComponent,
     DacOchaNewPopupComponent,
     VactionDatesComponent,
@@ -217,7 +220,8 @@ import { CustomServiceTemplatePopupComponent } from './popups/custom-service-tem
     ProfileAttachmentsComponent,
     GlobalSettingsComponent,
     AdminLicenseComponent,
-    UserFollowupPermissionNewComponent
+    UserFollowupPermissionNewComponent,
+    UserPermissionInternalComponent
   ],
   imports: [
     SharedModule,

@@ -1,3 +1,5 @@
+import {LoginInstances} from "@app/types/types";
+
 export interface IAppConfig {
   MAP_API_KEY: string;
   VERSION: string;
@@ -26,4 +28,5 @@ export interface IAppConfig {
   LOGIN_BACKGROUND_INTERNAL: string;
   LOGIN_BACKGROUND_EXTERNAL: string;
   NOTIFICATIONS_URL: string;
+  LOGIN_INSTANCE: LoginInstances
 }

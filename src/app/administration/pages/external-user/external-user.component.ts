@@ -186,14 +186,6 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
       .subscribe();
   }
 
-  showAuditLogs(user: ExternalUser, $event?: MouseEvent): void {
-    $event?.preventDefault();
-    user.showAuditLogs($event)
-      .subscribe((dialog: DialogRef) => {
-        dialog.onAfterClose$.subscribe();
-      });
-  }
-
   filterUsersByProfile(userInteraction: boolean = false) {
     this.reload$.next(null);
   }

@@ -14,7 +14,6 @@ import {switchMap} from 'rxjs/operators';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
 import {UrlService} from './url.service';
-import {AuditLogService} from '@services/audit-log.service';
 import {CommonUtils} from '@helpers/common-utils';
 
 @CastResponseContainer({
@@ -34,8 +33,7 @@ export class ProfileService extends CrudWithDialogGenericService<Profile> {
 
   constructor(public dialog: DialogService,
               public http: HttpClient,
-              private urlService: UrlService,
-              private auditLogService: AuditLogService) {
+              private urlService: UrlService) {
     super();
     FactoryService.registerService('ProfileService', this);
   }
@@ -109,7 +107,4 @@ export class ProfileService extends CrudWithDialogGenericService<Profile> {
     return this.http.get<Profile[]>(this._getServiceURL() + '/charities-npo-institutions');
   }
 
-  openAuditLogsById(id: number): Observable<DialogRef> {
-    return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
-  }
 }

@@ -20,7 +20,7 @@ export class SanadiAuditResult extends SearchableCloneable<SanadiAuditResult> {
   updatedOn!: string;
   operationInfo!: AdminResult;
   orgInfo!: AdminResult;
-  orgUserInfo!: AdminResult;
+  userInfo!: AdminResult;
   statusDateModified!: string;
   statusInfo!: AdminResult;
   qId!: string;
@@ -43,7 +43,7 @@ export class SanadiAuditResult extends SearchableCloneable<SanadiAuditResult> {
   }
 
   searchFields: ISearchFieldsMap<SanadiAuditResult> = {
-    ...infoSearchFields(['orgInfo', 'orgUserInfo', 'operationInfo']),
+    ...infoSearchFields(['orgInfo', 'userInfo', 'operationInfo']),
     ...normalSearchFields(['updatedOnString'])
   };
 

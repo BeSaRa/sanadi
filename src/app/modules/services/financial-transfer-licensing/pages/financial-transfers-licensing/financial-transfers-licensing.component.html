@@ -1,5 +1,6 @@
 <div class="row">
-  <tabs-list [accordionView]="accordionView" [hasForm]="true" class="py-4" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
+  <tabs-list [accordionView]="accordionView" [hasForm]="true" class="py-4" (onTabChange)="onTabChange($event)"
+    [tabByIndex$]="tabIndex$">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
       [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.transferOperationGroup.name" [hasError]="getTabInvalidStatus('transferOperationGroup')"
@@ -17,8 +18,8 @@
       [title]="lang.map.affidavit_of_completion"></tab>
     <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
       [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
-    <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
-      [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+    <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name"
+      [hasError]="getTabInvalidStatus('attachments')" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>
 <ng-container [formGroup]="form">
@@ -52,7 +53,6 @@
         </div>
 
       </div>
-
     </ng-container>
   </ng-template>
   <ng-template #transferOperationGroupTemplate>
@@ -118,7 +118,6 @@
           <app-field-error-message controlName="qatariTransactionAmount"></app-field-error-message>
         </div>
       </div>
-
     </ng-container>
   </ng-template>
   <ng-template #transfereeBankAccountTabTemplate>
@@ -129,7 +128,8 @@
             class="form-label">{{lang.map.transferee_type}}</label>
           <ng-select [selectOnTab]="true" labelForId="transfereeType" [clearable]="true"
             placeholder="{{lang.map.select}}" id="transfereeType" [notFoundText]="lang.map.msg_not_found"
-            [readonly]=" isExternalTransferType() || readonly" appendTo="body" formControlName="transfereeType" validationClasses="transfereeType">
+            [readonly]=" isExternalTransferType() || readonly" appendTo="body" formControlName="transfereeType"
+            validationClasses="transfereeType">
             <ng-option *ngFor="let option of financialTransfereeTypeList" [value]="option.lookupKey">
               {{option.getName()}}
             </ng-option>
@@ -157,12 +157,10 @@
             <input validationClasses="transferringEntityName" formControlName="transferringEntityName" type="text"
               id="transferringEntityName" trimInput [readonly]="!isEditTransfereeAllowed() || readonly"
               class="form-control">
-            <button *ngIf=" isSearchAuthorizedEntityAllowed()" type="button"
-              (click)="transfereeEntitySearch()" class="input-group-text bg-white"><i
-                class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
-            <button *ngIf=" isPreRegisteredEntityAllowed()" type="button"
-              (click)="transfereeEntitySearch()" class="input-group-text bg-white"><i
-                class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <button *ngIf=" isSearchAuthorizedEntityAllowed()" type="button" (click)="transfereeEntitySearch()"
+              class="input-group-text bg-white"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <button *ngIf=" isPreRegisteredEntityAllowed()" type="button" (click)="transfereeEntitySearch()"
+              class="input-group-text bg-white"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
             <app-field-error-message controlName="transferringEntityName"></app-field-error-message>
           </div>
 
@@ -200,11 +198,10 @@
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label for="bankAccountsControl" asteriskIfRequired [control]="bankAccountsControl"
             class="form-label">{{lang.map.bank_accounts}}</label>
-          <ng-select
-           [selectOnTab]="true" labelForId="bankAccountsControl" [clearable]="true"
-           [formControl]="bankAccountsControl"
-            placeholder="{{lang.map.select}}" id="bankAccountsControl" [notFoundText]="lang.map.msg_not_found"
-            [readonly]="readonly" appendTo="body" validationClasses [control]="bankAccountsControl">
+          <ng-select [selectOnTab]="true" labelForId="bankAccountsControl" [clearable]="true"
+            [formControl]="bankAccountsControl" placeholder="{{lang.map.select}}" id="bankAccountsControl"
+            [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body" validationClasses
+            [control]="bankAccountsControl">
             <ng-option *ngFor="let option of transferEntityBankAccounts" [value]="option">
               {{option.accountNumber}}
             </ng-option>
@@ -238,16 +235,12 @@
   </ng-template>
   <ng-template #financialTransfersProjectsTabTemplate>
     <ng-container formGroupName="financialTransfersProjects">
-      <financial-transfers-projects
-
-      #financialTransfersProjectsTab [list]="model?.financialTransfersProjects  || []"
-        [readonly]="readonly" (readyEvent)="financialTransfersProjectsTabStatus = $event"
-        (listUpdated)="updateTransactionAmount($event)" [submissionMechanism]="submissionMechanism"
+      <financial-transfers-projects #financialTransfersProjectsTab [list]="model?.financialTransfersProjects  || []"
+        [readonly]="readonly" (listUpdated)="updateTransactionAmount($event)"
+        [submissionMechanism]="submissionMechanism"
         [approvedFinancialTransferProjects]="approvedFinancialTransferProjectsList"
-        [requestType]="model?.requestType || 0"
-        >
+        [requestType]="model?.requestType || 0">
       </financial-transfers-projects>
-
     </ng-container>
   </ng-template>
   <ng-template #affidavitOfCompletionTabTemplate>
@@ -278,9 +271,10 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="actualTransferDate" id="actualTransferDate"
-            [ngClass]="{'input-disabled': readonly}" id="establishmentDate"
-              [options]="datepickerOptionsMap.actualTransferDate" (click)="!readonly && dpactualTransferDate.toggleCalendar()"
-              #dpactualTransferDate="angular-mydatepicker" angular-mydatepicker validationClasses="actualTransferDate">
+              [ngClass]="{'input-disabled': readonly}" id="establishmentDate"
+              [options]="datepickerOptionsMap.actualTransferDate"
+              (click)="!readonly && dpactualTransferDate.toggleCalendar()" #dpactualTransferDate="angular-mydatepicker"
+              angular-mydatepicker validationClasses="actualTransferDate">
             </div>
           </div>
         </div>
@@ -310,7 +304,7 @@
   </ng-template>
   <ng-template #attachmentsTab>
     <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
-      [formProperties]="formProperties"
-      [service]="service.documentService" [model]="model" [load]="loadAttachments"></attachments>
+      [formProperties]="formProperties" [service]="service.documentService" [model]="model" [load]="loadAttachments">
+    </attachments>
   </ng-template>
 </ng-container>
