@@ -14,7 +14,7 @@ const routes: Routes = [
   {path: '', component: ProjectsComponent},
   {
     path: 'projects-models', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.EXTERNAL_PROJECT_MODELS,
@@ -36,7 +36,7 @@ const routes: Routes = [
   },*/
   {
     path: 'internal-bank-account', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL,
@@ -47,7 +47,7 @@ const routes: Routes = [
   },
   {
     path: 'urgent-joint-relief-campaign', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_JOINT_RELIEF_CAMPAIGN,
@@ -58,7 +58,7 @@ const routes: Routes = [
   },
   {
     path: 'transferring-individual-funds-abroad', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
@@ -69,7 +69,7 @@ const routes: Routes = [
   },
   {
     path: 'general-association-meeting-attendance', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
@@ -80,7 +80,7 @@ const routes: Routes = [
   },
   {
     path: 'projects-fundraising', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: {info: ServiceItemResolver, countries: CountryResolver},
     data: {
       permissionKey: null,
@@ -91,7 +91,7 @@ const routes: Routes = [
   },
   {
     path: 'project-implementation', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: {info: ServiceItemResolver, countries: CountryResolver},
     data: {
       permissionKey: EServicePermissionsEnum.PROJECT_IMPLEMENTATION,

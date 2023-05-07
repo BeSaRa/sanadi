@@ -10,7 +10,7 @@ import {LocalizationComponent} from './pages/localization/localization.component
 import {CustomRoleComponent} from './pages/custom-role/custom-role.component';
 import {AidLookupContainerComponent} from './pages/aid-lookup-container/aid-lookup-container.component';
 import {ExternalUserComponent} from './pages/external-user/external-user.component';
-import {PermissionGuard} from '../guards/permission-guard';
+import {PermissionGuard} from '@app/guards/permission.guard';
 import {AttachmentTypesComponent} from './pages/attachment-types/attachment-types.component';
 import {ServiceDataComponent} from './pages/service-data/service-data.component';
 import {TeamComponent} from './pages/team/team.component';
@@ -42,22 +42,22 @@ const routes: Routes = [
   {path: '', component: AdminHomeComponent},
   {
     path: 'localization', component: LocalizationComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_LOCALIZATION, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'custom-role', component: CustomRoleComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_CUSTOM_ROLE, configPermissionGroup: null, checkAnyPermission: false},
   },
   {
     path: 'aid', component: AidLookupContainerComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_AID_LOOKUP, configPermissionGroup: null, checkAnyPermission: false},
   },
   {
     path: 'external-users', component: ExternalUserComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.MANAGE_EXTERNAL_USER_DYNAMIC,
       configPermissionGroup: null,
@@ -66,7 +66,7 @@ const routes: Routes = [
   },
   {
     path: 'external-user-request-approval', component: ExternalUserUpdateRequestApprovalComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.MANAGE_EXTERNAL_USER_REQUEST_APPROVALS_DYNAMIC,
       configPermissionGroup: null,
@@ -75,12 +75,12 @@ const routes: Routes = [
   },
   {
     path: 'services', component: ServiceDataComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_SERVICES_DATA, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'attachment-types', component: AttachmentTypesComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.MANAGE_ATTACHMENT_TYPES,
       configPermissionGroup: null,
@@ -89,22 +89,22 @@ const routes: Routes = [
   },
   {
     path: 'teams', component: TeamComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_TEAMS, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'countries', component: CountryComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_COUNTRIES, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'internal-users', component: InternalUserComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_INTERNAL_USERS, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'internal-departments', component: InternalDepartmentComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.MANAGE_INTERNAL_DEPARTMENTS,
       configPermissionGroup: null,
@@ -113,12 +113,12 @@ const routes: Routes = [
   },
   {
     path: 'job-titles', component: JobTitleComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_JOB_TITLES, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'training-program-partner', component: TrainingProgramPartnerComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.TRAINING_PROGRAM_PARTNER,
       configPermissionGroup: null,
@@ -127,7 +127,7 @@ const routes: Routes = [
   },
   {
     path: 'general-process-template', component: GeneralProcessComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.MANAGE_PROCESS_TEMPLATE,
       configPermissionGroup: null,
@@ -136,17 +136,17 @@ const routes: Routes = [
   },
   {
     path: 'sub-team', component: SubTeamComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_SUB_TEAM, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'lookups', component: AdminLookupComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_ADMIN_LOOKUP, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'survey-questions', component: SurveyQuestionComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.TRAINING_SURVEY_QUESTION,
       configPermissionGroup: null,
@@ -155,7 +155,7 @@ const routes: Routes = [
   },
   {
     path: 'survey-templates',
-    canActivate: [PermissionGuard], component: SurveyTemplateComponent,
+    canActivate: [PermissionGuard.canActivate], component: SurveyTemplateComponent,
     data: {
       permissionKey: PermissionsEnum.TRAINING_SURVEY_TEMPLATE,
       configPermissionGroup: null,
@@ -164,22 +164,22 @@ const routes: Routes = [
   },
   {
     path: 'sd-goals', component: SdGoalComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_SDG, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'bank', component: BankComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_BANK, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'donors', component: DonorComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_DONORS, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'field-assessment', component: FieldAssessmentComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.MANAGE_FIELD_ASSESSMENT,
       configPermissionGroup: null,
@@ -188,21 +188,21 @@ const routes: Routes = [
   },
   {
     path: 'vacation-dates', component: VactionDatesComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.MANAGE_VACATIONS_DATE, configPermissionGroup: null, checkAnyPermission: false
     }
   },
   {
     path: 'menu-items', component: CustomMenuComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.MANAGE_CUSTOM_MENU_ITEM, configPermissionGroup: null, checkAnyPermission: false
     }
   },
   {
     path: 'profiles', component: ProfilesComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.MANAGE_PROFILE, configPermissionGroup: null, checkAnyPermission: false
     },
@@ -210,12 +210,12 @@ const routes: Routes = [
   },
   {
     path: 'dynamic-models', component: DynamicModelsComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_DYNAMIC_MODEL, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'deduction-ratio', component: DeductionRatioComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.MANAGE_DEDUCTION_RATIO_ITEM,
       configPermissionGroup: null,
@@ -224,12 +224,12 @@ const routes: Routes = [
   },
   {
     path: 'global-settings', component: GlobalSettingsComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_SYSTEM_PREFERENCES, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'admin-license', component: AdminLicenseComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: '', configPermissionGroup: null, checkAnyPermission: false}
   },
   {path: '**', component: ErrorPageComponent}

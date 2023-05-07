@@ -2,14 +2,13 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from './pages/home/home.component';
 import {ErrorPageComponent} from './shared/components/error-page/error-page.component';
-import {AuthGuard} from './guards/auth-guard';
-import {GuestGuard} from './guards/guest-guard';
-import {PermissionGuard} from './guards/permission-guard';
+import {AuthGuard} from '@app/guards/auth.guard';
+import {GuestGuard} from '@app/guards/guest.guard';
+import {PermissionGuard} from '@app/guards/permission.guard';
 import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 import {ExternalLoginComponent} from '@app/pages/external-login/external-login.component';
 import {InternalLoginComponent} from '@app/pages/internal-login/internal-login.component';
-import {ServicesGuard} from '@app/guards/services.guard';
 import {DynamicMenuGuard} from '@app/guards/dynamic-menu.guard';
 import {DynamicMenuRouteTypeEnum} from '@app/enums/dynamic-menu-route-type.enum';
 import {NewServicePermissionGuard} from '@app/guards/new-service-permission.guard';
@@ -18,23 +17,23 @@ import {ICustomRouteData} from '@contracts/i-custom-route-data';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
-  {path: 'login', component: InternalLoginComponent, canActivate: [GuestGuard], data: {isLoginPage: true}},
-  {path: 'login-external', component: ExternalLoginComponent, canActivate: [GuestGuard], data: {isLoginPage: true}},
+  {path: 'login', component: InternalLoginComponent, canActivate: [GuestGuard.canActivate], data: {isLoginPage: true}},
+  {path: 'login-external', component: ExternalLoginComponent, canActivate: [GuestGuard.canActivate], data: {isLoginPage: true}},
   {
     path: 'home', component: HomeComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard.canActivate],
     children: [
       {path: '', redirectTo: 'main', pathMatch: 'full'},
       {
         path: 'administration',
-        canActivate: [PermissionGuard],
+        canActivate: [PermissionGuard.canActivate],
         data: {configPermissionGroup: PermissionGroupsEnum.ADMIN_PERMISSIONS_GROUP, checkAnyPermission: true},
         loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule)
       },
       {path: 'main', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
       {
         path: 'services/consultations',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/consultation/consultation.module')
           .then(m => m.ConsultationModule),
         data: {
@@ -45,7 +44,7 @@ const routes: Routes = [
       },
       {
         path: 'services/inquiries',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/inquiries-and-complaints/inquiries-and-complaints.module')
           .then(m => m.InquiriesAndComplaintsModule),
         data: {
@@ -56,7 +55,7 @@ const routes: Routes = [
       },
       {
         path: 'services/international-cooperation',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/international-cooperation/international-cooperation.module')
           .then(m => m.InternationalCooperationModule),
         data: {
@@ -67,7 +66,7 @@ const routes: Routes = [
       },
       {
         path: 'services/project-implementation',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/project-implementation/project-implementation.module')
           .then(m => m.ProjectImplementationModule),
         data: {
@@ -78,7 +77,7 @@ const routes: Routes = [
       },
       {
         path: 'services/project-fundraising',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/project-fundraising/project-fundraising.module')
           .then(m => m.ProjectFundraisingModule),
         data: {
@@ -89,7 +88,7 @@ const routes: Routes = [
       },
       {
         path: 'services/project-models',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/project-models/project-models.module')
           .then(m => m.ProjectModelsModule),
         data: {
@@ -100,7 +99,7 @@ const routes: Routes = [
       },
       {
         path: 'services/internal-project-license',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/internal-project-license/internal-project-license.module')
           .then(m => m.InternalProjectLicenseModule),
         data: {
@@ -111,7 +110,7 @@ const routes: Routes = [
       },
       {
         path: 'services/general-process-notification',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/general-process-notification/general-process-notification.module')
           .then(m => m.GeneralProcessNotificationModule),
         data: {
@@ -122,7 +121,7 @@ const routes: Routes = [
       },
       {
         path: 'services/awareness-activity-suggestion',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/awareness-activity-suggestion/awareness-activity-suggestion.module')
           .then(m => m.AwarenessActivitySuggestionModule),
         data: {
@@ -133,7 +132,7 @@ const routes: Routes = [
       },
       {
         path: 'services/general-association-meeting-attendance',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/general-association-meeting-attendance/general-association-meeting-attendance.module')
           .then(m => m.GeneralAssociationMeetingAttendanceModule),
         data: {
@@ -144,7 +143,7 @@ const routes: Routes = [
       },
       {
         path: 'services/internal-bank-account-approval',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/internal-bank-account-approval/internal-bank-account-approval.module')
           .then(m => m.InternalBankAccountApprovalModule),
         data: {
@@ -155,7 +154,7 @@ const routes: Routes = [
       },
       {
         path: 'services/urgent-joint-relief-campaign',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/urgent-joint-relief-campaign/urgent-joint-relief-campaign.module')
           .then(m => m.UrgentJointReliefCampaignModule),
         data: {
@@ -166,7 +165,7 @@ const routes: Routes = [
       },
       {
         path: 'services/transferring-individual-funds-abroad',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/transferring-individual-funds-abroad/transferring-individual-funds-abroad.module')
           .then(m => m.TransferringIndividualFundsAbroadModule),
         data: {
@@ -177,7 +176,7 @@ const routes: Routes = [
       },
       {
         path: 'services/initial-external-office-approval',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/initial-external-office-approval/initial-external-office-approval.module')
           .then(m => m.InitialExternalOfficeApprovalModule),
         data: {
@@ -188,7 +187,7 @@ const routes: Routes = [
       },
       {
         path: 'services/final-external-office-approval',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/final-external-office-approval/final-external-office-approval.module')
           .then(m => m.FinalExternalOfficeApprovalModule),
         data: {
@@ -199,7 +198,7 @@ const routes: Routes = [
       },
       {
         path: 'services/partner-approval',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/partner-approval/partner-approval.module')
           .then(m => m.PartnerApprovalModule),
         data: {
@@ -210,7 +209,7 @@ const routes: Routes = [
       },
       {
         path: 'services/employment',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/employment/employment.module')
           .then(m => m.EmploymentModule),
         data: {
@@ -221,7 +220,7 @@ const routes: Routes = [
       },
       {
         path: 'services/charity-organization-update',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/charity-organization-update/charity-organization-update.module')
           .then(m => m.CharityOrganizationUpdateModule),
         data: {
@@ -232,7 +231,7 @@ const routes: Routes = [
       },
       {
         path: 'services/npo-management',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/npo-management/npo-management.module')
           .then(m => m.NpoManagementModule),
         data: {
@@ -243,7 +242,7 @@ const routes: Routes = [
       },
       {
         path: 'services/foreign-countries-projects',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/foreign-countries-projects/foreign-countries-projects.module')
           .then(m => m.ForeignCountriesProjectsModule),
         data: {
@@ -254,7 +253,7 @@ const routes: Routes = [
       },
       {
         path: 'services/external-org-affiliation',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/external-organization-affiliation/external-organization-affiliation.module')
           .then(m => m.ExternalOrganizationAffiliationModule),
         data: {
@@ -265,7 +264,7 @@ const routes: Routes = [
       },
       {
         path: 'services/organization-entities-support',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/organization-entities-support/organization-entities-support.module')
           .then(m => m.OrganizationEntitiesSupportModule),
         data: {
@@ -276,7 +275,7 @@ const routes: Routes = [
       },
       {
         path: 'services/coordination-with-organizations-request',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/coordination-with-organization-request/coordination-with-organization-request.module')
           .then(m => m.CoordinationWithOrganizationRequestModule),
         data: {
@@ -287,7 +286,7 @@ const routes: Routes = [
       },
       {
         path: 'services/customs-exemption',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/customs-exemption-remittance/customs-exemption-remittance.module')
           .then(m => m.CustomsExemptionRemittanceModule),
         data: {
@@ -298,7 +297,7 @@ const routes: Routes = [
       },
       {
         path: 'services/financial-transfers-licensing',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/financial-transfer-licensing/financial-transfer-licensing.module')
           .then(m => m.FinancialTransferLicensingModule),
         data: {
@@ -309,7 +308,7 @@ const routes: Routes = [
       },
       {
         path: 'services/collection-approval',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/collection-approval/collection-approval.module')
           .then(m => m.CollectionApprovalModule),
         data: {
@@ -320,7 +319,7 @@ const routes: Routes = [
       },
       {
         path: 'services/collector-approval',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/collector-approval/collector-approval.module')
           .then(m => m.CollectorApprovalModule),
         data: {
@@ -331,7 +330,7 @@ const routes: Routes = [
       },
       {
         path: 'services/fundraising-licensing',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/fundraising-channel-licensing/fundraising-channel-licensing.module')
           .then(m => m.FundraisingChannelLicensingModule),
         data: {
@@ -342,7 +341,7 @@ const routes: Routes = [
       },
       {
         path: 'services/urgent-intervention-license',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/urgent-intervention-licensing/urgent-intervention-licensing.module')
           .then(m => m.UrgentInterventionLicensingModule),
         data: {
@@ -353,7 +352,7 @@ const routes: Routes = [
       },
       {
         path: 'services/urgent-intervention-announcement',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/urgent-intervention-announcement/urgent-intervention-announcement.module')
           .then(m => m.UrgentInterventionAnnouncementModule),
         data: {
@@ -364,7 +363,7 @@ const routes: Routes = [
       },
       {
         path: 'services/urgent-intervention-closure',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/urgent-intervention-closure/urgent-intervention-closure.module')
           .then(m => m.UrgentInterventionClosureModule),
         data: {
@@ -375,7 +374,7 @@ const routes: Routes = [
       },
       {
         path: 'services/urgent-intervention-financial-notification',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/urgent-intervention-financial-notification/urgent-intervention-financial-notification.module')
           .then(m => m.UrgentInterventionFinancialNotificationModule),
         data: {
@@ -386,7 +385,7 @@ const routes: Routes = [
       },
       {
         path: 'services/urgent-intervention-license-followup',
-        canActivate: [NewServicePermissionGuard],
+        canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/urgent-intervention-license-followup/urgent-intervention-license-followup.module')
           .then(m => m.UrgentInterventionLicenseFollowupModule),
         data: {
@@ -401,51 +400,51 @@ const routes: Routes = [
       },
       /*{
         path: 'general-services',
-        canActivate: [ServicesGuard],
+        canActivate: [ServicesGuard.canActivate],
         loadChildren: () => import('./modules/general-services/general-services.module').then(m => m.GeneralServicesModule),
         data: {configPermissionGroup: PermissionGroupsEnum.GENERAL_SERVICES_PERMISSIONS_GROUP, checkAnyPermission: true}
       },
       {
         path: 'office-services',
-        canActivate: [ServicesGuard],
+        canActivate: [ServicesGuard.canActivate],
         loadChildren: () => import('./modules/office-services/office-services.module').then(m => m.OfficeServicesModule),
         data: {configPermissionGroup: PermissionGroupsEnum.OFFICE_SERVICES_PERMISSIONS_GROUP, checkAnyPermission: true}
       },*/
       {path: 'user-inbox', loadChildren: () => import('./user-inbox/user-inbox.module').then(m => m.UserInboxModule)},
       {
         path: 'team-inbox',
-        canActivate: [PermissionGuard],
+        canActivate: [PermissionGuard.canActivate],
         loadChildren: () => import('./team-inbox/team-inbox.module').then(m => m.TeamInboxModule),
         data: {permissionKey: EServicePermissionsEnum.TEAM_INBOX}
       },
       {
         path: 'services-search',
-        canActivate: [PermissionGuard],
+        canActivate: [PermissionGuard.canActivate],
         loadChildren: () => import('./services-search/services-search.module').then(m => m.ServicesSearchModule),
         data: {permissionKey: EServicePermissionsEnum.E_SERVICES_SEARCH},
       },
       {path: 'sanady', loadChildren: () => import('./sanady/sanady.module').then(m => m.SanadyModule)},
       /*{
         path: 'projects',
-        canActivate: [ServicesGuard],
+        canActivate: [ServicesGuard.canActivate],
         data: {configPermissionGroup: PermissionGroupsEnum.PROJECTS_PERMISSION_GROUP, checkAnyPermission: true},
         loadChildren: () => import('./modules/projects/projects.module').then(m => m.ProjectsModule)
       },*/
       {
         path: 'training',
-        canActivate: [PermissionGuard],
+        canActivate: [PermissionGuard.canActivate],
         data: {configPermissionGroup: PermissionGroupsEnum.TRAINING_PROGRAMS_PAGE_GROUP, checkAnyPermission: true},
         loadChildren: () => import('./training-services/training-services.module').then(m => m.TrainingServicesModule)
       },
       /*{
         path: 'collection',
-        canActivate: [ServicesGuard],
+        canActivate: [ServicesGuard.canActivate],
         data: {configPermissionGroup: PermissionGroupsEnum.COLLECTION_SERVICES_GROUP, checkAnyPermission: true},
         loadChildren: () => import('./modules/collection/collection.module').then(m => m.CollectionModule)
       },
       {
         path: 'remittance',
-        canActivate: [ServicesGuard],
+        canActivate: [ServicesGuard.canActivate],
         loadChildren: () => import('./modules/remittances/remittances.module').then(m => m.RemittancesModule),
         data: {configPermissionGroup: PermissionGroupsEnum.REMITTANCE_PERMISSIONS_GROUP, checkAnyPermission: true}
       },*/
@@ -457,7 +456,7 @@ const routes: Routes = [
       {
         path: 'dynamic-menus',
         loadChildren: () => import('./modules/dynamic-menus/dynamic-menus.module').then(m => m.DynamicMenusModule),
-        canActivate: [DynamicMenuGuard],
+        canActivate: [DynamicMenuGuard.canActivate],
         data: {dynamicMenuRouteType: DynamicMenuRouteTypeEnum.MODULE}
       },
       /*{

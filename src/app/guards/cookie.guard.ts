@@ -1,45 +1,43 @@
-import {Injectable} from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router} from '@angular/router';
-import {Observable} from 'rxjs';
-import {LangService} from '@services/lang.service';
-import {ECookieService} from '@services/e-cookie.service';
-import {isValidValue} from '@helpers/utils';
-import {DialogService} from '@services/dialog.service';
-import {NavigationService} from '@services/navigation.service';
+import {ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot} from "@angular/router";
+import {inject} from "@angular/core";
+import {ECookieService} from "@services/e-cookie.service";
+import {DialogService} from "@services/dialog.service";
+import {LangService} from "@services/lang.service";
+import {NavigationService} from "@services/navigation.service";
+import {CommonUtils} from "@helpers/common-utils";
 import {EmployeeService} from "@services/employee.service";
 
-@Injectable({
-  providedIn: 'root'
-})
-export class CookieGuard implements CanActivate {
-  constructor(private langService: LangService,
-              private dialogService: DialogService,
-              private navigationService: NavigationService,
-              private eCookieService: ECookieService,
-              private employeeService: EmployeeService,
-              private router: Router) {
+export class CookieGuard {
+  static canActivate: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    return this.isValidCookie(route);
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+  private static isValidCookie(route: ActivatedRouteSnapshot): boolean {
     let cookieKey: string = route.data.cookieKey;
     if (!cookieKey) {
       return false;
     }
-    let cookieValue = this.eCookieService.getEObject(cookieKey),
+    const eCookieService = inject(ECookieService);
+    const dialogService = inject(DialogService);
+    const langService = inject(LangService);
+    const navigationService = inject(NavigationService);
+    const router = inject(Router);
+    const employeeService = inject(EmployeeService);
+
+    let cookieValue = eCookieService.getEObject(cookieKey),
       isValidCookie: boolean;
     if (!!route.data.validateCookie) {
       isValidCookie = route.data.validateCookie(cookieValue);
     } else {
-      isValidCookie = isValidValue(cookieValue);
+      isValidCookie = CommonUtils.isValidValue(cookieValue);
     }
 
     if (!isValidCookie) {
-      this.dialogService.info(this.langService.map.access_denied);
-      if (!this.navigationService.currentPath || this.navigationService.currentPath === '/') {
-        this.router.navigate([this.employeeService.isExternalUser() ? '/login-external' : '/login']).then();
+      dialogService.info(langService.map.access_denied);
+      if (!navigationService.currentPath || navigationService.currentPath === '/') {
+        router.navigate([employeeService.isExternalUser() ? '/login-external' : '/login']).then();
       }
     }
     return isValidCookie;
   }
-
 }

@@ -11,7 +11,7 @@ import {StaticAppResourcesService} from '@services/static-app-resources.service'
 @Injectable({
   providedIn: 'root',
 })
-export class PermissionGuard implements CanActivate {
+export class PermissionOldGuard implements CanActivate {
   constructor(private empService: EmployeeService,
               private dialogService: DialogService,
               private langService: LangService,

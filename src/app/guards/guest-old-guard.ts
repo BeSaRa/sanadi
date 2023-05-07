@@ -8,7 +8,7 @@ import {ConfigurationService} from "@services/configuration.service";
 @Injectable({
   providedIn: 'root'
 })
-export class GuestGuard implements CanActivate {
+export class GuestOldGuard implements CanActivate {
   constructor(private authService: AuthService, private configService: ConfigurationService, private router: Router) {
   }
 

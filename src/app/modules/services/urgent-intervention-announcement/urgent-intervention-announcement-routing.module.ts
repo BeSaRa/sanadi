@@ -17,7 +17,7 @@ import {ICustomRouteData} from '@contracts/i-custom-route-data';
 const routes: Routes = [
   {
     path: 'service', component: EServiceComponentWrapperComponent,
-    canActivate: [NewServicePermissionGuard, PreValidateDataGuard],
+    canActivate: [NewServicePermissionGuard.canActivate, PreValidateDataGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_ANNOUNCEMENT,
@@ -29,7 +29,7 @@ const routes: Routes = [
   },
   {
     path: 'outputs', component: UrgentInterventionAnnouncementOutputsComponent,
-    canActivate: [NewServicePermissionGuard],
+    canActivate: [NewServicePermissionGuard.canActivate],
     data: {
       permissionKey: Constants.SERVICE_OUTPUT_PERMISSION,
       permissionGroup: null,

@@ -16,7 +16,7 @@ import {
 const routes: Routes = [
   {
     path: 'service', component: EServiceComponentWrapperComponent,
-    canActivate: [NewServicePermissionGuard],
+    canActivate: [NewServicePermissionGuard.canActivate],
     resolve: {info: ServiceItemResolver, countries: CountryResolver},
     data: {
       permissionKey: EServicePermissionsEnum.PROJECT_FUNDRAISING,
@@ -27,7 +27,7 @@ const routes: Routes = [
   },
   {
     path: 'outputs', component: ProjectFundraisingOutputsComponent,
-    canActivate: [NewServicePermissionGuard],
+    canActivate: [NewServicePermissionGuard.canActivate],
     data: {
       permissionKey: Constants.SERVICE_OUTPUT_PERMISSION,
       permissionGroup: null,

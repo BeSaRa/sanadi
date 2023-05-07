@@ -15,7 +15,7 @@ import {
 const routes: Routes = [
   {
     path: 'service', component: EServiceComponentWrapperComponent,
-    canActivate: [NewServicePermissionGuard],
+    canActivate: [NewServicePermissionGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
@@ -26,7 +26,7 @@ const routes: Routes = [
   },
   {
     path: 'outputs', component: TransferringIndividualFundsAbroadOutputsComponent,
-    canActivate: [NewServicePermissionGuard],
+    canActivate: [NewServicePermissionGuard.canActivate],
     data: {
       permissionKey: Constants.SERVICE_OUTPUT_PERMISSION,
       permissionGroup: null,

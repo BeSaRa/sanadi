@@ -15,7 +15,7 @@ import {
 const routes: Routes = [
   {
     path: 'service', component: EServiceComponentWrapperComponent,
-    canActivate: [NewServicePermissionGuard],
+    canActivate: [NewServicePermissionGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
@@ -26,7 +26,7 @@ const routes: Routes = [
   },
   {
     path: 'outputs', component: UrgentInterventionFinancialNotificationOutputsComponent,
-    canActivate: [NewServicePermissionGuard],
+    canActivate: [NewServicePermissionGuard.canActivate],
     data: {
       permissionKey: Constants.SERVICE_OUTPUT_PERMISSION,
       permissionGroup: null,

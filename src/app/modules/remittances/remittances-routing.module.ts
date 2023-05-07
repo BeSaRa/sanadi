@@ -11,7 +11,7 @@ const routes: Routes = [
   {
     path: "customs-exemption",
     component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: { info: ServiceItemResolver },
     data: {
       permissionKey: EServicePermissionsEnum.CUSTOMS_EXEMPTION_REMITTANCE,
@@ -22,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: 'financial-transfers-licensing', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: { info: ServiceItemResolver },
     data: {
       permissionKey: EServicePermissionsEnum.FINANCIAL_TRANSFERS_LICENSING,

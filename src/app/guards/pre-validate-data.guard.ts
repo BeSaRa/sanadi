@@ -1,73 +1,77 @@
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
-import {Observable, of} from 'rxjs';
-import {DialogService} from '@services/dialog.service';
-import {LangService} from '@services/lang.service';
-import {EncryptionService} from '@services/encryption.service';
-import {ConfigurationService} from '@services/configuration.service';
-import {INavigatedItem} from '@contracts/inavigated-item';
-import {tap} from 'rxjs/operators';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {UrgentInterventionAnnouncementService} from '@services/urgent-intervention-announcement.service';
-import {ILanguageKeys} from '@contracts/i-language-keys';
+import {ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot} from "@angular/router";
+import {INavigatedItem} from "@contracts/inavigated-item";
+import {Observable, of} from "rxjs";
+import {CaseTypes} from "@enums/case-types.enum";
+import {inject} from "@angular/core";
+import {DialogService} from "@services/dialog.service";
+import {LangService} from "@services/lang.service";
+import {EncryptionService} from "@services/encryption.service";
+import {ConfigurationService} from "@services/configuration.service";
+import {UrgentInterventionAnnouncementService} from "@services/urgent-intervention-announcement.service";
+import {tap} from "rxjs/operators";
+import {ILanguageKeys} from "@contracts/i-language-keys";
 
-@Injectable({
-  providedIn: 'root'
-})
-export class PreValidateDataGuard implements CanActivate {
-  itemKey!: string;
-  caseType!: CaseTypes;
-  route!: ActivatedRouteSnapshot;
-  failMsgKey!: keyof ILanguageKeys;
+export class PreValidateDataGuard {
 
-  constructor(private dialogService: DialogService,
-              private langService: LangService,
-              private router: Router,
-              private encrypt: EncryptionService,
-              private configService: ConfigurationService,
-              private urgentInterventionAnnouncementService: UrgentInterventionAnnouncementService) {
-    this.itemKey = configService.CONFIG.E_SERVICE_ITEM_KEY;
+  private static data: {
+    itemKey: string,
+    caseType: CaseTypes,
+    failMsgKey: keyof ILanguageKeys,
+    route: ActivatedRouteSnapshot,
+    dialogService: DialogService,
+    langService: LangService,
+    encryptionService: EncryptionService,
+    configurationService: ConfigurationService,
+    urgentInterventionAnnouncementService: UrgentInterventionAnnouncementService,
+  } = {} as any;
+
+  static canActivate: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    this._init(route);
+    return this.preValidateData()
+      .pipe(tap(canProceed => !canProceed ? this._displayFailMessage() : true));
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    this.route = route;
-    this.caseType = route.data.caseType;
-    this.failMsgKey = route.data.preValidateFailMsgKey || 'access_denied';
+  private static _init(route: ActivatedRouteSnapshot): void {
+    this.data.dialogService = inject(DialogService);
+    this.data.langService = inject(LangService);
+    this.data.encryptionService = inject(EncryptionService);
+    this.data.configurationService = inject(ConfigurationService);
+    this.data.urgentInterventionAnnouncementService = inject(UrgentInterventionAnnouncementService);
 
-    return this.preValidateData()
-      .pipe(tap(canProceed => !canProceed ? this._displayMessage() : true));
+    this.data.itemKey = this.data.configurationService.CONFIG.E_SERVICE_ITEM_KEY;
+    this.data.route = route;
+    this.data.caseType = route.data.caseType;
+    this.data.failMsgKey = route.data.preValidateFailMsgKey || 'access_denied';
   }
 
   // to check if there is item param
-  hasItemParam(): boolean {
-    return this.route.queryParamMap.has(this.itemKey);
+  private static hasItemParam(): boolean {
+    return this.data.route.queryParamMap.has(this.data.itemKey);
   }
 
-  getItem(): string | null {
-    return this.route.queryParamMap.get(this.itemKey);
+  private static getItem(): string | null {
+    return this.data.route.queryParamMap.get(this.data.itemKey);
   }
 
-  validItem(): boolean {
+  private static validItem(): boolean {
     try {
-      this.encrypt.decrypt<INavigatedItem>(this.getItem()!);
+      this.data.encryptionService.decrypt<INavigatedItem>(this.getItem()!);
       return true;
     } catch (e) {
       return false;
     }
   }
 
-  preValidateData(): Observable<boolean> {
-    if (this.caseType === CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) {
+  private static preValidateData(): Observable<boolean> {
+    if (this.data.caseType === CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) {
       let isAddOperation = !this.hasItemParam() || !this.validItem();
-      return this.urgentInterventionAnnouncementService.preValidateAddLicense(isAddOperation);
+      return this.data.urgentInterventionAnnouncementService.preValidateAddLicense(isAddOperation);
     }
     return of(true);
   }
 
-  private _displayMessage() {
-    this.dialogService.info(this.langService.map[this.failMsgKey])
-      /*.onAfterClose$.subscribe(() => {
-        this.router.navigate(['/home']).then();
-      });*/
+  private static _displayFailMessage() {
+    // @ts-ignore
+    this.data.dialogService.info(this.data.langService.map[this.data.failMsgKey]);
   }
 }

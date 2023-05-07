@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {PermissionGuard} from '@app/guards/permission-guard';
+import {PermissionGuard} from '@app/guards/permission.guard';
 import {TrainingServicesComponent} from '@app/training-services/training-services.component';
 import {AccreditedTrainerComponent} from '@app/training-services/pages/accredited-trainer/accredited-trainer.component';
 import {TrainingProgramComponent} from '@app/training-services/pages/training-program/training-program.component';
@@ -13,12 +13,12 @@ const routes: Routes = [
   {path: '', component: TrainingServicesComponent},
   {
     path: 'trainer', component: AccreditedTrainerComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.TRAINING_ADD_TRAINEE, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'program', component: TrainingProgramComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: null,
       configPermissionGroup: PermissionGroupsEnum.TRAINING_PROGRAMS_MENU_ITEM_GROUP,
@@ -27,12 +27,12 @@ const routes: Routes = [
   },
   {
     path: 'available-programs', component: AvailableProgramsComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.TRAINING_CHARITY_MANAGEMENT, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'certificate-templates', component: CertificatesComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.TRAINING_CERTIFICATE_TEMPLATE, configPermissionGroup: null, checkAnyPermission: false}
   }
 ];

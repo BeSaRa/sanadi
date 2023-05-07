@@ -80,13 +80,14 @@ import {Donor} from '@app/models/donor';
 import {DonorService} from '@services/donor.service';
 import {SharedService} from '@services/shared.service';
 import {BeneficiaryRequesterRelationTypes} from '@app/enums/beneficiary-requester-relation-types';
+import {CanComponentDeactivateContract} from "@contracts/can-component-deactivate-contract";
 
 @Component({
   selector: 'app-user-request',
   templateUrl: './user-request.component.html',
   styleUrls: ['./user-request.component.scss']
 })
-export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
+export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, CanComponentDeactivateContract {
   constructor(public langService: LangService,
               public lookup: LookupService,
               private beneficiaryService: BeneficiaryService,

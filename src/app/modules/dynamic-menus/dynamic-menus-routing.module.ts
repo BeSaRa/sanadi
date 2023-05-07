@@ -8,17 +8,17 @@ import {DynamicMenuRouteTypeEnum} from '@app/enums/dynamic-menu-route-type.enum'
 const routes: Routes = [
   {
     path: ':parentId', component: DynamicMenusComponent,
-    canActivate: [DynamicMenuGuard],
+    canActivate: [DynamicMenuGuard.canActivate],
     data: {dynamicMenuRouteType: DynamicMenuRouteTypeEnum.PARENT}
   },
   {
     path: ':parentId/details', component: DynamicMenuDetailsComponent,
-    canActivate: [DynamicMenuGuard],
+    canActivate: [DynamicMenuGuard.canActivate],
     data: {dynamicMenuRouteType: DynamicMenuRouteTypeEnum.PARENT_DETAILS}
   },
   {
     path: ':parentId/details/:childId', component: DynamicMenuDetailsComponent,
-    canActivate: [DynamicMenuGuard],
+    canActivate: [DynamicMenuGuard.canActivate],
     data: {dynamicMenuRouteType: DynamicMenuRouteTypeEnum.CHILD}
   }
 ];

@@ -1,43 +1,44 @@
-import {Injectable} from '@angular/core';
-import {CanActivate, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree} from '@angular/router';
-import {Observable, of} from 'rxjs';
-import {CanNavigateOptions} from '../types/types';
-import {switchMap, take} from 'rxjs/operators';
-import {UserClickOn} from '../enums/user-click-on.enum';
-import {DialogService} from '../services/dialog.service';
-import {LangService} from '../services/lang.service';
+import {ActivatedRouteSnapshot, CanDeactivateFn, RouterStateSnapshot} from "@angular/router";
+import {CanComponentDeactivateContract} from "@contracts/can-component-deactivate-contract";
+import {switchMap, take} from "rxjs/operators";
+import {UserClickOn} from "@enums/user-click-on.enum";
+import {Observable, of} from "rxjs";
+import {inject} from "@angular/core";
+import {DialogService} from "@services/dialog.service";
+import {LangService} from "@services/lang.service";
+import {CanNavigateOptions} from "@app/types/types";
 
-@Injectable({
-  providedIn: 'root'
-})
-export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
-  constructor(private dialogService: DialogService,
-              private langService: LangService) {
-  }
-
-  canDeactivate(
-    component: CanComponentDeactivate,
+export class CanDeactivateGuard {
+  static canDeactivate: CanDeactivateFn<CanComponentDeactivateContract> = (
+    component: CanComponentDeactivateContract,
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
-    nextState?: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (!component.canDeactivate || component.canDeactivate() === 'ALLOW') {
-      return true;
+    nextState: RouterStateSnapshot) => {
+    const canDeactivate = this._canDeactivateComponent(component);
+    if (canDeactivate === 'CONFIRM_UNSAVED_CHANGES') {
+      return this._confirmToNavigate();
     } else {
-      if (component.canDeactivate() === 'DISALLOW') {
-        return false;
-      } else {
-        return this.dialogService.confirm(this.langService.map.msg_unsaved_changes_confirm)
-          .onAfterClose$.pipe(
-            take(1),
-            switchMap((click: UserClickOn) => {
-              return of(click === UserClickOn.YES)
-            })
-          );
-      }
+      return canDeactivate === 'ALLOW';
     }
-  }
-}
+  };
 
-export interface CanComponentDeactivate {
-  canDeactivate: () => CanNavigateOptions;
+  private static _canDeactivateComponent(component: CanComponentDeactivateContract): CanNavigateOptions {
+    if (!component.canDeactivate) {
+      return 'ALLOW';
+    }
+    return component.canDeactivate();
+  }
+
+  private static _confirmToNavigate(): Observable<boolean> {
+    const dialogService = inject(DialogService);
+    const langService = inject(LangService);
+
+    return dialogService.confirm(langService.map.msg_unsaved_changes_confirm)
+      .onAfterClose$.pipe(
+        take(1),
+        switchMap((click: UserClickOn) => {
+          return of(click === UserClickOn.YES)
+        })
+      );
+  }
 }

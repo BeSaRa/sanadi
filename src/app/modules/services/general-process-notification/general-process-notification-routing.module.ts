@@ -6,9 +6,6 @@ import {
 import {NewServicePermissionGuard} from '@app/guards/new-service-permission.guard';
 import {ServiceItemResolver} from '@app/resolvers/service-item.resolver';
 import {EServicePermissionsEnum} from '@enums/e-service-permissions-enum';
-import {
-  ConsultationOutputsComponent
-} from '@modules/services/consultation/pages/consultation-outputs/consultation-outputs.component';
 import {Constants} from '@helpers/constants';
 import {ErrorPageComponent} from '@app/shared/components/error-page/error-page.component';
 import {
@@ -18,7 +15,7 @@ import {
 const routes: Routes = [
   {
     path: 'service', component: EServiceComponentWrapperComponent,
-    canActivate: [NewServicePermissionGuard],
+    canActivate: [NewServicePermissionGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
@@ -29,7 +26,7 @@ const routes: Routes = [
   },
   {
     path: 'outputs', component: GeneralProcessNotificationOutputsComponent,
-    canActivate: [NewServicePermissionGuard],
+    canActivate: [NewServicePermissionGuard.canActivate],
     data: {
       permissionKey: Constants.SERVICE_OUTPUT_PERMISSION,
       permissionGroup: null,

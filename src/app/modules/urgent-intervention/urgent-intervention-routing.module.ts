@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: '', component: UrgentInterventionComponent },
   {
     path: 'urgent-intervention-license', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_LICENSING,
@@ -24,7 +24,7 @@ const routes: Routes = [
   },
   {
     path: 'urgent-intervention-announcement', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard, PreValidateDataGuard],
+    canActivate: [ServicesGuard.canActivate, PreValidateDataGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     runGuardsAndResolvers: 'always',
     data: {
@@ -38,7 +38,7 @@ const routes: Routes = [
   },
   {
     path: 'urgent-intervention-closure', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_CLOSURE,
@@ -49,7 +49,7 @@ const routes: Routes = [
   },
   {
     path: 'urgent-intervention-financial-notification', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
@@ -60,7 +60,7 @@ const routes: Routes = [
   },
   {
     path: 'urgent-intervention-license-followup', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
+    canActivate: [ServicesGuard.canActivate],
     resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
