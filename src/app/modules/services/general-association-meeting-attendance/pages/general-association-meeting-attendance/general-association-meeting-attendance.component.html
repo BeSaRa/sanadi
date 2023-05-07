@@ -203,77 +203,13 @@
       </ng-template>
     </ng-container>
     <ng-container>
-      <ng-template #meeting_agenda [formGroup]="agendaForm">
-        <ng-container *ngIf="isExternalUser">
-          <div class="row">
-            <div class="col">
-              <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_to_meeting_agenda}}</h1>
-              <button class="btn btn-link outline-none" [disabled]="(readonly || isCancel)"
-                tooltip="{{lang.map.btn_add}}" (click)="openAddAgendaForm()">
-                <i class="mdi mdi-plus-box"></i></button>
-            </div>
-          </div>
-          <ng-container *ngIf="addAgendaFormActive">
-            <div class="row">
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label asteriskIfRequired="description" class="form-label"
-                  for="agendaItemDescription">{{lang.map.lbl_description}}</label>
-                <input [readonly]="(readonly)" class="form-control" formControlName="description"
-                  id="agendaItemDescription" validationClasses="description">
-                <app-field-error-message controlName="description"></app-field-error-message>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12 text-center action-container mb-3">
-                <div class="flex-grow-1"></div>
-                <button [disabled]="!agendaForm?.valid" (click)="saveAgendaItem()"
-                  class="btn btn-primary">{{lang.map.btn_save}}</button>
-                <button class="btn btn-secondary" (click)="cancelAddAgendaItem()">{{lang.map.btn_cancel}}</button>
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
-        <div class="row">
-          <div class="col-12">
-            <app-table #table [columns]="agendaItemsDisplayedColumns" [data]="agendaItems" [selectable]="true"
-              [useSearchToFilter]="true" sortableTable>
-              <table [dataSource]="table.dataSource" cdk-table class="table table-striped table-bordered caption-top">
-                <ng-container cdkColumnDef="index">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> #
-                  </th>
-                  <td *cdkCellDef="let row; let i = index;" cdk-cell> {{i + 1}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="description">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.agenda_items}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="actions">
-                  <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
-                  <td *cdkCellDef="let row" cdk-cell class="table-actions">
-                    <div class="d-flex flex-row">
-                      <button (click)="removeAgendaItem($event, row)"
-                        [disabled]="(readonly || isCancel || addAgendaFormActive)" class="btn btn-link outline-none"
-                        tooltip="{{lang.map.btn_remove}}">
-                        <i class="mdi mdi-close-box"></i>
-                      </button>
-                      <button (click)="selectAgendaItem($event, row)"
-                        [disabled]="(readonly || isCancel || addAgendaFormActive)" class="btn btn-link outline-none"
-                        tooltip="{{lang.map.btn_edit}}">
-                        <i class="mdi mdi-pen"></i>
-                      </button>
-                    </div>
-                  </td>
-                </ng-container>
-                <tr *cdkHeaderRowDef="agendaItemsDisplayedColumns" cdk-header-row></tr>
-                <tr *cdkRowDef="let row; columns: agendaItemsDisplayedColumns;" cdk-row></tr>
-                <!--suppress HtmlUnknownBooleanAttribute -->
-                <tr *cdkNoDataRow>
-                  <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
-                </tr>
-              </table>
-            </app-table>
-          </div>
-        </div>
+      <ng-template #meeting_agenda>
+        <meeting-agenda
+        #meeting_agenda_ref
+        [agendaItems]="agendaItems"
+        [readonly]="readonly"
+        [isExternalUser]="isExternalUser"
+        ></meeting-agenda>
       </ng-template>
     </ng-container>
     <ng-container>
