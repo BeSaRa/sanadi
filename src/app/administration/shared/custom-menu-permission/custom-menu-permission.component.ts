@@ -15,6 +15,7 @@ import {SharedService} from '@services/shared.service';
 import {ExternalUser} from '@app/models/external-user';
 import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
 import { TabMap } from '@app/types/types';
+import { DateUtils } from '@app/helpers/date-utils';
 
 @Component({
   selector: 'custom-menu-permission',
@@ -332,5 +333,8 @@ export class CustomMenuPermissionComponent implements OnInit {
   }
   isMainMenu(menu:CustomMenu){
     return menu.id === 1;
+  }
+  getRandomValue(index:number){
+    return new Date(index).getMilliseconds();
   }
 }
