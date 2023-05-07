@@ -125,7 +125,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
           this.count = list.length;
         }
         this.models = list;
-        this.afterReload();
+        this.afterReload(list);
       })
   }
 
@@ -252,7 +252,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
       .subscribe((list: M[]) => {
         this.count = list.length;
         this.models = list;
-        this.afterReload();
+        this.afterReload(list);
       })
   }
 
@@ -260,7 +260,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
 
   }
 
-  afterReload(): void {
+  afterReload(list: M[] = []): void {
 
   }
 
