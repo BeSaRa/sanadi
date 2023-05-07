@@ -31,6 +31,7 @@ import {Title} from '@angular/platform-browser';
 import {GlobalSettingsService} from '@services/global-settings.service';
 import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-generic-service';
 import {ComponentType} from '@angular/cdk/portal';
+import {LocalizationService} from '@services/localization.service';
 
 @CastResponseContainer({
   $default: {
@@ -70,6 +71,7 @@ export class LangService extends CrudWithDialogGenericService<Localization> {
   changeStatus$: Subject<'Start' | 'InProgress' | 'Done'> = new Subject<"Start" | "InProgress" | "Done">()
 
   constructor(@Inject(DOCUMENT) private document: Document,
+              private localizationService: LocalizationService, // to make it available in FactoryService
               public http: HttpClient,
               public dialog: DialogService,
               private eCookieService: ECookieService,
@@ -247,12 +249,12 @@ export class LangService extends CrudWithDialogGenericService<Localization> {
     return this.getLocalForSpecificLang(key, 'en');
   }
 
-  addDialog(): DialogRef {
+  /*addDialog(): DialogRef {
     return this.dialog.show<IDialogData<Localization>>(LocalizationPopupComponent, {
       model: new Localization(),
       operation: OperationTypes.CREATE
     });
-  }
+  }*/
 
   getCurrentLanguage(): Language {
     return this.languages[this.map.lang];

@@ -6,9 +6,11 @@ import {LocalizationInterceptor} from './localization-interceptor';
 import {GlobalSettingsInterceptor} from '@model-interceptors/global-settings-interceptor';
 import {GlobalSettings} from '@models/global-settings';
 
+const localizationInterceptor = new LocalizationInterceptor();
+
 export function interceptLoginInfo(model: ILoginInfo): ILoginInfo {
   model.localizationSet = model.localizationSet.map(item => {
-    return LocalizationInterceptor.receive(Object.assign(new Localization(), item));
+    return localizationInterceptor.receive(Object.assign(new Localization(), item));
   });
   model.globalSetting = new GlobalSettingsInterceptor().receive(Object.assign(new GlobalSettings(), model.globalSetting));
 

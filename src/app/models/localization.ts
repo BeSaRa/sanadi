@@ -6,11 +6,18 @@ import {INames} from '@contracts/i-names';
 import {searchFunctionType} from '../types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
+import {LocalizationService} from '@services/localization.service';
+import {InterceptModel} from "@decorators/intercept-model";
+import {LocalizationInterceptor} from "@model-interceptors/localization-interceptor";
 
-export class Localization extends BaseModel<Localization, LangService> {
+const {send, receive} = new LocalizationInterceptor();
+
+@InterceptModel({send, receive})
+export class Localization extends BaseModel<Localization, LocalizationService> {
   localizationKey: string | undefined;
   module: number = 0;
-  service: LangService;
+  service: LocalizationService;
+  langService: LangService;
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
     enName: 'enName',
@@ -19,7 +26,8 @@ export class Localization extends BaseModel<Localization, LangService> {
 
   constructor() {
     super();
-    this.service = FactoryService.getService('LangService');
+    this.service = FactoryService.getService('LocalizationService');
+    this.langService = FactoryService.getService('LangService');
   }
 
   create(): Observable<Localization> {
@@ -39,7 +47,7 @@ export class Localization extends BaseModel<Localization, LangService> {
   }
 
   getName(): string {
-    return this[(this.service.map.lang + 'Name') as keyof INames];
+    return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
   buildForm(controls?: boolean): any {

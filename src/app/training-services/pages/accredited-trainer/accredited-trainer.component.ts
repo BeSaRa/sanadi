@@ -76,7 +76,7 @@ export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, T
     this.table && this.table.clearSelection();
   }
 
-  get selectedRecords(): JobTitle[] {
+  get selectedRecords(): Trainer[] {
     return this.table.selection.selected;
   }
 

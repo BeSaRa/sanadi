@@ -1,36 +1,43 @@
-import { FormBuilder } from '@angular/forms';
-import { Component, ViewChild } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { Localization } from '@app/models/localization';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { TableComponent } from '@app/shared/components/table/table.component';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import {FormBuilder} from '@angular/forms';
+import {Component, ViewChild} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {Localization} from '@app/models/localization';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {SearchColumnConfigMap} from '@app/interfaces/i-search-column-config';
+import {LocalizationService} from '@services/localization.service';
+import {FactoryService} from '@services/factory.service';
 
 @Component({
   selector: 'app-localization',
   templateUrl: './localization.component.html',
   styleUrls: ['./localization.component.scss']
 })
-export class LocalizationComponent extends AdminGenericComponent<Localization, LangService> {
+export class LocalizationComponent extends AdminGenericComponent<Localization, LocalizationService> {
   useCompositeToLoad = false;
   useCompositeToEdit = false;
   lang: LangService;
 
-  afterReload(): void {
+  afterReload(list: Localization[]): void {
     this.table && this.table.clearSelection();
+    if (!this.columnFilterFormHasValue()) {
+      this.lang.list = list;
+      this.lang._loadDone$.next(list);
+    }
   }
-  constructor(
-    public service: LangService,
-    private fb: FormBuilder
-  ) {
+
+  constructor(public service: LocalizationService,
+              private fb: FormBuilder) {
     super();
-    this.lang = service;
+    this.lang = FactoryService.getService('LangService');
   }
+
   _init(): void {
     this.buildFilterForm()
   }
+
   @ViewChild('table') table!: TableComponent;
   displayedColumns: string[] = ['localizationKey', 'arName', 'enName', 'actions'];
   searchColumns: string[] = ['search_localizationKey', 'search_arName', 'search_enName', 'search_actions'];
@@ -66,6 +73,7 @@ export class LocalizationComponent extends AdminGenericComponent<Localization, L
       onClick: (item: Localization) => this.edit$.next(item)
     }
   ];
+
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
       arName: [''], enName: [''], localizationKey: ['']
