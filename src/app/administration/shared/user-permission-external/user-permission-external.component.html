@@ -1,0 +1,36 @@
+<div *ngIf="!customRoleId" class="d-flex text-danger justify-content-center">
+  {{lang.map.msg_no_permissions_available}}
+</div>
+<ng-container *ngIf="!!customRoleId">
+  <ng-container *ngFor="let checkBoxGroup of permissionGroups">
+    <div class="row" *ngIf="isGroupVisible(checkBoxGroup)">
+      <div class="col-sm-12 mb-2">
+        <div class="p-2 border border-1">
+          <div class="form-check">
+            <input [indeterminate]="isGroupSelectionIndeterminate(checkBoxGroup)" [disabled]="readonly"
+                   [checked]="isGroupSelectionFull(checkBoxGroup)" type="checkbox"
+                   id="group-id-{{checkBoxGroup.group.id}}"
+                   (change)="onGroupClicked(checkBoxGroup)" class="form-check-input cursor-pointer">
+            <label for="group-id-{{checkBoxGroup.group.id}}"
+                   [ngClass]="{'text-opacity-50': readonly}"
+                   class="cursor-pointer fw-bold text-primary">{{checkBoxGroup.group.getName()}}</label>
+          </div>
+          <hr class="mt-0">
+          <div class="mx-2 permissions-grid-container" [style]="containerInlineStyle">
+            <ng-container *ngFor="let permission of checkBoxGroup.list">
+              <div class="form-check" *ngIf="!isFixedPermission(permission)">
+                <input type="checkbox" [checked]="checkBoxGroup.isSelected(permission.id)"
+                       [disabled]="!isChangePermissionAllowed(permission)"
+                       [value]="permission.id" id="group-permission-id-{{permission.id}}"
+                       (change)="onPermissionClicked($event , permission , checkBoxGroup)"
+                       class="form-check-input cursor-pointer">
+                <label for="group-permission-id-{{permission.id}}"
+                       class="cursor-pointer">{{permission.getName()}}</label>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>

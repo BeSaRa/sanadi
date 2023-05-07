@@ -15,7 +15,8 @@
            [title]="langService.map.lbl_permissions"
            [hasError]="getTabInvalidStatus('permissions')"></tab>
       <tab [name]="tabsData.menus.name" [template]="menusTab" [title]="langService.map.menus"></tab>
-      <tab [name]="tabsData.services.name" [disabled]="!isProfileValid" [title]="langService.map.link_services" [template]="serviceTab"></tab>
+      <tab [name]="tabsData.services.name" [disabled]="!isProfileValid" [title]="langService.map.link_services"
+           [template]="serviceTab"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div formGroupName="basic">
@@ -128,14 +129,14 @@
       </div>
     </ng-template>
     <ng-template #permissionsTabTemplate>
-      <div formGroupName="permissions">
+      <div formGroupName="userPermissions">
         <div class="row">
           <div class="col-sm-6 mb-4 ng-select-wrapper">
             <label for="customRoleId" class="form-label">{{langService.map.lbl_custom_role}}</label>
             <ng-select [selectOnTab]="true" labelForId="customRoleId" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="customRoleId"
                        [notFoundText]="langService.map.msg_not_found"
-                       (change)="updatePermissionsByRole($event)" appendTo="body"
+                       (change)="!readonly && onCustomRoleChange($event, true)" appendTo="body"
                        formControlName="customRoleId" validationClasses="customRoleId">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of customRoleList" [value]="option.id"
@@ -146,35 +147,14 @@
             <app-field-error-message controlName="customRoleId"></app-field-error-message>
           </div>
         </div>
-        <div class="row" *ngIf="customRoleControl?.value">
-          <ng-container>
-            <div *ngFor="let checkBoxGroup of groups" class="col-sm-12 mb-2">
-              <div class="p-2 border border-1">
-                <div class="form-check mb-2 pb-2 border-bottom">
-                  <input [indeterminate]="checkBoxGroup.isIndeterminate()" [disabled]="readonly"
-                         [checked]="checkBoxGroup.isFull()"
-                         type="checkbox"
-                         id="group-id-{{checkBoxGroup.group.id}}" (change)="onGroupClicked(checkBoxGroup)"
-                         class="form-check-input cursor-pointer">
-                  <label for="group-id-{{checkBoxGroup.group.id}}"
-                         class="cursor-pointer">{{checkBoxGroup.group.getName()}}</label>
-                </div>
-                <div *ngFor="let row of checkBoxGroup.rows" class="row mx-2">
-                  <div *ngFor="let permission of row" class="form-check col-sm-12 col-md-4">
-                    <input type="checkbox" [checked]="checkBoxGroup.isSelected(permission.id)"
-                           [disabled]="readonly || !isChangePermissionAllowed(permission)"
-                           [value]="permission.id"
-                           id="group-permission-id-{{permission.id}}"
-                           (change)="onPermissionClicked($event , permission , checkBoxGroup)"
-                           class="form-check-input cursor-pointer">
-                    <label for="group-permission-id-{{permission.id}}"
-                           class="cursor-pointer">{{permission.getName()}}</label>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </ng-container>
+        <div>
+          <user-permission-external [user]="model" [readonly]="readonly" [customRoleId]="customRoleControl?.value"
+                                    [operation]="operation" [customRolesList]="customRoleList"
+                                    [userUpdateRequest]="userUpdateRequest"
+                                    [externalUserPermissions]="externalUserPermissions"
+                                    [customRoleChangeTrigger]="customRoleChangedTrigger"
+                                    (onPermissionChange)="updateUserPermissions($event)">
+          </user-permission-external>
         </div>
       </div>
     </ng-template>
@@ -185,8 +165,8 @@
   </form>
   <ng-template #serviceTab>
     <user-security-external #userSecurityComponent [operation]="operation" [readonly]="readonly" [model]="model"
-                   [userUpdateRequest]="userUpdateRequest"
-                   [profileId]="profileControl?.value"></user-security-external>
+                            [userUpdateRequest]="userUpdateRequest"
+                            [profileId]="profileControl?.value"></user-security-external>
   </ng-template>
 </div>
 <div class="dialog-actions">

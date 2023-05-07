@@ -130,6 +130,9 @@ import { FieldAssessmentServiceLinkComponen } from './shared/field-assessment-se
 import { CustomServiceTemplateComponent } from './shared/custom-service-template/custom-service-template.component';
 import { CustomServiceTemplatePopupComponent } from './popups/custom-service-template-popup/custom-service-template-popup.component';
 import { UserPermissionInternalComponent } from '@app/administration/shared/user-permission-internal/user-permission-internal.component';
+import {
+  UserPermissionExternalComponent
+} from "@app/administration/shared/user-permission-external/user-permission-external.component";
 
 @NgModule({
   declarations: [
@@ -221,7 +224,8 @@ import { UserPermissionInternalComponent } from '@app/administration/shared/user
     GlobalSettingsComponent,
     AdminLicenseComponent,
     UserFollowupPermissionNewComponent,
-    UserPermissionInternalComponent
+    UserPermissionInternalComponent,
+    UserPermissionExternalComponent
   ],
   imports: [
     SharedModule,
