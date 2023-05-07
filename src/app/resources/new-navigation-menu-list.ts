@@ -2295,6 +2295,7 @@ export const newNavigationMenuList = [
     icon: '',
     isSvg: true,
     permission: null,
+    menuKey: SystemMenuKeys.SANADY,
     permissionGroup: PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP,
     parent: null,
     group: 'main',
