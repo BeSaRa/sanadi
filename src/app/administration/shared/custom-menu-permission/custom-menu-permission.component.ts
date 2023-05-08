@@ -338,4 +338,19 @@ export class CustomMenuPermissionComponent implements OnInit {
   getRandomValue(index:number){
     return new Date(index).getMilliseconds();
   }
+  onDefaultPermissionClicked(item: CustomMenu, { target }: Event, group: CheckGroup<CustomMenu> ,groupHandler: CheckGroupHandler<CustomMenu>): void {
+    let check = CheckGroupHandler.getCheckState(target);
+    if (item.isSystemParentItem()) {
+      if (check) {
+        groupHandler.checkAllChildren(item, group);
+        return;
+      }
+      groupHandler.unCheckAllChildren(item, group);
+      return;
+    }
+    check ? groupHandler.addToSelection(item, group) : groupHandler.removeFromSelection(item, group);
+    return;
+  }
+
+
 }
