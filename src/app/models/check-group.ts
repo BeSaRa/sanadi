@@ -24,6 +24,9 @@ export class CheckGroup<T extends { id: number }> {
   }
 
   isFull(): boolean {
+    // console.log(this.list);
+    // console.log(this.selected);
+
     return this.list.length === this.selected.length;
   }
 
