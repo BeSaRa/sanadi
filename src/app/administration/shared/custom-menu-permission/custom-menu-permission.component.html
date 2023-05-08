@@ -68,7 +68,7 @@
                   <input type="checkbox" [disabled]="readonly"
                    [checked]="permission.isSystemParent? defaultCheckBoxGroup.isChildrenSelected(permission.getChildrenIds()) : defaultCheckBoxGroup.isSelected(permission.id)"
                     [value]="permission.id" id="menu-default-permission-id-{{permission.isSystemParent ? getRandomValue(i) : permission.id}}"
-                    (change)="defaultGroupHandler.onCheckBoxClicked(permission , $event , defaultCheckBoxGroup)"
+                    (change)="onDefaultPermissionClicked(permission , $event , defaultCheckBoxGroup,defaultGroupHandler)"
                     class="form-check-input cursor-pointer">
                   <label for="menu-default-permission-id-{{permission.isSystemParent ? getRandomValue(i) : permission.id}}"
                     [ngClass]="{'fw-bold': isDefaultParentRow(row), 'text-danger': !isDefaultParentRow(row) && !permission.isActive()}"
