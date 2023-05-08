@@ -118,8 +118,9 @@ export class CustomMenuPermissionComponent implements OnInit {
           );
       }))
       .subscribe((selectedMenus: number[]) => {
-        this.groupHandler.setSelection(selectedMenus);
-        this.defaultGroupHandler.setSelection(selectedMenus);
+        const menus =[...new Set(selectedMenus)];
+        this.groupHandler.setSelection(menus);
+        this.defaultGroupHandler.setSelection(menus);
 
 
       });
@@ -213,8 +214,6 @@ export class CustomMenuPermissionComponent implements OnInit {
         this.permissionGroups.push(new CheckGroup<CustomMenu>(group, itemsInGroup, [], this.chunkSize, true));
       }
     });
-    console.log(this.permissionGroups);
-
   }
   private buildDefaultPermissionGroups(groups: Lookup[], menus: CustomMenu[]): void {
     const permissionsByGroup = new Map<number, CustomMenu[]>();
@@ -222,9 +221,11 @@ export class CustomMenuPermissionComponent implements OnInit {
     menus.reduce((record, menu) => {
       return permissionsByGroup.set(menu.menuType, (permissionsByGroup.get(menu.menuType) || []).concat(menu));
     }, {} as any);
+
     groups.forEach(group => {
       let items:CustomMenu[] =[];
       let itemsInGroup = permissionsByGroup.get(group.lookupKey) || [];
+
       itemsInGroup.forEach(item=>{
         if(item.isSystemParent){
           items.push(item);
