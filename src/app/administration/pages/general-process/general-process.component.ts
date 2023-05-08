@@ -25,8 +25,6 @@ import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 })
 export class GeneralProcessComponent extends AdminGenericComponent<GeneralProcess, GeneralProcessService> {
   usePagination = true;
-  list: GeneralProcess[] = [];
-  commonStatusEnum = CommonStatusEnum;
   @ViewChild('table') table!: TableComponent;
   view$: Subject<GeneralProcess> = new Subject<GeneralProcess>();
 

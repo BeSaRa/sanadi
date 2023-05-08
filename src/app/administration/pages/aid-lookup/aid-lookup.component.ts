@@ -152,7 +152,7 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
     {
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
-      label: 'logs',
+      label: 'show_logs',
       onClick: (item: AidLookup) => this.showAuditLogs(item)
     },
     // activate

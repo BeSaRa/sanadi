@@ -1,35 +1,30 @@
-import { filter } from 'rxjs/operators';
-import { switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { exhaustMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
-import { Country } from '@app/models/country';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { IGridAction } from '@app/interfaces/i-grid-action';
-import { TableComponent } from '@app/shared/components/table/table.component';
-import { LangService } from '@app/services/lang.service';
-import { CountryService } from '@app/services/country.service';
-import { takeUntil } from 'rxjs/operators';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { ITableOptions } from '@app/interfaces/i-table-options';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { isEmptyObject } from '@app/helpers/utils';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DialogService } from '@app/services/dialog.service';
-import { ToastService } from '@app/services/toast.service';
-import { SharedService } from '@app/services/shared.service';
-import { LookupService } from '@app/services/lookup.service';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { FilterEventTypes } from '@app/types/types';
-import { AdminGenericComponent } from "@app/generics/admin-generic-component";
-import { CustomValidators } from '@app/validators/custom-validators';
-import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
-import { FormBuilder } from '@angular/forms';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
+import {Country} from '@app/models/country';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {LangService} from '@app/services/lang.service';
+import {CountryService} from '@app/services/country.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {ITableOptions} from '@app/interfaces/i-table-options';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {isEmptyObject} from '@app/helpers/utils';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {SharedService} from '@app/services/shared.service';
+import {LookupService} from '@app/services/lookup.service';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {FilterEventTypes} from '@app/types/types';
+import {AdminGenericComponent} from "@app/generics/admin-generic-component";
+import {CustomValidators} from '@app/validators/custom-validators';
+import {SearchColumnConfigMap} from '@app/interfaces/i-search-column-config';
+import {FormBuilder} from '@angular/forms';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'country',
@@ -77,7 +72,6 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
   }
   @Input() headerTitle: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   bulkActions: IGridAction[] = [];
-  commonStatus = CommonStatusEnum;
   view$: Subject<Country> = new Subject<Country>();
 
   @ViewChild('table') table!: TableComponent;
@@ -253,31 +247,34 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
       // edit
       {
         type: 'action',
-        icon: 'mdi-pen',
+        icon: ActionIconsEnum.EDIT,
         label: 'btn_edit',
         onClick: (item: Country) => this.editCountry(item),
-        show: () => {
-          return true;
-        }
-      },
-      // logs
-      {
-        type: 'action',
-        icon: ActionIconsEnum.HISTORY,
-        label: 'show_logs',
-        show: () => false,
-        onClick: (item: Country) => this.showAuditLogs(item)
       },
       // delete
       /*{
        type: 'action',
-       icon: 'mdi-close-box',
+       icon: ActionIconsEnum.DELETE,
        label: 'btn_delete',
        onClick: (item: Country) => this.deleteCountry(item),
        show: (item) => {
        return true
        }
        },*/
+      // view
+      {
+        type: 'action',
+        icon: ActionIconsEnum.VIEW,
+        label: 'view',
+        onClick: (item: Country) => this.view$.next(item),
+      },
+      // logs
+      {
+        type: 'action',
+        icon: ActionIconsEnum.HISTORY,
+        label: 'show_logs',
+        onClick: (item: Country) => this.showAuditLogs(item)
+      },
       // activate
       {
         type: 'action',
@@ -286,7 +283,8 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
         onClick: (item: Country) => this.activateCountry(item),
         show: (item) => {
           return item.status === CommonStatusEnum.DEACTIVATED;
-        }
+        },
+        displayInGrid: false
       },
       // deactivate
       {
@@ -296,7 +294,8 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
         onClick: (item: Country) => this.deactivateCountry(item),
         show: (item) => {
           return item.status === CommonStatusEnum.ACTIVATED;
-        }
+        },
+        displayInGrid: false
       }
     ];
   }

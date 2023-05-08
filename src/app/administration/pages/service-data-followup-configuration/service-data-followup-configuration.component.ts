@@ -72,6 +72,14 @@ export class ServiceDataFollowupConfigurationComponent extends AdminGenericCompo
       show: () => !this.readonly,
       onClick: (item: ServiceDataFollowupConfiguration) => this.edit$.next(item)
     },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      show: () => !this.readonly,
+      onClick: (item: ServiceDataFollowupConfiguration) => this.delete(item)
+    },
     // view
     {
       type: 'action',
@@ -87,14 +95,6 @@ export class ServiceDataFollowupConfigurationComponent extends AdminGenericCompo
       label: 'show_logs',
       show: () => false,
       onClick: (item: ServiceDataFollowupConfiguration) => this.showAuditLogs(item)
-    },
-    // delete
-    {
-      type: 'action',
-      label: 'btn_delete',
-      icon: ActionIconsEnum.DELETE,
-      show: () => !this.readonly,
-      onClick: (item: ServiceDataFollowupConfiguration) => this.delete(item)
     },
     // activate
     {

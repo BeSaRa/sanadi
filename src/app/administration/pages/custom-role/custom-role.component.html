@@ -64,19 +64,15 @@
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
-              <div class="d-flex flex-row">
-                <a href="#" (click)="delete(row , $event)" tooltip="{{langService.map.btn_delete}}" class="icon-btn">
-                  <i class="mdi mdi-close-box"></i></a>
-                <a href="#" (click)="edit(row , $event)" tooltip="{{langService.map.btn_edit}}" class="icon-btn">
-                  <i class="mdi mdi-pen"></i>
-                </a>
-                <span class="form-check form-switch switch-action" style="top: auto">
+            <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+              <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+                <span afterTemplate class="form-check form-switch switch-action"
+                      style="top:auto">
                 <input class="form-check-input" type="checkbox" [checked]="row.status"
                        tooltip="{{row.status ? langService.map.btn_deactivate : langService.map.btn_activate}}"
                        (change)="toggleStatus(row)">
               </span>
-              </div>
+              </grid-actions>
             </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>

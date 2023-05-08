@@ -14,7 +14,6 @@ import { SharedService } from '@app/services/shared.service';
 import { DeleteBulkResult } from '@app/types/types';
 import { ToastService } from '@app/services/toast.service';
 import { FormBuilder } from '@angular/forms';
-import { LookupService } from '@app/services/lookup.service';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';

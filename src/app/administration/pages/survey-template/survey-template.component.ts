@@ -14,6 +14,7 @@ import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { LookupService } from '@app/services/lookup.service';
 import { FormBuilder } from '@angular/forms';
+import {ActionIconsEnum} from "@enums/action-icons-enum";
 
 @Component({
   selector: 'survey-template',
@@ -24,12 +25,49 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
   usePagination = true
   useCompositeToLoad = false;
   actions: IMenuItem<SurveyTemplate>[] = [
+    // edit
     {
       type: 'action',
-      onClick: () => this.reload$.next(null),
-      icon: 'mdi mdi-reload',
-      label: 'btn_reload',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: SurveyTemplate) => this.edit$.next(item)
     },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      onClick: (item: SurveyTemplate) => this.deleteTemplate(item)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: (item: SurveyTemplate) => this.viewTemplate(item)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_activate',
+      onClick: (item: SurveyTemplate) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return !item.status;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_deactivate',
+      onClick: (item: SurveyTemplate) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status;
+      }
+    }
   ];
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
   searchColumns: string[] = ['search_arName', 'search_enName', 'search_status', 'search_actions'];
@@ -67,7 +105,6 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
       callback: () => this.deleteBulk(),
     },
   ];
-  commonStatusEnum = CommonStatusEnum;
 
   constructor(
     public service: SurveyTemplateService,

@@ -7,7 +7,6 @@ import { LangService } from '@app/services/lang.service';
 import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { ToastService } from '@app/services/toast.service';
 import { SortEvent } from '@app/interfaces/sort-event';
 import { CommonUtils } from '@app/helpers/common-utils';
@@ -32,9 +31,7 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
     super();
   }
   usePagination = true
-  searchText = '';
   view$: Subject<InternalDepartment> = new Subject<InternalDepartment>();
-  commonStatusEnum = CommonStatusEnum;
 
   actions: IMenuItem<InternalDepartment>[] = [
     // edit
@@ -115,9 +112,6 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       .subscribe(() => this.reload$.next(null))
   }
 
-  filterCallback = (record: any, searchText: string) => {
-    return record.search(searchText);
-  }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
       arName: [''], enName: [''], status: [null]

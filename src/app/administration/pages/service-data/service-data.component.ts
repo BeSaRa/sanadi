@@ -28,7 +28,6 @@ import { LookupService } from '@app/services/lookup.service';
   styleUrls: ['./service-data.component.scss']
 })
 export class ServiceDataComponent extends AdminGenericComponent<ServiceData, ServiceDataService> {
-  commonStatus = CommonStatusEnum;
   useCompositeToEdit = false;
   usePagination = true;
   constructor(public langService: LangService,

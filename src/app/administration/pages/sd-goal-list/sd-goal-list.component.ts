@@ -59,8 +59,6 @@ export class SdGoalListComponent extends AdminGenericComponent<SDGoal, SDGoalSer
       }
     }
   }
-
-  commonStatusEnum = CommonStatusEnum;
   view$: Subject<SDGoal> = new Subject<SDGoal>();
   actions: IMenuItem<SDGoal>[] = [
     // edit

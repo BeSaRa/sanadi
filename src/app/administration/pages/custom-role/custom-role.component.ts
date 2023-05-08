@@ -79,19 +79,20 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
       icon: ActionIconsEnum.EDIT,
       onClick: (item: CustomRole) => this.edit(item)
     },
-     // logs
-     {
-      type: 'action',
-      icon: ActionIconsEnum.HISTORY,
-      label: 'show_logs',
-      onClick: (item: CustomRole) => this.showAuditLogs(item)
-    },
     // delete
     {
       type: 'action',
-      label: 'view',
+      label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
       onClick: (item: CustomRole) => this.delete(item)
+    },
+    // logs
+    {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      show: ()=> false,
+      onClick: (item: CustomRole) => this.showAuditLogs(item)
     },
     // activate
     {
@@ -99,7 +100,8 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
       icon: 'mdi-list-status',
       label: 'btn_activate',
       onClick: (item: CustomRole) => this.toggleStatus(item),
-      show: (item) => !item.status
+      show: (item) => !item.status,
+      displayInGrid: false
     },
     // deactivate
     {
@@ -107,7 +109,8 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
       icon: 'mdi-list-status',
       label: 'btn_deactivate',
       onClick: (item: CustomRole) => this.toggleStatus(item),
-      show: (item) => item.status
+      show: (item) => item.status,
+      displayInGrid: false
     }
   ];
 

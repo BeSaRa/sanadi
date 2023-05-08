@@ -11,7 +11,6 @@ import { isValidValue } from '@app/helpers/utils';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { IGridAction } from '@app/interfaces/i-grid-action';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { ToastService } from '@app/services/toast.service';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
@@ -67,11 +66,8 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
   teams: Team[] = [];
   actions: IMenuItem<Team>[] = [];
   bulkActions: IGridAction[] = [];
-  commonStatus = CommonStatusEnum;
 
   @ViewChild('table') table!: TableComponent;
-
-  reload$ = new BehaviorSubject<any>(null);
 
   constructor(public langService: LangService,
               public service: TeamService,
@@ -131,13 +127,13 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
         onClick: (item: Team) => this.viewTeam(item),
         show: () => true
       },
-       // logs
-    {
-      type: 'action',
-      icon: ActionIconsEnum.HISTORY,
-      label: 'show_logs',
-      onClick: (item: Team) => this.showAuditLogs(item)
-    },
+      // logs
+      {
+        type: 'action',
+        icon: ActionIconsEnum.HISTORY,
+        label: 'show_logs',
+        onClick: (item: Team) => this.showAuditLogs(item)
+      },
     ];
   }
 

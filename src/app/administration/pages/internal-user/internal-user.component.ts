@@ -68,7 +68,6 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
       mask:CustomValidators.inputMaskPatterns.NUMBER_ONLY
     }
   }
-  commonStatusEnum = CommonStatusEnum;
   view$: Subject<InternalUser> = new Subject<InternalUser>();
   actions: IMenuItem<InternalUser>[] = [
     // edit

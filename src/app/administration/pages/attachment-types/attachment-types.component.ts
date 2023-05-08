@@ -1,11 +1,11 @@
 import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
-import {DialogRef} from './../../../shared/models/dialog-ref';
-import {of, Subject, Subscription} from 'rxjs';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {of, Subject} from 'rxjs';
 import {Component, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {AttachmentType} from '@app/models/attachment-type';
 import {AttachmentTypeService} from '@app/services/attachment-type.service';
-import {FormBuilder, UntypedFormControl} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogService} from '@app/services/dialog.service';
 import {SharedService} from '@app/services/shared.service';
@@ -28,7 +28,6 @@ import { LookupService } from '@app/services/lookup.service';
 })
 export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentType, AttachmentTypeService> {
   usePagination = true;
-  list: AttachmentType[] = [];
   displayedColumns = ['arName', 'enName', 'status', 'actions'];
   searchColumns: string[] = ['search_arName', 'search_enName', 'search_status', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
@@ -59,9 +58,6 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
     }
   }
 
-  reloadSubscription!: Subscription;
-  filterControl: UntypedFormControl = new UntypedFormControl('');
-  commonStatus = CommonStatusEnum;
   view$: Subject<AttachmentType> = new Subject<AttachmentType>();
 
   actions: IMenuItem<AttachmentType>[] = [
@@ -110,7 +106,6 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
       }
     }
   ];
-  commonStatusEnum = CommonStatusEnum;
 
   @ViewChild('table') table!: TableComponent;
 

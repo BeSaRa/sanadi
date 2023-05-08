@@ -65,7 +65,6 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
   @ViewChild('table') table!: TableComponent;
   view$: Subject<SubTeam> = new Subject<SubTeam>();
 
-  commonStatusEnum = CommonStatusEnum;
   actions: IMenuItem<SubTeam>[] = [
     // edit
     {

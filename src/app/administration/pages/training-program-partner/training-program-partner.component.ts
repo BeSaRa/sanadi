@@ -52,7 +52,6 @@ export class TrainingProgramPartnerComponent extends AdminGenericComponent<Train
   @ViewChild('table') table!: TableComponent;
   view$: Subject<TrainingProgramPartner> = new Subject<TrainingProgramPartner>();
 
-  commonStatusEnum = CommonStatusEnum;
   actions: IMenuItem<TrainingProgramPartner>[] = [
     // edit
     {

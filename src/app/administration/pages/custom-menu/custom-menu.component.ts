@@ -150,6 +150,14 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       onClick: (item: CustomMenu) => this.edit(item),
       show: (item: CustomMenu) => !this.readonly && !item.isDefaultItem()
     },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      onClick: (item) => this.delete(item),
+      show: (item: CustomMenu) => !this.readonly && !item.isDefaultItem()
+    },
     // view
     {
       type: 'action',
@@ -164,14 +172,6 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       label: 'show_logs',
       show:(item)=> !item.isDefaultItem(),
       onClick: (item: CustomMenu) => this.showAuditLogs(item)
-    },
-    // delete
-    {
-      type: 'action',
-      label: 'btn_delete',
-      icon: ActionIconsEnum.DELETE,
-      onClick: (item) => this.delete(item),
-      show: (item: CustomMenu) => !this.readonly && !item.isDefaultItem()
     },
     // children
     {
