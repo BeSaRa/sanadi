@@ -7,7 +7,7 @@
             aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content w800px" #dialogContent>
+<div class="dialog-content min-w800px" #dialogContent>
   <form novalidate autocomplete="off" [formGroup]="form">
     <tabs-list [tabByIndex$]="selectedTabIndex$" [hasForm]="true" (onTabChange)="setDialogButtonsVisibility($event)">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
@@ -20,8 +20,8 @@
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div class="row" *ngIf="isDefaultParent()">
-        <div class="col-sm-6 mb-4 ng-select-wrapper">
-          <label asteriskIfRequired="systemMenuKey" for="systemMenuKey" class="form-label">{{lang.map.menu_type}}</label>
+        <div class="col-sm-12 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="systemMenuKey" for="systemMenuKey" class="form-label">{{lang.map.parent}}</label>
           <ng-select validationClasses="systemMenuKey" labelForId="systemMenuKey" placeholder="{{lang.map.select}}"
                      [notFoundText]="lang.map.msg_not_found" formControlName="systemMenuKey" id="systemMenuKey" appendTo="body">
             <ng-option [value]="option.menuKey?? ''" *ngFor="let option of defaultParents">

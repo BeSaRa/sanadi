@@ -59,6 +59,12 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
     ...infoSearchFields(['menuTypeInfo', 'statusInfo']),
   };
 
+  searchFieldsSystem: ISearchFieldsMap<CustomMenu> = {
+    ...normalSearchFields(['arName', 'enName']),
+    ...infoSearchFields(['menuTypeInfo', 'statusInfo']),
+    systemParent: (text: string) => !this.getSystemParent() ? false : this.getSystemParent()!.getName().toLowerCase().indexOf(text) > -1
+  };
+
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');

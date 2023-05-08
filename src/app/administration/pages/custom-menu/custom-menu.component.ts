@@ -1,6 +1,6 @@
 import { MenuItemService } from '@app/services/menu-item.service';
-import { MenuItem } from '@app/models/menu-item';
-import { Component, EventEmitter, Input, Output, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import {MenuItem} from '@app/models/menu-item';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
@@ -21,13 +21,11 @@ import {Observable, of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {ICustomMenuSearchCriteria} from '@contracts/i-custom-menu-search-criteria';
 import {Pagination} from '@app/models/pagination';
-import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
-import { LookupService } from '@app/services/lookup.service';
-import { FormBuilder } from '@angular/forms';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { TabMap } from '@app/types/types';
-import { ITabData } from '@app/interfaces/i-tab-data';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
+import {SearchColumnConfigMap} from '@app/interfaces/i-search-column-config';
+import {LookupService} from '@app/services/lookup.service';
+import {FormBuilder} from '@angular/forms';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {IKeyValue} from "@contracts/i-key-value";
 
 @Component({
   selector: 'app-custom-menu',
@@ -35,7 +33,7 @@ import { TabComponent } from '@app/shared/components/tab/tab.component';
   styleUrls: ['./custom-menu.component.scss'],
 })
 export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, CustomMenuService>
-implements AfterViewInit {
+  implements AfterViewInit {
   usePagination = true;
   useCompositeToLoad = false;
 
@@ -44,20 +42,23 @@ implements AfterViewInit {
               private dialogService: DialogService,
               private sharedService: SharedService,
               public toast: ToastService,
-              private lookupService:LookupService,
-              private fb:FormBuilder,
-              private cd : ChangeDetectorRef) {
+              private lookupService: LookupService,
+              private menuItemService: MenuItemService,
+              private fb: FormBuilder,
+              private cd: ChangeDetectorRef) {
     super();
   }
 
   protected _init(): void {
     this.listenToView();
+    this._setSearchColumns();
     this.buildFilterForm();
   }
-  ngAfterViewInit(){
-    this.cd.detectChanges();
 
+  ngAfterViewInit() {
+    this.cd.detectChanges();
   }
+
   @Input() parent?: CustomMenu;
   @Input() readonly: boolean = false;
   @Output() listUpdated: EventEmitter<any> = new EventEmitter<any>();
@@ -66,16 +67,26 @@ implements AfterViewInit {
   selectedPopupTabName: string = 'basic';
   private _displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'menuType', 'status', 'actions'];
 
+  isParentDefaultItem(): boolean {
+    return !!this.parent && this.parent.isDefaultItem();
+  }
 
-  get displayedColumns() : string[] {
-    if(!!this.parent && this.parent.isDefaultItem()){
-      return  ['rowSelection', 'arName', 'enName', 'menuType', 'systemParent' ,'status', 'actions']
+  get displayedColumns(): string[] {
+    if (this.isParentDefaultItem()) {
+      return ['rowSelection', 'arName', 'enName', 'menuType', 'systemParent', 'status', 'actions']
     }
     return this._displayedColumns;
   }
 
-  defaultParentsColumns: string[] = [ 'arName', 'enName', 'actions'];
-  searchColumns: string[] = ['_', 'search_arName', 'search_enName','search_menuType', 'search_status', 'search_actions'];
+  private _setSearchColumns(): void {
+    if (this.isParentDefaultItem()) {
+      this.searchColumns = ['_', 'search_arName', 'search_enName', 'search_menuType', 'search_systemParent', 'search_status', 'search_actions'];
+      return;
+    }
+    this.searchColumns = ['_', 'search_arName', 'search_enName', 'search_menuType', 'search_status', 'search_actions'];
+  }
+
+  defaultParentsColumns: string[] = ['arName', 'enName', 'actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {
       key: 'arName',
@@ -91,15 +102,15 @@ implements AfterViewInit {
       label: 'english_name',
       maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
     },
-    search_menuType:{
+    search_menuType: {
       key: 'menuType',
-      controlType:'select',
-      property:'menuType',
-      label:'menu_type',
-      selectOptions:{
-        options:this.lookupService.listByCategory.MenuType,
-        labelProperty:'getName',
-        optionValueKey:'lookupKey'
+      controlType: 'select',
+      property: 'menuType',
+      label: 'menu_type',
+      selectOptions: {
+        options: this.lookupService.listByCategory.MenuType,
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
       }
     },
     search_status: {
@@ -111,6 +122,19 @@ implements AfterViewInit {
         options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
         labelProperty: 'getName',
         optionValueKey: 'lookupKey'
+      }
+    },
+    search_systemParent: {
+      key: 'systemMenuKey',
+      controlType: 'select',
+      property: 'systemMenuKey',
+      label: 'parent',
+      selectOptions: {
+        options: this.menuItemService.parents
+          .filter((x) => !x.customMenu && !x.excludeFromDefaultParents)
+          .sort((a, b) => a.defaultId! - b.defaultId!),
+        labelProperty: 'getName',
+        optionValueKey: 'menuKey'
       }
     }
   }
@@ -124,7 +148,7 @@ implements AfterViewInit {
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
       onClick: (item: CustomMenu) => this.edit(item),
-      show: (item:CustomMenu) => !this.readonly && ! item.isDefaultItem()
+      show: (item: CustomMenu) => !this.readonly && !item.isDefaultItem()
     },
     // view
     {
@@ -133,11 +157,12 @@ implements AfterViewInit {
       icon: ActionIconsEnum.VIEW,
       onClick: (item: CustomMenu) => this.view(item),
     },
-     // logs
-     {
+    // logs
+    {
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
+      show:(item)=> !item.isDefaultItem(),
       onClick: (item: CustomMenu) => this.showAuditLogs(item)
     },
     // delete
@@ -146,7 +171,7 @@ implements AfterViewInit {
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
       onClick: (item) => this.delete(item),
-      show: (item:CustomMenu) => !this.readonly && ! item.isDefaultItem()
+      show: (item: CustomMenu) => !this.readonly && !item.isDefaultItem()
     },
     // children
     {
@@ -164,7 +189,7 @@ implements AfterViewInit {
       onClick: (item: CustomMenu) => this.toggleStatus(item),
       displayInGrid: false,
       show: (item: CustomMenu) => {
-        if( item.isDefaultItem()){
+        if (item.isDefaultItem()) {
           return false;
         }
         if (this.parent && !this.parent.isActive()) {
@@ -183,8 +208,8 @@ implements AfterViewInit {
       label: 'btn_deactivate',
       onClick: (item: CustomMenu) => this.toggleStatus(item),
       displayInGrid: false,
-      show: (item : CustomMenu) => {
-        if( item.isDefaultItem()){
+      show: (item: CustomMenu) => {
+        if (item.isDefaultItem()) {
           return false;
         }
         if (this.parent && !this.parent.isActive()) {
@@ -255,6 +280,15 @@ implements AfterViewInit {
   listenToReload(): void {
     this.reload$
       .pipe(takeUntil((this.destroy$)))
+      .pipe(
+        filter(() => {
+          if (this.columnFilterFormHasValue()) {
+            this.columnFilter$.next('filter');
+            return false;
+          }
+          return true;
+        })
+      )
       .pipe(switchMap(() => {
         let load: Observable<Pagination<CustomMenu[]>>;
         const paginationOptions = {
@@ -336,7 +370,8 @@ implements AfterViewInit {
       this.edit$.next(item);
     }
   }
-  showDefaultsChildren(item:MenuItem){
+
+  showDefaultsChildren(item: MenuItem) {
     return this.service.openDefaultChildrenViewDialog(item)
       .pipe(catchError(_ => of(null)))
 
@@ -411,12 +446,34 @@ implements AfterViewInit {
   }
 
   buildFilterForm() {
-    this.columnFilterForm = this.fb.group({
-      arName: [''], enName: [''], menuType:[null], status: [null]
-    })
+    const controls: IKeyValue = {
+      arName: [''], enName: [''], menuType: [null], status: [null]
+    };
+    if (this.isParentDefaultItem()) {
+      controls.systemMenuKey = [null];
+    }
+    this.columnFilterForm = this.fb.group(controls);
   }
 
-  isDefaultItem(item: CustomMenu){
-    return item.isDefaultItem()
+  getColumnFilterValue(): Partial<CustomMenu> {
+    const value: Partial<CustomMenu> = this.columnFilterForm.value;
+    if (this.columnFilterFormHasValue(value)) {
+      value.parentMenuItemId = !!this.parent ? this.parent.id : undefined;
+      return value;
+    }
+    return {};
+  }
+
+  allSelected() {
+    return this.table.selection.selected.length === this.table.dataSource.data.filter(d => !d.isDefaultItem()).length;
+  }
+
+  toggleAllExceptSystem(): void {
+    const allSelected = this.allSelected();
+    if (allSelected) {
+      this.table.clearSelection();
+    } else {
+      this.table.dataSource.data.forEach((item: CustomMenu) => !item.isDefaultItem() && this.table.selection.select(item));
+    }
   }
 }
