@@ -31,7 +31,8 @@
           <hr class="mt-0">
           <div *ngFor="let row of checkBoxGroup.rows" class="row mx-2" [ngClass]="{'mx-4': !isParentRow(row)}">
             <ng-container *ngFor="let permission of row">
-              <div *ngIf="!!permission && !!permission.id" class="col-sm-12 col-md-4">
+              <div *ngIf="!!permission && !!permission.id" class="col-sm-12"
+              [ngClass]="isParentRow(row) ? '' : 'col-md-4'">
                 <div class="form-check">
                   <input type="checkbox" [disabled]="readonly" [checked]="checkBoxGroup.isSelected(permission.id)"
                     [value]="permission.id" id="menu-permission-id-{{permission.id}}"
@@ -63,7 +64,8 @@
           <hr class="mt-0">
           <div *ngFor="let row of defaultCheckBoxGroup.rows;let i=index" class="row mx-2" [ngClass]="{'mx-4': !isDefaultParentRow(row)}">
             <ng-container *ngFor="let permission of row">
-              <div *ngIf="!!permission && !!permission.systemMenuKey" class="col-sm-12 col-md-4">
+              <div *ngIf="!!permission && !!permission.systemMenuKey" class="col-sm-12 "
+              [ngClass]="permission.isSystemParentItem() ? '' : 'col-md-4'">
                 <div class="form-check">
                   <input type="checkbox" [disabled]="readonly"
                    [checked]="permission.isSystemParent? defaultCheckBoxGroup.isChildrenSelected(permission.getChildrenIds()) : defaultCheckBoxGroup.isSelected(permission.id)"
@@ -75,8 +77,8 @@
                     class="cursor-pointer">{{permission.getNameWithSystemParent()}}</label>
                 </div>
               </div>
+              <hr class="mt-0 mb-2 mx-2" *ngIf="permission.isSystemParentItem()">
             </ng-container>
-            <hr class="mt-0 mb-2 mx-2" *ngIf="isParentRow(row)">
           </div>
         </div>
       </div>

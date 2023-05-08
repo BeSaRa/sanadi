@@ -1,19 +1,19 @@
 import { LangService } from '@services/lang.service';
-import {Component, Input, OnInit} from '@angular/core';
-import {CustomMenuService} from '@services/custom-menu.service';
-import {CustomMenu} from '@app/models/custom-menu';
-import {map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {InternalUser} from '@app/models/internal-user';
-import {LookupService} from '@services/lookup.service';
-import {CheckGroupHandler} from '@app/models/check-group-handler';
-import {Lookup} from '@app/models/lookup';
-import {CheckGroup} from '@app/models/check-group';
-import {UserCustomMenuService} from '@services/user-custom-menu.service';
-import {UserCustomMenu} from '@app/models/user-custom-menu';
-import {SharedService} from '@services/shared.service';
-import {ExternalUser} from '@app/models/external-user';
-import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
+import { Component, Input, OnInit } from '@angular/core';
+import { CustomMenuService } from '@services/custom-menu.service';
+import { CustomMenu } from '@app/models/custom-menu';
+import { map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { InternalUser } from '@app/models/internal-user';
+import { LookupService } from '@services/lookup.service';
+import { CheckGroupHandler } from '@app/models/check-group-handler';
+import { Lookup } from '@app/models/lookup';
+import { CheckGroup } from '@app/models/check-group';
+import { UserCustomMenuService } from '@services/user-custom-menu.service';
+import { UserCustomMenu } from '@app/models/user-custom-menu';
+import { SharedService } from '@services/shared.service';
+import { ExternalUser } from '@app/models/external-user';
+import { ExternalUserUpdateRequest } from '@app/models/external-user-update-request';
 import { TabMap } from '@app/types/types';
 import { DateUtils } from '@app/helpers/date-utils';
 
@@ -33,11 +33,11 @@ export class CustomMenuPermissionComponent implements OnInit {
   @Input() userUpdateRequest?: ExternalUserUpdateRequest;
 
   constructor(public lang: LangService,
-              private lookupService: LookupService,
-              private customMenuService: CustomMenuService,
-              private userCustomMenuService: UserCustomMenuService,
-              private sharedService: SharedService,
-              public langService:LangService) {
+    private lookupService: LookupService,
+    private customMenuService: CustomMenuService,
+    private userCustomMenuService: UserCustomMenuService,
+    private sharedService: SharedService,
+    public langService: LangService) {
   }
 
   allCustomMenusList: CustomMenu[] = [];
@@ -78,8 +78,8 @@ export class CustomMenuPermissionComponent implements OnInit {
     return this.customMenuService.loadPrivateMenusByUserType(this.user.userType)
       .pipe(tap((result) => {
         this.allCustomMenusList = result
-        const systemCustomMenu = result.find(x=>x.isDefaultItem());
-        if(systemCustomMenu){
+        const systemCustomMenu = result.find(x => x.isDefaultItem());
+        if (systemCustomMenu) {
           this.allDefaultCustomMenusList = systemCustomMenu.subMenuItems
         }
       }));
@@ -111,14 +111,14 @@ export class CustomMenuPermissionComponent implements OnInit {
           this.oldSelection$.next([]);
           return of([]);
         }
-        return this.userCustomMenuService.loadByCriteria({generalUserId: this.user.generalUserId})
+        return this.userCustomMenuService.loadByCriteria({ generalUserId: this.user.generalUserId })
           .pipe(
             map((userCustomMenus: UserCustomMenu[]) => userCustomMenus.map(p => p.menuItemId)),
             tap((selectedMenus: number[]) => this.oldSelection$.next([...selectedMenus]))
           );
       }))
       .subscribe((selectedMenus: number[]) => {
-        const menus =[...new Set(selectedMenus)];
+        const menus = [...new Set(selectedMenus)];
         this.groupHandler.setSelection(menus);
         this.defaultGroupHandler.setSelection(menus);
 
@@ -129,7 +129,7 @@ export class CustomMenuPermissionComponent implements OnInit {
 
   private _fillParentChunkSpace(menus: CustomMenu[], parent: CustomMenu): CustomMenu[] {
     for (let i = 0; i < (this.chunkSize - 1); i++) {
-      menus = menus.concat(new CustomMenu().clone({menuType: parent.menuType, parentMenuItemId: undefined}));
+      menus = menus.concat(new CustomMenu().clone({ menuType: parent.menuType, parentMenuItemId: undefined }));
     }
     return menus;
   }
@@ -142,37 +142,37 @@ export class CustomMenuPermissionComponent implements OnInit {
     for (let i = 0; i < missingChildrenCount; i++) {
       childMenus = childMenus.concat(new CustomMenu().clone({
         menuType: lastChild.menuType,
-         parentMenuItemId: lastChild.parentMenuItemId,
-         hasSystemParent : hasSystemParent
-        }));
+        parentMenuItemId: lastChild.parentMenuItemId,
+        hasSystemParent: hasSystemParent
+      }));
     }
     return childMenus;
   }
 
-  private _sortMenusSetParentAsFirst(menus: CustomMenu[]):{result:CustomMenu[],defaultResult:CustomMenu[]} {
+  private _sortMenusSetParentAsFirst(menus: CustomMenu[]): { result: CustomMenu[], defaultResult: CustomMenu[] } {
     let result: CustomMenu[] = [];
-    let defaultResult:CustomMenu[] = [];
+    let defaultResult: CustomMenu[] = [];
     let parents: CustomMenu[] = [], parentChildrenMap = new Map<number, CustomMenu[]>;
-    let defaultParents: CustomMenu[] = [] ;
+    let defaultParents: CustomMenu[] = [];
     let defaultChildrenMap = new Map<string, CustomMenu[]>;
-    const systemMenu = menus.find(x=>x.isSystem)!;
+    const systemMenu = menus.find(x => x.isSystem)!;
     menus.map((menu) => {
       if (!menu.parentMenuItemId && !menu.isDefaultItem()) {
         parents.push(menu);
       }
-      if(menu.parentMenuItemId && !menu.hasDefaultParent(systemMenu)) {
+      if (menu.parentMenuItemId && !menu.hasDefaultParent(systemMenu)) {
         parentChildrenMap.set(menu.parentMenuItemId, (parentChildrenMap.get(menu.parentMenuItemId) ?? []).concat(menu));
       }
-      if(menu.systemMenuKey && menu.hasDefaultParent(systemMenu)){
-        if(!defaultParents.find(m => m.systemMenuKey === menu.systemMenuKey && m.menuType === menu.menuType)){
+      if (menu.systemMenuKey && menu.hasDefaultParent(systemMenu)) {
+        if (!defaultParents.find(m => m.systemMenuKey === menu.systemMenuKey && m.menuType === menu.menuType)) {
           defaultParents.push(new CustomMenu().clone({
-            menuType : menu.menuType,
+            menuType: menu.menuType,
             systemMenuKey: menu.systemMenuKey,
-            isSystemParent:true,
-            parentMenuItemId : menu.parentMenuItemId
+            isSystemParent: true,
+            parentMenuItemId: menu.parentMenuItemId
           }))
         }
-        defaultChildrenMap.set(menu.systemMenuKey+'-'+menu.menuType, (defaultChildrenMap.get(menu.systemMenuKey+'-'+menu.menuType) ?? []).concat(menu));
+        defaultChildrenMap.set(menu.systemMenuKey + '-' + menu.menuType, (defaultChildrenMap.get(menu.systemMenuKey + '-' + menu.menuType) ?? []).concat(menu));
 
       }
     });
@@ -190,13 +190,13 @@ export class CustomMenuPermissionComponent implements OnInit {
       defaultResult.push(parent);
       // add empty custom menu to complete the chunk length of parents
       // defaultResult = this._fillParentChunkSpace(defaultResult, parent);
-      let children = defaultChildrenMap.get(parent.systemMenuKey!+'-'+ parent.menuType) ?? [];
+      let children = defaultChildrenMap.get(parent.systemMenuKey! + '-' + parent.menuType) ?? [];
       parent.subMenuItems = children;
       defaultResult = defaultResult.concat(children);
     });
 
     return {
-      result:result,
+      result: result,
       defaultResult: defaultResult
     };
   }
@@ -223,16 +223,16 @@ export class CustomMenuPermissionComponent implements OnInit {
     }, {} as any);
 
     groups.forEach(group => {
-      let items:CustomMenu[] =[];
+      let items: CustomMenu[] = [];
       let itemsInGroup = permissionsByGroup.get(group.lookupKey) || [];
 
-      itemsInGroup.forEach(item=>{
-        if(item.isSystemParent){
+      itemsInGroup.forEach(item => {
+        if (item.isSystemParent) {
           items.push(item);
-          items = this._fillParentChunkSpace(items,item);
-          let children = itemsInGroup.filter(x => x.systemMenuKey === item.systemMenuKey && !x.isSystemParent && x.menuType === item.menuType) ;
+          items = this._fillParentChunkSpace(items, item);
+          let children = itemsInGroup.filter(x => x.systemMenuKey === item.systemMenuKey && !x.isSystemParent && x.menuType === item.menuType);
           if (children.length > 0) {
-            children = this._fillChildrenChunkSpace(children, children[0],true);
+            children = this._fillChildrenChunkSpace(children, children[0], true);
           }
           items = items.concat(children);
         }
@@ -282,7 +282,7 @@ export class CustomMenuPermissionComponent implements OnInit {
     if (item.isSystemParentItem()) {
       // if parent is toggled, toggle all children items accordingly
       let children = this.allDefaultCustomMenusList
-          .filter((menu) => menu.systemMenuKey === item.systemMenuKey && menu.menuType === item.menuType && !menu.isSystemParent);
+        .filter((menu) => menu.systemMenuKey === item.systemMenuKey && menu.menuType === item.menuType && !menu.isSystemParent);
 
       children.forEach((childMenu) => {
         if (isChecked) {
@@ -306,7 +306,7 @@ export class CustomMenuPermissionComponent implements OnInit {
   }
   isDefaultParentRow(row: CustomMenu[]): boolean {
     return (!!row[0].systemMenuKey && row[0].isSystemParent)
-        ;
+      ;
   }
 
   getOldUserMenuPermissions(): number[] {
@@ -314,7 +314,7 @@ export class CustomMenuPermissionComponent implements OnInit {
   }
 
   getFinalUserMenuPermissions(): number[] {
-    let selection:number[] = [];
+    let selection: number[] = [];
     selection = selection.concat(this.groupHandler.getSelection().filter((item, index, list) => list.indexOf(item) === index));
     selection = selection.concat(this.defaultGroupHandler.getSelection().filter((item, index, list) => list.indexOf(item) === index));
     return selection;
@@ -332,25 +332,40 @@ export class CustomMenuPermissionComponent implements OnInit {
         this.sharedService.downloadFileToSystem(data, 'UserCustomMenuPermission_' + this.user.getName());
       });
   }
-  isMainMenu(menu:CustomMenu){
+  isMainMenu(menu: CustomMenu) {
     return menu.id === 1;
   }
-  getRandomValue(index:number){
+  getRandomValue(index: number) {
     return new Date(index).getMilliseconds();
   }
-  onDefaultPermissionClicked(item: CustomMenu, { target }: Event, group: CheckGroup<CustomMenu> ,groupHandler: CheckGroupHandler<CustomMenu>): void {
+  onDefaultPermissionClicked(item: CustomMenu, { target }: Event, group: CheckGroup<CustomMenu>, groupHandler: CheckGroupHandler<CustomMenu>): void {
     let check = CheckGroupHandler.getCheckState(target);
     if (item.isSystemParentItem()) {
       if (check) {
-        groupHandler.checkAllChildren(item, group);
+        this.checkAllChildren(item, group, groupHandler);
         return;
       }
-      groupHandler.unCheckAllChildren(item, group);
+      this.unCheckAllChildren(item, group, groupHandler);
       return;
     }
     check ? groupHandler.addToSelection(item, group) : groupHandler.removeFromSelection(item, group);
     return;
   }
 
+  unCheckAllChildren(menu: CustomMenu, group: CheckGroup<CustomMenu>, groupHandler: CheckGroupHandler<CustomMenu>) {
+    menu.getChildrenIds().forEach(id => {
+      if (!groupHandler.selection.includes(id)) return;
+      const child = { id: id } as CustomMenu;
+      groupHandler.removeFromSelection(child, group);
+    });
+  }
 
+  checkAllChildren(menu: CustomMenu, group: CheckGroup<CustomMenu>, groupHandler: CheckGroupHandler<CustomMenu>) {
+    menu.getChildrenIds().forEach(id => {
+      if (groupHandler.selection.includes(id))
+        return;
+      const child = { id: id } as CustomMenu;
+      groupHandler.addToSelection(child, group);
+    });
+  }
 }
