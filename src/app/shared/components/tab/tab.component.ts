@@ -27,6 +27,7 @@ export class TabComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() disabled: boolean = false;
   @Input() tabWidth?: string;
   @Input() hideIcon?: boolean = false;
+  @Input() tabAccordionButtonClasses: string = '';
 
   private destroy$: Subject<any> = new Subject<any>();
 
@@ -40,6 +41,7 @@ export class TabComponent implements OnInit, AfterViewInit, OnDestroy {
   accordionCollapsable: boolean = false;
   accordionIdRef: string = '';
   isReady: boolean = false;
+  tabListAccordionButtonClass: string = '';
 
   @ViewChild('accordionButton') accordionButtonRef!: ElementRef;
 

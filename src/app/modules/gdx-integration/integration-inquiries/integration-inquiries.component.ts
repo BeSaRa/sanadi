@@ -22,10 +22,10 @@ import {
 } from '@app/modules/gdx-integration/related-data/garsia-pension-list/garsia-pension-list.component';
 import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
 import {GdxMojResponse} from '@app/models/gdx-moj-response';
-import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
-import { MoeStudentInfoComponent } from '../related-data/moe-student-info/moe-student-info.component';
-import { MoeInstallmentsComponent } from '../related-data/moe-installments/moe-installments.component';
-import { MoePendingPaymentComponent } from '../related-data/moe-pending-payment/moe-pending-payment.component';
+import {GdxMoeResponse} from '@app/models/gdx-moe-pending-installments';
+import {MoeStudentInfoComponent} from '../related-data/moe-student-info/moe-student-info.component';
+import {MoeInstallmentsComponent} from '../related-data/moe-installments/moe-installments.component';
+import {MoePendingPaymentComponent} from '../related-data/moe-pending-payment/moe-pending-payment.component';
 
 @Component({
   selector: 'integration-inquiries',
@@ -88,9 +88,56 @@ export class IntegrationInquiriesComponent {
       serviceId: GdxServicesEnum.MOCI,
       isLoaded: false
     },
+    izzab: {
+      name: 'izzab',
+      index: 2,
+      langKey: 'integration_izzab',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.IZZAB,
+      isLoaded: false
+    },
+    mol: {
+      name: 'mol',
+      index: 3,
+      langKey: 'integration_mol',
+      show: () => false,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.MOL,
+      isLoaded: false
+    },
+    sjc: {
+      name: 'sjc',
+      index: 4,
+      langKey: 'integration_sjc',
+      show: () => false,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.SJC,
+      isLoaded: false
+    },
+    moe: {
+      name: 'moe',
+      index: 5,
+      langKey: 'integration_moe',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.MOE,
+      isLoaded: false
+    },
+    mme: {
+      name: 'mme',
+      index: 6,
+      langKey: 'integration_mme',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.MME,
+      isLoaded: false
+    },
     mawared: {
       name: 'mawared',
-      index: 2,
+      index: 7,
       langKey: 'integration_mawared',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
@@ -99,67 +146,22 @@ export class IntegrationInquiriesComponent {
     },
     garsia: {
       name: 'garsia',
-      index: 3,
+      index: 8,
       langKey: 'integration_garsia',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       serviceId: GdxServicesEnum.GARSIA,
       isLoaded: false
     },
-    izzab: {
-      name: 'izzab',
-      index: 4,
-      langKey: 'integration_izzab',
-      validStatus: () => true,
-      isTouchedOrDirty: () => true,
-      serviceId: GdxServicesEnum.IZZAB,
-      isLoaded: false
-    },
     kahramaa: {
       name: 'kahramaa',
-      index: 5,
+      index: 9,
       langKey: 'integration_kahramaa',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       serviceId: GdxServicesEnum.KAHRAMAA,
       isLoaded: false
     },
-    mol: {
-      name: 'mol',
-      index: 6,
-      langKey: 'integration_mol',
-      validStatus: () => true,
-      isTouchedOrDirty: () => true,
-      serviceId: GdxServicesEnum.MOL,
-      isLoaded: false
-    },
-    sjc: {
-      name: 'sjc',
-      index: 7,
-      langKey: 'integration_sjc',
-      validStatus: () => true,
-      isTouchedOrDirty: () => true,
-      serviceId: GdxServicesEnum.SJC,
-      isLoaded: false
-    },
-    moe: {
-      name:'moe',
-      index:8,
-      langKey:'integration_moe',
-      validStatus: () => true,
-      isTouchedOrDirty: () => true,
-      serviceId: GdxServicesEnum.MOE,
-      isLoaded: false
-    },
-    mme:{
-      name:'mme',
-      index:9,
-      langKey:'integration_mme',
-      validStatus: () => true,
-      isTouchedOrDirty: () => true,
-      serviceId: GdxServicesEnum.MME,
-      isLoaded: false
-    }
   };
   charityTabsData: TabMap = {
     qatarZakatFund: {
@@ -260,7 +262,7 @@ export class IntegrationInquiriesComponent {
   }
 
   onGovTabChange($event: TabComponent) {
-    const selectedTab = this._findTab(this.govTabsData,'tabName', $event.name);
+    const selectedTab = this._findTab(this.govTabsData, 'tabName', $event.name);
     if (!selectedTab || selectedTab.isLoaded) {
       return;
     }

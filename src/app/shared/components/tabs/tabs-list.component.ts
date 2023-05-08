@@ -31,6 +31,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit, A
   @Input() activeTabIndex: number = 0;
   @Input() tabByIndex$!: Subject<number>;
   @Input() accordionView: boolean = false;
+  @Input() accordionButtonClass: string = '';
   @Input() hasForm: boolean = false;
   @Input() scrollToViewPort: boolean = true;
   @Input() scrollOnInit: boolean = false;
@@ -98,7 +99,10 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit, A
       .pipe(takeUntil(this.destroy$))
       .pipe(delay(200))
       .subscribe((tabs) => {
-        tabs.forEach((tab) => tab.isReady = true);
+        tabs.forEach((tab) => {
+          tab.isReady = true;
+          this.accordionView && (tab.tabListAccordionButtonClass = this.accordionButtonClass);
+        });
       });
   }
 

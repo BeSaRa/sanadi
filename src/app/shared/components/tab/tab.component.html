@@ -3,8 +3,9 @@
 </div>
 <div *ngIf="accordionView" class="accordion-item mb-3">
   <h2 class="accordion-header" id="title-{{tabId}}">
-    <button #accordionButton (click)="!disabled && toggleAccordion($event)" class="accordion-button" type="button"
-            [ngClass]="{'collapsed': expansionState === 'close'}"
+    <button #accordionButton (click)="!disabled && toggleAccordion($event)"
+            class="accordion-button {{tabAccordionButtonClasses ? tabAccordionButtonClasses : tabListAccordionButtonClass}}"
+            type="button" [ngClass]="{'collapsed': expansionState === 'close'}"
             [attr.data-bs-target]="tabIdRef" [attr.data-bs-toggle]="disabled ? '' : 'collapse'"
             [attr.aria-expanded]="expansionState === 'open'" [attr.aria-controls]="('title'+tabId)">
       <div class="d-flex">
@@ -17,7 +18,8 @@
     </button>
   </h2>
   <div [id]="tabId" class="accordion-collapse collapse" [attr.aria-labelledby]="('title'+tabId)"
-       [attr.data-bs-parent]="accordionCollapsable ? accordionIdRef : null" [ngClass]="{'show': expansionState === 'open'}">
+       [attr.data-bs-parent]="accordionCollapsable ? accordionIdRef : null"
+       [ngClass]="{'show': expansionState === 'open'}">
     <div class="accordion-body">
       <ng-container *ngIf="!disabled" [ngTemplateOutlet]="content"></ng-container>
     </div>
