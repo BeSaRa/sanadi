@@ -6,12 +6,12 @@ import {LookupService} from "@services/lookup.service";
 import {CheckGroup} from "@models/check-group";
 import {CheckGroupHandler} from "@models/check-group-handler";
 import {Permission} from "@models/permission";
-import {CommonUtils} from "@helpers/common-utils";
 import {UserPermissionService} from "@services/user-permission.service";
 import {delay, map, switchMap, takeUntil, withLatestFrom} from "rxjs/operators";
 import {PermissionService} from "@services/permission.service";
 import {Lookup} from "@models/lookup";
 import {CustomRole} from "@models/custom-role";
+import {OperationTypes} from "@enums/operation-types.enum";
 
 @Component({
   selector: 'user-permission-internal',
@@ -30,6 +30,7 @@ export class UserPermissionInternalComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
 
   @Input() user!: InternalUser;
+  @Input() operation!: OperationTypes;
   @Input() readonly: boolean = false;
   @Input() customRolesList: CustomRole[] = [];
   @Input() customRoleId?: number;
@@ -41,6 +42,7 @@ export class UserPermissionInternalComponent implements OnInit, OnDestroy {
   @Output() onPermissionChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   chunkSize: number = 3;
+  containerInlineStyle: string = 'grid-template-columns: repeat(' + this.chunkSize + ', 1fr);';
   permissionGroups: CheckGroup<Permission>[] = [];
   groupHandler!: CheckGroupHandler<Permission>;
 
@@ -63,7 +65,6 @@ export class UserPermissionInternalComponent implements OnInit, OnDestroy {
     let selectedRole = this.customRolesList.find(role => role.id === this.customRoleId);
     this.groupHandler.setSelection(selectedRole ? selectedRole.permissionSet.map(p => p.permissionId) : []);
     this._emitPermissionChange();
-
   }
 
   private _loadPermissions(): void {
@@ -109,20 +110,12 @@ export class UserPermissionInternalComponent implements OnInit, OnDestroy {
   }
 
   saveUserPermissions(): Observable<any> {
-    const selection: number[] = this._getFinalPermissions();
-    return this.userPermissionService.saveUserPermissions(this.user.id, selection);
-  }
-
-  printPermissions($event: MouseEvent): void {
-    $event?.preventDefault();
-    this.userPermissionService.loadPermissionsAsBlob(this.user.id)
-      .subscribe((data) => {
-        CommonUtils.printBlobData(data, 'InternalUserPermission_' + this.user.getName());
-      });
+    return this.userPermissionService.saveUserPermissions(this.user.id, this._getFinalPermissions());
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.destroy$.subscribe();
   }
 }

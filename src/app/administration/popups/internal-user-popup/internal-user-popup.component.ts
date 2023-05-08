@@ -10,13 +10,9 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of, Subject} from 'rxjs';
 import {InternalDepartmentService} from '@app/services/internal-department.service';
 import {InternalDepartment} from '@app/models/internal-department';
-import {catchError, filter, map, switchMap, takeUntil, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
-import {CheckGroup} from '@app/models/check-group';
-import {Permission} from '@app/models/permission';
-import {PermissionService} from '@app/services/permission.service';
-import {CheckGroupHandler} from '@app/models/check-group-handler';
 import {CustomRole} from '@app/models/custom-role';
 import {ExternalUserCustomRoleService} from '@services/external-user-custom-role.service';
 import {UserPermissionService} from '@app/services/user-permission.service';
@@ -41,6 +37,9 @@ import {AuthService} from '@services/auth.service';
 import {
   UserFollowupPermissionNewComponent
 } from '@app/administration/shared/user-followup-permission-new/user-followup-permission-new.component';
+import {
+  UserPermissionInternalComponent
+} from "@app/administration/shared/user-permission-internal/user-permission-internal.component";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -54,8 +53,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   form!: UntypedFormGroup;
   departments: InternalDepartment[] = [];
   statusList: Lookup[] = [];
-  permissionGroups: CheckGroup<Permission>[] = [];
-  groupHandler!: CheckGroupHandler<Permission>;
   customRoles: CustomRole[] = [];
   @ViewChild(UserTeamComponent) userTeamComponent!: UserTeamComponent;
   @ViewChild('customMenuPermissionComponent') customMenuPermissionComponentRef!: CustomMenuPermissionComponent;
@@ -139,6 +136,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     },
   };
   @ViewChild('dialogContent') dialogContent!: ElementRef;
+  @ViewChild(UserPermissionInternalComponent) userPermissionInternalComponentRef!: UserPermissionInternalComponent;
   @ViewChild('userFollowupPermissionComponent') userFollowupPermissionComponentRef!: UserFollowupPermissionNewComponent;
 
   constructor(public dialogRef: DialogRef,
@@ -153,7 +151,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
               private customRoleService: ExternalUserCustomRoleService,
               private userPermissionService: UserPermissionService,
               private internalUserDepartmentService: InternalUserDepartmentService,
-              private permissionService: PermissionService,
               private toast: ToastService,
               private internalUserService: InternalUserService,
               @Inject(DIALOG_DATA_TOKEN) public data: IDialogData<InternalUser>) {
@@ -165,7 +162,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
 
   initPopup(): void {
     this.loadDepartments();
-    this.loadPermissions();
     this.loadCustomRoles();
     if (this.operation === OperationTypes.UPDATE) {
       this.loadUserDepartments();
@@ -240,42 +236,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     return this.permissionsFormTab?.get('permissions');
   }
 
-  private onPermissionChanged(): void {
-    this.groupHandler.getSelection().length ? this.updateUserPermissions(true) : this.updateUserPermissions(false);
-  }
-
-  private loadPermissions() {
-    this.permissionService
-      .loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .pipe(withLatestFrom(of(this.lookupService.listByCategory.ExternalUserPermissionGroup)))
-      .pipe(switchMap(([permissions, groups]) => {
-        this.buildPermissionGroups(groups, permissions);
-        this.groupHandler = new CheckGroupHandler<Permission>(
-          this.permissionGroups,
-          () => this.onPermissionChanged(),
-          () => this.onPermissionChanged()
-        );
-        return of(true);
-      }))
-      .pipe(switchMap(_ => this.model.id ? this.userPermissionService.loadUserPermissions(this.model.id) : of([])))
-      .subscribe((userPermissions) => {
-        this.groupHandler.setSelection(userPermissions.map(p => p.permissionId));
-        this.onPermissionChanged();
-      });
-
-  }
-
-  private buildPermissionGroups(groups: Lookup[], permissions: Permission[]): void {
-    permissions = permissions.filter((permission) => !permission.isExternalPermissionCategory());
-    const permissionsByGroup = new Map<number, Permission[]>();
-    this.permissionGroups = [];
-    permissions.reduce((record, permission) => {
-      return permissionsByGroup.set(permission.groupId, (permissionsByGroup.get(permission.groupId) || []).concat(permission));
-    }, {} as any);
-    groups.forEach(group => this.permissionGroups.push(new CheckGroup<Permission>(group, permissionsByGroup.get(group.lookupKey) || [], [])));
-  }
-
   private loadCustomRoles() {
     this.customRoleService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
@@ -342,7 +302,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     }
 
     signSub.subscribe(() => {
-      this.userPermissionService.saveUserPermissions(model.id, this.groupHandler.getSelection())
+      this.userPermissionInternalComponentRef.saveUserPermissions()
         .pipe(
           catchError(() => of(null)),
           filter((response) => response !== null)
@@ -393,10 +353,11 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   onCustomRoleChange(value: any, userInteraction: boolean = false) {
-    let selectedRole = this.customRoles.find(role => role.id === this.customRoleId!.value);
+    if (this.readonly) {
+      return;
+    }
+    let selectedRole = this.customRoles.find(role => role.id === value);
     this.userCustomRoleId?.setValue(selectedRole ? selectedRole.id : null);
-    this.groupHandler.setSelection(selectedRole ? selectedRole.permissionSet.map(p => p.permissionId) : []);
-    this.updateUserPermissions(!!this.groupHandler.selection.length);
     this._updatePermissionValidations(true);
     if (userInteraction) {
       this.customRoleChangedTrigger = !this.customRoleChangedTrigger;

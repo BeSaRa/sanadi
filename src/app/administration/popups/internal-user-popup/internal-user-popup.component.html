@@ -118,27 +118,12 @@
         </div>
       </div>
     </ng-container>
-    <div *ngIf="customRoleId?.value" class="row">
-      <div *ngFor="let checkBoxGroup of permissionGroups" class="col-sm-12 mb-2">
-        <div class="p-2 border border-1">
-          <div class="form-check mb-2 pb-2 border-bottom">
-            <input [indeterminate]="checkBoxGroup.isIndeterminate()" [disabled]="readonly"
-                   [checked]="checkBoxGroup.isFull()" type="checkbox" id="group-id-{{checkBoxGroup.group.id}}"
-                   (change)="groupHandler.onGroupClicked(checkBoxGroup)" class="form-check-input cursor-pointer">
-            <label for="group-id-{{checkBoxGroup.group.id}}"
-                   class="cursor-pointer">{{checkBoxGroup.group.getName()}}</label>
-          </div>
-          <div *ngFor="let row of checkBoxGroup.rows" class="row mx-2">
-            <div *ngFor="let permission of row" class="form-check col-sm-12 col-md-4">
-              <input type="checkbox" [disabled]="readonly" [checked]="checkBoxGroup.isSelected(permission.id)"
-                     [value]="permission.id" id="group-permission-id-{{permission.id}}"
-                     (change)="groupHandler.onCheckBoxClicked(permission , $event , checkBoxGroup)"
-                     class="form-check-input cursor-pointer">
-              <label for="group-permission-id-{{permission.id}}" class="cursor-pointer">{{permission.getName()}}</label>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div>
+      <user-permission-internal #userPermissionComponent [user]="model" [customRoleId]="customRoleId?.value"
+                                [customRolesList]="customRoles" [readonly]="readonly" [operation]="operation"
+                                [customRoleChangeTrigger]="customRoleChangedTrigger"
+                                (onPermissionChange)="updateUserPermissions($event)">
+      </user-permission-internal>
     </div>
   </ng-template>
   <ng-template #menusTab>
