@@ -89,6 +89,8 @@ export class UserPermissionExternalComponent implements OnInit, OnDestroy {
       // (admin, internal user only visible and super admin only visible) permissions will be restricted
       restrictedPermissions = allPermissions.filter(permission => {
         return permission.groupId === UserPermissionGroupsEnum.ADMINISTRATION
+          || (permission.groupId === UserPermissionGroupsEnum.TRAINING_PERMISSIONS
+            && permission.permissionKey !== PermissionsEnum.TRAINING_CHARITY_MANAGEMENT)
           || this.loggedInInternalUserOnlyPermissions.includes(permission.permissionKey)
           || this.loggedInSuperAdminOnlyPermissions.includes(permission.permissionKey);
       });
