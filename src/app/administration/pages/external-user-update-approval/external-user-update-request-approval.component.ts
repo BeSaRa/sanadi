@@ -349,4 +349,13 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       arName: [''], enName: [''], requestType:[null], requestStatus:[null], domainName: ['']
     })
   }
+
+  getColumnFilterValue(): Partial<ExternalUserUpdateRequest> {
+    const value: Partial<ExternalUserUpdateRequest> = this.columnFilterForm.value;
+    if (this.columnFilterFormHasValue(value)) {
+      value.profileId = this.profileIdControl.value ?? null;
+      return value;
+    }
+    return {};
+  }
 }

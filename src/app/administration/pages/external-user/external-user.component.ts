@@ -23,9 +23,9 @@ import {ProfileService} from '@services/profile.service';
 import {FormBuilder, UntypedFormControl} from '@angular/forms';
 import {PaginatorComponent} from '@app/shared/components/paginator/paginator.component';
 import {UserPreferencesService} from '@services/user-preferences.service';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { LookupService } from '@app/services/lookup.service';
-import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {LookupService} from '@app/services/lookup.service';
+import {SearchColumnConfigMap} from '@app/interfaces/i-search-column-config';
 
 @Component({
   selector: 'app-external-user',
@@ -194,7 +194,16 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
     this.reload$
       .pipe(
         takeUntil(this.destroy$),
-        filter(val => val !== 'init')
+        filter(val => val !== 'init'),
+      )
+      .pipe(
+        filter(() => {
+          if (this.columnFilterFormHasValue()) {
+            this.columnFilter$.next('filter');
+            return false;
+          }
+          return true;
+        })
       )
       .pipe(switchMap(() => {
         const paginationOptions = {
@@ -227,5 +236,14 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
     this.columnFilterForm = this.fb.group({
       arName: [''], enName: [''], empNum: [null], status: [null], domainName: ['']
     })
+  }
+
+  getColumnFilterValue(): Partial<ExternalUser> {
+    const value: Partial<ExternalUser> = this.columnFilterForm.value;
+    if (this.columnFilterFormHasValue(value)) {
+      value.profileId = this.profileIdControl.value ?? null;
+      return value;
+    }
+    return {};
   }
 }
