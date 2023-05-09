@@ -953,7 +953,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       .pipe(takeUntil(this.destroy$))
       .subscribe(list => {
         if (!list.length) {
-          this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
+          this.dialogService.info(this.langService.map.no_result_for_your_search_criteria)
+            .onAfterClose$.subscribe(()=> {
+            this.isBeneficiaryEnquired = true;
+          });
           return;
         }
         if (list.length > 1) {
