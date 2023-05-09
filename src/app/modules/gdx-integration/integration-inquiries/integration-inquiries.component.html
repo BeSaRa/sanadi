@@ -10,18 +10,18 @@
     <tab [name]="govTabsData.moj.name" [template]="MOJTemplate" [title]="lang.map[govTabsData.moj.langKey]"></tab>
     <tab [name]="govTabsData.moci.name" [template]="MOCITemplate" [title]="lang.map[govTabsData.moci.langKey]"></tab>
     <tab [name]="govTabsData.izzab.name" [template]="IzzabTemplate" [title]="lang.map[govTabsData.izzab.langKey]"></tab>
+    <tab [name]="govTabsData.mme.name" [template]="MMETemplate" [title]="lang.map[govTabsData.mme.langKey]"></tab>
     <tab [name]="govTabsData.mol.name" *ngIf="govTabsData.mol.show?.()" [template]="MOLTemplate"
          [title]="lang.map[govTabsData.mol.langKey]"></tab>
-    <tab [name]="govTabsData.sjc.name" *ngIf="govTabsData.sjc.show?.()" [template]="SJCTemplate"
-         [title]="lang.map[govTabsData.sjc.langKey]"></tab>
     <tab [name]="govTabsData.moe.name" [template]="MOETemplate" [title]="lang.map[govTabsData.moe.langKey]"></tab>
-    <tab [name]="govTabsData.mme.name" [template]="MMETemplate" [title]="lang.map[govTabsData.mme.langKey]"></tab>
     <tab [name]="govTabsData.mawared.name" [template]="MawaredTemplate"
          [title]="lang.map[govTabsData.mawared.langKey]"></tab>
     <tab [name]="govTabsData.garsia.name" [template]="GarsiaTemplate"
          [title]="lang.map[govTabsData.garsia.langKey]"></tab>
     <tab [name]="govTabsData.kahramaa.name" [template]="KahramaaTemplate"
          [title]="lang.map[govTabsData.kahramaa.langKey]"></tab>
+    <tab [name]="govTabsData.sjc.name" *ngIf="govTabsData.sjc.show?.()" [template]="SJCTemplate"
+         [title]="lang.map[govTabsData.sjc.langKey]"></tab>
   </tabs-list>
   <ng-template #MOJTemplate>
     <integration-inquiry-log-list #mojLogsComponent [gdxServiceId]="gdxServicesEnum.MOJ" [beneficiary]="beneficiary"

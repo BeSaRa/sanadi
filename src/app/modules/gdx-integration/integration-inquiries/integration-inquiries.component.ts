@@ -97,24 +97,23 @@ export class IntegrationInquiriesComponent {
       serviceId: GdxServicesEnum.IZZAB,
       isLoaded: false
     },
+    mme: {
+      name: 'mme',
+      index: 3,
+      langKey: 'integration_mme',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.MME,
+      isLoaded: false
+    },
     mol: {
       name: 'mol',
-      index: 3,
+      index: 4,
       langKey: 'integration_mol',
       show: () => false,
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       serviceId: GdxServicesEnum.MOL,
-      isLoaded: false
-    },
-    sjc: {
-      name: 'sjc',
-      index: 4,
-      langKey: 'integration_sjc',
-      show: () => false,
-      validStatus: () => true,
-      isTouchedOrDirty: () => true,
-      serviceId: GdxServicesEnum.SJC,
       isLoaded: false
     },
     moe: {
@@ -126,18 +125,9 @@ export class IntegrationInquiriesComponent {
       serviceId: GdxServicesEnum.MOE,
       isLoaded: false
     },
-    mme: {
-      name: 'mme',
-      index: 6,
-      langKey: 'integration_mme',
-      validStatus: () => true,
-      isTouchedOrDirty: () => true,
-      serviceId: GdxServicesEnum.MME,
-      isLoaded: false
-    },
     mawared: {
       name: 'mawared',
-      index: 7,
+      index: 6,
       langKey: 'integration_mawared',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
@@ -146,7 +136,7 @@ export class IntegrationInquiriesComponent {
     },
     garsia: {
       name: 'garsia',
-      index: 8,
+      index: 7,
       langKey: 'integration_garsia',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
@@ -155,11 +145,21 @@ export class IntegrationInquiriesComponent {
     },
     kahramaa: {
       name: 'kahramaa',
-      index: 9,
+      index: 8,
       langKey: 'integration_kahramaa',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       serviceId: GdxServicesEnum.KAHRAMAA,
+      isLoaded: false
+    },
+    sjc: {
+      name: 'sjc',
+      index: 9,
+      langKey: 'integration_sjc',
+      show: () => false,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.SJC,
       isLoaded: false
     },
   };
