@@ -267,7 +267,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
     return new ServiceData().clone({
       ...this.model,
       ...this.form?.value.basic,
-      concernedDepartmentsIdsParsed: model.concernedDepartmentsIds, // to stop override from UI, always save with original values
+      concernedDepartmentsIdsParsed: model.concernedDepartmentsIdsParsed, // to stop override from UI, always save with original values
       ...this.form?.value.customSettings
     });
   }
