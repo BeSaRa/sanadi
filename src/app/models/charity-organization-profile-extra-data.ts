@@ -139,12 +139,4 @@ export class CharityOrganizationProfileExtraData extends BaseModel<CharityOrgani
       youTube: controls ? [youTube, [Validators.maxLength(350)]] : youTube,
     };
   }
-
-  saveLogo(file: File): Observable<boolean> {
-    return this.service.updateLogo(this.id, file);
-  }
-
-  getLogo(): Observable<BlobModel> {
-    return this.service.getLogo(this.id);
-  }
 }

@@ -93,14 +93,14 @@ export class CharityOrganizationProfileExtraDataService extends CrudWithDialogGe
     }));
   }
 
-  updateLogo(charityId: number, file: File): Observable<boolean> {
+  updateLogo(profileId: number, file: File): Observable<boolean> {
     let form = new FormData();
     form.append('content', file);
-    return this.http.post<boolean>(this._getServiceURL() + '/logo?charityId=' + charityId, form);
+    return this.http.post<boolean>(this._getServiceURL() + '/logo?charityId=' + profileId, form);
   }
 
-  getLogo(charityId: number): Observable<BlobModel> {
-    return this.http.post(this._getServiceURL() + '/logo/content', { charityId: charityId }, {
+  getLogo(profileId: number): Observable<BlobModel> {
+    return this.http.post(this._getServiceURL() + '/logo/content', { charityId: profileId }, {
       responseType: 'blob',
       observe: 'body'
     }).pipe(

@@ -40,13 +40,6 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
   activityTypes: AdminLookup[] = [];
   addContactOfficersLabel: keyof ILanguageKeys = 'add_contact_officer';
   addComplianceOfficersLabel: keyof ILanguageKeys = 'add_compliance_officer';
-
-  @ViewChild('logoUploader') logoUploader!: ElementRef;
-  logoPath!: SafeResourceUrl;
-  logoFile: any;
-  logoExtensions: string[] = [FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG];
-  saveLogo$: Subject<void> = new Subject<void>();
-  blob!: BlobModel;
   externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
   externalOfficesColumns = [
     'externalOfficeName',
@@ -148,8 +141,6 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
 
   initPopup(): void {
     this.loadActivityTypes();
-    this.listenToSaveLogo();
-    this.setCurrentLogo();
     this.externalOffices$ = this.finalExternalOfficeApprovalService.licenseSearch({
       organizationId: this.model.profileId,
     });
@@ -191,80 +182,7 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
   }
 
   onProfileBranchesChanged(branches: Branch[]) {
-    console.log('branches from main component', branches);
     this.model.branchList = branches;
   }
 
-  // logo functionality
-  openFileBrowser($event: MouseEvent): void {
-    $event?.stopPropagation();
-    $event?.preventDefault();
-    this.logoUploader?.nativeElement.click();
-  }
-
-  onLogoSelected($event: Event): void {
-    this.saveLogoAfterSelect($event);
-  }
-
-  private _clearLogoUploader(): void {
-    this.logoFile = null;
-    this.logoUploader.nativeElement.value = '';
-  }
-
-  removeLogo($event: MouseEvent): void {
-    $event.preventDefault();
-    this.logoPath = '';
-    this._clearLogoUploader();
-  }
-
-  listenToSaveLogo() {
-    this.saveLogo$.pipe(
-      takeUntil(this.destroy$),
-      switchMap(() => {
-        return this.model.saveLogo(this.logoFile).pipe(
-          catchError(_ => of(null))
-        );
-      })
-    ).subscribe((success) => {
-      if (success) {
-        this.toast.success(this.lang.map.msg_save_stamp_for_x_success.change({x: this.model.getName()}));
-      }
-    });
-  }
-
-  saveLogoAfterSelect($event: Event) {
-    let files = ($event.target as HTMLInputElement).files;
-    if (files && files[0]) {
-      const extension = files[0].name.getExtension().toLowerCase();
-      if (this.logoExtensions.indexOf(extension) === -1) {
-        this.dialogService.error(this.lang.map.msg_invalid_format_allowed_formats.change({formats: this.logoExtensions.join(', ')}));
-        this.logoPath = '';
-        this._clearLogoUploader();
-        return;
-      }
-
-      let reader = new FileReader();
-      reader.readAsDataURL(files[0]);
-
-      reader.onload = (event) => {
-        // @ts-ignore
-        this.logoPath = event.target.result as string;
-        // @ts-ignore
-        this.logoFile = files[0];
-
-        // save stamp file to department
-        this.saveLogo$.next();
-      };
-    }
-  }
-
-  setCurrentLogo() {
-    this.model.getLogo().subscribe((file) => {
-      if (file.blob.type === 'error' || file.blob.size === 0) {
-        return;
-      }
-      this.blob = file;
-      this.logoPath = file.safeUrl;
-    });
-  }
 }

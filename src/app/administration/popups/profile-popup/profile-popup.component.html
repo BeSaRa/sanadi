@@ -7,7 +7,7 @@
             aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content" style="width:900px" #dialogContent>
+<div class="dialog-content w800px" #dialogContent>
   <tabs-list (onTabChange)="onTabChange($event)" [hasForm]="true">
     <tab [name]="tabsData.basic.name" [hasError]="!tabsData.basic.validStatus()" [template]="basicInfoTab"
          [title]="lang.map.lbl_basic_info"></tab>
@@ -131,6 +131,14 @@
         </div>
       </div>
     </form>
+    <div class="row">
+      <div class="col-12">
+        <file-uploader labelKey="logo" fileInputKey="upload_logo"
+                       [allowedExtensions]="logoExtensions" [allowRemoveLoadedFile]="false"
+                       [isRequired]="!model.id" [showFilePreview]="true" [readonly]="readonly"
+                       [loadedFile]="loadedLogo" (fileUploadEvent)="setLogoFile($event)"></file-uploader>
+      </div>
+    </div>
   </ng-template>
   <ng-template #linkServices>
     <div class="row">

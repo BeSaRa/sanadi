@@ -19,7 +19,7 @@ import {ToastService} from '@app/services/toast.service';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {ServiceDataService} from '@app/services/service-data.service';
 import {ServiceData} from '@app/models/service-data';
 import {DialogService} from '@app/services/dialog.service';
@@ -32,6 +32,9 @@ import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {SortEvent} from "@contracts/sort-event";
 import {CommonUtils} from "@helpers/common-utils";
+import {FileExtensionsEnum} from "@enums/file-extension-mime-types-icons.enum";
+import {CharityOrganizationProfileExtraDataService} from "@services/charity-organization-profile-extra-data.service";
+import {BlobModel} from "@models/blob-model";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -120,6 +123,9 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   registrationAuthorities: Profile[] = [];
   servicesControl = new FormControl<number[]>([]);
   countryControl = new FormControl<number[]>([]);
+  logoExtensions: string[] = [FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG];
+  loadedLogo!: BlobModel;
+  logoFile?: File;
 
   servicesSortingCallbacks = {
     serviceName: (a: ProfileServiceModel, b: ProfileServiceModel, dir: SortEvent): number => {
@@ -167,10 +173,6 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     return this.operation === OperationTypes.VIEW;
   }
 
-  get OperationTypes() {
-    return OperationTypes;
-  }
-
   get basicInfoForm(): AbstractControl | null {
     return this.form.get('basicInfo');
   }
@@ -192,6 +194,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
               private cd: ChangeDetectorRef,
               private profileServiceRelationService: ProfileServiceRelationService,
               private profileCountryService: ProfileCountryService,
+              private charityOrganizationProfileExtraDataService: CharityOrganizationProfileExtraDataService,
               private employeeService: EmployeeService,
               private countryService: CountryService,
               private service: ProfileService,
@@ -200,7 +203,6 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     super();
     this.model = data.model;
     this.operation = data.operation;
-    debugger
   }
 
   ngAfterViewInit() {
@@ -229,6 +231,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       this.loadLinkedCountries(this.model.id);
       this._loadServices();
       this.loadCountries();
+      this.loadProfileLogo();
     }
   }
 
@@ -255,14 +258,18 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   }
 
   afterSave(model: Profile, dialogRef: DialogRef): void {
-    const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
-    this.operation === this.operationTypes.CREATE
-      ? this.toast.success(message.change({x: this.basicInfoForm?.get(this.lang.map.lang + 'Name')?.value || ''}))
-      : this.toast.success(message.change({x: model.getName()}));
     this.model = model;
-    this.operation = OperationTypes.UPDATE;
-    this.loadLinkedServices(model.id);
-    this.loadLinkedCountries(model.id);
+    this.saveLogo()
+      .subscribe(() => {
+        const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
+        this.operation === this.operationTypes.CREATE
+          ? this.toast.success(message.change({x: this.basicInfoForm?.get(this.lang.map.lang + 'Name')?.value || ''}))
+          : this.toast.success(message.change({x: model.getName()}));
+        this.model = model;
+        this.operation = OperationTypes.UPDATE;
+        this.loadLinkedServices(model.id);
+        this.loadLinkedCountries(model.id);
+      })
   }
 
   loadLinkedServices(id: number) {
@@ -284,8 +291,30 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       });
   }
 
+  isSaveAllowed(): boolean {
+    if (this.operation === OperationTypes.VIEW) {
+      return false;
+    }
+    let isAllowed = this.form.valid;
+    if (isAllowed && this.operation === OperationTypes.CREATE) {
+      isAllowed = !!this.logoFile;
+    }
+    return isAllowed;
+  }
+
   beforeSave(model: Profile, form: UntypedFormGroup): boolean | Observable<boolean> {
-    return this.form.valid;
+    if (!this.form.valid) {
+      this.dialogService.error(this.lang.map.msg_all_required_fields_are_filled)
+        .onAfterClose$.subscribe(() => {
+        this.displayFormValidity(this.form, this.dialogContent.nativeElement);
+      });
+      return false;
+    }
+    if (this.operation === OperationTypes.CREATE && !this.logoFile) {
+      this.toast.error(this.lang.map.logo_is_required);
+      return false;
+    }
+    return true;
   }
 
   prepareModel(model: Profile, form: UntypedFormGroup): Profile | Observable<Profile> {
@@ -311,7 +340,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   }
 
   addServices() {
-    if(this.readonly || !this.servicesControl.value?.length) {
+    if (this.readonly || !this.servicesControl.value?.length) {
       return;
     }
     const _services = this.servicesControl.value!.map((e) =>
@@ -386,5 +415,34 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
 
   searchNgSelect(searchText: string, item: any): boolean {
     return item.ngSelectSearch(searchText);
+  }
+
+  loadProfileLogo() {
+    if (this.operation === OperationTypes.CREATE) {
+      return;
+    }
+    this.charityOrganizationProfileExtraDataService.getLogo(this.model.id)
+      .subscribe((file) => {
+        if (file.blob.type === 'error' || file.blob.size === 0) {
+          return;
+        }
+        this.loadedLogo = file;
+      });
+  }
+
+  setLogoFile(file: File | File[] | undefined): void {
+    if (!file || file instanceof File) {
+      this.logoFile = file;
+    } else {
+      this.logoFile = file[0];
+    }
+  }
+
+  saveLogo(): Observable<any> {
+    if (!!this.logoFile) {
+      return this.charityOrganizationProfileExtraDataService.updateLogo(this.model.id, this.logoFile);
+    } else {
+      return of(true);
+    }
   }
 }
