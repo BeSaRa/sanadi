@@ -30,6 +30,8 @@ import {TabMap} from '@app/types/types';
 import {EmployeeService} from '@services/employee.service';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {SortEvent} from "@contracts/sort-event";
+import {CommonUtils} from "@helpers/common-utils";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -48,6 +50,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       type: 'action',
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
+      disabled: this.readonly,
       onClick: (item: ProfileServiceModel) => this.delete(item)
     },
   ];
@@ -56,6 +59,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       type: 'action',
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
+      disabled: this.readonly,
       onClick: (item: ProfileCountry) => this.deleteCountry(item)
     },
   ];
@@ -116,6 +120,22 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   registrationAuthorities: Profile[] = [];
   servicesControl = new FormControl<number[]>([]);
   countryControl = new FormControl<number[]>([]);
+
+  servicesSortingCallbacks = {
+    serviceName: (a: ProfileServiceModel, b: ProfileServiceModel, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.serviceDataInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.serviceDataInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+  }
+  countriesSortingCallbacks = {
+    country: (a: ProfileCountry, b: ProfileCountry, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.countryInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.countryInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+  }
+
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
   private _loadServices() {
@@ -180,6 +200,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     super();
     this.model = data.model;
     this.operation = data.operation;
+    debugger
   }
 
   ngAfterViewInit() {
@@ -290,6 +311,9 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   }
 
   addServices() {
+    if(this.readonly || !this.servicesControl.value?.length) {
+      return;
+    }
     const _services = this.servicesControl.value!.map((e) =>
       new ProfileServiceModel().clone({
         profileId: this.model.id,
@@ -304,6 +328,9 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   }
 
   delete(model: ProfileServiceModel): void {
+    if (this.readonly) {
+      return;
+    }
     const message = this.lang.map.remove_service_messages;
     this.dialogService.confirm(message).onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
@@ -321,13 +348,15 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
 
   // createBulk
   addCountries() {
+    if (this.readonly) {
+      return;
+    }
     const _countries = this.countryControl.value!.map((e) => {
       return {
         profileId: this.model.id,
         countryId: +e,
       } as ProfileCountry
     });
-    console.log(_countries)
     this.profileCountryService.createBulk(_countries).subscribe((_e) => {
       this.loadLinkedCountries(this.model.id);
       this.toast.success(this.lang.map.countries_add_successfully);
@@ -336,6 +365,9 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   }
 
   deleteCountry(model: ProfileCountry): void {
+    if (this.readonly) {
+      return;
+    }
     const message = this.lang.map.remove_profile_country_link_messages;
     this.dialogService.confirm(message).onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {

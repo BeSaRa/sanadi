@@ -2,23 +2,23 @@
   <h1 class="h6 text-white">{{ lang.map.menu_profile }}</h1>
   <div>
     <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
-      fullscreenBtn></button>
+            fullscreenBtn></button>
     <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
-      aria-label="Close"></button>
+            aria-label="Close"></button>
   </div>
 </div>
 <div class="dialog-content" style="width:900px" #dialogContent>
   <tabs-list (onTabChange)="onTabChange($event)" [hasForm]="true">
     <tab [name]="tabsData.basic.name" [hasError]="!tabsData.basic.validStatus()" [template]="basicInfoTab"
-      [title]="lang.map.lbl_basic_info"></tab>
+         [title]="lang.map.lbl_basic_info"></tab>
     <tab *ngIf="tabsData.services.show!()" [name]="tabsData.services.name" [hasError]="false" [template]="linkServices"
-      [title]="lang.map.link_services">
+         [title]="lang.map.link_services">
     </tab>
     <tab *ngIf="tabsData.countries.show!()" [name]="tabsData.countries.name" [hasError]="false"
-      [template]="countriesTemplate" [title]="lang.map.country_countries">
+         [template]="countriesTemplate" [title]="lang.map.country_countries">
     </tab>
     <tab *ngIf="tabsData.attachments.show!()" [hideIcon]="true" [name]="tabsData.attachments.name" [hasError]="false"
-      [template]="attachments" [title]="lang.map.attachments">
+         [template]="attachments" [title]="lang.map.attachments">
     </tab>
   </tabs-list>
   <ng-template #basicInfoTab [formGroup]="form">
@@ -26,21 +26,21 @@
       <div class="row">
         <div class="col-sm-6 mb-4 position-relative">
           <label for="arName" asteriskIfRequired="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
-          <input id="arName" validationClasses="arName" formControlName="arName" class="form-control" trimInput />
+          <input id="arName" validationClasses="arName" formControlName="arName" class="form-control" trimInput/>
           <app-field-error-message controlName="arName"></app-field-error-message>
         </div>
         <div class="col-sm-6 mb-4 position-relative">
           <label for="enName" asteriskIfRequired="enName" class="form-label">{{ lang.map.lbl_english_name }}</label>
-          <input id="enName" trimInput formControlName="enName" validationClasses="enName" class="form-control" />
+          <input id="enName" trimInput formControlName="enName" validationClasses="enName" class="form-control"/>
           <app-field-error-message controlName="enName"></app-field-error-message>
         </div>
         <div class="col-md-6 col-sm-12 mb-4 ng-select-wrapper">
           <label class="form-label" asteriskIfRequired="profileType" for="profileType">{{ lang.map.lbl_profile_type
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="profileType" [clearable]="false"
-            placeholder="{{ lang.map.select }}" id="profileType" [notFoundText]="lang.map.msg_not_found"
-            formControlName="profileType" validationClasses="profileType" (change)="handleProfileType($event)"
-            appendTo="body">
+                     placeholder="{{ lang.map.select }}" id="profileType" [notFoundText]="lang.map.msg_not_found"
+                     formControlName="profileType" validationClasses="profileType" (change)="handleProfileType($event)"
+                     appendTo="body">
             <ng-option *ngFor="let option of profileTypes" [value]="option.lookupKey" [disabled]="!option.isActive()">
               {{ option.getName() }}
             </ng-option>
@@ -49,23 +49,23 @@
         </div>
         <div class="col-sm-6 mb-4 position-relative">
           <label for="arDesc" asteriskIfRequired="arDesc" class="form-label">{{lang.map.lbl_description}}</label>
-          <input trimInput id="arDesc" validationClasses="arDesc" formControlName="arDesc" class="form-control" />
+          <input trimInput id="arDesc" validationClasses="arDesc" formControlName="arDesc" class="form-control"/>
           <app-field-error-message controlName="arDesc"></app-field-error-message>
         </div>
         <div class="col-sm-6 mb-4 position-relative">
           <label for="profileCode" asteriskIfRequired="profileCode" class="form-label">{{ lang.map.lbl_profile_code
             }}</label>
           <input profileCodeExists [operation]="operation" [profileId]="this.model?.id!" id="profileCode"
-            formControlName="profileCode" class="form-control" validationClasses="profileCode" trimInput="ALL" />
+                 formControlName="profileCode" class="form-control" validationClasses="profileCode" trimInput/>
           <app-field-error-message controlName="profileCode"></app-field-error-message>
         </div>
         <div class="col-md-6 col-sm-12 mb-4 ng-select-wrapper">
           <label class="form-label" asteriskIfRequired="status" for="status">{{lang.map.lbl_status}}</label>
           <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false" placeholder="{{ lang.map.select }}"
-            id="status" [notFoundText]="lang.map.msg_not_found" formControlName="status" validationClasses="status"
-            appendTo="body">
+                     id="status" [notFoundText]="lang.map.msg_not_found" formControlName="status"
+                     validationClasses="status" appendTo="body">
             <ng-option *ngFor="let option of status" [value]="option.lookupKey"
-              [disabled]="option.isRetiredCommonStatus()">
+                       [disabled]="option.isRetiredCommonStatus()">
               {{ option.getName() }}
             </ng-option>
           </ng-select>
@@ -75,8 +75,9 @@
           <label class="form-label" asteriskIfRequired="registrationAuthority" for="registrationAuthority">{{
             lang.map.lbl_registration_authority }}</label>
           <ng-select [selectOnTab]="true" labelForId="registrationAuthority" [clearable]="false"
-            placeholder="{{ lang.map.select }}" id="registrationAuthority" [notFoundText]="lang.map.msg_not_found"
-            formControlName="registrationAuthority" validationClasses="registrationAuthority" appendTo="body">
+                     placeholder="{{ lang.map.select }}" id="registrationAuthority"
+                     [notFoundText]="lang.map.msg_not_found"
+                     formControlName="registrationAuthority" validationClasses="registrationAuthority" appendTo="body">
             <ng-option value="">{{ lang.map.lbl_none }}</ng-option>
             <ng-option *ngIf="showRaca" [value]="-1">{{lang.map.lbl_raca}}</ng-option>
             <ng-option *ngFor="let option of registrationAuthorities" [value]="option.id">
@@ -87,14 +88,16 @@
         </div>
         <div class="col-sm-6 mb-4 position-relative">
           <label for="email" asteriskIfRequired="email" class="form-label">{{lang.map.lbl_email}}</label>
-          <input trimInput id="email" formControlName="email" validationClasses="email" class="form-control" />
+          <input trimInput id="email" formControlName="email" validationClasses="email" class="form-control"/>
           <app-field-error-message controlName="email"></app-field-error-message>
         </div>
         <div class="col-md-6 col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="permitTypeList"
-            for="permitTypeList">{{lang.map.permit_type}}</label>
+                 for="permitTypeList">{{lang.map.permit_type}}</label>
           <ng-select [multiple]="true" validationClasses="permitTypeList" appendTo="body" [clearable]="true"
-            id="permitTypeList" [items]="permitTypes" bindValue="lookupKey" formControlName="permitTypeList">
+                     id="permitTypeList" [items]="permitTypes" bindValue="lookupKey" formControlName="permitTypeList"
+                     [selectOnTab]="true" labelForId="permitTypeList"
+                     placeholder="{{ lang.map.select }}" [notFoundText]="lang.map.msg_not_found">
             <ng-template ng-option-tmp let-item="item">
               <span class="custom-option">{{item.getName()}}</span>
             </ng-template>
@@ -116,9 +119,11 @@
         </div>
         <div class="col-md-6 col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="submissionMechanism"
-            for="submissionMechanism">{{lang.map.submission_mechanism}}</label>
+                 for="submissionMechanism">{{lang.map.submission_mechanism}}</label>
           <ng-select validationClasses="submissionMechanism" appendTo="body" [clearable]="true" id="submissionMechanism"
-            formControlName="submissionMechanism">
+                     formControlName="submissionMechanism"
+                     [selectOnTab]="true" labelForId="submissionMechanism"
+                     placeholder="{{ lang.map.select }}" [notFoundText]="lang.map.msg_not_found">
             <ng-option [value]="option.lookupKey" *ngFor="let option of submissionMechanisms">{{option.getName()}}
             </ng-option>
           </ng-select>
@@ -134,9 +139,9 @@
           <div class="mb-4 ng-select-wrapper flex-grow-1">
             <label for="serviceId">{{lang.map.service_name}}</label>
             <ng-select [formControl]="servicesControl" appendTo="body" [selectOnTab]="true" [items]="services"
-              labelForId="serviceId" bindValue="id" [clearable]="true" [searchFn]="searchNgSelect"
-              placeholder="{{lang.map.select}}" id="serviceId" [notFoundText]="lang.map.msg_not_found" [multiple]="true"
-              [closeOnSelect]="false">
+                       labelForId="serviceId" bindValue="id" [clearable]="true" [searchFn]="searchNgSelect"
+                       placeholder="{{lang.map.select}}" id="serviceId" [notFoundText]="lang.map.msg_not_found"
+                       [multiple]="true" [closeOnSelect]="false">
               <ng-template ng-option-tmp let-item="item">
                 <span class="custom-option">{{item.getName()}}</span>
               </ng-template>
@@ -156,7 +161,7 @@
             </ng-select>
           </div>
           <button [disabled]="readonly || servicesControl.value?.length === 0" (click)="addServices()"
-            class="btn btn-primary">
+                  class="btn btn-primary">
             {{ lang.map.btn_add }}
           </button>
         </div>
@@ -165,10 +170,11 @@
     <div class="row">
       <div class="col-12">
         <app-table #table [useSearchToFilter]="true" [selectable]="true" [data]="profileServices"
-          [columns]="profileServicesColumns" sortableTable>
+                   [columns]="profileServicesColumns" sortableTable>
           <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
             <ng-container cdkColumnDef="service">
-              <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.service_name }}</th>
+              <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+                  [sortCallback]="servicesSortingCallbacks.serviceName">{{ lang.map.service_name }}</th>
               <td cdk-cell *cdkCellDef="let row">{{ row.serviceDataInfo.getName() }}</td>
             </ng-container>
             <ng-container cdkColumnDef="actions">
@@ -195,15 +201,15 @@
           <div class="mb-4 ng-select-wrapper flex-grow-1">
             <label for="countries">{{lang.map.country}}</label>
             <ng-select [selectOnTab]="true" [multiple]="true" labelForId="countries" [clearable]="true"
-              placeholder="{{lang.map.select}}" id="countries" [notFoundText]="lang.map.msg_not_found"
-              [readonly]="false" appendTo="body" [formControl]="countryControl">
+                       placeholder="{{lang.map.select}}" id="countries" [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="false" appendTo="body" [formControl]="countryControl">
               <ng-option *ngFor="let option of countriesList" [value]="option.id" [disabled]="!option.isActive()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
           </div>
           <button [disabled]="readonly || countryControl.value?.length === 0" (click)="addCountries()"
-            class="btn btn-primary">
+                  class="btn btn-primary">
             {{ lang.map.btn_add }}
           </button>
         </div>
@@ -212,10 +218,11 @@
     <div class="row">
       <div class="col-12">
         <app-table #table [useSearchToFilter]="true" [selectable]="true" [data]="profileCountries"
-          [columns]="profileCountriesColumns" sortableTable>
+                   [columns]="profileCountriesColumns" sortableTable>
           <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
             <ng-container cdkColumnDef="country">
-              <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.country }}</th>
+              <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+                  [sortCallback]="countriesSortingCallbacks.country">{{ lang.map.country }}</th>
               <td cdk-cell *cdkCellDef="let row">{{ row.countryInfo.getName() }}</td>
             </ng-container>
             <ng-container cdkColumnDef="actions">
@@ -235,15 +242,15 @@
     </div>
   </ng-template>
   <ng-template #attachments>
-    <profile-attachments [profileId]="''+model.id"></profile-attachments>
+    <profile-attachments [profileId]="''+model.id" [readonly]="readonly"></profile-attachments>
   </ng-template>
 </div>
 <div class="dialog-actions">
   <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
-    tooltip="{{ lang.map.validate_fields }}" class="btn btn-link"><i
-      class="mdi mdi-information-outline text-info"></i></button>
+          tooltip="{{ lang.map.validate_fields }}" class="btn btn-link"><i
+    class="mdi mdi-information-outline text-info"></i></button>
   <div class="flex-grow-1"></div>
   <button *ngIf="saveVisible" [disabled]="form.invalid || form.pending" (click)="save$.next(null)"
-    class="btn btn-primary">{{ lang.map.btn_save }}</button>
+          class="btn btn-primary">{{ lang.map.btn_save }}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
 </div>

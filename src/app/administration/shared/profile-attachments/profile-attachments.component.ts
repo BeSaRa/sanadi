@@ -5,12 +5,14 @@ import {FileNetDocument} from '@app/models/file-net-document';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
-import {FileExtensionsEnum, FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import { ProfileAttachmentsService } from '@app/services/profile-attachments.service';
-import { ProfileAttachmentDetailsPopupComponent } from '@app/shared/popups/profile-attachment-details-popup/profile-attachment-details-popup.component';
-import { GlobalSettingsService } from '@app/services/global-settings.service';
-import { GlobalSettings } from '@app/models/global-settings';
+import {ProfileAttachmentsService} from '@app/services/profile-attachments.service';
+import {
+  ProfileAttachmentDetailsPopupComponent
+} from '@app/shared/popups/profile-attachment-details-popup/profile-attachment-details-popup.component';
+import {GlobalSettingsService} from '@app/services/global-settings.service';
+import {GlobalSettings} from '@app/models/global-settings';
 
 @Component({
   selector: 'profile-attachments',
@@ -21,18 +23,19 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
   constructor(
     public lang: LangService,
     private service: ProfileAttachmentsService,
-    private dialog :DialogService,
+    private dialog: DialogService,
     private toast: ToastService,
-    private globalSettingsService: GlobalSettingsService
-  ){
+    private globalSettingsService: GlobalSettingsService) {
     this.setAllowedFiles();
 
   }
+
   ngOnInit(): void {
     this.listenToReload();
     this.listenToAddOtherAttachment();
     this.loadingStatus.next(true);
   }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -47,6 +50,7 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
   private reload$ = this.loadingStatus.asObservable().pipe(filter(v => !!v));
 
   @Input() profileId!: string;
+  @Input() readonly: boolean = false;
 
   selectedFile?: FileNetDocument;
   attachments: FileNetDocument[] = [];
@@ -114,7 +118,11 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
         this.attachments = this.attachments.slice();
       });
   }
-  canShowActionButtons(attachment: FileNetDocument, buttonType: 'view' | 'delete' | 'upload' | 'publish') {
+
+  canShowActionButtons(attachment: FileNetDocument, buttonType: 'view' | 'upload') {
+    if (this.readonly && (buttonType === 'upload')) {
+      return false;
+    }
     return attachment.id ? true : (attachment.attachmentTypeStatus);
   }
 
@@ -125,6 +133,7 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
   uploadAttachment(row: FileNetDocument, uploader: HTMLInputElement): void {
 
     if (this.isDisabledActionButtons(row, 'upload')) {
@@ -136,7 +145,7 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
     this.selectedIndex = this.attachments.indexOf(row);
   }
 
-  isDisabledActionButtons(attachment: FileNetDocument, buttonType: 'view' | 'delete' | 'upload' | 'publish') {
+  isDisabledActionButtons(attachment: FileNetDocument, buttonType: 'view' | 'upload') {
     if (buttonType === 'view') {
       return !attachment.id;
     } else if (buttonType === 'upload') {
