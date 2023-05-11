@@ -1,34 +1,34 @@
-import { BankAccountEnNameKeys, BankAccountOperationTypes } from '@enums/bank-account-operation-types';
-import { Component } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { OperationTypes } from '@enums/operation-types.enum';
-import { SaveTypes } from '@enums/save-types';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { InternalBankAccountApproval } from '@models/internal-bank-account-approval';
-import { InternalBankAccountApprovalService } from '@services/internal-bank-account-approval.service';
-import { LangService } from '@services/lang.service';
-import { Observable, of } from 'rxjs';
-import { LookupService } from '@services/lookup.service';
-import { DialogService } from '@services/dialog.service';
-import { ToastService } from '@services/toast.service';
-import { Lookup } from '@models/lookup';
-import { Bank } from '@models/bank';
-import { BankAccount } from '@models/bank-account';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { SelectedLicenseInfo } from '@contracts/selected-license-info';
-import { LicenseService } from '@services/license.service';
-import { InternalBankAccountLicense } from '@app/license-models/internal-bank-account-license';
-import { BankAccountRequestTypes } from '@enums/service-request-types';
-import { EmployeeService } from '@services/employee.service';
-import { NpoEmployee } from '@models/npo-employee';
-import { CommonCaseStatus } from '@enums/common-case-status.enum';
-import { OpenFrom } from '@enums/open-from.enum';
-import { UserClickOn } from '@enums/user-click-on.enum';
-import { BankService } from '@services/bank.service';
-import { InternalBankCategoryEnum } from '@enums/internal-bank-category-enum';
-import { FieldControlAndLabelKey } from '@app/types/types';
-import { CommonUtils } from '@app/helpers/common-utils';
+import {BankAccountOperationTypes} from '@enums/bank-account-operation-types';
+import {Component} from '@angular/core';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {InternalBankAccountApproval} from '@models/internal-bank-account-approval';
+import {InternalBankAccountApprovalService} from '@services/internal-bank-account-approval.service';
+import {LangService} from '@services/lang.service';
+import {Observable, of} from 'rxjs';
+import {LookupService} from '@services/lookup.service';
+import {DialogService} from '@services/dialog.service';
+import {ToastService} from '@services/toast.service';
+import {Lookup} from '@models/lookup';
+import {Bank} from '@models/bank';
+import {BankAccount} from '@models/bank-account';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {SelectedLicenseInfo} from '@contracts/selected-license-info';
+import {LicenseService} from '@services/license.service';
+import {InternalBankAccountLicense} from '@app/license-models/internal-bank-account-license';
+import {BankAccountRequestTypes} from '@enums/service-request-types';
+import {EmployeeService} from '@services/employee.service';
+import {NpoEmployee} from '@models/npo-employee';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {OpenFrom} from '@enums/open-from.enum';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {BankService} from '@services/bank.service';
+import {InternalBankCategoryEnum} from '@enums/internal-bank-category-enum';
+import {FieldControlAndLabelKey} from '@app/types/types';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'internal-bank-account-approval',
@@ -75,14 +75,14 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   hasSearchedForLicense = false;
 
   constructor(public lang: LangService,
-    public fb: UntypedFormBuilder,
-    public service: InternalBankAccountApprovalService,
-    private lookupService: LookupService,
-    private dialog: DialogService,
-    private toast: ToastService,
-    private licenseService: LicenseService,
-    private bankService: BankService,
-    private employeeService: EmployeeService) {
+              public fb: UntypedFormBuilder,
+              public service: InternalBankAccountApprovalService,
+              private lookupService: LookupService,
+              private dialog: DialogService,
+              private toast: ToastService,
+              private licenseService: LicenseService,
+              private bankService: BankService,
+              private employeeService: EmployeeService) {
     super();
   }
 
@@ -190,6 +190,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   hasBankAccounts() {
     return this.isNewMerge || this.isUpdateMerge || this.isCancel
   }
+
   _afterBuildForm(): void {
     this.listenToBankCategoryChange();
     this.listenToBankIdChange();
@@ -217,17 +218,17 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   isNewAccountOperationType(): boolean {
-    return this.operationType.value == BankAccountOperationTypes.NEW_ACCOUNT;
+    return this.operationType.value == BankAccountOperationTypes.ACCOUNT;
   }
 
   private _isValidDraftData(): boolean {
     const draftFields: FieldControlAndLabelKey[] = [
-      { control: this.requestType, labelKey: 'request_type' },
-      { control: this.operationType, labelKey: 'bank_operation_type' },
+      {control: this.requestType, labelKey: 'request_type'},
+      {control: this.operationType, labelKey: 'bank_operation_type'},
     ];
     const invalidDraftField = this.getInvalidDraftField(draftFields);
     if (invalidDraftField) {
-      this.dialog.error(this.lang.map.msg_please_validate_x_to_continue.change({ x: this.lang.map[invalidDraftField.labelKey] }));
+      this.dialog.error(this.lang.map.msg_please_validate_x_to_continue.change({x: this.lang.map[invalidDraftField.labelKey]}));
       invalidDraftField.control.markAsTouched();
       return false;
     }
@@ -240,6 +241,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     return isAllowed && CommonUtils.isValidValue(this.requestType.value) &&
       this.requestType.value === BankAccountRequestTypes.UPDATE;
   }
+
   private _isValidBankAndNpoData() {
     if ((this.isNewRequestType() || this.isUpdateRequestType()) && this.isMergeOperationType()) {
       if (this.selectedBankAccounts.length < 2) {
@@ -261,9 +263,11 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     }
     return true;
   }
+
   isUpdateAcount() {
     return this.isUpdateRequestType() && this.isNewAccountOperationType()
   }
+
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (!this.selectedLicenses.length && this.isUpdateRequestType()) {
       this.dialog.error(this.lang.map.please_select_license_to_complete_save);
@@ -319,7 +323,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -342,7 +346,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       return;
     }
     this.selectedLicenses = [model];
-    this.model = (new InternalBankAccountApproval()).clone({ ...this.model, ...model });
+    this.model = (new InternalBankAccountApproval()).clone({...this.model, ...model});
     this.loadBankAccountsBasedOnCurrencyAndBank(this.model.category, this.model.bankId, this.model.currency);
     this.form.patchValue({
       basicInfo: this.model?.buildBasicInfo(),
@@ -500,7 +504,8 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   onSelectNewRequestType() {
-    this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel.filter((bot => bot.enName != BankAccountEnNameKeys.Account));
+    // this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel.filter((bot => bot.enName != BankAccountEnNameKeys.Account));
+    this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel;
     this.enableCancelAccountFields();
     this.enableNewNewAccountFields();
     this.disableNewNewAccountFields();
@@ -525,11 +530,12 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   onSelectUpdateRequestType() {
-    this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel.filter((bot => bot.enName != BankAccountEnNameKeys.NEW_ACCOUNT));
+    // this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel.filter((bot => bot.enName != BankAccountEnNameKeys.NEW_ACCOUNT));
+    this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel;
     this.enableSearchField();
     this.enableCancelAccountFields();
     this.isCancel = false;
-    if (this.operationType.value == BankAccountOperationTypes.NEW_ACCOUNT) {
+    if (this.operationType.value == BankAccountOperationTypes.ACCOUNT) {
       this.showUpdateBankAccountFields();
       this.hideUpdateMergeFields();
       this.enableUpdateNewAccountFields();
@@ -691,13 +697,13 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   makeOperationTypeCancel() {
-    this.operationType.disable({ emitEvent: false });
+    this.operationType.disable({emitEvent: false});
     this.operationType.setValidators([CustomValidators.required]);
-    this.operationType.patchValue(BankAccountOperationTypes.INACTIVE, { emitEvent: false });
+    this.operationType.patchValue(BankAccountOperationTypes.INACTIVE, {emitEvent: false});
   }
 
   enableOperationType() {
-    this.operationType.enable({ emitEvent: false });
+    this.operationType.enable({emitEvent: false});
     this.operationType.setValidators([CustomValidators.required]);
   }
 
@@ -710,9 +716,9 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   disableOperationType() {
-    this.operationType.disable({ emitEvent: false });
+    this.operationType.disable({emitEvent: false});
     this.operationType.setValidators([]);
-    this.operationType.patchValue(null, { emitEvent: false });
+    this.operationType.patchValue(null, {emitEvent: false});
   }
 
   enableSearchField() {
@@ -843,17 +849,18 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   private openSelectLicense(licenses: InternalBankAccountLicense[]) {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: InternalBankAccountLicense, details: InternalBankAccountLicense }>;
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{
+      selected: InternalBankAccountLicense,
+      details: InternalBankAccountLicense
+    }>;
   }
 
   searchForLicense() {
-    let criteriaObject: any = { fullSerial: this.oldLicenseFullSerialField.value };
-    if (this.requestType.value === BankAccountRequestTypes.UPDATE && this.operationType.value === BankAccountOperationTypes.NEW_ACCOUNT) {
-      criteriaObject.operationType = BankAccountOperationTypes.NEW_ACCOUNT;
-    }
-
-    if (this.requestType.value === BankAccountRequestTypes.UPDATE && this.operationType.value === BankAccountOperationTypes.MERGE) {
-      criteriaObject.operationType = BankAccountOperationTypes.MERGE;
+    let criteriaObject: any = {fullSerial: this.oldLicenseFullSerialField.value};
+    if (this.requestType.value === BankAccountRequestTypes.UPDATE){
+      if(CommonUtils.isValidValue(this.operationType.value)) {
+        criteriaObject.operationType = this.operationType.value;
+      }
     }
 
     this.licenseService
@@ -866,7 +873,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       }))
       .pipe(
         filter<null | SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense>, SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense>>
-          ((info): info is SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense> => !!info))
+        ((info): info is SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense> => !!info))
       .subscribe((_info) => {
         this.hasSearchedForLicense = true;
         const item = _info.details.convertToItem();
@@ -1035,4 +1042,15 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   //     this.selectedBankAccounts.find(x => x.id == bankAccount.id)!.isMergeAccount = true;
   //   }
   // }
+
+  getBankOperationTypeName(lookup: Lookup): string {
+    if (lookup.lookupKey === BankAccountOperationTypes.ACCOUNT) {
+      if (this.requestType.value === BankAccountRequestTypes.NEW) {
+        return this.lang.map.bank_operation_new_account;
+      } else if (this.requestType.value === BankAccountRequestTypes.UPDATE) {
+        return this.lang.map.bank_operation_account;
+      }
+    }
+    return lookup.getName();
+  }
 }

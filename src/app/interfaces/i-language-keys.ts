@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  bank_operation_account: string; // don't update or delete as its mapped to lookup
+  bank_operation_new_account: string; // don't update or delete as its mapped to lookup
   msg_no_permissions_available: string;
   add_followup: string;
   msg_check_x_duplicate: string;

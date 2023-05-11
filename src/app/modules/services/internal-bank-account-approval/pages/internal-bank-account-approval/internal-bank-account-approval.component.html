@@ -29,7 +29,8 @@
               for="operationType">{{lang.map.bank_operation_type}}</label>
             <ng-select validationClasses="operationType" appendTo="body" [clearable]="true" id="operationType"
               formControlName="operationType" [readonly]="(readonly)">
-              <ng-option [value]="option.lookupKey" *ngFor="let option of flexBankOperationTypes">{{option.getName()}}
+              <ng-option [value]="option.lookupKey" *ngFor="let option of flexBankOperationTypes">
+                {{getBankOperationTypeName(option)}}
               </ng-option>
             </ng-select>
             <app-field-error-message controlName="operationType"></app-field-error-message>
