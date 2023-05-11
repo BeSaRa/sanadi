@@ -144,6 +144,9 @@ import { CountryPopupComponent } from '@app/shared/popups/country-popup/country-
 import {
   EServiceWrapperButtonsComponent
 } from "@app/shared/components/e-service-wrapper-buttons/e-service-wrapper-buttons.component";
+import { VacationTableComponent } from './components/vacation-table/vacation-table.component';
+import { SetVacationPopupComponent } from './popups/set-vacation-popup/set-vacation-popup.component';
+
 import {CaseAuditLogComponent} from '@app/shared/components/case-audit-log/case-audit-log.component';
 import {ValueDifferencesListComponent} from './components/value-differences-list/value-differences-list.component';
 
@@ -261,7 +264,10 @@ import {ValueDifferencesListComponent} from './components/value-differences-list
     CountryPopupComponent,
     EServiceWrapperButtonsComponent,
     CaseAuditLogComponent,
-    ValueDifferencesListComponent
+    ValueDifferencesListComponent,
+    EServiceWrapperButtonsComponent,
+    VacationTableComponent,
+    SetVacationPopupComponent
   ],
   imports: [
     CommonModule,

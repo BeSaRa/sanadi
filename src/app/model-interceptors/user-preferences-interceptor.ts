@@ -1,10 +1,22 @@
 import {IModelInterceptor} from '@contracts/i-model-interceptor';
 import {UserPreferences} from '@models/user-preferences';
 import {CommonUtils} from '@helpers/common-utils';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { DateUtils } from '@app/helpers/date-utils';
 
 export class UserPreferencesInterceptor implements IModelInterceptor<UserPreferences> {
   send(model: Partial<UserPreferences>): Partial<UserPreferences> {
-    UserPreferencesInterceptor.stringifyEmailList(model);
+    model.vacationFrom =!model.vacationFrom
+    ? undefined
+    : DateUtils.changeDateFromDatepicker(
+        model.vacationFrom as unknown as IMyDateModel
+      )?.toISOString();
+    model.vacationTo =!model.vacationTo
+    ? undefined
+    : DateUtils.changeDateFromDatepicker(
+        model.vacationTo as unknown as IMyDateModel
+      )?.toISOString();
+     UserPreferencesInterceptor.stringifyEmailList(model);
 
     UserPreferencesInterceptor._deleteBeforeSend(model)
     return model;

@@ -6,6 +6,11 @@ import {InterceptModel} from '@decorators/intercept-model';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable} from 'rxjs';
 import {Cloneable} from '@models/cloneable';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { IHasVacation } from '@app/interfaces/i-has-vacation';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { InternalUser } from './internal-user';
+import { ExternalUser } from './external-user';
 
 const interceptor: UserPreferencesInterceptor = new UserPreferencesInterceptor();
 
@@ -13,10 +18,12 @@ const interceptor: UserPreferencesInterceptor = new UserPreferencesInterceptor()
   receive: interceptor.receive,
   send: interceptor.send
 })
-export class UserPreferences extends Cloneable<UserPreferences> {
+export class UserPreferences extends Cloneable<UserPreferences> implements IHasVacation {
   alternateEmailList!: string;
   isMailNotificationEnabled!: boolean;
   defaultLang!: number;
+  vacationFrom!:string;
+  vacationTo!:string;
 
   // extra properties
   alternateEmailListParsed: string[] = [];
@@ -32,15 +39,32 @@ export class UserPreferences extends Cloneable<UserPreferences> {
   buildForm(controls?: boolean): any {
     const {
       isMailNotificationEnabled,
-      defaultLang
+      defaultLang,
     } = this;
     return {
       isMailNotificationEnabled: controls ? [isMailNotificationEnabled] : isMailNotificationEnabled,
-      defaultLang: controls ? [defaultLang, CustomValidators.required] : defaultLang
+      defaultLang: controls ? [defaultLang, CustomValidators.required] : defaultLang,
+
+    }
+  }
+  buildVacationForm(controls?: boolean): any {
+    const {
+      vacationFrom,
+      vacationTo
+    } = this;
+    return {
+      vacationFrom: controls ? [vacationFrom] : vacationFrom,
+      vacationTo: controls ? [vacationTo] : vacationTo,
     }
   }
 
-  updateUserPreferences(generalUserId: number): Observable<UserPreferences> {
+  updateUserPreferences(generalUserId: number): Observable<UserPreferences|null> {
     return this.service.updateUserPreferences(generalUserId, this);
+  }
+  updateUserVacation(generalUserId: number): Observable<UserPreferences|null> {
+    return this.service.updateUserVacation(generalUserId, this);
+  }
+  openVacationDialog(user: InternalUser | ExternalUser,  canEditPreferences: boolean): Observable<DialogRef> {
+    return this.service.openVacationDialog(user,this,canEditPreferences);
   }
 }
