@@ -570,7 +570,7 @@ export class CharityOrganizationUpdateComponent
       const model = this.charityOrganizationService.getByIdComposite(id);
       model.subscribe((m) => {
         this._updateForm(m.toCharityOrganizationUpdate());
-        this.charityOrganizationService.getLogoBy({charityId: id}).subscribe(logo => {
+        this.charityOrganizationService.getLogoBy({charityId: charity.profileId}).subscribe(logo => {
           if (logo.blob.size === 0) {
             this.loadedLogo = undefined;
             return;
