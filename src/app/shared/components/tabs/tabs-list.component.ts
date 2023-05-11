@@ -58,6 +58,11 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit, A
   tabContainerId: string = '';
   tabContainerNumber: number = 0;
   accordionContainerId: string = '';
+  private _ready: boolean = false;
+
+  get ready(): boolean {
+    return this._ready;
+  }
 
   @ContentChildren(TabComponent) tabs!: QueryList<TabComponent>;
   @Output() onTabChange: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
@@ -103,6 +108,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit, A
           tab.isReady = true;
           this.accordionView && (tab.tabListAccordionButtonClass = this.accordionButtonClass);
         });
+        this._ready = true;
       });
   }
 

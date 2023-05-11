@@ -61,7 +61,8 @@
 
   <!--  </ng-template>-->
   <div class="mt-4 mb-3">
-    <e-service-wrapper-buttons *ngIf="viewReady" [component]="component" [model]="model!"
+    <e-service-wrapper-buttons *ngIf="viewReady && component.componentTabsListRef.ready"
+                               [component]="component" [model]="model!"
                                [actions]="actions" [actionsTrigger]="actionsTrigger"
                                (actionCallback)="actionCallback($event)"></e-service-wrapper-buttons>
   </div>

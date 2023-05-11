@@ -146,7 +146,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
           hideIcon: true
         });
       }
-
+      setTimeout(() => this.componentTabsListRef.tabListService.selectTabByIndex(0));
       this.cd.detectChanges();
     }, 0);
   }

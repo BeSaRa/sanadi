@@ -438,6 +438,7 @@ export class CharityOrganizationUpdateComponent
       this.tabs.push(this._tabs[this._tabs.length - 1]);
     }
     this.buildingTabsDone = true;
+    setTimeout(() => this.componentTabsListRef.tabListService.selectTabByIndex(0))
   }
 
   constructor(
@@ -863,7 +864,7 @@ export class CharityOrganizationUpdateComponent
           switchMap(() => this.loadCaseById()),
           map((data) => this.model = data)
         ).subscribe(id => {
-          console.log(this.model);
+        console.log(this.model);
         this._afterSaveMessage(model, saveType, operation);
       });
     } else {
