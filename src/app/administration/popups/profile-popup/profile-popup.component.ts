@@ -295,11 +295,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (this.operation === OperationTypes.VIEW) {
       return false;
     }
-    let isAllowed = this.form.valid;
-    if (isAllowed && this.operation === OperationTypes.CREATE) {
-      isAllowed = !!this.logoFile;
-    }
-    return isAllowed;
+    return this.form.valid && (!!this.logoFile || !!this.loadedLogo);
   }
 
   beforeSave(model: Profile, form: UntypedFormGroup): boolean | Observable<boolean> {
@@ -310,7 +306,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       });
       return false;
     }
-    if (this.operation === OperationTypes.CREATE && !this.logoFile) {
+    if (!this.loadedLogo && !this.logoFile) {
       this.toast.error(this.lang.map.logo_is_required);
       return false;
     }

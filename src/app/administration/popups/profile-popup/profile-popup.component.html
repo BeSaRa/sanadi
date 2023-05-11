@@ -135,7 +135,7 @@
       <div class="col-12">
         <file-uploader labelKey="logo" fileInputKey="upload_logo"
                        [allowedExtensions]="logoExtensions" [allowRemoveLoadedFile]="false"
-                       [isRequired]="!model.id" [showFilePreview]="true" [readonly]="readonly"
+                       [isRequired]="true" [showFilePreview]="true" [readonly]="readonly"
                        [loadedFile]="loadedLogo" (fileUploadEvent)="setLogoFile($event)"></file-uploader>
       </div>
     </div>
