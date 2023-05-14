@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
@@ -18,6 +18,7 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import {CustomValidators} from "@app/validators/custom-validators";
 
 @Component({
   selector: 'executive-management-popup',
@@ -31,8 +32,9 @@ export class ExecutiveManagementPopupComponent extends UiCrudDialogGenericCompon
   popupTitleKey!: keyof ILanguageKeys;
   pageTitle!: keyof ILanguageKeys;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
-  countriesList: Country[] = [];
+  // countriesList: Country[] = [];
   hidePassport:boolean;
+
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ExecutiveManagement>,
   public lang: LangService,
   public dialogRef: DialogRef,
@@ -53,9 +55,9 @@ export class ExecutiveManagementPopupComponent extends UiCrudDialogGenericCompon
   }
   initPopup(): void {
     this.popupTitleKey = this.pageTitle;
-    this.countryService.loadAsLookups()
+    /*this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((countries) => this.countriesList = countries);
+      .subscribe((countries) => this.countriesList = countries);*/
   }
 
   destroyPopup(): void {
@@ -89,7 +91,15 @@ export class ExecutiveManagementPopupComponent extends UiCrudDialogGenericCompon
   saveFail(error: Error): void {
     throw new Error(error.message);
   }
+
+  get nationalityField(): UntypedFormControl {
+    return (this.form.get('nationality')) as UntypedFormControl;
+  }
+
   buildForm(): void {
     this.form = this.fb.group(this.model.getManagerFields(true));
+    if (this.nationalities.length) {
+      this.nationalityField.setValidators([CustomValidators.required])
+    }
   }
 }
