@@ -93,6 +93,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   selectedExecutive!: TransferFundsExecutiveManagement | null;
   selectedExecutiveIndex: number = -1;
   executiveDisplayedColumns: string[] = ['localName', 'englishName', 'jobTitle', 'nationality', 'identificationNumber', 'actions'];
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   selectedPurposes: TransferFundsCharityPurpose[] = [];
   selectedPurpose!: TransferFundsCharityPurpose | null;

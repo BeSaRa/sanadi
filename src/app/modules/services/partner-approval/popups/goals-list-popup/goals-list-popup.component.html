@@ -13,7 +13,8 @@
         <label asteriskIfRequired="domain" for="domain" class="form-label">{{lang.map.domain}}</label>
         <ng-select [selectOnTab]="true" labelForId="domain" [clearable]="false" placeholder="{{lang.map.select}}"
           id="domain" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="domain"
-          validationClasses="domain">
+          validationClasses="domain"
+          (change)="onDomainChange($event,true)">
           <ng-option *ngFor="let option of domainsList" [value]="option.lookupKey">
             {{option.getName()}}
           </ng-option>

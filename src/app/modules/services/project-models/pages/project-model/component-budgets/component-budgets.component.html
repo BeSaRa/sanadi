@@ -22,7 +22,7 @@
         </ng-container>
         <ng-container cdkColumnDef="totalCost">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
-          <td cdk-cell *cdkCellDef="let row" class="text-end"> {{row.totalCost}} </td>
+          <td cdk-cell *cdkCellDef="let row" class="text-end"> {{(row.totalCost?? 0) | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
         </ng-container>
         <ng-container cdkColumnDef="totalComponentCostLabel">
           <td cdk-footer-cell colspan="2" class="text-end" *cdkFooterCellDef="let row">
@@ -31,7 +31,7 @@
         </ng-container>
         <ng-container cdkColumnDef="totalComponentCost">
           <td cdk-footer-cell class="text-end" *cdkFooterCellDef="let row">
-            <span><b>{{projectTotalCostField ? projectTotalCostField.value : 0}}</b></span>
+            <span><b>{{(projectTotalCostField ? projectTotalCostField.value : 0) | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR }}</b></span>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="actions">

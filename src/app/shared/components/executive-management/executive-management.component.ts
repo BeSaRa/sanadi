@@ -39,7 +39,7 @@ export class ExecutiveManagementComponent extends UiCrudListGenericComponent<Exe
         onClick: (item: ExecutiveManagement) => this.view$.next(item),
       }
     ];
-  displayColumns: string[]=['arabicName', 'englishName', 'email', 'passportNumber', 'actions'];
+  displayColumns: string[]=['arabicName', 'englishName', 'email', 'phone', 'actions'];
 
   _getNewInstance(override?: Partial<ExecutiveManagement> | undefined): ExecutiveManagement {
     return new ExecutiveManagement().clone(override ?? {});

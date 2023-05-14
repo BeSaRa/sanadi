@@ -3,33 +3,32 @@
     <tab [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info" name="basic_info">
     </tab>
     <tab [hasError]="requesterInfo.invalid" [template]="requester_info" [title]="lang.map.requester_info"
-         name="requester_info">
+      name="requester_info">
     </tab>
     <tab *ngIf="isExternalOrganizationTransferee" [hasError]="receiverOrganizationInfo.invalid"
-         [template]="receiver_organization_info" [title]="lang.map.receiver_organization_info"
-         name="receiver_organization_info">
+      [template]="receiver_organization_info" [title]="lang.map.receiver_organization_info"
+      name="receiver_organization_info">
     </tab>
     <tab *ngIf="isExternalOrganizationTransferee" [template]="executive_management_info"
-         [title]="lang.map.executive_management_info" name="executive_management_info"
-         [hasError]="(selectedExecutives && selectedExecutives.length === 0) && isExternalOrganizationTransferee">
+      [title]="lang.map.executive_management_info" name="executive_management_info"
+      [hasError]="(selectedExecutives && selectedExecutives.length === 0) && isExternalOrganizationTransferee">
     </tab>
     <tab *ngIf="isIndividualTransferee" [hasError]="receiverPersonInfo.invalid" [template]="receiver_person_info"
-         [title]="lang.map.receiver_person_info" name="receiver_person_info">
+      [title]="lang.map.receiver_person_info" name="receiver_person_info">
     </tab>
-    <tab [template]="transfer_purpose_info" [title]="lang.map.transfer_purpose"
-         name="transfer_purpose_info" [hasError]="(selectedPurposes && selectedPurposes.length === 0 && !isCancel)">
+    <tab [template]="transfer_purpose_info" [title]="lang.map.transfer_purpose" name="transfer_purpose_info"
+      [hasError]="(selectedPurposes && selectedPurposes.length === 0 && !isCancel)">
     </tab>
     <tab [hasError]="financialTransactionInfo.invalid" [template]="financial_transaction_info"
-         [title]="lang.map.financial_transaction_info" name="financial_transaction_info">
+      [title]="lang.map.financial_transaction_info" name="financial_transaction_info">
     </tab>
     <tab *ngIf="isPeriodicalTransferType" [hasError]="(selectedPayments && selectedPayments.length === 0 && !isCancel)"
-         [template]="payment_info" [title]="lang.map.payments"
-         name="payment_info">
+      [template]="payment_info" [title]="lang.map.payments" name="payment_info">
     </tab>
     <tab [hasError]="specialExplanation.invalid" [template]="special_explanations"
-         [title]="lang.map.special_explanations"
-         name="special_explanations"></tab>
-    <tab *ngIf="!accordionView" [hideIcon]="true" [template]="attachmentsTab" [title]="lang.map.attachments" name="attachments"></tab>
+      [title]="lang.map.special_explanations" name="special_explanations"></tab>
+    <tab *ngIf="!accordionView" [hideIcon]="true" [template]="attachmentsTab" [title]="lang.map.attachments"
+      name="attachments"></tab>
   </tabs-list>
   <ng-container [formGroup]="form">
     <ng-container formGroupName="basicInfo">
@@ -37,35 +36,31 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="requestType" class="form-label"
-                   for="requestType">{{lang.map.request_type}}</label>
+              for="requestType">{{lang.map.request_type}}</label>
             <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" formControlName="requestType"
-                       id="requestType" validationClasses="requestType"
-                       (change)="handleRequestTypeChange($event, true)">
+              id="requestType" validationClasses="requestType" (change)="handleRequestTypeChange($event, true)">
               <ng-option *ngFor="let option of requestTypes" [value]="option.lookupKey">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="requestType"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="transfereeType" class="form-label"
-                   for="transfereeType">{{lang.map.transferee_type}}</label>
-            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                       formControlName="transfereeType"
-                       id="transfereeType" validationClasses="transfereeType">
+              for="transfereeType">{{lang.map.transferee_type}}</label>
+            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" formControlName="transfereeType"
+              id="transfereeType" validationClasses="transfereeType">
               <ng-option *ngFor="let option of transfereeTypes"
-                         [value]="option.lookupKey">{{option.getName()}}</ng-option>
+                [value]="option.lookupKey">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="transfereeType"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="oldLicenseFullSerial" class="form-label"
-                   for="oldLicenseFullSerial">{{lang.map.serial_number}}
+              for="oldLicenseFullSerial">{{lang.map.serial_number}}
             </label>
             <div class="input-group">
-              <input (keydown.enter)="searchForLicense()" [readonly]="(readonly)"
-                     class="form-control"
-                     formControlName="oldLicenseFullSerial"
-                     id="oldLicenseFullSerial"
-                     validationClasses="oldLicenseFullSerial">
+              <input (keydown.enter)="searchForLicense()" [readonly]="(readonly)" class="form-control"
+                formControlName="oldLicenseFullSerial" id="oldLicenseFullSerial"
+                validationClasses="oldLicenseFullSerial">
               <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
               <button (click)="searchForLicense()" [disabled]="(readonly)" class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>
@@ -79,12 +74,10 @@
               <div class="col-12 position-relative">
                 <h1 class="h6 text-primary">{{lang.map.selected_license_info}}</h1>
                 <div class="table-responsive">
-                  <app-table #table [useSearchToFilter]="true"
-                             [selectable]="true" [data]="selectedLicenses"
-                             [columns]="selectedLicenseDisplayedColumns"
-                             sortableTable>
+                  <app-table #table [useSearchToFilter]="true" [selectable]="true" [data]="selectedLicenses"
+                    [columns]="selectedLicenseDisplayedColumns" sortableTable>
                     <table cdk-table [dataSource]="table.dataSource"
-                           class="table table-striped table-bordered caption-top">
+                      class="table table-striped table-bordered caption-top">
                       <ng-container cdkColumnDef="serial">
                         <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
                         <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>
@@ -124,74 +117,60 @@
       <ng-template #requester_info>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="arName" class="form-label"
-                   for="arName">{{lang.map.arabic_name}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="arName"
-                   id="arName" validationClasses="arName">
+            <label asteriskIfRequired="arName" class="form-label" for="arName">{{lang.map.arabic_name}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="arName" id="arName"
+              validationClasses="arName">
             <app-field-error-message controlName="arName"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="enName" class="form-label"
-                   for="enName">{{lang.map.english_name}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="enName"
-                   id="enName" validationClasses="enName">
+            <label asteriskIfRequired="enName" class="form-label" for="enName">{{lang.map.english_name}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="enName" id="enName"
+              validationClasses="enName">
             <app-field-error-message controlName="enName"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="identificationNumber" class="form-label"
-                   for="identificationNumber">{{lang.map.identification_number}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="identificationNumber"
-                   id="identificationNumber" validationClasses="identificationNumber">
+              for="identificationNumber">{{lang.map.identification_number}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="identificationNumber"
+              id="identificationNumber" validationClasses="identificationNumber">
             <app-field-error-message controlName="identificationNumber"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="email" class="form-label"
-                   for="email">{{lang.map.lbl_email}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="email"
-                   id="email" validationClasses="email">
+            <label asteriskIfRequired="email" class="form-label" for="email">{{lang.map.lbl_email}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="email" id="email"
+              validationClasses="email">
             <app-field-error-message controlName="email"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="phone" class="form-label"
-                   for="phone">{{lang.map.lbl_phone}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="phone"
-                   id="phone" validationClasses="phone">
+            <label asteriskIfRequired="phone" class="form-label" for="phone">{{lang.map.lbl_phone}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="phone" id="phone"
+              validationClasses="phone">
             <app-field-error-message controlName="phone"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="mobileNo" class="form-label"
-                   for="mobileNo">{{lang.map.mobile_number}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="mobileNo"
-                   id="mobileNo" validationClasses="mobileNo">
+            <label asteriskIfRequired="mobileNo" class="form-label" for="mobileNo">{{lang.map.mobile_number}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="mobileNo" id="mobileNo"
+              validationClasses="mobileNo">
             <app-field-error-message controlName="mobileNo"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="nationality" class="form-label"
-                   for="nationality">{{lang.map.lbl_nationality}}</label>
-            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                       formControlName="nationality"
-                       id="nationality" validationClasses="nationality">
+              for="nationality">{{lang.map.lbl_nationality}}</label>
+            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" formControlName="nationality"
+              id="nationality" validationClasses="nationality">
               <ng-option *ngFor="let option of nationalities"
-                         [value]="option.lookupKey">{{option.getName()}}</ng-option>
+                [value]="option.lookupKey">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="nationality"></app-field-error-message>
           </div>
           <div class="col-md-8 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="address" class="form-label"
-                   for="address">{{lang.map.lbl_address}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="address"
-                   id="address" validationClasses="address">
+            <label asteriskIfRequired="address" class="form-label" for="address">{{lang.map.lbl_address}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="address" id="address"
+              validationClasses="address">
             <app-field-error-message controlName="address"></app-field-error-message>
           </div>
         </div>
@@ -202,14 +181,12 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="organizationArabicName" class="form-label"
-                   for="organizationArabicName">{{lang.map.organization_arabic_name}}
+              for="organizationArabicName">{{lang.map.organization_arabic_name}}
             </label>
             <div class="input-group">
-              <input (keydown.enter)="searchOrganizations('ar')" [readonly]="(readonly)"
-                     class="form-control"
-                     formControlName="organizationArabicName"
-                     id="organizationArabicName"
-                     validationClasses="organizationArabicName">
+              <input (keydown.enter)="searchOrganizations('ar')" [readonly]="(readonly)" class="form-control"
+                formControlName="organizationArabicName" id="organizationArabicName"
+                validationClasses="organizationArabicName">
               <app-field-error-message controlName="organizationArabicName"></app-field-error-message>
               <button (click)="searchOrganizations('ar')" [disabled]="(readonly || isCancel)" class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>
@@ -218,13 +195,11 @@
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="organizationEnglishName" class="form-label"
-                   for="organizationEnglishName">{{lang.map.organization_english_name}}</label>
+              for="organizationEnglishName">{{lang.map.organization_english_name}}</label>
             <div class="input-group">
-              <input (keydown.enter)="searchOrganizations('en')" [readonly]="(readonly)"
-                     class="form-control"
-                     formControlName="organizationEnglishName"
-                     id="organizationEnglishName"
-                     validationClasses="organizationEnglishName">
+              <input (keydown.enter)="searchOrganizations('en')" [readonly]="(readonly)" class="form-control"
+                formControlName="organizationEnglishName" id="organizationEnglishName"
+                validationClasses="organizationEnglishName">
               <app-field-error-message controlName="organizationEnglishName"></app-field-error-message>
               <button (click)="searchOrganizations('en')" [disabled]="(readonly || isCancel)" class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>
@@ -233,12 +208,11 @@
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="headQuarterType" class="form-label"
-                   for="headQuarterType">{{lang.map.headquarter_type}}</label>
-            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                       formControlName="headQuarterType"
-                       id="headQuarterType" validationClasses="headQuarterType">
+              for="headQuarterType">{{lang.map.headquarter_type}}</label>
+            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" formControlName="headQuarterType"
+              id="headQuarterType" validationClasses="headQuarterType">
               <ng-option *ngFor="let option of headQuarterTypes"
-                         [value]="option.lookupKey">{{option.getName()}}</ng-option>
+                [value]="option.lookupKey">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="headQuarterType"></app-field-error-message>
           </div>
@@ -246,108 +220,89 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="establishmentDate" class="form-label"
-                   for="establishmentDate">{{lang.map.establishment_date}}</label>
+              for="establishmentDate">{{lang.map.establishment_date}}</label>
             <div class="reg-start-date-container">
               <div class="input-group">
                 <i class="input-group-text mdi mdi-calendar"></i>
                 <div #dpEstablishmentDate="angular-mydatepicker"
-                     (click)="!readonly && dpEstablishmentDate.toggleCalendar()"
-                     [ngClass]="{'input-disabled': (readonly)}"
-                     [options]="datepickerOptionsMap.establishmentDate"
-                     angular-mydatepicker
-                     class="form-control"
-                     formControlName="establishmentDate"
-                     id="establishmentDate" validationClasses="establishmentDate"></div>
+                  (click)="!readonly && dpEstablishmentDate.toggleCalendar()" [ngClass]="{'input-disabled': (readonly)}"
+                  [options]="datepickerOptionsMap.establishmentDate" angular-mydatepicker class="form-control"
+                  formControlName="establishmentDate" id="establishmentDate" validationClasses="establishmentDate">
+                </div>
               </div>
             </div>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="country" class="form-label"
-                   for="country">{{lang.map.country}}</label>
-            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                       formControlName="country"
-                       id="country" validationClasses="country">
-              <ng-option *ngFor="let option of countries"
-                         [value]="option.id">{{option.getName()}}</ng-option>
+            <label asteriskIfRequired="country" class="form-label" for="country">{{lang.map.country}}</label>
+            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" formControlName="country"
+              id="country" validationClasses="country">
+              <ng-option *ngFor="let option of countries" [value]="option.id">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="country"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="region" class="form-label"
-                   for="region">{{lang.map.region}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="region"
-                   id="region" validationClasses="region">
+            <label asteriskIfRequired="region" class="form-label" for="region">{{lang.map.region}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="region" id="region"
+              validationClasses="region">
             <app-field-error-message controlName="region"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="city" class="form-label"
-                   for="city">{{lang.map.city}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="city"
-                   id="city" validationClasses="city">
+            <label asteriskIfRequired="city" class="form-label" for="city">{{lang.map.city}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="city" id="city"
+              validationClasses="city">
             <app-field-error-message controlName="city"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="detailsAddress" class="form-label"
-                   for="detailsAddress">{{lang.map.lbl_address}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="detailsAddress"
-                   id="detailsAddress" validationClasses="detailsAddress">
+              for="detailsAddress">{{lang.map.lbl_address}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="detailsAddress" id="detailsAddress"
+              validationClasses="detailsAddress">
             <app-field-error-message controlName="detailsAddress"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="postalCode" class="form-label"
-                   for="postalCode">{{lang.map.postal_code}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="postalCode"
-                   id="postalCode" validationClasses="postalCode">
+            <label asteriskIfRequired="postalCode" class="form-label" for="postalCode">{{lang.map.postal_code}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="postalCode" id="postalCode"
+              validationClasses="postalCode">
             <app-field-error-message controlName="postalCode"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="website" class="form-label"
-                   for="website">{{lang.map.website}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="website"
-                   id="website" validationClasses="website">
+            <label asteriskIfRequired="website" class="form-label" for="website">{{lang.map.website}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="website" id="website"
+              validationClasses="website">
             <app-field-error-message controlName="website"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="organizationEmail" class="form-label"
-                   for="organizationEmail">{{lang.map.lbl_email}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="organizationEmail"
-                   id="organizationEmail" validationClasses="organizationEmail">
+              for="organizationEmail">{{lang.map.lbl_email}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="organizationEmail"
+              id="organizationEmail" validationClasses="organizationEmail">
             <app-field-error-message controlName="organizationEmail"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="firstSocialMedia" class="form-label"
-                   for="firstSocialMedia">{{lang.map.social_media_1}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="firstSocialMedia"
-                   id="firstSocialMedia" validationClasses="firstSocialMedia">
+              for="firstSocialMedia">{{lang.map.social_media_1}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="firstSocialMedia" id="firstSocialMedia"
+              validationClasses="firstSocialMedia">
             <app-field-error-message controlName="firstSocialMedia"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="secondSocialMedia" class="form-label"
-                   for="secondSocialMedia">{{lang.map.social_media_2}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="secondSocialMedia"
-                   id="secondSocialMedia" validationClasses="secondSocialMedia">
+              for="secondSocialMedia">{{lang.map.social_media_2}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="secondSocialMedia"
+              id="secondSocialMedia" validationClasses="secondSocialMedia">
             <app-field-error-message controlName="secondSocialMedia"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="thirdSocialMedia" class="form-label"
-                   for="thirdSocialMedia">{{lang.map.social_media_3}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="thirdSocialMedia"
-                   id="thirdSocialMedia" validationClasses="thirdSocialMedia">
+              for="thirdSocialMedia">{{lang.map.social_media_3}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="thirdSocialMedia" id="thirdSocialMedia"
+              validationClasses="thirdSocialMedia">
             <app-field-error-message controlName="thirdSocialMedia"></app-field-error-message>
           </div>
         </div>
@@ -357,26 +312,24 @@
       <ng-template #executive_management_info>
         <div class="row">
           <div class="col-12">
-            <app-table #table [columns]="executiveDisplayedColumns"
-                       [data]="selectedExecutives" [selectable]="true"
-                       [useSearchToFilter]="true"
-                       sortableTable>
-              <table [dataSource]="table.dataSource" cdk-table
-                     class="table table-striped table-bordered caption-top">
+            <app-table #table [columns]="executiveDisplayedColumns" [data]="selectedExecutives" [selectable]="true"
+              [useSearchToFilter]="true" sortableTable>
+              <table [dataSource]="table.dataSource" cdk-table class="table table-striped table-bordered caption-top">
                 <ng-container cdkColumnDef="extra-header">
                   <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-                    <table-header *ngIf="isExternalUser" tableTitle="executives" [skipSearch]="true" [add$]="addExecutive$" [allowAdd]="!isCancel" [skipClearSort]="true">
+                    <table-header *ngIf="isExternalUser" tableTitle="executives" [skipSearch]="true"
+                      [add$]="addExecutive$" [allowAdd]="!isCancel" [skipClearSort]="true">
                     </table-header>
                   </th>
                 </ng-container>
                 <ng-container cdkColumnDef="localName">
-                  <th *cdkHeaderCellDef cdk-header-cell
-                      sortable-header> {{lang.map.name_in_local_language_like_passport}}</th>
+                  <th *cdkHeaderCellDef cdk-header-cell sortable-header>
+                    {{lang.map.name_in_local_language_like_passport}}</th>
                   <td *cdkCellDef="let row" cdk-cell> {{row.nameLikePassport}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="englishName">
-                  <th *cdkHeaderCellDef cdk-header-cell
-                      sortable-header> {{lang.map.name_in_English_language_like_passport}}</th>
+                  <th *cdkHeaderCellDef cdk-header-cell sortable-header>
+                    {{lang.map.name_in_English_language_like_passport}}</th>
                   <td *cdkCellDef="let row" cdk-cell> {{row.englishNameLikePassport}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="jobTitle">
@@ -396,11 +349,11 @@
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
                       <button (click)="removeExecutive($event, row)" [disabled]="(readonly || isCancel)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
+                        class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
                       </button>
                       <button (click)="selectExecutive($event, row)" [disabled]="(readonly || isCancel)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
+                        class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                         <i class="mdi mdi-pen"></i>
                       </button>
                     </div>
@@ -424,13 +377,11 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverNameLikePassport" class="form-label"
-                   for="receiverNameLikePassport">{{lang.map.name_in_local_language_like_passport}}</label>
+              for="receiverNameLikePassport">{{lang.map.name_in_local_language_like_passport}}</label>
             <div class="input-group">
-              <input (keydown.enter)="searchPersons('ar')" [readonly]="(readonly)"
-                     class="form-control"
-                     formControlName="receiverNameLikePassport"
-                     id="receiverNameLikePassport"
-                     validationClasses="receiverNameLikePassport">
+              <input (keydown.enter)="searchPersons('ar')" [readonly]="(readonly)" class="form-control"
+                formControlName="receiverNameLikePassport" id="receiverNameLikePassport"
+                validationClasses="receiverNameLikePassport">
               <app-field-error-message controlName="receiverNameLikePassport"></app-field-error-message>
               <button (click)="searchPersons('ar')" [disabled]="(readonly || isCancel)" class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>
@@ -439,13 +390,11 @@
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverEnglishNameLikePassport" class="form-label"
-                   for="receiverEnglishNameLikePassport">{{lang.map.name_in_English_language_like_passport}}</label>
+              for="receiverEnglishNameLikePassport">{{lang.map.name_in_English_language_like_passport}}</label>
             <div class="input-group">
-              <input (keydown.enter)="searchPersons('en')" [readonly]="(readonly)"
-                     class="form-control"
-                     formControlName="receiverEnglishNameLikePassport"
-                     id="receiverEnglishNameLikePassport"
-                     validationClasses="receiverEnglishNameLikePassport">
+              <input (keydown.enter)="searchPersons('en')" [readonly]="(readonly)" class="form-control"
+                formControlName="receiverEnglishNameLikePassport" id="receiverEnglishNameLikePassport"
+                validationClasses="receiverEnglishNameLikePassport">
               <app-field-error-message controlName="receiverEnglishNameLikePassport"></app-field-error-message>
               <button (click)="searchPersons('en')" [disabled]="(readonly || isCancel)" class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>
@@ -454,57 +403,51 @@
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverJobTitle" class="form-label"
-                   for="receiverJobTitle">{{lang.map.job_title}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="receiverJobTitle"
-                   id="receiverJobTitle" validationClasses="receiverJobTitle">
+              for="receiverJobTitle">{{lang.map.job_title}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="receiverJobTitle" id="receiverJobTitle"
+              validationClasses="receiverJobTitle">
             <app-field-error-message controlName="receiverJobTitle"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverNationality" class="form-label"
-                   for="receiverNationality">{{lang.map.lbl_nationality}}</label>
-            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                       formControlName="receiverNationality"
-                       id="receiverNationality" validationClasses="receiverNationality">
+              for="receiverNationality">{{lang.map.lbl_nationality}}</label>
+            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" formControlName="receiverNationality"
+              id="receiverNationality" validationClasses="receiverNationality">
               <ng-option *ngFor="let option of nationalities"
-                         [value]="option.lookupKey">{{option.getName()}}</ng-option>
+                [value]="option.lookupKey">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="receiverNationality"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverIdentificationNumber" class="form-label"
-                   for="receiverIdentificationNumber">{{lang.map.national_id_number}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="receiverIdentificationNumber"
-                   id="receiverIdentificationNumber" validationClasses="receiverIdentificationNumber">
+              for="receiverIdentificationNumber">{{lang.map.national_id_number}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="receiverIdentificationNumber"
+              id="receiverIdentificationNumber" validationClasses="receiverIdentificationNumber">
             <app-field-error-message controlName="receiverIdentificationNumber"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverPassportNumber" class="form-label"
-                   for="receiverPassportNumber">{{lang.map.passport_number}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="receiverPassportNumber"
-                   id="receiverPassportNumber" validationClasses="receiverPassportNumber">
+              for="receiverPassportNumber">{{lang.map.passport_number}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="receiverPassportNumber"
+              id="receiverPassportNumber" validationClasses="receiverPassportNumber">
             <app-field-error-message controlName="receiverPassportNumber"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverPhone1" class="form-label"
-                   for="receiverPhone1">{{lang.map.lbl_phone_1}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="receiverPhone1"
-                   id="receiverPhone1" validationClasses="receiverPhone1">
+              for="receiverPhone1">{{lang.map.lbl_phone_1}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="receiverPhone1" id="receiverPhone1"
+              validationClasses="receiverPhone1">
             <app-field-error-message controlName="receiverPhone1"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverPhone2" class="form-label"
-                   for="receiverPhone2">{{lang.map.lbl_phone_2}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="receiverPhone2"
-                   id="receiverPhone2" validationClasses="receiverPhone2">
+              for="receiverPhone2">{{lang.map.lbl_phone_2}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="receiverPhone2" id="receiverPhone2"
+              validationClasses="receiverPhone2">
             <app-field-error-message controlName="receiverPhone2"></app-field-error-message>
           </div>
         </div>
@@ -514,27 +457,23 @@
       <ng-template #transfer_purpose_info>
         <div class="row">
           <div class="col-12">
-            <app-table #table [columns]="purposeDisplayedColumns"
-                       [data]="selectedPurposes" [selectable]="true"
-                       [useSearchToFilter]="true"
-                       [filter]="filterControl.value"
-                       sortableTable>
-              <table [dataSource]="table.dataSource" cdk-table
-                     class="table table-striped table-bordered caption-top">
+            <app-table #table [columns]="purposeDisplayedColumns" [data]="selectedPurposes" [selectable]="true"
+              [useSearchToFilter]="true" [filter]="filterControl.value" sortableTable>
+              <table [dataSource]="table.dataSource" cdk-table class="table table-striped table-bordered caption-top">
                 <ng-container cdkColumnDef="extra-header">
                   <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-                    <table-header *ngIf="isExternalUser" tableTitle="purposes" (textChange)="filterControl.setValue($event)" [add$]="addPropose$" [allowAdd]="!isCancel" [skipClearSort]="true">
+                    <table-header *ngIf="isExternalUser" tableTitle="purposes"
+                      (textChange)="filterControl.setValue($event)" [add$]="addPropose$" [allowAdd]="!isCancel"
+                      [skipClearSort]="true">
                     </table-header>
                   </th>
                 </ng-container>
                 <ng-container cdkColumnDef="projectName">
-                  <th *cdkHeaderCellDef cdk-header-cell
-                      sortable-header> {{lang.map.project_name}}</th>
+                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.project_name}}</th>
                   <td *cdkCellDef="let row" cdk-cell> {{row.projectName}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="projectType">
-                  <th *cdkHeaderCellDef cdk-header-cell
-                      sortable-header> {{lang.map.project_type}}</th>
+                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.project_type}}</th>
                   <td *cdkCellDef="let row" cdk-cell> {{row.projectTypeInfo?.getName() || ''}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="domain">
@@ -543,7 +482,8 @@
                 </ng-container>
                 <ng-container cdkColumnDef="totalCost">
                   <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.total_cost}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.totalCost}} </td>
+                  <td *cdkCellDef="let row" cdk-cell> {{(row.totalCost??0) |
+                    mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="beneficiaryCountry">
                   <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.beneficiary_country}}</th>
@@ -558,11 +498,11 @@
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
                       <button (click)="removePurpose($event, row)" [disabled]="(readonly || isCancel)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
+                        class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
                       </button>
                       <button (click)="selectPurpose($event, row)" [disabled]="(readonly || isCancel)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
+                        class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                         <i class="mdi mdi-pen"></i>
                       </button>
                     </div>
@@ -586,32 +526,27 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="qatariTransactionAmount" class="form-label"
-                   for="qatariTransactionAmount">{{lang.map.qatari_riyal_transaction_amount}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="qatariTransactionAmount"
-                   id="qatariTransactionAmount" validationClasses="qatariTransactionAmount"
-                   [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
-                   [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+              for="qatariTransactionAmount">{{lang.map.qatari_riyal_transaction_amount}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="qatariTransactionAmount"
+              id="qatariTransactionAmount" validationClasses="qatariTransactionAmount"
+              [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+              [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
             <app-field-error-message controlName="qatariTransactionAmount"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="currencyTransferTransactionAmount" class="form-label"
-                   for="currencyTransferTransactionAmount">{{lang.map.transaction_amount_in_transfer_currency}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="currencyTransferTransactionAmount"
-                   id="currencyTransferTransactionAmount" validationClasses="currencyTransferTransactionAmount"
-                   [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
-                   [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+              for="currencyTransferTransactionAmount">{{lang.map.transaction_amount_in_transfer_currency}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="currencyTransferTransactionAmount"
+              id="currencyTransferTransactionAmount" validationClasses="currencyTransferTransactionAmount"
+              [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+              [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
             <app-field-error-message controlName="currencyTransferTransactionAmount"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="currency" class="form-label"
-                   for="currency">{{lang.map.currency}}</label>
-            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                       formControlName="currency"
-                       id="currency" validationClasses="currency">
-              <ng-option *ngFor="let option of currencies"
-                         [value]="option.lookupKey">{{option.getName()}}</ng-option>
+            <label asteriskIfRequired="currency" class="form-label" for="currency">{{lang.map.currency}}</label>
+            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" formControlName="currency"
+              id="currency" validationClasses="currency">
+              <ng-option *ngFor="let option of currencies" [value]="option.lookupKey">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="currency"></app-field-error-message>
           </div>
@@ -619,31 +554,28 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="transferMethod" class="form-label"
-                   for="transferMethod">{{lang.map.transfer_method}}</label>
-            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                       formControlName="transferMethod"
-                       id="transferMethod" validationClasses="transferMethod">
+              for="transferMethod">{{lang.map.transfer_method}}</label>
+            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" formControlName="transferMethod"
+              id="transferMethod" validationClasses="transferMethod">
               <ng-option *ngFor="let option of transferMethods"
-                         [value]="option.lookupKey">{{option.getName()}}</ng-option>
+                [value]="option.lookupKey">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="transferMethod"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="transferringEntityName" class="form-label"
-                   for="transferringEntityName">{{lang.map.transferring_entity_name}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="transferringEntityName"
-                   id="transferringEntityName" validationClasses="transferringEntityName">
+              for="transferringEntityName">{{lang.map.transferring_entity_name}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="transferringEntityName"
+              id="transferringEntityName" validationClasses="transferringEntityName">
             <app-field-error-message controlName="transferringEntityName"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="transferType" class="form-label"
-                   for="transferType">{{lang.map.transfer_type}}</label>
-            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                       formControlName="transferType"
-                       id="transferType" validationClasses="transferType">
+              for="transferType">{{lang.map.transfer_type}}</label>
+            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" formControlName="transferType"
+              id="transferType" validationClasses="transferType">
               <ng-option *ngFor="let option of transferTypes"
-                         [value]="option.lookupKey">{{option.getName()}}</ng-option>
+                [value]="option.lookupKey">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="transferType"></app-field-error-message>
           </div>
@@ -651,28 +583,24 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="transferFromIBAN" class="form-label"
-                   for="transferFromIBAN">{{lang.map.transfer_from_iban}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="transferFromIBAN"
-                   id="transferFromIBAN" validationClasses="transferFromIBAN">
+              for="transferFromIBAN">{{lang.map.transfer_from_iban}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="transferFromIBAN" id="transferFromIBAN"
+              validationClasses="transferFromIBAN">
             <app-field-error-message controlName="transferFromIBAN"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="transfereeIBAN" class="form-label"
-                   for="transfereeIBAN">{{lang.map.transferee_iban}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="transfereeIBAN"
-                   id="transfereeIBAN" validationClasses="transfereeIBAN">
+              for="transfereeIBAN">{{lang.map.transferee_iban}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="transfereeIBAN" id="transfereeIBAN"
+              validationClasses="transfereeIBAN">
             <app-field-error-message controlName="transfereeIBAN"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="transferCountry" class="form-label"
-                   for="transferCountry">{{lang.map.transfer_to_country}}</label>
-            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                       formControlName="transferCountry"
-                       id="transferCountry" validationClasses="transferCountry">
-              <ng-option *ngFor="let option of countries"
-                         [value]="option.id">{{option.getName()}}</ng-option>
+              for="transferCountry">{{lang.map.transfer_to_country}}</label>
+            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" formControlName="transferCountry"
+              id="transferCountry" validationClasses="transferCountry">
+              <ng-option *ngFor="let option of countries" [value]="option.id">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="transferCountry"></app-field-error-message>
           </div>
@@ -683,26 +611,22 @@
       <ng-template #payment_info>
         <div class="row">
           <div class="col-12">
-            <app-table #table [columns]="paymentDisplayedColumns"
-                       [data]="selectedPayments" [selectable]="true"
-                       [useSearchToFilter]="true"
-                       sortableTable>
-              <table [dataSource]="table.dataSource" cdk-table
-                     class="table table-striped table-bordered caption-top">
+            <app-table #table [columns]="paymentDisplayedColumns" [data]="selectedPayments" [selectable]="true"
+              [useSearchToFilter]="true" sortableTable>
+              <table [dataSource]="table.dataSource" cdk-table class="table table-striped table-bordered caption-top">
                 <ng-container cdkColumnDef="extra-header">
                   <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-                    <table-header *ngIf="isExternalUser" tableTitle="payments" [skipSearch]="true" [add$]="addPayment$" [allowAdd]="!isCancel" [skipClearSort]="true">
+                    <table-header *ngIf="isExternalUser" tableTitle="payments" [skipSearch]="true" [add$]="addPayment$"
+                      [allowAdd]="!isCancel" [skipClearSort]="true">
                     </table-header>
                   </th>
                 </ng-container>
                 <ng-container cdkColumnDef="paymentNo">
-                  <th *cdkHeaderCellDef cdk-header-cell
-                      sortable-header> {{lang.map.payment_name}}</th>
+                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.payment_name}}</th>
                   <td *cdkCellDef="let row" cdk-cell> {{row.paymentNo}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="totalCost">
-                  <th *cdkHeaderCellDef cdk-header-cell
-                      sortable-header> {{lang.map.amount}}</th>
+                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.amount}}</th>
                   <td *cdkCellDef="let row" cdk-cell> {{row.totalCost}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="dueDate">
@@ -714,11 +638,11 @@
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
                       <button (click)="removePayment($event, row)" [disabled]="(readonly || isCancel)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
+                        class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
                       </button>
                       <button (click)="selectPayment($event, row)" [disabled]="(readonly || isCancel)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
+                        class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                         <i class="mdi mdi-pen"></i>
                       </button>
                     </div>
@@ -746,17 +670,20 @@
             </div>
             <div class="col-md-4 col-sm-12 mb-4 position-relative">
               <label class="form-label">{{lang.map.remaining_amount}}</label>
-              <input [readonly]="true" class="form-control" [value]="(+qatariTransactionAmount.value) - totalPaymentsAmount">
+              <input [readonly]="true" class="form-control"
+                [value]="(+qatariTransactionAmount.value) - totalPaymentsAmount">
             </div>
           </div>
           <div class="row">
             <div class="col-sm-12 position-relative" style="text-align: center"
-            *ngIf="qatariTransactionAmount.value && ((+qatariTransactionAmount.value) === totalPaymentsAmount)">
-              <label class="form-label" style="font-weight: bold">* {{lang.map.the_transfer_amount_has_been_depleted}} *</label>
+              *ngIf="qatariTransactionAmount.value && ((+qatariTransactionAmount.value) === totalPaymentsAmount)">
+              <label class="form-label" style="font-weight: bold">* {{lang.map.the_transfer_amount_has_been_depleted}}
+                *</label>
             </div>
             <div class="col-sm-12 position-relative" style="text-align: center"
-            *ngIf="totalPaymentsAmount > (+qatariTransactionAmount.value)">
-              <label class="form-label" style="font-weight: bold; color: #dc3545">* {{lang.map.total_payments_is_greater_than_transfer_amount}} *</label>
+              *ngIf="totalPaymentsAmount > (+qatariTransactionAmount.value)">
+              <label class="form-label" style="font-weight: bold; color: #dc3545">*
+                {{lang.map.total_payments_is_greater_than_transfer_amount}} *</label>
             </div>
           </div>
         </ng-container>
@@ -767,9 +694,9 @@
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="description" class="form-label"
-                   for="description">{{lang.map.special_explanations}}</label>
+              for="description">{{lang.map.special_explanations}}</label>
             <textarea [readonly]="(readonly)" class="form-control" formControlName="description" id="description"
-                      name="description" rows="4" validationClasses="description"></textarea>
+              name="description" rows="4" validationClasses="description"></textarea>
             <app-field-error-message controlName="description"></app-field-error-message>
           </div>
         </div>
@@ -777,8 +704,7 @@
     </ng-container>
   </ng-container>
   <ng-template #attachmentsTab>
-    <attachments [caseId]="model?.id" [caseType]="model?.caseType"
-                 [service]="service.documentService" [model]="model"
-                 [formProperties]="formProperties"></attachments>
+    <attachments [caseId]="model?.id" [caseType]="model?.caseType" [service]="service.documentService" [model]="model"
+      [formProperties]="formProperties"></attachments>
   </ng-template>
 </div>
