@@ -5,6 +5,8 @@ import { DateUtils } from '@app/helpers/date-utils';
 export class RealBeneficiaryInterceptor implements IModelInterceptor<RealBeneficiary> {
   receive(model: RealBeneficiary): RealBeneficiary {
     model.birthDateString = model.birthDate ? DateUtils.getDateStringFromDate(model.birthDate, 'DEFAULT_DATE_FORMAT') : '';
+    console.log(model.birthDateString);
+
     model.birthDate = DateUtils.getDateStringFromDate(model.birthDate);
     model.startDate = DateUtils.getDateStringFromDate(model.startDate);
     model.iddate = DateUtils.getDateStringFromDate(model.iddate);

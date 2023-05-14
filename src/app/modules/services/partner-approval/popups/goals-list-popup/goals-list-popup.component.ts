@@ -40,8 +40,11 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
 
   initPopup(): void {
     this.popupTitleKey = 'domain';
+    this.displayByDomain = null;
+    // this.listenToGoalListChange();
+    this.loadOCHADACClassifications();
   }
-  
+
   destroyPopup(): void {
   }
 
@@ -66,7 +69,7 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
 
   prepareModel(model: GoalList, form: UntypedFormGroup): GoalList | Observable<GoalList> {
     let formValue = form.getRawValue();
-    
+
     let domainInfo: AdminResult =
       this.domainsList
         .find((x) => x.lookupKey === formValue.domain)
@@ -82,15 +85,15 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
         (x) => x.id === formValue.mainUNOCHACategory
       ) ?? new AdminResult();
 
-     return this._getNewInstance({
-       ...this.model,
-       ...formValue,
-       domainInfo: domainInfo,
-       mainUNOCHACategoryInfo: mainUNOCHACategoryInfo,
-       mainDACCategoryInfo: mainDACCategoryInfo,
-      });
+    return this._getNewInstance({
+      ...this.model,
+      ...formValue,
+      domainInfo: domainInfo,
+      mainUNOCHACategoryInfo: mainUNOCHACategoryInfo,
+      mainDACCategoryInfo: mainDACCategoryInfo,
+    });
   }
-  
+
   saveFail(error: Error): void {
     throw new Error(error.message);
   }
@@ -98,29 +101,25 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
   }
-  
+
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<GoalList>,
-               public lang: LangService,
-               public dialogRef: DialogRef,
-               public dialogService: DialogService,
-               public fb: UntypedFormBuilder,
-               public toast: ToastService,
-               private lookupService: LookupService,
-               private dacOchaService:DacOchaService) {
-     super();
-     this.model = data.model;
-     this.operation = data.operation;
-     this.list = data.list;
+    public lang: LangService,
+    public dialogRef: DialogRef,
+    public dialogService: DialogService,
+    public fb: UntypedFormBuilder,
+    public toast: ToastService,
+    private lookupService: LookupService,
+    private dacOchaService: DacOchaService) {
+    super();
+    this.model = data.model;
+    this.operation = data.operation;
+    this.list = data.list;
   }
-  
+
 
   displayByDomain: 'DAC' | 'OCHA' | null = null;
 
-  ngOnInit() {
-    this.displayByDomain = null;
-    this.listenToGoalListChange();
-    this.loadOCHADACClassifications();
-  }
+
 
   private listenToGoalListChange(): void {
     this.form.get('domain')!.valueChanges
@@ -176,5 +175,39 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
         })
       )
       .subscribe();
+  }
+  onDomainChange(value: any, userInteraction: boolean = false) {
+    if(userInteraction){
+      this.mainDACCategoryField.setValue(null);
+      this.mainUNOCHACategoryField.setValue(null);
+    }
+    if (!value) {
+      this.mainDACCategoryField.setValue(null);
+      this.mainUNOCHACategoryField.setValue(null);
+
+    } else {
+      if (value === DomainTypes.DEVELOPMENT) {
+        this.displayByDomain = 'DAC';
+        this.mainDACCategoryField.setValidators([
+          CustomValidators.required,
+        ]);
+        this.mainUNOCHACategoryField.setValidators([]);
+        this.mainUNOCHACategoryField.setValue(null);
+      } else if (value === DomainTypes.HUMANITARIAN) {
+        this.displayByDomain = 'OCHA';
+        this.mainUNOCHACategoryField.setValidators([
+          CustomValidators.required,
+        ]);
+        this.mainDACCategoryField.setValidators([]);
+        this.mainDACCategoryField.setValue(null);
+      }
+    }
+
+
+    this.mainDACCategoryField.updateValueAndValidity();
+    this.mainUNOCHACategoryField.updateValueAndValidity();
+  }
+  _afterViewInit(){
+    this.onDomainChange(this.model.domain,false);
   }
 }

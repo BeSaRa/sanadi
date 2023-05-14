@@ -90,7 +90,7 @@ export class BankAccountPopupComponent extends UiCrudDialogGenericComponent<Bank
       ...formValue,
       countryInfo: this.countriesList.find((x) => x.id === formValue.country)?.createAdminResult() ?? new AdminResult(),
       currencyInfo: this.currenciesList.find((x) => x.lookupKey === formValue.currency)?.createAdminResult() ?? new AdminResult(),
-      bankCategoryInfo: this.bankCategoriesList.find((x) => x.lookupKey === formValue.currency) ?? new Lookup(),
+      bankCategoryInfo: this.bankCategoriesList.find((x) => x.lookupKey === formValue.category) ?? new Lookup(),
     });
   }
 

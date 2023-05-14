@@ -13,6 +13,7 @@ import {CommonUtils} from "@helpers/common-utils";
 import {
   ComponentBudgetsPopupComponent
 } from "@modules/services/project-models/popups/component-budgets-popup/component-budgets-popup.component";
+import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
   selector: 'component-budgets',
@@ -26,6 +27,7 @@ export class ComponentBudgetsComponent extends UiCrudListGenericComponent<Projec
               public toast: ToastService) {
     super();
   }
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   projectTotalCostField: UntypedFormControl = new UntypedFormControl();
 

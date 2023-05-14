@@ -198,6 +198,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
       startDate,
       streetNumber,
       zoneNumber,
+      birthDateString
     } = this;
     return new RealBeneficiary().clone({
       address,
@@ -220,6 +221,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
       streetNumber,
       zoneNumber,
       passportNumber,
+      birthDateString
     });
   }
 }

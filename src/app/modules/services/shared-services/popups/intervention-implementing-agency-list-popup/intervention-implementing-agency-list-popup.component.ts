@@ -57,12 +57,12 @@ export class InterventionImplementingAgencyListPopupComponent extends UiCrudDial
   prepareModel(model: ImplementingAgency, form: UntypedFormGroup): ImplementingAgency | Observable<ImplementingAgency> {
     let formValue = form.getRawValue();
     let agencyTypeInfo: AdminResult = (this.implementingAgencyTypeList.find(x => x.lookupKey === formValue.implementingAgencyType) ?? new Lookup()).convertToAdminResult();
-    let agencyInfo: AdminResult = (this.implementingAgencyList.find(x => x.fnId === formValue.implementingAgency)) ?? new AdminResult();
+    let implementingAgencyInfo: AdminResult = (this.implementingAgencyList.find(x => x.fnId === formValue.implementingAgency)) ?? new AdminResult();
      return this._getNewInstance({
        ...this.model,
        ...formValue,
        agencyTypeInfo,
-       agencyInfo,
+       implementingAgencyInfo,
      });
   }
   saveFail(error: Error): void {
@@ -85,7 +85,7 @@ export class InterventionImplementingAgencyListPopupComponent extends UiCrudDial
     this.list = data.list;
     this.executionCountry = (data.extras && data.extras.executionCountry) ?? undefined;
   }
-  
+
 
   executionCountry: number;
   implementingAgencyTypeList: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType.slice().sort((a, b) => a.lookupKey - b.lookupKey);

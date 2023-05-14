@@ -37,7 +37,7 @@
         <app-field-error-message controlName="email"></app-field-error-message>
       </div>
       <!-- Country -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative" *ngIf="countriesList.length">
+      <!-- <div class="col-sm-12 col-md-4 mb-4 position-relative" *ngIf="countriesList.length">
         <label asteriskIfRequired="country" for="country" class="form-label">{{lang.map.country}}</label>
         <ng-select [selectOnTab]="true" labelForId="country" [clearable]="false" placeholder="{{lang.map.select}}"
           id="country" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="country"
@@ -46,7 +46,7 @@
             {{option.getName()}}</ng-option>
         </ng-select>
         <app-field-error-message controlName="country"></app-field-error-message>
-      </div>
+      </div> -->
       <!-- nationalities -->
       <div class="col-sm-12 col-md-4 mb-4 position-relative" *ngIf="nationalities.length">
         <label asteriskIfRequired="nationality" for="nationality"
