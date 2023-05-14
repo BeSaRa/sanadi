@@ -45,28 +45,32 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4 mb-4 position-relative" *ngIf="isLicensingUser">
-          <label asteriskIfRequired [control]="selectedTemplateControl" class="form-label">{{lang.map.select + ' ' +
+        <ng-container *ngIf="isLicensingUser">
+          <div class="col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired [control]="selectedTemplateControl" class="form-label">{{lang.map.select + ' ' +
             lang.map.lbl_template}}</label>
-          <div class="input-group">
-            <input [value]="selectedTemplate?.getName()" [readonly]="true" type="text" class="form-control">
-            <button class="btn btn-primary btn-sm" (click)="selectTemplatePopup(true)"><i
+            <div class="input-group">
+              <input [value]="selectedTemplate?.getName()" [readonly]="true" type="text" class="form-control">
+              <button class="btn btn-primary btn-sm" (click)="selectTemplatePopup(true)"><i
                 class="mdi mdi-file-word"></i></button>
-            <app-field-error-message [control]="selectedTemplateControl"></app-field-error-message>
-          </div>
-        </div>
-        <div class="col-md-4 mb-4 position-relative">
-          <div class="input-group">
-            <file-uploader #fileUploader *ngIf="isLicensingUser && selectedTemplate" labelKey="template_file" [isRequired]="true"
-              (fileUploadEvent)="uploadTemplate($event)" [allowedExtensions]="[fileExtensionsEnum.DOCX]">
-            </file-uploader>
-            <div style="font-size: 19px; padding-top: 2rem">
-              <button class="btn btn-primary btn-sm ms-2" *ngIf="isInternalUser"
-                [tooltip]="lang.map.view + ' ' + lang.map.uploaded_templates" (click)="selectTemplatePopup(false)"><i
-                  class="mdi mdi-file-eye"></i></button>
+              <app-field-error-message [control]="selectedTemplateControl"></app-field-error-message>
             </div>
           </div>
-        </div>
+        </ng-container>
+       <ng-container *ngIf="(isLicensingUser && selectedTemplate) || isInternalUser">
+         <div class="col-md-4 mb-4 position-relative">
+           <div class="input-group">
+             <file-uploader #fileUploader *ngIf="isLicensingUser && selectedTemplate" labelKey="template_file" [isRequired]="true"
+                            (fileUploadEvent)="uploadTemplate($event)" [allowedExtensions]="[fileExtensionsEnum.DOCX]">
+             </file-uploader>
+             <div style="font-size: 19px; padding-top: 2rem">
+               <button class="btn btn-primary btn-sm ms-2" *ngIf="isInternalUser"
+                       [tooltip]="lang.map.view + ' ' + lang.map.uploaded_templates" (click)="selectTemplatePopup(false)"><i
+                 class="mdi mdi-file-eye"></i></button>
+             </div>
+           </div>
+         </div>
+       </ng-container>
       </div>
       <div class="row">
         <!-- goal -->
