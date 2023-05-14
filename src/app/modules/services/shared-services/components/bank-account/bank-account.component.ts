@@ -43,9 +43,7 @@ export class BankAccountComponent extends UiCrudListGenericComponent<BankAccount
       }
     ];
   displayColumns: string[]=['bankName', 'accountNumber', 'iBan', 'country', 'actions'];
-  @Input() bankAccountDTOsList: BankAccount[] = [];
-  @Input() caseType?: CaseTypes;
-  countriesList: Country[] = [];
+  @Input() countriesList: Country[] = [];
 
   _getNewInstance(override?: Partial<BankAccount> | undefined): BankAccount {
     return new BankAccount().clone(override ?? {});
@@ -57,7 +55,9 @@ export class BankAccountComponent extends UiCrudListGenericComponent<BankAccount
     return this.lang.map.msg_confirm_delete_x.change({x: record.iBan});
   }
   getExtraDataForPopup(): IKeyValue {
-    return {}
+    return {
+      countriesList: this.countriesList
+    }
   }
   sortingCallbacks = {
     country: (a: BankAccount, b: BankAccount, dir: SortEvent): number => {
