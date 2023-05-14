@@ -30,17 +30,16 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
     {
       type: 'action',
       show: () => !this.readonly,
-      icon: ActionIconsEnum.DELETE,
-      label: 'btn_delete',
-      onClick: (e) => this.removeOne(e)
-    },
-    {
-
-      type: 'action',
-      show: () => !this.readonly,
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (e) => this.selectOne(e)
+    },
+    {
+      type: 'action',
+      show: () => !this.readonly,
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (e) => this.removeOne(e)
     },
     {
 

@@ -15,7 +15,7 @@ import { IKeyValue } from '@app/interfaces/i-key-value';
 @Component({
   selector: 'goals-list',
   templateUrl: './goals-list.component.html',
-  styleUrls: ['./goals-list.component.css']
+  styleUrls: ['./goals-list.component.scss']
 })
 export class GoalsListComponent extends UiCrudListGenericComponent<GoalList> {
   _getNewInstance(override?: Partial<GoalList> | undefined): GoalList {
@@ -25,11 +25,11 @@ export class GoalsListComponent extends UiCrudListGenericComponent<GoalList> {
   _getDialogComponent(): ComponentType<any> {
     return GoalsListPopupComponent
   }
-  
+
   _getDeleteConfirmMessage(record: GoalList): string {
     return this.lang.map.msg_confirm_delete_selected
   }
-  
+
   getExtraDataForPopup(): IKeyValue {
     return {};
   }

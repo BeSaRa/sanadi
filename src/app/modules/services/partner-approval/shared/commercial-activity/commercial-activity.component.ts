@@ -13,14 +13,14 @@ import { IKeyValue } from '@app/interfaces/i-key-value';
 @Component({
   selector: 'commercial-activity',
   templateUrl: './commercial-activity.component.html',
-  styleUrls: ['./commercial-activity.component.css']
+  styleUrls: ['./commercial-activity.component.scss']
 })
 export class CommercialActivityComponent extends UiCrudListGenericComponent<CommercialActivity> {
   _getNewInstance(override?: Partial<CommercialActivity> | undefined): CommercialActivity {
     return new CommercialActivity().clone(override ?? {});
   }
   _getDialogComponent(): ComponentType<any> {
-    return CommercialActivityPopupComponent 
+    return CommercialActivityPopupComponent
   }
   _getDeleteConfirmMessage(record: CommercialActivity): string {
     return this.lang.map.msg_confirm_delete_selected

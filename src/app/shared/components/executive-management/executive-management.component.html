@@ -36,7 +36,7 @@
               </td>
             </ng-container>
             <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-            <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+            <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
             <tr *cdkNoDataRow>
               <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>

@@ -21,26 +21,44 @@ import {
 import {
   InterventionFieldListComponent
 } from '@modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
-import { ReadBenefucuariesPopupComponent } from './popups/read-benefucuaries-popup/read-benefucuaries-popup.component';
-import { WorkAreasPopupComponent } from './popups/work-areas-popup/work-areas-popup.component';
-import { BankAccountPopupComponent } from './popups/bank-account-popup/bank-account-popup.component';
-import { InterventionImplementingAgencyListPopupComponent } from './popups/intervention-implementing-agency-list-popup/intervention-implementing-agency-list-popup.component';
-import { InterventionRegionListPopupComponent } from './popups/intervention-region-list-popup/intervention-region-list-popup.component';
-import { InterventionFieldListPopupComponent } from './popups/intervention-field-list-popup/intervention-field-list-popup.component';
-import { SelectCustomServiceTemplatePopupComponent } from './popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
-import { BankAccountNewComponent } from './components/bank-account-new/bank-account-new.component';
-import { BankAccountNewPopupComponent } from './popups/bank-account-new-popup/bank-account-new-popup.component';
+import {ReadBenefucuariesPopupComponent} from './popups/read-benefucuaries-popup/read-benefucuaries-popup.component';
+import {WorkAreasPopupComponent} from './popups/work-areas-popup/work-areas-popup.component';
+import {BankAccountPopupComponent} from './popups/bank-account-popup/bank-account-popup.component';
+import {
+  InterventionImplementingAgencyListPopupComponent
+} from './popups/intervention-implementing-agency-list-popup/intervention-implementing-agency-list-popup.component';
+import {
+  InterventionRegionListPopupComponent
+} from './popups/intervention-region-list-popup/intervention-region-list-popup.component';
+import {
+  InterventionFieldListPopupComponent
+} from './popups/intervention-field-list-popup/intervention-field-list-popup.component';
+import {
+  SelectCustomServiceTemplatePopupComponent
+} from './popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
 import {AuditBankAccountComponent} from './audit/audit-bank-account/audit-bank-account.component';
 import {AuditWorkAreasComponent} from './audit/audit-work-areas/audit-work-areas.component';
-import { AuditExecutiveManagementComponent } from './audit/audit-executive-management/audit-executive-management.component';
-import { AuditContactOfficersComponent } from './audit/audit-contact-officers/audit-contact-officers.component';
-import { AuditBankBranchComponent } from './audit/audit-bank-branch/audit-bank-branch.component';
-import { AuditOrganizationOfficerComponent } from './audit/audit-organization-officer/audit-organization-officer.component';
-import { AuditRealBeneficiaryComponent } from './audit/audit-real-beneficiary/audit-real-beneficiary.component';
-import { AuditInterventionImplementingAgencyListComponent } from './audit/audit-intervention-implementing-agency-list copy/audit-intervention-implementing-agency-list.component';
-import { AuditInterventionFieldListComponent } from './audit/audit-intervention-field-list/audit-intervention-field-list.component';
-import { AuditInterventionRegionListComponent } from './audit/audit-intervention-region-list/audit-intervention-region-list.component';
-import { AuditPaymentComponent } from '../transferring-individual-funds-abroad/audit/audit-payment/audit-payment.component';
+import {
+  AuditExecutiveManagementComponent
+} from './audit/audit-executive-management/audit-executive-management.component';
+import {AuditContactOfficersComponent} from './audit/audit-contact-officers/audit-contact-officers.component';
+import {AuditBankBranchComponent} from './audit/audit-bank-branch/audit-bank-branch.component';
+import {
+  AuditOrganizationOfficerComponent
+} from './audit/audit-organization-officer/audit-organization-officer.component';
+import {AuditRealBeneficiaryComponent} from './audit/audit-real-beneficiary/audit-real-beneficiary.component';
+import {
+  AuditInterventionImplementingAgencyListComponent
+} from './audit/audit-intervention-implementing-agency-list copy/audit-intervention-implementing-agency-list.component';
+import {
+  AuditInterventionFieldListComponent
+} from './audit/audit-intervention-field-list/audit-intervention-field-list.component';
+import {
+  AuditInterventionRegionListComponent
+} from './audit/audit-intervention-region-list/audit-intervention-region-list.component';
+import {
+  AuditPaymentComponent
+} from '../transferring-individual-funds-abroad/audit/audit-payment/audit-payment.component';
 
 
 @NgModule({
@@ -59,10 +77,7 @@ import { AuditPaymentComponent } from '../transferring-individual-funds-abroad/a
     InterventionFieldListComponent,
     InterventionFieldListPopupComponent,
     BankAccountPopupComponent,
-    SelectCustomServiceTemplatePopupComponent
     SelectCustomServiceTemplatePopupComponent,
-    BankAccountNewComponent,
-    BankAccountNewPopupComponent,
     AuditBankAccountComponent,
     AuditWorkAreasComponent,
     AuditExecutiveManagementComponent,
@@ -89,9 +104,7 @@ import { AuditPaymentComponent } from '../transferring-individual-funds-abroad/a
     ApprovalFormComponent,
     InterventionImplementingAgencyListComponent,
     InterventionRegionListComponent,
-    InterventionFieldListComponent
     InterventionFieldListComponent,
-    BankAccountNewComponent,
     AuditBankAccountComponent,
     AuditWorkAreasComponent,
     AuditExecutiveManagementComponent,

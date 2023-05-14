@@ -8,6 +8,8 @@ import { WorkArea } from '@models/work-area';
 import { LangService } from '@services/lang.service';
 import { ComponentType } from '@angular/cdk/portal';
 import { WorkAreasPopupComponent } from '../../popups/work-areas-popup/work-areas-popup.component';
+import {ActionIconsEnum} from "@enums/action-icons-enum";
+import {IMenuItem} from "@modules/context-menu/interfaces/i-menu-item";
 
 @Component({
   selector: 'work-areas',
@@ -50,4 +52,30 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
     this.cancel();
     this.list = [];
   }
+
+  actions: IMenuItem<WorkArea>[] = [
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: WorkArea) => this.selectOne(item),
+      show: (_item: WorkArea) => !this.readonly
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: WorkArea) => this.removeOne(item),
+      show: (_item: WorkArea) => !this.readonly
+    },
+    // view
+    {
+      type: 'action',
+      icon: ActionIconsEnum.VIEW,
+      label: 'view',
+      onClick: (item: WorkArea) => this.selectOne(item),
+    }
+  ];
 }
