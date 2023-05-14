@@ -1,29 +1,28 @@
-import { AdminResult } from './admin-result';
-import { WFResponseType } from './../enums/wfresponse-type.enum';
-import { CustomValidators } from './../validators/custom-validators';
-import { IMyDateModel } from 'angular-mydatepicker';
-import { AwarenessActivitySuggestionInterceptor } from './../model-interceptors/awareness-activity-suggestion';
-import { AwarenessActivitySuggestionService } from './../services/awareness-activity-suggestion.service';
-import { normalSearchFields } from '@app/helpers/normal-search-fields';
-import { infoSearchFields } from '@app/helpers/info-search-fields';
-import { dateSearchFields } from '@app/helpers/date-search-fields';
-import { ISearchFieldsMap, ControlValueLabelLangKey } from './../types/types';
-import { HasLicenseDurationType } from '@contracts/has-license-duration-type';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { mixinLicenseDurationType } from "@app/mixins/mixin-license-duration";
-import { UntypedFormGroup, Validators } from "@angular/forms";
-import { FactoryService } from "@services/factory.service";
-import { InterceptModel } from "@decorators/intercept-model";
-import { CaseModel } from "@app/models/case-model";
-import { HasRequestType } from "@app/interfaces/has-request-type";
-import { mixinRequestType } from "@app/mixins/mixin-request-type";
-import { CaseModelContract } from "@contracts/case-model-contract";
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
-import { AuditOperationTypes } from '@app/enums/audit-operation-types';
-import { ObjectUtils } from '@app/helpers/object-utils';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { DateUtils } from '@app/helpers/date-utils';
+import {AdminResult} from './admin-result';
+import {WFResponseType} from './../enums/wfresponse-type.enum';
+import {CustomValidators} from './../validators/custom-validators';
+import {IMyDateModel} from 'angular-mydatepicker';
+import {AwarenessActivitySuggestionInterceptor} from './../model-interceptors/awareness-activity-suggestion';
+import {AwarenessActivitySuggestionService} from './../services/awareness-activity-suggestion.service';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
+import {dateSearchFields} from '@app/helpers/date-search-fields';
+import {ControlValueLabelLangKey, ISearchFieldsMap} from './../types/types';
+import {HasLicenseDurationType} from '@contracts/has-license-duration-type';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {mixinLicenseDurationType} from "@app/mixins/mixin-license-duration";
+import {UntypedFormGroup, Validators} from "@angular/forms";
+import {FactoryService} from "@services/factory.service";
+import {InterceptModel} from "@decorators/intercept-model";
+import {CaseModel} from "@app/models/case-model";
+import {HasRequestType} from "@app/interfaces/has-request-type";
+import {mixinRequestType} from "@app/mixins/mixin-request-type";
+import {CaseModelContract} from "@contracts/case-model-contract";
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {IAuditModelProperties} from '@app/interfaces/i-audit-model-properties';
+import {AuditOperationTypes} from '@app/enums/audit-operation-types';
+import {ObjectUtils} from '@app/helpers/object-utils';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new AwarenessActivitySuggestionInterceptor();
@@ -34,7 +33,7 @@ const interceptor = new AwarenessActivitySuggestionInterceptor();
 })
 export class AwarenessActivitySuggestion
   extends _RequestType<AwarenessActivitySuggestionService, AwarenessActivitySuggestion>
-  implements HasRequestType, HasLicenseDurationType, CaseModelContract<AwarenessActivitySuggestionService, AwarenessActivitySuggestion>,IAuditModelProperties<AwarenessActivitySuggestion> {
+  implements HasRequestType, HasLicenseDurationType, CaseModelContract<AwarenessActivitySuggestionService, AwarenessActivitySuggestion>, IAuditModelProperties<AwarenessActivitySuggestion> {
   service!: AwarenessActivitySuggestionService;
   caseType: number = CaseTypes.AWARENESS_ACTIVITY_SUGGESTION;
   requestType!: number;
@@ -67,12 +66,15 @@ export class AwarenessActivitySuggestion
     ...infoSearchFields(['caseStatusInfo', 'creatorInfo', 'ouInfo']),
     ...normalSearchFields(['fullSerial', 'subject'])
   };
+
   constructor() {
     super();
     this.service = FactoryService.getService("AwarenessActivitySuggestionService");
     this.finalizeSearchFields();
   }
+
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
   getAdminResultByProperty(property: keyof AwarenessActivitySuggestion): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
@@ -103,78 +105,65 @@ export class AwarenessActivitySuggestion
       delete this.searchFields.organization;
     }
   }
-  getFormValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+
+  getBasicInfoFormValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       requestType: {langKey: 'request_type', value: this.requestType},
-      description:{langKey: 'special_explanations', value: this.description},
-      agreementWithRACA:{langKey: 'does_organization_have_agreement_with_RACA', value: this.agreementWithRACA},
-      subject:{langKey: 'subject', value: this.subject},
-      expectedDate:{langKey: 'expected_date', value: this.expectedDate},
-      goal:{langKey: 'goal', value: this.goal},
-      activityName:{langKey: 'activity_name', value: this.activityName},
-      oldLicenseFullSerial:{langKey: 'license_number', value: this.oldLicenseFullSerial},
+      subject: {langKey: 'subject', value: this.subject},
+      goal: {langKey: 'goal', value: this.goal},
+      oldLicenseFullSerial: {langKey: 'license_number', value: this.oldLicenseFullSerial},
     };
   }
+
   getContactOfficerValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      contactQID:{langKey: 'identification_number', value: this.contactQID},
-      contactName:{langKey: 'full_name', value: this.contactName},
-      contactEmail:{langKey: 'lbl_email', value: this.contactEmail},
-      contactPhone:{langKey: 'lbl_phone', value: this.contactPhone},
-      contactExtraPhone:{langKey: 'lbl_extra_phone_number', value: this.contactExtraPhone},
-
+      contactQID: {langKey: 'identification_number', value: this.contactQID},
+      contactName: {langKey: 'full_name', value: this.contactName},
+      contactEmail: {langKey: 'lbl_email', value: this.contactEmail},
+      contactPhone: {langKey: 'lbl_phone', value: this.contactPhone},
+      contactExtraPhone: {langKey: 'lbl_extra_phone_number', value: this.contactExtraPhone},
+      jobTitle: {langKey: 'job_title', value: this.jobTitle},
     };
   }
-  getDataOfApplicantValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+
+  getBeneficiariesNatureValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      identificationNumber:{langKey: 'identification_number', value: this.identificationNumber},
-      enName:{langKey: 'name', value: this.enName},
-      jobTitle:{langKey: 'lbl_job_title', value: this.jobTitle},
-      address:{langKey: 'lbl_address', value: this.address},
-      email:{langKey: 'lbl_email', value: this.email},
-      phone:{langKey: 'lbl_phone', value: this.phone},
-      mobileNo:{langKey: 'lbl_extra_phone_number', value: this.mobileNo},
-
+      beneficiariesNumber: {langKey: 'lbl_beneficiaries_count', value: this.beneficiariesNumber},
+      beneficiaries: {langKey: 'lbl_beneficiaries', value: this.beneficiaries},
     };
   }
+
+  getSpecialExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      description: {langKey: 'special_explanations', value: this.description},
+    }
+  }
+
   formBuilder(controls?: boolean) {
-    const {
-      requestType, description,
+    const basicInfoValues = ObjectUtils.getControlValues<AwarenessActivitySuggestion>(this.getBasicInfoFormValuesWithLabels());
+    const contactOfficerValues = ObjectUtils.getControlValues<AwarenessActivitySuggestion>(this.getContactOfficerValuesWithLabels());
+    const beneficiariesNatureValues = ObjectUtils.getControlValues<AwarenessActivitySuggestion>(this.getBeneficiariesNatureValuesWithLabels());
+    const specialExplanationValues = ObjectUtils.getControlValues<AwarenessActivitySuggestion>(this.getSpecialExplanationValuesWithLabels());
 
-      contactQID,
-      contactName,
-      contactEmail,
-      contactPhone,
-      contactExtraPhone,
-      jobTitle,
-
-      subject,
-      goal,
-
-      oldLicenseFullSerial,
-
-      beneficiaries,
-      beneficiariesNumber,
-    } = this;
     return {
-      description: controls ? [description, Validators.required] : description,
+      description: controls ? [specialExplanationValues.description, Validators.required] : specialExplanationValues.description,
       basicInfo: {
-        requestType: controls ? [requestType, Validators.required] : requestType,
-        oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
-        subject: controls ? [subject, [Validators.required]] : subject,
-        goal: controls ? [goal, [Validators.required]] : goal,
+        requestType: controls ? [basicInfoValues.requestType, Validators.required] : basicInfoValues.requestType,
+        oldLicenseFullSerial: controls ? [basicInfoValues.oldLicenseFullSerial] : basicInfoValues.oldLicenseFullSerial,
+        subject: controls ? [basicInfoValues.subject, [Validators.required]] : basicInfoValues.subject,
+        goal: controls ? [basicInfoValues.goal, [Validators.required]] : basicInfoValues.goal,
       },
       contactOfficer: {
-        contactQID: controls ? [contactQID, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : contactQID,
-        contactName: controls ? [contactName, [CustomValidators.required, Validators.maxLength(300)]] : contactName,
-        contactEmail: controls ? [contactEmail, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : contactEmail,
-        contactPhone: controls ? [contactPhone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : contactPhone,
-        contactExtraPhone: controls ? [contactExtraPhone, CustomValidators.commonValidations.phone] : contactExtraPhone,
-        jobTitle: controls ? [jobTitle, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : jobTitle,
+        contactQID: controls ? [contactOfficerValues.contactQID, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : contactOfficerValues.contactQID,
+        contactName: controls ? [contactOfficerValues.contactName, [CustomValidators.required, Validators.maxLength(300)]] : contactOfficerValues.contactName,
+        contactEmail: controls ? [contactOfficerValues.contactEmail, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : contactOfficerValues.contactEmail,
+        contactPhone: controls ? [contactOfficerValues.contactPhone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : contactOfficerValues.contactPhone,
+        contactExtraPhone: controls ? [contactOfficerValues.contactExtraPhone, CustomValidators.commonValidations.phone] : contactOfficerValues.contactExtraPhone,
+        jobTitle: controls ? [contactOfficerValues.jobTitle, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : contactOfficerValues.jobTitle,
       },
       beneficiariesNature: {
-        beneficiaries: controls ? [beneficiaries, [CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : beneficiaries,
-        beneficiariesNumber: controls ? [beneficiariesNumber, [CustomValidators.required]] : beneficiariesNumber,
+        beneficiaries: controls ? [beneficiariesNatureValues.beneficiaries, [CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : beneficiariesNatureValues.beneficiaries,
+        beneficiariesNumber: controls ? [beneficiariesNatureValues.beneficiariesNumber, [CustomValidators.required]] : beneficiariesNatureValues.beneficiariesNumber,
       },
     };
   }
@@ -187,9 +176,11 @@ export class AwarenessActivitySuggestion
       followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
     }
   }
+
   approveWithSave(form: UntypedFormGroup): DialogRef {
     return this.service.approve(this, WFResponseType.APPROVE)
   }
+
   finalApprove(): DialogRef {
     return this.service.finalApprove(this, WFResponseType.FINAL_APPROVE)
   }

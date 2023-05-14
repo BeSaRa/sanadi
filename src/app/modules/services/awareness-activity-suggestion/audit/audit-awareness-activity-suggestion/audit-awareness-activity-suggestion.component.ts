@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ProfileTypes } from '@app/enums/profile-types.enum';
-import { ObjectUtils } from '@app/helpers/object-utils';
-import { IAuditCaseProperties } from '@app/interfaces/i-audit-case-properties';
-import { IValueDifference } from '@app/interfaces/i-value-difference';
-import { AwarenessActivitySuggestion } from '@app/models/awareness-activity-suggestion';
-import { EmployeeService } from '@app/services/employee.service';
-import { LangService } from '@app/services/lang.service';
+import {Component, OnInit} from '@angular/core';
+import {ObjectUtils} from '@app/helpers/object-utils';
+import {IAuditCaseProperties} from '@app/interfaces/i-audit-case-properties';
+import {IValueDifference} from '@app/interfaces/i-value-difference';
+import {AwarenessActivitySuggestion} from '@app/models/awareness-activity-suggestion';
+import {LangService} from '@app/services/lang.service';
 
 @Component({
   selector: 'app-audit-awareness-activity-suggestion',
@@ -16,45 +14,47 @@ export class AuditAwarenessActivitySuggestionComponent implements IAuditCaseProp
   newVersion!: AwarenessActivitySuggestion; // don't delete or rename the property
   oldVersion!: AwarenessActivitySuggestion; // don't delete or rename the property
 
-  formDifferences: IValueDifference[] = [];
-  dataOfApplicant: IValueDifference[] = [];
-  contactOfficer: IValueDifference[] = [];
+  basicInfoDifferences: IValueDifference[] = [];
+  contactOfficerDifferences: IValueDifference[] = [];
+  beneficiariesNatureDifferences: IValueDifference[] = [];
+  specialExplanationDifferences: IValueDifference[] = [];
 
-  constructor(
-    public lang: LangService,
-    public employeeService: EmployeeService,
-    ) {
+  constructor(public lang: LangService) {
   }
 
   ngOnInit() {
     this._getFormDifferences();
-    this._getDataOfApplicantDifferences();
     this._getContactOfficerDifferences();
+    this._getBeneficiariesNatureDifferences();
+    this._getSpecialExplanationDifferences();
 
   }
 
   private _getFormDifferences(): void {
-    const newVersionDataModel: Partial<AwarenessActivitySuggestion> = ObjectUtils.getControlComparisonValues<AwarenessActivitySuggestion>(this.newVersion.getFormValuesWithLabels());
-    const oldVersionDataModel: Partial<AwarenessActivitySuggestion> = ObjectUtils.getControlComparisonValues<AwarenessActivitySuggestion>(this.oldVersion.getFormValuesWithLabels());
-    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getFormValuesWithLabels());
-    this.formDifferences = ObjectUtils.getValueDifferencesList<AwarenessActivitySuggestion, AwarenessActivitySuggestion>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+    const newVersionDataModel: Partial<AwarenessActivitySuggestion> = ObjectUtils.getControlComparisonValues<AwarenessActivitySuggestion>(this.newVersion.getBasicInfoFormValuesWithLabels());
+    const oldVersionDataModel: Partial<AwarenessActivitySuggestion> = ObjectUtils.getControlComparisonValues<AwarenessActivitySuggestion>(this.oldVersion.getBasicInfoFormValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getBasicInfoFormValuesWithLabels());
+    this.basicInfoDifferences = ObjectUtils.getValueDifferencesList<AwarenessActivitySuggestion, AwarenessActivitySuggestion>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
-  private _getDataOfApplicantDifferences(): void {
-    const newVersionDataModel: Partial<AwarenessActivitySuggestion> = ObjectUtils.getControlComparisonValues<AwarenessActivitySuggestion>(this.newVersion.getDataOfApplicantValuesWithLabels());
-    const oldVersionDataModel: Partial<AwarenessActivitySuggestion> = ObjectUtils.getControlComparisonValues<AwarenessActivitySuggestion>(this.oldVersion.getDataOfApplicantValuesWithLabels());
-    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getDataOfApplicantValuesWithLabels());
-    this.dataOfApplicant = ObjectUtils.getValueDifferencesList<AwarenessActivitySuggestion, AwarenessActivitySuggestion>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
-  }
+
   private _getContactOfficerDifferences(): void {
     const newVersionDataModel: Partial<AwarenessActivitySuggestion> = ObjectUtils.getControlComparisonValues<AwarenessActivitySuggestion>(this.newVersion.getContactOfficerValuesWithLabels());
     const oldVersionDataModel: Partial<AwarenessActivitySuggestion> = ObjectUtils.getControlComparisonValues<AwarenessActivitySuggestion>(this.oldVersion.getContactOfficerValuesWithLabels());
     const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getContactOfficerValuesWithLabels());
-    this.contactOfficer = ObjectUtils.getValueDifferencesList<AwarenessActivitySuggestion, AwarenessActivitySuggestion>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+    this.contactOfficerDifferences = ObjectUtils.getValueDifferencesList<AwarenessActivitySuggestion, AwarenessActivitySuggestion>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
 
-  isNonProfitProfile() {
-    return this.employeeService.getProfile()?.profileType == ProfileTypes.NON_PROFIT_ORGANIZATIONS || this.newVersion?.profileType == ProfileTypes.NON_PROFIT_ORGANIZATIONS;
+  private _getBeneficiariesNatureDifferences(): void {
+    const newVersionDataModel: Partial<AwarenessActivitySuggestion> = ObjectUtils.getControlComparisonValues<AwarenessActivitySuggestion>(this.newVersion.getBeneficiariesNatureValuesWithLabels());
+    const oldVersionDataModel: Partial<AwarenessActivitySuggestion> = ObjectUtils.getControlComparisonValues<AwarenessActivitySuggestion>(this.oldVersion.getBeneficiariesNatureValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getBeneficiariesNatureValuesWithLabels());
+    this.beneficiariesNatureDifferences = ObjectUtils.getValueDifferencesList<AwarenessActivitySuggestion, AwarenessActivitySuggestion>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
 
-
+  private _getSpecialExplanationDifferences(): void {
+    const newVersionDataModel: Partial<AwarenessActivitySuggestion> = ObjectUtils.getControlComparisonValues<AwarenessActivitySuggestion>(this.newVersion.getSpecialExplanationValuesWithLabels());
+    const oldVersionDataModel: Partial<AwarenessActivitySuggestion> = ObjectUtils.getControlComparisonValues<AwarenessActivitySuggestion>(this.oldVersion.getSpecialExplanationValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getSpecialExplanationValuesWithLabels());
+    this.specialExplanationDifferences = ObjectUtils.getValueDifferencesList<AwarenessActivitySuggestion, AwarenessActivitySuggestion>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+  }
 }
