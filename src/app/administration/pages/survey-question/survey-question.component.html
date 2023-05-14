@@ -20,7 +20,7 @@
                           [add$]="add$"
                           (textChange)="filterControl.setValue($event)"
                           [sort]="table.dataSource.sort"
-                          >
+            >
               <ng-container *ngTemplateOutlet="bulk"></ng-container>
             </table-header>
           </th>
@@ -42,7 +42,7 @@
         <ng-container *ngFor="let column of searchColumns" [cdkColumnDef]="column">
           <th cdk-header-cell *cdkHeaderCellDef>
             <header-search-field (filterChange)="columnFilter$.next($event)" [form]="columnFilterForm"
-                                     [searchConfig]="searchColumnsConfig" [column]="column">
+                                 [searchConfig]="searchColumnsConfig" [column]="column">
             </header-search-field>
           </th>
         </ng-container>
@@ -61,9 +61,7 @@
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
-            <button (click)="deleteQuestion(row)" class="btn icon-btn"><i class="mdi text-primary mdi-delete"></i>
-            </button>
-            <button (click)="edit$.next(row)" class="btn icon-btn"><i class="mdi text-primary mdi-pen"></i></button>
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex"></grid-actions>
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>

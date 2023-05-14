@@ -16,6 +16,7 @@ import {of} from 'rxjs';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { FormBuilder } from '@angular/forms';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
+import {ActionIconsEnum} from "@enums/action-icons-enum";
 
 @Component({
   selector: 'bank',
@@ -24,7 +25,15 @@ import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 })
 export class BankComponent extends AdminGenericComponent<Bank, BankService> implements OnInit {
   usePagination = true
-  actions: IMenuItem<Bank>[] = [];
+  actions: IMenuItem<Bank>[] = [
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: Bank) => this.edit$.next(item)
+    }
+  ];
   displayedColumns: string[] = ['arName', 'enName', 'actions'];
   searchColumns: string[] = ['search_arName', 'search_enName', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
@@ -60,14 +69,9 @@ export class BankComponent extends AdminGenericComponent<Bank, BankService> impl
               private fb: FormBuilder) {
     super();
   }
-  
+
   _init(){
     this.buildFilterForm();
-  }
-
-  edit(bank: Bank, event: MouseEvent) {
-    event.preventDefault();
-    this.edit$.next(bank);
   }
 
   delete(event: MouseEvent, model: Bank): void {

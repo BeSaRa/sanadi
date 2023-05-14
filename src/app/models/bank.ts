@@ -6,9 +6,10 @@ import { BankService } from '@app/services/bank.service';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { Lookup } from '@app/models/lookup';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { searchFunctionType } from '@app/types/types';
+import {ISearchFieldsMap, searchFunctionType} from '@app/types/types';
 import { BankInterceptor } from "@app/model-interceptors/bank-interceptor";
 import { InterceptModel } from "@decorators/intercept-model";
+import {normalSearchFields} from "@helpers/normal-search-fields";
 
 const interceptor = new BankInterceptor();
 
@@ -32,9 +33,8 @@ export class Bank extends BaseModel<Bank, BankService> {
     return this[(this.langService?.map.lang + 'Name') as keyof INames] || '';
   }
 
-  searchFields: { [key: string]: searchFunctionType | string } = {
-    arName: 'arName',
-    enName: 'enName'
+  searchFields: ISearchFieldsMap<Bank> = {
+    ...normalSearchFields(['arName', 'enName'])
   };
 
   buildForm(controls?: boolean): any {

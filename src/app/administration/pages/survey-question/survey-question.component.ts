@@ -1,22 +1,22 @@
-import { Component, ViewChild } from '@angular/core';
-import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { SurveyQuestion } from '@app/models/survey-question';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { SurveyQuestionService } from '@app/services/survey-question.service';
-import { LangService } from '@app/services/lang.service';
-import { IGridAction } from '@app/interfaces/i-grid-action';
-import { TableComponent } from '@app/shared/components/table/table.component';
-import { DialogService } from '@app/services/dialog.service';
-import { Observable } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { SharedService } from '@app/services/shared.service';
-import { DeleteBulkResult } from '@app/types/types';
-import { ToastService } from '@app/services/toast.service';
-import { FormBuilder } from '@angular/forms';
-import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import {Component, ViewChild} from '@angular/core';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {SurveyQuestion} from '@app/models/survey-question';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {SurveyQuestionService} from '@app/services/survey-question.service';
+import {LangService} from '@app/services/lang.service';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {DialogService} from '@app/services/dialog.service';
+import {Observable} from 'rxjs';
+import {filter, switchMap} from 'rxjs/operators';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {SharedService} from '@app/services/shared.service';
+import {DeleteBulkResult} from '@app/types/types';
+import {ToastService} from '@app/services/toast.service';
+import {FormBuilder} from '@angular/forms';
+import {SearchColumnConfigMap} from '@app/interfaces/i-search-column-config';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'survey-question',
@@ -25,6 +25,7 @@ import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 })
 export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestion, SurveyQuestionService> {
   usePagination = true
+
   constructor(public service: SurveyQuestionService,
               private dialog: DialogService,
               private sharedService: SharedService,
@@ -52,9 +53,11 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
       maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
     }
   }
+
   protected _init(): void {
     this.buildFilterForm()
   }
+
   useCompositeToLoad = false;
   @ViewChild(TableComponent)
   table!: TableComponent;
@@ -69,7 +72,7 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
     {
       type: 'action',
       label: 'btn_edit',
-      icon: 'mdi-pen',
+      icon: ActionIconsEnum.EDIT,
       onClick: (item) => {
         this.edit$.next(item);
       },
@@ -77,27 +80,28 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
     {
       type: 'action',
       label: 'btn_delete',
-      icon: 'mdi-delete',
+      icon: ActionIconsEnum.DELETE,
       onClick: (item) => {
         this.deleteQuestion(item);
       },
     },
-     // logs
-     {
+    // logs
+    {
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
+      show: () => false,
       onClick: (item) => this.showAuditLogs(item)
     },
   ];
 
   deleteQuestion(q: SurveyQuestion): void {
-    this.dialog.confirm(this.lang.map.msg_confirm_delete_selected)
+    this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({x: q.getName()}))
       .onAfterClose$
       .pipe(filter(click => click === UserClickOn.YES))
       .pipe(switchMap(() => q.delete()))
       .subscribe((_) => {
-        this.toast.success(this.lang.map.msg_delete_x_success.change({ x: q.getName() }));
+        this.toast.success(this.lang.map.msg_delete_x_success.change({x: q.getName()}));
         this.models = this.models.filter(item => item.id !== q.id);
       });
   }
@@ -121,6 +125,7 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
         this.table && this.table.clearSelection();
       });
   }
+
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
       arName: [''], enName: [''], isFreeText: [null]
