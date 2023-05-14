@@ -9,11 +9,11 @@
         </ng-container>
         <ng-container cdkColumnDef="oldValue">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.old_value}}</th>
-          <td cdk-cell *cdkCellDef="let row"><span>{{row.oldValueInfo ? row.oldValueInfo.getName() : ''}}</span></td>
+          <td cdk-cell *cdkCellDef="let row"><span class="text-pre-wrap">{{row.oldValueInfo ? row.oldValueInfo.getName() : ''}}</span></td>
         </ng-container>
         <ng-container cdkColumnDef="newValue">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.new_value}}</th>
-          <td cdk-cell *cdkCellDef="let row"><span>{{row.newValueInfo ? row.newValueInfo.getName() : ''}}</span></td>
+          <td cdk-cell *cdkCellDef="let row"><span class="text-pre-wrap">{{row.newValueInfo ? row.newValueInfo.getName() : ''}}</span></td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
