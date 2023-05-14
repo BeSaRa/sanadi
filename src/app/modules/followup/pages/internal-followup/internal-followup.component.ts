@@ -1,19 +1,20 @@
-import { Component } from '@angular/core';
-import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { Followup } from '@app/models/followup';
-import { FollowupService } from '@app/services/followup.service';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { Subject } from 'rxjs';
-import { LangService } from '@app/services/lang.service';
-import { DialogService } from '@app/services/dialog.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { ToastService } from '@app/services/toast.service';
-import { switchMap, takeUntil, tap } from 'rxjs/operators';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { FollowupStatusEnum } from '@app/enums/status.enum';
-import { SortEvent } from "@contracts/sort-event";
-import { CommonUtils } from "@helpers/common-utils";
-import { CommonService } from "@services/common.service";
+import {Component} from '@angular/core';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {Followup} from '@app/models/followup';
+import {FollowupService} from '@app/services/followup.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {Subject} from 'rxjs';
+import {LangService} from '@app/services/lang.service';
+import {DialogService} from '@app/services/dialog.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {ToastService} from '@app/services/toast.service';
+import {switchMap, takeUntil, tap} from 'rxjs/operators';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {FollowupStatusEnum} from '@app/enums/status.enum';
+import {SortEvent} from "@contracts/sort-event";
+import {CommonUtils} from "@helpers/common-utils";
+import {CommonService} from "@services/common.service";
+import {ActionIconsEnum} from "@enums/action-icons-enum";
 
 @Component({
   selector: 'internal-followup',
@@ -21,7 +22,23 @@ import { CommonService } from "@services/common.service";
   styleUrls: ['./internal-followup.component.scss']
 })
 export class InternalFollowupComponent extends AdminGenericComponent<Followup, FollowupService> {
-  actions: IMenuItem<Followup>[] = [];
+  actions: IMenuItem<Followup>[] = [
+    // show comments
+    {
+      type: 'action',
+      icon: ActionIconsEnum.COMMENT,
+      label: 'comments',
+      onClick: (item: Followup) => this.showComments(item)
+    },
+    // terminate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_terminate',
+      disabled:(item)=> this.isDisabled(item),
+      onClick: (item: Followup) => this.terminate(item)
+    }
+  ];
   displayedColumns: string[] = ['fullSerial', 'requestType', 'name', 'serviceType', 'dueDate', 'createdBy', 'status', 'actions'];
   headerColumn: string[] = ['extra-header'];
   searchText = '';
@@ -75,8 +92,8 @@ export class InternalFollowupComponent extends AdminGenericComponent<Followup, F
       });
   }
 
-  terminate(model: Followup, $event: MouseEvent) {
-    $event.preventDefault();
+  terminate(model: Followup, $event?: MouseEvent) {
+    $event?.preventDefault();
     const message = this.lang.map.msg_confirm_terminate_followup;
     this.dialog.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
@@ -91,7 +108,7 @@ export class InternalFollowupComponent extends AdminGenericComponent<Followup, F
 
   }
 
-  showComments(model: Followup, _$event: MouseEvent) {
+  showComments(model: Followup, _$event?: MouseEvent) {
     this.dialog.show(this.service._getCommentsDialogComponent(), model);
   }
 

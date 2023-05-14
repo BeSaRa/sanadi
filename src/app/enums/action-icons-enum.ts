@@ -62,5 +62,7 @@ export enum ActionIconsEnum {
   POLL = 'mdi-poll',
   BLOCK = 'mdi-block-helper',
   INFO = 'mdi-information',
-  FILE_HISTORY = 'mdi-file-clock'
+  FILE_HISTORY = 'mdi-file-clock',
+  COMMENT = 'mdi-comment',
+  CHANGE_DATE = 'mdi-calendar-edit'
 }

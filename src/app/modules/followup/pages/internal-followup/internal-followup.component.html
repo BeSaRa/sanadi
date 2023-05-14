@@ -59,16 +59,8 @@
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
-              <button class="btn icon-btn text-primary grid-action-btn"
-                      [tooltip]="lang.map.comments" (click)="showComments(row, $event)">
-                <i class="mdi mdi-comment"></i>
-              </button>
-              <button class="btn icon-btn text-primary grid-action-btn"
-                      [disabled]="isDisabled(row)"
-                      [tooltip]="lang.map.btn_terminate" (click)="terminate(row, $event)">
-                <i class="mdi mdi-close-box"></i>
-              </button>
+            <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+              <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex"></grid-actions>
             </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>

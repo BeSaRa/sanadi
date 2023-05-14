@@ -59,34 +59,8 @@
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
-              <button *ngIf="!hasTerminatedRequest(row)" class="btn icon-btn text-primary"
-                      [tooltip]="lang.map.comments" (click)="showComments(row, $event)">
-                <i class="mdi mdi-comment"></i>
-              </button>
-              <button *ngIf="!hasTerminatedRequest(row)" class="btn icon-btn text-primary"
-                      [disabled]="isDisabled(row)"
-                      [tooltip]="lang.map.btn_terminate" (click)="terminate(row, $event)">
-                <i class="mdi mdi-delete"></i>
-              </button>
-              <button *ngIf="hasTerminatedRequest(row)" class="btn icon-btn text-primary"
-                      [disabled]="isDisabled(row)"
-                      [tooltip]="lang.map.reject_terminate" (click)="rejectTerminate(row)">
-                <i class="mdi mdi-close"></i>
-              </button>
-              <button *ngIf="hasTerminatedRequest(row)" class="btn icon-btn text-primary"
-                      [disabled]="isDisabled(row)"
-                      [tooltip]="lang.map.accept_terminate" (click)="terminate(row, $event)">
-                <i class="mdi mdi-check"></i>
-              </button>
-              <button *ngIf="isInternalUser" class="btn icon-btn text-primary"
-                      [tooltip]="lang.map.edit_due_date" (click)="editDueDate(row)">
-                <i class="mdi mdi-calendar-edit"></i>
-              </button>
-              <button *ngIf="row.hasReason()" class="btn icon-btn text-primary"
-                      [tooltip]="row.getReason()">
-                <i class="mdi mdi-alert-circle"></i>
-              </button>
+            <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+              <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex"></grid-actions>
             </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>

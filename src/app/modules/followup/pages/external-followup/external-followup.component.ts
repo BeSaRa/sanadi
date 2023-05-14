@@ -14,6 +14,7 @@ import { EmployeeService } from '@app/services/employee.service';
 import { SortEvent } from "@contracts/sort-event";
 import { CommonUtils } from "@helpers/common-utils";
 import { CommonService } from "@services/common.service";
+import {ActionIconsEnum} from "@enums/action-icons-enum";
 
 @Component({
   selector: 'external-followup',
@@ -21,7 +22,59 @@ import { CommonService } from "@services/common.service";
   styleUrls: ['./external-followup.component.scss']
 })
 export class ExternalFollowupComponent extends AdminGenericComponent<Followup, FollowupService> {
-  actions: IMenuItem<Followup>[] = [];
+  actions: IMenuItem<Followup>[] = [
+    // show comments
+    {
+      type: 'action',
+      icon: ActionIconsEnum.COMMENT,
+      label: 'comments',
+      show:(item)=> !this.hasTerminatedRequest(item),
+      onClick: (item: Followup) => this.showComments(item)
+    },
+    // terminate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_terminate',
+      show:(item)=> !this.hasTerminatedRequest(item),
+      disabled:(item)=> this.isDisabled(item),
+      onClick: (item: Followup) => this.terminate(item)
+    },
+    // reject terminate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.CANCEL,
+      label: 'reject_terminate',
+      show:(item)=> this.hasTerminatedRequest(item),
+      disabled:(item)=> this.isDisabled(item),
+      onClick: (item: Followup) => this.rejectTerminate(item)
+    },
+    // accept terminate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.ACCEPT,
+      label: 'accept_terminate',
+      show:(item)=> this.hasTerminatedRequest(item),
+      disabled:(item)=> this.isDisabled(item),
+      onClick: (item: Followup) => this.terminate(item)
+    },
+    // edit due date
+    {
+      type: 'action',
+      icon: ActionIconsEnum.CHANGE_DATE,
+      label: 'edit_due_date',
+      show:(item)=> this.isInternalUser,
+      onClick: (item: Followup) => this.editDueDate(item)
+    },
+    // reason
+    {
+      type: 'action',
+      icon: 'mdi-alert-circle',
+      label: (item)=> item.getReason(),
+      show:(item)=> item.hasReason(),
+      onClick: (item: Followup) => false
+    }
+  ];
   displayedColumns: string[] = ['fullSerial', 'requestType', 'name', 'serviceType', 'dueDate', 'createdBy', 'status', 'actions'];
   searchText = '';
   add$: Subject<any> = new Subject<any>();
@@ -80,8 +133,8 @@ export class ExternalFollowupComponent extends AdminGenericComponent<Followup, F
       });
   }
 
-  terminate(model: Followup, $event: MouseEvent) {
-    $event.preventDefault();
+  terminate(model: Followup, $event?: MouseEvent) {
+    $event?.preventDefault();
     const message = this.lang.map.msg_confirm_terminate_followup;
     this.dialog.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
@@ -105,7 +158,7 @@ export class ExternalFollowupComponent extends AdminGenericComponent<Followup, F
       })
   }
 
-  showComments(model: Followup, _$event: MouseEvent) {
+  showComments(model: Followup, _$event?: MouseEvent) {
     this.dialog.show(this.service._getCommentsDialogComponent(), model);
   }
 
