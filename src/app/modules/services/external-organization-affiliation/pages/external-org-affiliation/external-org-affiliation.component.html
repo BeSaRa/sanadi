@@ -313,9 +313,9 @@
     </ng-template>
     <ng-template #bank_accounts>
       <bank-account
-        #bankAccountsTab
+        #bankAccountsTab  [countriesList]="countriesList"
         [caseType]="model?.caseType"
-        [bankAccountDTOsList]="model?.bankAccountDTOs || []"
+        [list]="model?.bankAccountDTOs || []"
         [readonly]="isCancelRequestType() || readonly"
       ></bank-account>
     </ng-template>

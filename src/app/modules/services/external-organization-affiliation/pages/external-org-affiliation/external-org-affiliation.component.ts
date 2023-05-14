@@ -58,7 +58,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       name: 'bankAccountsTab',
       langKey: 'bank_details',
       validStatus: () => {
-        return !this.bankAccountComponentRef || this.bankAccountComponentRef.bankAccountDTOsList.length > 0;
+        return !this.bankAccountComponentRef || this.bankAccountComponentRef.list.length > 0;
       }
     },
     managers: {
@@ -117,8 +117,8 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       ...this.specialExplanation.getRawValue()
     });
 
-    value.bankAccountDTOs = this.bankAccountComponentRef.bankAccountDTOsList;
-    value.executiveManagementDTOs = this.executiveManagementComponentRef.list;
+    value.bankAccountDTOs = this.bankAccountComponentRef.list ?? [];
+    value.executiveManagementDTOs = this.executiveManagementComponentRef.list ?? [];
     value.contactOfficerDTOs = [this.contactOfficerTab.value];
     return value;
   }

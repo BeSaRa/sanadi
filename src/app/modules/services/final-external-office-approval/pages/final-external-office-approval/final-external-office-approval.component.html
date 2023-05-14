@@ -239,23 +239,24 @@
         </div>
       </ng-template>
       <ng-template #bankAccountsTemplate>
-        <bank-account 
-          #bankAccountsTab 
+        <bank-account
+          #bankAccountsTab
           [list]="model?.bankAccountList || []"
-          [caseType]="model?.caseType" 
+          [countriesList]="countriesList"
+          [caseType]="model?.caseType"
           [readonly]="(isExtendOrCancelRequestType() || readonly)"
         ></bank-account>
       </ng-template>
       <ng-template #managersTabTemplate>
-      <executive-management 
-        #managersTab            
+      <executive-management
+        #managersTab
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
         [list]="model?.executiveManagementList || []"
       ></executive-management>
       </ng-template>
       <ng-template #branchesTabTemplate>
-        <bank-branch 
-          #branchesTab 
+        <bank-branch
+          #branchesTab
           [readonly]="(isExtendOrCancelRequestType() || readonly)"
           [branchList]="model?.branchList || []"
         ></bank-branch>

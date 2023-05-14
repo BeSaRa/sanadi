@@ -280,7 +280,7 @@
     </ng-template>
     <!-- Bank accounts -->
     <ng-template #bankAccountsTemplate>
-      <bank-account #bankAccountsTab
+      <bank-account #bankAccountsTab [countriesList]="countries"
                     [list]="model?.bankAccountList || []"
                     [caseType]="model?.caseType" [readonly]="(isExtendOrCancelRequestType() || readonly)"
                     ></bank-account>
@@ -319,7 +319,7 @@
         </div>
 
 
-        <commercial-activity #commercialActivityTab 
+        <commercial-activity #commercialActivityTab
                              [commercialActivitiesList]="model?.commercialActivitiesList || []"
                              [readonly]="(isExtendOrCancelRequestType() || readonly)"
                              >
@@ -330,21 +330,21 @@
 
     <!-- Goals -->
     <ng-template #goalsTemplate>
-      <goal 
-        #goalsTab 
-        [displayGoals]="model?.displayGoals  || []" 
+      <goal
+        #goalsTab
+        [displayGoals]="model?.displayGoals  || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
       ></goal>
 
-      <goals-list 
-        #goalsListTab 
-        [goalsList]="model?.goalsList || []" 
+      <goals-list
+        #goalsListTab
+        [goalsList]="model?.goalsList || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
       ></goals-list>
 
       <!-- Target Groups -->
-      <target-group 
-        #targetGroupsTab 
+      <target-group
+        #targetGroupsTab
         [targetGroupList]="model?.targetGroupList || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
       ></target-group>
@@ -356,7 +356,7 @@
     </ng-template>
     <!-- Management Councils -->
     <ng-template #managementCouncilsTemplate>
-      <management-council 
+      <management-council
         #managementCouncilsTab
         [managementCouncilList]="model?.managementCouncilList || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
@@ -365,9 +365,9 @@
     </ng-template>
     <!-- Executive Managements -->
     <ng-template #executiveManagementsTemplate>
-      <executive-management 
+      <executive-management
         #executiveManagementsTab
-        [pageTitleKey]="'executive_management'" 
+        [pageTitleKey]="'executive_management'"
         [list]="model?.executiveManagementList || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
       ></executive-management>
@@ -375,8 +375,8 @@
 
     <!-- Contact Officers -->
     <ng-template #contactOfficersTemplate>
-      <contact-officer 
-        #contactOfficersTab 
+      <contact-officer
+        #contactOfficersTab
         [contactOfficerList]="model?.contactOfficerList || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)">
       </contact-officer>
@@ -384,8 +384,8 @@
 
     <!-- Approval Reasons -->
     <ng-template #approvalReasonsTemplate>
-      <approval-reason 
-        #approvalReasonsTab 
+      <approval-reason
+        #approvalReasonsTab
         [list]="model?.approvalReasonList || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
       ></approval-reason>

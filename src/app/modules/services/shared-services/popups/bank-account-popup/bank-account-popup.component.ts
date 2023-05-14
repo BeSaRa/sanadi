@@ -1,23 +1,23 @@
-import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { UiCrudDialogGenericComponent } from '@app/generics/ui-crud-dialog-generic-component.directive';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { AdminResult } from '@app/models/admin-result';
-import { BankAccount } from '@app/models/bank-account';
-import { Country } from '@app/models/country';
-import { Lookup } from '@app/models/lookup';
-import { CountryService } from '@app/services/country.service';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { ToastService } from '@app/services/toast.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { Observable } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {Component, Inject} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {AdminResult} from '@app/models/admin-result';
+import {BankAccount} from '@app/models/bank-account';
+import {Country} from '@app/models/country';
+import {Lookup} from '@app/models/lookup';
+import {CountryService} from '@app/services/country.service';
+import {DialogService} from '@app/services/dialog.service';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {Observable} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'bank-account-popup',
@@ -47,10 +47,17 @@ export class BankAccountPopupComponent extends UiCrudDialogGenericComponent<Bank
     this.operation = data.operation;
     this.list = data.list;
     this.caseType = data.caseType!;
+    this.countriesList = data.extras?.countriesList ?? [];
   }
 
   initPopup(): void {
     this.popupTitleKey = 'bank_details';
+    if (!this.countriesList.length) {
+      this.loadCountries();
+    }
+  }
+
+  private loadCountries(): void {
     this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countriesList = countries);
