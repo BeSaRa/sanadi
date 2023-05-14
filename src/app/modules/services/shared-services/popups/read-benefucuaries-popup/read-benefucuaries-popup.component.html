@@ -1,6 +1,6 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
   <h1 class="h6 text-white">{{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
-    lang.map.internal_branches }}</h1>
+    lang.map.lbl_real_beneficiary }}</h1>
   <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
 <div class="dialog-content no-fixed-height">
@@ -24,16 +24,14 @@
           </div>
         </ng-container>
         <ng-container *ngSwitchCase="'text'">
-          <label [asteriskIfRequired]="control.controlName" [for]="control.controlName" class="form-label"
-            [validationClasses]="control.controlName">{{ control.label }}</label>
+          <label [asteriskIfRequired]="control.controlName" [for]="control.controlName" class="form-label">{{ control.label }}</label>
           <input type="text" class="form-control" [readonly]="readonly || hideSave" [id]="control.controlName"
-            [formControlName]="control.controlName" />
+            [formControlName]="control.controlName" [validationClasses]="control.controlName"/>
 
           <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
         </ng-container>
         <ng-container *ngSwitchCase="'textarea'">
-          <label [asteriskIfRequired]="control.controlName" [for]="control.controlName" class="form-label"
-            [validationClasses]="control.controlName">{{ control.label }}</label>
+          <label [asteriskIfRequired]="control.controlName" [for]="control.controlName" class="form-label">{{ control.label }}</label>
           <textarea [validationClasses]="control.controlName" trimInput [readonly]="readonly || hideSave"
             [id]="control.controlName" [formControlName]="control.controlName" class="form-control">
           </textarea>
@@ -54,7 +52,7 @@
           </div>
         </ng-container>
         <ng-container *ngSwitchCase="'title'">
-          <h6>{{control.label}}</h6>
+          <h6 class="text-primary">{{control.label}}</h6>
         </ng-container>
       </div>
     </div>
