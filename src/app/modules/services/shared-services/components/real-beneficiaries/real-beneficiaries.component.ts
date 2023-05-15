@@ -6,7 +6,7 @@ import {LangService} from '@services/lang.service';
 import {LookupService} from '@services/lookup.service';
 import {ToastService} from '@services/toast.service';
 import { ComponentType } from '@angular/cdk/portal';
-import { ReadBenefucuariesPopupComponent } from '../../popups/read-benefucuaries-popup/read-benefucuaries-popup.component';
+import { RealBeneficiariesPopupComponent } from '@modules/services/shared-services/popups/real-beneficiaries-popup/real-beneficiaries-popup.component';
 import { Nationalities } from '@app/enums/nationalities.enum';
 
 @Component({
@@ -16,7 +16,7 @@ import { Nationalities } from '@app/enums/nationalities.enum';
 })
 export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficiary> {
   protected _getPopupComponent(): ComponentType<any> {
-    return ReadBenefucuariesPopupComponent;
+    return RealBeneficiariesPopupComponent;
   }
   @Input() readonly!: boolean;
   filterControl: UntypedFormControl = new UntypedFormControl('');

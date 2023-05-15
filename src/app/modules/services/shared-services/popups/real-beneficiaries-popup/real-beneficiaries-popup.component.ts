@@ -12,11 +12,11 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { DatepickerOptionsMap } from '@app/types/types';
 
 @Component({
-  selector: 'app-read-benefucuaries-popup',
-  templateUrl: './read-benefucuaries-popup.component.html',
-  styleUrls: ['./read-benefucuaries-popup.component.scss']
+  selector: 'app-real-beneficiaries-popup',
+  templateUrl: './real-beneficiaries-popup.component.html',
+  styleUrls: ['./real-beneficiaries-popup.component.scss']
 })
-export class ReadBenefucuariesPopupComponent implements OnInit {
+export class RealBeneficiariesPopupComponent implements OnInit {
   model!: RealBeneficiary;
   form: UntypedFormGroup;
   readonly: boolean;

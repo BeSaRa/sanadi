@@ -21,7 +21,7 @@ import {
 import {
   InterventionFieldListComponent
 } from '@modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
-import {ReadBenefucuariesPopupComponent} from './popups/read-benefucuaries-popup/read-benefucuaries-popup.component';
+import {RealBeneficiariesPopupComponent} from '@modules/services/shared-services/popups/real-beneficiaries-popup/real-beneficiaries-popup.component';
 import {WorkAreasPopupComponent} from './popups/work-areas-popup/work-areas-popup.component';
 import {BankAccountPopupComponent} from './popups/bank-account-popup/bank-account-popup.component';
 import {
@@ -68,7 +68,7 @@ import {
     WorkAreasComponent,
     WorkAreasPopupComponent,
     RealBeneficiariesComponent,
-    ReadBenefucuariesPopupComponent,
+    RealBeneficiariesPopupComponent,
     ApprovalFormComponent,
     InterventionImplementingAgencyListComponent,
     InterventionImplementingAgencyListPopupComponent,
@@ -100,7 +100,7 @@ import {
     WorkAreasComponent,
     WorkAreasPopupComponent,
     RealBeneficiariesComponent,
-    ReadBenefucuariesPopupComponent,
+    RealBeneficiariesPopupComponent,
     ApprovalFormComponent,
     InterventionImplementingAgencyListComponent,
     InterventionRegionListComponent,
