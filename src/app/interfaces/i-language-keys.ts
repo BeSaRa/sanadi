@@ -1958,5 +1958,6 @@ export interface ILanguageKeys {
   lbl_icon:string;
   systemMenus:string;
   msg_last_in_teams:string;
+  out_of_office:string;
 
 }

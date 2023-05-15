@@ -22,6 +22,7 @@ import { ISetVacationData } from '@app/interfaces/i-set-vacation-data';
 import { AdminResult } from '@app/models/admin-result';
 import { LangService } from './lang.service';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 @CastResponseContainer({
   $default: {
@@ -113,9 +114,9 @@ export class UserPreferencesService extends CrudGenericService<UserPreferences> 
   _updateUserVacation(generalUserId: number, @InterceptParam() model: UserPreferences): Observable<UserPreferences | null> {
     return this._validatePreferences(generalUserId, model).pipe(
       switchMap((teams) => {
-        if (teams.length > 0) {
-          const teamsString = teams.map(x=>x.getName()).join(',');
-         return this.dialog.confirm(`${this.lang.map.msg_last_in_teams} ${teamsString}`)
+        if (teams.length < 1) {
+          const teamsString = CommonUtils.generateHtmlList(this.lang.map.msg_last_in_teams,teams.map(x=>x.getName()))
+         return this.dialog.confirm(`${teamsString.outerHTML} <br> ${this.lang.map.msg_confirm_continue}`)
           .onAfterClose$
           .pipe(
             switchMap((click:UserClickOn)=>{

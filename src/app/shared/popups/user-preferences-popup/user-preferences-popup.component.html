@@ -8,7 +8,7 @@
   </div>
 </div>
 <div class="dialog-content w800px" #content>
-  <tabs-list [tabByIndex$]="tabIndex$" [hasForm]="true">
+  <tabs-list [tabByIndex$]="tabIndex$" (onTabChange)="onTapChange($event)" [hasForm]="true">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
       [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.vacationTap.name" [hasError]="getTabInvalidStatus('vacationTap')"
@@ -96,7 +96,7 @@
   </ng-template>
 
   <ng-template #vacationTapTemplate>
-    <div class="row mb-3">
+    <!-- <div class="row mb-3">
       <div class="col-sm-6 position-relative">
         <label class="form-label">{{ getVacationLabel()}}</label>
         <button *ngIf="canEditPreferences" (click)="openVacationPopup()" class="btn btn-link outline-none"
@@ -104,12 +104,10 @@
           <i class="mdi" [ngClass]="getVacationIcon()"></i>
         </button>
       </div>
-    </div>
-    <div class="row mb-3">
-      <vacation-table [model]="model">
+    </div> -->
+    <vacation-table [model]="model" [user]="user" [canEditPreferences]="canEditPreferences">
 
-      </vacation-table>
-    </div>
+    </vacation-table>
   </ng-template>
 </div>
 <div class="dialog-actions">
