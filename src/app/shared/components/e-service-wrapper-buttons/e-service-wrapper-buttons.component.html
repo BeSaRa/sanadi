@@ -11,8 +11,8 @@
 </div>
 
 
-<ng-template #actionButtonTemplate let-action="action" let-isDropdownItem="isDropdownItem">
-  <button [ngClass]="actionClass(action, isDropdownItem)" [disabled]="isDisabled(action)"
+<ng-template #actionButtonTemplate let-action="action" let-group="group" let-isDropdownItem="isDropdownItem">
+  <button [ngClass]="actionButtonClass(action, group.key, isDropdownItem)" [disabled]="isDisabled(action)"
           (click)="onActionClick(action)" class="btn action-button">
     <div class="d-flex flex-wrap" [ngClass]="{'justify-content-center': !isDropdownItem}">
       <span class="flex-grow-1">{{action.translatedLabel}}</span>
@@ -35,7 +35,7 @@
       Otherwise, render buttons upto index < maxCount, remaining actions will be in button group -->
       <ng-container *ngIf="!maxCount || maxCount === 0 || index < maxCount"
                     [ngTemplateOutlet]="actionButtonTemplate"
-                    [ngTemplateOutletContext]="{action: action, isDropdownItem: false}"></ng-container>
+                    [ngTemplateOutletContext]="{action: action, group: group, isDropdownItem: false}"></ng-container>
       <ng-container *ngIf="!!maxCount && maxCount > 0 && index === maxCount"
                     [ngTemplateOutlet]="buttonsGroupDropdownTemplate"
                     [ngTemplateOutletContext]="{group: group, maxCount: maxCount}"></ng-container>
@@ -44,7 +44,8 @@
 </ng-template>
 <ng-template #buttonsGroupDropdownTemplate let-group="group" let-maxCount="maxCount">
   <div class="btn-group dropup" role="group">
-    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+    <button type="button" class="btn dropdown-toggle" [ngClass]="dropdownButtonClass(group.key)"
+            data-bs-toggle="dropdown" aria-expanded="false"
             [disabled]="isButtonGroupDropdownDisabled(group.key)">
       {{getGroupDropdownButtonText(group.key)}}
     </button>
@@ -53,7 +54,7 @@
         <!-- skip the action until maxCount and draw remaining actions in dropdown menu -->
         <li *ngIf="index >= maxCount">
           <ng-container [ngTemplateOutlet]="actionButtonTemplate"
-                        [ngTemplateOutletContext]="{action: action, isDropdownItem: true}"></ng-container>
+                        [ngTemplateOutletContext]="{action: action, group: group, isDropdownItem: true}"></ng-container>
         </li>
       </ng-container>
     </ul>

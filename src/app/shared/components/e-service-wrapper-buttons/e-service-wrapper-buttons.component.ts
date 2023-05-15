@@ -119,9 +119,25 @@ export class EServiceWrapperButtonsComponent implements OnInit, OnDestroy {
     return action.data.hideByTabIndex();
   }
 
-  actionClass(action: IMenuItem<CaseModel<any, any>>, isDropdownItem: boolean): string {
-    return this._dropdownItemClasses(isDropdownItem);
+  actionButtonClass(action: IMenuItem<CaseModel<any, any>>, groupKey: WrapperButtonsGroupEnum, isDropdownItem: boolean): string {
+    let classes = this._dropdownItemClasses(isDropdownItem);
+    if (groupKey === WrapperButtonsGroupEnum.TWO) {
+      classes += ' btn-primary';
+    } else if (groupKey === WrapperButtonsGroupEnum.THREE) {
+      classes += ' btn-success';
+    }
+    return classes;
     //return (!action.class ? '' : (typeof action.class === 'function' ? action.class(this.model) : action.class)) || '';
+  }
+
+  dropdownButtonClass(groupKey: WrapperButtonsGroupEnum): string {
+    let classes = '';
+    if (groupKey === WrapperButtonsGroupEnum.TWO) {
+      classes += ' btn-primary';
+    } else if (groupKey === WrapperButtonsGroupEnum.THREE) {
+      classes += ' btn-success';
+    }
+    return classes;
   }
 
   getButtonGroupClass(groupKey: WrapperButtonsGroupEnum): string {

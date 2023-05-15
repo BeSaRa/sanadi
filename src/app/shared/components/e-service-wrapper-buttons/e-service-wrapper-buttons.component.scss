@@ -1,38 +1,27 @@
-// RACA secondary sunrise palette
-$group1Color: #7b1e3c;
-$group1Background: #FBF7B3; // 80%
-$group1ActiveBackground: #FDF39E; // 100%
-$group1DisabledBackground: #FCF9C6; // 60%
-$group1ActiveBorder: #FCFBDA; // 40%
-
-// RACA secondary palm palette
-$group2Color: #fff;
-$group2Background: #22AF9B; // 80%
-$group2ActiveBackground: #009C80; // 100%
-$group2DisabledBackground: #64C3B4; // 60%
-$group2ActiveBorder: #9AD6CD; // 40%
-
-// RACA secondary Skyline palette
-$group3Color: #fff;
-$group3Background: #396881; // 80%
-$group3ActiveBackground: #0D4261; // 100%
-$group3DisabledBackground: #6E8EA0; // 60%
-$group3ActiveBorder: #9DB4C0; // 40%
+// RACA secondary dune palette
+$group1Background: #A29475; // 80%
+$group1ActiveBackground: #8b8067; // 100%
+$group1DisabledBackground: #C8BFAD; // 60%
+$group1ActiveBorder: #DCD5C8; // 40%
 
 // RACA secondary sea palette
-$group4Color: #fff;
-$group4Background: #64A8C1; // 80%
-$group4ActiveBackground: #4194B3; // 100%
-$group4DisabledBackground: #8CBED0; // 60%
+$group4Background: #4194B3; // 100%
+$group4ActiveBackground: #3a809a;
+$group4DisabledBackground: #65A9C1; // 80%
 $group4ActiveBorder: #B1D5E3; // 40%
 
 .action-button {
+  &:not(.dropdown-item) {
+    color: #ffffff;
+  }
+
   .action-info {
     visibility: hidden;
   }
 
   .icon-action-info {
     font-size: 18px;
+    color: #ffffff;
   }
 
   &:hover, &:active, &:focus {
@@ -60,12 +49,8 @@ ul.dropdown-menu {
 .button-group-1 {
   button {
     &.dropdown-item {
-      .icon-action-info {
-        color: $group1Color;
-      }
-
       &:hover, &.active, &:active, &:focus {
-        color: $group1Color;
+        color: #ffffff;
         background: $group1Background;
       }
 
@@ -75,7 +60,6 @@ ul.dropdown-menu {
     }
 
     &:not(.dropdown-item) {
-      color: $group1Color;
       background-color: $group1Background;
       border-color: white;
 
@@ -98,37 +82,18 @@ ul.dropdown-menu {
 .button-group-2 {
   button {
     &.dropdown-item {
-      .icon-action-info {
-        color: $group2Color;
-      }
-
       &:hover, &.active, &:active, &:focus {
-        color: $group2Color;
-        background: $group2Background;
+        color: #ffffff;
+        background: #9a264b;
       }
 
       &:active, &:focus {
-        box-shadow: 0 0 0 0.25rem $group2ActiveBorder;;
+        box-shadow: 0 0 0 0.25rem rgba(154, 38, 75, 0.25)
       }
     }
 
     &:not(.dropdown-item) {
-      color: $group2Color;
-      background-color: $group2Background;
       border-color: white;
-
-      &:hover {
-        background-color: $group2ActiveBackground;
-      }
-
-      &:focus, &:active {
-        background-color: $group2ActiveBackground;
-        box-shadow: 0 0 0 0.25rem $group2ActiveBorder;
-      }
-
-      &:disabled {
-        background-color: $group2DisabledBackground;
-      }
     }
   }
 }
@@ -136,37 +101,18 @@ ul.dropdown-menu {
 .button-group-3 {
   button {
     &.dropdown-item {
-      .icon-action-info {
-        color: $group3Color;
-      }
-
       &:hover, &.active, &:active, &:focus {
-        color: $group3Color;
-        background: $group3Background;
+        color: #ffffff;
+        background: #157347;
       }
 
       &:active, &:focus {
-        box-shadow: 0 0 0 0.25rem $group3ActiveBorder;;
+        box-shadow: 0 0 0 0.25rem #75B798;
       }
     }
 
     &:not(.dropdown-item) {
-      color: $group3Color;
-      background-color: $group3Background;
       border-color: white;
-
-      &:hover {
-        background-color: $group3ActiveBackground;
-      }
-
-      &:focus, &:active {
-        background-color: $group3ActiveBackground;
-        box-shadow: 0 0 0 0.25rem $group3ActiveBorder;
-      }
-
-      &:disabled {
-        background-color: $group3DisabledBackground;
-      }
     }
   }
 }
@@ -174,12 +120,8 @@ ul.dropdown-menu {
 .button-group-4 {
   button {
     &.dropdown-item {
-      .icon-action-info {
-        color: $group4Color;
-      }
-
       &:hover, &.active, &:active, &:focus {
-        color: $group4Color;
+        color: #ffffff;
         background: $group4Background;
       }
 
@@ -189,7 +131,6 @@ ul.dropdown-menu {
     }
 
     &:not(.dropdown-item) {
-      color: $group4Color;
       background-color: $group4Background;
       border-color: white;
 
