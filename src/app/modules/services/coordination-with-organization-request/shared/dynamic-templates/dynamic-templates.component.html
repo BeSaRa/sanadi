@@ -1,12 +1,13 @@
 <div class="table-responsive">
   <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
-    [filter]="filterControl.value" [useSearchToFilter]="true">
+             [filter]="filterControl.value" [useSearchToFilter]="true">
     <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
       <ng-container cdkColumnDef="extra-header">
         <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-          <table-header *ngIf="canUpdate && isClaimed" (textChange)="filterControl.setValue($event)"
-            tableTitle="effective_coordination_capabilities" [add$]="add$" [allowAdd]="addAllowed()"
-            [skipClearSort]="true">
+          <table-header (textChange)="filterControl.setValue($event)"
+                        tableTitle="effective_coordination_capabilities" [add$]="add$"
+                        [allowAdd]="canUpdate && isClaimed && addAllowed()"
+                        [skipClearSort]="true">
           </table-header>
         </th>
       </ng-container>
@@ -19,15 +20,15 @@
         <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
           <div class="d-flex flex-row">
             <button (click)="delete($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
-              [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
+                    [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
               <i class="mdi mdi-close-box"></i>
             </button>
             <button (click)="edit($event, row, i)" class="icon-btn text-primary" [hidden]="!canUpdate"
-              [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
+                    [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
               <i class="mdi mdi-pen"></i>
             </button>
             <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="formOpend"
-              tooltip="{{lang.map.view}}">
+                    tooltip="{{lang.map.view}}">
               <i class="mdi mdi-eye"></i>
             </button>
           </div>
