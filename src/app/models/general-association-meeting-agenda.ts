@@ -1,11 +1,9 @@
-import { AuditOperationTypes } from '@app/enums/audit-operation-types';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
-import { AdminResult } from '@app/models/admin-result';
-import { SearchableCloneable } from '@app/models/searchable-cloneable';
-import { ControlValueLabelLangKey } from '@app/types/types';
-import { FactoryService } from '@services/factory.service';
-import { LangService } from '@services/lang.service';
+import {AuditOperationTypes} from '@app/enums/audit-operation-types';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IAuditModelProperties} from '@app/interfaces/i-audit-model-properties';
+import {AdminResult} from '@app/models/admin-result';
+import {SearchableCloneable} from '@app/models/searchable-cloneable';
+import {ControlValueLabelLangKey} from '@app/types/types';
 
 export class GeneralAssociationAgenda extends SearchableCloneable<GeneralAssociationAgenda>  implements IAuditModelProperties<GeneralAssociationAgenda>{
   description!: string;

@@ -37,23 +37,20 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> implem
   address!: string;
   qid!: string;
   passportNumber!: string;
-  iDDate!: string | IMyDateModel;
+  idDate!: string | IMyDateModel;
   passportDate!: string | IMyDateModel;
-  iDExpiryDate!: string | IMyDateModel;
+  idExpiryDate!: string | IMyDateModel;
   passportExpiryDate!: string | IMyDateModel;
   startDate!: string | IMyDateModel;
   lastUpdateDate!: string | IMyDateModel;
   id!: number;
-  iddate!: string | IMyDateModel;
-  idexpiryDate!: string | IMyDateModel;
   nationalityInfo!: AdminResult;
   birthDateString!: string;
 
   birthDateStamp!: number | null
-  iDDateStamp!: number | null
-  idexpiryDateStamp!: number | null
+  idDateStamp!: number | null
   passportDateStamp!: number | null
-  iDExpiryDateStamp!: number | null
+  idExpiryDateStamp!: number | null
   startDateStamp!: number | null
   lastUpdateDateStamp!: number | null
   passportExpiryDateStamp!: number | null
@@ -68,21 +65,17 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> implem
         const birthDateValue = DateUtils.getDateStringFromDate(this.birthDate, 'DATEPICKER_FORMAT');
         adminResultValue = AdminResult.createInstance({ arName: birthDateValue, enName: birthDateValue });
         break;
-      case 'iDDate':
-        const iDDateValue = DateUtils.getDateStringFromDate(this.iDDate, 'DATEPICKER_FORMAT');
-        adminResultValue = AdminResult.createInstance({ arName: iDDateValue, enName: iDDateValue });
-        break;
-      case 'idexpiryDate':
-        const idexpiryDateValue = DateUtils.getDateStringFromDate(this.idexpiryDate, 'DATEPICKER_FORMAT');
-        adminResultValue = AdminResult.createInstance({ arName: idexpiryDateValue, enName: idexpiryDateValue });
+      case 'idDate':
+        const idDateValue = DateUtils.getDateStringFromDate(this.idDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: idDateValue, enName: idDateValue });
         break;
       case 'passportDate':
         const passportDateValue = DateUtils.getDateStringFromDate(this.passportDate, 'DATEPICKER_FORMAT');
         adminResultValue = AdminResult.createInstance({ arName: passportDateValue, enName: passportDateValue });
         break;
-      case 'iDExpiryDate':
-        const iDExpiryDateValue = DateUtils.getDateStringFromDate(this.iDExpiryDate, 'DATEPICKER_FORMAT');
-        adminResultValue = AdminResult.createInstance({ arName: iDExpiryDateValue, enName: iDExpiryDateValue });
+      case 'idExpiryDate':
+        const idExpiryDateValue = DateUtils.getDateStringFromDate(this.idExpiryDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: idExpiryDateValue, enName: idExpiryDateValue });
         break;
       case 'startDate':
         const startDateValue = DateUtils.getDateStringFromDate(this.startDate, 'DATEPICKER_FORMAT');
@@ -121,10 +114,9 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> implem
       identificationNumber: { langKey: 'identification_number', value: this.identificationNumber },
       passportNumber: { langKey: 'passport_number', value: this.passportNumber },
       birthDate: { langKey: 'date_of_birth', value: this.birthDate, comparisonValue: this.birthDateStamp },
-      iDDate: { langKey: 'id_date', value: this.iDDate, comparisonValue: this.iDDateStamp },
-      idexpiryDate: { langKey: 'id_expiry_date', value: this.idexpiryDate, comparisonValue: this.idexpiryDateStamp },
+      idDate: { langKey: 'id_date', value: this.idDate, comparisonValue: this.idDateStamp },
       passportDate: { langKey: 'passport_date', value: this.passportDate, comparisonValue: this.passportDateStamp },
-      iDExpiryDate: { langKey: 'id_expiry_date', value: this.iDExpiryDate, comparisonValue: this.iDExpiryDateStamp },
+      idExpiryDate: { langKey: 'id_expiry_date', value: this.idExpiryDate, comparisonValue: this.idExpiryDateStamp },
       startDate: { langKey: 'date_becoming_real_benefeciary', value: this.startDate, comparisonValue: this.startDateStamp },
       lastUpdateDate: { langKey: 'date_of_last_update_real_benefeciary', value: this.lastUpdateDate, comparisonValue: this.lastUpdateDateStamp },
       passportExpiryDate: { langKey: 'passport_expiry_date', value: this.passportExpiryDate, comparisonValue: this.passportExpiryDateStamp }
@@ -145,10 +137,9 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> implem
       buildingNumber,
       identificationNumber,
       passportNumber,
-      iDDate,
-      idexpiryDate,
+      idDate,
       passportDate,
-      iDExpiryDate,
+      idExpiryDate,
       startDate,
       lastUpdateDate,
       passportExpiryDate
@@ -229,18 +220,15 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> implem
         ]
         : identificationNumber,
       passportNumber: controls
-        ? [passportNumber, [CustomValidators.required, , CustomValidators.maxLength(20)]]
+        ? [passportNumber, [CustomValidators.required, CustomValidators.maxLength(20)]]
         : passportNumber,
-      iDDate: controls ? [iDDate, [CustomValidators.required]] : iDDate,
-      // idexpiryDate: controls
-      //   ? [idexpiryDate, [CustomValidators.required]]
-      //   : idexpiryDate,
+      idDate: controls ? [idDate, [CustomValidators.required]] : idDate,
       passportDate: controls
         ? [passportDate, [CustomValidators.required]]
         : passportDate,
-      iDExpiryDate: controls
-        ? [iDExpiryDate, [CustomValidators.required]]
-        : iDExpiryDate,
+      idExpiryDate: controls
+        ? [idExpiryDate, [CustomValidators.required]]
+        : idExpiryDate,
       startDate: controls
         ? [startDate, [CustomValidators.required]]
         : startDate,
@@ -275,11 +263,9 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> implem
       birthDate,
       birthLocation,
       buildingNumber,
-      iDDate,
-      iDExpiryDate,
+      idDate,
+      idExpiryDate,
       id,
-      iddate,
-      idexpiryDate,
       lastUpdateDate,
       nationality,
       passportDate,
@@ -298,10 +284,8 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> implem
       birthDate,
       birthLocation,
       buildingNumber,
-      iddate,
-      iDDate,
-      idexpiryDate,
-      iDExpiryDate,
+      idDate,
+      idExpiryDate,
       objectDBId: id,
       lastUpdateDate,
       identificationNumber: qid,

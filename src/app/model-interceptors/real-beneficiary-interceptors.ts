@@ -5,21 +5,16 @@ import { DateUtils } from '@app/helpers/date-utils';
 export class RealBeneficiaryInterceptor implements IModelInterceptor<RealBeneficiary> {
   receive(model: RealBeneficiary): RealBeneficiary {
     model.birthDateString = model.birthDate ? DateUtils.getDateStringFromDate(model.birthDate, 'DEFAULT_DATE_FORMAT') : '';
-    console.log(model.birthDateString);
-
     model.birthDate = DateUtils.getDateStringFromDate(model.birthDate);
     model.startDate = DateUtils.getDateStringFromDate(model.startDate);
-    model.iddate = DateUtils.getDateStringFromDate(model.iddate);
-    model.iDDate = DateUtils.getDateStringFromDate(model.iDDate);
-    model.idexpiryDate = DateUtils.getDateStringFromDate(model.idexpiryDate);
-    model.iDExpiryDate = DateUtils.getDateStringFromDate(model.iDExpiryDate);
+    model.idDate = DateUtils.getDateStringFromDate(model.idDate);
+    model.idExpiryDate = DateUtils.getDateStringFromDate(model.idExpiryDate);
     model.passportDate = DateUtils.getDateStringFromDate(model.passportDate);
     model.lastUpdateDate = DateUtils.getDateStringFromDate(model.lastUpdateDate);
     model.birthDateStamp = !model.birthDate ? null : DateUtils.getTimeStampFromDate(model.birthDate);
-    model.iDDateStamp = !model.iDDate ? null : DateUtils.getTimeStampFromDate(model.iDDate);
-    model.idexpiryDateStamp = !model.idexpiryDate ? null : DateUtils.getTimeStampFromDate(model.idexpiryDate);
+    model.idDateStamp = !model.idDate ? null : DateUtils.getTimeStampFromDate(model.idDate);
     model.passportDateStamp = !model.passportDate ? null : DateUtils.getTimeStampFromDate(model.passportDate);
-    model.iDExpiryDateStamp = !model.iDExpiryDate ? null : DateUtils.getTimeStampFromDate(model.iDExpiryDate);
+    model.idExpiryDateStamp = !model.idExpiryDate ? null : DateUtils.getTimeStampFromDate(model.idExpiryDate);
     model.startDateStamp = !model.startDate ? null : DateUtils.getTimeStampFromDate(model.startDate);
     model.lastUpdateDateStamp = !model.lastUpdateDate ? null : DateUtils.getTimeStampFromDate(model.lastUpdateDate);
     model.passportExpiryDateStamp = !model.passportExpiryDate ? null : DateUtils.getTimeStampFromDate(model.passportExpiryDate);
@@ -32,10 +27,9 @@ export class RealBeneficiaryInterceptor implements IModelInterceptor<RealBenefic
     delete model.birthDateString;
     delete model.auditOperation;
     delete model.birthDateStamp
-    delete model.iDDateStamp
-    delete model.idexpiryDateStamp
+    delete model.idDateStamp
     delete model.passportDateStamp
-    delete model.iDExpiryDateStamp
+    delete model.idExpiryDateStamp
     delete model.startDateStamp
     delete model.lastUpdateDateStamp
     delete model.passportExpiryDateStamp

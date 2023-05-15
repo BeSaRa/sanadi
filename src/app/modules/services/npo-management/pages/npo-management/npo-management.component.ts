@@ -453,14 +453,12 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
           buildingNumber: rb.buildingNumber,
           address: rb.address,
           passportNumber: rb.passportNumber,
-          iDDate: rb.iDDate,
+          idDate: rb.idDate,
           passportDate: rb.passportDate,
-          iDExpiryDate: rb.iDExpiryDate,
+          idExpiryDate: rb.idExpiryDate,
           passportExpiryDate: rb.passportExpiryDate,
           startDate: rb.startDate,
           lastUpdateDate: rb.lastUpdateDate,
-          iddate: rb.iddate,
-          idexpiryDate: rb.idexpiryDate,
           birthDateString: rb.birthDate ? DateUtils.getDateStringFromDate(rb.birthDate, 'DEFAULT_DATE_FORMAT') : ''
         });
         return ob;

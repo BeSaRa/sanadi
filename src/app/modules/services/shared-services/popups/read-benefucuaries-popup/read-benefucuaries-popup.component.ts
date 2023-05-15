@@ -23,7 +23,7 @@ export class ReadBenefucuariesPopupComponent implements OnInit {
   hideSave: boolean;
   editRecordIndex: number;
 
-  idColumns = ['identificationNumber', 'iDDate', 'iDExpiryDate'];
+  idColumns = ['identificationNumber', 'idDate', 'idExpiryDate'];
   passportColumns = ['passportNumber', 'passportDate', 'passportExpiryDate'];
 
   QATARI_NATIONALITY = Nationalities.QATARI;
@@ -64,11 +64,11 @@ export class ReadBenefucuariesPopupComponent implements OnInit {
   };
   datepickerOptionsMap: DatepickerOptionsMap = {
     birthDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    iDDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
+    idDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
     passportExpiryDate: DateUtils.getDatepickerOptions({
       disablePeriod: 'past',
     }),
-    iDExpiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
+    idExpiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
     passportDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
     startDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
     lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
@@ -140,13 +140,13 @@ export class ReadBenefucuariesPopupComponent implements OnInit {
     },
     {
       isDisplayed: false,
-      controlName: 'iDDate',
+      controlName: 'idDate',
       label: this.lang.map.id_date,
       type: 'date',
     },
     {
       isDisplayed: false,
-      controlName: 'iDExpiryDate',
+      controlName: 'idExpiryDate',
       label: this.lang.map.id_expiry_date,
       type: 'date',
     },
@@ -223,8 +223,8 @@ export class ReadBenefucuariesPopupComponent implements OnInit {
     row.birthDate = DateUtils.changeDateToDatepicker(row.birthDate);
     row.birthDateString = row.birthDate ? DateUtils.getDateStringFromDate(row.birthDate, 'DEFAULT_DATE_FORMAT') : '';
     row.startDate = DateUtils.changeDateToDatepicker(row.startDate);
-    row.iDDate = DateUtils.changeDateToDatepicker(row.iDDate);
-    row.iDExpiryDate = DateUtils.changeDateToDatepicker(row.iDExpiryDate);
+    row.idDate = DateUtils.changeDateToDatepicker(row.idDate);
+    row.idExpiryDate = DateUtils.changeDateToDatepicker(row.idExpiryDate);
     row.passportExpiryDate = DateUtils.changeDateToDatepicker(
       row.passportExpiryDate
     );
@@ -240,8 +240,8 @@ export class ReadBenefucuariesPopupComponent implements OnInit {
     beneficiary.birthDate = DateUtils.getDateStringFromDate(form.birthDate);
     beneficiary.birthDateString = form.birthDate ? DateUtils.getDateStringFromDate(form.birthDate, 'DEFAULT_DATE_FORMAT') : '';
     beneficiary.startDate = DateUtils.getDateStringFromDate(form.startDate);
-    beneficiary.iDDate = DateUtils.getDateStringFromDate(form.iDDate);
-    beneficiary.iDExpiryDate = DateUtils.getDateStringFromDate(form.iDExpiryDate);
+    beneficiary.idDate = DateUtils.getDateStringFromDate(form.idDate);
+    beneficiary.idExpiryDate = DateUtils.getDateStringFromDate(form.idExpiryDate);
     beneficiary.passportExpiryDate = DateUtils.getDateStringFromDate(form.passportExpiryDate);
     beneficiary.passportDate = DateUtils.getDateStringFromDate(form.passportDate);
     beneficiary.lastUpdateDate = DateUtils.getDateStringFromDate(form.lastUpdateDate);
