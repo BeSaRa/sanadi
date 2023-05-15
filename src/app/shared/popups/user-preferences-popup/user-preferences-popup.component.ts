@@ -1,5 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { TabMap } from '@app/types/types';
@@ -156,7 +157,14 @@ export class UserPreferencesPopupComponent implements OnInit {
   }
 
   openVacationPopup() {
-    this.model.openVacationDialog(this.user, this.canEditPreferences).subscribe();
+    this.model.openVacationDialog(this.user, this.canEditPreferences).subscribe(dialog=>{
+      dialog.onAfterClose$.subscribe(model =>{
+       if(model){
+        this.model = model;
+       }
+      });
+    })
+    ;
   }
   isInvalidForm() {
     return !this.form || this.form.invalid || !this.emailsFormArray || this.emailsFormArray.controls.some(control => control.invalid);
@@ -186,5 +194,8 @@ export class UserPreferencesPopupComponent implements OnInit {
 
   getVacationLabel(): string {
     return !this.hasVacation() ? this.lang.map.lbl_add_vacation : this.lang.map.lbl_edit_vacation
+  }
+  getVacationIcon(): string {
+    return !this.hasVacation() ? ActionIconsEnum.ADD : ActionIconsEnum.EDIT;
   }
 }

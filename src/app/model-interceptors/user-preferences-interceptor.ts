@@ -24,6 +24,8 @@ export class UserPreferencesInterceptor implements IModelInterceptor<UserPrefere
 
   receive(model: UserPreferences): UserPreferences {
     UserPreferencesInterceptor.parseEmailsList(model);
+    model.vacationFrom =DateUtils.getDateStringFromDate(model.vacationFrom);
+    model.vacationTo =DateUtils.getDateStringFromDate(model.vacationTo);
     return model;
   }
 

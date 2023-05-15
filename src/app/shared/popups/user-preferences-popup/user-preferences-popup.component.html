@@ -101,7 +101,7 @@
         <label class="form-label">{{ getVacationLabel()}}</label>
         <button *ngIf="canEditPreferences" (click)="openVacationPopup()" class="btn btn-link outline-none"
           title="{{ getVacationLabel()}}">
-          <i class="mdi mdi-plus-box"></i>
+          <i class="mdi" [ngClass]="getVacationIcon()"></i>
         </button>
       </div>
     </div>
