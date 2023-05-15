@@ -1,5 +1,5 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
-  <h1 class="h6 text-white">{{ lang.map.user_preferences }}</h1>
+  <h1 class="h6 text-white">{{ lang.map.out_of_office }}</h1>
   <div>
     <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
       fullscreenBtn></button>
@@ -9,8 +9,8 @@
 </div>
 <div class="dialog-content w800px" #content>
   <form [formGroup]="form">
-    <div class="row mb-3">
-      <div class="mb-6 col-md-6 col-sm-12 position-relative">
+    <div class="row">
+      <div class="mb-4 col-md-6 col-sm-12 position-relative">
         <label for="vacationFrom" asteriskIfRequired="vacationFrom" class="form-label">{{
           lang.map.vacation_date_from }}</label>
         <div class="input-group">
@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="mb-6 col-md-6 col-sm-12 position-relative">
+      <div class="mb-4 col-md-6 col-sm-12 position-relative">
         <label for="vacationTo" asteriskIfRequired="vacationTo" class="form-label">{{
           lang.map.vacation_date_to }}</label>
         <div class="input-group">

@@ -65,6 +65,7 @@ export class SetVacationPopupComponent implements OnInit {
     }
     return  DateUtils.getTimeStampFromDate(this.vacationFrom.value)! < DateUtils.getTimeStampFromDate(this.vacationTo.value)!;
   }
+  validateFieldsVisible = true;
   buildForm(): void {
     this.form = this.fb.group(this.model.buildVacationForm(true));
     this.vacationFrom.setValue(DateUtils.changeDateToDatepicker(this.model.vacationFrom));
