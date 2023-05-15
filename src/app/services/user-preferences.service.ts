@@ -115,15 +115,18 @@ export class UserPreferencesService extends CrudGenericService<UserPreferences> 
       switchMap((teams) => {
         if (teams.length > 0) {
           const teamsString = teams.map(x=>x.getName()).join(',');
-          this.dialog.confirm(`${this.lang.map.msg_last_in_teams} ${teamsString}`)
-          .onAfterClose$.subscribe((click:UserClickOn)=>{
-            if(click === UserClickOn.YES){
-              return this.http.put<UserPreferences>(this._getServiceURL() + '/out-office/general-user-id/' + generalUserId, model);
-            }
-            return of(null);
-          })
+         return this.dialog.confirm(`${this.lang.map.msg_last_in_teams} ${teamsString}`)
+          .onAfterClose$
+          .pipe(
+            switchMap((click:UserClickOn)=>{
+              if(click === UserClickOn.YES){
+                return this.http.put<UserPreferences>(this._getServiceURL() + '/out-office/general-user-id/' + generalUserId, model);
+              }
+              return of(null);
+            })
+          )
         }
-        return of(null)
+        return this.http.put<UserPreferences>(this._getServiceURL() + '/out-office/general-user-id/' + generalUserId, model);
       })
     )
 

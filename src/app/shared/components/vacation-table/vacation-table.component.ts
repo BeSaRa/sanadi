@@ -1,5 +1,5 @@
 import { LangService } from './../../../services/lang.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { IHasVacation } from '@app/interfaces/i-has-vacation';
 
 @Component({
@@ -7,17 +7,17 @@ import { IHasVacation } from '@app/interfaces/i-has-vacation';
     templateUrl: 'vacation-table.component.html',
     styleUrls: ['vacation-table.component.scss']
 })
-export class VacationTableComponent implements OnInit {
+export class VacationTableComponent {
   displayedColumns = ['vacationFrom','vacationTo'];
-  ngOnInit(): void {
-    this.list.push(this.model);
-  }
+  // ngOnInit(): void {
+  //   this.list.push(this.model);
+  // }
 
-  @Input() model!:IHasVacation;
+  @Input()
+  set model(value:IHasVacation){
+    this.list = [value];
+  };
   list:IHasVacation[] = [];
-  /**
-   *
-   */
   constructor(public lang:LangService) {
 
   }

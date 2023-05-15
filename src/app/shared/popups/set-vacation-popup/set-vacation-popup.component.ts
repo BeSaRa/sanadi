@@ -1,3 +1,4 @@
+import { UserPreferencesInterceptor } from '@model-interceptors/user-preferences-interceptor';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { DateUtils } from '@app/helpers/date-utils';
@@ -66,6 +67,10 @@ export class SetVacationPopupComponent implements OnInit {
   }
   buildForm(): void {
     this.form = this.fb.group(this.model.buildVacationForm(true));
+    this.vacationFrom.setValue(DateUtils.changeDateToDatepicker(this.model.vacationFrom));
+    this.vacationTo.setValue(DateUtils.changeDateToDatepicker(this.model.vacationTo));
+    this.vacationFrom.updateValueAndValidity();
+    this.vacationTo.updateValueAndValidity();
   }
   save() {
     if (!this.canEditPreferences ) {
@@ -77,13 +82,15 @@ export class SetVacationPopupComponent implements OnInit {
       ...this.form.value,
     });
     updatedModel.updateUserVacation(this.user.generalUserId).subscribe(model => {
-      this.dialogRef.close(true);
       if(!model){
-        this.toast.error(this.lang.map.err_invalid_date);
+        // this.toast.error(this.lang.map.err_invalid_date);
+        this.dialogRef.close()
+        return;
       }
-      console.log(model);
-
       this.toast.success(this.lang.map.msg_save_success);
+      const {receive} =new UserPreferencesInterceptor()
+      this.model= receive(updatedModel);
+      this.dialogRef.close(this.model);
     });
   }
 }

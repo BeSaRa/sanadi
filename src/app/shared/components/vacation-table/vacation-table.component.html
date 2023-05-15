@@ -1,19 +1,20 @@
-<app-table #table [columns]="displayedColumns" [data]="list">
-  <table cdk-table [dataSource]="table.data" class="table table-striped table-bordered caption-top">
-    <ng-container cdkColumnDef="vacationFrom">
-      <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.vacation_date_from}}</th>
-      <td cdk-cell *cdkCellDef="let row"> {{row.vacationFrom}} </td>
-    </ng-container>
-    <ng-container cdkColumnDef="vacationTo">
-      <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.vacation_date_to}}</th>
-      <td cdk-cell *cdkCellDef="let row"> {{row.vacationTo}} </td>
-    </ng-container>
+<app-table #table sortableTable [data]="list" [columns]="displayedColumns"
+          [useSearchToFilter]="false">
+          <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+            <ng-container cdkColumnDef="vacationFrom">
+              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.vacation_date_from}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.vacationFrom}} </td>
+            </ng-container>
+            <ng-container cdkColumnDef="vacationTo">
+              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.vacation_date_to}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.vacationTo}} </td>
+            </ng-container>
 
-
-    <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
-    <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
-    <tr *cdkNoDataRow>
-      <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-    </tr>
-  </table>
-</app-table>
+            <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: table.columns;" ></tr>
+            <tr *cdkNoDataRow>
+              <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
+            </tr>
+          </table>
+          <!-- <app-paginator #paginator></app-paginator> -->
+        </app-table>
