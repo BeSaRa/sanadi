@@ -724,7 +724,7 @@ export class CharityOrganizationUpdateComponent
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if ((!this.logoFile && !this.model?.logoFnId) && this.updateSectionField.value === CharityUpdateSection.META_DATA) {
+    if ((!this.logoFile && !this.loadedLogo) && this.updateSectionField.value === CharityUpdateSection.META_DATA) {
       this.toast.error(this.lang.map.logo_is_required);
       return false;
     }
@@ -914,8 +914,8 @@ export class CharityOrganizationUpdateComponent
 
       this._loadEmployees(this.model.charityId);
     }
-    if (this.model.logoFnId) {
-      this.service.getLogo(this.model.logoFnId).subscribe(logo => {
+    if (this.model?.id) {
+      this.service.loadLogoByCaseId(this.model?.id).subscribe(logo => {
         if (logo.blob.size === 0) {
           this.loadedLogo = undefined;
           return;

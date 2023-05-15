@@ -77,6 +77,16 @@ export class CharityOrganizationUpdateService extends BaseGenericEService<Charit
           return of(new BlobModel(new Blob([], { type: 'error' }), this.domSanitizer));
         })));
   }
+  loadLogoByCaseId(id: string) {
+    return this.http.post(this._getURLSegment() + `/${id}/logo/content`, {}, {
+      responseType: 'blob',
+      observe: 'body'
+    }).pipe(
+      map(blob => new BlobModel(blob, this.domSanitizer),
+        catchError(_ => {
+          return of(new BlobModel(new Blob([], { type: 'error' }), this.domSanitizer));
+        })));
+  }
 
   saveLogo(caseId: string, file: File) {
     const form = new FormData();
