@@ -1,42 +1,38 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-  <h1 class="h6 text-white">{{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
-    lang.map.work_areas }}</h1>
+  <h1 class="h6 text-white">{{ popupTitle }}</h1>
   <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content no-fixed-height">
-  <form class="row" [formGroup]="form">
-    <div *ngFor="let control of controls" class="col-sm-6 position-relative" [ngSwitch]="control.type">
-      <ng-container *ngSwitchCase="'dropdown'">
-        <div>
-          <label [asteriskIfRequired]="control.controlName" [for]="control.controlName"
-            class="form-label">{{control.label }}</label>
-          <ng-select [selectOnTab]="true" [labelForId]="control.controlName" [readonly]="readonly" [clearable]="true"
-            placeholder="{{ lang.map.select }}" [id]="control.controlName" [notFoundText]="lang.map.msg_not_found"
-            appendTo="body" [validationClasses]="control.controlName" [formControlName]="control.controlName"
-            (change)="control.onChange?.($event)">
-            <ng-option *ngFor="let type of control.load ? control.load : (control.load$ | async)"
-              [disabled]="(control.dropdownOptionDisabled && control.dropdownOptionDisabled(type)) ?? false"
-              [value]="type[control.dropdownValue!]">{{ type.getName() }}</ng-option>
-          </ng-select>
-          <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
-        </div>
-      </ng-container>
-      <ng-container *ngSwitchCase="'text'">
-        <label [asteriskIfRequired]="control.controlName" [for]="control.controlName" class="form-label"
-          [validationClasses]="control.controlName">{{ control.label }}</label>
-        <input type="text" class="form-control" [readonly]="readonly" [id]="control.controlName"
-          [formControlName]="control.controlName" />
-
-        <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
-      </ng-container>
+<div class="dialog-content no-fixed-height" #dialogContent>
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+        <label asteriskIfRequired="country" for="country" class="form-label">{{lang.map.country}}</label>
+        <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true"
+                   placeholder="{{lang.map.select}}" id="country" [notFoundText]="lang.map.msg_not_found"
+                   [readonly]="readonly" appendTo="body"
+                   formControlName="country" validationClasses="country">
+          <ng-option *ngFor="let option of countries" [value]="option.id" [disabled]="!option.isActive()">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="country"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="region" for="region" class="form-label">{{lang.map.region}}</label>
+        <input id="region" validationClasses="region" formControlName="region" trimInput class="form-control">
+        <app-field-error-message controlName="region"></app-field-error-message>
+      </div>
     </div>
   </form>
 </div>
+
 <div class="dialog-actions">
-  <button (click)="save()" [disabled]="!form.valid" *ngIf="!readonly" class="btn btn-primary m-2">
-    {{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }}
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
   </button>
-  <button (click)="cancel()" class="btn btn-secondary m-2">
-    {{ lang.map.btn_cancel }}
-  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

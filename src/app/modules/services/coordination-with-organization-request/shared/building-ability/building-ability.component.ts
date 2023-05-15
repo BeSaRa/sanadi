@@ -18,6 +18,8 @@ import { filter, map, take, takeUntil } from 'rxjs/operators';
 import { BuildingAbility } from '@models/building-ability';
 import { Profile } from '@models/profile';
 import { BuildingAbilityPopupComponent } from '../../popups/building-ability-popup/building-ability-popup.component';
+import {IMenuItem} from "@modules/context-menu/interfaces/i-menu-item";
+import {ActionIconsEnum} from "@enums/action-icons-enum";
 
 @Component({
   selector: 'building-ability',
@@ -77,6 +79,31 @@ export class BuildingAbilityComponent implements OnInit {
   @Input() isClaimed: boolean = true;
 
   filterControl: UntypedFormControl = new UntypedFormControl('');
+  actions: IMenuItem<BuildingAbility>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      show: () => !this.readonly && this.canUpdate && this.isClaimed,
+      onClick: (item, itemIndex: number) => this.edit(item, itemIndex)
+    },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      show: () => !this.readonly && this.canUpdate && this.isClaimed,
+      onClick: (item, itemIndex: number) => this.delete(item, itemIndex)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: (item, itemIndex: number) => this.view(item, itemIndex)
+    },
+  ];
 
   ngOnInit(): void {
     this.buildForm();
@@ -242,21 +269,21 @@ export class BuildingAbilityComponent implements OnInit {
     this.formOpened = false;
   }
 
-  view($event: MouseEvent, record: BuildingAbility, index: number) {
-    $event.preventDefault();
+  view(record: BuildingAbility, index: number, $event?: MouseEvent) {
+    $event?.preventDefault();
     this.formOpened = true;
     this.editIndex = index;
     this.viewOnly = true;
     this.recordChanged$.next(record);
   }
 
-  delete($event: MouseEvent, record: BuildingAbility, index: number): any {
-    $event.preventDefault();
-    if (this.readonly) {
+  delete(record: BuildingAbility, index: number, $event?: MouseEvent): any {
+    $event?.preventDefault();
+    if (this.readonly || !this.canUpdate || !this.isClaimed) {
       return;
     }
     this.dialogService
-      .confirm(this.lang.map.msg_confirm_delete_selected)
+      .confirm(this.lang.map.msg_confirm_delete_x.change({x: record.activityName}))
       .onAfterClose$.pipe(take(1))
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
@@ -266,10 +293,9 @@ export class BuildingAbilityComponent implements OnInit {
       });
   }
 
-  edit($event: MouseEvent, record: BuildingAbility, index: number) {
-    $event.preventDefault();
-    this.formOpened = true;
-    if (this.readonly) {
+  edit(record: BuildingAbility, index: number, $event?: MouseEvent) {
+    $event?.preventDefault();
+    if (this.readonly || !this.canUpdate || !this.isClaimed) {
       return;
     }
     this.editIndex = index;

@@ -666,10 +666,7 @@
                   {{ row.internalMembersDTO.length }}
                 </td>
               </ng-container>
-              <tr
-                cdk-header-row
-                *cdkHeaderRowDef="organizationMeetingsColumns"
-              ></tr>
+              <tr cdk-header-row *cdkHeaderRowDef="organizationMeetingsColumns"  class="table-row-header"></tr>
               <tr
                 cdk-row
                 *cdkRowDef="let row; columns: organizationMeetingsColumns"
@@ -756,7 +753,7 @@
 
               <tr
                 cdk-header-row
-                *cdkHeaderRowDef="allEmployeesOfOrganizationColumns"
+                *cdkHeaderRowDef="allEmployeesOfOrganizationColumns" class="table-row-header"
               ></tr>
               <tr
                 cdk-row

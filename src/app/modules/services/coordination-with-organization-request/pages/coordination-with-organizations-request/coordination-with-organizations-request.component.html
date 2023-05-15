@@ -81,7 +81,7 @@
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" formControlName="licenseStartDate" id="licenseStartDate"
                    [options]="datepickerOptionsMap.licenseStartDate" [ngClass]="{'input-disabled': !isEditAllowed()}"
-                   (click)="openDateMenu(dpLicenseStartDate)"
+                   (click)="isEditAllowed() && openDateMenu(dpLicenseStartDate)"
                    (inputFieldChanged)="onDateChange($event, 'licenseStartDate', 'licenseEndDate')"
                    #dpLicenseStartDate="angular-mydatepicker" angular-mydatepicker validationClasses="licenseStartDate">
               </div>
@@ -96,7 +96,7 @@
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" formControlName="licenseEndDate" id="licenseEndDate"
                    [options]="datepickerOptionsMap.licenseEndDate" [ngClass]="{'input-disabled': !isEditAllowed()}"
-                   (click)="openDateMenu(dpLicenseEndDate)"
+                   (click)="isEditAllowed() && openDateMenu(dpLicenseEndDate)"
                    (inputFieldChanged)="onDateChange($event, 'licenseStartDate', 'licenseEndDate')"
                    #dpLicenseEndDate="angular-mydatepicker" angular-mydatepicker
                    validationClasses="licenseEndDate"></div>
@@ -113,7 +113,7 @@
           <label class="form-label" asteriskIfRequired="description"
                  for="description">{{lang.map.special_explanations}}</label>
           <textarea name="description" formControlName="description" validationClasses="description" id="description"
-                    rows="4" class="form-control" [readOnly]="!isEditAllowed()" [disabled]="!isEditAllowed()"
+                    rows="4" class="form-control" [readOnly]="!isEditAllowed()"
                     [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>
