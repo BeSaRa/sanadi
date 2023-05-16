@@ -1,21 +1,20 @@
-import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { TabMap } from '@app/types/types';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { IDialogData } from '@contracts/i-dialog-data';
-import { CommonUtils } from '@helpers/common-utils';
-import { ExternalUser } from '@models/external-user';
-import { InternalUser } from '@models/internal-user';
-import { Lookup } from '@models/lookup';
-import { UserPreferences } from '@models/user-preferences';
-import { EmployeeService } from '@services/employee.service';
-import { LangService } from '@services/lang.service';
-import { ToastService } from '@services/toast.service';
-import { Subject } from 'rxjs';
+import {Component, Inject, OnInit} from '@angular/core';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {TabMap} from '@app/types/types';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {IDialogData} from '@contracts/i-dialog-data';
+import {CommonUtils} from '@helpers/common-utils';
+import {ExternalUser} from '@models/external-user';
+import {InternalUser} from '@models/internal-user';
+import {Lookup} from '@models/lookup';
+import {UserPreferences} from '@models/user-preferences';
+import {EmployeeService} from '@services/employee.service';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'user-preferences-popup',
@@ -31,7 +30,8 @@ export class UserPreferencesPopupComponent implements OnInit {
   user: InternalUser | ExternalUser;
   canEditPreferences: boolean = false;
   tabIndex$: Subject<number> = new Subject<number>();
-  //  validateFieldsVisible = true;
+  saveVisible = true;
+  validateFieldsVisible = true;
   tabsData: TabMap = {
     basicInfo: {
       name: 'basicInfoTab',
@@ -40,7 +40,12 @@ export class UserPreferencesPopupComponent implements OnInit {
       checkTouchedDirty: false,
       isTouchedOrDirty: () => false,
       show: () => true,
-      validStatus: () => this.basicInfoTab.valid,
+      validStatus: () => {
+        if (this.basicInfoTab.disabled) {
+          return true;
+        }
+        return this.basicInfoTab.valid
+      },
     },
     vacationTap: {
       name: 'vacationTap',
@@ -65,11 +70,11 @@ export class UserPreferencesPopupComponent implements OnInit {
   }
 
   constructor(public lang: LangService,
-    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<UserPreferences>,
-    public fb: UntypedFormBuilder,
-    private toast: ToastService,
-    public dialogRef: DialogRef,
-    private employeeService: EmployeeService) {
+              @Inject(DIALOG_DATA_TOKEN) data: IDialogData<UserPreferences>,
+              public fb: UntypedFormBuilder,
+              private toast: ToastService,
+              public dialogRef: DialogRef,
+              private employeeService: EmployeeService) {
     this.model = data.model;
     this.user = data.user;
     this.canEditPreferences = data.isLoggedInUserPreferences ? true : this.employeeService.isInternalUser()
@@ -119,7 +124,7 @@ export class UserPreferencesPopupComponent implements OnInit {
       return;
     }
     if (this._hasDuplicateEmail()) {
-      this.toast.error(this.lang.map.msg_check_x_duplicate.change({ x: this.lang.map.alternate_emails }));
+      this.toast.error(this.lang.map.msg_check_x_duplicate.change({x: this.lang.map.alternate_emails}));
       return;
     }
 
@@ -128,11 +133,8 @@ export class UserPreferencesPopupComponent implements OnInit {
       ...this.form.value,
       alternateEmailListParsed: this.emailsFormArray.value
     });
-    updatedModel.updateUserPreferences(this.user.generalUserId).subscribe(model => {
+    updatedModel.updateUserPreferences(this.user.generalUserId).subscribe(_ => {
       this.dialogRef.close(true);
-      if (!model) {
-        this.toast.error(this.lang.map.err_invalid_date);
-      }
       this.toast.success(this.lang.map.msg_save_success);
     });
   }
@@ -181,12 +183,13 @@ export class UserPreferencesPopupComponent implements OnInit {
 
     return [arabicLang, englishLang];
   }
-  onTapChange(value:TabComponent){
-    if(value.tabId === "basicInfoTab1"){
-      this.canEditPreferences = true;
-      return;
-    }
-    this.canEditPreferences = false;
 
+  onTabChange(tab: TabComponent) {
+    this.setDialogButtonsVisibility(tab);
+  }
+
+  setDialogButtonsVisibility(tab: any): void {
+    this.saveVisible = (tab.name && tab.name === this.tabsData.basicInfo.name);
+    this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.basicInfo.name);
   }
 }

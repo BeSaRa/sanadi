@@ -58,7 +58,7 @@ export class UserPreferences extends Cloneable<UserPreferences> implements IHasV
     }
   }
 
-  updateUserPreferences(generalUserId: number): Observable<UserPreferences|null> {
+  updateUserPreferences(generalUserId: number): Observable<UserPreferences> {
     return this.service.updateUserPreferences(generalUserId, this);
   }
   updateUserVacation(generalUserId: number): Observable<UserPreferences|null> {
