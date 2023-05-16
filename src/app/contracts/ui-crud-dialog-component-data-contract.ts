@@ -6,6 +6,7 @@ export interface UiCrudDialogComponentDataContract<M> {
   model: M,
   operation: OperationTypes,
   list: M[],
+  listIndex: number,
   caseType?: CaseTypes,
   extras?: IKeyValue
 }

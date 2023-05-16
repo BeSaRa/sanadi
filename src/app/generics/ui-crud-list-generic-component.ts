@@ -49,6 +49,7 @@ export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterView
   filterControl: UntypedFormControl = new UntypedFormControl('');
   sortingCallbacks = {};
   itemInOperation?: M;
+  itemInOperationListIndex?: number;
 
   ngOnInit(): void {
     this._init();
@@ -103,6 +104,7 @@ export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterView
       .subscribe((result) => {
         this._updateList(result.operation, result.savedRecord);
         this.itemInOperation = undefined;
+        this.itemInOperationListIndex = undefined;
         this.afterReload();
       })
   }
@@ -117,6 +119,7 @@ export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterView
           operation: OperationTypes.CREATE,
           list: this.list,
           caseType: this.caseType,
+          listIndex: undefined,
           extras: this.getExtraDataForPopup()
         }).onAfterClose$;
       }))
@@ -141,6 +144,7 @@ export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterView
           operation: OperationTypes.UPDATE,
           list: this.list,
           caseType: this.caseType,
+          listIndex: this._itemInOperationIndex(),
           extras: this.getExtraDataForPopup()
         }).onAfterClose$;
       }))
@@ -158,12 +162,14 @@ export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterView
   listenToView(): void {
     this.view$
       .pipe(takeUntil(this.destroy$))
+      .pipe(tap((model) => this.itemInOperation = model))
       .pipe(exhaustMap((model) => {
         return this.dialog.show<IDialogData<M>>(this._getDialogComponent(), {
           model: this._getNewInstance(model),
           operation: OperationTypes.VIEW,
           list: this.list,
           caseType: this.caseType,
+          listIndex: this._itemInOperationIndex(),
           extras: this.getExtraDataForPopup()
         }).onAfterClose$;
       }))
@@ -177,8 +183,11 @@ export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterView
       .pipe(exhaustMap((model) => {
         return this.dialog.confirm(this._getDeleteConfirmMessage(model)).onAfterClose$
           .pipe(tap((userSelection) => {
+            this.itemInOperation = undefined;
+            this.itemInOperationListIndex = undefined;
             if (userSelection === UserClickOn.YES) {
               this.itemInOperation = model;
+              this.itemInOperationListIndex = this._itemInOperationIndex();
             }
           }));
       }))
