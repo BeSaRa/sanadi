@@ -177,6 +177,13 @@ export class CollectionItemPopupComponent implements OnInit, OnDestroy {
   save() {
     this.dialogRef.close({ buildingPlate: this.buildingPlate });
   }
+  isInvalidForm():boolean{
+
+    if(!!this.buildingPlate){
+      return this.buildingPlate.form.invalid || this.form.invalid;
+    }
+    return this.form.invalid
+  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

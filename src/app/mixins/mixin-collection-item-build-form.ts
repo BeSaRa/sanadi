@@ -42,8 +42,8 @@ export function mixinCollectionItemBuildForm<T extends Constructor<{}>>(baseClas
       return {
         identificationNumber: controls ? [values.identificationNumber, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.identificationNumber,
         locationDetails: controls ? [values.locationDetails, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.locationDetails,
-        latitude: controls ? [{value: values.latitude, disabled: true}, [CustomValidators.required]] : values.latitude,
-        longitude: controls ? [{value: values.longitude, disabled: true}, [CustomValidators.required]] : values.longitude,
+        latitude: controls ? [{value: values.latitude}, [CustomValidators.required]] : values.latitude,
+        longitude: controls ? [{value: values.longitude}, [CustomValidators.required]] : values.longitude,
         licenseEndDate: controls ? [DateUtils.changeDateToDatepicker(values.licenseEndDate)] : DateUtils.changeDateToDatepicker(values.licenseEndDate),
         oldLicenseFullSerial: controls ? [values.oldLicenseFullSerial] : values.oldLicenseFullSerial,
       }

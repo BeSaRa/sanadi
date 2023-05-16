@@ -80,7 +80,7 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button (click)="save()" *ngIf="!readOnly && !viewOnly" [disabled]="!form.valid" class="btn btn-primary">{{editIndex ? lang.map.btn_save :
+  <button (click)="save()" *ngIf="!readOnly && !viewOnly" [disabled]="isInvalidForm()" class="btn btn-primary">{{editIndex ? lang.map.btn_save :
     lang.map.btn_add}}</button>
   <button (click)="cancel()" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>
