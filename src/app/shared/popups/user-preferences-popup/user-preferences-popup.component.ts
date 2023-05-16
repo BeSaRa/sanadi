@@ -41,10 +41,7 @@ export class UserPreferencesPopupComponent implements OnInit {
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        if (this.basicInfoTab.disabled) {
-          return true;
-        }
-        return this.basicInfoTab.valid
+        return !this.isInvalidForm();
       },
     },
     vacationTap: {
