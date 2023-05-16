@@ -444,7 +444,10 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   }
 
   selectTemplatePopup(isUploaded: boolean) {
-    if (isUploaded && this.model) {
+    if (!this.model){
+      return;
+    }
+    if (isUploaded) {
       this.customServiceTemplate.loadTemplatesbyCaseType(this.model?.getCaseType()).subscribe((data) => {
         this.dialogService.show(SelectCustomServiceTemplatePopupComponent, { list: data, showSelectBtn: true }).onAfterClose$.subscribe((temp) => {
           if (temp) {
@@ -452,7 +455,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
           }
         })
       })
-    } else if (this.model) {
+    } else {
       this.customServiceTemplate.loadTemplatesbyCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
         this.dialogService.show(SelectCustomServiceTemplatePopupComponent, { list: data, showSelectBtn: false })
       })
@@ -474,6 +477,9 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
           approvalTemplateType: this.selectedTemplate.approvalTemplateType,
         }, caseId: this.model?.getCaseId()
       }, uploadedTemplate).subscribe((result) => {
+        if (!result) {
+          return;
+        }
         this.dialogService.success(this.lang.map.file_have_been_uploaded_successfully);
       })
     }

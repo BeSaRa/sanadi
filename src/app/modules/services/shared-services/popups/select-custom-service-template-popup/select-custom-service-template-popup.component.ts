@@ -25,7 +25,7 @@ export class SelectCustomServiceTemplatePopupComponent implements OnInit {
     public lang: LangService,
     private customServiceTemplate: CustomServiceTemplateService,
     private sharedService: SharedService,
-    @Inject(DIALOG_DATA_TOKEN) private data: {
+    @Inject(DIALOG_DATA_TOKEN) public data: {
       list: CustomServiceTemplate[],
       showSelectBtn: boolean,
       caseType: number

@@ -1,16 +1,17 @@
 <div class="row">
   <tabs-list [accordionView]="accordionView" class="py-4" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$"
-    [hasForm]="true">
+             [hasForm]="true">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
-      [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+         [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.beneficiaryGroup.name" [hasError]="getTabInvalidStatus('beneficiaryGroup')"
-      [template]="beneficiaryGroupTapTemplate" [title]="lang.map.beneficiaries_type"></tab>
+         [template]="beneficiaryGroupTapTemplate" [title]="lang.map.beneficiaries_type"></tab>
     <tab [name]="tabsData.organizationOfficer.name" [hasError]="getTabInvalidStatus('organizationOfficer')"
-      [template]="organizationOfficerTabTemplate" [title]="lang.map.organization_officer"></tab>
+         [template]="organizationOfficerTabTemplate" [title]="lang.map.organization_officer"></tab>
     <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
-      [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
+         [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
     <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name"
-      [hasError]="getTabInvalidStatus('attachments')" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+         [hasError]="getTabInvalidStatus('attachments')" [template]="attachmentsTab"
+         [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>
 <ng-container [formGroup]="form">
@@ -20,8 +21,8 @@
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label for="requestType" asteriskIfRequired="requestType" class="form-label">{{lang.map.request_type}}</label>
           <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true" placeholder="{{lang.map.select}}"
-            id="requestType" [notFoundText]="lang.map.msg_not_found" [readonly]="true" appendTo="body"
-            formControlName="requestType" validationClasses="requestType">
+                     id="requestType" [notFoundText]="lang.map.msg_not_found" [readonly]="true" appendTo="body"
+                     formControlName="requestType" validationClasses="requestType">
             <ng-option *ngFor="let option of requestTypesList" [value]="option.lookupKey">
               {{option.getName()}}
             </ng-option>
@@ -31,8 +32,8 @@
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="serviceType" for="serviceType">{{lang.map.service_type}}</label>
           <ng-select [selectOnTab]="true" labelForId="serviceType" [clearable]="true" placeholder="{{lang.map.select}}"
-            id="serviceType" [notFoundText]="lang.map.msg_not_found" appendTo="body" [readonly]="readonly"
-            formControlName="serviceType" validationClasses="serviceType">
+                     id="serviceType" [notFoundText]="lang.map.msg_not_found" appendTo="body" [readonly]="readonly"
+                     formControlName="serviceType" validationClasses="serviceType">
             <ng-option *ngFor="let option of serviceTypes" [value]="option.id" [disabled]="option.isRetired()">
               {{option.getName()}}
             </ng-option>
@@ -40,27 +41,29 @@
           <app-field-error-message controlName="activityType"></app-field-error-message>
         </div>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="!!model && !!model.getCaseId()">
         <div class="col-md-4 mb-4 position-relative" *ngIf="isLicensingUser">
           <label asteriskIfRequired [control]="selectedTemplateControl" class="form-label">{{lang.map.select + ' ' +
-            lang.map.lbl_template}}</label>
+          lang.map.lbl_template}}</label>
           <div class="input-group">
             <input [value]="selectedTemplate?.getName()" [readonly]="true" type="text" class="form-control">
-            <button class="btn btn-primary btn-sm" (click)="selectTemplatePopup(true)"><i
-                class="mdi mdi-file-word"></i></button>
+            <button class="btn btn-primary btn-sm" [tooltip]="lang.map.select + ' ' + lang.map.lbl_template"
+                    (click)="selectTemplatePopup(true)"><i
+              class="mdi mdi-file-word"></i></button>
             <app-field-error-message [control]="selectedTemplateControl"></app-field-error-message>
           </div>
         </div>
         <div class="col-md-4 mb-4 position-relative">
           <div class="input-group">
             <file-uploader #fileUploader *ngIf="isLicensingUser && selectedTemplate" labelKey="template_file"
-              [isRequired]="true" (fileUploadEvent)="uploadTemplate($event)"
-              [allowedExtensions]="[fileExtensionsEnum.DOCX]">
+                           [isRequired]="true" (fileUploadEvent)="uploadTemplate($event)"
+                           [allowedExtensions]="[fileExtensionsEnum.DOCX]">
             </file-uploader>
             <div style="font-size: 19px; padding-top: 2rem">
               <button class="btn btn-primary btn-sm ms-2" *ngIf="isInternalUser"
-                [tooltip]="lang.map.view + ' ' + lang.map.uploaded_templates" (click)="selectTemplatePopup(false)"><i
-                  class="mdi mdi-file-eye"></i></button>
+                      [tooltip]="lang.map.view + ' ' + lang.map.uploaded_templates"
+                      (click)="selectTemplatePopup(false)"><i
+                class="mdi mdi-file-eye"></i></button>
             </div>
           </div>
         </div>
@@ -69,19 +72,19 @@
         <div class="col-sm-12 col-md-4 mb-4 position-relative" [hidden]="!showOtherService">
           <label class="form-label" asteriskIfRequired="otherService" for="otherService">{{lang.map.lbl_other}}</label>
           <input validationClasses="otherService" formControlName="otherService" type="text" id="otherService"
-            [readonly]="readonly" class="form-control">
+                 [readonly]="readonly" class="form-control">
           <app-field-error-message controlName="otherService"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="subject" for="subject">{{lang.map.subject}}</label>
           <input validationClasses="subject" formControlName="subject" type="text" id="subject" [readonly]="readonly"
-            class="form-control">
+                 class="form-control">
           <app-field-error-message controlName="subject"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="goal" for="goal">{{lang.map.goal}}</label>
           <input validationClasses="goal" formControlName="goal" type="text" id="goal" [readonly]="readonly"
-            class="form-control">
+                 class="form-control">
           <app-field-error-message controlName="goal"></app-field-error-message>
         </div>
       </div>
@@ -92,16 +95,16 @@
       <div class="row">
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="beneficiaries"
-            for="beneficiaries">{{lang.map.beneficiaries_description}}</label>
+                 for="beneficiaries">{{lang.map.beneficiaries_description}}</label>
           <input validationClasses="beneficiaries" formControlName="beneficiaries" type="text" id="beneficiaries"
-            [readonly]="readonly" class="form-control">
+                 [readonly]="readonly" class="form-control">
           <app-field-error-message controlName="beneficiaries"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="beneficiariesNumber"
-            for="beneficiariesNumber">{{lang.map.number_of_beneficiaries}}</label>
+                 for="beneficiariesNumber">{{lang.map.number_of_beneficiaries}}</label>
           <input validationClasses="beneficiariesNumber" formControlName="beneficiariesNumber" type="text"
-            id="beneficiariesNumber" [readonly]="readonly" class="form-control">
+                 id="beneficiariesNumber" [readonly]="readonly" class="form-control">
           <app-field-error-message controlName="beneficiariesNumber"></app-field-error-message>
         </div>
       </div>
@@ -113,8 +116,8 @@
       <div class="col-sm-12 col-md-4 mb-4 position-relative">
         <label class="form-label" for="officer">{{lang.map.organization_officer}}</label>
         <ng-select [selectOnTab]="true" labelForId="officer" [clearable]="true" placeholder="{{lang.map.select}}"
-          id="officer" [notFoundText]="lang.map.msg_not_found" appendTo="body" [readonly]="readonly"
-          (change)="selectOrganizationOfficer($event)">
+                   id="officer" [notFoundText]="lang.map.msg_not_found" appendTo="body" [readonly]="readonly"
+                   (change)="selectOrganizationOfficer($event)">
           <ng-option *ngFor="let option of externalUsersList" [value]="option.id">
             {{option.getName()}}
           </ng-option>
@@ -127,19 +130,19 @@
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="arName" for="arName">{{lang.map.arabic_name}}</label>
           <input validationClasses="arName" formControlName="arName" type="text" id="arName" [readonly]="true"
-            class="form-control">
+                 class="form-control">
           <app-field-error-message controlName="arName"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="enName" for="enName">{{lang.map.english_name}}</label>
           <input validationClasses="enName" formControlName="enName" type="text" id="enName" [readonly]="true"
-            class="form-control">
+                 class="form-control">
           <app-field-error-message controlName="enName"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
           <input validationClasses="email" formControlName="email" type="text" id="email" [readonly]="true"
-            class="form-control">
+                 class="form-control">
           <app-field-error-message controlName="email"></app-field-error-message>
         </div>
 
@@ -149,19 +152,19 @@
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="jobTitle" for="jobTitle">{{lang.map.job_title}}</label>
           <input validationClasses="jobTitle" formControlName="jobTitle" type="text" id="jobTitle" [readonly]="true"
-            class="form-control">
+                 class="form-control">
           <app-field-error-message controlName="jobTitle"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="phone" for="phone">{{lang.map.lbl_phone}}</label>
           <input validationClasses="phone" formControlName="phone" type="text" id="phone" [readonly]="true"
-            class="form-control">
+                 class="form-control">
           <app-field-error-message controlName="phone"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="mobileNo" for="mobileNo">{{lang.map.lbl_mobile_number}}</label>
           <input validationClasses="mobileNo" formControlName="mobileNo" type="text" id="mobileNo" [readonly]="true"
-            class="form-control">
+                 class="form-control">
           <app-field-error-message controlName="mobileNo"></app-field-error-message>
         </div>
 
@@ -173,17 +176,18 @@
     <div class="row">
       <div class="col-sm-12 col-md-12 mb-4 position-relative">
         <label for="description" asteriskIfRequired="description"
-          class="form-label">{{lang.map.special_explanations}}</label>
+               class="form-label">{{lang.map.special_explanations}}</label>
         <textarea rows="5" id="description" validationClasses="description"
-          [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readOnly]="(readonly)"
-          formControlName="description" trimInput class="form-control"></textarea>
+                  [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readOnly]="(readonly)"
+                  formControlName="description" trimInput class="form-control"></textarea>
         <app-field-error-message controlName="description"></app-field-error-message>
       </div>
     </div>
   </ng-template>
   <ng-template #attachmentsTab>
     <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
-      [service]="service.documentService" [model]="model" [load]="loadAttachments" [formProperties]="formProperties">
+                 [service]="service.documentService" [model]="model" [load]="loadAttachments"
+                 [formProperties]="formProperties">
     </attachments>
   </ng-template>
 </ng-container>
