@@ -48,6 +48,10 @@ export class EvaluationIndicatorsPopupComponent extends UiCrudDialogGenericCompo
     });
   }
 
+  getPopupHeadingText(): string {
+    return '';
+  }
+
   _getNewInstance(override?: Partial<EvaluationIndicator> | undefined): EvaluationIndicator {
     return new EvaluationIndicator().clone(override ?? {});
   }

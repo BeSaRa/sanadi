@@ -1,20 +1,20 @@
-import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { ImplementingAgency } from '@models/implementing-agency';
-import { LangService } from '@app/services/lang.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { AdminResult } from '@app/models/admin-result';
-import { Lookup } from '@app/models/lookup';
-import { CommonService } from '@app/services/common.service';
-import { LookupService } from '@app/services/lookup.service';
-import { ToastService } from '@app/services/toast.service';
-import { DialogService } from '@app/services/dialog.service';
-import { UiCrudDialogGenericComponent } from '@app/generics/ui-crud-dialog-generic-component.directive';
-import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { Observable } from 'rxjs';
+import {Component, Inject} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {ImplementingAgency} from '@models/implementing-agency';
+import {LangService} from '@app/services/lang.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {AdminResult} from '@app/models/admin-result';
+import {Lookup} from '@app/models/lookup';
+import {CommonService} from '@app/services/common.service';
+import {LookupService} from '@app/services/lookup.service';
+import {ToastService} from '@app/services/toast.service';
+import {DialogService} from '@app/services/dialog.service';
+import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
+import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-intervention-implementing-agency-list-popup',
@@ -26,15 +26,23 @@ export class InterventionImplementingAgencyListPopupComponent extends UiCrudDial
   form!: UntypedFormGroup;
   operation: OperationTypes;
   popupTitleKey!: keyof ILanguageKeys;
+
   _getNewInstance(override?: Partial<ImplementingAgency> | undefined): ImplementingAgency {
     return new ImplementingAgency().clone(override ?? {});
   }
+
   initPopup(): void {
     this.popupTitleKey = 'entities';
     this.loadImplementingAgenciesByAgencyType(this.form.value.implementingAgencyType);
   }
+
+  getPopupHeadingText(): string {
+    return '';
+  }
+
   destroyPopup(): void {
   }
+
   afterSave(savedModel: ImplementingAgency, originalModel: ImplementingAgency): void {
     this.toast.success(this.operation === OperationTypes.CREATE
       ? this.lang.map.msg_added_in_list_success : this.lang.map.msg_updated_in_list_success);
@@ -58,27 +66,30 @@ export class InterventionImplementingAgencyListPopupComponent extends UiCrudDial
     let formValue = form.getRawValue();
     let agencyTypeInfo: AdminResult = (this.implementingAgencyTypeList.find(x => x.lookupKey === formValue.implementingAgencyType) ?? new Lookup()).convertToAdminResult();
     let implementingAgencyInfo: AdminResult = (this.implementingAgencyList.find(x => x.fnId === formValue.implementingAgency)) ?? new AdminResult();
-     return this._getNewInstance({
-       ...this.model,
-       ...formValue,
-       agencyTypeInfo,
-       implementingAgencyInfo,
-     });
+    return this._getNewInstance({
+      ...this.model,
+      ...formValue,
+      agencyTypeInfo,
+      implementingAgencyInfo,
+    });
   }
+
   saveFail(error: Error): void {
     throw new Error(error.message);
   }
+
   buildForm(): void {
     this.form = this.fb.group(this.model.getAgencyFields(true));
   }
+
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ImplementingAgency>,
-  public lang: LangService,
-  public dialogRef: DialogRef,
-  public dialogService: DialogService,
-  public fb: UntypedFormBuilder,
-  public toast: ToastService,
-  private lookupService: LookupService,
-  private commonService: CommonService) {
+              public lang: LangService,
+              public dialogRef: DialogRef,
+              public dialogService: DialogService,
+              public fb: UntypedFormBuilder,
+              public toast: ToastService,
+              private lookupService: LookupService,
+              private commonService: CommonService) {
     super();
     this.model = data.model;
     this.operation = data.operation;

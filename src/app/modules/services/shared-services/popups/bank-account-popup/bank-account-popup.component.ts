@@ -57,6 +57,10 @@ export class BankAccountPopupComponent extends UiCrudDialogGenericComponent<Bank
     }
   }
 
+  getPopupHeadingText(): string {
+    return this.model.iBan;
+  }
+
   private loadCountries(): void {
     this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))

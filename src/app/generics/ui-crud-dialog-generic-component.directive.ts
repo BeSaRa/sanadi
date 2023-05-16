@@ -24,6 +24,14 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
   abstract toast: ToastService;
   abstract popupTitleKey: keyof ILanguageKeys;
 
+  /**
+   * @description Get the text to append to popup heading.
+   *
+   *
+   * example: Edit User : User1, View User : User 1
+   */
+  abstract getPopupHeadingText(): string;
+
   abstract _getNewInstance(override?: Partial<M>): M;
 
   destroy$: Subject<any> = new Subject<any>();
@@ -46,9 +54,13 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
       if (this.operation === OperationTypes.CREATE) {
         return this.lang.map.lbl_add_x.change({x: this.lang.map[this.popupTitleKey]});
       } else if (this.operation === OperationTypes.UPDATE) {
-        return this.lang.map.lbl_edit_x.change({x: this.lang.map[this.popupTitleKey]});
+        return this.lang.map.lbl_edit_x.change({
+          x: this.lang.map[this.popupTitleKey] + (this.getPopupHeadingText() ? ' : ' + this.getPopupHeadingText() : '')
+        });
       } else if (this.operation === OperationTypes.VIEW) {
-        return this.lang.map.lbl_view_x.change({x: this.lang.map[this.popupTitleKey]})
+        return this.lang.map.lbl_view_x.change({
+          x: this.lang.map[this.popupTitleKey] + (this.getPopupHeadingText() ? ' : ' + this.getPopupHeadingText() : '')
+        })
       }
       return '';
     } catch (e) {

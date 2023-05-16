@@ -1,18 +1,18 @@
-import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { UiCrudDialogGenericComponent } from '@app/generics/ui-crud-dialog-generic-component.directive';
-import { DateUtils } from '@app/helpers/date-utils';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { BankBranch } from '@app/models/bank-branch';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { DatepickerOptionsMap } from '@app/types/types';
-import { Observable } from 'rxjs';
+import {Component, Inject} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
+import {DateUtils} from '@app/helpers/date-utils';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {BankBranch} from '@app/models/bank-branch';
+import {DialogService} from '@app/services/dialog.service';
+import {LangService} from '@app/services/lang.service';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'bank-branch-popup',
@@ -24,12 +24,19 @@ export class BankBranchPopupComponent extends UiCrudDialogGenericComponent<BankB
   form!: UntypedFormGroup;
   operation: OperationTypes;
   popupTitleKey!: keyof ILanguageKeys;
+
   _getNewInstance(override?: Partial<BankBranch> | undefined): BankBranch {
     return new BankBranch().clone(override ?? {});
   }
+
+  getPopupHeadingText(): string {
+    return '';
+  }
+
   initPopup(): void {
     this.popupTitleKey = 'branches';
   }
+
   destroyPopup(): void {
   }
 
@@ -54,29 +61,33 @@ export class BankBranchPopupComponent extends UiCrudDialogGenericComponent<BankB
 
   prepareModel(model: BankBranch, form: UntypedFormGroup): BankBranch | Observable<BankBranch> {
     let formValue = form.getRawValue();
-     return this._getNewInstance({
-       ...this.model,
-       ...formValue,
-     });
+    return this._getNewInstance({
+      ...this.model,
+      ...formValue,
+    });
   }
+
   saveFail(error: Error): void {
     throw new Error(error.message);
   }
+
   buildForm(): void {
     this.form = this.fb.group(this.model.getBranchFields(true));
   }
+
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<BankBranch>,
-               public lang: LangService,
-               public dialogRef: DialogRef,
-               public dialogService: DialogService,
-               public fb: UntypedFormBuilder,
-               public toast: ToastService) {
-     super();
-     this.model = data.model;
-     this.operation = data.operation;
-     this.list = data.list;
+              public lang: LangService,
+              public dialogRef: DialogRef,
+              public dialogService: DialogService,
+              public fb: UntypedFormBuilder,
+              public toast: ToastService) {
+    super();
+    this.model = data.model;
+    this.operation = data.operation;
+    this.list = data.list;
   }
+
   datepickerOptionsMap: DatepickerOptionsMap = {
-    establishmentDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' })
+    establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'})
   };
 }

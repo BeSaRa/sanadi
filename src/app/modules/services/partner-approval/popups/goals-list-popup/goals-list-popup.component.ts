@@ -1,24 +1,24 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { GoalList } from '@app/models/goal-list';
-import { LangService } from '@app/services/lang.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { Lookup } from '@app/models/lookup';
-import { map, takeUntil } from 'rxjs/operators';
-import { DomainTypes } from '@app/enums/domain-types';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { Observable, Subject } from 'rxjs';
-import { AdminResult } from '@app/models/admin-result';
-import { DacOchaService } from '@app/services/dac-ocha.service';
-import { LookupService } from '@app/services/lookup.service';
-import { UiCrudDialogGenericComponent } from '@app/generics/ui-crud-dialog-generic-component.directive';
-import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
-import { DialogService } from '@app/services/dialog.service';
-import { ToastService } from '@app/services/toast.service';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import {Component, Inject} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {GoalList} from '@app/models/goal-list';
+import {LangService} from '@app/services/lang.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {Lookup} from '@app/models/lookup';
+import {map, takeUntil} from 'rxjs/operators';
+import {DomainTypes} from '@app/enums/domain-types';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Observable} from 'rxjs';
+import {AdminResult} from '@app/models/admin-result';
+import {DacOchaService} from '@app/services/dac-ocha.service';
+import {LookupService} from '@app/services/lookup.service';
+import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
+import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
 @Component({
   selector: 'app-goals-list-popup',
@@ -33,7 +33,7 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
   commonStatusEnum = CommonStatusEnum;
   domainsList: Lookup[] = this.lookupService.listByCategory.Domain;
   mainDACCategoriesList: AdminResult[] = [];
-  mainUNOCHACategoriesList: AdminResult[] = [];;
+  mainUNOCHACategoriesList: AdminResult[] = [];
   _getNewInstance(override?: Partial<GoalList> | undefined): GoalList {
     return new GoalList().clone(override ?? {});
   }
@@ -43,6 +43,10 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
     this.displayByDomain = null;
     // this.listenToGoalListChange();
     this.loadOCHADACClassifications();
+  }
+
+  getPopupHeadingText(): string {
+    return '';
   }
 
   destroyPopup(): void {

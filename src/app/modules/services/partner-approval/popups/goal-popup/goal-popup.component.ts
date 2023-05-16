@@ -22,24 +22,28 @@ export class GoalPopupComponent extends UiCrudDialogGenericComponent<Goal>{
   form!: UntypedFormGroup;
   operation: OperationTypes;
   popupTitleKey!: keyof ILanguageKeys;
-  
+
   _getNewInstance(override?: Partial<Goal> | undefined): Goal {
     return new Goal().clone(override ?? {});
   }
-  
+
   initPopup(): void {
     this.popupTitleKey = 'goal';
   }
-  
+
+  getPopupHeadingText(): string {
+    return '';
+  }
+
   destroyPopup(): void {
   }
-  
+
   afterSave(savedModel: Goal, originalModel: Goal): void {
     this.toast.success(this.operation === OperationTypes.CREATE
       ? this.lang.map.msg_added_in_list_success : this.lang.map.msg_updated_in_list_success);
     this.dialogRef.close(savedModel);
   }
-  
+
   beforeSave(model: Goal, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
@@ -52,7 +56,7 @@ export class GoalPopupComponent extends UiCrudDialogGenericComponent<Goal>{
     }
     return true;
   }
-  
+
   prepareModel(model: Goal, form: UntypedFormGroup): Goal | Observable<Goal> {
     let formValue = form.getRawValue();
      return this._getNewInstance({
@@ -60,11 +64,11 @@ export class GoalPopupComponent extends UiCrudDialogGenericComponent<Goal>{
        ...formValue,
      });
   }
-  
+
   saveFail(error: Error): void {
     throw new Error(error.message);
   }
-  
+
   buildForm(): void {
     this.form = this.fb.group(this.model.getGoalsFields(true));
   }

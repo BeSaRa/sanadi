@@ -39,6 +39,10 @@ export class ComponentBudgetsPopupComponent extends UiCrudDialogGenericComponent
     this.popupTitleKey = 'project_components_budgets';
   }
 
+  getPopupHeadingText(): string {
+    return '';
+  }
+
   _getNewInstance(override?: Partial<ProjectComponent> | undefined): ProjectComponent {
     return new ProjectComponent().clone(override ?? {});
   }

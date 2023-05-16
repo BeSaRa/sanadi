@@ -46,6 +46,10 @@ export class WorkAreasPopupComponent extends UiCrudDialogGenericComponent<WorkAr
     this.popupTitleKey = 'work_area';
   }
 
+  getPopupHeadingText(): string {
+    return '';
+  }
+
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
   }

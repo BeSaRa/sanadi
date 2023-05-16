@@ -1,29 +1,29 @@
-import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { FinancialTransferRequestTypes } from '@app/enums/service-request-types';
-import { SubmissionMechanisms } from '@app/enums/submission-mechanisms.enum';
-import { UiCrudDialogGenericComponent } from '@app/generics/ui-crud-dialog-generic-component.directive';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ExternalProjectLicensing } from '@app/models/external-project-licensing';
-import { FinancialTransfersProject } from '@app/models/financial-transfers-project';
-import { DialogService } from '@app/services/dialog.service';
-import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { Observable, of } from 'rxjs';
-import { catchError, debounceTime, filter, switchMap, takeUntil } from 'rxjs/operators';
+import {Component, Inject} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {FinancialTransferRequestTypes} from '@app/enums/service-request-types';
+import {SubmissionMechanisms} from '@app/enums/submission-mechanisms.enum';
+import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ExternalProjectLicensing} from '@app/models/external-project-licensing';
+import {FinancialTransfersProject} from '@app/models/financial-transfers-project';
+import {DialogService} from '@app/services/dialog.service';
+import {FinancialTransferLicensingService} from '@app/services/financial-transfer-licensing.service';
+import {LangService} from '@app/services/lang.service';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Observable, of} from 'rxjs';
+import {catchError, debounceTime, filter, switchMap, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'financial-transfers-projects-popup',
   templateUrl: './financial-transfers-projects-popup.component.html',
   styleUrls: ['./financial-transfers-projects-popup.component.scss']
 })
-export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGenericComponent<FinancialTransfersProject>{
+export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGenericComponent<FinancialTransfersProject> {
   model: FinancialTransfersProject;
   form!: UntypedFormGroup;
   operation: OperationTypes;
@@ -32,17 +32,17 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   selectedProject: FinancialTransfersProject;
   inputMaskPatterns = CustomValidators.inputMaskPatterns
   approvedFinancialTransferProjects: ExternalProjectLicensing[] = []
-  lastQatariTransactionAmountValue:any;
+  lastQatariTransactionAmountValue: any;
   requestType!: number;
   submissionMechanism!: number;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<FinancialTransfersProject>,
-    public lang: LangService,
-    public dialogRef: DialogRef,
-    public dialogService: DialogService,
-    public fb: UntypedFormBuilder,
-    public toast: ToastService,
-    private financialTransferLicensingService: FinancialTransferLicensingService
+              public lang: LangService,
+              public dialogRef: DialogRef,
+              public dialogService: DialogService,
+              public fb: UntypedFormBuilder,
+              public toast: ToastService,
+              private financialTransferLicensingService: FinancialTransferLicensingService
   ) {
     super();
     this.model = data.model;
@@ -57,11 +57,17 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   _getNewInstance(override?: Partial<FinancialTransfersProject> | undefined): FinancialTransfersProject {
     return new FinancialTransfersProject().clone(override ?? {});
   }
+
   initPopup(): void {
     this.popupTitleKey = 'lbl_projects';
     this._listenToFinancialTransferProjectChange();
     this._listenQatariTransactionAmountChange()
   }
+
+  getPopupHeadingText(): string {
+    return '';
+  }
+
   destroyPopup(): void {
   }
 
@@ -76,7 +82,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
       this.displayRequiredFieldsMessage();
       return false;
     }
-    const isQatariTransactionAmountValid = this.submissionMechanism === SubmissionMechanisms.NOTIFICATION  || (this.qatariTransactionAmount.value <= this.selectedProject!.dueAmount)
+    const isQatariTransactionAmountValid = this.submissionMechanism === SubmissionMechanisms.NOTIFICATION || (this.qatariTransactionAmount.value <= this.selectedProject!.dueAmount)
     if (!isQatariTransactionAmountValid) {
       this.toast.error(this.lang.map.msg_qatari_transaction_should_not_exceed_due_amount);
       return false;
@@ -139,8 +145,8 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
         switchMap((value: string) => {
 
           const qatariTransactionAmount = this.requestType === FinancialTransferRequestTypes.UPDATE ?
-          this.qatariTransactionAmount.value : undefined;
-          return this.financialTransferLicensingService.loadEternalProjectsDetails(value,qatariTransactionAmount)
+            this.qatariTransactionAmount.value : undefined;
+          return this.financialTransferLicensingService.loadEternalProjectsDetails(value, qatariTransactionAmount)
             .pipe(
               catchError(_ => of(null)),
             )
@@ -154,10 +160,11 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
           return;
         }
 
-        this.form.patchValue({...project,qatariTransactionAmount:this.qatariTransactionAmount.value});
+        this.form.patchValue({...project, qatariTransactionAmount: this.qatariTransactionAmount.value});
         this.selectedProject = project
       });
   }
+
   get qatariTransactionAmount(): UntypedFormControl {
     return this.form.get('qatariTransactionAmount') as UntypedFormControl;
   }

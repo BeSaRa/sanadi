@@ -23,14 +23,18 @@ export class ProjectAddressesPopupComponent extends UiCrudDialogGenericComponent
   _getNewInstance(override?: Partial<ProjectAddress> | undefined): ProjectAddress {
     return new ProjectAddress().clone(override ?? {});
   }
-  
+
   initPopup(): void {
     this.popupTitleKey = 'project_addresses';
   }
-  
+
+  getPopupHeadingText(): string {
+    return '';
+  }
+
   destroyPopup(): void {
   }
-  
+
   afterSave(savedModel: ProjectAddress, originalModel: ProjectAddress): void {
     this.toast.success(this.operation === OperationTypes.CREATE
       ? this.lang.map.msg_added_in_list_success : this.lang.map.msg_updated_in_list_success);
@@ -57,11 +61,11 @@ export class ProjectAddressesPopupComponent extends UiCrudDialogGenericComponent
       ...formValue,
     });
   }
-  
+
   saveFail(error: Error): void {
     throw new Error(error.message);
   }
-  
+
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
   }

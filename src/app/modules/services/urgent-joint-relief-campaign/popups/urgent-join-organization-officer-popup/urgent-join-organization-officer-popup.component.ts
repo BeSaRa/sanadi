@@ -30,6 +30,10 @@ export class UrgentJoinOrganizationOfficerPopupComponent extends UiCrudDialogGen
     this.popupTitleKey = 'organization_officers';
   }
 
+  getPopupHeadingText(): string {
+    return '';
+  }
+
   destroyPopup(): void {
   }
 

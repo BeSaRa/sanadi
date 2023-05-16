@@ -60,6 +60,10 @@ export class ExecutiveManagementPopupComponent extends UiCrudDialogGenericCompon
       .subscribe((countries) => this.countriesList = countries);*/
   }
 
+  getPopupHeadingText(): string {
+    return '';
+  }
+
   destroyPopup(): void {
   }
 
