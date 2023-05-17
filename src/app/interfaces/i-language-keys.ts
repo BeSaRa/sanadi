@@ -1962,4 +1962,7 @@ export interface ILanguageKeys {
   rent_payment_amount: string;
   rent_payment_due_day: string;
   rent_payment_due_month: string;
+  izzab_status: string;
+  izzab_has_sheep: string;
+  izzab_has_no_sheep: string;
 }

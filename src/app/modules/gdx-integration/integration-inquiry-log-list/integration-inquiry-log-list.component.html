@@ -1,13 +1,13 @@
 <div class="row">
   <div class="col-12">
     <app-table #table sortableTable [paginator]="paginator" [data]="logsList" [columns]="displayedColumns"
-      [filter]="filterControl.value" [useSearchToFilter]="true">
+               [filter]="filterControl.value" [useSearchToFilter]="true">
       <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
 
         <ng-container cdkColumnDef="extra-header">
           <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
             <table-header tableTitle="inquiries" [add$]="add$" [reload$]="reload$" [sort]="table.dataSource.sort"
-              (textChange)="filterControl.setValue($event)" [headerClass]="'bg-secondary'">
+                          (textChange)="filterControl.setValue($event)" [headerClass]="'bg-secondary'">
             </table-header>
           </th>
         </ng-container>
@@ -15,33 +15,30 @@
           <th style="width:8px" class="p-0" cdk-header-cell sortable-header *cdkHeaderCellDef></th>
           <td cdk-cell class="position-relative p-0" *cdkCellDef="let row">
             <div [class]="row.status ? 'bg-success' : 'bg-danger'"
-              [tooltip]="row.status ? lang.map.lbl_active : lang.map.lbl_inactive"
-              class="position-absolute top-0 start-0 end-0 bottom-0">
+                 [tooltip]="row.status ? lang.map.lbl_active : lang.map.lbl_inactive"
+                 class="position-absolute top-0 start-0 end-0 bottom-0">
             </div>
           </td>
         </ng-container>
-        <ng-container cdkColumnDef="icons">
-          <th cdk-header-cell *cdkHeaderCellDef sortable-header></th>
-          <td cdk-cell *cdkCellDef="let row" class="row-indicator-td">
-            <div class="d-flex flex-row">
-              <i class="mdi {{actionIconsEnum.SHEEP}} text-primary" *ngIf="izzabHasSheep(row)"
-                tooltip="{{lang.map.has_sheep}}"></i>
-            </div>
+        <ng-container cdkColumnDef="sheepStatus">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{this.lang.map.izzab_status}}</th>
+          <td cdk-cell *cdkCellDef="let row">
+            <span>{{izzabHasSheep(row) ? this.lang.map.izzab_has_sheep : this.lang.map.izzab_has_no_sheep}}</span>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="organization">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-            [sortCallback]="sortingCallbacks.organization"> {{lang.map.lbl_organization}}</th>
+              [sortCallback]="sortingCallbacks.organization"> {{lang.map.lbl_organization}}</th>
           <td cdk-cell *cdkCellDef="let row"><span>{{row.orgInfo ? row.orgInfo.getName() : ''}}</span></td>
         </ng-container>
         <ng-container cdkColumnDef="user">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-            [sortCallback]="sortingCallbacks.user"> {{lang.map.user}}</th>
+              [sortCallback]="sortingCallbacks.user"> {{lang.map.user}}</th>
           <td cdk-cell *cdkCellDef="let row"><span>{{row.orgUserInfo ? row.orgUserInfo.getName() : ''}}</span></td>
         </ng-container>
         <ng-container cdkColumnDef="actionTime">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-            [sortCallback]="sortingCallbacks.actionTime"> {{lang.map.action_time}}</th>
+              [sortCallback]="sortingCallbacks.actionTime"> {{lang.map.action_time}}</th>
           <td cdk-cell *cdkCellDef="let row"><span>{{row.actionTimeString}}</span></td>
         </ng-container>
         <ng-container cdkColumnDef="actions">
@@ -54,7 +51,7 @@
         <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
         <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"
-          [ngClass]="{'selected-row': selectedRecord && selectedRecord.id === row.id}"></tr>
+            [ngClass]="{'selected-row': selectedRecord && selectedRecord.id === row.id}"></tr>
         <tr *cdkNoDataRow>
           <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
         </tr>
