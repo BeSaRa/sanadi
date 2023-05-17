@@ -1,37 +1,39 @@
-import { CustomServiceTemplateService } from './../../../../../services/custom-service-template.service';
-import { JobTitleService } from '@services/job-title.service';
-import { ExternalUser } from '@models/external-user';
-import { ExternalUserService } from '@services/external-user.service';
-import { AdminLookupService } from '@services/admin-lookup.service';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, } from '@angular/forms';
-import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
-import { CommonCaseStatus } from '@enums/common-case-status.enum';
-import { OpenFrom } from '@enums/open-from.enum';
-import { OperationTypes } from '@enums/operation-types.enum';
-import { SaveTypes } from '@enums/save-types';
-import { ServiceRequestTypes } from '@enums/service-request-types';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { CommonUtils } from '@helpers/common-utils';
-import { AdminLookup } from '@models/admin-lookup';
-import { Lookup } from '@models/lookup';
-import { OrganizationsEntitiesSupport } from '@models/organizations-entities-support';
-import { OrganizationsEntitiesSupportSearchCriteria } from '@models/organizations-entities-support-search-criteria';
-import { DialogService } from '@services/dialog.service';
-import { EmployeeService } from '@services/employee.service';
-import { LangService } from '@services/lang.service';
-import { LookupService } from '@services/lookup.service';
-import { OrganizationsEntitiesSupportService } from '@services/organizations-entities-support.service';
-import { ToastService } from '@services/toast.service';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { TabMap } from '@app/types/types';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { Observable, of, Subject } from 'rxjs';
-import { catchError, map, takeUntil, tap, } from 'rxjs/operators';
-import { JobTitle } from '@models/job-title';
-import { SelectCustomServiceTemplatePopupComponent } from '@app/modules/services/shared-services/popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
-import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
-import { CustomServiceTemplate } from '@app/models/custom-service-template';
+import {CustomServiceTemplateService} from './../../../../../services/custom-service-template.service';
+import {JobTitleService} from '@services/job-title.service';
+import {ExternalUser} from '@models/external-user';
+import {ExternalUserService} from '@services/external-user.service';
+import {AdminLookupService} from '@services/admin-lookup.service';
+import {ChangeDetectorRef, Component} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators,} from '@angular/forms';
+import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {OpenFrom} from '@enums/open-from.enum';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
+import {ServiceRequestTypes} from '@enums/service-request-types';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {CommonUtils} from '@helpers/common-utils';
+import {AdminLookup} from '@models/admin-lookup';
+import {Lookup} from '@models/lookup';
+import {OrganizationsEntitiesSupport} from '@models/organizations-entities-support';
+import {OrganizationsEntitiesSupportSearchCriteria} from '@models/organizations-entities-support-search-criteria';
+import {DialogService} from '@services/dialog.service';
+import {EmployeeService} from '@services/employee.service';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {OrganizationsEntitiesSupportService} from '@services/organizations-entities-support.service';
+import {ToastService} from '@services/toast.service';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {TabMap} from '@app/types/types';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Observable, of, Subject} from 'rxjs';
+import {catchError, map, takeUntil, tap,} from 'rxjs/operators';
+import {JobTitle} from '@models/job-title';
+import {
+  SelectCustomServiceTemplatePopupComponent
+} from '@app/modules/services/shared-services/popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
+import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {CustomServiceTemplate} from '@app/models/custom-service-template';
 
 @Component({
   selector: 'app-organizations-entities-support',
@@ -40,17 +42,17 @@ import { CustomServiceTemplate } from '@app/models/custom-service-template';
 })
 export class OrganizationsEntitiesSupportComponent extends EServicesGenericComponent<OrganizationsEntitiesSupport, OrganizationsEntitiesSupportService> {
   constructor(public lang: LangService,
-    private cd: ChangeDetectorRef,
-    private toastService: ToastService,
-    private dialogService: DialogService,
-    public fb: UntypedFormBuilder,
-    private customServiceTemplate: CustomServiceTemplateService,
-    public service: OrganizationsEntitiesSupportService,
-    private lookupService: LookupService,
-    public employeeService: EmployeeService,
-    private adminLookupService: AdminLookupService,
-    private externalUserService: ExternalUserService,
-    private jobTitleService: JobTitleService) {
+              private cd: ChangeDetectorRef,
+              private toastService: ToastService,
+              private dialogService: DialogService,
+              public fb: UntypedFormBuilder,
+              private customServiceTemplate: CustomServiceTemplateService,
+              public service: OrganizationsEntitiesSupportService,
+              private lookupService: LookupService,
+              public employeeService: EmployeeService,
+              private adminLookupService: AdminLookupService,
+              private externalUserService: ExternalUserService,
+              private jobTitleService: JobTitleService) {
     super();
   }
 
@@ -327,9 +329,11 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       })
     ).subscribe();
   }
+
   get isNotCreateOeration() {
     return this.operation != this.operationTypes.CREATE;
   }
+
   private _isOthersServiceType(serviceType?: AdminLookup) {
     if (!serviceType) return false;
     return serviceType.enName.toLocaleLowerCase() === 'other' ||
@@ -444,25 +448,32 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   }
 
   selectTemplatePopup(isUploaded: boolean) {
-    if (!this.model){
+    if (!this.model) {
       return;
     }
     if (isUploaded) {
-      this.customServiceTemplate.loadTemplatesbyCaseType(this.model?.getCaseType()).subscribe((data) => {
-        this.dialogService.show(SelectCustomServiceTemplatePopupComponent, { list: data, showSelectBtn: true }).onAfterClose$.subscribe((temp) => {
+      this.customServiceTemplate.loadActiveTemplatesByCaseType(this.model?.getCaseType()).subscribe((data) => {
+        this.dialogService.show(SelectCustomServiceTemplatePopupComponent, {
+          list: data,
+          showSelectBtn: true
+        }).onAfterClose$.subscribe((temp) => {
           if (temp) {
             this.selectedTemplate = temp;
           }
         })
       })
     } else {
-      this.customServiceTemplate.loadTemplatesbyCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
-        this.dialogService.show(SelectCustomServiceTemplatePopupComponent, { list: data, showSelectBtn: false })
+      this.customServiceTemplate.loadTemplatesByCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
+        this.dialogService.show(SelectCustomServiceTemplatePopupComponent, {list: data, showSelectBtn: false})
       })
 
     }
   }
+
   uploadTemplate(file: File | File[] | undefined) {
+    if (!this.model) {
+      return;
+    }
     if (file) {
       let uploadedTemplate;
       if (!file || file instanceof File) {
@@ -470,12 +481,12 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       } else {
         uploadedTemplate = file[0];
       }
-      this.customServiceTemplate.uploadCaseDoc(this.model?.getCaseType(), {
+      this.customServiceTemplate.uploadCaseDoc(this.model.getCaseType(), this.model.getCaseId(), {
         documentDTO: {
           arabicName: this.selectedTemplate.arabicName,
           englishName: this.selectedTemplate.englishName,
           approvalTemplateType: this.selectedTemplate.approvalTemplateType,
-        }, caseId: this.model?.getCaseId()
+        }
       }, uploadedTemplate).subscribe((result) => {
         if (!result) {
           return;
@@ -484,12 +495,15 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       })
     }
   }
+
   get isLicensingUser() {
     return this.employeeService.isLicensingUser();
   }
+
   get isInternalUser() {
     return this.employeeService.isInternalUser();
   }
+
   isEditRequestTypeAllowed(): boolean {
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }

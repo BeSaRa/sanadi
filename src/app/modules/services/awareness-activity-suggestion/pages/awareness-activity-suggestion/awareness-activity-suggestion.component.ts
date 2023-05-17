@@ -115,7 +115,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       return;
     }
     if (isUploaded) {
-      this.customServiceTemplate.loadTemplatesbyCaseType(this.model?.getCaseType()).subscribe((data) => {
+      this.customServiceTemplate.loadActiveTemplatesByCaseType(this.model?.getCaseType()).subscribe((data) => {
         this.dialog.show(SelectCustomServiceTemplatePopupComponent, {
           list: data,
           showSelectBtn: true
@@ -127,13 +127,16 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
         })
       })
     } else {
-      this.customServiceTemplate.loadTemplatesbyCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
+      this.customServiceTemplate.loadTemplatesByCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
         this.dialog.show(SelectCustomServiceTemplatePopupComponent, {list: data, showSelectBtn: false})
       })
     }
   }
 
   uploadTemplate(file: File | File[] | undefined) {
+    if (!this.model) {
+      return;
+    }
     if (file) {
       let uploadedTemplate;
       if (!file || file instanceof File) {
@@ -141,12 +144,12 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       } else {
         uploadedTemplate = file[0];
       }
-      this.customServiceTemplate.uploadCaseDoc(this.model?.getCaseType(), {
+      this.customServiceTemplate.uploadCaseDoc(this.model.getCaseType(), this.model.getCaseId(), {
         documentDTO: {
           arabicName: this.selectedTemplate.arabicName,
           englishName: this.selectedTemplate.englishName,
           approvalTemplateType: this.selectedTemplate.approvalTemplateType,
-        }, caseId: this.model?.getCaseId()
+        }
       }, uploadedTemplate).subscribe((result) => {
         if (!result) {
           return;

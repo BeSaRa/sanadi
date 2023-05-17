@@ -2,7 +2,7 @@
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
     <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="null"
-      aria-label="Close"></button>
+            aria-label="Close"></button>
   </div>
 </div>
 <div class="dialog-content" #dialogContent>
@@ -13,14 +13,14 @@
         <label asteriskIfRequired="arabicName" for="arabicName" class="form-label">{{ lang.map.lbl_arabic_name
           }}</label>
         <input type="text" validationClasses="arabicName" formControlName="arabicName" trimInput
-          [readonly]="readOnly" class="form-control" id="arabicName" />
+               class="form-control" id="arabicName" />
         <app-field-error-message controlName="arabicName"></app-field-error-message>
       </div>
       <!-- English Name -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="englishName" for="englishName" class="form-label">{{ lang.map.english_name }}</label>
         <input type="text" validationClasses="englishName" formControlName="englishName"
-          [readonly]="readOnly" trimInput class="form-control" id="englishName" />
+               trimInput class="form-control" id="englishName" />
         <app-field-error-message controlName="englishName"></app-field-error-message>
       </div>
       <!-- template type -->
@@ -38,17 +38,22 @@
         <app-field-error-message controlName="approvalTemplateType"></app-field-error-message>
       </div>
       <!-- docx file -->
-      <div class="col-md-6 col-sm-12 mb-4 position-relative" *ngIf="!readOnly && !viewOnly">
-        <file-uploader labelKey="template_file" [isRequired]="true"
-                      (fileUploadEvent)="setTemplateFile($event)"
-                      [allowedExtensions]="[fileExtensionsEnum.DOCX]">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <file-uploader labelKey="template_file" [isRequired]="!model.id" [readonly]="readonly"
+                       (fileUploadEvent)="setTemplateFile($event)"
+                       [allowedExtensions]="[fileExtensionsEnum.DOCX]">
         </file-uploader>
       </div>
     </div>
   </div>
 </div>
 <div class="dialog-actions">
-  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readOnly && !viewOnly"
-    class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save : lang.map.btn_add}}</button>
-  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+  <button tabindex="-1" *ngIf="!readonly" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="!readonly" (click)="save()"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

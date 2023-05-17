@@ -43,7 +43,7 @@ export class CustomServiceTemplateComponent implements OnInit {
   }
 
   @Input() readOnly: boolean = false;
-  @Input() caseType?: CaseTypes;
+  @Input() caseType!: CaseTypes;
 
   caseTypes = CaseTypes;
 
@@ -88,7 +88,7 @@ export class CustomServiceTemplateComponent implements OnInit {
       label: 'view',
       onClick: (item: CustomServiceTemplate) => this.view(item),
     },
-    // download documint
+    // download document
     {
       type: 'action',
       icon: ActionIconsEnum.DOWNLOAD,

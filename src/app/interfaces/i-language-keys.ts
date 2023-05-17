@@ -1965,4 +1965,5 @@ export interface ILanguageKeys {
   izzab_estate: string;
   izzab_has_estate: string;
   izzab_has_no_estate: string;
+  msg_upload_missing_x: string;
 }

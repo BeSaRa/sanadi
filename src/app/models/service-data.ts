@@ -1,15 +1,15 @@
-import { ServiceDataService } from '@services/service-data.service';
-import { BaseModel } from './base-model';
-import { searchFunctionType } from '../types/types';
-import { FactoryService } from '@services/factory.service';
-import { LangService } from '@services/lang.service';
-import { LookupService } from '@services/lookup.service';
-import { AdminResult } from './admin-result';
-import { INames } from '@contracts/i-names';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { ServiceDataInterceptor } from "@app/model-interceptors/service-data-interceptor";
-import { InterceptModel } from "@decorators/intercept-model";
+import {ServiceDataService} from '@services/service-data.service';
+import {BaseModel} from './base-model';
+import {searchFunctionType} from '../types/types';
+import {FactoryService} from '@services/factory.service';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {AdminResult} from './admin-result';
+import {INames} from '@contracts/i-names';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {ServiceDataInterceptor} from "@app/model-interceptors/service-data-interceptor";
+import {InterceptModel} from "@decorators/intercept-model";
 
 const interceptor = new ServiceDataInterceptor()
 
@@ -47,8 +47,8 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   serviceReviewLimit!: number;
   followUp!: boolean;
 
-  concernedDepartmentsIds?:string;
-  concernedDepartmentsIdsParsed:number[] = [];
+  concernedDepartmentsIds?: string;
+  concernedDepartmentsIdsParsed: number[] = [];
 
   service: ServiceDataService;
   langService: LangService;
@@ -77,8 +77,11 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
     return this.caseType == CaseTypes.EXTERNAL_PROJECT_MODELS ||
       this.caseType == CaseTypes.URGENT_INTERVENTION_LICENSING ||
       this.caseType == CaseTypes.COLLECTOR_LICENSING ||
-      this.caseType === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE ||
-      this.caseType === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION ||
+      this.caseType === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE;
+  }
+
+  hasCustomTemplates() {
+    return this.caseType === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION ||
       this.caseType === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT;
   }
 
@@ -98,7 +101,7 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
     return this.caseType == CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE;
   }
 
-  isAwarenessActivitySuggesion() {
+  isAwarenessActivitySuggestion() {
     return this.caseType == CaseTypes.AWARENESS_ACTIVITY_SUGGESTION;
   }
 
@@ -122,6 +125,12 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   }
 
   convertToAdminResult(): AdminResult {
-    return AdminResult.createInstance({ arName: this.arName, enName: this.enName, id: this.id, status: this.status, disabled: !this.isActive() });
+    return AdminResult.createInstance({
+      arName: this.arName,
+      enName: this.enName,
+      id: this.id,
+      status: this.status,
+      disabled: !this.isActive()
+    });
   }
 }

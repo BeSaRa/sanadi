@@ -5,6 +5,8 @@ import { CustomServiceTemplate } from '@app/models/custom-service-template';
 export class CustomServiceTemplateInterceptor implements IModelInterceptor<CustomServiceTemplate> {
   receive(model: CustomServiceTemplate): any {
     model.approvalTemplateTypeInfo && (model.approvalTemplateTypeInfo = AdminResult.createInstance(model.approvalTemplateTypeInfo));
+    model.arName = model.arabicName;
+    model.enName = model.englishName;
 
     return model;
   }
@@ -16,5 +18,10 @@ export class CustomServiceTemplateInterceptor implements IModelInterceptor<Custo
 
   private static _deleteBeforeSend(model: Partial<CustomServiceTemplate>): void {
     delete model.searchFields;
+    delete model.arName;
+    delete model.enName;
+    delete model.approvalTemplateTypeInfo;
+    delete model.langService;
+    delete model.service;
   }
 }

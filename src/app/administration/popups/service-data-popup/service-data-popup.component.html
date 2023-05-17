@@ -1,20 +1,23 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
-    aria-label="Close"></button>
+          aria-label="Close"></button>
 </div>
-<div class="dialog-content" #dialogContent>
-  <form novalidate autocomplete="off" [formGroup]="form" class="w800px">
+<div class="dialog-content w800px" #dialogContent>
+  <form novalidate autocomplete="off" [formGroup]="form">
     <tabs-list (onTabChange)="setDialogButtonsVisibility($event)" [hasForm]="true">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
-        [hasError]="!tabsData.basic.validStatus()"></tab>
+           [hasError]="!tabsData.basic.validStatus()"></tab>
       <tab [name]="tabsData.steps.name" [template]="stepsTabTemplate" [title]="lang.map.service_steps"
-        [hasError]="!tabsData.steps.validStatus()"></tab>
+           [hasError]="!tabsData.steps.validStatus()"></tab>
       <tab [name]="tabsData.customSettings.name" [template]="customSettingsTabTemplate"
-        [title]="lang.map.custom_settings" [hasError]="!tabsData.customSettings.validStatus()"
-        *ngIf="model.hasCustomSettings()"></tab>
+           [title]="lang.map.custom_settings" [hasError]="!tabsData.customSettings.validStatus()"
+           *ngIf="model.hasCustomSettings()"></tab>
+      <tab [name]="tabsData.templates.name" [template]="templatesTabTemplate"
+           [title]="lang.map.templates" [hasError]="false"
+           *ngIf="model.hasCustomTemplates()"></tab>
       <tab [name]="tabsData.followup.name" [template]="followupTabTemplate" [title]="lang.map.followup_configuration"
-        [hasError]="!tabsData.followup.validStatus()" [disabled]="!model.followUp"></tab>
+           [hasError]="!tabsData.followup.validStatus()" [disabled]="!model.followUp"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div formGroupName="basic">
@@ -33,9 +36,9 @@
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="bawServiceCode" for="bawServiceCode"
-              class="form-label">{{lang.map.baw_service_code}}</label>
+                   class="form-label">{{lang.map.baw_service_code}}</label>
             <input id="bawServiceCode" validationClasses="bawServiceCode" formControlName="bawServiceCode"
-              class="form-control">
+                   class="form-control">
             <app-field-error-message controlName="bawServiceCode"></app-field-error-message>
           </div>
           <!--          <div class="col-sm-6 position-relative">-->
@@ -46,10 +49,11 @@
           <div class="col-sm-6 mb-4 ng-select-wrapper">
             <label for="status" asteriskIfRequired="status" class="form-label">{{lang.map.lbl_status}}</label>
             <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false" placeholder="{{lang.map.select}}"
-              id="status" [notFoundText]="lang.map.msg_not_found" formControlName="status" validationClasses="status">
+                       id="status" [notFoundText]="lang.map.msg_not_found" formControlName="status"
+                       validationClasses="status">
               <ng-option value="">{{lang.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
-                [disabled]="option.isRetiredCommonStatus()">
+                         [disabled]="option.isRetiredCommonStatus()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
@@ -59,48 +63,48 @@
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="licenseSerialCode" for="licenseSerialCode"
-              class="form-label">{{lang.map.license_serial_code}}</label>
+                   class="form-label">{{lang.map.license_serial_code}}</label>
             <input id="licenseSerialCode" validationClasses="licenseSerialCode" formControlName="licenseSerialCode"
-              class="form-control">
+                   class="form-control">
             <app-field-error-message controlName="licenseSerialCode"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="requestSerialCode" for="requestSerialCode"
-              class="form-label">{{lang.map.request_serial_code}}</label>
+                   class="form-label">{{lang.map.request_serial_code}}</label>
             <input id="requestSerialCode" validationClasses="requestSerialCode" formControlName="requestSerialCode"
-              class="form-control">
+                   class="form-control">
             <app-field-error-message controlName="requestSerialCode"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="serviceTimeLimit" for="serviceTimeLimit"
-              class="form-label">{{lang.map.service_time_limit}}</label>
+                   class="form-label">{{lang.map.service_time_limit}}</label>
             <input id="serviceTimeLimit" validationClasses="serviceTimeLimit" formControlName="serviceTimeLimit"
-              class="form-control">
+                   class="form-control">
             <app-field-error-message controlName="serviceTimeLimit"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="fees" for="serviceReviewLimit"
-              class="form-label">{{lang.map.lbl_review_limit}}</label>
+                   class="form-label">{{lang.map.lbl_review_limit}}</label>
             <input id="serviceReviewLimit" validationClasses="serviceReviewLimit" formControlName="serviceReviewLimit"
-              class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message controlName="serviceReviewLimit"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="licenseMinTime" for="licenseMinTime"
-              class="form-label">{{lang.map.license_min_time + ' (' + lang.map.months + ')'}}</label>
+                   class="form-label">{{lang.map.license_min_time + ' (' + lang.map.months + ')'}}</label>
             <input id="licenseMinTime" validationClasses="licenseMinTime" formControlName="licenseMinTime"
-              class="form-control">
+                   class="form-control">
             <app-field-error-message controlName="licenseMinTime"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="licenseMaxTime" for="licenseMaxTime"
-              class="form-label">{{lang.map.license_max_time + ' (' + lang.map.months + ')'}}</label>
+                   class="form-label">{{lang.map.license_max_time + ' (' + lang.map.months + ')'}}</label>
             <input id="licenseMaxTime" validationClasses="licenseMaxTime" formControlName="licenseMaxTime"
-              class="form-control">
+                   class="form-control">
             <app-field-error-message controlName="licenseMaxTime"></app-field-error-message>
           </div>
         </div>
@@ -113,19 +117,20 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="fees" for="sLA" class="form-label">{{lang.map.lbl_sla}}</label>
             <input id="sLA" validationClasses="sLA" formControlName="sLA" class="form-control"
-              [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message controlName="sLA"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12 mb-4 ng-select-wrapper">
             <label asteriskIfRequired="concernedDepartmentsIdsParsed" for="concernedDepartmentsIdsParsed"
-              class="form-label">{{lang.map.related_departments}}</label>
+                   class="form-label">{{lang.map.related_departments}}</label>
             <ng-select [selectOnTab]="true" [items]="departments" labelForId="concernedDepartmentsIdsParsed"
-              bindValue="id" [clearable]="true" [readonly]="true" [searchFn]="searchNgSelect" appendTo="body"
-              placeholder="{{lang.map.select}}" id="concernedDepartmentsIdsParsed"
-              [notFoundText]="lang.map.msg_not_found" [multiple]="true" [closeOnSelect]="false"
-              formControlName="concernedDepartmentsIdsParsed" validationClasses="concernedDepartmentsIdsParsed">
+                       bindValue="id" [clearable]="true" [readonly]="true" [searchFn]="searchNgSelect" appendTo="body"
+                       placeholder="{{lang.map.select}}" id="concernedDepartmentsIdsParsed"
+                       [notFoundText]="lang.map.msg_not_found" [multiple]="true" [closeOnSelect]="false"
+                       formControlName="concernedDepartmentsIdsParsed"
+                       validationClasses="concernedDepartmentsIdsParsed">
               <ng-template ng-option-tmp let-item="item">
                 <span class="custom-option">{{item.getName()}}</span>
               </ng-template>
@@ -149,52 +154,52 @@
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="serviceTerms" for="serviceTerms"
-              class="form-label">{{lang.map.service_terms}}</label>
+                   class="form-label">{{lang.map.service_terms}}</label>
             <textarea id="serviceTerms" validationClasses="serviceTerms" formControlName="serviceTerms"
-              class="form-control"></textarea>
+                      class="form-control"></textarea>
             <app-field-error-message controlName="serviceTerms"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="serviceRequirements" for="serviceRequirements"
-              class="form-label">{{lang.map.service_requirements}}</label>
+                   class="form-label">{{lang.map.service_requirements}}</label>
             <textarea id="serviceRequirements" validationClasses="serviceRequirements"
-              formControlName="serviceRequirements" class="form-control"></textarea>
+                      formControlName="serviceRequirements" class="form-control"></textarea>
             <app-field-error-message controlName="serviceRequirements"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="serviceDescription" for="serviceDescription"
-              class="form-label">{{lang.map.service_description}}</label>
+                   class="form-label">{{lang.map.service_description}}</label>
             <textarea id="serviceDescription" validationClasses="serviceDescription"
-              formControlName="serviceDescription" class="form-control"></textarea>
+                      formControlName="serviceDescription" class="form-control"></textarea>
             <app-field-error-message controlName="serviceDescription"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="serviceStepsArabic" for="serviceStepsArabic"
-              class="form-label">{{lang.map.service_steps_arabic}}</label>
+                   class="form-label">{{lang.map.service_steps_arabic}}</label>
             <textarea id="serviceStepsArabic" validationClasses="serviceStepsArabic"
-              formControlName="serviceStepsArabic" class="form-control"></textarea>
+                      formControlName="serviceStepsArabic" class="form-control"></textarea>
             <app-field-error-message controlName="serviceStepsArabic"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="serviceStepsEnglish" for="serviceStepsEnglish"
-              class="form-label">{{lang.map.service_steps_english}}</label>
+                   class="form-label">{{lang.map.service_steps_english}}</label>
             <textarea id="serviceStepsEnglish" validationClasses="serviceStepsEnglish"
-              formControlName="serviceStepsEnglish" class="form-control"></textarea>
+                      formControlName="serviceStepsEnglish" class="form-control"></textarea>
             <app-field-error-message controlName="serviceStepsEnglish"></app-field-error-message>
           </div>
         </div>
         <div class="col-sm-6 mb-4">
           <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" id="allowCompletion" formControlName="followUp"
-              [checked]="model.followUp">
+                   [checked]="model.followUp">
             <label class="form-check-label" for="allowCompletion">{{lang.map.enable_followUp}}</label>
           </div>
         </div>
@@ -208,7 +213,7 @@
               <ng-container cdkColumnDef="extra-header">
                 <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
                   <table-header tableTitle="service_steps" [reload$]="reloadSteps$" [skipSearch]="true"
-                    [skipClearSort]="true"></table-header>
+                                [skipClearSort]="true"></table-header>
                 </th>
               </ng-container>
               <ng-container cdkColumnDef="enName">
@@ -226,7 +231,8 @@
               <ng-container cdkColumnDef="actions">
                 <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
                 <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
-                  <grid-actions [record]="row" [actions]="stepActions" [itemIndex]="itemIndex" [rebindTrigger]="readonly"></grid-actions>
+                  <grid-actions [record]="row" [actions]="stepActions" [itemIndex]="itemIndex"
+                                [rebindTrigger]="readonly"></grid-actions>
                 </td>
               </ng-container>
               <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
@@ -249,7 +255,7 @@
               {{lang.map.custom_setting_max_target_amount}}
             </label>
             <input id="maxTargetAmount" formControlName="maxTargetAmount" class="form-control"
-              [mask]="inputMaskPatterns.NUMBER_ONLY" validationClasses="maxTargetAmount" trimInput>
+                   [mask]="inputMaskPatterns.NUMBER_ONLY" validationClasses="maxTargetAmount" trimInput>
             <app-field-error-message controlName="maxTargetAmount"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative" *ngIf="showMaxElementsCount">
@@ -257,33 +263,35 @@
               {{lang.map.custom_settings_max_elements_count}}
             </label>
             <input id="maxElementsCount" formControlName="maxElementsCount" class="form-control"
-              [mask]="inputMaskPatterns.NUMBER_ONLY" validationClasses="maxElementsCount" trimInput>
+                   [mask]="inputMaskPatterns.NUMBER_ONLY" validationClasses="maxElementsCount" trimInput>
             <app-field-error-message controlName="maxElementsCount"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 form-check form-switch" *ngIf="showActivateDevelopmentField">
             <div class="ms-3">
               <input class="form-check-input" type="checkbox" id="activateDevelopmentField"
-                formControlName="activateDevelopmentField">
+                     formControlName="activateDevelopmentField">
               <label class="form-check-label"
-                for="activateDevelopmentField">{{lang.map.custom_settings_activate_development_field}}</label>
+                     for="activateDevelopmentField">{{lang.map.custom_settings_activate_development_field}}</label>
             </div>
           </div>
           <div class="col-sm-6 mb-4 ng-select-wrapper" *ngIf="showAttachmentTypeField">
             <label for="attachmentID" class="form-label"
-              asteriskIfRequired="attachmentID">{{lang.map.attachment_type}}</label>
+                   asteriskIfRequired="attachmentID">{{lang.map.attachment_type}}</label>
             <ng-select [selectOnTab]="true" labelForId="attachmentID" [clearable]="false"
-              placeholder="{{lang.map.select}}" id="attachmentID" [notFoundText]="lang.map.msg_not_found"
-              formControlName="attachmentID" validationClasses="attachmentID">
+                       placeholder="{{lang.map.select}}" id="attachmentID" [notFoundText]="lang.map.msg_not_found"
+                       formControlName="attachmentID" validationClasses="attachmentID">
               <ng-option *ngFor="let option of attachmentTypesList" [value]="option.id" [disabled]="!option.isActive()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
             <app-field-error-message controlName="attachmentID"></app-field-error-message>
           </div>
-          <custom-service-template *ngIf="isTemplateTable" #customServiceTemplateTab [list]="templatesList || []" [caseType]="model?.caseType"
-            [readOnly]="readonly" (readyEvent)="customServiceTemplateTabStatus = $event"></custom-service-template>
         </div>
       </div>
+    </ng-template>
+    <ng-template #templatesTabTemplate>
+      <service-data-custom-templates [caseType]="model.caseType"
+                                     [readonly]="readonly"></service-data-custom-templates>
     </ng-template>
     <ng-template #followupTabTemplate>
       <service-data-followup-configuration [serviceData]="model" [readonly]="readonly">
@@ -294,11 +302,11 @@
 
 <div class="dialog-actions">
   <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
-    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
   <button [disabled]="form.invalid || form.pending" *ngIf="saveVisible" (click)="save$.next(null)"
-    class="btn btn-primary">{{lang.map.btn_save}}</button>
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

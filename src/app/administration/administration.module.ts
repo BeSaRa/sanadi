@@ -134,6 +134,8 @@ import { UserPermissionInternalComponent } from '@app/administration/shared/user
 import {
   UserPermissionExternalComponent
 } from "@app/administration/shared/user-permission-external/user-permission-external.component";
+import { ServiceDataCustomTemplatesComponent } from './shared/service-data-custom-templates/service-data-custom-templates.component';
+import { ServiceDataCustomTemplatePopupComponent } from './popups/service-data-custom-template-popup/service-data-custom-template-popup.component';
 
 @NgModule({
   declarations: [
@@ -227,7 +229,9 @@ import {
     UserFollowupPermissionNewComponent,
     UserPermissionInternalComponent,
     UserPermissionExternalComponent,
-    CustomMenuDefaultsPopupComponent
+    CustomMenuDefaultsPopupComponent,
+    ServiceDataCustomTemplatesComponent,
+    ServiceDataCustomTemplatePopupComponent
   ],
   imports: [
     SharedModule,
