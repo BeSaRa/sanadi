@@ -4,7 +4,7 @@ import { DialogRef } from "@app/shared/models/dialog-ref";
 import { Observable } from "rxjs";
 
 export interface IHasVacation {
-  vacationFrom:string;
-  vacationTo:string;
+  vacationFrom:string|null;
+  vacationTo:string|null;
   openVacationDialog(user: InternalUser | ExternalUser,  canEditPreferences: boolean): Observable<DialogRef>
 }
