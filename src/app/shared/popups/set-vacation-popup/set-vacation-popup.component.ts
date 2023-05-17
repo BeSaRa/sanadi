@@ -12,6 +12,9 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { UserPreferences } from '@models/user-preferences';
+import { DialogService } from '@app/services/dialog.service';
+import { take } from 'rxjs/operators';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
 
 @Component({
     selector: 'set-vacation-popup',
@@ -26,6 +29,7 @@ export class SetVacationPopupComponent implements OnInit {
     public lang:LangService,
     private toast: ToastService,
     public dialogRef: DialogRef,
+    private dialog:DialogService
     ) {
       this.model = data.model.userPreferences;
       this.canEditPreferences = data.model.canEditPreferences;
@@ -77,7 +81,19 @@ export class SetVacationPopupComponent implements OnInit {
     if (!this.canEditPreferences ) {
       return;
     }
+    this.dialog.confirm(this.lang.map.msg_confirm_continue)
+    .onAfterClose$
+    .pipe(
+      take(1),
+    )
+    .subscribe((click: UserClickOn)=>{
+      if (click === UserClickOn.YES) {
+        this._updateUserVacation();
+      }
+    })
 
+  }
+  private _updateUserVacation(){
     let updatedModel = new UserPreferences().clone({
       ...this.model,
       ...this.form.value,

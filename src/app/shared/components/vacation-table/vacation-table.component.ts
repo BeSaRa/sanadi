@@ -1,15 +1,19 @@
-import {LangService} from './../../../services/lang.service';
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {IHasVacation} from '@app/interfaces/i-has-vacation';
-import {ExternalUser} from '@app/models/external-user';
-import {InternalUser} from '@app/models/internal-user';
-import {UserPreferences} from '@app/models/user-preferences';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {CommonUtils} from "@helpers/common-utils";
+import { UserPreferencesService } from '@services/user-preferences.service';
+import { LangService } from './../../../services/lang.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { IHasVacation } from '@app/interfaces/i-has-vacation';
+import { ExternalUser } from '@app/models/external-user';
+import { InternalUser } from '@app/models/internal-user';
+import { UserPreferences } from '@app/models/user-preferences';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { Subject, of } from 'rxjs';
+import { take, takeUntil, switchMap } from 'rxjs/operators';
+import { CommonUtils } from "@helpers/common-utils";
+import { DialogService } from '@app/services/dialog.service';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { UserPreferencesInterceptor } from '@app/model-interceptors/user-preferences-interceptor';
 
 @Component({
   selector: 'vacation-table',
@@ -42,7 +46,9 @@ export class VacationTableComponent implements OnInit, OnDestroy {
   list: IHasVacation[] = [];
 
   constructor(public lang: LangService,
-              public dialogRef: DialogRef) {
+    public dialogRef: DialogRef,
+    private userPreferencesService: UserPreferencesService,
+    private dialog: DialogService) {
 
   }
 
@@ -79,6 +85,39 @@ export class VacationTableComponent implements OnInit, OnDestroy {
       label: 'btn_edit',
       disabled: () => !this.canEditPreferences,
       onClick: () => this.openVacationPopup(),
+    },
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      disabled: () => !this.canEditPreferences,
+      onClick: (item) => this._reset(item),
     }
   ];
+  private _reset(model: UserPreferences) {
+    this.dialog.confirm(this.lang.map.msg_confirm_continue)
+      .onAfterClose$
+      .pipe(
+        take(1),
+        switchMap((click: UserClickOn) => {
+          if (click === UserClickOn.YES) {
+            return this._resetUserVacation(model);
+          }
+          return of(null)
+        })
+      )
+      .subscribe(_=>{
+        this.list = []
+      })
+  }
+  private _resetUserVacation(model: UserPreferences) {
+
+    const {send}=new UserPreferencesInterceptor();
+    const resetModel = send(new UserPreferences().clone({
+      ...model,
+      vacationFrom: null,
+      vacationTo: null,
+    }));
+   return this.userPreferencesService.setVacations(this.user.generalUserId, resetModel)
+  }
 }

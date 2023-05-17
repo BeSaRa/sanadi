@@ -22,8 +22,8 @@ export class UserPreferences extends Cloneable<UserPreferences> implements IHasV
   alternateEmailList!: string;
   isMailNotificationEnabled!: boolean;
   defaultLang!: number;
-  vacationFrom!:string;
-  vacationTo!:string;
+  vacationFrom!:string|null;
+  vacationTo!:string|null;
 
   // extra properties
   alternateEmailListParsed: string[] = [];

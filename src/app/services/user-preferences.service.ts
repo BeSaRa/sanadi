@@ -1,28 +1,28 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {CrudGenericService} from '@app/generics/crud-generic-service';
-import {UserPreferences} from '@models/user-preferences';
-import {UrlService} from '@services/url.service';
-import {FactoryService} from '@services/factory.service';
-import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
-import {Observable, of} from 'rxjs';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {switchMap} from 'rxjs/operators';
-import {IDialogData} from '@contracts/i-dialog-data';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {DialogService} from '@services/dialog.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { CrudGenericService } from '@app/generics/crud-generic-service';
+import { UserPreferences } from '@models/user-preferences';
+import { UrlService } from '@services/url.service';
+import { FactoryService } from '@services/factory.service';
+import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
+import { Observable, of } from 'rxjs';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { switchMap } from 'rxjs/operators';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { DialogService } from '@services/dialog.service';
 import {
   UserPreferencesPopupComponent
 } from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
-import {HasInterception, InterceptParam} from '@decorators/intercept-model';
-import {InternalUser} from '@models/internal-user';
-import {ExternalUser} from '@models/external-user';
-import {SetVacationPopupComponent} from '@app/shared/popups/set-vacation-popup/set-vacation-popup.component';
-import {ISetVacationData} from '@app/interfaces/i-set-vacation-data';
-import {AdminResult} from '@app/models/admin-result';
-import {LangService} from './lang.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {CommonUtils} from '@app/helpers/common-utils';
+import { HasInterception, InterceptParam } from '@decorators/intercept-model';
+import { InternalUser } from '@models/internal-user';
+import { ExternalUser } from '@models/external-user';
+import { SetVacationPopupComponent } from '@app/shared/popups/set-vacation-popup/set-vacation-popup.component';
+import { ISetVacationData } from '@app/interfaces/i-set-vacation-data';
+import { AdminResult } from '@app/models/admin-result';
+import { LangService } from './lang.service';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 @CastResponseContainer({
   $default: {
@@ -36,9 +36,9 @@ export class UserPreferencesService extends CrudGenericService<UserPreferences> 
   list: UserPreferences[] = [];
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              public dialog: DialogService,
-              private lang: LangService) {
+    private urlService: UrlService,
+    public dialog: DialogService,
+    private lang: LangService) {
     super();
     FactoryService.registerService('UserPreferencesService', this);
   }
@@ -123,19 +123,29 @@ export class UserPreferencesService extends CrudGenericService<UserPreferences> 
             .pipe(
               switchMap((click: UserClickOn) => {
                 if (click === UserClickOn.YES) {
-                  return this.http.put<UserPreferences>(this._getServiceURL() + '/out-office/general-user-id/' + generalUserId, model);
+                  return this._setVacations(generalUserId, model)
                 }
                 return of(null);
               })
             )
         }
-        return this.http.put<UserPreferences>(this._getServiceURL() + '/out-office/general-user-id/' + generalUserId, model);
+        return this._setVacations(generalUserId, model)
       })
     )
 
   }
 
-
+  @HasInterception
+  @CastResponse(() => UserPreferences, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _setVacations(generalUserId: number, model: Partial<UserPreferences>) {
+    return this.http.put<UserPreferences>(this._getServiceURL() + '/out-office/general-user-id/' + generalUserId, model);
+  }
+  setVacations(generalUserId: number, model: Partial<UserPreferences>) {
+    return this._setVacations(generalUserId,model)
+  }
   updateUserPreferences(generalUserId: number, model: UserPreferences): Observable<UserPreferences> {
     return this._updateUserPreferences(generalUserId, model);
   }
