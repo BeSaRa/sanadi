@@ -1,13 +1,15 @@
-import { AuditOperationTypes } from '@app/enums/audit-operation-types';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import {AuditOperationTypes} from '@app/enums/audit-operation-types';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IAuditModelProperties} from '@app/interfaces/i-audit-model-properties';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { ControlValueLabelLangKey } from '@app/types/types';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
 import {FactoryService} from '@services/factory.service';
 import {MapService} from '@services/map.service';
-import { AdminResult } from './admin-result';
+import {AdminResult} from './admin-result';
+import {ObjectUtils} from "@helpers/object-utils";
+import {normalSearchFields} from "@helpers/normal-search-fields";
 
 export class ProjectAddress extends SearchableCloneable<ProjectAddress> implements IAuditModelProperties<ProjectAddress> {
   beneficiaryRegion!: string;
@@ -20,6 +22,11 @@ export class ProjectAddress extends SearchableCloneable<ProjectAddress> implemen
     lat: 25.3266204,
     lng: 51.5310087
   }
+
+  searchFields: ISearchFieldsMap<ProjectAddress> = {
+    ...normalSearchFields(['beneficiaryRegion', 'address'])
+  }
+
   getAdminResultByProperty(property: keyof ProjectAddress): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
@@ -29,21 +36,23 @@ export class ProjectAddress extends SearchableCloneable<ProjectAddress> implemen
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
           value = '';
         }
-        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
     }
     return adminResultValue ?? new AdminResult();
   }
+
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      beneficiaryRegion:{ langKey: 'region', value: this.beneficiaryRegion },
-      address:{ langKey: 'address_details', value: this.address },
-      latitude:{ langKey: 'latitude', value: this.latitude },
-      longitude:{ langKey: 'longitude', value: this.longitude },
-      location:{ langKey: 'item_location', value: this.location },
+      beneficiaryRegion: {langKey: 'region', value: this.beneficiaryRegion},
+      address: {langKey: 'address_details', value: this.address},
+      latitude: {langKey: 'latitude', value: this.latitude},
+      longitude: {langKey: 'longitude', value: this.longitude},
+      // location:{ langKey: 'item_location', value: this.location },
     };
   }
+
   constructor() {
     super();
     this.mapService = FactoryService.getService('MapService');
@@ -70,16 +79,12 @@ export class ProjectAddress extends SearchableCloneable<ProjectAddress> implemen
   }
 
   buildForm(controls?: boolean) {
-    const { beneficiaryRegion,
-            address,
-            latitude,
-            longitude,
-    } = this;
+    const values = ObjectUtils.getControlValues<ProjectAddress>(this.getValuesWithLabels());
     return {
-      beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.required]] : beneficiaryRegion,
-      address: controls ? [address] : address,
-      latitude: controls ? [latitude, [CustomValidators.required]] : latitude,
-      longitude: controls ? [longitude, [CustomValidators.required]] : longitude,
+      beneficiaryRegion: controls ? [values.beneficiaryRegion, [CustomValidators.required]] : values.beneficiaryRegion,
+      address: controls ? [values.address] : values.address,
+      latitude: controls ? [{value: values.latitude, disabled: true}, [CustomValidators.required]] : values.latitude,
+      longitude: controls ? [{value: values.longitude, disabled: true}, [CustomValidators.required]] : values.longitude,
     };
   }
 }

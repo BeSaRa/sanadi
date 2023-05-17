@@ -1,6 +1,6 @@
 <tabs-list>
   <tab name="basicInfo" [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
-  <tab name="contectInfo" [template]="contectInfoTabTemplate" [title]="lang.map.lbl_contact_info"></tab>
+  <tab name="contactInfo" [template]="contactInfoTabTemplate" [title]="lang.map.lbl_contact_info"></tab>
   <tab name="founderMember" [template]="founderMemberTabTemplate" [title]="lang.map.lbl_founder_members"></tab>
   <tab name="bankAccount" [template]="bankAccountTabTemplate" [title]="lang.map.bank_accounts"></tab>
   <tab name="realBeneficiary" [template]="realBeneficiaryTabTemplate" [title]="lang.map.lbl_real_beneficiary"></tab>
@@ -10,8 +10,9 @@
   <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
 </ng-template>
 
-<ng-template #contectInfoTabTemplate>
-  <value-differences-list [differenceList]="ContectInfoDifferences"></value-differences-list>
+<ng-template #contactInfoTabTemplate>
+  <value-differences-list [differenceList]="contactInfoDifferences"></value-differences-list>
+  <heading-row labelKey="contact_officers"></heading-row>
   <audit-npo-contact-officer [newVersionList]="newVersion.contactOfficerList"
     [oldVersionList]="oldVersion.contactOfficerList" [caseType]="newVersion.caseType">
   </audit-npo-contact-officer>

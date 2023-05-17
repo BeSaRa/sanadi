@@ -1,16 +1,16 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { UiCrudDialogGenericComponent } from '@app/generics/ui-crud-dialog-generic-component.directive';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { OrganizationOfficer } from '@app/models/organization-officer';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { Observable } from 'rxjs';
+import {Component, Inject} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {OrganizationOfficer} from '@app/models/organization-officer';
+import {DialogService} from '@app/services/dialog.service';
+import {LangService} from '@app/services/lang.service';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-urgent-join-organization-officer-popup',
@@ -22,6 +22,7 @@ export class UrgentJoinOrganizationOfficerPopupComponent extends UiCrudDialogGen
   form!: UntypedFormGroup;
   operation: OperationTypes;
   popupTitleKey!: keyof ILanguageKeys;
+
   _getNewInstance(override?: Partial<OrganizationOfficer> | undefined): OrganizationOfficer {
     return new OrganizationOfficer().clone(override ?? {});
   }
@@ -58,26 +59,26 @@ export class UrgentJoinOrganizationOfficerPopupComponent extends UiCrudDialogGen
 
   prepareModel(model: OrganizationOfficer, form: UntypedFormGroup): OrganizationOfficer | Observable<OrganizationOfficer> {
     let formValue = form.getRawValue();
-     return this._getNewInstance({
-       ...this.model,
-       ...formValue,
-     });
+    return this._getNewInstance({
+      ...this.model,
+      ...formValue,
+    });
   }
 
   saveFail(error: Error): void {
     throw new Error(error.message);
   }
+
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
   }
 
-
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<OrganizationOfficer>,
-  public lang: LangService,
-  public dialogRef: DialogRef,
-  public dialogService: DialogService,
-  public fb: UntypedFormBuilder,
-  public toast: ToastService) {
+              public lang: LangService,
+              public dialogRef: DialogRef,
+              public dialogService: DialogService,
+              public fb: UntypedFormBuilder,
+              public toast: ToastService) {
     super();
     this.model = data.model;
     this.operation = data.operation;

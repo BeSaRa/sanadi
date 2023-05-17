@@ -1,14 +1,13 @@
 import {Component} from '@angular/core';
 import {InterventionRegion} from '@models/intervention-region';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {DialogService} from '@services/dialog.service';
-import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
-import { ComponentType } from '@angular/cdk/portal';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { InterventionRegionListPopupComponent } from '../../popups/intervention-region-list-popup/intervention-region-list-popup.component';
+import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
+import {ComponentType} from '@angular/cdk/portal';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {
+  InterventionRegionListPopupComponent
+} from '../../popups/intervention-region-list-popup/intervention-region-list-popup.component';
 
 @Component({
   selector: 'intervention-region-list',
@@ -16,9 +15,13 @@ import { InterventionRegionListPopupComponent } from '../../popups/intervention-
   styleUrls: ['./intervention-region-list.component.scss']
 })
 export class InterventionRegionListComponent extends UiCrudListGenericComponent<InterventionRegion> {
-  displayColumns = ['region', 'description', 'actions'];
 
-  actions: IMenuItem<InterventionRegion>[] =  [
+  constructor() {
+    super();
+  }
+
+  displayColumns = ['region', 'description', 'actions'];
+  actions: IMenuItem<InterventionRegion>[] = [
     {
       type: 'action',
       icon: ActionIconsEnum.EDIT,
@@ -41,20 +44,19 @@ export class InterventionRegionListComponent extends UiCrudListGenericComponent<
       show: (_item: InterventionRegion) => this.readonly
     }
   ];
-  constructor(public lang: LangService,
-    public toast: ToastService,
-    public dialog: DialogService) {
-    super();
-  }
+
   _getNewInstance(override?: Partial<InterventionRegion> | undefined): InterventionRegion {
     return new InterventionRegion().clone(override ?? {});
   }
+
   _getDialogComponent(): ComponentType<any> {
     return InterventionRegionListPopupComponent;
   }
+
   _getDeleteConfirmMessage(record: InterventionRegion): string {
     return this.lang.map.msg_confirm_delete_x.change({x: record.region});
   }
+
   getExtraDataForPopup(): IKeyValue {
     return {}
   }

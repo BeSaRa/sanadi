@@ -2,8 +2,8 @@
   <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)" [hasForm]="true">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
          [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
-    <tab [name]="tabsData.contectInfo.name" [hasError]="getTabInvalidStatus('contectInfo')"
-         [template]="contectInfoTabTemplate" [title]="lang.map.lbl_contact_info"></tab>
+    <tab [name]="tabsData.contactInfo.name" [hasError]="getTabInvalidStatus('contactInfo')"
+         [template]="contactInfoTabTemplate" [title]="lang.map.lbl_contact_info"></tab>
     <tab [name]="tabsData.founderMember.name" [hasError]="getTabInvalidStatus('founderMember')"
          [template]="founderMemberTabTemplate" [title]="lang.map.lbl_founder_members"></tab>
     <tab [name]="tabsData.bankAccount.name" [hasError]="getTabInvalidStatus('bankAccount')"
@@ -206,28 +206,26 @@
     </form>
   </ng-template>
 
-  <ng-template #contectInfoTabTemplate>
-    <form [formGroup]="contectInfo" autocomplete="off">
+  <ng-template #contactInfoTabTemplate>
+    <form [formGroup]="contactInfo" autocomplete="off">
+      <heading-row labelKey="lbl_contact_info"></heading-row>
       <div class="row">
-        <div>
-          <h6>{{lang.map.lbl_contact_info}}</h6>
-        </div>
         <!-- Email -->
-        <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
           <input id="email" validationClasses="email" [readonly]="readonly || isViewOnly" formControlName="email"
                  trimInput class="form-control">
           <app-field-error-message controlName="email"></app-field-error-message>
         </div>
         <!-- phone -->
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="phone" for="phone">{{lang.map.lbl_phone}}</label>
           <input id="phone" validationClasses="phone" [readonly]="readonly || isViewOnly" formControlName="phone"
                  class="form-control">
           <app-field-error-message controlName="phone"></app-field-error-message>
         </div>
         <!-- fax -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="fax" for="fax" class="form-label">{{
             lang.map.fax_number
             }}</label>
@@ -236,7 +234,7 @@
           <app-field-error-message controlName="fax"></app-field-error-message>
         </div>
         <!-- hotline -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="hotline" for="hotline" class="form-label">{{
             lang.map.hotline
             }}</label>
@@ -245,7 +243,7 @@
           <app-field-error-message controlName="hotline"></app-field-error-message>
         </div>
         <!-- website -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="website" for="website" class="form-label">{{
             lang.map.website
             }}</label>
@@ -253,9 +251,9 @@
                  class="form-control"/>
           <app-field-error-message controlName="website"></app-field-error-message>
         </div>
-        <div class="mt-2">
-          <h6>{{lang.map.lbl_national_address}}</h6>
-        </div>
+      </div>
+      <div class="row">
+        <heading-row labelKey="lbl_national_address"></heading-row>
         <!-- zone number -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="zoneNumber" for="zoneNumber" class="form-label">{{
@@ -293,9 +291,9 @@
           </textarea>
           <app-field-error-message controlName="address"></app-field-error-message>
         </div>
-        <div class="mt-2">
-          <h6>{{lang.map.social_media_1.slice(0, -1)}}</h6>
-        </div>
+      </div>
+      <div class="row">
+        <heading-row labelKey="social_media"></heading-row>
         <!-- facebook -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="facebook" for="facebook" class="form-label">{{
@@ -342,11 +340,10 @@
           <app-field-error-message controlName="youTube"></app-field-error-message>
         </div>
         <div class="col-12">
-          <h6>{{lang.map.contact_officers}}</h6>
-          <npo-contact-officer #contactOfficersTab 
+          <npo-contact-officer #contactOfficersTab
                                [readonly]="readonly || isViewOnly"
-                               [contactOfficerList]="model?.contactOfficerList || []"
-                               >
+                               [list]="model?.contactOfficerList || []"
+          >
           </npo-contact-officer>
         </div>
       </div>
@@ -354,16 +351,16 @@
   </ng-template>
 
   <ng-template #founderMemberTabTemplate>
-    <founder-members [readonly]="readonly || isViewOnly" #founderMemberTab [founderMemberList]="model?.founderMemberList || []">
+    <founder-members [readonly]="readonly || isViewOnly" #founderMemberTab [list]="model?.founderMemberList || []">
     </founder-members>
   </ng-template>
 
   <ng-template #bankAccountTabTemplate>
-    <npo-bank-account #bankAccountsTab 
-                      [caseType]="model?.caseType" 
+    <npo-bank-account #bankAccountsTab
+                      [caseType]="model?.caseType"
                       [readonly]="readonly || isViewOnly"
-                      [bankAccountList]="model?.bankAccountList || []"
-                      >
+                      [list]="model?.bankAccountList || []"
+    >
     </npo-bank-account>
   </ng-template>
 

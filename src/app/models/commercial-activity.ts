@@ -1,13 +1,14 @@
-import { normalSearchFields } from '@app/helpers/normal-search-fields';
-import { SearchableCloneable } from '@app/models/searchable-cloneable';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
-import { CustomValidators } from '@app/validators/custom-validators';
+import {CustomValidators} from '@app/validators/custom-validators';
 import {AuditOperationTypes} from '@enums/audit-operation-types';
 import {AdminResult} from '@models/admin-result';
 import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 import {ObjectUtils} from '@helpers/object-utils';
 import {CommonUtils} from '@helpers/common-utils';
-export class CommercialActivity extends SearchableCloneable<CommercialActivity> implements IAuditModelProperties<CommercialActivity>{
+
+export class CommercialActivity extends SearchableCloneable<CommercialActivity> implements IAuditModelProperties<CommercialActivity> {
   activityName!: string;
   details!: string;
 
@@ -17,6 +18,11 @@ export class CommercialActivity extends SearchableCloneable<CommercialActivity> 
 
   // extra properties
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  constructor() {
+    super();
+  }
+
   getAdminResultByProperty(property: keyof CommercialActivity): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
@@ -30,34 +36,30 @@ export class CommercialActivity extends SearchableCloneable<CommercialActivity> 
     return adminResultValue ?? new AdminResult();
   }
 
-  constructor() {
-    super();
-  }
-
   buildForm(controls: boolean = false) {
     const values = ObjectUtils.getControlValues<CommercialActivity>(this.getValuesWithLabels());
     return {
       activityName: controls
         ? [
           values.activityName,
-            [
-              CustomValidators.required,
-              CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-            ],
-          ]
+          [
+            CustomValidators.required,
+            CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
         : values.activityName,
       details: controls
         ? [
           values.details,
-            [
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.EXPLANATIONS
-              ),
-            ],
-          ]
+          [
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.EXPLANATIONS
+            ),
+          ],
+        ]
         : values.details,
     };
   }

@@ -15,13 +15,13 @@ export class AuditNpoManagementComponent implements IAuditCaseProperties<NpoMana
   oldVersion!: NpoManagement; // don't delete or rename the property
 
   basicInfoDifferences: IValueDifference[] = [];
-  ContectInfoDifferences: IValueDifference[] = [];
+  contactInfoDifferences: IValueDifference[] = [];
   constructor(public lang: LangService) {
   }
 
   ngOnInit() {
     this._getBasicInfoDifferences();
-    this._getContectInfoDifferences();
+    this._getContactInfoDifferences();
   }
 
   private _getBasicInfoDifferences(): void {
@@ -31,10 +31,10 @@ export class AuditNpoManagementComponent implements IAuditCaseProperties<NpoMana
     this.basicInfoDifferences = ObjectUtils.getValueDifferencesList<NpoManagement, NpoManagement>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
 
-  private _getContectInfoDifferences(): void {
-    const newVersionDataModel: Partial<NpoManagement> = ObjectUtils.getControlComparisonValues<NpoManagement>(this.newVersion.getBasicInfoValuesWithLabels());
-    const oldVersionDataModel: Partial<NpoManagement> = ObjectUtils.getControlComparisonValues<NpoManagement>(this.oldVersion.getBasicInfoValuesWithLabels());
-    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getBasicInfoValuesWithLabels());
-    this.ContectInfoDifferences = ObjectUtils.getValueDifferencesList<NpoManagement, NpoManagement>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+  private _getContactInfoDifferences(): void {
+    const newVersionDataModel: Partial<NpoManagement> = ObjectUtils.getControlComparisonValues<NpoManagement>(this.newVersion.getContactInfoValuesWithLabels());
+    const oldVersionDataModel: Partial<NpoManagement> = ObjectUtils.getControlComparisonValues<NpoManagement>(this.oldVersion.getContactInfoValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getContactInfoValuesWithLabels());
+    this.contactInfoDifferences = ObjectUtils.getValueDifferencesList<NpoManagement, NpoManagement>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
 }

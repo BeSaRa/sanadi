@@ -12,7 +12,7 @@ export class ForeignCountriesProjectsSearchCriteriaInterceptor implements IModel
 
   send(model: Partial<ForeignCountriesProjectsSearchCriteria>): Partial<ForeignCountriesProjectsSearchCriteria> {
     if (!model.projectName) { return model; }
-    model.projectNeeds = [{ projectName: model.projectName }];
+    model.projectNeeds = [{ projectName: model.projectName } as ProjectNeed];
     delete model.projectName;
     return model;
   }

@@ -13,17 +13,17 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
       delete (item as Partial<ProjectComponent>).searchFields;
       return item;
     });
-    model.evaluationIndicatorList = model.evaluationIndicatorList?.map(item => {
+    model.evaluationIndicatorList = (model.evaluationIndicatorList ?? []).map(item => {
       item = new EvaluationIndicator().clone(item);
       delete item.indicatorInfo;
       delete (item as Partial<EvaluationIndicator>).searchFields;
       return item;
     });
-    model.foreignCountriesProjectList = model.foreignCountriesProjectList?.map(item => {
+    model.foreignCountriesProjectList = (model.foreignCountriesProjectList ?? []).map(item => {
       delete (item as Partial<ProjectModelForeignCountriesProject>).searchFields;
       return item;
     });
-    model.projectAddressList = model.projectAddressList?.map(item => {
+    model.projectAddressList = (model.projectAddressList ?? []).map(item => {
       delete item.mapService;
       delete item.defaultLatLng;
       delete (item as Partial<ProjectAddress>).searchFields;

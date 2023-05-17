@@ -2,15 +2,20 @@ import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
-import { ControlValueLabelLangKey } from '@app/types/types';
+import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
 import { AdminResult } from './admin-result';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { CustomValidators } from '@app/validators/custom-validators';
+import {normalSearchFields} from "@helpers/normal-search-fields";
 
 export class ProjectModelForeignCountriesProject extends SearchableCloneable<ProjectModelForeignCountriesProject> implements IAuditModelProperties<ProjectModelForeignCountriesProject> {
   objectDBId!: number;
   projectName!: string;
   notes!: string;
+
+  searchFields: ISearchFieldsMap<ProjectModelForeignCountriesProject> = {
+    ...normalSearchFields(['projectName', 'notes'])
+  }
 
   getAdminResultByProperty(property: keyof ProjectModelForeignCountriesProject): AdminResult {
     let adminResultValue: AdminResult;
@@ -34,6 +39,7 @@ export class ProjectModelForeignCountriesProject extends SearchableCloneable<Pro
       notes:{ langKey: 'notes', value: this.notes },
     };
   }
+
   buildForm(withControls = true): IKeyValue {
     const {
       notes,

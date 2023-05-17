@@ -1,4 +1,4 @@
-import {AfterViewInit, Directive, Input, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Directive, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
@@ -12,6 +12,7 @@ import {CaseTypes} from '@enums/case-types.enum';
 import {UserClickOn} from '@enums/user-click-on.enum';
 import {IKeyValue} from '@contracts/i-key-value';
 import {ToastService} from '@services/toast.service';
+import {CustomValidators} from "@app/validators/custom-validators";
 
 @Directive()
 export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterViewInit, OnDestroy {
@@ -19,11 +20,12 @@ export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterView
   @Input() caseType?: CaseTypes;
   @Input() readonly: boolean = false;
 
-  abstract lang: LangService;
+  lang = inject(LangService);
+  toast = inject(ToastService);
+  dialog = inject(DialogService);
+
   abstract actions: IMenuItem<M>[];
   abstract displayColumns: string[];
-  abstract dialog: DialogService;
-  abstract toast: ToastService;
 
   abstract _getNewInstance(override?: Partial<M>): M;
 
@@ -47,6 +49,7 @@ export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterView
   // using this subject later to unsubscribe from any subscription
   destroy$: Subject<any> = new Subject<any>();
   filterControl: UntypedFormControl = new UntypedFormControl('');
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
   sortingCallbacks = {};
   itemInOperation?: M;
   itemInOperationListIndex?: number;

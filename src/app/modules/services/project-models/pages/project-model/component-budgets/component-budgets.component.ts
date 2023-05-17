@@ -1,9 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl} from '@angular/forms';
+import {Component} from '@angular/core';
+import {UntypedFormControl} from '@angular/forms';
 import {ProjectComponent} from '@app/models/project-component';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
-import {DialogService} from '@app/services/dialog.service';
 import {UiCrudListGenericComponent} from "@app/generics/ui-crud-list-generic-component";
 import {ComponentType} from '@angular/cdk/portal';
 import {IKeyValue} from '@app/interfaces/i-key-value';
@@ -13,23 +10,16 @@ import {CommonUtils} from "@helpers/common-utils";
 import {
   ComponentBudgetsPopupComponent
 } from "@modules/services/project-models/popups/component-budgets-popup/component-budgets-popup.component";
-import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
   selector: 'component-budgets',
   templateUrl: './component-budgets.component.html',
   styleUrls: ['./component-budgets.component.scss']
 })
-export class ComponentBudgetsComponent extends UiCrudListGenericComponent<ProjectComponent> implements OnInit {
-  constructor(public lang: LangService,
-              public fb: UntypedFormBuilder,
-              public dialog: DialogService,
-              public toast: ToastService) {
+export class ComponentBudgetsComponent extends UiCrudListGenericComponent<ProjectComponent> {
+  constructor() {
     super();
   }
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
-
-  projectTotalCostField: UntypedFormControl = new UntypedFormControl();
 
   displayColumns: string[] = ['componentName', 'details', 'totalCost', 'actions'];
   footerColumns: string[] = ['totalComponentCostLabel', 'totalComponentCost'];
@@ -58,6 +48,8 @@ export class ComponentBudgetsComponent extends UiCrudListGenericComponent<Projec
       onClick: (item: ProjectComponent) => this.view$.next(item),
     }
   ];
+
+  projectTotalCostField: UntypedFormControl = new UntypedFormControl();
 
   protected _afterViewInit() {
     this._setProjectTotalCost();

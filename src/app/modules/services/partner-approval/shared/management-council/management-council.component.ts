@@ -1,23 +1,28 @@
-import { Component, Input } from '@angular/core';
-import { ActionIconsEnum } from '@enums/action-icons-enum';
-import { CommonUtils } from '@helpers/common-utils';
-import { SortEvent } from '@contracts/sort-event';
-import { ManagementCouncil } from '@models/management-council';
-import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
-import { DialogService } from '@services/dialog.service';
-import { LangService } from '@services/lang.service';
-import { ToastService } from '@services/toast.service';
-import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
-import { ComponentType } from '@angular/cdk/portal';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { ManagementCouncilPopupComponent } from '../../popups/management-council-popup/management-council-popup.component';
+import {Component} from '@angular/core';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {CommonUtils} from '@helpers/common-utils';
+import {SortEvent} from '@contracts/sort-event';
+import {ManagementCouncil} from '@models/management-council';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
+import {ComponentType} from '@angular/cdk/portal';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {
+  ManagementCouncilPopupComponent
+} from '../../popups/management-council-popup/management-council-popup.component';
 
 @Component({
   selector: 'management-council',
   templateUrl: './management-council.component.html',
   styleUrls: ['./management-council.component.scss'],
 })
-export class ManagementCouncilComponent extends UiCrudListGenericComponent<ManagementCouncil>{
+export class ManagementCouncilComponent extends UiCrudListGenericComponent<ManagementCouncil> {
+
+  constructor() {
+    super();
+  }
+
+  displayColumns: string[] = ['arabicName', 'englishName', 'email', 'nationality', 'passportNumber', 'actions'];
   actions: IMenuItem<ManagementCouncil>[] = [
     {
       type: 'action',
@@ -47,23 +52,20 @@ export class ManagementCouncilComponent extends UiCrudListGenericComponent<Manag
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
   }
+
   _getNewInstance(override?: Partial<ManagementCouncil> | undefined): ManagementCouncil {
     return new ManagementCouncil().clone(override ?? {});
   }
+
   _getDialogComponent(): ComponentType<any> {
     return ManagementCouncilPopupComponent;
   }
+
   _getDeleteConfirmMessage(record: ManagementCouncil): string {
-    return this.lang.map.msg_confirm_delete_x.change({x: record.englishName});
+    return this.lang.map.msg_confirm_delete_x.change({x: record.getName()});
   }
+
   getExtraDataForPopup(): IKeyValue {
     return {}
   }
-  @Input() managementCouncilList: ManagementCouncil[] = [];
-  constructor(public lang: LangService,
-    public toast: ToastService,
-    public dialog: DialogService) {
-  super();
-  }
-  displayColumns: string[] = ['arabicName', 'englishName', 'email', 'nationality', 'passportNumber', 'actions'];
 }

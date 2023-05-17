@@ -30,7 +30,7 @@ export class ForeignCountriesProjectsInterceptor implements IModelInterceptor<Fo
     model.countryInfo && (model.countryInfo = AdminResult.createInstance(model.countryInfo));
     model.externalCooperationAuthorityInfo && (model.externalCooperationAuthorityInfo = AdminResult.createInstance(model.externalCooperationAuthorityInfo));
     model.projectNeeds = model.projectNeeds.map(e => (new ProjectNeed()).clone({ ...e }));
-    model.projectNeedList = model.projectNeeds.map(e => (new ProjectNeed()).clone({ ...e }));
+    // model.projectNeedList = model.projectNeeds.map(e => (new ProjectNeed()).clone({ ...e }));
     model.followUpDate = DateUtils.changeDateToDatepicker(model.followUpDate);
 
     return model;

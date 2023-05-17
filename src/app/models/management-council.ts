@@ -8,6 +8,8 @@ import {AuditOperationTypes} from '@enums/audit-operation-types';
 import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 import {ObjectUtils} from '@helpers/object-utils';
 import {CommonUtils} from '@helpers/common-utils';
+import {LangService} from "@services/lang.service";
+import {FactoryService} from "@services/factory.service";
 
 export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> implements IAuditModelProperties<ManagementCouncil> {
   arabicName!: string;
@@ -22,11 +24,21 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> im
 
   searchFields: ISearchFieldsMap<ManagementCouncil> = {
     ...infoSearchFields(['nationalityInfo']),
-    ...normalSearchFields(['arabicName', 'englishName', 'jobTitle', 'email', 'passportNumber', 'phone'])
+    ...normalSearchFields(['arabicName', 'englishName', 'email', 'passportNumber'])
   };
 
   // extra properties
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  langService: LangService;
+
+  constructor() {
+    super();
+    this.langService = FactoryService.getService('LangService');
+  }
+
+  getName(): string {
+    return this.langService.map.lang === 'ar' ? this.arabicName : this.englishName;
+  }
 
   // don't delete (used in case audit history)
   getAdminResultByProperty(property: keyof ManagementCouncil): AdminResult {

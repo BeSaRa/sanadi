@@ -1,14 +1,11 @@
-import { Component, Input } from '@angular/core';
-import { LangService } from "@app/services/lang.service";
-import { ToastService } from "@app/services/toast.service";
-import { DialogService } from "@app/services/dialog.service";
-import { FounderMembers } from "@app/models/founder-members";
-import { FounderMembersPopupComponent } from '../../../popups/founder-members-popup/founder-members-popup.component';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
-import { ComponentType } from '@angular/cdk/portal';
-import { IKeyValue } from '@app/interfaces/i-key-value';
+import {Component} from '@angular/core';
+import {FounderMembers} from "@app/models/founder-members";
+import {FounderMembersPopupComponent} from '../../../popups/founder-members-popup/founder-members-popup.component';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
+import {ComponentType} from '@angular/cdk/portal';
+import {IKeyValue} from '@app/interfaces/i-key-value';
 
 @Component({
   selector: 'founder-members',
@@ -16,9 +13,12 @@ import { IKeyValue } from '@app/interfaces/i-key-value';
   styleUrls: ['./founder-members.component.scss']
 })
 export class FounderMembersComponent extends UiCrudListGenericComponent<FounderMembers> {
-  
-  displayColumns: string[] = ['idNumber', 'fullName', 'email', 'phone', 'extraPhone', 'actions'];
 
+  constructor() {
+    super();
+  }
+
+  displayColumns: string[] = ['identificationNumber', 'fullName', 'email', 'phone', 'extraPhone', 'actions'];
   actions: IMenuItem<FounderMembers>[] = [
     {
       type: 'action',
@@ -41,16 +41,6 @@ export class FounderMembersComponent extends UiCrudListGenericComponent<FounderM
       onClick: (item: FounderMembers) => this.view$.next(item),
     }
   ];
-
-  @Input() founderMemberList: FounderMembers[] = [];
-
-  constructor(
-    public lang: LangService,
-    public toast: ToastService,
-    public dialog: DialogService
-    ) {
-    super();
-  }
 
   _getNewInstance(override?: Partial<FounderMembers> | undefined): FounderMembers {
     return new FounderMembers().clone(override ?? {});

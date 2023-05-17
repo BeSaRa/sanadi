@@ -66,8 +66,7 @@ export class PartnerApprovalComponent
   readonly: boolean = false;
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: PartnerApproval;
-  
-  workAreasTabStatus: ReadinessStatus = 'READY';
+
   loadAttachments: boolean = false;
   formProperties = {
     requestType: () => {
@@ -143,8 +142,7 @@ export class PartnerApprovalComponent
           (!this.targetGroupComponentRef ||
               this.targetGroupComponentRef.list.length > 0) &&
           (!this.workAreasTabComponentRef ||
-            (this.workAreasTabStatus === 'READY' &&
-              this.workAreasTabComponentRef.list.length > 0))
+            this.workAreasTabComponentRef.list.length > 0)
         );
       },
     },
@@ -361,6 +359,7 @@ export class PartnerApprovalComponent
     this.operation = this.operationTypes.CREATE;
     this.setSelectedLicense(undefined, true);
     this.bankAccountComponentRef.forceClearComponent();
+    this.goalsComponentRef?.forceClearComponent();
     this.goalsListComponentRef?.forceClearComponent();
     this.commercialActivityTabComponentRef?.forceClearComponent();
     this.managementCouncilComponentRef.forceClearComponent();

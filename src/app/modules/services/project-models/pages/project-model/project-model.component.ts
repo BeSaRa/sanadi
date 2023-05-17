@@ -1,60 +1,54 @@
-import { Component, ViewChild } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
-  ValidatorFn
-} from '@angular/forms';
-import { ProjectModelProjectTypes } from '@app/enums/project-model-project-types';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { FieldControlAndLabelKey } from '@app/types/types';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { IKeyValue } from '@contracts/i-key-value';
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { IDacOchaFields } from '@contracts/idac-ocha-fields';
-import { IInternalExternalExecutionFields } from '@contracts/iinternal-external-execution-fields';
-import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
-import { CaseTypes } from '@enums/case-types.enum';
-import { CommonCaseStatus } from '@enums/common-case-status.enum';
-import { DomainTypes } from '@enums/domain-types';
-import { ExecutionFields } from '@enums/execution-fields';
-import { FileIconsEnum } from '@enums/file-extension-mime-types-icons.enum';
-import { OpenFrom } from '@enums/open-from.enum';
-import { OperationTypes } from '@enums/operation-types.enum';
-import { SaveTypes } from '@enums/save-types';
-import { ProjectModelRequestType } from '@enums/service-request-types';
-import { UserClickOn } from '@enums/user-click-on.enum';
-import { CommonUtils } from '@helpers/common-utils';
-import { AdminLookup } from '@models/admin-lookup';
-import { AidLookup } from '@models/aid-lookup';
-import { Country } from '@models/country';
-import { ForeignCountriesProjectsNeed } from '@models/foreign-countries-projects-need';
-import { Lookup } from '@models/lookup';
-import { ProjectModel } from '@models/project-model';
-import { ProjectModelForeignCountriesProject } from '@models/project-model-foreign-countries-project';
-import { SDGoal } from '@models/sdgoal';
-import { AdminLookupService } from '@services/admin-lookup.service';
-import { AidLookupService } from '@services/aid-lookup.service';
-import { CountryService } from '@services/country.service';
-import { DacOchaService } from '@services/dac-ocha.service';
-import { DialogService } from '@services/dialog.service';
-import { EmployeeService } from '@services/employee.service';
-import { ForeignCountriesProjectsService } from '@services/foreign-countries-projects.service';
-import { LangService } from '@services/lang.service';
-import { LookupService } from '@services/lookup.service';
-import { ProjectModelService } from '@services/project-model.service';
-import { SDGoalService } from '@services/sdgoal.service';
-import { ServiceDataService } from '@services/service-data.service';
-import { ToastService } from '@services/toast.service';
-import { Observable, of, Subject } from 'rxjs';
-import { catchError, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { ComponentBudgetsComponent } from './component-budgets/component-budgets.component';
-import { EvaluationIndicatorsComponent } from './evaluation-indicators/evaluation-indicators.component';
-import { ProjectAddressesComponent } from './project-addresses/project-addresses.component';
-import { ForeignCountriesProjectsComponent } from './foreign-countries-projects/foreign-countries-projects.component';
+import {Component, ViewChild} from '@angular/core';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn} from '@angular/forms';
+import {ProjectModelProjectTypes} from '@app/enums/project-model-project-types';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {FieldControlAndLabelKey} from '@app/types/types';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {IKeyValue} from '@contracts/i-key-value';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {IDacOchaFields} from '@contracts/idac-ocha-fields';
+import {IInternalExternalExecutionFields} from '@contracts/iinternal-external-execution-fields';
+import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
+import {CaseTypes} from '@enums/case-types.enum';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {DomainTypes} from '@enums/domain-types';
+import {ExecutionFields} from '@enums/execution-fields';
+import {FileIconsEnum} from '@enums/file-extension-mime-types-icons.enum';
+import {OpenFrom} from '@enums/open-from.enum';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
+import {ProjectModelRequestType} from '@enums/service-request-types';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {CommonUtils} from '@helpers/common-utils';
+import {AdminLookup} from '@models/admin-lookup';
+import {AidLookup} from '@models/aid-lookup';
+import {Country} from '@models/country';
+import {ForeignCountriesProjectsNeed} from '@models/foreign-countries-projects-need';
+import {Lookup} from '@models/lookup';
+import {ProjectModel} from '@models/project-model';
+import {ProjectModelForeignCountriesProject} from '@models/project-model-foreign-countries-project';
+import {SDGoal} from '@models/sdgoal';
+import {AdminLookupService} from '@services/admin-lookup.service';
+import {AidLookupService} from '@services/aid-lookup.service';
+import {CountryService} from '@services/country.service';
+import {DacOchaService} from '@services/dac-ocha.service';
+import {DialogService} from '@services/dialog.service';
+import {EmployeeService} from '@services/employee.service';
+import {ForeignCountriesProjectsService} from '@services/foreign-countries-projects.service';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {ProjectModelService} from '@services/project-model.service';
+import {SDGoalService} from '@services/sdgoal.service';
+import {ServiceDataService} from '@services/service-data.service';
+import {ToastService} from '@services/toast.service';
+import {Observable, of, Subject} from 'rxjs';
+import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {ComponentBudgetsComponent} from './component-budgets/component-budgets.component';
+import {EvaluationIndicatorsComponent} from './evaluation-indicators/evaluation-indicators.component';
+import {ProjectAddressesComponent} from './project-addresses/project-addresses.component';
+import {ForeignCountriesProjectsComponent} from './foreign-countries-projects/foreign-countries-projects.component';
 
 @Component({
   selector: 'project-model',
@@ -63,12 +57,15 @@ import { ForeignCountriesProjectsComponent } from './foreign-countries-projects/
 })
 export class ProjectModelComponent extends EServicesGenericComponent<ProjectModel, ProjectModelService> {
   form!: UntypedFormGroup;
+
   _saveFail(error: any): void {
     // throw new Error('Method not implemented.');
   }
+
   _launchFail(error: any): void {
     // throw new Error('Method not implemented.');
   }
+
   _destroyComponent(): void {
     // throw new Error('Method not implemented.');
   }
@@ -168,15 +165,20 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       langKey: 'project_components_budgets',
       index: 3,
       validStatus: () => {
-        return (this.model && this.model.componentList && this.model.componentList.length > 0)
-          && this.projectTotalCostField && this.projectTotalCostField.value > 0
+        return !this.componentBudgetsRef
+          || (this.componentBudgetsRef.list.length > 0 && this.componentBudgetsRef.projectTotalCostField.value > 0);
+        /*return (this.model && this.model.componentList && this.model.componentList.length > 0)
+          && this.projectTotalCostField && this.projectTotalCostField.value > 0*/
       }
     },
     evaluationIndicators: {
       name: 'evaluationIndicatorsTab',
       langKey: 'project_evaluation_indicators',
       index: 4,
-      validStatus: () => (this.model && this.model.evaluationIndicatorList && this.model.evaluationIndicatorList.length > 0)
+      validStatus: () => {
+        return !this.evaluationIndicatorsRef || (this.evaluationIndicatorsRef.list.length > 0);
+        // return (this.model && this.model.evaluationIndicatorList && this.model.evaluationIndicatorList.length > 0)
+      }
     },
     projectAddresses: {
       name: 'projectAddressesTab',
@@ -438,8 +440,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       componentList: this.componentBudgetsRef.list,
       evaluationIndicatorList: this.evaluationIndicatorsRef.list,
       projectTotalCost: this.projectTotalCostField.value,
-      foreignCountriesProjectList: this.foreignCountriesProjectsRef.list,
-      projectAddressList: this.projectAddressesRef.list,
+      foreignCountriesProjectList: this.foreignCountriesProjectsRef?.list ?? [],
+      projectAddressList: this.projectAddressesRef?.list ?? [],
       description: this.descriptionTab.value
     });
     if (model.getCaseStatus() === CommonCaseStatus.DRAFT) {
@@ -473,7 +475,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
 
-
   _updateForm(model: ProjectModel): void {
     this.model = model;
     this.form.patchValue({
@@ -494,8 +495,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.form.reset();
     this.componentBudgetsRef.forceClearComponent();
     this.evaluationIndicatorsRef.forceClearComponent();
-    this.foreignCountriesProjectsRef.forceClearComponent();
-    this.projectAddressesRef.forceClearComponent();
+    this.foreignCountriesProjectsRef?.forceClearComponent();
+    this.projectAddressesRef?.forceClearComponent();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
     this.templateSerialControl.setValue('');
@@ -792,7 +793,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   hideProjectAddressesTabAndClearProjectAddressesList() {
     this.showProjectAddressesTab = false;
-    this.projectAddressesRef.forceClearComponent()
+    this.projectAddressesRef?.forceClearComponent()
   }
 
   applyNotOutsideQatarChanges() {

@@ -7,6 +7,9 @@ import {AdminResult} from '@models/admin-result';
 import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 import {ObjectUtils} from '@helpers/object-utils';
 import {CommonUtils} from '@helpers/common-utils';
+import {INames} from "@contracts/i-names";
+import {LangService} from "@services/lang.service";
+import {FactoryService} from "@services/factory.service";
 
 export class ContactOfficer extends SearchableCloneable<ContactOfficer> implements IAuditModelProperties<ContactOfficer> {
   arabicName!: string;
@@ -22,6 +25,16 @@ export class ContactOfficer extends SearchableCloneable<ContactOfficer> implemen
 
   // extra properties
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  langService: LangService;
+
+  constructor() {
+    super();
+    this.langService = FactoryService.getService('LangService');
+  }
+
+  getName(): string {
+    return this.langService.map.lang === 'ar' ? this.arabicName : this.englishName;
+  }
 
   getAdminResultByProperty(property: keyof ContactOfficer): AdminResult {
     let adminResultValue: AdminResult;

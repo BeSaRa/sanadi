@@ -1,21 +1,24 @@
-import { ComponentType } from '@angular/cdk/portal';
-import { Component } from '@angular/core';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { Result } from '@app/models/result';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { ResultListPopupComponent } from '@app/modules/services/urgent-intervention-closure/popups/result-list-popup/result-list-popup.component';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
+import {ComponentType} from '@angular/cdk/portal';
+import {Component} from '@angular/core';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {Result} from '@app/models/result';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {
+  ResultListPopupComponent
+} from '@app/modules/services/urgent-intervention-closure/popups/result-list-popup/result-list-popup.component';
 
 @Component({
   selector: 'result-list',
   templateUrl: './result-list.component.html',
   styleUrls: ['./result-list.component.scss']
 })
-export class ResultListComponent extends UiCrudListGenericComponent<Result>{
+export class ResultListComponent extends UiCrudListGenericComponent<Result> {
+
+  constructor() {
+    super();
+  }
   displayColumns = ['outputs', 'expectedResults', 'expectedImpact', 'actions'];
   actions: IMenuItem<Result>[] = [
     // edit
@@ -44,20 +47,18 @@ export class ResultListComponent extends UiCrudListGenericComponent<Result>{
     }
   ];
 
-  constructor(public lang: LangService,
-    public toast: ToastService,
-    public dialog: DialogService) {
-    super();
-  }
   _getNewInstance(override?: Partial<Result> | undefined): Result {
     return new Result().clone(override ?? {});
   }
+
   _getDialogComponent(): ComponentType<any> {
     return ResultListPopupComponent;
   }
+
   _getDeleteConfirmMessage(record: Result): string {
     return this.lang.map.msg_confirm_delete_selected
   }
+
   getExtraDataForPopup(): IKeyValue {
     return {}
   }

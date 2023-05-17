@@ -331,7 +331,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       implementingAgencyList: this.implementingAgencyListComponentRef.list,
       stageList: this.stageListComponentRef.list,
       resultList: this.resultListComponentRef.list,
-      officeEvaluationList: this.implementationEvaluationListComponentRef.list,
+      officeEvaluationList: this.implementationEvaluationListComponentRef?.list ?? [],
       bestPracticesList: this.bestPracticesListComponentRef.list,
       lessonsLearnedList: this.lessonsLearntListComponentRef.list,
       interventionTotalCost: this.stageListComponentRef.totalInterventionCost

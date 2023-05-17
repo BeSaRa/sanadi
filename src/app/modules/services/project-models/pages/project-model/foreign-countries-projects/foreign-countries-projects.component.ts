@@ -1,15 +1,14 @@
-import { ComponentType } from '@angular/cdk/portal';
-import { Component, Input } from '@angular/core';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { ProjectModelForeignCountriesProject } from '@app/models/project-model-foreign-countries-project';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { ForeignCountriesProjectPopupComponent } from '../../../popups/foreign-countries-project-popup/foreign-countries-project-popup.component';
-import { ForeignCountriesProjectsNeed } from '@app/models/foreign-countries-projects-need';
+import {ComponentType} from '@angular/cdk/portal';
+import {Component, Input} from '@angular/core';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {
+  ForeignCountriesProjectPopupComponent
+} from '../../../popups/foreign-countries-project-popup/foreign-countries-project-popup.component';
+import {ForeignCountriesProjectsNeed} from '@app/models/foreign-countries-projects-need';
 
 @Component({
   selector: 'foreign-countries-projects',
@@ -18,11 +17,12 @@ import { ForeignCountriesProjectsNeed } from '@app/models/foreign-countries-proj
 })
 export class ForeignCountriesProjectsComponent extends UiCrudListGenericComponent<ProjectModelForeignCountriesProject> {
   @Input() ForeignCountriesProjectsNeeds!: ForeignCountriesProjectsNeed[];
-  constructor(public lang: LangService,
-    public toast: ToastService,
-    public dialog: DialogService) {
-  super();
+
+  constructor() {
+    super();
   }
+
+  displayColumns: string[] = ['index', 'projectName', 'notes', 'actions'];
   actions: IMenuItem<ProjectModelForeignCountriesProject>[] = [
     // edit
     {
@@ -48,20 +48,22 @@ export class ForeignCountriesProjectsComponent extends UiCrudListGenericComponen
       onClick: (item: ProjectModelForeignCountriesProject) => this.view$.next(item),
     }
   ];
-  displayColumns: string[] = ['index', 'projectName', 'notes', 'actions'];
 
   _getNewInstance(override?: Partial<ProjectModelForeignCountriesProject> | undefined): ProjectModelForeignCountriesProject {
-    return new ProjectModelForeignCountriesProject().clone(override?? {})
+    return new ProjectModelForeignCountriesProject().clone(override ?? {})
   }
+
   _getDialogComponent(): ComponentType<any> {
     return ForeignCountriesProjectPopupComponent
   }
+
   _getDeleteConfirmMessage(record: ProjectModelForeignCountriesProject): string {
     return this.lang.map.msg_confirm_delete_x.change({x: record.projectName});
   }
+
   getExtraDataForPopup(): IKeyValue {
     return {
-      foreignCountriesProjectsNeeds:this.ForeignCountriesProjectsNeeds
+      foreignCountriesProjectsNeeds: this.ForeignCountriesProjectsNeeds
     }
   }
 

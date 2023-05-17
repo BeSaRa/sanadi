@@ -1,59 +1,55 @@
 <div class="row">
-  <div class="row">
-    <div class="col-sm-12 col-md-4 mb-4 position-relative">
-      <label for="totalQatariRiyalTransactions"
-        class="form-label">{{lang.map.total_qatari_riyal_transaction_amount}}</label>
-      <span id="totalQatariRiyalTransactions" class="form-control input-disabled"
-        [innerHTML]="(totalQatariRiyalTransactions || '&nbsp;')| mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR"></span>
-    </div>
+  <div class="col-sm-12 col-md-4 mb-4 position-relative">
+    <label for="totalQatariRiyalTransactions"
+           class="form-label">{{lang.map.total_qatari_riyal_transaction_amount}}</label>
+    <span id="totalQatariRiyalTransactions" class="form-control input-disabled">
+        {{(totalQatariRiyalTransactions || '0') | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}}
+      </span>
   </div>
 </div>
 
-<div class="row pt-3">
+<div class="row">
   <div class="col-12">
-    <div class="table-responsive">
-      <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="displayColumns"
-        [filter]="filterControl.value" [useSearchToFilter]="true">
-        <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
-          <ng-container cdkColumnDef="extra-header">
-            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-              <table-header tableTitle="lbl_projects" [add$]="add$" [allowAdd]="addAllowed()" (textChange)="filterControl.setValue($event)">
-              </table-header>
-            </th>
-          </ng-container>
-          <ng-container cdkColumnDef="fullSerial">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.serial_number}}</th>
-            <td cdk-cell *cdkCellDef="let row">
-              {{row.fullSerial || ''}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="qatariTransactionAmount">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.qatari_riyal_transaction_amount}}</th>
-            <td cdk-cell *cdkCellDef="let row">
-              {{row.qatariTransactionAmount | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="notes">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.notes}}</th>
-            <td cdk-cell *cdkCellDef="let row">
-              {{row.notes || ''}} </td>
-          </ng-container>
-
-          <ng-container cdkColumnDef="actions">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-            <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-              <grid-actions [record]="row" [actions]="actions" [itemIndex]="i" [rebindTrigger]="readonly"></grid-actions>
-            </td>
-          </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-          <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
-          <tr cdk-row [ngClass]="isTransferAmountGreaterThenDueAmount(row) ? 'risk' : '' "
+    <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="displayColumns"
+               [filter]="filterControl.value" [useSearchToFilter]="true">
+      <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="lbl_projects" [add$]="add$" [allowAdd]="addAllowed()"
+                          (textChange)="filterControl.setValue($event)"
+                          [sort]="table.dataSource.sort">
+            </table-header>
+          </th>
+        </ng-container>
+        <ng-container cdkColumnDef="fullSerial">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.serial_number}}</th>
+          <td cdk-cell *cdkCellDef="let row">{{row.fullSerial || ''}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="qatariTransactionAmount">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.qatari_riyal_transaction_amount}}</th>
+          <td cdk-cell *cdkCellDef="let row">
+            {{row.qatariTransactionAmount | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="notes">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.notes}}</th>
+          <td cdk-cell *cdkCellDef="let row">{{row.notes || ''}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="actions">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+          <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="i" [rebindTrigger]="readonly"></grid-actions>
+          </td>
+        </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+        <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
+        <tr cdk-row [ngClass]="isTransferAmountGreaterThenDueAmount(row) ? 'risk' : '' "
             *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
-          <tr *cdkNoDataRow>
-            <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
-          </tr>
-        </table>
-        <app-paginator #paginator></app-paginator>
-      </app-table>
-      <context-menu-item #menu [actions]="actions"></context-menu-item>
-    </div>
+        <tr *cdkNoDataRow>
+          <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
+        </tr>
+      </table>
+      <app-paginator #paginator></app-paginator>
+    </app-table>
+    <context-menu-item #menu [actions]="actions"></context-menu-item>
   </div>
 </div>

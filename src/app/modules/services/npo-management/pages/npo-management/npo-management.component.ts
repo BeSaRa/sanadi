@@ -72,10 +72,10 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
       langKey: "lbl_basic_info" as keyof ILanguageKeys,
       validStatus: () => this.basicInfo.valid,
     },
-    contectInfo: {
-      name: "contectInfoTab",
+    contactInfo: {
+      name: "contactInfoTab",
       langKey: "lbl_contact_info" as keyof ILanguageKeys,
-      validStatus: () => this.contectInfo.valid && (!this.contactOfficerComponentRef || this.contactOfficerComponentRef.list.length > 0),
+      validStatus: () => this.contactInfo.valid && (!this.contactOfficerComponentRef || this.contactOfficerComponentRef.list.length > 0),
     },
     founderMember: {
       name: "founderMemberTab",
@@ -196,7 +196,7 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
     const model = new NpoManagement().buildForm(true);
     this.form = new UntypedFormGroup({
       basicInfo: this.fb.group(model.basicInfo),
-      contectInfo: this.fb.group(model.contectInfo),
+      contactInfo: this.fb.group(model.contactInfo),
     });
   }
 
@@ -239,7 +239,7 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
     const value = new NpoManagement().clone({
       ...this.model,
       ...this.basicInfo.value,
-      ...this.contectInfo.value,
+      ...this.contactInfo.value,
       profileId: this.model?.profileId
     })
     value.bankAccountList = this.bankAccountComponentRef.list;
@@ -290,7 +290,7 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
     const formModel = model.buildForm();
     this.form.patchValue({
       basicInfo: formModel.basicInfo,
-      contectInfo: formModel.contectInfo
+      contactInfo: formModel.contactInfo
     });
 
     this.cd.detectChanges();
@@ -599,8 +599,8 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
     return this.form.get('basicInfo') as UntypedFormGroup;
   }
 
-  get contectInfo() {
-    return this.form.get('contectInfo') as UntypedFormGroup;
+  get contactInfo() {
+    return this.form.get('contactInfo') as UntypedFormGroup;
   }
 
   get requestTypeField(): UntypedFormControl {

@@ -1,56 +1,48 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
-    <h1 class="h6 text-white">{{popupTitle}}</h1>
-    <div>
-      <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
-              tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
-      <button type="button" class="btn-close btn-close-white"
-              tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
-    </div>
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
   </div>
+</div>
 <div class="dialog-content w800px no-fixed-height" #dialogContent>
-    <ng-container [formGroup]="form">
-        <div class="row">
-        <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" for="indicator"
-                asteriskIfRequired="indicator">{{lang.map.indicator}}</label>
-            <ng-select [readonly]="readonly" validationClasses="indicator"
-                    appendTo="body"
-                    labelForId="indicator"
-                    placeholder="{{lang.map.select}}"
-                    [notFoundText]="lang.map.msg_not_found"
-                    [clearable]="true"
-                    id="indicator"
-                    formControlName="indicator">
-            <ng-option *ngFor="let option of indicators" [value]="option.id"
-                        [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="indicator"></app-field-error-message>
-        </div>
-        <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="percentage"
-                for="percentage">{{lang.map.percentage}}</label>
-            <input id="percentage" validationClasses="percentage" formControlName="percentage"
-                class="form-control" maxlength="5" max="100">
-            <app-field-error-message controlName="percentage"></app-field-error-message>
-        </div>
-        <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="notes"
-                for="notes">{{lang.map.notes}}</label>
-            <input id="notes" validationClasses="notes" formControlName="notes"
-                class="form-control" maxlength="250">
-            <app-field-error-message controlName="notes"></app-field-error-message>
-        </div>
-        </div>
-    </ng-container>
+  <ng-container [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label class="form-label" for="indicator" asteriskIfRequired="indicator">{{lang.map.indicator}}</label>
+        <ng-select [readonly]="readonly" validationClasses="indicator"
+                   appendTo="body" labelForId="indicator" placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found" [clearable]="true"
+                   id="indicator" formControlName="indicator">
+          <ng-option *ngFor="let option of indicators" [value]="option.id"
+                     [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="indicator"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="percentage" for="percentage">{{lang.map.percentage}}</label>
+        <input id="percentage" validationClasses="percentage" formControlName="percentage"
+               class="form-control" maxlength="5" max="100">
+        <app-field-error-message controlName="percentage"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="notes" for="notes">{{lang.map.notes}}</label>
+        <input id="notes" validationClasses="notes" formControlName="notes" class="form-control" maxlength="250">
+        <app-field-error-message controlName="notes"></app-field-error-message>
+      </div>
+    </div>
+  </ng-container>
 </div>
 
 <div class="dialog-actions">
-    <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
-            tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
-      <i class="mdi mdi-information-outline text-info"></i>
-    </button>
-    <span class="flex-grow-1"></span>
-    <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
-            class="btn btn-primary">{{lang.map.btn_save}}</button>
-    <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

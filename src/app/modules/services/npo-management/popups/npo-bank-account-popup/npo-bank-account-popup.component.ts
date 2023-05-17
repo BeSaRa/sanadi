@@ -30,6 +30,20 @@ export class NpoBankAccountPopupComponent extends UiCrudDialogGenericComponent<N
   bankList!: Bank[];
   currenciesList: Lookup[] = this.lookupService.listByCategory.Currency;
 
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<NpoBankAccount>,
+              public lang: LangService,
+              public dialogRef: DialogRef,
+              public dialogService: DialogService,
+              public fb: UntypedFormBuilder,
+              public toast: ToastService,
+              private lookupService: LookupService,
+              private bankService: BankService) {
+    super();
+    this.model = data.model;
+    this.operation = data.operation;
+    this.list = data.list;
+  }
+
   _getNewInstance(override?: Partial<NpoBankAccount> | undefined): NpoBankAccount {
     return new NpoBankAccount().clone(override ?? {});
   }
@@ -83,19 +97,5 @@ export class NpoBankAccountPopupComponent extends UiCrudDialogGenericComponent<N
 
   buildForm(): void {
     this.form = this.fb.group(this.model.getBankAccountFields(true));
-  }
-
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<NpoBankAccount>,
-              public lang: LangService,
-              public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService,
-              private lookupService: LookupService,
-              private bankService: BankService) {
-    super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
   }
 }

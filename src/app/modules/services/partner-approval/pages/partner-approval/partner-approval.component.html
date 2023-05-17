@@ -320,7 +320,7 @@
 
 
         <commercial-activity #commercialActivityTab
-                             [commercialActivitiesList]="model?.commercialActivitiesList || []"
+                             [list]="model?.commercialActivitiesList || []"
                              [readonly]="(isExtendOrCancelRequestType() || readonly)"
                              >
         </commercial-activity>
@@ -332,20 +332,20 @@
     <ng-template #goalsTemplate>
       <goal
         #goalsTab
-        [displayGoals]="model?.displayGoals  || []"
+        [list]="model?.displayGoals  || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
       ></goal>
 
       <goals-list
         #goalsListTab
-        [goalsList]="model?.goalsList || []"
+        [list]="model?.goalsList || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
       ></goals-list>
 
       <!-- Target Groups -->
       <target-group
         #targetGroupsTab
-        [targetGroupList]="model?.targetGroupList || []"
+        [list]="model?.targetGroupList || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
       ></target-group>
 
@@ -358,7 +358,7 @@
     <ng-template #managementCouncilsTemplate>
       <management-council
         #managementCouncilsTab
-        [managementCouncilList]="model?.managementCouncilList || []"
+        [list]="model?.managementCouncilList || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
       >
       </management-council>
@@ -377,7 +377,7 @@
     <ng-template #contactOfficersTemplate>
       <contact-officer
         #contactOfficersTab
-        [contactOfficerList]="model?.contactOfficerList || []"
+        [list]="model?.contactOfficerList || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)">
       </contact-officer>
     </ng-template>

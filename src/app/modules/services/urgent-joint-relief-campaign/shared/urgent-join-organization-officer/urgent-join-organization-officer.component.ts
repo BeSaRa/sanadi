@@ -1,14 +1,14 @@
-import { Component, Input } from '@angular/core';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { OrganizationOfficer } from '@app/models/organization-officer';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { UrgentJoinOrganizationOfficerPopupComponent } from '../../popups/urgent-join-organization-officer-popup/urgent-join-organization-officer-popup.component';
-import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
-import { ComponentType } from '@angular/cdk/portal';
-import { IKeyValue } from '@app/interfaces/i-key-value';
+import {Component} from '@angular/core';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {OrganizationOfficer} from '@app/models/organization-officer';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {
+  UrgentJoinOrganizationOfficerPopupComponent
+} from '../../popups/urgent-join-organization-officer-popup/urgent-join-organization-officer-popup.component';
+import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
+import {ComponentType} from '@angular/cdk/portal';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {EmployeeService} from "@services/employee.service";
 
 @Component({
   selector: 'urgent-join-organization-officer',
@@ -16,24 +16,13 @@ import { IKeyValue } from '@app/interfaces/i-key-value';
   styleUrls: ['./urgent-join-organization-officer.component.scss']
 })
 export class UrgentJoinOrganizationOfficerComponent extends UiCrudListGenericComponent<OrganizationOfficer> {
-  _getNewInstance(override?: Partial<OrganizationOfficer> | undefined): OrganizationOfficer {
-    return new OrganizationOfficer().clone(override ?? {});
-  }
-  _getDialogComponent(): ComponentType<any> {
-    return UrgentJoinOrganizationOfficerPopupComponent
-  }
-  _getDeleteConfirmMessage(record: OrganizationOfficer): string {
-    return this.lang.map.msg_confirm_delete_x.change({x: record.fullName});
-  }
-  getExtraDataForPopup(): IKeyValue {
-    return {}
+
+  constructor(private employeeService: EmployeeService) {
+    super();
+    this.isExternalUser = employeeService.isExternalUser();
   }
 
-  constructor(public lang: LangService,
-    public toast: ToastService,
-    public dialog: DialogService) {
-    super();
-  }
+  displayColumns: string[] = ['fullName', 'identificationNumber', 'email', 'phone', 'extraPhone', 'actions'];
   actions: IMenuItem<OrganizationOfficer>[] = [
     // edit
     {
@@ -59,8 +48,22 @@ export class UrgentJoinOrganizationOfficerComponent extends UiCrudListGenericCom
       onClick: (item: OrganizationOfficer) => this.view$.next(item)
     }
   ];
+  isExternalUser: boolean = false;
 
-  @Input() isExternalUser: boolean = false;
-  displayColumns: string[] = ['fullName', 'identificationNumber', 'email', 'phoneNumber', 'extraPhoneNumber', 'actions'];
+  _getNewInstance(override?: Partial<OrganizationOfficer> | undefined): OrganizationOfficer {
+    return new OrganizationOfficer().clone(override ?? {});
+  }
+
+  _getDialogComponent(): ComponentType<any> {
+    return UrgentJoinOrganizationOfficerPopupComponent
+  }
+
+  _getDeleteConfirmMessage(record: OrganizationOfficer): string {
+    return this.lang.map.msg_confirm_delete_x.change({x: record.fullName});
+  }
+
+  getExtraDataForPopup(): IKeyValue {
+    return {}
+  }
 
 }

@@ -128,7 +128,7 @@ export class NpoManagement
       oldLicenseFullSerial: { langKey: 'license_number', value: this.oldLicenseFullSerial },
     };
   }
-  getContectInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+  getContactInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       address: { langKey: 'lbl_address', value: this.address },
       phone: { langKey: 'lbl_phone', value: this.phone },
@@ -148,7 +148,7 @@ export class NpoManagement
   }
   buildForm(controls?: boolean) {
     const values = ObjectUtils.getControlValues<NpoManagement>(this.getBasicInfoValuesWithLabels())
-
+    const contactValues = ObjectUtils.getControlValues<NpoManagement>(this.getContactInfoValuesWithLabels())
     return {
       basicInfo: {
         requestType: controls ? [values.requestType, [CustomValidators.required]] : values.requestType,
@@ -170,21 +170,21 @@ export class NpoManagement
         establishmentDate: controls ? [values.establishmentDate, []] : values.establishmentDate,
         registrationDate: controls ? [values.registrationDate, []] : values.registrationDate,
       },
-      contectInfo: {
-        email: controls ? [values.email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : values.email,
-        phone: controls ? [values.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phone,
-        zoneNumber: controls ? [values.zoneNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : values.zoneNumber,
-        streetNumber: controls ? [values.streetNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : values.streetNumber,
-        buildingNumber: controls ? [values.buildingNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : values.buildingNumber,
-        fax: controls ? [values.fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : values.fax,
-        address: controls ? [values.address, [CustomValidators.required, CustomValidators.maxLength(100)]] : values.address,
-        website: controls ? [values.website, [CustomValidators.required, CustomValidators.pattern('WEBSITE')]] : values.website,
-        facebook: controls ? [values.facebook, [CustomValidators.maxLength(350)]] : values.facebook,
-        twitter: controls ? [values.twitter, [CustomValidators.maxLength(350)]] : values.twitter,
-        instagram: controls ? [values.instagram, [CustomValidators.maxLength(350)]] : values.instagram,
-        snapChat: controls ? [values.snapChat, [CustomValidators.maxLength(350)]] : values.snapChat,
-        youTube: controls ? [values.youTube, [CustomValidators.maxLength(350)]] : values.youTube,
-        hotline: controls ? [values.hotline, [CustomValidators.number, Validators.maxLength(10)]] : values.hotline
+      contactInfo: {
+        email: controls ? [contactValues.email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : contactValues.email,
+        phone: controls ? [contactValues.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : contactValues.phone,
+        zoneNumber: controls ? [contactValues.zoneNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : contactValues.zoneNumber,
+        streetNumber: controls ? [contactValues.streetNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : contactValues.streetNumber,
+        buildingNumber: controls ? [contactValues.buildingNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : contactValues.buildingNumber,
+        fax: controls ? [contactValues.fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : contactValues.fax,
+        address: controls ? [contactValues.address, [CustomValidators.required, CustomValidators.maxLength(100)]] : contactValues.address,
+        website: controls ? [contactValues.website, [CustomValidators.required, CustomValidators.pattern('WEBSITE')]] : contactValues.website,
+        facebook: controls ? [contactValues.facebook, [CustomValidators.maxLength(350)]] : contactValues.facebook,
+        twitter: controls ? [contactValues.twitter, [CustomValidators.maxLength(350)]] : contactValues.twitter,
+        instagram: controls ? [contactValues.instagram, [CustomValidators.maxLength(350)]] : contactValues.instagram,
+        snapChat: controls ? [contactValues.snapChat, [CustomValidators.maxLength(350)]] : contactValues.snapChat,
+        youTube: controls ? [contactValues.youTube, [CustomValidators.maxLength(350)]] : contactValues.youTube,
+        hotline: controls ? [contactValues.hotline, [CustomValidators.number, Validators.maxLength(10)]] : contactValues.hotline
       },
     };
   }

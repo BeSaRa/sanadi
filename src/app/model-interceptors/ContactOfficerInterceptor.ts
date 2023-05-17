@@ -5,6 +5,7 @@ export class ContactOfficerInterceptor implements IModelInterceptor<ContactOffic
   send(model: Partial<ContactOfficer>): Partial<ContactOfficer> {
     delete model.searchFields;
     delete model.auditOperation;
+    delete model.langService;
     return model;
   }
 

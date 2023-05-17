@@ -28,7 +28,8 @@
         <label class="form-label" asteriskIfRequired="totalCost"
                for="totalCost">{{lang.map.total_cost}}</label>
         <input id="totalCost" validationClasses="totalCost" formControlName="totalCost"
-               class="form-control" maxlength="20">
+               class="form-control" maxlength="20" [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+               [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
         <app-field-error-message controlName="totalCost"></app-field-error-message>
       </div>
     </div>

@@ -109,7 +109,7 @@
       </div>
     </ng-template>
     <ng-template #tabContent>
-      <project-needs [caseType]="model?.caseType" [projectNeedsList]="model?.projectNeeds || []"
+      <project-needs [caseType]="model?.caseType" [list]="model?.projectNeeds || []"
         [readonly]="readonly || isCancelRequestType">
       </project-needs>
     </ng-template>

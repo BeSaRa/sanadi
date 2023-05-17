@@ -1,16 +1,15 @@
-import { Component, Input } from '@angular/core';
-import { LangService } from '@services/lang.service';
-import { ToastService } from '@services/toast.service';
-import { ImplementingAgency } from '@models/implementing-agency';
-import { DialogService } from '@services/dialog.service';
-import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
-import { ActionIconsEnum } from '@enums/action-icons-enum';
-import { SortEvent } from '@contracts/sort-event';
-import { CommonUtils } from '@helpers/common-utils';
-import { InterventionImplementingAgencyListPopupComponent } from '../../popups/intervention-implementing-agency-list-popup/intervention-implementing-agency-list-popup.component';
-import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
-import { ComponentType } from '@angular/cdk/portal';
-import { IKeyValue } from '@app/interfaces/i-key-value';
+import {Component, Input} from '@angular/core';
+import {ImplementingAgency} from '@models/implementing-agency';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {SortEvent} from '@contracts/sort-event';
+import {CommonUtils} from '@helpers/common-utils';
+import {
+  InterventionImplementingAgencyListPopupComponent
+} from '../../popups/intervention-implementing-agency-list-popup/intervention-implementing-agency-list-popup.component';
+import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
+import {ComponentType} from '@angular/cdk/portal';
+import {IKeyValue} from '@app/interfaces/i-key-value';
 
 @Component({
   selector: 'intervention-implementing-agency-list',
@@ -18,7 +17,14 @@ import { IKeyValue } from '@app/interfaces/i-key-value';
   styleUrls: ['./intervention-implementing-agency-list.component.scss']
 })
 export class InterventionImplementingAgencyListComponent extends UiCrudListGenericComponent<ImplementingAgency> {
-  actions: IMenuItem<ImplementingAgency>[] =  [
+  @Input() executionCountry!: number;
+
+  constructor() {
+    super();
+  }
+
+  displayColumns: string[] = ['implementingAgencyType', 'implementingAgency', 'actions'];
+  actions: IMenuItem<ImplementingAgency>[] = [
     {
       type: 'action',
       icon: ActionIconsEnum.EDIT,
@@ -41,28 +47,6 @@ export class InterventionImplementingAgencyListComponent extends UiCrudListGener
       show: (_item: ImplementingAgency) => this.readonly
     }
   ];
-  displayColumns: string[] = ['implementingAgencyType', 'implementingAgency', 'actions'];
-  _getNewInstance(override?: Partial<ImplementingAgency> | undefined): ImplementingAgency {
-    return new ImplementingAgency().clone(override ?? {});
-  }
-  _getDialogComponent(): ComponentType<any> {
-    return InterventionImplementingAgencyListPopupComponent;
-  }
-  _getDeleteConfirmMessage(record: ImplementingAgency): string {
-    return this.lang.map.msg_confirm_delete_x.change({x: record.implementingAgency});
-  }
-  getExtraDataForPopup(): IKeyValue {
-    return {executionCountry : this.executionCountry}
-  }
-
-  constructor(public lang: LangService,
-    public toast: ToastService,
-    public dialog: DialogService) {
-    super();
-  }
-
-  @Input() executionCountry!: number;
-
   sortingCallbacks = {
     implementingAgency: (a: ImplementingAgency, b: ImplementingAgency, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.implementingAgencyInfo.getName().toLowerCase(),
@@ -75,5 +59,21 @@ export class InterventionImplementingAgencyListComponent extends UiCrudListGener
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   };
+
+  _getNewInstance(override?: Partial<ImplementingAgency> | undefined): ImplementingAgency {
+    return new ImplementingAgency().clone(override ?? {});
+  }
+
+  _getDialogComponent(): ComponentType<any> {
+    return InterventionImplementingAgencyListPopupComponent;
+  }
+
+  _getDeleteConfirmMessage(record: ImplementingAgency): string {
+    return this.lang.map.msg_confirm_delete_x.change({x: record.implementingAgencyInfo.getName()});
+  }
+
+  getExtraDataForPopup(): IKeyValue {
+    return {executionCountry: this.executionCountry}
+  }
 
 }

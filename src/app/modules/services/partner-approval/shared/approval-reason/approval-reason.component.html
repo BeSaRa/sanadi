@@ -1,40 +1,43 @@
-<div class="table-responsive">
-  <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="displayColumns"
-    [filter]="filterControl.value" [useSearchToFilter]="true">
-    <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
-      <ng-container cdkColumnDef="extra-header">
-        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-          <table-header tableTitle="approval_reasons" [add$]="add$" [allowAdd]="!readonly" [skipClearSort]="true"
-            (textChange)="filterControl.setValue($event)">
-          </table-header>
-        </th>
-      </ng-container>
-      <ng-container cdkColumnDef="projects">
-        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_projects}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.projects}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="research">
-        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_research}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.research}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="fieldVisit">
-        <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_field_visit}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.fieldVisit}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="actions">
-        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-        <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-          <grid-actions [record]="row" [actions]="actions" [itemIndex]="i" [rebindTrigger]="readonly"></grid-actions>
-        </td>
-      </ng-container>
-      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-      <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
-      <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
-      <tr *cdkNoDataRow>
-        <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
-      </tr>
-    </table>
-    <app-paginator #paginator></app-paginator>
-  </app-table>
-  <context-menu-item #menu [actions]="actions"></context-menu-item>
+<div class="row">
+  <div class="col-12">
+    <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="displayColumns"
+               [filter]="filterControl.value" [useSearchToFilter]="true">
+      <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="approval_reasons" [add$]="add$" [allowAdd]="!readonly"
+                          (textChange)="filterControl.setValue($event)"
+                          [sort]="table.dataSource.sort">
+            </table-header>
+          </th>
+        </ng-container>
+        <ng-container cdkColumnDef="projects">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_projects}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.projects}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="research">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_research}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.research}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="fieldVisit">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_field_visit}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.fieldVisit}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="actions">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+          <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="i" [rebindTrigger]="readonly"></grid-actions>
+          </td>
+        </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+        <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event, row)"></tr>
+        <tr *cdkNoDataRow>
+          <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
+        </tr>
+      </table>
+      <app-paginator #paginator></app-paginator>
+    </app-table>
+    <context-menu-item #menu [actions]="actions"></context-menu-item>
+  </div>
 </div>

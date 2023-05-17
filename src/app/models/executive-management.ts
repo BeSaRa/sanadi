@@ -8,6 +8,8 @@ import {AuditOperationTypes} from '@enums/audit-operation-types';
 import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 import {CommonUtils} from '@helpers/common-utils';
 import {ObjectUtils} from '@helpers/object-utils';
+import {LangService} from "@services/lang.service";
+import {FactoryService} from "@services/factory.service";
 
 export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement> implements IAuditModelProperties<ExecutiveManagement> {
   arabicName!: string;
@@ -21,16 +23,26 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
 
   searchFields: ISearchFieldsMap<ExecutiveManagement> = {
     ...infoSearchFields(['nationalityInfo']),
-    ...normalSearchFields(['arabicName', 'englishName', 'jobTitle', 'email', 'phone', 'passportNumber'])
+    ...normalSearchFields(['arabicName', 'englishName', 'email', 'passportNumber'])
   };
 
   searchFieldsNoPassport: ISearchFieldsMap<ExecutiveManagement> = {
     ...infoSearchFields(['nationalityInfo']),
-    ...normalSearchFields(['arabicName', 'englishName', 'jobTitle', 'email', 'phone'])
+    ...normalSearchFields(['arabicName', 'englishName', 'email'])
   };
 
   // extra properties
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  langService: LangService;
+
+  constructor() {
+    super();
+    this.langService = FactoryService.getService('LangService');
+  }
+
+  getName(): string {
+    return this.langService.map.lang === 'ar' ? this.arabicName : this.englishName;
+  }
 
   getAdminResultByProperty(property: keyof ExecutiveManagement): AdminResult {
     let adminResultValue: AdminResult;

@@ -1,30 +1,27 @@
-import { ComponentType } from '@angular/cdk/portal';
-import { Component } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
-import { EvaluationIndicator } from '@app/models/evaluation-indicator';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { EvaluationIndicatorsPopupComponent } from '../../../popups/evaluation-indicators-popup/evaluation-indicators-popup.component';
-import { IKeyValue } from '@app/interfaces/i-key-value';
+import {ComponentType} from '@angular/cdk/portal';
+import {Component} from '@angular/core';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
+import {EvaluationIndicator} from '@app/models/evaluation-indicator';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {
+  EvaluationIndicatorsPopupComponent
+} from '../../../popups/evaluation-indicators-popup/evaluation-indicators-popup.component';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {SortEvent} from "@contracts/sort-event";
+import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'evaluation-indicators',
   templateUrl: './evaluation-indicators.component.html',
   styleUrls: ['./evaluation-indicators.component.scss']
 })
-export class EvaluationIndicatorsComponent extends UiCrudListGenericComponent<EvaluationIndicator>  {
-  constructor(public lang: LangService,
-    public fb: UntypedFormBuilder,
-    public dialog: DialogService,
-    public toast: ToastService) {
-  super();
+export class EvaluationIndicatorsComponent extends UiCrudListGenericComponent<EvaluationIndicator> {
+  constructor() {
+    super();
   }
+
   displayColumns: string[] = ['index', 'indicator', 'percentage', 'notes', 'actions'];
-  footerColumns: string[] = ['totalComponentCostLabel', 'totalComponentCost'];
   actions: IMenuItem<EvaluationIndicator>[] = [
     // edit
     {
@@ -50,6 +47,13 @@ export class EvaluationIndicatorsComponent extends UiCrudListGenericComponent<Ev
       onClick: (item: EvaluationIndicator) => this.view$.next(item),
     }
   ];
+  sortingCallbacks = {
+    indicator: (a: EvaluationIndicator, b: EvaluationIndicator, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.indicatorInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.indicatorInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
 
   _getNewInstance(override?: Partial<EvaluationIndicator> | undefined): EvaluationIndicator {
     return new EvaluationIndicator().clone(override ? override : {});
@@ -60,7 +64,7 @@ export class EvaluationIndicatorsComponent extends UiCrudListGenericComponent<Ev
   }
 
   _getDeleteConfirmMessage(record: EvaluationIndicator): string {
-    return this.lang.map.msg_confirm_delete_x.change({x: record.indicator});
+    return this.lang.map.msg_confirm_delete_x.change({x: record.indicatorInfo?.getName()});
   }
 
   getExtraDataForPopup(): IKeyValue {

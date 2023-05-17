@@ -1,15 +1,14 @@
-import { ComponentType } from '@angular/cdk/portal';
-import { Component } from '@angular/core';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { CollectionItem } from '@app/models/collection-item';
-import { ProjectAddress } from '@app/models/project-address';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { ProjectAddressesPopupComponent } from '../../../popups/project-addresses-popup/project-addresses-popup.component';
+import {ComponentType} from '@angular/cdk/portal';
+import {Component} from '@angular/core';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {CollectionItem} from '@app/models/collection-item';
+import {ProjectAddress} from '@app/models/project-address';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {
+  ProjectAddressesPopupComponent
+} from '../../../popups/project-addresses-popup/project-addresses-popup.component';
 
 @Component({
   selector: 'project-addresses',
@@ -17,11 +16,11 @@ import { ProjectAddressesPopupComponent } from '../../../popups/project-addresse
   styleUrls: ['./project-addresses.component.scss']
 })
 export class ProjectAddressesComponent extends UiCrudListGenericComponent<ProjectAddress> {
-  constructor(public lang: LangService,
-              public toast: ToastService,
-              public dialog: DialogService) {
+  constructor() {
     super();
   }
+
+  displayColumns: string[] = ['index', 'beneficiaryRegion', 'address', 'location', 'actions'];
   actions: IMenuItem<ProjectAddress>[] = [
     // edit
     {
@@ -47,8 +46,7 @@ export class ProjectAddressesComponent extends UiCrudListGenericComponent<Projec
       onClick: (item: ProjectAddress) => this.view$.next(item),
     }
   ];
-  displayColumns: string[] = ['index', 'beneficiaryRegion', 'address', 'location', 'actions'];
-  
+
   _getDialogComponent(): ComponentType<any> {
     return ProjectAddressesPopupComponent;
   }
@@ -58,12 +56,11 @@ export class ProjectAddressesComponent extends UiCrudListGenericComponent<Projec
   }
 
   _getDeleteConfirmMessage(record: ProjectAddress): string {
-    return this.lang.map.msg_confirm_delete_x.change({x: record.address});
+    return this.lang.map.msg_confirm_delete_x.change({x: record.beneficiaryRegion});
   }
 
   getExtraDataForPopup(): IKeyValue {
-    return {
-    };
+    return {};
   }
 
   openLocationMap(item: CollectionItem) {

@@ -1,10 +1,11 @@
 import {CustomValidators} from "@app/validators/custom-validators";
 import {SearchableCloneable} from "@app/models/searchable-cloneable";
 import {AuditOperationTypes} from '@enums/audit-operation-types';
-import {ControlValueLabelLangKey} from '@app/types/types';
+import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
 import {AdminResult} from '@models/admin-result';
 import {CommonUtils} from '@helpers/common-utils';
 import {ObjectUtils} from '@helpers/object-utils';
+import {normalSearchFields} from "@helpers/normal-search-fields";
 
 export class TargetGroup extends SearchableCloneable<TargetGroup> {
   services!: string;
@@ -12,6 +13,10 @@ export class TargetGroup extends SearchableCloneable<TargetGroup> {
 
   // extra properties
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+
+  searchFields: ISearchFieldsMap<TargetGroup> = {
+    ...normalSearchFields(['services', 'targetedGroup'])
+  }
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {

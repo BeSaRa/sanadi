@@ -1184,6 +1184,7 @@ export interface ILanguageKeys {
   headquarter_type: string;
   latitude: string;
   longitude: string;
+  social_media: string;
   social_media_1: string;
   social_media_2: string;
   social_media_3: string;

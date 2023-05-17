@@ -16,6 +16,7 @@ import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable} from 'rxjs';
+import {NPORequestType} from "@enums/service-request-types";
 
 @Component({
   selector: 'founder-members-popup',
@@ -103,4 +104,6 @@ export class FounderMembersPopupComponent extends UiCrudDialogGenericComponent<F
   searchNgSelect(term: string, item: any): boolean {
     return item.ngSelectSearch(term);
   }
+
+    protected readonly NPORequestType = NPORequestType;
 }

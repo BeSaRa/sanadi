@@ -1,16 +1,15 @@
-import { Component } from '@angular/core';
-import { InterventionField } from '@models/intervention-field';
-import { DialogService } from '@services/dialog.service';
-import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { ComponentType } from '@angular/cdk/portal';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { InterventionFieldListPopupComponent } from '../../popups/intervention-field-list-popup/intervention-field-list-popup.component';
+import {Component} from '@angular/core';
+import {InterventionField} from '@models/intervention-field';
+import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
+import {ComponentType} from '@angular/cdk/portal';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {
+  InterventionFieldListPopupComponent
+} from '../../popups/intervention-field-list-popup/intervention-field-list-popup.component';
 
 @Component({
   selector: 'intervention-field-list',
@@ -18,6 +17,12 @@ import { InterventionFieldListPopupComponent } from '../../popups/intervention-f
   styleUrls: ['./intervention-field-list.component.scss']
 })
 export class InterventionFieldListComponent extends UiCrudListGenericComponent<InterventionField> {
+
+  constructor() {
+    super();
+  }
+
+  displayColumns = ['mainOcha', 'subOcha', 'actions'];
   actions: IMenuItem<InterventionField>[] = [
     {
       type: 'action',
@@ -41,25 +46,6 @@ export class InterventionFieldListComponent extends UiCrudListGenericComponent<I
       show: (_item: InterventionField) => this.readonly
     }
   ];
-  displayColumns = ['mainOcha', 'subOcha', 'actions'];
-
-  constructor(public lang: LangService,
-    public toast: ToastService,
-    public dialog: DialogService) {
-    super();
-  }
-  _getNewInstance(override?: Partial<InterventionField> | undefined): InterventionField {
-    return new InterventionField().clone(override ?? {});
-  }
-  _getDialogComponent(): ComponentType<any> {
-    return InterventionFieldListPopupComponent;
-  }
-  _getDeleteConfirmMessage(record: InterventionField): string {
-    return this.lang.map.msg_confirm_delete_selected;
-  }
-  getExtraDataForPopup(): IKeyValue {
-    return {}
-  }
   sortingCallbacks = {
     mainOCha: (a: InterventionField, b: InterventionField, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.mainUNOCHACategoryInfo.getName().toLowerCase(),
@@ -72,4 +58,21 @@ export class InterventionFieldListComponent extends UiCrudListGenericComponent<I
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   }
+
+  _getNewInstance(override?: Partial<InterventionField> | undefined): InterventionField {
+    return new InterventionField().clone(override ?? {});
+  }
+
+  _getDialogComponent(): ComponentType<any> {
+    return InterventionFieldListPopupComponent;
+  }
+
+  _getDeleteConfirmMessage(record: InterventionField): string {
+    return this.lang.map.msg_confirm_delete_x.change({x: record.mainUNOCHACategoryInfo.getName()});
+  }
+
+  getExtraDataForPopup(): IKeyValue {
+    return {}
+  }
+
 }

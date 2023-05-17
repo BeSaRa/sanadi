@@ -1,21 +1,24 @@
-import { ActionIconsEnum } from '@enums/action-icons-enum';
-import { LessonsLearntPopupComponent } from '../../../../popups/lessons-learnt-popup/lessons-learnt-popup.component';
-import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
-import { ComponentType } from '@angular/cdk/portal';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { Component } from '@angular/core';
-import { LessonsLearned } from '@app/models/lessons-learned';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {LessonsLearntPopupComponent} from '../../../../popups/lessons-learnt-popup/lessons-learnt-popup.component';
+import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
+import {ComponentType} from '@angular/cdk/portal';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {Component} from '@angular/core';
+import {LessonsLearned} from '@app/models/lessons-learned';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 
 @Component({
   selector: 'lessons-learnt-list',
   templateUrl: './lessons-learnt-list.component.html',
   styleUrls: ['./lessons-learnt-list.component.scss']
 })
-export class LessonsLearntListComponent extends UiCrudListGenericComponent<LessonsLearned>{
+export class LessonsLearntListComponent extends UiCrudListGenericComponent<LessonsLearned> {
+
+  constructor() {
+    super();
+  }
+
+  displayColumns = ['lessonsLearntListString', 'statement', 'actions'];
   actions: IMenuItem<LessonsLearned>[] = [
     {
       type: 'action',
@@ -40,22 +43,18 @@ export class LessonsLearntListComponent extends UiCrudListGenericComponent<Lesso
     }
   ];
 
-  displayColumns = ['lessonsLearntListString', 'statement', 'actions'];
-
-  constructor(public lang: LangService,
-    public toast: ToastService,
-    public dialog: DialogService) {
-    super();
-  }
   _getNewInstance(override?: Partial<LessonsLearned> | undefined): LessonsLearned {
     return new LessonsLearned().clone(override ?? {});
   }
+
   _getDialogComponent(): ComponentType<any> {
     return LessonsLearntPopupComponent;
   }
+
   _getDeleteConfirmMessage(record: LessonsLearned): string {
     return this.lang.map.msg_confirm_delete_selected
   }
+
   getExtraDataForPopup(): IKeyValue {
     return {}
   }

@@ -7,6 +7,7 @@ export class ManagementCouncilInterceptor implements IModelInterceptor<Managemen
     delete model.searchFields;
     delete model.nationalityInfo;
     delete model.auditOperation;
+    delete model.langService;
     return model;
   }
 

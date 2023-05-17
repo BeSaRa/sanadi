@@ -1,12 +1,11 @@
 import {CustomValidators} from '@app/validators/custom-validators';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
-import { ISearchFieldsMap } from '@app/types/types';
-import { normalSearchFields } from '@app/helpers/normal-search-fields';
-import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
-import { AuditOperationTypes } from '@app/enums/audit-operation-types';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { ControlValueLabelLangKey } from '@app/types/types';
-import { AdminResult } from './admin-result';
+import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import {IAuditModelProperties} from '@app/interfaces/i-audit-model-properties';
+import {AuditOperationTypes} from '@app/enums/audit-operation-types';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {AdminResult} from './admin-result';
 
 export class ProjectComponent extends SearchableCloneable<ProjectComponent> implements IAuditModelProperties<ProjectComponent> {
   componentName!: string;
@@ -22,19 +21,21 @@ export class ProjectComponent extends SearchableCloneable<ProjectComponent> impl
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
           value = '';
         }
-        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
     }
     return adminResultValue ?? new AdminResult();
   }
+
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      componentName:{ langKey: 'component_name', value: this.componentName },
-      details:{ langKey: 'details', value: this.details },
-      totalCost:{ langKey: 'total_cost', value: this.totalCost },
+      componentName: {langKey: 'component_name', value: this.componentName},
+      details: {langKey: 'details', value: this.details},
+      totalCost: {langKey: 'total_cost', value: this.totalCost},
     };
   }
+
   buildForm(control: boolean = false): any {
     const {
       componentName,
@@ -48,7 +49,8 @@ export class ProjectComponent extends SearchableCloneable<ProjectComponent> impl
       totalCost: control ? [totalCost, [CustomValidators.required].concat(CustomValidators.commonValidations.decimalWithMinValue(2), CustomValidators.maxLength(20))] : totalCost
     }
   }
+
   searchFields: ISearchFieldsMap<ProjectComponent> = {
-    ...normalSearchFields(['componentName','details','totalCost'])
+    ...normalSearchFields(['componentName', 'details', 'totalCost'])
   };
 }
