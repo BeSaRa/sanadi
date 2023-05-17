@@ -29,6 +29,7 @@ import {MenuItem} from '@app/models/menu-item';
 import {MenuItemInterceptor} from '@app/model-interceptors/menu-item-interceptor';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {UserTypes} from '@app/enums/user-types.enum';
+import { SystemMenuKeys } from '@app/enums/system-menu-keys.enum';
 
 @CastResponseContainer({
   $default: {
@@ -296,7 +297,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
       enName: customMenu.enName,
       group: 'main',
       isSvg: false,
-      icon: ActionIconsEnum.MENU,
+      icon: customMenu.icon??ActionIconsEnum.MENU,
       path: (hasChildren ? this.dynamicMainMenuUrl : this.dynamicMainMenuDetailsUrl).change({parentId: customMenu.id}),
       customMenu: customMenu,
     }));
@@ -344,6 +345,8 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     });
     childrenList = childrenList.sort((a: CustomMenu, b: CustomMenu) => a.menuOrder - b.menuOrder)
     systemChildrenList = systemChildrenList.sort((a: CustomMenu, b: CustomMenu) => a.menuOrder - b.menuOrder)
+    console.log(systemChildrenList);
+    // console.log(parentList);
 
     // let parentList = customMenuList.filter(item => !item.parentMenuItemId && !item.isDefaultItem());
     // let childrenList = customMenuList.filter(item => !!item.parentMenuItemId && !!item.menuURL && !item.hasDefaultParent())
