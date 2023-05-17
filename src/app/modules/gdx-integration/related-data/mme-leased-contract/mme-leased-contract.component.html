@@ -1,167 +1,148 @@
 <div class="row">
-    <div class="col-12">
-      <app-table #table sortableTable [paginator]="paginator"
-                 [data]="list"
-                 [columns]="displayedColumns"
-                 [filter]="filterControl.value" [useSearchToFilter]="true">
-        <table class="table table-striped table-bordered caption-top" cdk-table
-               [dataSource]="table.dataSource">
-          <ng-container cdkColumnDef="extra-header">
-            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-              <table-header tableTitle="leased_contract_lbl" [headerClass]="'bg-secondary'"
-                            [sort]="table.dataSource.sort"
-                            (textChange)="filterControl.setValue($event)">
-              </table-header>
-            </th>
-          </ng-container>
-          
-          <ng-container cdkColumnDef="certificateCode">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.certificate_code_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.certificateCode}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="noAtarizationNo">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.no_atarization_no_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.noAtarizationNo}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="noAtarizationDate">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.no_atarization_date_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.noAtarizationDate}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="noAtarizationFromDate">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.no_atarization_from_date_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.noAtarizationFromDate}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="noAtarizationToDate">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.no_atarization_to_date_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.noAtarizationToDate}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="rentPurpose">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.rent_purpose_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.rentPurpose}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="contractSignDate">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-            [sortCallback]="sortingCallbacks.contractSignDate"
-                > {{lang.map.contract_sign_date_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.contractSignDate}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="contractFromDate">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-            [sortCallback]="sortingCallbacks.contractFromDate"
-                > {{lang.map.contract_from_date_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.contractFromDateString}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="contractToDate">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-            [sortCallback]="sortingCallbacks.contractToDate"
-                > {{lang.map.contract_to_date_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.contractToDateString}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="propertyDeedNo">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.property_deed_no_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.propertyDeedNo}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="pinNO">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.pin_no_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.pinNO}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="propertyType">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.property_type_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.propertyType}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="area">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.area_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.area}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="electricityNo">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.electricity_no_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.electricityNo}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="waterNo">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.water_no_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.waterNo}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="municipality">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.municipality_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.municipality}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="zoneNo">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.zone_no_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.zoneNo}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="streetNo">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.street_no_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.streetNo}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="buildingNo">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.building_no_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.buildingNo}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="floorNo">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.floor_no_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.floorNo}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="flatNo">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.flat_no_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.flatNo}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="addressText">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.address_text_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.addressText}}</span></td>
-          </ng-container>
+  <div class="col-12">
+    <app-table #table sortableTable [paginator]="paginator"
+               [data]="list"
+               [columns]="displayedColumns"
+               [filter]="filterControl.value" [useSearchToFilter]="true">
+      <table class="table table-striped table-bordered caption-top" cdk-table
+             [dataSource]="table.dataSource">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="leased_contract_lbl" [headerClass]="'bg-secondary'"
+                          [sort]="table.dataSource.sort"
+                          (textChange)="filterControl.setValue($event)">
+            </table-header>
+          </th>
+        </ng-container>
 
-          <ng-container cdkColumnDef="tenantType">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.tenant_type_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.tenantType}}</span></td>
-          </ng-container>
+        <ng-container cdkColumnDef="certificateCode">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.certificate_code_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.certificateCode}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="noAtarizationNo">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.no_atarization_no_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.noAtarizationNo}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="noAtarizationDate">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.no_atarization_date_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.noAtarizationDate}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="noAtarizationFromDate">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.no_atarization_from_date_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.noAtarizationFromDate}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="noAtarizationToDate">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.no_atarization_to_date_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.noAtarizationToDate}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="rentPurpose">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.rent_purpose_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.rentPurpose}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="contractSignDate">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.contractSignDate"> {{lang.map.contract_sign_date_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.contractSignDate}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="contractFromDate">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.contractFromDate"> {{lang.map.contract_from_date_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.contractFromDateString}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="contractToDate">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.contractToDate"> {{lang.map.contract_to_date_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.contractToDateString}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="propertyDeedNo">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.property_deed_no_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.propertyDeedNo}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="pinNO">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.pin_no_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.pinNO}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="propertyType">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.property_type_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.propertyType}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="area">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.area_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.area}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="electricityNo">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.electricity_no_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.electricityNo}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="waterNo">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.water_no_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.waterNo}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="municipality">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.municipality_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.municipality}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="zoneNo">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.zone_no_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.zoneNo}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="streetNo">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.street_no_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.streetNo}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="buildingNo">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.building_no_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.buildingNo}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="floorNo">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.floor_no_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.floorNo}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="flatNo">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.flat_no_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.flatNo}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="addressText">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.address_text_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.addressText}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="tenantType">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.tenant_type_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.tenantType}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="tenantArName">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.tenant_name_arabic_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.tenantArName}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="tenantEnName">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.tenant_name_english_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.tenantEnName}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="rentPaymentAmount">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.rent_payment_amount}}</th>
+          <td cdk-cell *cdkCellDef="let row">
+            <span>{{(row.rentPaymentAmount ?? 0) | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="rentPaymentDueDay">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.rent_payment_due_day}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.rentPaymentDueDay}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="rentPaymentDueMonth">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.rent_payment_due_month}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.rentPaymentDueMonth}}</span></td>
+        </ng-container>
 
-          <ng-container cdkColumnDef="tenantArName">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.tenant_name_arabic_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.tenantArName}}</span></td>
-          </ng-container>
-
-          <ng-container cdkColumnDef="tenantEnName">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header 
-                > {{lang.map.tenant_name_english_lbl}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.tenantEnName}}</span></td>
-          </ng-container>
-
-
-
-          <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
-          <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
-          <tr cdk-row *cdkRowDef="let row; columns: table.columns;"
-              (contextmenu)="menu.open($event , row)"
-              ></tr>
-          <tr *cdkNoDataRow>
-            <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-          </tr>
-        </table>
-        <app-paginator #paginator></app-paginator>
-      </app-table>
-      <context-menu-item #menu
-                         [actions]="actions"></context-menu-item>
-    </div>
+        <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+        <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
+        <tr *cdkNoDataRow>
+          <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+        </tr>
+      </table>
+      <app-paginator #paginator></app-paginator>
+    </app-table>
+    <context-menu-item #menu
+                       [actions]="actions"></context-menu-item>
   </div>
-  
+</div>

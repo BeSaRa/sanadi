@@ -6,6 +6,7 @@ import { SortEvent } from '@app/interfaces/sort-event';
 import { GdxMmeResponse } from '@app/models/gdx-mme-leased-contract';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { LangService } from '@app/services/lang.service';
+import {CustomValidators} from "@app/validators/custom-validators";
 
 @Component({
   selector: 'mme-leased-contract',
@@ -17,8 +18,9 @@ export class MmeLeasedContractComponent {
 
   constructor(public lang: LangService) {
   }
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
   headerColumn: string[] = ['extra-header'];
-  
+
   displayedColumns: string[] = [// 'zoneNo',// 'streetNo',// 'buildingNo',// 'floorNo',// 'flatNo',// 'addressText',// 'area',// 'electricityNo',// 'waterNo',// 'pinNO',// 'certificateCode',// 'noAtarizationNo',// 'noAtarizationDate',// 'noAtarizationFromDate',// 'noAtarizationToDate',// 'rentPurpose',
     'contractSignDate',
     'contractFromDate',
@@ -28,7 +30,10 @@ export class MmeLeasedContractComponent {
     'municipality',
     'tenantType',
     'tenantArName',
-    'tenantEnName'
+    'tenantEnName',
+    'rentPaymentAmount',
+    'rentPaymentDueDay',
+    'rentPaymentDueMonth'
   ];
   sortingCallbacks = {
     contractFromDate: (a: GdxMmeResponse, b: GdxMmeResponse, dir: SortEvent): number => {
@@ -46,6 +51,6 @@ export class MmeLeasedContractComponent {
   };
 
   filterControl: UntypedFormControl = new UntypedFormControl('');
-  
+
   actions: IMenuItem<GdxMmeResponse>[] = [];
 }

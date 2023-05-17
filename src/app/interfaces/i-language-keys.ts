@@ -1959,5 +1959,7 @@ export interface ILanguageKeys {
   systemMenus:string;
   msg_last_in_teams:string;
   out_of_office:string;
-
+  rent_payment_amount: string;
+  rent_payment_due_day: string;
+  rent_payment_due_month: string;
 }
