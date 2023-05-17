@@ -156,7 +156,7 @@ export class IntegrationInquiriesComponent {
       name: 'sjc',
       index: 9,
       langKey: 'integration_sjc',
-      show: () => false,
+      show: () => true,
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       serviceId: GdxServicesEnum.SJC,
