@@ -325,7 +325,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     let parentList:CustomMenu[] = [];
     let childrenList:CustomMenu[] = [];
     let systemChildrenList:CustomMenu[] = [];
-    const systemMenu = customMenuList.find(x=>x.isSystem)!;
+    // const systemMenu = customMenuList.find(x=>x.isSystem)!;
 
     customMenuList.forEach((item:CustomMenu)=>{
       if(!item.parentMenuItemId && !item.isDefaultItem()){
@@ -333,11 +333,11 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
         return;
       }
       if(!!item.parentMenuItemId && !!item.menuURL){
-        if(!item.hasDefaultParent(systemMenu)){
+        if(!item.systemMenuKey){
           childrenList.push(item);
           return;
         }
-        if(item.hasDefaultParent(systemMenu)){
+        if(!!item.systemMenuKey){
           systemChildrenList.push(item);
           return;
         }
