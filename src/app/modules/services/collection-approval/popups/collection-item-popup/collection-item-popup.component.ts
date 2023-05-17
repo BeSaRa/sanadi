@@ -179,10 +179,10 @@ export class CollectionItemPopupComponent implements OnInit, OnDestroy {
   }
   isInvalidForm():boolean{
 
-    if(!!this.buildingPlate){
-      return this.buildingPlate.form.invalid || this.form.invalid;
+    if(!this.buildingPlate){
+      return true;
     }
-    return this.form.invalid
+    return this.buildingPlate.form.invalid || this.form.invalid || !this.item.latitude || !this.item.longitude;
   }
   ngOnDestroy(): void {
     this.destroy$.next();
