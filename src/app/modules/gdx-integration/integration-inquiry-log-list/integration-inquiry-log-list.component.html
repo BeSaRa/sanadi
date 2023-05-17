@@ -20,10 +20,10 @@
             </div>
           </td>
         </ng-container>
-        <ng-container cdkColumnDef="sheepStatus">
-          <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{this.lang.map.izzab_status}}</th>
+        <ng-container cdkColumnDef="izzabEstateStatus">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{this.lang.map.izzab_estate}}</th>
           <td cdk-cell *cdkCellDef="let row">
-            <span>{{izzabHasSheep(row) ? this.lang.map.izzab_has_sheep : this.lang.map.izzab_has_no_sheep}}</span>
+            <span>{{izzabHasEstate(row) ? this.lang.map.izzab_has_estate : this.lang.map.izzab_has_no_estate}}</span>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="organization">

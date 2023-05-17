@@ -58,7 +58,7 @@ export class IntegrationInquiryLogListComponent {
 
   get displayedColumns(): string[] {
     if (this.gdxServiceId === GdxServicesEnum.IZZAB) {
-      return ['workItemStatus', 'sheepStatus', 'organization', 'user', 'actionTime'];
+      return ['workItemStatus', 'izzabEstateStatus', 'organization', 'user', 'actionTime'];
     }
     return this._displayedColumns;
   }
@@ -205,7 +205,7 @@ export class IntegrationInquiryLogListComponent {
       });
   }
 
-  izzabHasSheep(record: GdxServiceLog): boolean {
+  izzabHasEstate(record: GdxServiceLog): boolean {
     return this.gdxServiceId === GdxServicesEnum.IZZAB && record.gdxServiceResponseParsed.hasIzzab;
   }
 }
