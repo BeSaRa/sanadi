@@ -233,18 +233,18 @@ export class CharityOrganizationUpdateComponent
 
   private _buildContactInformationInputs() {
     this.contactInformationInputs = [
-      {type: 'text', controlName: 'phone', label: this.lang.map.lbl_phone},
-      {type: 'text', controlName: 'email', label: this.lang.map.lbl_email},
-      {type: 'text', controlName: 'website', label: this.lang.map.website},
-      {type: 'text', controlName: 'zoneNumber', label: this.lang.map.lbl_zone},
-      {type: 'text', controlName: 'streetNumber', label: this.lang.map.lbl_street},
-      {type: 'text', controlName: 'buildingNumber', label: this.lang.map.building_number},
-      {type: 'text', controlName: 'address', label: this.lang.map.lbl_address},
-      {type: 'text', controlName: 'facebook', label: this.lang.map.facebook},
-      {type: 'text', controlName: 'twitter', label: this.lang.map.twitter},
-      {type: 'text', controlName: 'instagram', label: this.lang.map.instagram},
-      {type: 'text', controlName: 'youTube', label: this.lang.map.youtube},
-      {type: 'text', controlName: 'snapChat', label: this.lang.map.snapchat},
+      {type: 'text', controlName: 'phone', langKey: 'lbl_phone'},
+      {type: 'text', controlName: 'email', langKey: 'lbl_email'},
+      {type: 'text', controlName: 'website', langKey: 'website'},
+      {type: 'text', controlName: 'zoneNumber', langKey: 'lbl_zone'},
+      {type: 'text', controlName: 'streetNumber', langKey: 'lbl_street'},
+      {type: 'text', controlName: 'buildingNumber', langKey: 'building_number'},
+      {type: 'text', controlName: 'address', langKey: 'lbl_address'},
+      {type: 'text', controlName: 'facebook', langKey: 'facebook'},
+      {type: 'text', controlName: 'twitter', langKey: 'twitter'},
+      {type: 'text', controlName: 'instagram', langKey: 'instagram'},
+      {type: 'text', controlName: 'youTube', langKey: 'youtube'},
+      {type: 'text', controlName: 'snapChat', langKey: 'snapchat'},
     ];
   }
 

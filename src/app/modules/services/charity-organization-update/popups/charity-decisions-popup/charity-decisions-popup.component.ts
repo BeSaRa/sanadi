@@ -11,6 +11,7 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { CharityDecision } from '@app/models/charity-decision';
 import { DatepickerOptionsMap } from '@app/types/types';
+import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'app-charity-decisions-popup',
@@ -29,6 +30,7 @@ export class CharityDecisionsPopupComponent implements OnInit {
   model: CharityDecision;
   controls: ControlWrapper[] = [];
   pageTitle: keyof ILanguageKeys;
+  hideFullScreen = true;
   inside: boolean;
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
@@ -57,22 +59,22 @@ export class CharityDecisionsPopupComponent implements OnInit {
     this.controls = [
       {
         controlName: 'referenceNumber',
-        label: this.lang.map.decision_reference_number,
+        langKey: 'decision_reference_number',
         type: 'text',
       },
       {
         controlName: 'generalDate',
-        label: this.lang.map.date,
+        langKey: 'date',
         type: 'date',
       },
       {
         controlName: 'subject',
-        label: this.lang.map.subject,
+        langKey: 'subject',
         type: 'text',
       },
       {
         controlName: 'category',
-        label: this.lang.map.decision_category,
+        langKey: 'decision_category',
         type: 'dropdown',
         dropdownValue: 'id',
         load$: this.inside
@@ -86,7 +88,7 @@ export class CharityDecisionsPopupComponent implements OnInit {
     if (!this.inside) {
       this.controls.push({
         controlName: 'organization',
-        label: this.lang.map.issuer,
+        langKey: 'issuer',
         type: 'text'
       });
     }
@@ -103,10 +105,12 @@ export class CharityDecisionsPopupComponent implements OnInit {
 
     return model;
   }
-  cancel() {
-    this.dialogRef.close(null)
-  }
+
   save() {
     this.dialogRef.close(this.mapFormTo(this.form.getRawValue()))
+  }
+
+  displayFormValidity(form?: UntypedFormGroup | null, element?: HTMLElement | string): void {
+    CommonUtils.displayFormValidity((form || this.form), element);
   }
 }

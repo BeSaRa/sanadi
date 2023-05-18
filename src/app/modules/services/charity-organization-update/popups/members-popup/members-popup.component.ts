@@ -10,6 +10,7 @@ import { LangService } from '@app/services/lang.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { DatepickerOptionsMap } from '@app/types/types';
+import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'app-members-popup',
@@ -21,6 +22,7 @@ export class MembersPopupComponent implements OnInit {
   form: UntypedFormGroup;
   readonly: boolean;
   hideSave: boolean;
+  hideFullScreen = false;
   editRecordIndex: number;
   extended: boolean;
   pageTitle!: keyof ILanguageKeys;
@@ -58,17 +60,17 @@ export class MembersPopupComponent implements OnInit {
       this.controls.push(
         {
           controlName: 'email',
-          label: this.lang.map.email_for_working_authority,
+          langKey: 'email_for_working_authority',
           type: 'text',
         },
         {
           controlName: 'phone',
-          label: this.lang.map.phone_for_working_authority,
+          langKey: 'phone_for_working_authority',
           type: 'text',
         },
         {
           controlName: 'joinDate',
-          label: this.lang.map.job_title_occupied_date,
+          langKey: 'job_title_occupied_date',
           type: 'date',
         }
       );
@@ -76,7 +78,7 @@ export class MembersPopupComponent implements OnInit {
       this.controls.push(
         {
           controlName: 'joinDate',
-          label: this.lang.map.first_join_date,
+          langKey: 'first_join_date',
           type: 'date',
         }
       );
@@ -87,17 +89,17 @@ export class MembersPopupComponent implements OnInit {
     return [
       {
         controlName: 'fullName',
-        label: this.lang.map.full_name,
+        langKey: 'full_name',
         type: 'text',
       },
       {
         controlName: 'identificationNumber',
-        label: this.lang.map.personal_number,
+        langKey: 'personal_number',
         type: 'text',
       },
       {
         controlName: 'jobTitleId',
-        label: this.lang.map.job_title,
+        langKey: 'job_title',
         load: this.jobTitles,
         dropdownValue: 'id',
         type: 'dropdown',
@@ -116,13 +118,15 @@ export class MembersPopupComponent implements OnInit {
     (member.joinDate && (member.joinDate = DateUtils.getDateStringFromDate(form.joinDate)));
     return member;
   }
-  cancel() {
-    this.dialogRef.close(null)
-  }
+
   save() {
     this.dialogRef.close(
       this.mapFormToMember(
         this.form.getRawValue()
       ))
+  }
+
+  displayFormValidity(form?: UntypedFormGroup | null, element?: HTMLElement | string): void {
+    CommonUtils.displayFormValidity((form || this.form), element);
   }
 }

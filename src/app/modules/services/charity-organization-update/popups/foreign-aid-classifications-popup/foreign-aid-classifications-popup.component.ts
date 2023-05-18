@@ -19,6 +19,7 @@ import { DacOchaService } from '@app/services/dac-ocha.service';
 import { AidLookupStatusEnum } from '@app/enums/status.enum';
 import { AdminResult } from '@app/models/admin-result';
 import { LookupService } from '@app/services/lookup.service';
+import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'app-foreign-aid-classifications-popup',
@@ -36,6 +37,7 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
   byParent: AdminLookup[] = [];
   domains = this.lookupService.listByCategory.Domain;
   mainDacCategories?: AdminLookup[] = [];
+  hideFullScreen = false;
 
   handleGovernanceDomainChange = (id: number | string) => {
     let fg: any = {};
@@ -47,7 +49,7 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
       controls = [{
         controlName: 'aidClassification',
         type: 'dropdown',
-        label: this.lang.map.menu_aid_class,
+        langKey: 'menu_aid_class',
         load$: this.aidClassifications$,
         dropdownValue: 'id',
         dropdownOptionDisabled: (optionItem: AidLookup) => {
@@ -101,7 +103,7 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
       controlName: 'domain',
       type: 'dropdown',
       load: this.domains,
-      label: this.lang.map.domain,
+      langKey: 'domain',
       dropdownValue: 'lookupKey',
       onChange: this.handleGovernanceDomainChange,
       dropdownOptionDisabled: (optionItem: Lookup) => {
@@ -125,7 +127,7 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
       controlName: 'mainDACCategory',
       type: 'dropdown',
       load$: this.mainDacCategories$,
-      label: this.lang.map.classification_of_DAC,
+      langKey: 'classification_of_DAC',
       dropdownValue: 'id',
       onChange: this.handleOCHAOrDAC,
       dropdownOptionDisabled: (optionItem: AdminLookup) => {
@@ -136,7 +138,7 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
       controlName: 'subDACCategory',
       type: 'dropdown',
       load$: of([]),
-      label: this.lang.map.DAC_subclassification,
+      langKey: 'DAC_subclassification',
       dropdownValue: 'id',
       dropdownOptionDisabled: (optionItem: AdminLookup) => {
         return !optionItem.isActive();
@@ -148,7 +150,7 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
       controlName: 'mainUNOCHACategory',
       type: 'dropdown',
       load$: this.mainOchaCategories$,
-      label: this.lang.map.OCHA_main_classification,
+      langKey: 'OCHA_main_classification',
       dropdownValue: 'id',
       onChange: this.handleOCHAOrDAC,
       dropdownOptionDisabled: (optionItem: AdminLookup) => {
@@ -159,7 +161,7 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
       controlName: 'subUNOCHACategory',
       type: 'dropdown',
       load$: of([]),
-      label: this.lang.map.OCHA_subclassification,
+      langKey: 'OCHA_subclassification',
       dropdownValue: 'id',
       dropdownOptionDisabled: (optionItem: AdminLookup) => {
         return !optionItem.isActive();
@@ -196,7 +198,7 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
       {
         controlName: 'aidClassification',
         type: 'dropdown',
-        label: this.lang.map.menu_aid_class,
+        langKey: 'menu_aid_class',
         load$: this.aidClassifications$,
         dropdownValue: 'id',
         dropdownOptionDisabled: (optionItem: AidLookup) => {
@@ -212,7 +214,7 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
       this.controls.push({
         controlName: 'aidClassification',
         type: 'dropdown',
-        label: this.lang.map.menu_aid_class,
+        langKey: 'menu_aid_class',
         load$: this.aidClassifications$,
         dropdownValue: 'id',
         dropdownOptionDisabled: (optionItem: AidLookup) => {
@@ -246,10 +248,12 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
     model.charityWorkArea = this.charityWorkArea;
     return model;
   }
-  cancel() {
-    this.dialogRef.close(null)
-  }
+
   save() {
     this.dialogRef.close(this.mapFormTo(this.form.getRawValue()))
+  }
+
+  displayFormValidity(form?: UntypedFormGroup | null, element?: HTMLElement | string): void {
+    CommonUtils.displayFormValidity((form || this.form), element);
   }
 }

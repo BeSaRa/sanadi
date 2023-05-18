@@ -1,7 +1,7 @@
 <div class="row">
   <form autocomplete="off" [formGroup]="form" id="form">
     <tabs-list [accordionView]="accordionView" [hasForm]="true">
-      <ng-container  *ngIf="tabs.length > 0">
+      <ng-container *ngIf="tabs.length > 0">
         <tab
           *ngFor="let tab of tabs; let i = index"
           [name]="tab.name"
@@ -309,29 +309,20 @@
       </div>
     </ng-template>
     <ng-template #tabContent>
-      <div class="row" formGroupName="contactInformation">
-        <div
-          *ngFor="let input of contactInformationInputs"
-          class="col-sm-6 col-md-4 mb-4 position-relative"
-        >
-          <label
-            [asteriskIfRequired]="input.controlName"
-            [for]="input.controlName"
-            class="form-label"
-            [validationClasses]="input.controlName"
-          >{{ input.label }}</label
-          >
-          <input
-            type="text"
-            [readonly]="readonly"
-            class="form-control"
-            [id]="input.controlName"
-            [formControlName]="input.controlName"
-          />
-
-          <app-field-error-message
-            [controlName]="input.controlName"
-          ></app-field-error-message>
+      <div formGroupName="contactInformation">
+        <div class="row">
+          <ng-container *ngFor="let control of contactInformationInputs" [ngSwitch]="control.type">
+            <div *ngIf="!control.hide"
+                 class="{{control.gridClass ? control.gridClass : 'col-sm-12 col-md-4'}} mb-4 position-relative">
+              <ng-container *ngSwitchCase="'text'">
+                <label [asteriskIfRequired]="control.controlName" [for]="control.controlName"
+                       class="form-label">{{ lang.map[control.langKey] }}</label>
+                <input type="text" [readonly]="readonly" class="form-control" [id]="control.controlName"
+                       [formControlName]="control.controlName" [validationClasses]="control.controlName" trimInput/>
+                <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
+              </ng-container>
+            </div>
+          </ng-container>
         </div>
       </div>
     </ng-template>
@@ -364,7 +355,8 @@
     <ng-template #tabContent>
       <div class="row">
         <div class="col-12">
-          <external-office-list [externalOffices$]="externalOffices$" [externalOfficesColumns]="externalOfficesColumns"></external-office-list>
+          <external-office-list [externalOffices$]="externalOffices$"
+                                [externalOfficesColumns]="externalOfficesColumns"></external-office-list>
         </div>
       </div>
     </ng-template>
@@ -666,7 +658,7 @@
                   {{ row.internalMembersDTO.length }}
                 </td>
               </ng-container>
-              <tr cdk-header-row *cdkHeaderRowDef="organizationMeetingsColumns"  class="table-row-header"></tr>
+              <tr cdk-header-row *cdkHeaderRowDef="organizationMeetingsColumns" class="table-row-header"></tr>
               <tr
                 cdk-row
                 *cdkRowDef="let row; columns: organizationMeetingsColumns"
@@ -771,9 +763,9 @@
     </ng-template>
     <ng-template #tabContent>
       <attachments [model]="model"
-        [caseId]="model?.id" [formProperties]="formProperties"
-        [caseType]="model?.caseType"
-        [service]="service.documentService"
+                   [caseId]="model?.id" [formProperties]="formProperties"
+                   [caseType]="model?.caseType"
+                   [service]="service.documentService"
       ></attachments>
     </ng-template>
   </form>

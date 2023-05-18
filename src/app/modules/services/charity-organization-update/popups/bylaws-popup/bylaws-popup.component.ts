@@ -1,17 +1,18 @@
-import { LangService } from '@services/lang.service';
-import { Component, Inject, OnInit } from '@angular/core';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
-import { AdminLookupService } from '@app/services/admin-lookup.service';
-import { share } from 'rxjs/operators';
-import { AdminLookup } from '@app/models/admin-lookup';
-import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
-import { DateUtils } from '@app/helpers/date-utils';
-import { DatepickerOptionsMap } from '@app/types/types';
-import { Bylaw } from '@app/models/bylaw';
-import { UntypedFormGroup } from '@angular/forms';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { AdminResult } from '@app/models/admin-result';
+import {LangService} from '@services/lang.service';
+import {Component, Inject, OnInit} from '@angular/core';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {AdminLookupService} from '@app/services/admin-lookup.service';
+import {share} from 'rxjs/operators';
+import {AdminLookup} from '@app/models/admin-lookup';
+import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
+import {DateUtils} from '@app/helpers/date-utils';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {Bylaw} from '@app/models/bylaw';
+import {UntypedFormGroup} from '@angular/forms';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {AdminResult} from '@app/models/admin-result';
+import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'app-bylaws-popup',
@@ -20,17 +21,19 @@ import { AdminResult } from '@app/models/admin-result';
 })
 export class BylawsPopupComponent implements OnInit {
   datepickerOptionsMap: DatepickerOptionsMap = {
-    firstReleaseDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' })
+    firstReleaseDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
+    lastUpdateDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'})
   };
   classifications!: AdminLookup[];
   controls: ControlWrapper[] = [];
+  hideFullScreen = true;
 
   form: UntypedFormGroup;
   readonly: boolean;
   hideSave: boolean;
   editRecordIndex: number;
   model: Bylaw;
+
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
@@ -58,22 +61,22 @@ export class BylawsPopupComponent implements OnInit {
         this.controls = [
           {
             controlName: 'fullName',
-            label: this.lang.map.bylaw_name,
+            langKey: 'bylaw_name',
             type: 'text'
           },
           {
             controlName: 'firstReleaseDate',
-            label: this.lang.map.first_realase_date,
+            langKey: 'first_realase_date',
             type: 'date'
           },
           {
             controlName: 'lastUpdateDate',
-            label: this.lang.map.date_of_last_update,
+            langKey: 'date_of_last_update',
             type: 'date'
           },
           {
             controlName: 'category',
-            label: this.lang.map.classification,
+            langKey: 'classification',
             type: 'dropdown',
             load: result,
             dropdownValue: 'id',
@@ -81,15 +84,15 @@ export class BylawsPopupComponent implements OnInit {
               return !optionItem.isActive();
             }
           }
-
         ];
       });
 
-    const row = { ...this.model };
+    const row = {...this.model};
     row.firstReleaseDate = DateUtils.changeDateToDatepicker(row.firstReleaseDate);
     row.lastUpdateDate = DateUtils.changeDateToDatepicker(row.lastUpdateDate);
     this.form.patchValue(row);
   }
+
   mapFormTo(form: any): Bylaw {
     const model: Bylaw = new Bylaw().clone(form);
     model.lastUpdateDate = DateUtils.getDateStringFromDate(form.lastUpdateDate);
@@ -99,10 +102,12 @@ export class BylawsPopupComponent implements OnInit {
     }));
     return model;
   }
-  cancel() {
-    this.dialogRef.close(null)
-  }
+
   save() {
     this.dialogRef.close(this.mapFormTo(this.form.getRawValue()))
+  }
+
+  displayFormValidity(form?: UntypedFormGroup | null, element?: HTMLElement | string): void {
+    CommonUtils.displayFormValidity((form || this.form), element);
   }
 }

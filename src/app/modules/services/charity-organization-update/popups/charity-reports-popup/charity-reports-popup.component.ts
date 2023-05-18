@@ -1,19 +1,20 @@
-import { LangService } from '@services/lang.service';
-import { Component, Inject, OnInit } from '@angular/core';
-import { DateUtils } from '@app/helpers/date-utils';
-import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
-import { DatepickerOptionsMap } from '@app/types/types';
-import { Lookup } from '@app/models/lookup';
-import { LookupService } from '@app/services/lookup.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { CharityReport } from '@app/models/charity-report';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
-import { AdminLookup } from '@app/models/admin-lookup';
-import { AdminResult } from '@app/models/admin-result';
-import { AdminLookupService } from '@app/services/admin-lookup.service';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import {LangService} from '@services/lang.service';
+import {Component, Inject, OnInit} from '@angular/core';
+import {DateUtils} from '@app/helpers/date-utils';
+import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {Lookup} from '@app/models/lookup';
+import {LookupService} from '@app/services/lookup.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {CharityReport} from '@app/models/charity-report';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {AdminLookup} from '@app/models/admin-lookup';
+import {AdminResult} from '@app/models/admin-result';
+import {AdminLookupService} from '@app/services/admin-lookup.service';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'app-charity-reports-popup',
@@ -21,7 +22,7 @@ import { ILanguageKeys } from '@app/interfaces/i-language-keys';
   styleUrls: ['./charity-reports-popup.component.scss']
 })
 export class CharityReportsPopupComponent implements OnInit {
-
+  hideFullScreen = false;
   datepickerOptionsMap: DatepickerOptionsMap = {
     generalDate: DateUtils.getDatepickerOptions({
       disablePeriod: 'none',
@@ -31,22 +32,22 @@ export class CharityReportsPopupComponent implements OnInit {
     {
       controlName: 'fullName',
       type: 'text',
-      label: this.lang.map.report_title,
+      langKey: 'report_title'
     },
     {
       controlName: 'generalDate',
       type: 'date',
-      label: this.lang.map.report_date,
+      langKey: 'report_date'
     },
     {
       controlName: 'feedback',
       type: 'text',
-      label: this.lang.map.feedback,
+      langKey: 'feedback'
     },
     {
       controlName: 'reportStatus',
       type: 'dropdown',
-      label: this.lang.map.status,
+      langKey: 'status',
       load: this.lookupService.listByCategory.CharityReportStatus,
       dropdownValue: 'lookupKey',
       dropdownOptionDisabled: (optionItem: Lookup) => {
@@ -60,6 +61,7 @@ export class CharityReportsPopupComponent implements OnInit {
   editRecordIndex: number;
   model: CharityReport;
   pageTitle: keyof ILanguageKeys;
+
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
@@ -91,7 +93,7 @@ export class CharityReportsPopupComponent implements OnInit {
       this.controls.push(
         {
           controlName: 'riskType',
-          label: this.lang.map.risk_type,
+          langKey: 'risk_type',
           type: 'dropdown',
           load$: this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.RISK_TYPE),
           dropdownValue: 'id',
@@ -102,11 +104,11 @@ export class CharityReportsPopupComponent implements OnInit {
         {
           controlName: 'riskMitigationMeasures',
           type: 'text',
-          label: this.lang.map.risk_mitigation_measures,
+          langKey: 'risk_mitigation_measures',
         },
         {
           controlName: 'category',
-          label: this.lang.map.classification,
+          langKey: 'classification',
           type: 'dropdown',
           load$: this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.RISK_CLASSIFICATION),
           dropdownValue: 'id',
@@ -118,7 +120,7 @@ export class CharityReportsPopupComponent implements OnInit {
     } else if (this.pageTitle === 'coordination_and_support_reports') {
       this.controls.push({
           controlName: 'category',
-          label: this.lang.map.classification,
+          langKey: 'classification',
           type: 'dropdown',
           load$: this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION),
           dropdownValue: 'id',
@@ -129,12 +131,12 @@ export class CharityReportsPopupComponent implements OnInit {
         {
           controlName: 'subject',
           type: 'text',
-          label: this.lang.map.report_subject,
+          langKey: 'report_subject',
         },
         {
           controlName: 'procedures',
           type: 'text',
-          label: this.lang.map.procedures
+          langKey: 'procedures',
         }
       );
     } else {
@@ -142,11 +144,12 @@ export class CharityReportsPopupComponent implements OnInit {
       this.controls.push({
         controlName: 'subject',
         type: 'text',
-        label: this.lang.map.report_subject,
-      }, {
+        langKey: 'report_subject',
+      },
+        {
         controlName: 'procedures',
         type: 'text',
-        label: this.lang.map.procedures
+        langKey: 'procedures',
       });
     }
     this.form.patchValue({
@@ -154,6 +157,7 @@ export class CharityReportsPopupComponent implements OnInit {
       generalDate: DateUtils.changeDateToDatepicker(this.model.generalDate),
     });
   }
+
   mapFormTo(form: any): CharityReport {
     const model: CharityReport = new CharityReport().clone(form);
     model.reportStatusInfo = AdminResult.createInstance({...this.lookupService.listByCategory.CharityReportStatus.find(e => e.lookupKey === model.reportStatus)});
@@ -161,11 +165,13 @@ export class CharityReportsPopupComponent implements OnInit {
 
     return model;
   }
-  cancel() {
-    this.dialogRef.close(null)
-  }
+
   save() {
     this.dialogRef.close(this.mapFormTo(this.form.getRawValue()))
+  }
+
+  displayFormValidity(form?: UntypedFormGroup | null, element?: HTMLElement | string): void {
+    CommonUtils.displayFormValidity((form || this.form), element);
   }
 
 }

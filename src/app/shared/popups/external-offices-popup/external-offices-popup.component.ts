@@ -1,4 +1,4 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, UntypedFormGroup} from '@angular/forms';
 import {ControlWrapper} from '@contracts/i-control-wrapper';
 import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
@@ -14,10 +14,11 @@ import {Country} from '@app/models/country';
 })
 export class ExternalOfficesPopupComponent implements OnInit {
   readonly = true;
+  hideFullScreen = false;
   controls: ControlWrapper[] = [
     {
       controlName: 'country',
-      label: this.lang.map.country,
+      langKey: 'country',
       type: 'dropdown',
       load$: this.countryService.loadAsLookups(),
       dropdownValue: 'id',
@@ -25,27 +26,43 @@ export class ExternalOfficesPopupComponent implements OnInit {
         return !optionItem.isActive();
       }
     },
-    {controlName: 'region', label: this.lang.map.region, type: 'text'},
+    {
+      controlName: 'region',
+      langKey: 'region',
+      type: 'text'
+    },
     {
       controlName: 'recordNo',
-      label: this.lang.map.record_number,
+      langKey: 'record_number',
       type: 'text',
     },
-    {controlName: 'fax', label: this.lang.map.fax_number, type: 'text'},
-    {controlName: 'email', label: this.lang.map.lbl_email, type: 'text'},
+    {
+      controlName: 'fax',
+      langKey: 'fax_number',
+      type: 'text'
+    },
+    {
+      controlName: 'email',
+      langKey: 'lbl_email',
+      type: 'text'
+    },
     {
       controlName: 'postalCode',
-      label: this.lang.map.postal_code,
+      langKey: 'postal_code',
       type: 'text',
     },
-    {controlName: 'phone', label: this.lang.map.lbl_phone, type: 'text'},
+    {
+      controlName: 'phone',
+      langKey: 'lbl_phone',
+      type: 'text'
+    },
   ];
   form!: UntypedFormGroup;
 
-  constructor(public lang: LangService, private fb: FormBuilder, private countryService: CountryService,
-              @Inject(DIALOG_DATA_TOKEN) public data: FinalExternalOfficeApprovalResult
-  ) {
-    console.log(data);
+  constructor(public lang: LangService,
+              private fb: FormBuilder,
+              private countryService: CountryService,
+              @Inject(DIALOG_DATA_TOKEN) public data: FinalExternalOfficeApprovalResult) {
   }
 
   ngOnInit(): void {

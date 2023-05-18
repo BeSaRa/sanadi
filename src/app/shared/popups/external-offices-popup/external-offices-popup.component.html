@@ -1,81 +1,50 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
   <h1 class="h6 text-white">{{ data.externalOfficeName }}</h1>
-  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+  <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
+  </div>
 </div>
-<div class="dialog-content w800px">
-  <form class="row" [formGroup]="form">
-    <div
-      *ngFor="let control of controls"
-      class="col-sm-6 col-md-4 mb-4 position-relative"
-      [ngSwitch]="control.type"
-    >
-      <ng-container *ngSwitchCase="'dropdown'">
-        <div>
-          <label [asteriskIfRequired]="control.controlName" [for]="control.controlName"
-            class="form-label"
-          >{{ control.label }}</label
-          >
-          <ng-select
-            [selectOnTab]="true"
-            [labelForId]="control.controlName"
-            [clearable]="true"
-            placeholder="{{ lang.map.select }}"
-            [id]="control.controlName"
-            [notFoundText]="lang.map.msg_not_found"
-            appendTo="body"
-            [validationClasses]="control.controlName"
-            [formControlName]="control.controlName">
-            <ng-option *ngFor="let type of control.load$? (control.load$ | async): control.load"
-                       [disabled]="(control.dropdownOptionDisabled && control.dropdownOptionDisabled(type)) ?? false"
-                       [value]="type[control.dropdownValue!]"
-            >{{ type.getName() }}</ng-option
-            >
-          </ng-select>
-          <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
-        </div>
-      </ng-container>
-      <ng-container *ngSwitchCase="'text'">
-        <label
-          [asteriskIfRequired]="control.controlName"
-          [for]="control.controlName"
-          class="form-label"
-          [validationClasses]="control.controlName"
-        >{{ control.label }}</label
-        >
-        <input
-          type="text"
-          class="form-control"
-          [id]="control.controlName"
-          [formControlName]="control.controlName"
-        />
-
-        <app-field-error-message
-          [controlName]="control.controlName"
-        ></app-field-error-message>
-      </ng-container>
-      <ng-container *ngSwitchCase="'date'">
-        <label
-          [asteriskIfRequired]="control.controlName"
-          [for]="control.controlName"
-          class="form-label"
-          [validationClasses]="control.controlName"
-        >{{ control.label }}</label
-        >
-        <div class="input-group">
-          <i class="input-group-text mdi mdi-calendar"></i>
-          <div
-            class="form-control"
-            [formControlName]="control.controlName"
-            [ngClass]="{ 'input-disabled': readonly }"
-            [id]="control.controlName"
-            (click)="!readonly && dp.toggleCalendar()"
-            #dp="angular-mydatepicker"
-            angular-mydatepicker
-            [validationClasses]="control.controlName"
-          ></div>
-          <app-field-error-message
-            [controlName]="control.controlName"
-          ></app-field-error-message>
+<div class="dialog-content w800px" #dialogContent>
+  <form [formGroup]="form">
+    <div class="row">
+      <ng-container *ngFor="let control of controls" [ngSwitch]="control.type">
+        <div *ngIf="!control.hide"
+             class="{{control.gridClass ? control.gridClass : 'col-sm-12 col-md-6'}} mb-4 position-relative">
+          <ng-container *ngSwitchCase="'dropdown'">
+            <label [asteriskIfRequired]="control.controlName" [for]="control.controlName"
+                   class="form-label">{{ lang.map[control.langKey!] }}</label>
+            <ng-select [selectOnTab]="true" [labelForId]="control.controlName" [clearable]="true"
+                       placeholder="{{ lang.map.select }}"
+                       [id]="control.controlName" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+                       [validationClasses]="control.controlName" [formControlName]="control.controlName">
+              <ng-option *ngFor="let type of control.load$? (control.load$ | async): control.load"
+                         [disabled]="(control.dropdownOptionDisabled && control.dropdownOptionDisabled(type)) ?? false"
+                         [value]="type[control.dropdownValue!]">{{ type.getName() }}</ng-option>
+            </ng-select>
+            <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
+          </ng-container>
+          <ng-container *ngSwitchCase="'text'">
+            <label [asteriskIfRequired]="control.controlName" [for]="control.controlName"
+                   class="form-label">{{ lang.map[control.langKey!] }}</label>
+            <input type="text" class="form-control" [id]="control.controlName" [formControlName]="control.controlName"
+                   [validationClasses]="control.controlName" trimInput/>
+            <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
+          </ng-container>
+          <ng-container *ngSwitchCase="'date'">
+            <label [asteriskIfRequired]="control.controlName" [for]="control.controlName"
+                   class="form-label">{{ lang.map[control.langKey!] }}</label>
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div class="form-control" [formControlName]="control.controlName"
+                   [ngClass]="{ 'input-disabled': readonly }"
+                   [id]="control.controlName" (click)="!readonly && dp.toggleCalendar()" #dp="angular-mydatepicker"
+                   angular-mydatepicker [validationClasses]="control.controlName"></div>
+            </div>
+            <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
+          </ng-container>
         </div>
       </ng-container>
     </div>
@@ -84,17 +53,20 @@
   <div class="row">
     <div class="col-sm-12 mb-4 position-relative">
       <div class="list-container">
-        <app-page-header pageTitle="managers">
-        </app-page-header>
-        <executive-management [hidePassport]="true" [list]="data.executiveManagementList" [readonly]="readonly"></executive-management>
+        <executive-management [hidePassport]="true" [list]="data.executiveManagementList"
+                              [readonly]="true"></executive-management>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-sm-12 mb-4">
       <div class="list-container">
-        <bank-branch [list]="data.branchList" [readonly]="readonly"></bank-branch>
+        <bank-branch [list]="data.branchList" [readonly]="true"></bank-branch>
       </div>
     </div>
   </div>
+</div>
+<div class="dialog-actions">
+  <span class="flex-grow-1"></span>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

@@ -1,15 +1,16 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
-import { Nationalities } from '@app/enums/nationalities.enum';
-import { DateUtils } from '@app/helpers/date-utils';
-import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
-import { Lookup } from '@app/models/lookup';
-import { RealBeneficiary } from '@app/models/real-beneficiary';
-import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { DatepickerOptionsMap } from '@app/types/types';
+import {Component, Inject, OnInit} from '@angular/core';
+import {UntypedFormGroup} from '@angular/forms';
+import {Nationalities} from '@app/enums/nationalities.enum';
+import {DateUtils} from '@app/helpers/date-utils';
+import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
+import {Lookup} from '@app/models/lookup';
+import {RealBeneficiary} from '@app/models/real-beneficiary';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'app-real-beneficiaries-popup',
@@ -22,19 +23,21 @@ export class RealBeneficiariesPopupComponent implements OnInit {
   readonly: boolean;
   hideSave: boolean;
   editRecordIndex: number;
+  hideFullScreen = false;
 
   idColumns = ['identificationNumber', 'idDate', 'idExpiryDate'];
   passportColumns = ['passportNumber', 'passportDate', 'passportExpiryDate'];
 
   QATARI_NATIONALITY = Nationalities.QATARI;
+
   private _handleChangeNationality = (lookupKey: string | number) => {
     const nationality = this.lookupService.listByCategory.Nationality.find(e => e.lookupKey === lookupKey);
     this.controls.map(e => {
       if (this.idColumns.includes(e.controlName)) {
-        e.isDisplayed = nationality?.lookupKey === this.QATARI_NATIONALITY;
+        e.hide = nationality?.lookupKey !== this.QATARI_NATIONALITY;
       }
       if (this.passportColumns.includes(e.controlName)) {
-        e.isDisplayed = nationality?.lookupKey !== this.QATARI_NATIONALITY;
+        e.hide = nationality?.lookupKey === this.QATARI_NATIONALITY;
       }
       return e;
     });
@@ -73,37 +76,30 @@ export class RealBeneficiariesPopupComponent implements OnInit {
     startDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
     lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
   };
-  controls: (ControlWrapper & { isDisplayed?: boolean })[] = [
+  controls: ControlWrapper[] = [
     {
-      gridClass: 'col-sm-6',
       controlName: 'arabicName',
-      label: this.lang.map.arabic_name,
+      langKey: 'arabic_name',
       type: 'text',
-      isDisplayed: true,
     },
     {
-      gridClass: 'col-sm-6',
       controlName: 'englishName',
-      label: this.lang.map.english_name,
+      langKey: 'english_name',
       type: 'text',
-      isDisplayed: true,
     },
     {
-      isDisplayed: true,
       controlName: 'birthDate',
-      label: this.lang.map.date_of_birth,
+      langKey: 'date_of_birth',
       type: 'date',
     },
     {
-      isDisplayed: true,
       controlName: 'birthLocation',
-      label: this.lang.map.birth_location,
+      langKey: 'birth_location',
       type: 'text',
     },
     {
-      isDisplayed: true,
       controlName: 'nationality',
-      label: this.lang.map.lbl_nationality,
+      langKey: 'lbl_nationality',
       type: 'dropdown',
       load: this.lookupService.listByCategory.Nationality,
       onChange: this._handleChangeNationality,
@@ -112,89 +108,77 @@ export class RealBeneficiariesPopupComponent implements OnInit {
         return !optionItem.isActive();
       }
     },
-
     {
-      isDisplayed: true,
       controlName: 'passportNumber',
-      label: this.lang.map.passport_number,
+      langKey: 'passport_number',
       type: 'text',
     },
-
     {
-      isDisplayed: true,
       controlName: 'passportDate',
-      label: this.lang.map.passport_date,
+      langKey: 'passport_date',
       type: 'date',
     },
     {
-      isDisplayed: true,
       controlName: 'passportExpiryDate',
-      label: this.lang.map.passport_expiry_date,
+      langKey: 'passport_expiry_date',
       type: 'date',
     },
     {
-      isDisplayed: false,
       controlName: 'identificationNumber',
-      label: this.lang.map.lbl_qid,
+      langKey: 'lbl_qid',
       type: 'text',
+      hide: true,
     },
     {
-      isDisplayed: false,
       controlName: 'idDate',
-      label: this.lang.map.id_date,
+      langKey: 'id_date',
       type: 'date',
+      hide: true,
     },
     {
-      isDisplayed: false,
       controlName: 'idExpiryDate',
-      label: this.lang.map.id_expiry_date,
+      langKey: 'id_expiry_date',
       type: 'date',
+      hide: true,
     },
     {
       gridClass: 'col-sm-6',
-      isDisplayed: true,
       controlName: 'startDate',
-      label: this.lang.map.date_becoming_real_benefeciary,
+      langKey: 'date_becoming_real_benefeciary',
       type: 'date',
+      hide: true,
     },
     {
       gridClass: 'col-sm-6',
-      isDisplayed: true,
       controlName: 'lastUpdateDate',
-      label: this.lang.map.date_of_last_update_real_benefeciary,
+      langKey: 'date_of_last_update_real_benefeciary',
       type: 'date',
     },
     {
-      isDisplayed: true,
       controlName: '',
       gridClass: 'col-12',
-      label: this.lang.map.lbl_national_address,
+      langKey: 'lbl_national_address',
       type: 'title',
     },
     {
-      isDisplayed: true,
       controlName: 'zoneNumber',
-      label: this.lang.map.lbl_zone,
+      langKey: 'lbl_zone',
       type: 'text',
     },
     {
-      isDisplayed: true,
       controlName: 'streetNumber',
-      label: this.lang.map.lbl_street,
+      langKey: 'lbl_street',
       type: 'text',
     },
-
     {
-      isDisplayed: true,
       controlName: 'buildingNumber',
-      label: this.lang.map.building_number,
+      langKey: 'building_number',
       type: 'text',
     },
     {
       gridClass: 'col-12',
-      isDisplayed: true,
       controlName: 'address',
-      label: this.lang.map.lbl_address,
+      langKey: 'lbl_address',
       type: 'textarea',
     },
   ];
@@ -248,10 +232,12 @@ export class RealBeneficiariesPopupComponent implements OnInit {
 
     return beneficiary;
   }
-  cancel() {
-    this.dialogRef.close(null)
-  }
+
   save() {
     this.dialogRef.close(this.mapForm(this.form.getRawValue()))
+  }
+
+  displayFormValidity(form?: UntypedFormGroup | null, element?: HTMLElement | string): void {
+    CommonUtils.displayFormValidity((form || this.form), element);
   }
 }

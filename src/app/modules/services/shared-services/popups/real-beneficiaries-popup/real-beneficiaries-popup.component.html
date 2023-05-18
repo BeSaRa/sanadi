@@ -1,68 +1,79 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
   <h1 class="h6 text-white">{{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
     lang.map.lbl_real_beneficiary }}</h1>
-  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+  <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
+  </div>
 </div>
-<div class="dialog-content no-fixed-height">
-  <form class="row" [formGroup]="form">
-    <div *ngFor="let control of controls" [class]="control.gridClass ? control.gridClass : 'col-sm-6 col-md-4'"
-      [ngSwitch]="control.type">
-      <div *ngIf="control.isDisplayed" class="mb-4 position-relative">
-        <ng-container *ngSwitchCase="'dropdown'">
-          <div>
+<div class="dialog-content w800px" #dialogContent>
+  <form [formGroup]="form">
+    <div class="row">
+      <ng-container *ngFor="let control of controls" [ngSwitch]="control.type">
+        <div *ngIf="!control.hide"
+             class="{{control.gridClass ? control.gridClass : 'col-sm-12 col-md-6'}} mb-4 position-relative">
+          <ng-container *ngSwitchCase="'dropdown'">
             <label [asteriskIfRequired]="control.controlName" [for]="control.controlName"
-              class="form-label">{{control.label }}</label>
+                   class="form-label">{{ lang.map[control.langKey!] }}</label>
             <ng-select [selectOnTab]="true" [labelForId]="control.controlName" [clearable]="true"
-              [readonly]="readonly || hideSave" placeholder="{{ lang.map.select }}" [id]="control.controlName"
-              [notFoundText]="lang.map.msg_not_found" appendTo="body" [validationClasses]="control.controlName"
-              [formControlName]="control.controlName" (change)="control.onChange?.($event)">
+                       [readonly]="readonly || hideSave" placeholder="{{ lang.map.select }}"
+                       [id]="control.controlName"
+                       [notFoundText]="lang.map.msg_not_found" appendTo="body"
+                       [validationClasses]="control.controlName"
+                       [formControlName]="control.controlName" (change)="control.onChange?.($event)">
               <ng-option *ngFor="let type of control.load$ ? (control.load$ | async): control.load"
-                [disabled]="(control.dropdownOptionDisabled && control.dropdownOptionDisabled(type)) ?? false"
-                [value]="type[control.dropdownValue!]">{{ type.getName() }}</ng-option>
+                         [disabled]="(control.dropdownOptionDisabled && control.dropdownOptionDisabled(type)) ?? false"
+                         [value]="type[control.dropdownValue!]">{{ type.getName() }}</ng-option>
             </ng-select>
             <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
-          </div>
-        </ng-container>
-        <ng-container *ngSwitchCase="'text'">
-          <label [asteriskIfRequired]="control.controlName" [for]="control.controlName" class="form-label">{{ control.label }}</label>
-          <input type="text" class="form-control" [readonly]="readonly || hideSave" [id]="control.controlName"
-            [formControlName]="control.controlName" [validationClasses]="control.controlName"/>
-
-          <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
-        </ng-container>
-        <ng-container *ngSwitchCase="'textarea'">
-          <label [asteriskIfRequired]="control.controlName" [for]="control.controlName" class="form-label">{{ control.label }}</label>
-          <textarea [validationClasses]="control.controlName" trimInput [readonly]="readonly || hideSave"
-            [id]="control.controlName" [formControlName]="control.controlName" class="form-control">
-          </textarea>
-          <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
-        </ng-container>
-        <ng-container *ngSwitchCase="'date'">
-          <label [asteriskIfRequired]="control.controlName" [for]="control.controlName" class="form-label"
-            [validationClasses]="control.controlName">{{ control.label }}</label>
-          <div class="input-group">
-            <i class="input-group-text mdi mdi-calendar"></i>
-            <div class="form-control" [formControlName]="control.controlName"
-              [ngClass]="{ 'input-disabled': readonly || form.get(control.controlName)?.disabled || hideSave }"
-              [disabled]="readonly || hideSave" [id]="control.controlName"
-              [options]="datepickerOptionsMap[control.controlName]"
-              (click)="(!readonly && !hideSave) && dp.toggleCalendar()" #dp="angular-mydatepicker" angular-mydatepicker
-              [validationClasses]="control.controlName"></div>
+          </ng-container>
+          <ng-container *ngSwitchCase="'text'">
+            <label [asteriskIfRequired]="control.controlName" [for]="control.controlName"
+                   class="form-label">{{ lang.map[control.langKey!] }}</label>
+            <input type="text" class="form-control" [readonly]="readonly || hideSave" [id]="control.controlName"
+                   [formControlName]="control.controlName" [validationClasses]="control.controlName" trimInput/>
             <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
-          </div>
-        </ng-container>
-        <ng-container *ngSwitchCase="'title'">
-          <h6 class="text-primary">{{control.label}}</h6>
-        </ng-container>
-      </div>
+          </ng-container>
+          <ng-container *ngSwitchCase="'textarea'">
+            <label [asteriskIfRequired]="control.controlName" [for]="control.controlName"
+                   class="form-label">{{ lang.map[control.langKey!] }}</label>
+            <textarea [validationClasses]="control.controlName" trimInput [readonly]="readonly || hideSave"
+                      [id]="control.controlName" [formControlName]="control.controlName" class="form-control">
+          </textarea>
+            <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
+          </ng-container>
+          <ng-container *ngSwitchCase="'date'">
+            <label [asteriskIfRequired]="control.controlName" [for]="control.controlName"
+                   class="form-label">{{ lang.map[control.langKey!] }}</label>
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div class="form-control" [formControlName]="control.controlName"
+                   [ngClass]="{ 'input-disabled': readonly || form.get(control.controlName)?.disabled || hideSave }"
+                   [disabled]="readonly || hideSave" [id]="control.controlName"
+                   [options]="datepickerOptionsMap[control.controlName]"
+                   (click)="(!readonly && !hideSave) && dp.toggleCalendar()" #dp="angular-mydatepicker"
+                   angular-mydatepicker
+                   [validationClasses]="control.controlName"></div>
+            </div>
+            <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
+          </ng-container>
+          <ng-container *ngSwitchCase="'title'">
+            <heading-row [labelKey]="control.langKey" [removeBottomMargin]="true"></heading-row>
+          </ng-container>
+        </div>
+      </ng-container>
     </div>
   </form>
 </div>
 <div class="dialog-actions">
-  <button (click)="save()" [disabled]="!form.valid" *ngIf="!hideSave" class="btn btn-primary m-2">
-    {{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }}
+  <button tabindex="-1" *ngIf="!hideSave" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
   </button>
-  <button (click)="cancel()" class="btn btn-secondary m-2">
-    {{ lang.map.btn_cancel }}
-  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="!hideSave" (click)="save()"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>
