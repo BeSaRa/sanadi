@@ -196,6 +196,8 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
         }).onAfterClose$.subscribe((data) => {
           if (data) {
             this.buildingPlate = data.buildingPlate;
+            this.item = data.item;
+            // this.model.collectionItemList.push(data.item);
             this.save$.next();
           } else {
             this.cancel();

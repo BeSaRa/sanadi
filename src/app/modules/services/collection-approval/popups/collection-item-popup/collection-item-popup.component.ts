@@ -175,7 +175,10 @@ export class CollectionItemPopupComponent implements OnInit, OnDestroy {
     this.dialogRef.close(null)
   }
   save() {
-    this.dialogRef.close({ buildingPlate: this.buildingPlate });
+    this.dialogRef.close({
+      item: this.item,
+      buildingPlate: this.buildingPlate
+    });
   }
   ngOnDestroy(): void {
     this.destroy$.next();
