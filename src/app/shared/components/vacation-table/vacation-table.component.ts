@@ -9,7 +9,7 @@ import { UserPreferences } from '@app/models/user-preferences';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Subject, of } from 'rxjs';
-import { take, takeUntil, switchMap } from 'rxjs/operators';
+import { take, takeUntil, switchMap, filter } from 'rxjs/operators';
 import { CommonUtils } from "@helpers/common-utils";
 import { DialogService } from '@app/services/dialog.service';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
@@ -104,20 +104,22 @@ export class VacationTableComponent implements OnInit, OnDestroy {
             return this._resetUserVacation(model);
           }
           return of(null)
-        })
+        }),
+        filter(result=> !!result)
+
       )
-      .subscribe(_=>{
-        this.list = []
+      .subscribe(_ => {
+          this.list = [];
       })
   }
   private _resetUserVacation(model: UserPreferences) {
 
-    const {send}=new UserPreferencesInterceptor();
+    const { send } = new UserPreferencesInterceptor();
     const resetModel = send(new UserPreferences().clone({
       ...model,
       vacationFrom: null,
       vacationTo: null,
     }));
-   return this.userPreferencesService.setVacations(this.user.generalUserId, resetModel)
+    return this.userPreferencesService.setVacations(this.user.generalUserId, resetModel)
   }
 }
