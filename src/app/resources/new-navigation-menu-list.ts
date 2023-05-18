@@ -5,7 +5,7 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {Constants} from '@helpers/constants';
-import { SystemMenuKeys } from '@app/enums/system-menu-keys.enum';
+import {SystemMenuKeys} from '@app/enums/system-menu-keys.enum';
 
 const serviceAddUpdateLabel: keyof ILanguageKeys = 'menu_service';
 const serviceAddUpdateIcon: ActionIconsEnum = ActionIconsEnum.SERVICE_ADD_UPDATE;
@@ -97,6 +97,48 @@ enum DefaultItemOrder {
   ADMIN
 }
 
+const GroupNames = {
+  MAIN: 'main',
+  SANADI: 'sanady',
+
+  SERVICE_INQUIRY: 'service_' + CaseTypes.INQUIRY,
+  SERVICE_CONSULTATION: 'service_' + CaseTypes.CONSULTATION,
+  SERVICE_INTERNATIONAL_COOPERATION: 'service_' + CaseTypes.INTERNATIONAL_COOPERATION,
+  SERVICE_EMPLOYMENT: 'service_' + CaseTypes.EMPLOYMENT,
+  SERVICE_EXTERNAL_ORG_AFFILIATION_REQUEST: 'service_' + CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
+  SERVICE_FOREIGN_COUNTRIES_PROJECTS: 'service_' + CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
+  SERVICE_COORDINATION_WITH_ORGANIZATION_REQUEST: 'service_' + CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
+  SERVICE_CHARITY_ORGANIZATION_UPDATE: 'service_' + CaseTypes.CHARITY_ORGANIZATION_UPDATE,
+  SERVICE_NPO_MANAGEMENT: 'service_' + CaseTypes.NPO_MANAGEMENT,
+  SERVICE_AWARENESS_ACTIVITY_SUGGESTION: 'service_' + CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
+  SERVICE_GENERAL_PROCESS_NOTIFICATION: 'service_' + CaseTypes.GENERAL_PROCESS_NOTIFICATION,
+  SERVICE_ORGANIZATION_ENTITIES_SUPPORT: 'service_' + CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
+  SERVICE_INITIAL_EXTERNAL_OFFICE_APPROVAL: 'service_' + CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+  SERVICE_PARTNER_APPROVAL: 'service_' + CaseTypes.PARTNER_APPROVAL,
+  SERVICE_FINAL_EXTERNAL_OFFICE_APPROVAL: 'service_' + CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+  SERVICE_INTERNAL_PROJECT_LICENSE: 'service_' + CaseTypes.INTERNAL_PROJECT_LICENSE,
+  SERVICE_EXTERNAL_PROJECT_MODELS: 'service_' + CaseTypes.EXTERNAL_PROJECT_MODELS,
+  SERVICE_INTERNAL_BANK_ACCOUNT_APPROVAL: 'service_' + CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
+  SERVICE_URGENT_JOINT_RELIEF_CAMPAIGN: 'service_' + CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
+  SERVICE_TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD: 'service_' + CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+  SERVICE_GENERAL_ASSOCIATION_MEETING_ATTENDANCE: 'service_' + CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+  SERVICE_PROJECT_FUNDRAISING: 'service_' + CaseTypes.PROJECT_FUNDRAISING,
+  SERVICE_PROJECT_IMPLEMENTATION: 'service_' + CaseTypes.PROJECT_IMPLEMENTATION,
+  SERVICE_COLLECTION_APPROVAL: 'service_' + CaseTypes.COLLECTION_APPROVAL,
+  SERVICE_FUNDRAISING_LICENSING: 'service_' + CaseTypes.FUNDRAISING_LICENSING,
+  SERVICE_COLLECTOR_LICENSING: 'service_' + CaseTypes.COLLECTOR_LICENSING,
+  SERVICE_CUSTOMS_EXEMPTION_REMITTANCE: 'service_' + CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
+  SERVICE_FINANCIAL_TRANSFERS_LICENSING: 'service_' + CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
+  SERVICE_URGENT_INTERVENTION_LICENSING: 'service_' + CaseTypes.URGENT_INTERVENTION_LICENSING,
+  SERVICE_URGENT_INTERVENTION_ANNOUNCEMENT: 'service_' + CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT,
+  SERVICE_URGENT_INTERVENTION_CLOSURE: 'service_' + CaseTypes.URGENT_INTERVENTION_CLOSURE,
+  SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION: 'service_' + CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+  SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP: 'service_' + CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
+
+  TRAINING: 'training-services',
+  ADMIN: 'administration'
+}
+
 export const newNavigationMenuList = [
   {
     id: 101,
@@ -109,10 +151,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.CONSULTATION_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_CONSULTATION,
     svg: '<svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"\n     viewBox="0 0 512.001 512.001">\n  <g>\n    <g>\n      <path d="M502.278,204.819c-0.974,0.202-24.103,5.007-43.64,10.863c-26.141,7.835-41.134,24.336-41.134,45.267v94.486h-66.178\n\t\t\tc-16.344,0-29.642,13.297-29.642,29.642v122.88h16.167v-122.88c0-7.43,6.044-13.474,13.474-13.474h82.347V260.95\n\t\t\tc0-18.19,18.551-26.466,29.608-29.78c11.235-3.367,24.011-6.439,32.551-8.383v157.037c0,19.316-15.715,35.032-35.032,35.032\n\t\t\th-89.503l-11.684,93.103h16.036l9.874-76.935h75.279c28.231,0,51.2-22.969,51.2-51.2V202.808L502.278,204.819z"/>\n    </g>\n  </g>\n  <g>\n    <g>\n      <path d="M465.116,78.556h-0.009c-25.264,0-45.925,20.083-46.852,45.124l-22.614,51.887h22.582v26.947h44.733\n\t\t\tc27.043,0,49.044-22.001,49.044-49.044v-28.03C512,99.588,490.967,78.556,465.116,78.556z M495.832,153.47\n\t\t\tc0,18.128-14.749,32.876-32.876,32.876h-28.564v-26.948h-14.067l14.067-32.272v-1.685c0-16.937,13.779-30.716,30.716-30.716h0.009\n\t\t\tc16.937,0,30.716,13.779,30.716,30.716V153.47z"/>\n    </g>\n  </g>\n  <g>\n    <g>\n      <path d="M160.674,355.436H94.496V260.95c0-20.932-14.992-37.431-41.134-45.267c-19.537-5.856-42.665-10.661-43.64-10.863\n\t\t\tL0,202.808v177.016c0,28.231,22.969,51.2,51.2,51.2h75.279l9.873,76.935h16.036l-11.684-93.103H51.2\n\t\t\tc-19.317,0-35.032-15.716-35.032-35.032V222.787c8.536,1.941,21.308,5.013,32.551,8.383c11.057,3.315,29.608,11.591,29.608,29.78\n\t\t\tv110.654h82.347c7.43,0,13.474,6.044,13.474,13.474v122.88h16.168v-122.88C190.316,368.733,177.018,355.436,160.674,355.436z"/>\n    </g>\n  </g>\n  <g>\n    <g>\n      <path d="M93.745,123.68c-0.928-25.041-21.588-45.124-46.852-45.124h-0.009C21.033,78.556,0,99.588,0,125.44v28.03\n\t\t\tc0,27.043,22.001,49.044,49.044,49.044h44.733v-26.947h22.582L93.745,123.68z M77.608,159.398v26.947H49.044\n\t\t\tc-18.127,0-32.876-14.748-32.876-32.876v-28.03c0-16.937,13.779-30.716,30.716-30.716h0.009c16.937,0,30.716,13.779,30.716,30.716\n\t\t\tv1.685l14.067,32.273H77.608z"/>\n    </g>\n  </g>\n  <g>\n    <g>\n      <path d="M121.263,273.516v48.505h113.447v185.937h16.168V322.021h16.168v185.937h16.168V322.021h107.521v-48.505H121.263z\n\t\t\t M374.568,305.853H137.432v-16.168h237.137V305.853z"/>\n    </g>\n  </g>\n  <g>\n    <g>\n      <path d="M365.406,88.198v-41.04h-45.272V4.042H131.503v41.04L92.321,92.968h39.183V128h33.774v-16.168h-17.605V76.8h-21.23\n\t\t\tl21.23-25.946V20.21h156.295v26.947H176.775v123.958h188.632v-35.032h39.183L365.406,88.198z M349.238,119.916v35.032H192.943V128\n\t\t\th127.192V73.709h-16.168v38.123H192.943V63.326h156.295V93.97l21.23,25.946H349.238z"/>\n    </g>\n  </g>\n  <g>\n    <g>\n      <g>\n        <rect x="202.644" y="215.309" width="16.168" height="16.168"/>\n        <rect x="247.916" y="215.309" width="16.168" height="16.168"/>\n        <rect x="293.187" y="215.309" width="16.168" height="16.168"/>\n      </g>\n    </g>\n  </g>\n</svg>',
     data: {
+      childrenGroupName: GroupNames.SERVICE_CONSULTATION,
       servicePath: SystemPathsEnum.CONSULTATION_SERVICE + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.CONSULTATION),
       outputPath: SystemPathsEnum.CONSULTATION_SERVICE + '/outputs'
@@ -127,7 +170,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.CONSULTATION,
     permissionGroup: null,
     parent: 101,
-    group: 'service_' + CaseTypes.CONSULTATION,
+    group: GroupNames.SERVICE_CONSULTATION,
     itemOrder: 1,
     svg: null
   },
@@ -140,7 +183,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_CONSULTATION,
     permissionGroup: null,
     parent: 101,
-    group: 'service_' + CaseTypes.CONSULTATION,
+    group: GroupNames.SERVICE_CONSULTATION,
     itemOrder: 2,
     svg: null
   },
@@ -153,7 +196,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 101,
-    group: 'service_' + CaseTypes.CONSULTATION,
+    group: GroupNames.SERVICE_CONSULTATION,
     itemOrder: 3,
     svg: null
   },
@@ -168,10 +211,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.INQUIRY_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_INQUIRY,
     svg: '<svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 469.333 469.333">\n<g>\n\t<path d="M469.331,181.333c-0.003-3.298-1.521-6.409-4.133-8.427c-0.01-0.01-26.078-20.212-59.865-46.741V85.333\n\t\tc0-23.531-19.135-42.667-42.667-42.667h-62.125c-15.199-12.413-28.389-23.387-37.198-31.198\n\t\tC254.874,3.972,244.773,0.001,234.675,0C224.567-0.001,214.462,3.976,206,11.469c-8.809,7.811-21.997,18.785-37.207,31.198\n\t\th-62.126C83.135,42.667,64,61.802,64,85.333v40.831c-33.794,26.527-59.854,46.732-59.865,46.742\n\t\tc-2.612,2.018-4.13,5.129-4.133,8.427H0v245.333c0,23.531,19.135,42.667,42.667,42.667h384c23.531,0,42.667-19.135,42.667-42.667\n\t\tV181.333H469.331z M405.333,153.275c14.919,11.681,27.582,21.553,35.927,28.048c-8.332,6.469-21.016,16.335-35.927,27.995\n\t\tV153.275z M220.146,27.437c9.146-8.104,19.885-8.115,29.052,0.01c4.801,4.246,10.855,9.406,17.81,15.219h-64.674\n\t\tC209.29,36.853,215.345,31.689,220.146,27.437z M85.333,85.333c0-11.76,9.573-21.333,21.333-21.333h256\n\t\tC374.427,64,384,73.573,384,85.333v140.703c-47.747,37.501-107.642,85.137-134.802,109.182\n\t\tc-2.573,2.281-7.938,6.115-14.865,6.115c-5.063,0-9.948-2.052-14.531-6.115c-27.326-24.195-86.921-71.676-134.469-109.086V85.333\n\t\tz M64,153.275v56.111c-14.921-11.686-27.605-21.573-35.938-28.052C36.401,174.837,49.07,164.964,64,153.275z M448,426.667\n\t\tc0,11.76-9.573,21.333-21.333,21.333h-384c-11.76,0-21.333-9.573-21.333-21.333V203.112\n\t\tc44.49,34.63,147.421,115.396,184.323,148.086c8.479,7.5,18.396,11.469,28.677,11.469c10.354,0,20.656-4.073,29.01-11.469\n\t\tC301.694,317.238,406.667,235.23,448,203.105V426.667z"/>\n\t<circle cx="202.667" cy="160" r="10.667"/>\n\t<circle cx="266.667" cy="160" r="10.667"/>\n\t<path d="M267.854,228.896c1.885,3.656,5.615,5.771,9.49,5.771c1.604,0,3.229-0.365,4.76-1.125\n\t\tc5.271-2.635,7.406-9.042,4.771-14.313C286.323,218.115,272.823,192,234.667,192s-51.656,26.115-52.208,27.229\n\t\tc-2.604,5.208-0.51,11.479,4.667,14.156c5.177,2.708,11.573,0.667,14.344-4.479c0.344-0.635,8.677-15.573,33.198-15.573\n\t\tC259,213.333,267.396,228.052,267.854,228.896z"/>\n</g>\n</svg>',
     data: {
+      childrenGroupName: GroupNames.SERVICE_INQUIRY,
       servicePath: SystemPathsEnum.INQUIRY_SERVICE + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.INQUIRY),
       outputPath: SystemPathsEnum.INQUIRY_SERVICE + '/outputs'
@@ -186,7 +230,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.INQUIRY,
     permissionGroup: null,
     parent: 201,
-    group: 'service_' + CaseTypes.INQUIRY,
+    group: GroupNames.SERVICE_INQUIRY,
     itemOrder: 1,
     svg: null
   },
@@ -199,7 +243,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_INQUIRY,
     permissionGroup: null,
     parent: 201,
-    group: 'service_' + CaseTypes.INQUIRY,
+    group: GroupNames.SERVICE_INQUIRY,
     itemOrder: 2,
     svg: null
   },
@@ -212,7 +256,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 201,
-    group: 'service_' + CaseTypes.INQUIRY,
+    group: GroupNames.SERVICE_INQUIRY,
     itemOrder: 3,
     svg: null
   },
@@ -227,10 +271,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.INTERNATIONAL_COOP_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_INTERNATIONAL_COOPERATION,
     svg: '<svg viewBox="0 0 512.802 512.802" xmlns="http://www.w3.org/2000/svg">\n  <g>\n    <path\n      d="m483.582 284.393-92.061 18.853-15.509-6c33.463-32.415 52.439-76.88 52.439-123.842 0-45.865-17.799-89.041-50.118-121.572-32.29-32.502-75.289-50.583-121.089-50.917-.873-.02-1.713-.02-2.586 0-45.8.334-88.799 18.416-121.089 50.917-32.319 32.532-50.118 75.707-50.118 121.572 0 47.955 19.566 92.939 54.126 125.479l-15.841 4.439-92.438-18.933-29.298 144.161 111.297 14.646c-2.641 9.209-.359 19.553 6.856 26.796 5.126 5.146 11.944 7.98 19.197 7.98 5.968 0 11.639-1.922 16.317-5.469 1.263 4.049 3.482 7.859 6.672 11.061 5.127 5.146 11.944 7.979 19.197 7.979 4.208 0 8.268-.96 11.938-2.766 1.157 3.368 3.045 6.537 5.719 9.221 4.577 4.594 10.663 7.124 17.139 7.124s12.562-2.53 17.139-7.124l1.179-1.184c1.178 2.899 2.935 5.615 5.275 7.965 4.577 4.594 10.664 7.125 17.14 7.124 6.476 0 12.562-2.53 17.138-7.124l.282-.283c5.591 1.837 11.359 2.752 17.099 2.752 11.482 0 22.839-3.612 32.383-10.583l75.135-47.402 115.7-21.091zm-104.293-13.038c-10.516-9.521-21.957-17.696-34.107-24.453 5.458-20.543 8.612-42.944 9.173-65.999h58.907c-1.57 33.231-13.54 64.763-33.973 90.452zm-9.881 11.286c-2.858 2.965-5.837 5.834-8.944 8.59l-27.151-10.504c2.735-6.078 5.223-12.448 7.451-19.073 10.165 5.916 19.766 12.926 28.644 20.987zm43.86-116.738h-58.911c-.649-27.011-4.796-52.955-12.049-76.1 10.712-6.216 20.808-13.627 30.12-22.171 23.887 26.276 39.053 60.596 40.84 98.271zm-51.447-108.889c-7.656 6.968-15.889 13.101-24.583 18.36-2.967-7.58-6.293-14.785-9.969-21.532-6.458-11.85-13.743-21.85-21.645-29.867 21.039 7.036 40.128 18.403 56.197 33.039zm-98.37-40.458c18.872 3.267 36.656 18.795 50.646 44.465 3.656 6.709 6.943 13.917 9.846 21.536-18.756 8.989-39.238 14.179-60.491 15.168v-81.169zm0 96.178c22.92-.974 45.032-6.402 65.342-15.874 6.315 21.039 9.946 44.532 10.562 69.043h-75.904zm0 68.169h75.904c-.525 20.639-3.232 40.662-7.874 59.115-21.214-9.554-44.218-15.005-68.03-15.952zm0 58.171c22.392.971 43.994 6.283 63.84 15.532-2.418 7.455-5.164 14.587-8.253 21.296h-55.587zm-15-222.517v81.168c-21.254-.989-41.735-6.179-60.491-15.168 2.903-7.618 6.189-14.826 9.846-21.536 13.987-25.667 31.769-41.194 50.645-44.464zm-68.081 223.484c-4.629-18.391-7.303-38.384-7.822-59.138h75.903v43.162c-23.832.949-46.853 6.407-68.081 15.976zm68.081-.967v36.829h-30.821l-.823.777-20.739 5.812c-4.428-8.59-8.274-17.929-11.505-27.863 19.86-9.264 41.479-14.583 63.888-15.555zm-67.1 47.542-26.612 7.457c-4.31-3.616-8.392-7.434-12.249-11.428 8.87-8.053 18.461-15.058 28.614-20.972 2.963 8.782 6.388 17.126 10.247 24.943zm-8.803-120.713c.616-24.51 4.247-48.004 10.562-69.043 20.31 9.471 42.421 14.9 65.342 15.874v53.169zm33.732-141.928c-7.903 8.017-15.187 18.017-21.646 29.867-3.677 6.747-7.002 13.951-9.969 21.532-8.695-5.259-16.927-11.392-24.583-18.36 16.068-14.636 35.158-26.003 56.198-33.039zm-66.805 43.657c9.312 8.544 19.408 15.954 30.12 22.171-7.253 23.146-11.4 49.089-12.049 76.1h-58.911c1.786-37.675 16.952-71.995 40.84-98.271zm-6.891 203.749c-20.448-25.66-32.382-57.126-33.944-90.478h58.906c.555 23.183 3.676 45.544 9.124 66.027-12.143 6.758-23.576 14.932-34.086 24.451zm-114.682 144.395 23.103-113.679 53.655 10.989-21.438 109.969zm128.019 43.629c-2.291 2.299-5.335 3.566-8.57 3.566s-6.279-1.267-8.57-3.566c-4.747-4.766-4.747-12.521 0-17.287l18.081-18.149c2.291-2.3 5.334-3.566 8.57-3.566s6.279 1.266 8.57 3.566c4.748 4.766 4.748 12.521 0 17.286zm42.186 13.572c-2.291 2.3-5.334 3.566-8.57 3.566-3.235 0-6.279-1.266-8.57-3.565-4.747-4.766-4.747-12.521 0-17.287l18.081-18.15c2.291-2.3 5.334-3.566 8.57-3.566s6.279 1.266 8.57 3.565c4.342 4.36 4.7 11.214 1.098 16zm54.935-7.848-22.197 22.282c-1.741 1.748-4.054 2.71-6.512 2.71s-4.771-.963-6.512-2.71c-3.256-3.268-3.568-8.376-.957-12.01l23.154-23.427c1.741-1.748 4.054-2.71 6.513-2.71 2.458 0 4.771.963 6.511 2.71 3.613 3.627 3.613 9.528 0 13.155zm30.5 17.053-11.966 12.011c-1.741 1.748-4.053 2.71-6.511 2.71-2.459 0-4.771-.962-6.513-2.71-3.612-3.626-3.612-9.528 0-13.154l11.966-12.011c1.74-1.747 4.053-2.709 6.511-2.71 2.459 0 4.771.962 6.513 2.71 3.612 3.626 3.612 9.527 0 13.154zm40.197 1.938-.453.31c-8.266 6.103-18.422 8.704-28.383 7.523 8.658-9.513 8.431-24.31-.734-33.511-4.577-4.594-10.664-7.124-17.14-7.124-2.444 0-4.832.362-7.104 1.057-1.05-4.026-3.119-7.837-6.256-10.986-4.575-4.594-10.662-7.124-17.138-7.124 0 0 0 0-.001 0-4.688 0-9.169 1.333-13.024 3.808-1.26-4.07-3.486-7.902-6.69-11.119-5.126-5.146-11.944-7.979-19.197-7.979-5.967 0-11.638 1.922-16.316 5.468-1.263-4.049-3.483-7.859-6.673-11.061-5.126-5.146-11.944-7.979-19.197-7.979s-14.071 2.833-19.197 7.979l-15.823 15.883-32.29-4.249 21.234-108.919 12.93 2.648 71.082-19.919-51.689 48.835 5.436 5.456c22.781 22.868 59.153 23.579 82.805 1.618l10.812-10.041c10.614 12.344 35.948 39.999 62.142 55.337 30.232 17.703 60.56 34.151 76.509 42.676zm81.792-49.818c-9.518-5.021-47.384-25.142-85.079-47.215-31.264-18.307-62.862-57.556-63.179-57.95l-5.044-6.304-22.519 20.909c-15.771 14.646-39.101 15.817-56.059 3.793l59.942-56.633h94.452l72.17 27.921 21.204-4.342 22.005 112.913zm30.586-122.83 45.758-9.37 23.179 114.059-46.87 8.544z"\n      fill="currentColor"/>\n  </g>\n</svg>',
     data: {
+      childrenGroupName: GroupNames.SERVICE_INTERNATIONAL_COOPERATION,
       servicePath: SystemPathsEnum.INTERNATIONAL_COOPERATION_SERVICE + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.INTERNATIONAL_COOPERATION),
       outputPath: SystemPathsEnum.INTERNATIONAL_COOPERATION_SERVICE + '/outputs'
@@ -245,7 +290,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.INTERNATIONAL_COOPERATION,
     permissionGroup: null,
     parent: 301,
-    group: 'service_' + CaseTypes.INTERNATIONAL_COOPERATION,
+    group: GroupNames.SERVICE_INTERNATIONAL_COOPERATION,
     itemOrder: 1,
     svg: null
   },
@@ -258,7 +303,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_INTERNATIONAL_COOPERATION,
     permissionGroup: null,
     parent: 301,
-    group: 'service_' + CaseTypes.INTERNATIONAL_COOPERATION,
+    group: GroupNames.SERVICE_INTERNATIONAL_COOPERATION,
     itemOrder: 2,
     svg: null
   },
@@ -271,7 +316,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 301,
-    group: 'service_' + CaseTypes.INTERNATIONAL_COOPERATION,
+    group: GroupNames.SERVICE_INTERNATIONAL_COOPERATION,
     itemOrder: 3,
     svg: null
   },
@@ -286,10 +331,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.PROJECT_IMPLEMENTATION_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_PROJECT_IMPLEMENTATION,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_PROJECT_IMPLEMENTATION,
       servicePath: SystemPathsEnum.PROJECT_IMPLEMENTATION + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.PROJECT_IMPLEMENTATION),
       outputPath: SystemPathsEnum.PROJECT_IMPLEMENTATION + '/outputs'
@@ -304,7 +350,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.PROJECT_IMPLEMENTATION,
     permissionGroup: null,
     parent: 401,
-    group: 'service_' + CaseTypes.PROJECT_IMPLEMENTATION,
+    group: GroupNames.SERVICE_PROJECT_IMPLEMENTATION,
     itemOrder: 1,
     svg: null
   },
@@ -317,7 +363,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_PROJECT_IMPLEMENTATION,
     permissionGroup: null,
     parent: 401,
-    group: 'service_' + CaseTypes.PROJECT_IMPLEMENTATION,
+    group: GroupNames.SERVICE_PROJECT_IMPLEMENTATION,
     itemOrder: 2,
     svg: null
   },
@@ -330,7 +376,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 401,
-    group: 'service_' + CaseTypes.PROJECT_IMPLEMENTATION,
+    group: GroupNames.SERVICE_PROJECT_IMPLEMENTATION,
     itemOrder: 3,
     svg: null
   },
@@ -345,10 +391,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.PROJECT_FUNDRAISING_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_PROJECT_FUNDRAISING,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_PROJECT_FUNDRAISING,
       servicePath: SystemPathsEnum.PROJECT_FUNDRAISING + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.PROJECT_FUNDRAISING),
       outputPath: SystemPathsEnum.PROJECT_FUNDRAISING + '/outputs'
@@ -363,7 +410,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.PROJECT_FUNDRAISING,
     permissionGroup: null,
     parent: 501,
-    group: 'service_' + CaseTypes.PROJECT_FUNDRAISING,
+    group: GroupNames.SERVICE_PROJECT_FUNDRAISING,
     itemOrder: 1,
     svg: null
   },
@@ -376,7 +423,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_PROJECT_FUNDRAISING,
     permissionGroup: null,
     parent: 501,
-    group: 'service_' + CaseTypes.PROJECT_FUNDRAISING,
+    group: GroupNames.SERVICE_PROJECT_FUNDRAISING,
     itemOrder: 2,
     svg: null
   },
@@ -389,7 +436,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 501,
-    group: 'service_' + CaseTypes.PROJECT_FUNDRAISING,
+    group: GroupNames.SERVICE_PROJECT_FUNDRAISING,
     itemOrder: 3,
     svg: null
   },
@@ -404,10 +451,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.PROJECT_MODEL_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_EXTERNAL_PROJECT_MODELS,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_EXTERNAL_PROJECT_MODELS,
       servicePath: SystemPathsEnum.PROJECT_MODELS + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.EXTERNAL_PROJECT_MODELS),
       outputPath: SystemPathsEnum.PROJECT_MODELS + '/outputs'
@@ -422,7 +470,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.EXTERNAL_PROJECT_MODELS,
     permissionGroup: null,
     parent: 601,
-    group: 'service_' + CaseTypes.EXTERNAL_PROJECT_MODELS,
+    group: GroupNames.SERVICE_EXTERNAL_PROJECT_MODELS,
     itemOrder: 1,
     svg: null
   },
@@ -435,7 +483,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_EXTERNAL_PROJECT_MODELS,
     permissionGroup: null,
     parent: 601,
-    group: 'service_' + CaseTypes.EXTERNAL_PROJECT_MODELS,
+    group: GroupNames.SERVICE_EXTERNAL_PROJECT_MODELS,
     itemOrder: 2,
     svg: null
   },
@@ -448,7 +496,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 601,
-    group: 'service_' + CaseTypes.EXTERNAL_PROJECT_MODELS,
+    group: GroupNames.SERVICE_EXTERNAL_PROJECT_MODELS,
     itemOrder: 3,
     svg: null
   },
@@ -463,10 +511,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.GENERAL_PROCESS_NOTIFICATION_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_GENERAL_PROCESS_NOTIFICATION,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_GENERAL_PROCESS_NOTIFICATION,
       servicePath: SystemPathsEnum.GENERAL_PROCESS_NOTIFICATION + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.GENERAL_PROCESS_NOTIFICATION),
       outputPath: SystemPathsEnum.GENERAL_PROCESS_NOTIFICATION + '/outputs'
@@ -481,7 +530,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
     permissionGroup: null,
     parent: 701,
-    group: 'service_' + CaseTypes.GENERAL_PROCESS_NOTIFICATION,
+    group: GroupNames.SERVICE_GENERAL_PROCESS_NOTIFICATION,
     itemOrder: 1,
     svg: null
   },
@@ -494,7 +543,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_GENERAL_PROCESS_NOTIFICATION,
     permissionGroup: null,
     parent: 701,
-    group: 'service_' + CaseTypes.GENERAL_PROCESS_NOTIFICATION,
+    group: GroupNames.SERVICE_GENERAL_PROCESS_NOTIFICATION,
     itemOrder: 2,
     svg: null
   },
@@ -507,7 +556,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 701,
-    group: 'service_' + CaseTypes.GENERAL_PROCESS_NOTIFICATION,
+    group: GroupNames.SERVICE_GENERAL_PROCESS_NOTIFICATION,
     itemOrder: 3,
     svg: null
   },
@@ -522,10 +571,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.AWARENESS_ACTIVITY_SUGGESTION_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_AWARENESS_ACTIVITY_SUGGESTION,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_AWARENESS_ACTIVITY_SUGGESTION,
       servicePath: SystemPathsEnum.AWARENESS_ACTIVITY_SUGGESTION + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.AWARENESS_ACTIVITY_SUGGESTION),
       outputPath: SystemPathsEnum.AWARENESS_ACTIVITY_SUGGESTION + '/outputs'
@@ -540,7 +590,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.AWARENESS_ACTIVITY_SUGGESTION,
     permissionGroup: null,
     parent: 801,
-    group: 'service_' + CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
+    group: GroupNames.SERVICE_AWARENESS_ACTIVITY_SUGGESTION,
     itemOrder: 1,
     svg: null
   },
@@ -553,7 +603,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_AWARENESS_ACTIVITY_SUGGESTION,
     permissionGroup: null,
     parent: 801,
-    group: 'service_' + CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
+    group: GroupNames.SERVICE_AWARENESS_ACTIVITY_SUGGESTION,
     itemOrder: 2,
     svg: null
   },
@@ -566,7 +616,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 801,
-    group: 'service_' + CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
+    group: GroupNames.SERVICE_AWARENESS_ACTIVITY_SUGGESTION,
     itemOrder: 3,
     svg: null
   },
@@ -581,10 +631,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
       servicePath: SystemPathsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE),
       outputPath: SystemPathsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE + '/outputs'
@@ -599,7 +650,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
     permissionGroup: null,
     parent: 901,
-    group: 'service_' + CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    group: GroupNames.SERVICE_GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
     itemOrder: 1,
     svg: null
   },
@@ -612,7 +663,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
     permissionGroup: null,
     parent: 901,
-    group: 'service_' + CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    group: GroupNames.SERVICE_GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
     itemOrder: 2,
     svg: null
   },
@@ -625,7 +676,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 901,
-    group: 'service_' + CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    group: GroupNames.SERVICE_GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
     itemOrder: 3,
     svg: null
   },
@@ -640,10 +691,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_INTERNAL_BANK_ACCOUNT_APPROVAL,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_INTERNAL_BANK_ACCOUNT_APPROVAL,
       servicePath: SystemPathsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL),
       outputPath: SystemPathsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL + '/outputs'
@@ -658,7 +710,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL,
     permissionGroup: null,
     parent: 1001,
-    group: 'service_' + CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
+    group: GroupNames.SERVICE_INTERNAL_BANK_ACCOUNT_APPROVAL,
     itemOrder: 1,
     svg: null
   },
@@ -671,7 +723,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_INTERNAL_BANK_ACCOUNT_APPROVAL,
     permissionGroup: null,
     parent: 1001,
-    group: 'service_' + CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
+    group: GroupNames.SERVICE_INTERNAL_BANK_ACCOUNT_APPROVAL,
     itemOrder: 2,
     svg: null
   },
@@ -684,7 +736,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 1001,
-    group: 'service_' + CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
+    group: GroupNames.SERVICE_INTERNAL_BANK_ACCOUNT_APPROVAL,
     itemOrder: 3,
     svg: null
   },
@@ -699,10 +751,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.URGENT_JOINT_RELIEF_CAMPAIGN_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_URGENT_JOINT_RELIEF_CAMPAIGN,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_URGENT_JOINT_RELIEF_CAMPAIGN,
       servicePath: SystemPathsEnum.URGENT_JOINT_RELIEF_CAMPAIGN + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN),
       outputPath: SystemPathsEnum.URGENT_JOINT_RELIEF_CAMPAIGN + '/outputs'
@@ -717,7 +770,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.URGENT_JOINT_RELIEF_CAMPAIGN,
     permissionGroup: null,
     parent: 1101,
-    group: 'service_' + CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
+    group: GroupNames.SERVICE_URGENT_JOINT_RELIEF_CAMPAIGN,
     itemOrder: 1,
     svg: null
   },
@@ -730,7 +783,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_URGENT_JOINT_RELIEF_CAMPAIGN,
     permissionGroup: null,
     parent: 1101,
-    group: 'service_' + CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
+    group: GroupNames.SERVICE_URGENT_JOINT_RELIEF_CAMPAIGN,
     itemOrder: 2,
     svg: null
   },
@@ -743,7 +796,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 1101,
-    group: 'service_' + CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
+    group: GroupNames.SERVICE_URGENT_JOINT_RELIEF_CAMPAIGN,
     itemOrder: 3,
     svg: null
   },
@@ -758,10 +811,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
       servicePath: SystemPathsEnum.TRANSFER_INDIVIDUAL_FUNDS_ABROAD + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD),
       outputPath: SystemPathsEnum.TRANSFER_INDIVIDUAL_FUNDS_ABROAD + '/outputs'
@@ -776,7 +830,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
     permissionGroup: null,
     parent: 1201,
-    group: 'service_' + CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+    group: GroupNames.SERVICE_TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
     itemOrder: 1,
     svg: null
   },
@@ -789,7 +843,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
     permissionGroup: null,
     parent: 1201,
-    group: 'service_' + CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+    group: GroupNames.SERVICE_TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
     itemOrder: 2,
     svg: null
   },
@@ -802,7 +856,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 1201,
-    group: 'service_' + CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+    group: GroupNames.SERVICE_TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
     itemOrder: 3,
     svg: null
   },
@@ -817,10 +871,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_FINAL_EXTERNAL_OFFICE_APPROVAL,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_FINAL_EXTERNAL_OFFICE_APPROVAL,
       servicePath: SystemPathsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL),
       outputPath: SystemPathsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL + '/outputs'
@@ -835,7 +890,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL,
     permissionGroup: null,
     parent: 1301,
-    group: 'service_' + CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+    group: GroupNames.SERVICE_FINAL_EXTERNAL_OFFICE_APPROVAL,
     itemOrder: 1,
     svg: null
   },
@@ -848,7 +903,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_FINAL_EXTERNAL_OFFICE_APPROVAL,
     permissionGroup: null,
     parent: 1301,
-    group: 'service_' + CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+    group: GroupNames.SERVICE_FINAL_EXTERNAL_OFFICE_APPROVAL,
     itemOrder: 2,
     svg: null
   },
@@ -861,7 +916,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 1301,
-    group: 'service_' + CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+    group: GroupNames.SERVICE_FINAL_EXTERNAL_OFFICE_APPROVAL,
     itemOrder: 3,
     svg: null
   },
@@ -876,10 +931,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.PARTNER_APPROVAL_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_PARTNER_APPROVAL,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_PARTNER_APPROVAL,
       servicePath: SystemPathsEnum.PARTNER_APPROVAL + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.PARTNER_APPROVAL),
       outputPath: SystemPathsEnum.PARTNER_APPROVAL + '/outputs'
@@ -894,7 +950,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.PARTNER_APPROVAL,
     permissionGroup: null,
     parent: 1401,
-    group: 'service_' + CaseTypes.PARTNER_APPROVAL,
+    group: GroupNames.SERVICE_PARTNER_APPROVAL,
     itemOrder: 1,
     svg: null
   },
@@ -907,7 +963,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_PARTNER_APPROVAL,
     permissionGroup: null,
     parent: 1401,
-    group: 'service_' + CaseTypes.PARTNER_APPROVAL,
+    group: GroupNames.SERVICE_PARTNER_APPROVAL,
     itemOrder: 2,
     svg: null
   },
@@ -920,7 +976,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 1401,
-    group: 'service_' + CaseTypes.PARTNER_APPROVAL,
+    group: GroupNames.SERVICE_PARTNER_APPROVAL,
     itemOrder: 3,
     svg: null
   },
@@ -935,10 +991,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.EMPLOYMENT_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_EMPLOYMENT,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_EMPLOYMENT,
       servicePath: SystemPathsEnum.EMPLOYMENT + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.EMPLOYMENT),
       outputPath: SystemPathsEnum.EMPLOYMENT + '/outputs'
@@ -953,7 +1010,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.EMPLOYMENT,
     permissionGroup: null,
     parent: 1501,
-    group: 'service_' + CaseTypes.EMPLOYMENT,
+    group: GroupNames.SERVICE_EMPLOYMENT,
     itemOrder: 1,
     svg: null
   },
@@ -966,7 +1023,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_EMPLOYMENT,
     permissionGroup: null,
     parent: 1501,
-    group: 'service_' + CaseTypes.EMPLOYMENT,
+    group: GroupNames.SERVICE_EMPLOYMENT,
     itemOrder: 2,
     svg: null
   },
@@ -979,7 +1036,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 1501,
-    group: 'service_' + CaseTypes.EMPLOYMENT,
+    group: GroupNames.SERVICE_EMPLOYMENT,
     itemOrder: 3,
     svg: null
   },
@@ -994,10 +1051,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.CHARITY_ORGANIZATION_UPDATE_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_CHARITY_ORGANIZATION_UPDATE,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_CHARITY_ORGANIZATION_UPDATE,
       servicePath: SystemPathsEnum.CHARITY_ORGANIZATION_UPDATE + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.CHARITY_ORGANIZATION_UPDATE),
       outputPath: SystemPathsEnum.CHARITY_ORGANIZATION_UPDATE + '/outputs'
@@ -1012,7 +1070,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.CHARITY_ORGANIZATION_UPDATE,
     permissionGroup: null,
     parent: 1601,
-    group: 'service_' + CaseTypes.CHARITY_ORGANIZATION_UPDATE,
+    group: GroupNames.SERVICE_CHARITY_ORGANIZATION_UPDATE,
     itemOrder: 1,
     svg: null
   },
@@ -1025,7 +1083,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_CHARITY_ORGANIZATION_UPDATE,
     permissionGroup: null,
     parent: 1601,
-    group: 'service_' + CaseTypes.CHARITY_ORGANIZATION_UPDATE,
+    group: GroupNames.SERVICE_CHARITY_ORGANIZATION_UPDATE,
     itemOrder: 2,
     svg: null
   },
@@ -1038,7 +1096,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 1601,
-    group: 'service_' + CaseTypes.CHARITY_ORGANIZATION_UPDATE,
+    group: GroupNames.SERVICE_CHARITY_ORGANIZATION_UPDATE,
     itemOrder: 3,
     svg: null
   },
@@ -1053,10 +1111,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.NPO_MANAGEMENT_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_NPO_MANAGEMENT,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_NPO_MANAGEMENT,
       servicePath: SystemPathsEnum.NPO_MANAGEMENT + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.NPO_MANAGEMENT),
       outputPath: SystemPathsEnum.NPO_MANAGEMENT + '/outputs'
@@ -1071,7 +1130,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.NPO_MANAGEMENT,
     permissionGroup: null,
     parent: 1701,
-    group: 'service_' + CaseTypes.NPO_MANAGEMENT,
+    group: GroupNames.SERVICE_NPO_MANAGEMENT,
     itemOrder: 1,
     svg: null
   },
@@ -1084,7 +1143,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_NPO_MANAGEMENT,
     permissionGroup: null,
     parent: 1701,
-    group: 'service_' + CaseTypes.NPO_MANAGEMENT,
+    group: GroupNames.SERVICE_NPO_MANAGEMENT,
     itemOrder: 2,
     svg: null
   },
@@ -1097,7 +1156,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 1701,
-    group: 'service_' + CaseTypes.NPO_MANAGEMENT,
+    group: GroupNames.SERVICE_NPO_MANAGEMENT,
     itemOrder: 3,
     svg: null
   },
@@ -1112,10 +1171,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.FOREIGN_COUNTRIES_PROJECTS_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_FOREIGN_COUNTRIES_PROJECTS,
     svg: '<svg viewBox="0 0 512.802 512.802" xmlns="http://www.w3.org/2000/svg">\n  <g>\n    <path\n      d="m483.582 284.393-92.061 18.853-15.509-6c33.463-32.415 52.439-76.88 52.439-123.842 0-45.865-17.799-89.041-50.118-121.572-32.29-32.502-75.289-50.583-121.089-50.917-.873-.02-1.713-.02-2.586 0-45.8.334-88.799 18.416-121.089 50.917-32.319 32.532-50.118 75.707-50.118 121.572 0 47.955 19.566 92.939 54.126 125.479l-15.841 4.439-92.438-18.933-29.298 144.161 111.297 14.646c-2.641 9.209-.359 19.553 6.856 26.796 5.126 5.146 11.944 7.98 19.197 7.98 5.968 0 11.639-1.922 16.317-5.469 1.263 4.049 3.482 7.859 6.672 11.061 5.127 5.146 11.944 7.979 19.197 7.979 4.208 0 8.268-.96 11.938-2.766 1.157 3.368 3.045 6.537 5.719 9.221 4.577 4.594 10.663 7.124 17.139 7.124s12.562-2.53 17.139-7.124l1.179-1.184c1.178 2.899 2.935 5.615 5.275 7.965 4.577 4.594 10.664 7.125 17.14 7.124 6.476 0 12.562-2.53 17.138-7.124l.282-.283c5.591 1.837 11.359 2.752 17.099 2.752 11.482 0 22.839-3.612 32.383-10.583l75.135-47.402 115.7-21.091zm-104.293-13.038c-10.516-9.521-21.957-17.696-34.107-24.453 5.458-20.543 8.612-42.944 9.173-65.999h58.907c-1.57 33.231-13.54 64.763-33.973 90.452zm-9.881 11.286c-2.858 2.965-5.837 5.834-8.944 8.59l-27.151-10.504c2.735-6.078 5.223-12.448 7.451-19.073 10.165 5.916 19.766 12.926 28.644 20.987zm43.86-116.738h-58.911c-.649-27.011-4.796-52.955-12.049-76.1 10.712-6.216 20.808-13.627 30.12-22.171 23.887 26.276 39.053 60.596 40.84 98.271zm-51.447-108.889c-7.656 6.968-15.889 13.101-24.583 18.36-2.967-7.58-6.293-14.785-9.969-21.532-6.458-11.85-13.743-21.85-21.645-29.867 21.039 7.036 40.128 18.403 56.197 33.039zm-98.37-40.458c18.872 3.267 36.656 18.795 50.646 44.465 3.656 6.709 6.943 13.917 9.846 21.536-18.756 8.989-39.238 14.179-60.491 15.168v-81.169zm0 96.178c22.92-.974 45.032-6.402 65.342-15.874 6.315 21.039 9.946 44.532 10.562 69.043h-75.904zm0 68.169h75.904c-.525 20.639-3.232 40.662-7.874 59.115-21.214-9.554-44.218-15.005-68.03-15.952zm0 58.171c22.392.971 43.994 6.283 63.84 15.532-2.418 7.455-5.164 14.587-8.253 21.296h-55.587zm-15-222.517v81.168c-21.254-.989-41.735-6.179-60.491-15.168 2.903-7.618 6.189-14.826 9.846-21.536 13.987-25.667 31.769-41.194 50.645-44.464zm-68.081 223.484c-4.629-18.391-7.303-38.384-7.822-59.138h75.903v43.162c-23.832.949-46.853 6.407-68.081 15.976zm68.081-.967v36.829h-30.821l-.823.777-20.739 5.812c-4.428-8.59-8.274-17.929-11.505-27.863 19.86-9.264 41.479-14.583 63.888-15.555zm-67.1 47.542-26.612 7.457c-4.31-3.616-8.392-7.434-12.249-11.428 8.87-8.053 18.461-15.058 28.614-20.972 2.963 8.782 6.388 17.126 10.247 24.943zm-8.803-120.713c.616-24.51 4.247-48.004 10.562-69.043 20.31 9.471 42.421 14.9 65.342 15.874v53.169zm33.732-141.928c-7.903 8.017-15.187 18.017-21.646 29.867-3.677 6.747-7.002 13.951-9.969 21.532-8.695-5.259-16.927-11.392-24.583-18.36 16.068-14.636 35.158-26.003 56.198-33.039zm-66.805 43.657c9.312 8.544 19.408 15.954 30.12 22.171-7.253 23.146-11.4 49.089-12.049 76.1h-58.911c1.786-37.675 16.952-71.995 40.84-98.271zm-6.891 203.749c-20.448-25.66-32.382-57.126-33.944-90.478h58.906c.555 23.183 3.676 45.544 9.124 66.027-12.143 6.758-23.576 14.932-34.086 24.451zm-114.682 144.395 23.103-113.679 53.655 10.989-21.438 109.969zm128.019 43.629c-2.291 2.299-5.335 3.566-8.57 3.566s-6.279-1.267-8.57-3.566c-4.747-4.766-4.747-12.521 0-17.287l18.081-18.149c2.291-2.3 5.334-3.566 8.57-3.566s6.279 1.266 8.57 3.566c4.748 4.766 4.748 12.521 0 17.286zm42.186 13.572c-2.291 2.3-5.334 3.566-8.57 3.566-3.235 0-6.279-1.266-8.57-3.565-4.747-4.766-4.747-12.521 0-17.287l18.081-18.15c2.291-2.3 5.334-3.566 8.57-3.566s6.279 1.266 8.57 3.565c4.342 4.36 4.7 11.214 1.098 16zm54.935-7.848-22.197 22.282c-1.741 1.748-4.054 2.71-6.512 2.71s-4.771-.963-6.512-2.71c-3.256-3.268-3.568-8.376-.957-12.01l23.154-23.427c1.741-1.748 4.054-2.71 6.513-2.71 2.458 0 4.771.963 6.511 2.71 3.613 3.627 3.613 9.528 0 13.155zm30.5 17.053-11.966 12.011c-1.741 1.748-4.053 2.71-6.511 2.71-2.459 0-4.771-.962-6.513-2.71-3.612-3.626-3.612-9.528 0-13.154l11.966-12.011c1.74-1.747 4.053-2.709 6.511-2.71 2.459 0 4.771.962 6.513 2.71 3.612 3.626 3.612 9.527 0 13.154zm40.197 1.938-.453.31c-8.266 6.103-18.422 8.704-28.383 7.523 8.658-9.513 8.431-24.31-.734-33.511-4.577-4.594-10.664-7.124-17.14-7.124-2.444 0-4.832.362-7.104 1.057-1.05-4.026-3.119-7.837-6.256-10.986-4.575-4.594-10.662-7.124-17.138-7.124 0 0 0 0-.001 0-4.688 0-9.169 1.333-13.024 3.808-1.26-4.07-3.486-7.902-6.69-11.119-5.126-5.146-11.944-7.979-19.197-7.979-5.967 0-11.638 1.922-16.316 5.468-1.263-4.049-3.483-7.859-6.673-11.061-5.126-5.146-11.944-7.979-19.197-7.979s-14.071 2.833-19.197 7.979l-15.823 15.883-32.29-4.249 21.234-108.919 12.93 2.648 71.082-19.919-51.689 48.835 5.436 5.456c22.781 22.868 59.153 23.579 82.805 1.618l10.812-10.041c10.614 12.344 35.948 39.999 62.142 55.337 30.232 17.703 60.56 34.151 76.509 42.676zm81.792-49.818c-9.518-5.021-47.384-25.142-85.079-47.215-31.264-18.307-62.862-57.556-63.179-57.95l-5.044-6.304-22.519 20.909c-15.771 14.646-39.101 15.817-56.059 3.793l59.942-56.633h94.452l72.17 27.921 21.204-4.342 22.005 112.913zm30.586-122.83 45.758-9.37 23.179 114.059-46.87 8.544z"\n      fill="currentColor"/>\n  </g>\n</svg>',
     data: {
+      childrenGroupName: GroupNames.SERVICE_FOREIGN_COUNTRIES_PROJECTS,
       servicePath: SystemPathsEnum.FOREIGN_COUNTRIES_PROJECTS + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.FOREIGN_COUNTRIES_PROJECTS),
       outputPath: SystemPathsEnum.FOREIGN_COUNTRIES_PROJECTS + '/outputs'
@@ -1130,7 +1190,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.FOREIGN_COUNTRIES_PROJECTS,
     permissionGroup: null,
     parent: 1801,
-    group: 'service_' + CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
+    group: GroupNames.SERVICE_FOREIGN_COUNTRIES_PROJECTS,
     itemOrder: 1,
     svg: null
   },
@@ -1143,7 +1203,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_FOREIGN_COUNTRIES_PROJECTS,
     permissionGroup: null,
     parent: 1801,
-    group: 'service_' + CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
+    group: GroupNames.SERVICE_FOREIGN_COUNTRIES_PROJECTS,
     itemOrder: 2,
     svg: null
   },
@@ -1156,7 +1216,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 1801,
-    group: 'service_' + CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
+    group: GroupNames.SERVICE_FOREIGN_COUNTRIES_PROJECTS,
     itemOrder: 3,
     svg: null
   },
@@ -1171,10 +1231,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_EXTERNAL_ORG_AFFILIATION_REQUEST,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_EXTERNAL_ORG_AFFILIATION_REQUEST,
       servicePath: SystemPathsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST),
       outputPath: SystemPathsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST + '/outputs'
@@ -1189,7 +1250,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST,
     permissionGroup: null,
     parent: 1901,
-    group: 'service_' + CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
+    group: GroupNames.SERVICE_EXTERNAL_ORG_AFFILIATION_REQUEST,
     itemOrder: 1,
     svg: null
   },
@@ -1202,7 +1263,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_EXTERNAL_ORG_AFFILIATION_REQUEST,
     permissionGroup: null,
     parent: 1901,
-    group: 'service_' + CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
+    group: GroupNames.SERVICE_EXTERNAL_ORG_AFFILIATION_REQUEST,
     itemOrder: 2,
     svg: null
   },
@@ -1215,7 +1276,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 1901,
-    group: 'service_' + CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
+    group: GroupNames.SERVICE_EXTERNAL_ORG_AFFILIATION_REQUEST,
     itemOrder: 3,
     svg: null
   },
@@ -1230,10 +1291,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.ORGANIZATION_ENTITIES_SUPPORT_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_ORGANIZATION_ENTITIES_SUPPORT,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_ORGANIZATION_ENTITIES_SUPPORT,
       servicePath: SystemPathsEnum.ORGANIZATION_ENTITIES_SUPPORT + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.ORGANIZATION_ENTITIES_SUPPORT),
       outputPath: SystemPathsEnum.ORGANIZATION_ENTITIES_SUPPORT + '/outputs'
@@ -1248,7 +1310,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT,
     permissionGroup: null,
     parent: 2001,
-    group: 'service_' + CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
+    group: GroupNames.SERVICE_ORGANIZATION_ENTITIES_SUPPORT,
     itemOrder: 1,
     svg: null
   },
@@ -1261,7 +1323,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_ORGANIZATION_ENTITIES_SUPPORT,
     permissionGroup: null,
     parent: 2001,
-    group: 'service_' + CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
+    group: GroupNames.SERVICE_ORGANIZATION_ENTITIES_SUPPORT,
     itemOrder: 2,
     svg: null
   },
@@ -1274,7 +1336,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 2001,
-    group: 'service_' + CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
+    group: GroupNames.SERVICE_ORGANIZATION_ENTITIES_SUPPORT,
     itemOrder: 3,
     svg: null
   },
@@ -1289,10 +1351,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_COORDINATION_WITH_ORGANIZATION_REQUEST,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_COORDINATION_WITH_ORGANIZATION_REQUEST,
       servicePath: SystemPathsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST),
       outputPath: SystemPathsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST + '/outputs'
@@ -1307,7 +1370,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST,
     permissionGroup: null,
     parent: 2101,
-    group: 'service_' + CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
+    group: GroupNames.SERVICE_COORDINATION_WITH_ORGANIZATION_REQUEST,
     itemOrder: 1,
     svg: null
   },
@@ -1320,7 +1383,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_COORDINATION_WITH_ORGANIZATION_REQUEST,
     permissionGroup: null,
     parent: 2101,
-    group: 'service_' + CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
+    group: GroupNames.SERVICE_COORDINATION_WITH_ORGANIZATION_REQUEST,
     itemOrder: 2,
     svg: null
   },
@@ -1333,7 +1396,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 2101,
-    group: 'service_' + CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
+    group: GroupNames.SERVICE_COORDINATION_WITH_ORGANIZATION_REQUEST,
     itemOrder: 3,
     svg: null
   },
@@ -1348,10 +1411,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.CUSTOMS_EXEMPTION_REMITTANCE_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_CUSTOMS_EXEMPTION_REMITTANCE,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_CUSTOMS_EXEMPTION_REMITTANCE,
       servicePath: SystemPathsEnum.CUSTOMS_EXEMPTION_REMITTANCE + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE),
       outputPath: SystemPathsEnum.CUSTOMS_EXEMPTION_REMITTANCE + '/outputs'
@@ -1366,7 +1430,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.CUSTOMS_EXEMPTION_REMITTANCE,
     permissionGroup: null,
     parent: 2201,
-    group: 'service_' + CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
+    group: GroupNames.SERVICE_CUSTOMS_EXEMPTION_REMITTANCE,
     itemOrder: 1,
     svg: null
   },
@@ -1379,7 +1443,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_CUSTOMS_EXEMPTION_REMITTANCE,
     permissionGroup: null,
     parent: 2201,
-    group: 'service_' + CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
+    group: GroupNames.SERVICE_CUSTOMS_EXEMPTION_REMITTANCE,
     itemOrder: 2,
     svg: null
   },
@@ -1392,7 +1456,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 2201,
-    group: 'service_' + CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
+    group: GroupNames.SERVICE_CUSTOMS_EXEMPTION_REMITTANCE,
     itemOrder: 3,
     svg: null
   },
@@ -1407,10 +1471,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.FINANCIAL_TRANSFERS_LICENSING_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_FINANCIAL_TRANSFERS_LICENSING,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_FINANCIAL_TRANSFERS_LICENSING,
       servicePath: SystemPathsEnum.FINANCIAL_TRANSFERS_LICENSING + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.FINANCIAL_TRANSFERS_LICENSING),
       outputPath: SystemPathsEnum.FINANCIAL_TRANSFERS_LICENSING + '/outputs'
@@ -1425,7 +1490,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.FINANCIAL_TRANSFERS_LICENSING,
     permissionGroup: null,
     parent: 2301,
-    group: 'service_' + CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
+    group: GroupNames.SERVICE_FINANCIAL_TRANSFERS_LICENSING,
     itemOrder: 1,
     svg: null
   },
@@ -1438,7 +1503,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_FINANCIAL_TRANSFERS_LICENSING,
     permissionGroup: null,
     parent: 2301,
-    group: 'service_' + CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
+    group: GroupNames.SERVICE_FINANCIAL_TRANSFERS_LICENSING,
     itemOrder: 2,
     svg: null
   },
@@ -1451,7 +1516,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 2301,
-    group: 'service_' + CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
+    group: GroupNames.SERVICE_FINANCIAL_TRANSFERS_LICENSING,
     itemOrder: 3,
     svg: null
   },
@@ -1466,10 +1531,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.COLLECTION_APPROVAL_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_COLLECTION_APPROVAL,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_COLLECTION_APPROVAL,
       servicePath: SystemPathsEnum.COLLECTION_APPROVAL + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.COLLECTION_APPROVAL),
       outputPath: SystemPathsEnum.COLLECTION_APPROVAL + '/outputs'
@@ -1484,7 +1550,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.COLLECTION_APPROVAL,
     permissionGroup: null,
     parent: 2401,
-    group: 'service_' + CaseTypes.COLLECTION_APPROVAL,
+    group: GroupNames.SERVICE_COLLECTION_APPROVAL,
     itemOrder: 1,
     svg: null
   },
@@ -1497,7 +1563,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_COLLECTION_APPROVAL,
     permissionGroup: null,
     parent: 2401,
-    group: 'service_' + CaseTypes.COLLECTION_APPROVAL,
+    group: GroupNames.SERVICE_COLLECTION_APPROVAL,
     itemOrder: 2,
     svg: null
   },
@@ -1510,7 +1576,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 2401,
-    group: 'service_' + CaseTypes.COLLECTION_APPROVAL,
+    group: GroupNames.SERVICE_COLLECTION_APPROVAL,
     itemOrder: 3,
     svg: null
   },
@@ -1525,10 +1591,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.COLLECTOR_LICENSING_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_COLLECTOR_LICENSING,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_COLLECTOR_LICENSING,
       servicePath: SystemPathsEnum.COLLECTOR_LICENSING + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.COLLECTOR_LICENSING),
       outputPath: SystemPathsEnum.COLLECTOR_LICENSING + '/outputs'
@@ -1543,7 +1610,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.COLLECTOR_LICENSING,
     permissionGroup: null,
     parent: 2501,
-    group: 'service_' + CaseTypes.COLLECTOR_LICENSING,
+    group: GroupNames.SERVICE_COLLECTOR_LICENSING,
     itemOrder: 1,
     svg: null
   },
@@ -1556,7 +1623,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_COLLECTOR_LICENSING,
     permissionGroup: null,
     parent: 2501,
-    group: 'service_' + CaseTypes.COLLECTOR_LICENSING,
+    group: GroupNames.SERVICE_COLLECTOR_LICENSING,
     itemOrder: 2,
     svg: null
   },
@@ -1569,7 +1636,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 2501,
-    group: 'service_' + CaseTypes.COLLECTOR_LICENSING,
+    group: GroupNames.SERVICE_COLLECTOR_LICENSING,
     itemOrder: 3,
     svg: null
   },
@@ -1584,10 +1651,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.FUNDRAISING_LICENSING_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_FUNDRAISING_LICENSING,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_FUNDRAISING_LICENSING,
       servicePath: SystemPathsEnum.FUNDRAISING_LICENSING + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.FUNDRAISING_LICENSING),
       outputPath: SystemPathsEnum.FUNDRAISING_LICENSING + '/outputs'
@@ -1602,7 +1670,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.FUNDRAISING_LICENSING,
     permissionGroup: null,
     parent: 2601,
-    group: 'service_' + CaseTypes.FUNDRAISING_LICENSING,
+    group: GroupNames.SERVICE_FUNDRAISING_LICENSING,
     itemOrder: 1,
     svg: null
   },
@@ -1615,7 +1683,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_FUNDRAISING_LICENSING,
     permissionGroup: null,
     parent: 2601,
-    group: 'service_' + CaseTypes.FUNDRAISING_LICENSING,
+    group: GroupNames.SERVICE_FUNDRAISING_LICENSING,
     itemOrder: 2,
     svg: null
   },
@@ -1628,7 +1696,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 2601,
-    group: 'service_' + CaseTypes.FUNDRAISING_LICENSING,
+    group: GroupNames.SERVICE_FUNDRAISING_LICENSING,
     itemOrder: 3,
     svg: null
   },
@@ -1643,10 +1711,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_LICENSING_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_URGENT_INTERVENTION_LICENSING,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_URGENT_INTERVENTION_LICENSING,
       servicePath: SystemPathsEnum.URGENT_INTERVENTION_LICENSING + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.URGENT_INTERVENTION_LICENSING),
       outputPath: SystemPathsEnum.URGENT_INTERVENTION_LICENSING + '/outputs'
@@ -1661,7 +1730,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.URGENT_INTERVENTION_LICENSING,
     permissionGroup: null,
     parent: 2701,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_LICENSING,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_LICENSING,
     itemOrder: 1,
     svg: null
   },
@@ -1674,7 +1743,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_LICENSING,
     permissionGroup: null,
     parent: 2701,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_LICENSING,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_LICENSING,
     itemOrder: 2,
     svg: null
   },
@@ -1687,7 +1756,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 2701,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_LICENSING,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_LICENSING,
     itemOrder: 3,
     svg: null
   },
@@ -1702,10 +1771,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_ANNOUNCEMENT_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_URGENT_INTERVENTION_ANNOUNCEMENT,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_URGENT_INTERVENTION_ANNOUNCEMENT,
       servicePath: SystemPathsEnum.URGENT_INTERVENTION_ANNOUNCEMENT + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT),
       outputPath: SystemPathsEnum.URGENT_INTERVENTION_ANNOUNCEMENT + '/outputs'
@@ -1720,7 +1790,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.URGENT_INTERVENTION_ANNOUNCEMENT,
     permissionGroup: null,
     parent: 2801,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_ANNOUNCEMENT,
     itemOrder: 1,
     svg: null
   },
@@ -1733,7 +1803,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_ANNOUNCEMENT,
     permissionGroup: null,
     parent: 2801,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_ANNOUNCEMENT,
     itemOrder: 2,
     svg: null
   },
@@ -1746,7 +1816,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 2801,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_ANNOUNCEMENT,
     itemOrder: 3,
     svg: null
   },
@@ -1761,10 +1831,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_CLOSURE_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_URGENT_INTERVENTION_CLOSURE,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_URGENT_INTERVENTION_CLOSURE,
       servicePath: SystemPathsEnum.URGENT_INTERVENTION_CLOSURE + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.URGENT_INTERVENTION_CLOSURE),
       outputPath: SystemPathsEnum.URGENT_INTERVENTION_CLOSURE + '/outputs'
@@ -1779,7 +1850,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.URGENT_INTERVENTION_CLOSURE,
     permissionGroup: null,
     parent: 2901,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_CLOSURE,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_CLOSURE,
     itemOrder: 1,
     svg: null
   },
@@ -1792,7 +1863,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_CLOSURE,
     permissionGroup: null,
     parent: 2901,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_CLOSURE,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_CLOSURE,
     itemOrder: 2,
     svg: null
   },
@@ -1805,7 +1876,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 2901,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_CLOSURE,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_CLOSURE,
     itemOrder: 3,
     svg: null
   },
@@ -1820,10 +1891,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
       servicePath: SystemPathsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION),
       outputPath: SystemPathsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION + '/outputs'
@@ -1838,7 +1910,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
     permissionGroup: null,
     parent: 3001,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
     itemOrder: 1,
     svg: null
   },
@@ -1851,7 +1923,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
     permissionGroup: null,
     parent: 3001,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
     itemOrder: 2,
     svg: null
   },
@@ -1864,7 +1936,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 3001,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
     itemOrder: 3,
     svg: null
   },
@@ -1879,10 +1951,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_LICENSE_FOLLOWUP_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP,
       servicePath: SystemPathsEnum.URGENT_INTERVENTION_LICENSE_FOLLOWUP + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP),
       outputPath: SystemPathsEnum.URGENT_INTERVENTION_LICENSE_FOLLOWUP + '/outputs'
@@ -1897,7 +1970,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
     permissionGroup: null,
     parent: 3101,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP,
     itemOrder: 1,
     svg: null
   },
@@ -1910,7 +1983,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP,
     permissionGroup: null,
     parent: 3101,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP,
     itemOrder: 2,
     svg: null
   },
@@ -1923,7 +1996,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 3101,
-    group: 'service_' + CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
+    group: GroupNames.SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP,
     itemOrder: 3,
     svg: null
   },
@@ -1939,10 +2012,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.INTERNAL_PROJECT_LICENSE_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_INTERNAL_PROJECT_LICENSE,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_INTERNAL_PROJECT_LICENSE,
       servicePath: SystemPathsEnum.INTERNAL_PROJECT_LICENSE + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.INTERNAL_PROJECT_LICENSE),
       outputPath: SystemPathsEnum.INTERNAL_PROJECT_LICENSE + '/outputs'
@@ -1957,7 +2031,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.INTERNAL_PROJECT_LICENSE,
     permissionGroup: null,
     parent: 100001,
-    group: 'service_' + CaseTypes.INTERNAL_PROJECT_LICENSE,
+    group: GroupNames.SERVICE_INTERNAL_PROJECT_LICENSE,
     itemOrder: 1,
     svg: null
   },
@@ -1970,7 +2044,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_INTERNAL_PROJECT_LICENSE,
     permissionGroup: null,
     parent: 100001,
-    group: 'service_' + CaseTypes.INTERNAL_PROJECT_LICENSE,
+    group: GroupNames.SERVICE_INTERNAL_PROJECT_LICENSE,
     itemOrder: 2,
     svg: null
   },
@@ -1983,7 +2057,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 100001,
-    group: 'service_' + CaseTypes.INTERNAL_PROJECT_LICENSE,
+    group: GroupNames.SERVICE_INTERNAL_PROJECT_LICENSE,
     itemOrder: 3,
     svg: null
   },*/
@@ -1998,10 +2072,11 @@ export const newNavigationMenuList = [
     permission: '',
     permissionGroup: PermissionGroupsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL_SERVICES_PERMISSION_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_INITIAL_EXTERNAL_OFFICE_APPROVAL,
     svg: null,
     data: {
+      childrenGroupName: GroupNames.SERVICE_INITIAL_EXTERNAL_OFFICE_APPROVAL,
       servicePath: SystemPathsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL + '/service',
       searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL),
       outputPath: SystemPathsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL + '/outputs'
@@ -2016,7 +2091,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL,
     permissionGroup: null,
     parent: 200001,
-    group: 'service_' + CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    group: GroupNames.SERVICE_INITIAL_EXTERNAL_OFFICE_APPROVAL,
     itemOrder: 1,
     svg: null
   },
@@ -2029,7 +2104,7 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.SEARCH_SERVICE_INITIAL_EXTERNAL_OFFICE_APPROVAL,
     permissionGroup: null,
     parent: 200001,
-    group: 'service_' + CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    group: GroupNames.SERVICE_INITIAL_EXTERNAL_OFFICE_APPROVAL,
     itemOrder: 2,
     svg: null
   },
@@ -2042,7 +2117,7 @@ export const newNavigationMenuList = [
     permission: Constants.SERVICE_OUTPUT_PERMISSION,
     permissionGroup: null,
     parent: 200001,
-    group: 'service_' + CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    group: GroupNames.SERVICE_INITIAL_EXTERNAL_OFFICE_APPROVAL,
     itemOrder: 3,
     svg: null
   },*/
@@ -2056,7 +2131,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.SANADI_UNDER_PROCESSING_REQUESTS,
     permissionGroup: null,
     parent: 23,
-    group: 'sanady',
+    group: GroupNames.SANADI,
     itemOrder: 2,
     svg: '<svg fill="currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">\n<g>\n\t<g>\n\t\t<path class="st0" d="M17.3,14.4c-0.2,0-0.3,0-0.5,0c-0.2,0-0.4,0-0.5,0.3c-0.1,0.2-0.1,0.3,0.1,0.4c0.3,0.2,0.5,0.5,0.7,0.8\n\t\t\tc0.4,0.4,0.4,1,0,1.4c-0.3,0.3-0.6,0.6-0.9,0.9c-0.4,0.4-1,0.4-1.5,0c-0.3-0.3-0.5-0.5-0.8-0.8c-0.1-0.1-0.2-0.1-0.3-0.1\n\t\t\tc-0.1,0.1-0.4,0-0.4,0.3c0,0.4,0,0.7,0,1.1c0,0.6-0.4,1-1,1c-0.5,0-0.9,0-1.4,0c-0.5,0-0.9-0.4-0.9-1c0-0.4,0-0.8,0-1.1\n\t\t\tc0-0.2-0.1-0.3-0.3-0.3c-0.1-0.1-0.3-0.1-0.4,0c-0.2,0.3-0.5,0.5-0.8,0.8c-0.4,0.4-1,0.4-1.4,0c-0.3-0.3-0.6-0.6-0.9-0.9\n\t\t\tc-0.4-0.4-0.4-1,0-1.4c0.3-0.3,0.5-0.5,0.8-0.8c0.1-0.1,0.1-0.2,0.1-0.3c-0.1-0.1-0.1-0.4-0.3-0.4c-0.4,0-0.8,0-1.1,0\n\t\t\tc-0.5,0-0.9-0.4-0.9-0.9c0-0.5,0-0.9,0-1.4c0-0.6,0.4-1,1-1c0.4,0,0.8,0,1.2,0c0.2,0,0.2-0.2,0.3-0.3c0.1-0.1,0.1-0.2,0-0.4\n\t\t\tC7,10,6.7,9.8,6.5,9.5C6.1,9,6.1,8.5,6.5,8c0.3-0.3,0.6-0.6,0.9-0.9c0.4-0.4,1-0.4,1.4,0c0.3,0.2,0.5,0.5,0.7,0.8\n\t\t\tC9.7,8.1,9.8,8.1,9.9,8c0.2-0.1,0.4-0.1,0.3-0.4c0-0.3,0-0.7,0-1c0-0.7,0.4-1.1,1.1-1.1c0.4,0,0.8,0,1.2,0c0.6,0,1,0.4,1,1\n\t\t\tc0,0.4,0,0.7,0,1.1c0,0.2,0,0.2,0.2,0.3c0.2,0,0.3,0.2,0.5,0c0.2-0.3,0.5-0.5,0.8-0.8c0.4-0.4,1-0.4,1.4,0\n\t\t\tc0.3,0.3,0.6,0.6,0.9,0.9c0.4,0.5,0.4,1,0,1.5c-0.2,0.2-0.5,0.5-0.7,0.7c-0.1,0.1-0.1,0.2-0.1,0.4c0.1,0.2,0.1,0.3,0.3,0.3\n\t\t\tc0.4,0,0.7,0,1.1,0c0.6,0,1,0.4,1,1c0,0.5,0,1,0,1.5c0,0.4-0.4,0.8-0.9,0.8C17.8,14.4,17.6,14.4,17.3,14.4\n\t\t\tC17.3,14.4,17.3,14.4,17.3,14.4z M7,16.4c0.3,0.3,0.7,0.6,1,0.9c0.3-0.3,0.6-0.6,0.9-0.9c0.3-0.3,0.6-0.4,1-0.2\n\t\t\tc0.8,0.3,1.3,0.4,1.2,1.6c0,0.2,0,0.4,0,0.7c0,0.1,0,0.2,0,0.3c0.5,0,0.9,0,1.4,0c0-0.4,0-0.8,0-1.2c0-0.5,0.2-0.8,0.7-1\n\t\t\tc0.1,0,0.2-0.1,0.3-0.1c0.5-0.2,0.9-0.1,1.3,0.3c0.3,0.3,0.6,0.5,0.9,0.8c0.3-0.3,0.6-0.7,0.9-1c-0.3-0.3-0.6-0.6-0.9-0.9\n\t\t\tc-0.3-0.3-0.4-0.7-0.2-1.1c0-0.1,0.1-0.2,0.1-0.3c0.3-0.6,0.5-0.8,1.2-0.8c0.4,0,0.8,0,1.2,0c0-0.5,0-0.9,0-1.4\n\t\t\tc-0.4,0-0.8,0-1.3,0c-0.5,0-0.8-0.2-1-0.7c0-0.1-0.1-0.2-0.1-0.3c-0.2-0.6-0.2-0.9,0.3-1.3c0.3-0.3,0.5-0.6,0.8-0.9\n\t\t\tc-0.3-0.3-0.7-0.6-1-0.9c-0.3,0.3-0.5,0.6-0.8,0.8c-0.2,0.1-0.4,0.3-0.6,0.3c-0.2,0-0.5-0.1-0.7-0.2c-0.7-0.3-0.8-0.5-0.8-1.3\n\t\t\tc0-0.3,0-0.7,0-1c-0.5,0-0.9,0-1.4,0c0,0.4,0,0.8,0,1.2c0,0.5-0.2,0.8-0.7,1c-0.1,0-0.2,0.1-0.3,0.1C9.7,9.1,9.4,9.1,9,8.7\n\t\t\tC8.7,8.4,8.4,8.1,8.1,7.8c-0.3,0.3-0.6,0.7-0.9,1C7.4,9.1,7.7,9.4,8,9.7c0.3,0.3,0.4,0.7,0.2,1.2c0,0.1-0.1,0.2-0.1,0.3\n\t\t\tc-0.2,0.5-0.5,0.7-1,0.7c-0.4,0-0.8,0-1.3,0c0,0.5,0,0.9,0,1.4c0,0,0,0,0,0c0.4,0,0.9,0,1.3,0c0.5,0,0.8,0.2,0.9,0.7\n\t\t\tc0,0.1,0.1,0.2,0.1,0.3c0.2,0.5,0.1,0.8-0.2,1.2C7.6,15.8,7.3,16.1,7,16.4z"/>\n\t\t<path class="st0" d="M23.4,15.3c0.3-0.3,0.5-0.5,0.8-0.7c0.2-0.2,0.5-0.3,0.7-0.1c0.2,0.2,0.2,0.5-0.1,0.7c-0.7,0.7-1.4,1.4-2.1,2\n\t\t\tc-0.1,0.1-0.3,0.2-0.5,0.2c-0.2,0-0.3-0.2-0.3-0.4c-0.1-1-0.3-1.9-0.4-2.9c0-0.3,0.1-0.5,0.4-0.6c0.3,0,0.5,0.1,0.5,0.4\n\t\t\tc0.1,0.3,0.1,0.6,0.2,0.9c0.6-2.9,0.1-5.7-1.5-8.2C19.3,4.2,17,2.6,14,2c0.1-0.3,0.1-0.6,0.2-0.9C19.5,2,24.9,7.8,23.4,15.3z"/>\n\t\t<path class="st0" d="M4.5,20.6c4,3.8,11.1,4.1,15.5-0.8c0.2,0.2,0.4,0.4,0.7,0.6c-2.2,2.4-4.9,3.8-8.2,4c-3.2,0.2-6.1-0.8-8.6-2.9\n\t\t\tc0.1,0.3,0.2,0.6,0.3,0.9c0.1,0.3,0,0.6-0.3,0.7c-0.3,0.1-0.5,0-0.6-0.4c-0.3-0.9-0.6-1.9-0.9-2.8c-0.1-0.2-0.1-0.4,0.1-0.6\n\t\t\tc0.2-0.2,0.4-0.2,0.6-0.1c0.9,0.3,1.8,0.6,2.7,0.8c0.4,0.1,0.5,0.3,0.4,0.6C6.1,21,5.9,21.1,5.5,21C5.2,20.9,4.9,20.8,4.5,20.6z"\n\t\t\t/>\n\t\t<path class="st0" d="M7.7,1.5c-0.3,0-0.6,0-1-0.1C6.3,1.5,6.1,1.3,6.1,1c0-0.3,0.2-0.5,0.6-0.5c1,0,2,0.1,3,0.1\n\t\t\tc0.2,0,0.4,0.1,0.5,0.3c0.1,0.2,0,0.4-0.1,0.6C9.4,2.3,8.9,3,8.3,3.8C8.1,4,7.8,4.1,7.6,3.9c-0.2-0.2-0.2-0.4,0-0.7\n\t\t\tc0.2-0.2,0.4-0.5,0.6-0.8C3.4,4-0.6,9.7,1.5,16.2c-0.3,0.1-0.6,0.2-0.9,0.3c-1-3-0.9-6,0.5-8.9C2.5,4.7,4.7,2.7,7.7,1.5z"/>\n\t\t<path class="st0" d="M15,12.7c0,1.8-1.5,3.1-3.2,3.1c-1.7,0-3.1-1.5-3.1-3.2c0-1.7,1.5-3.1,3.2-3C13.6,9.6,15,11,15,12.7z\n\t\t\t M14,12.7c0-1.2-1-2.2-2.2-2.2c-1.2,0-2.2,1-2.2,2.2c0,1.2,1,2.2,2.2,2.2C13,14.9,14,13.9,14,12.7z"/>\n\t</g>\n</g>\n</svg>\n'
   },
@@ -2069,7 +2144,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.SANADI_SEARCH_BENEFICIARY,
     permissionGroup: null,
     parent: 23,
-    group: 'sanady',
+    group: GroupNames.SANADI,
     itemOrder: 4,
     svg: '<svg stroke="none" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">\n<g>\n\t<g>\n\t\t<path  d="M10.1,3.1c0,0.2-0.1,0.3-0.3,0.4C9.6,3.6,9.4,3.6,9.3,3.4c-0.5-0.5-1-1-1.4-1.4C7.7,1.9,7.6,1.8,7.5,1.6\n\t\t\tC7.3,1.4,7.3,1.2,7.5,1c0.2-0.2,0.4-0.2,0.6,0c0.6,0.6,1.2,1.2,1.8,1.8C10,2.9,10,3,10.1,3.1z"/>\n\t\t<path  d="M14.1,3.6c-0.2,0-0.4-0.1-0.4-0.3c-0.1-0.2,0-0.4,0.1-0.5c0.4-0.4,0.7-0.7,1.1-1.1c0.2-0.2,0.5-0.5,0.7-0.7\n\t\t\tc0.2-0.2,0.5-0.2,0.7,0c0.2,0.2,0.2,0.5,0,0.7c-0.6,0.6-1.1,1.1-1.7,1.7C14.3,3.5,14.2,3.6,14.1,3.6z"/>\n\t\t<path  d="M12.3,1.3c0,0.3,0,0.6,0,0.9c0,0.3-0.2,0.5-0.4,0.5c-0.2,0-0.5-0.2-0.5-0.5c0-0.6,0-1.2,0-1.8\n\t\t\tc0-0.3,0.2-0.4,0.4-0.4c0.3,0,0.4,0.2,0.4,0.4C12.3,0.7,12.3,1,12.3,1.3z"/>\n\t\t<path  d="M11.8,11.6c0.3,0,0.7,0,1,0.1c0.9,0.2,1.6,1.1,1.6,2.1c0,0.3-0.2,0.5-0.4,0.5c-0.3,0-0.5-0.2-0.5-0.5\n\t\t\tc-0.1-0.8-0.6-1.3-1.4-1.3c-0.3,0-0.7,0-1,0c-0.6,0.1-1.1,0.6-1.1,1.2c0,0,0,0.1,0,0.1c0,0.2-0.2,0.4-0.5,0.4\n\t\t\tc-0.2,0-0.4-0.2-0.4-0.5c0-1,0.9-2.1,1.9-2.2C11.3,11.6,11.6,11.6,11.8,11.6z"/>\n\t\t<path  d="M11.9,7.1c-1,0-1.8,0.8-1.8,1.8c0,1,0.8,1.8,1.8,1.8c1,0,1.8-0.8,1.8-1.8C13.6,8,12.8,7.2,11.9,7.1z\n\t\t\t M11.8,9.8c-0.5,0-0.9-0.4-0.9-0.9C11,8.4,11.4,8,11.8,8c0.5,0,0.9,0.4,0.9,0.9C12.7,9.4,12.3,9.8,11.8,9.8z"/>\n\t</g>\n\t<path  d="M23.9,22c-2-2.4-3.9-4.8-5.9-7.1c-0.1-0.2-0.1-0.3,0-0.4c0.9-1.4,1.2-3,1-4.6c-0.5-3.6-3.5-6.2-6.9-6.2\n\t\tc-0.5,0-0.9,0-1.3,0.1c-3.9,0.7-6.5,4.3-5.9,8.2c0.7,4.7,5.8,7.4,10.1,5.4c0.2-0.1,0.4-0.1,0.5,0.1c1.9,2.3,3.8,4.7,5.7,7\n\t\tc0.5,0.6,1.1,0.8,1.8,0.6C24.3,24.6,24.8,23.1,23.9,22z M11.8,17c-3.4,0-6.2-2.8-6.2-6.3c0-3.4,2.8-6.3,6.3-6.2\n\t\tc3.4,0,6.2,2.8,6.2,6.3C18.1,14.2,15.3,17,11.8,17z M22.9,24c-0.4,0.1-0.8,0-1-0.3c-0.5-0.6-1-1.2-1.5-1.8\n\t\tc-1.4-1.7-2.8-3.5-4.2-5.2c-0.1-0.2-0.1-0.3,0-0.4c0.3-0.2,0.6-0.5,0.9-0.8c0.1-0.1,0.2-0.2,0.3,0c1.1,1.4,2.3,2.7,3.4,4.1\n\t\tc0.8,1,1.6,1.9,2.4,2.9c0.2,0.2,0.2,0.4,0.3,0.6C23.4,23.6,23.2,23.9,22.9,24z"/>\n\t<path  d="M11.8,5.4c-3,0-5.4,2.4-5.4,5.3c0,3,2.4,5.4,5.3,5.4c3,0,5.4-2.4,5.4-5.4C17.2,7.8,14.8,5.4,11.8,5.4z\n\t\t M11.8,15.2c-2.5,0-4.5-2-4.5-4.5c0-2.5,2-4.5,4.5-4.5c2.5,0,4.5,2,4.5,4.4C16.3,13.2,14.3,15.2,11.8,15.2z"/>\n\t<g>\n\t\t<path  d="M23.2,13.3c0,0.2-0.1,0.4-0.3,0.4c-0.2,0-0.3-0.1-0.3-0.4c-0.1-0.5-0.4-0.9-1-0.9c-0.2,0-0.5,0-0.7,0\n\t\t\tc-0.4,0.1-0.7,0.4-0.8,0.9c0,0.3-0.1,0.4-0.3,0.4c-0.2,0-0.3-0.2-0.3-0.4c0.1-0.8,0.7-1.4,1.5-1.4c0.4,0,0.7,0,1.1,0\n\t\t\tC22.7,12,23.2,12.6,23.2,13.3z"/>\n\t\t<path  d="M21.3,8.7c-0.7,0-1.2,0.6-1.2,1.3c0,0.7,0.6,1.2,1.2,1.2c0.7,0,1.3-0.6,1.2-1.2C22.6,9.2,22,8.7,21.3,8.7z\n\t\t\t M21.3,10.6c-0.3,0-0.6-0.3-0.6-0.6c0-0.4,0.3-0.6,0.6-0.6c0.3,0,0.6,0.3,0.6,0.6C21.9,10.3,21.7,10.5,21.3,10.6z"/>\n\t</g>\n\t<g>\n\t\t<path  d="M4.4,13.3c0,0.2-0.1,0.4-0.3,0.4c-0.2,0-0.3-0.1-0.3-0.4c-0.1-0.5-0.4-0.9-1-0.9c-0.2,0-0.5,0-0.7,0\n\t\t\tc-0.4,0.1-0.7,0.4-0.8,0.9c0,0.3-0.1,0.4-0.3,0.4c-0.2,0-0.3-0.2-0.3-0.4c0.1-0.8,0.7-1.4,1.5-1.4c0.4,0,0.7,0,1.1,0\n\t\t\tC3.9,12,4.4,12.6,4.4,13.3z"/>\n\t\t<path  d="M2.5,8.7c-0.7,0-1.2,0.6-1.2,1.3c0,0.7,0.6,1.2,1.2,1.2c0.7,0,1.3-0.6,1.2-1.2C3.8,9.2,3.2,8.7,2.5,8.7z\n\t\t\t M2.5,10.6c-0.3,0-0.6-0.3-0.6-0.6c0-0.4,0.3-0.6,0.6-0.6c0.3,0,0.6,0.3,0.6,0.6C3.2,10.3,2.9,10.5,2.5,10.6z"/>\n\t</g>\n</g>\n</svg>\n'
   },
@@ -2082,7 +2157,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.SANADI_ADD_REQUEST,
     permissionGroup: null,
     parent: 23,
-    group: 'sanady',
+    group: GroupNames.SANADI,
     itemOrder: 1,
     svg: '<svg fill="currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">\n<g>\n\t<g>\n\t\t<path class="st0" d="M4.8,19.5c0.9,1.1,1.8,2.2,2.7,3.3c0.1-0.1,0.3-0.2,0.4-0.3c0.4-0.3,0.8-0.4,1.3-0.3c1.9,0.3,3.8,0.7,5.7,1\n\t\t\tc0.3,0.1,0.6,0,0.9-0.2c1.5-1.2,2.9-2.4,4.4-3.6c0.5-0.4,1-0.8,1.5-1.2c0.5-0.4,0.5-1,0.2-1.4c-0.3-0.4-0.9-0.5-1.4-0.1\n\t\t\tc-0.7,0.6-1.4,1.1-2.1,1.7c-0.1,0-0.1,0.1-0.2,0.1c-0.1,0-0.3,0-0.3-0.1c-0.1-0.1,0-0.2,0-0.3c0,0,0.1-0.1,0.1-0.1\n\t\t\tc0.7-0.6,1.4-1.2,2.2-1.8c0.5-0.4,1-0.5,1.6-0.2c0.6,0.2,0.9,0.7,0.9,1.3c0.1,0.6-0.2,1-0.6,1.4c-1.7,1.4-3.4,2.8-5.1,4.1\n\t\t\tc-0.3,0.2-0.6,0.5-0.8,0.7c-0.4,0.3-0.9,0.5-1.4,0.4c-1.9-0.4-3.8-0.7-5.6-1c-0.3-0.1-0.6,0-0.8,0.2C8.1,23,8,23.1,7.9,23.2\n\t\t\tc0.1,0.1,0.2,0.3,0.3,0.4c0.2,0.2,0.1,0.3,0,0.5c-0.3,0.3-0.6,0.5-1,0.8C7,25,6.8,25,6.7,24.9c-0.1-0.1-0.1-0.3,0.1-0.4\n\t\t\tC7,24.2,7.3,24,7.5,23.8c-1.3-1.5-2.5-3.1-3.8-4.6c-0.2,0.2-0.5,0.4-0.7,0.6c-0.1,0-0.1,0.1-0.2,0.1c-0.1,0.1-0.3,0-0.4-0.1\n\t\t\tc-0.1-0.1-0.1-0.3,0-0.4c0.4-0.3,0.7-0.6,1.1-0.9c0.1-0.1,0.3-0.1,0.4,0.1c0.1,0.1,0.2,0.3,0.3,0.4c0.3-0.2,0.5-0.4,0.8-0.6\n\t\t\tc0.6-0.5,1.2-1,1.8-1.5c0.6-0.5,1.4-0.7,2.2-0.5c2.2,0.5,4.4,0.9,6.6,1.4c0.9,0.2,1.4,1,1.2,1.8c-0.2,0.8-0.9,1.3-1.8,1.2\n\t\t\tc-1.1-0.2-2.3-0.4-3.4-0.6c-0.1,0-0.2,0-0.2-0.1c-0.1-0.1-0.2-0.2-0.1-0.3c0-0.2,0.2-0.2,0.3-0.2c0.4,0.1,0.8,0.1,1.1,0.2\n\t\t\tc0.8,0.1,1.6,0.3,2.3,0.4c0.6,0.1,1.1-0.2,1.2-0.7c0.1-0.5-0.2-1-0.8-1.1c-2.2-0.5-4.4-1-6.6-1.4c-0.5-0.1-1,0-1.5,0.3\n\t\t\tC6.5,18,5.7,18.7,4.8,19.5C4.8,19.4,4.8,19.5,4.8,19.5z"/>\n\t</g>\n\t<g>\n\t\t<g>\n\t\t\t<g id="check-box-outline_3_">\n\t\t\t\t<path class="st0" d="M11.7,3.1L11.7,3.1c-0.1,0.1-0.1,0.2,0,0.3l0.6,0.6c0.1,0.1,0.2,0.1,0.3,0l1.6-1.6c0.1-0.1,0.1-0.2,0-0.3v0\n\t\t\t\t\tC14,2,13.9,2,13.8,2l-1.3,1.3c-0.1,0.1-0.2,0.1-0.3,0l-0.3-0.3C11.8,3,11.7,3,11.7,3.1z M13.6,4.6h-2.2c-0.1,0-0.2-0.1-0.2-0.2\n\t\t\t\t\tV2.2c0-0.1,0.1-0.2,0.2-0.2h1.5c0.1,0,0.2-0.1,0.2-0.2v0c0-0.1-0.1-0.2-0.2-0.2h-1.5c-0.3,0-0.6,0.2-0.6,0.6v2.2\n\t\t\t\t\tc0,0.3,0.2,0.6,0.6,0.6h2.2c0.3,0,0.6-0.2,0.6-0.6V3.3c0-0.1-0.1-0.2-0.2-0.2h0c-0.1,0-0.2,0.1-0.2,0.2v1.1\n\t\t\t\t\tC13.8,4.5,13.7,4.6,13.6,4.6z"/>\n\t\t\t</g>\n\t\t</g>\n\t\t<g>\n\t\t\t<g id="check-box-outline_2_">\n\t\t\t\t<path class="st0" d="M11.7,7.2L11.7,7.2c-0.1,0.1-0.1,0.2,0,0.3L12.2,8c0.1,0.1,0.2,0.1,0.3,0l1.6-1.6c0.1-0.1,0.1-0.2,0-0.3\n\t\t\t\t\tl0,0c-0.1-0.1-0.2-0.1-0.3,0l-1.3,1.3c-0.1,0.1-0.2,0.1-0.3,0l-0.3-0.3C11.8,7.1,11.7,7.1,11.7,7.2z M13.6,8.7h-2.2\n\t\t\t\t\tc-0.1,0-0.2-0.1-0.2-0.2V6.3c0-0.1,0.1-0.2,0.2-0.2h1.5c0.1,0,0.2-0.1,0.2-0.2v0c0-0.1-0.1-0.2-0.2-0.2h-1.5\n\t\t\t\t\tc-0.3,0-0.6,0.2-0.6,0.6v2.2c0,0.3,0.2,0.6,0.6,0.6h2.2c0.3,0,0.6-0.2,0.6-0.6V7.4c0-0.1-0.1-0.2-0.2-0.2h0\n\t\t\t\t\tc-0.1,0-0.2,0.1-0.2,0.2v1.1C13.8,8.6,13.7,8.7,13.6,8.7z"/>\n\t\t\t</g>\n\t\t</g>\n\t\t<path class="st0" d="M13.6,9.9h-1.1h0h-1.1c-0.3,0-0.6,0.2-0.6,0.6v2.2c0,0.3,0.2,0.6,0.6,0.6h1.1h0h1.1c0.3,0,0.6-0.2,0.6-0.6\n\t\t\tv-2.2C14.1,10.1,13.9,9.9,13.6,9.9z M13.8,12.6c0,0.1-0.1,0.2-0.2,0.2h-1.1v0h-1.1c-0.1,0-0.2-0.1-0.2-0.2v-2.2\n\t\t\tc0-0.1,0.1-0.2,0.2-0.2h1.1v0h1.1c0.1,0,0.2,0.1,0.2,0.2V12.6z"/>\n\t\t<path class="st0" d="M18.7,2.4h-3.2c-0.2,0-0.4-0.2-0.4-0.4v0c0-0.2,0.2-0.4,0.4-0.4h3.2C18.9,1.7,19,1.8,19,2v0\n\t\t\tC19,2.2,18.9,2.4,18.7,2.4z"/>\n\t\t<path class="st0" d="M17.1,3.7h-1.6c-0.2,0-0.4-0.2-0.4-0.4v0c0-0.2,0.2-0.4,0.4-0.4h1.6c0.2,0,0.4,0.2,0.4,0.4v0\n\t\t\tC17.4,3.6,17.3,3.7,17.1,3.7z"/>\n\t\t<path class="st0" d="M18.7,6.5h-3.2c-0.2,0-0.4-0.2-0.4-0.4v0c0-0.2,0.2-0.4,0.4-0.4h3.2c0.2,0,0.4,0.2,0.4,0.4v0\n\t\t\tC19,6.3,18.9,6.5,18.7,6.5z"/>\n\t\t<path class="st0" d="M18.7,10.6h-3.2c-0.2,0-0.4-0.2-0.4-0.4v0c0-0.2,0.2-0.4,0.4-0.4h3.2c0.2,0,0.4,0.2,0.4,0.4v0\n\t\t\tC19,10.4,18.9,10.6,18.7,10.6z"/>\n\t\t<path class="st0" d="M17.1,7.8h-1.6c-0.2,0-0.4-0.2-0.4-0.4v0c0-0.2,0.2-0.4,0.4-0.4h1.6c0.2,0,0.4,0.2,0.4,0.4v0\n\t\t\tC17.4,7.7,17.3,7.8,17.1,7.8z"/>\n\t\t<path class="st0" d="M20.7,0H9.3C9.1,0,9,0.1,9,0.2v14.5c0,0.1,0.1,0.2,0.2,0.2h8.4l3.2-3.2V0.2C20.9,0.1,20.8,0,20.7,0z\n\t\t\t M17.9,13.7v-1.8h1.7L17.9,13.7z M20.1,11.2h-2.7c-0.1,0-0.2,0.1-0.2,0.2v2.7H9.9c-0.1,0-0.2-0.1-0.2-0.2v-13\n\t\t\tc0-0.1,0.1-0.2,0.2-0.2h10c0.1,0,0.2,0.1,0.2,0.2V11.2z"/>\n\t</g>\n</g>\n</svg>\n'
   },
@@ -2095,7 +2170,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.SANADI_PARTIAL_REQUEST,
     permissionGroup: null,
     parent: 23,
-    group: 'sanady',
+    group: GroupNames.SANADI,
     itemOrder: 5,
     svg: ''
   },
@@ -2108,7 +2183,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.SANADI_SEARCH_REQUEST,
     permissionGroup: null,
     parent: 23,
-    group: 'sanady',
+    group: GroupNames.SANADI,
     itemOrder: 3,
     svg: '<svg fill="currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">\n<g>\n\t<path class="st0" d="M17.2,7H8C7.9,7,7.7,6.9,7.7,6.7v0c0-0.2,0.1-0.3,0.3-0.3h9.2c0.2,0,0.3,0.1,0.3,0.3v0C17.6,6.9,17.4,7,17.2,7\n\t\tz"/>\n\t<path class="st0" d="M17.2,9.5H8c-0.2,0-0.3-0.1-0.3-0.3l0,0C7.7,9,7.9,8.9,8,8.9h9.2c0.2,0,0.3,0.1,0.3,0.3l0,0\n\t\tC17.6,9.4,17.4,9.5,17.2,9.5z"/>\n\t<path class="st0" d="M17.2,12H8c-0.2,0-0.3-0.1-0.3-0.3v0c0-0.2,0.1-0.3,0.3-0.3h9.2c0.2,0,0.3,0.1,0.3,0.3v0\n\t\tC17.6,11.9,17.4,12,17.2,12z"/>\n\t<path class="st0" d="M14.1,16.8c0-0.1,0-0.3,0-0.4H8c-0.2,0-0.3,0.1-0.3,0.3C7.7,16.8,7.9,17,8,17h6.1\n\t\tC14.1,16.9,14.1,16.8,14.1,16.8z"/>\n\t<path class="st0" d="M15.1,13.8H8c-0.2,0-0.3,0.1-0.3,0.3c0,0.2,0.1,0.3,0.3,0.3h6.6C14.8,14.3,14.9,14.1,15.1,13.8z"/>\n\t<g>\n\t\t<g>\n\t\t\t<path class="st0" d="M15.1,20.3c-0.1,0-0.2,0-0.3,0c-2.8,0-5.6,0-8.4,0c-1,0-1.5-0.5-1.5-1.5c0-4.8,0-9.5,0-14.3\n\t\t\t\tc0-0.5,0.2-0.9,0.5-1.2c1-1,1.9-1.9,2.9-2.9C8.7,0.2,9.1,0,9.6,0c3.1,0,6.2,0,9.3,0c0.9,0,1.4,0.5,1.4,1.4c0,3.4,0,6.7,0,10.1\n\t\t\t\tc0,0.1,0,0.1,0,0.2c-0.3,0-0.5,0-0.8-0.1c0-0.1,0-0.2,0-0.3c0-3.3,0-6.6,0-9.9c0-0.6,0-0.6-0.6-0.6c-3.2,0-6.4,0-9.6,0\n\t\t\t\tc-0.1,0-0.1,0-0.2,0C9,0.9,9,1,9,1.1c0,0.5,0,1.1,0,1.6C9,3.5,8.5,4,7.6,4C7,4,6.4,4,5.8,4c0,0.1,0,0.2,0,0.2c0,4.9,0,9.8,0,14.8\n\t\t\t\tc0,0.4,0.1,0.5,0.5,0.5c2.7,0,5.4,0,8.1,0c0.2,0,0.3,0,0.4,0.2C14.9,19.9,15,20.1,15.1,20.3z"/>\n\t\t\t<path class="st0" d="M17.3,21c-0.6,0.8-1.1,1.5-1.7,2.3c-0.3,0.5-0.7,0.9-1,1.4C14.3,25,14.1,25,13.8,25\n\t\t\t\tc-0.3-0.1-0.4-0.3-0.5-0.5c0-0.2,0-0.4,0.2-0.6c0.9-1.2,1.7-2.3,2.5-3.5c0-0.1,0.1-0.1,0.1-0.2c-1-1.1-1.5-2.4-1.3-3.9\n\t\t\t\tc0.1-1.1,0.6-2,1.5-2.7c1.7-1.5,4.2-1.6,5.9-0.1c1.7,1.4,2.2,3.9,1.1,5.8C22.2,21.2,19.6,22.2,17.3,21z M23,17\n\t\t\t\tc0-2-1.6-3.6-3.5-3.6c-2,0-3.6,1.6-3.6,3.5c0,2,1.5,3.6,3.5,3.7C21.3,20.6,22.9,19,23,17z"/>\n\t\t</g>\n\t\t<path class="st0" d="M4,19c-0.1,0-0.2,0-0.3,0C3.3,19,3,18.7,3,18.3c0-0.1,0-0.2,0-0.3L3,6.3c0-0.7,0.3-1,1-1h0.5\n\t\t\tc0,0,0.1,0,0.1,0.1v0.3c0,0,0,0.1-0.1,0.1H4.2c-0.7,0-0.8,0-0.8,0.8l0,11.5c0,0.4,0.1,0.6,0.6,0.6h0.5c0,0,0.1,0,0.1,0.1v0.3\n\t\t\tc0,0,0,0.1-0.1,0.1c-0.1,0-0.2,0-0.3,0C4.1,19,4,19,4,19z M1.8,17.1c-0.4,0-0.7-0.3-0.7-0.7c0-0.3,0-0.5,0-0.8l0-7.7\n\t\t\tc0-0.6,0.2-0.8,0.9-0.8h0.6c0,0,0.1,0,0.1,0.1v0.3c0,0,0,0.1-0.1,0.1l-0.7,0c-0.3,0-0.3,0-0.3,0.3c0,0.3,0,0.5,0,0.8l0,7.5\n\t\t\tc0,0.4,0,0.4,0.5,0.5h0.5c0,0,0.1,0,0.1,0.1V17c0,0,0,0.1,0,0.1c0,0-0.1,0-0.1,0l-0.1,0c-0.1,0-0.3,0-0.4,0\n\t\t\tC2,17.2,1.8,17.2,1.8,17.1z"/>\n\t</g>\n</g>\n</svg>\n'
   },
@@ -2121,11 +2196,13 @@ export const newNavigationMenuList = [
     permission: null,
     permissionGroup: PermissionGroupsEnum.ADMIN_PERMISSIONS_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.ADMIN,
-    excludeFromDefaultParents : true,
-    svg: '<svg xmlns="http://www.w3.org/2000/svg" stroke="none" fill="currentColor" viewBox="0 0 25 25">\n<g>\n\t<path  d="M18,13.5c0.2,0.1,0.3,0.2,0.5,0.3c0.2,0.1,0.3,0.1,0.4-0.1c0.1-0.2,0.2-0.4,0.3-0.5c0.1-0.2,0.1-0.3-0.1-0.4\n\t\tc-0.2-0.1-0.5-0.3-0.7-0.4c-0.2-0.1-0.3-0.2-0.2-0.5c0.2-0.4,0.3-0.9,0.4-1.4c0-0.2,0.1-0.3,0.4-0.3c0.3,0,0.5,0,0.8,0\n\t\tc0.2,0,0.3-0.1,0.3-0.3c0-0.2,0-0.4,0-0.6c0-0.2-0.1-0.2-0.2-0.2c-0.3,0-0.6,0-0.8,0c-0.2,0-0.3-0.1-0.4-0.3\n\t\tc-0.1-0.5-0.2-0.9-0.4-1.4c-0.1-0.2,0-0.3,0.2-0.4c0.2-0.1,0.5-0.3,0.7-0.4c0.2-0.1,0.2-0.2,0.1-0.4c-0.1-0.2-0.2-0.4-0.3-0.6\n\t\tc-0.1-0.2-0.2-0.2-0.4-0.1C18.2,5.8,18,5.9,17.7,6c-0.2,0.1-0.3,0.1-0.5-0.1c-0.3-0.4-0.6-0.7-1-1c-0.2-0.1-0.2-0.3-0.1-0.5\n\t\tc0.1-0.2,0.3-0.5,0.4-0.7c0.1-0.2,0.1-0.3-0.1-0.3c-0.2-0.1-0.4-0.2-0.6-0.3c-0.2-0.1-0.3-0.1-0.4,0.1c-0.1,0.2-0.3,0.5-0.4,0.7\n\t\tc-0.1,0.2-0.2,0.2-0.4,0.1c-0.4-0.2-0.9-0.3-1.3-0.4c-0.3,0-0.3-0.1-0.3-0.4c0-0.3,0-0.5,0-0.8c0-0.2-0.1-0.2-0.2-0.2\n\t\tc-0.2,0-0.4,0-0.7,0c-0.2,0-0.2,0.1-0.2,0.2c0,0.3,0,0.6,0,0.8c0,0.2-0.1,0.3-0.3,0.4c-0.5,0.1-0.9,0.2-1.4,0.4\n\t\tc-0.2,0.1-0.3,0-0.4-0.2C9.7,3.7,9.5,3.5,9.4,3.2C9.3,3.1,9.2,3,9.1,3.1C8.9,3.2,8.7,3.3,8.5,3.4C8.3,3.5,8.3,3.6,8.4,3.8\n\t\tC8.5,4,8.7,4.3,8.8,4.5C8.9,4.7,8.9,4.8,8.7,5C8.4,5.3,8,5.6,7.7,6C7.6,6.1,7.5,6.2,7.3,6.1C7,5.9,6.8,5.8,6.6,5.6\n\t\tC6.4,5.5,6.3,5.6,6.2,5.7C6.1,5.9,6,6.1,5.9,6.3C5.8,6.5,5.8,6.5,6,6.6C6.2,6.8,6.5,6.9,6.7,7c0.2,0.1,0.2,0.2,0.2,0.4\n\t\tC6.7,7.9,6.6,8.4,6.5,8.9c0,0.2-0.1,0.3-0.3,0.3c-0.3,0-0.6,0-0.8,0c-0.2,0-0.3,0.1-0.3,0.3c0,0.2,0,0.4,0,0.6\n\t\tc0,0.2,0.1,0.3,0.3,0.3c0.3,0,0.5,0,0.8,0c0.2,0,0.3,0.1,0.4,0.3c0.1,0.5,0.2,0.9,0.4,1.4c0.1,0.2,0,0.3-0.1,0.4\n\t\tc-0.2,0.1-0.5,0.3-0.7,0.4c-0.2,0.1-0.2,0.2-0.1,0.3c0.1,0.2,0.2,0.4,0.3,0.6c0.1,0.1,0.2,0.2,0.3,0.1c0.2-0.1,0.3-0.2,0.5-0.3\n\t\tC7,13.8,7,14,7,14.2c0,0.1-0.1,0.2-0.2,0.2c-0.4,0.2-0.8,0.1-1-0.3c-0.1-0.2-0.3-0.5-0.4-0.7c-0.2-0.4-0.1-0.8,0.3-1.1\n\t\tc0.2-0.1,0.3-0.2,0.5-0.3c0.1,0,0.1-0.1,0.1-0.2C6.1,11.6,6,11.3,6,11c0-0.1-0.1-0.1-0.1-0.1c-0.2,0-0.4,0-0.6,0\n\t\tc-0.5,0-0.8-0.3-0.8-0.8c0-0.2,0-0.5,0-0.7c0-0.5,0.3-0.8,0.8-0.8c0.2,0,0.4,0,0.6,0c0.1,0,0.1,0,0.1-0.1C6,8.2,6.1,7.8,6.2,7.5\n\t\tc0-0.1,0-0.1,0-0.1C6,7.3,5.8,7.2,5.7,7.1C5.2,6.9,5.1,6.4,5.4,6c0.1-0.2,0.2-0.4,0.4-0.6C6,5,6.4,4.9,6.8,5.1\n\t\tC7,5.2,7.2,5.3,7.3,5.4c0.1,0,0.1,0,0.1,0c0.2-0.2,0.4-0.5,0.7-0.7c0.1-0.1,0.1-0.1,0-0.2C8.1,4.4,8,4.2,7.9,4.1\n\t\tC7.6,3.6,7.8,3.2,8.2,2.9c0.2-0.1,0.4-0.2,0.6-0.4c0.4-0.2,0.9-0.1,1.1,0.3C10,3,10.1,3.2,10.2,3.4c0,0.1,0.1,0.1,0.1,0.1\n\t\tc0.3-0.1,0.6-0.2,0.9-0.2c0.1,0,0.1,0,0.1-0.1c0-0.2,0-0.4,0-0.6c0-0.5,0.3-0.8,0.8-0.8c0.2,0,0.5,0,0.7,0c0.5,0,0.8,0.3,0.8,0.8\n\t\tc0,0.2,0,0.4,0,0.6c0,0.1,0,0.1,0.1,0.1c0.3,0.1,0.6,0.1,0.9,0.2c0.1,0,0.1,0,0.1-0.1C14.9,3.2,15,3,15.1,2.9\n\t\tc0.2-0.4,0.7-0.5,1.1-0.3c0.2,0.1,0.4,0.2,0.6,0.4c0.4,0.2,0.5,0.7,0.3,1.1c-0.1,0.2-0.2,0.3-0.3,0.5c0,0.1,0,0.1,0,0.2\n\t\tc0.2,0.2,0.5,0.4,0.7,0.7c0.1,0.1,0.1,0.1,0.2,0c0.2-0.1,0.3-0.2,0.5-0.3c0.4-0.2,0.9-0.1,1.1,0.3c0.1,0.2,0.3,0.4,0.4,0.6\n\t\tc0.2,0.4,0.1,0.9-0.3,1.1c-0.2,0.1-0.3,0.2-0.5,0.3c-0.1,0-0.1,0.1-0.1,0.2C18.9,7.9,19,8.1,19,8.5c0,0.1,0.1,0.1,0.1,0.1\n\t\tc0.2,0,0.4,0,0.6,0c0.4,0,0.8,0.3,0.8,0.8c0,0.3,0,0.5,0,0.8c0,0.4-0.3,0.7-0.7,0.8c-0.2,0-0.4,0-0.6,0c-0.1,0-0.1,0-0.1,0.1\n\t\tc-0.1,0.3-0.1,0.6-0.2,0.9c0,0.1,0,0.1,0.1,0.2c0.2,0.1,0.3,0.2,0.5,0.3c0.4,0.2,0.5,0.7,0.3,1.1c-0.1,0.2-0.2,0.4-0.4,0.7\n\t\tc-0.3,0.4-0.8,0.5-1.2,0.2c-0.1,0-0.1-0.1-0.1-0.2C18,13.9,18,13.8,18,13.5z"/>\n\t<path  d="M14,12.1c0.3-0.2,0.5-0.3,0.6-0.5c0,0,0.1-0.1,0.1-0.1c1.3,0.1,2.3,1,2.6,2.2c0,0.2,0,0.2-0.2,0.2\n\t\tc-0.1,0-0.3,0-0.4,0c-0.1-0.1-0.1-0.3-0.1-0.4c-0.3-0.8-1.1-1.4-2-1.4C14.5,12.1,14.3,12.1,14,12.1z"/>\n\t<path  d="M11,12.1c-0.3,0-0.6,0-0.9,0c-0.9,0.1-1.6,0.8-1.8,1.6c0,0.1-0.1,0.1-0.2,0.1c-0.1,0-0.2,0-0.3,0\n\t\tc-0.1,0-0.1,0-0.1-0.1c0.1-0.5,0.3-0.9,0.6-1.3c0.5-0.6,1.2-1,2-1c0.1,0,0.1,0,0.1,0C10.5,11.8,10.7,11.9,11,12.1z"/>\n\t<path  d="M22.6,20.2c-0.1,0-0.1,0-0.2,0c-1.6,0-3.3,0-4.9,0c-0.1,0-0.1,0-0.2,0c0.1-0.3,0.1-0.7,0.2-1\n\t\tc0.2-1.2,0.4-2.4,0.5-3.7c0.1-0.6-0.3-1-0.9-1c-3,0-6.1,0-9.1,0c-0.6,0-1,0.4-0.9,1c0.2,1.5,0.4,3.1,0.7,4.6c0,0-0.1,0-0.2,0\n\t\tc-1.6,0-3.3,0-4.9,0c-0.1,0-0.1,0-0.2,0c-0.1,0.1-0.2,0.2-0.2,0.3c0,0.1,0.1,0.3,0.3,0.3c0.1,0,0.1,0,0.2,0c6.6,0,13.1,0,19.7,0\n\t\tc0.1,0,0.1,0,0.2,0c0.1,0,0.3-0.1,0.3-0.3C22.8,20.3,22.7,20.2,22.6,20.2z M16.3,20.2c-0.7,0-1.3,0-2,0c-1.8,0-3.6,0-5.5,0\n\t\tc-0.3,0-0.5-0.1-0.5-0.4c-0.2-1.4-0.4-2.9-0.6-4.3c0-0.3,0-0.3,0.3-0.3c1.5,0,3,0,4.5,0c1.5,0,3,0,4.5,0c0.3,0,0.3,0.1,0.3,0.3\n\t\tc-0.2,1.5-0.4,2.9-0.6,4.4C16.7,20,16.5,20.2,16.3,20.2z"/>\n\t<path  d="M12.5,7.5c-1.2,0-2.2,1-2.2,2.2c0,1.2,1,2.2,2.2,2.2c1.2,0,2.2-1,2.2-2.2C14.7,8.5,13.7,7.5,12.5,7.5z\n\t\t M12.5,11.4c-0.9,0-1.6-0.7-1.6-1.6c0-0.9,0.7-1.6,1.6-1.6c0.9,0,1.6,0.7,1.6,1.6C14.1,10.6,13.4,11.4,12.5,11.4z"/>\n\t<path  d="M12.5,16.6c-0.6,0-1,0.5-1,1c0,0.6,0.5,1,1,1c0.6,0,1-0.5,1.1-1C13.6,17.1,13.1,16.6,12.5,16.6z M12.5,18.1\n\t\tc-0.2,0-0.4-0.2-0.5-0.4c0-0.2,0.2-0.5,0.4-0.5c0.2,0,0.4,0.2,0.5,0.4C13,17.9,12.8,18.1,12.5,18.1z"/>\n\t<path  d="M23.4,20.8h0.4c0.2,0,0.3-0.1,0.3-0.3v0c0-0.2-0.1-0.3-0.3-0.3h-0.4c-0.2,0-0.3,0.1-0.3,0.3v0\n\t\tC23.1,20.6,23.2,20.8,23.4,20.8z"/>\n\t<circle  cx="24.7" cy="20.5" r="0.3"/>\n\t<path  d="M1.6,20.8H1.2c-0.2,0-0.3-0.1-0.3-0.3v0c0-0.2,0.1-0.3,0.3-0.3h0.4c0.2,0,0.3,0.1,0.3,0.3v0\n\t\tC1.9,20.6,1.8,20.8,1.6,20.8z"/>\n\t<circle  cx="0.3" cy="20.5" r="0.3"/>\n\t<path  d="M17.6,22h-1.2c-0.2,0-0.3-0.1-0.3-0.3v0c0-0.2,0.1-0.3,0.3-0.3h1.2c0.2,0,0.3,0.1,0.3,0.3v0\n\t\tC17.9,21.8,17.7,22,17.6,22z"/>\n\t<path  d="M8.6,22H7.5c-0.2,0-0.3-0.1-0.3-0.3v0c0-0.2,0.1-0.3,0.3-0.3h1.2c0.2,0,0.3,0.1,0.3,0.3v0\n\t\tC8.9,21.8,8.8,22,8.6,22z"/>\n\t<path  d="M15.5,21.4h-6c-0.2,0-0.3,0.1-0.3,0.3v0c0,0.2,0.1,0.3,0.3,0.3h2.4v0.3h-1.3c-0.2,0-0.3,0.1-0.3,0.3\n\t\ts0.1,0.3,0.3,0.3h3.9c0.2,0,0.3-0.1,0.3-0.3s-0.1-0.3-0.3-0.3h-1.4V22h2.3c0.2,0,0.3-0.1,0.3-0.3v0C15.8,21.5,15.6,21.4,15.5,21.4z\n\t\t"/>\n</g>\n</svg>\n'
-
+    excludeFromDefaultParents: true,
+    svg: '<svg xmlns="http://www.w3.org/2000/svg" stroke="none" fill="currentColor" viewBox="0 0 25 25">\n<g>\n\t<path  d="M18,13.5c0.2,0.1,0.3,0.2,0.5,0.3c0.2,0.1,0.3,0.1,0.4-0.1c0.1-0.2,0.2-0.4,0.3-0.5c0.1-0.2,0.1-0.3-0.1-0.4\n\t\tc-0.2-0.1-0.5-0.3-0.7-0.4c-0.2-0.1-0.3-0.2-0.2-0.5c0.2-0.4,0.3-0.9,0.4-1.4c0-0.2,0.1-0.3,0.4-0.3c0.3,0,0.5,0,0.8,0\n\t\tc0.2,0,0.3-0.1,0.3-0.3c0-0.2,0-0.4,0-0.6c0-0.2-0.1-0.2-0.2-0.2c-0.3,0-0.6,0-0.8,0c-0.2,0-0.3-0.1-0.4-0.3\n\t\tc-0.1-0.5-0.2-0.9-0.4-1.4c-0.1-0.2,0-0.3,0.2-0.4c0.2-0.1,0.5-0.3,0.7-0.4c0.2-0.1,0.2-0.2,0.1-0.4c-0.1-0.2-0.2-0.4-0.3-0.6\n\t\tc-0.1-0.2-0.2-0.2-0.4-0.1C18.2,5.8,18,5.9,17.7,6c-0.2,0.1-0.3,0.1-0.5-0.1c-0.3-0.4-0.6-0.7-1-1c-0.2-0.1-0.2-0.3-0.1-0.5\n\t\tc0.1-0.2,0.3-0.5,0.4-0.7c0.1-0.2,0.1-0.3-0.1-0.3c-0.2-0.1-0.4-0.2-0.6-0.3c-0.2-0.1-0.3-0.1-0.4,0.1c-0.1,0.2-0.3,0.5-0.4,0.7\n\t\tc-0.1,0.2-0.2,0.2-0.4,0.1c-0.4-0.2-0.9-0.3-1.3-0.4c-0.3,0-0.3-0.1-0.3-0.4c0-0.3,0-0.5,0-0.8c0-0.2-0.1-0.2-0.2-0.2\n\t\tc-0.2,0-0.4,0-0.7,0c-0.2,0-0.2,0.1-0.2,0.2c0,0.3,0,0.6,0,0.8c0,0.2-0.1,0.3-0.3,0.4c-0.5,0.1-0.9,0.2-1.4,0.4\n\t\tc-0.2,0.1-0.3,0-0.4-0.2C9.7,3.7,9.5,3.5,9.4,3.2C9.3,3.1,9.2,3,9.1,3.1C8.9,3.2,8.7,3.3,8.5,3.4C8.3,3.5,8.3,3.6,8.4,3.8\n\t\tC8.5,4,8.7,4.3,8.8,4.5C8.9,4.7,8.9,4.8,8.7,5C8.4,5.3,8,5.6,7.7,6C7.6,6.1,7.5,6.2,7.3,6.1C7,5.9,6.8,5.8,6.6,5.6\n\t\tC6.4,5.5,6.3,5.6,6.2,5.7C6.1,5.9,6,6.1,5.9,6.3C5.8,6.5,5.8,6.5,6,6.6C6.2,6.8,6.5,6.9,6.7,7c0.2,0.1,0.2,0.2,0.2,0.4\n\t\tC6.7,7.9,6.6,8.4,6.5,8.9c0,0.2-0.1,0.3-0.3,0.3c-0.3,0-0.6,0-0.8,0c-0.2,0-0.3,0.1-0.3,0.3c0,0.2,0,0.4,0,0.6\n\t\tc0,0.2,0.1,0.3,0.3,0.3c0.3,0,0.5,0,0.8,0c0.2,0,0.3,0.1,0.4,0.3c0.1,0.5,0.2,0.9,0.4,1.4c0.1,0.2,0,0.3-0.1,0.4\n\t\tc-0.2,0.1-0.5,0.3-0.7,0.4c-0.2,0.1-0.2,0.2-0.1,0.3c0.1,0.2,0.2,0.4,0.3,0.6c0.1,0.1,0.2,0.2,0.3,0.1c0.2-0.1,0.3-0.2,0.5-0.3\n\t\tC7,13.8,7,14,7,14.2c0,0.1-0.1,0.2-0.2,0.2c-0.4,0.2-0.8,0.1-1-0.3c-0.1-0.2-0.3-0.5-0.4-0.7c-0.2-0.4-0.1-0.8,0.3-1.1\n\t\tc0.2-0.1,0.3-0.2,0.5-0.3c0.1,0,0.1-0.1,0.1-0.2C6.1,11.6,6,11.3,6,11c0-0.1-0.1-0.1-0.1-0.1c-0.2,0-0.4,0-0.6,0\n\t\tc-0.5,0-0.8-0.3-0.8-0.8c0-0.2,0-0.5,0-0.7c0-0.5,0.3-0.8,0.8-0.8c0.2,0,0.4,0,0.6,0c0.1,0,0.1,0,0.1-0.1C6,8.2,6.1,7.8,6.2,7.5\n\t\tc0-0.1,0-0.1,0-0.1C6,7.3,5.8,7.2,5.7,7.1C5.2,6.9,5.1,6.4,5.4,6c0.1-0.2,0.2-0.4,0.4-0.6C6,5,6.4,4.9,6.8,5.1\n\t\tC7,5.2,7.2,5.3,7.3,5.4c0.1,0,0.1,0,0.1,0c0.2-0.2,0.4-0.5,0.7-0.7c0.1-0.1,0.1-0.1,0-0.2C8.1,4.4,8,4.2,7.9,4.1\n\t\tC7.6,3.6,7.8,3.2,8.2,2.9c0.2-0.1,0.4-0.2,0.6-0.4c0.4-0.2,0.9-0.1,1.1,0.3C10,3,10.1,3.2,10.2,3.4c0,0.1,0.1,0.1,0.1,0.1\n\t\tc0.3-0.1,0.6-0.2,0.9-0.2c0.1,0,0.1,0,0.1-0.1c0-0.2,0-0.4,0-0.6c0-0.5,0.3-0.8,0.8-0.8c0.2,0,0.5,0,0.7,0c0.5,0,0.8,0.3,0.8,0.8\n\t\tc0,0.2,0,0.4,0,0.6c0,0.1,0,0.1,0.1,0.1c0.3,0.1,0.6,0.1,0.9,0.2c0.1,0,0.1,0,0.1-0.1C14.9,3.2,15,3,15.1,2.9\n\t\tc0.2-0.4,0.7-0.5,1.1-0.3c0.2,0.1,0.4,0.2,0.6,0.4c0.4,0.2,0.5,0.7,0.3,1.1c-0.1,0.2-0.2,0.3-0.3,0.5c0,0.1,0,0.1,0,0.2\n\t\tc0.2,0.2,0.5,0.4,0.7,0.7c0.1,0.1,0.1,0.1,0.2,0c0.2-0.1,0.3-0.2,0.5-0.3c0.4-0.2,0.9-0.1,1.1,0.3c0.1,0.2,0.3,0.4,0.4,0.6\n\t\tc0.2,0.4,0.1,0.9-0.3,1.1c-0.2,0.1-0.3,0.2-0.5,0.3c-0.1,0-0.1,0.1-0.1,0.2C18.9,7.9,19,8.1,19,8.5c0,0.1,0.1,0.1,0.1,0.1\n\t\tc0.2,0,0.4,0,0.6,0c0.4,0,0.8,0.3,0.8,0.8c0,0.3,0,0.5,0,0.8c0,0.4-0.3,0.7-0.7,0.8c-0.2,0-0.4,0-0.6,0c-0.1,0-0.1,0-0.1,0.1\n\t\tc-0.1,0.3-0.1,0.6-0.2,0.9c0,0.1,0,0.1,0.1,0.2c0.2,0.1,0.3,0.2,0.5,0.3c0.4,0.2,0.5,0.7,0.3,1.1c-0.1,0.2-0.2,0.4-0.4,0.7\n\t\tc-0.3,0.4-0.8,0.5-1.2,0.2c-0.1,0-0.1-0.1-0.1-0.2C18,13.9,18,13.8,18,13.5z"/>\n\t<path  d="M14,12.1c0.3-0.2,0.5-0.3,0.6-0.5c0,0,0.1-0.1,0.1-0.1c1.3,0.1,2.3,1,2.6,2.2c0,0.2,0,0.2-0.2,0.2\n\t\tc-0.1,0-0.3,0-0.4,0c-0.1-0.1-0.1-0.3-0.1-0.4c-0.3-0.8-1.1-1.4-2-1.4C14.5,12.1,14.3,12.1,14,12.1z"/>\n\t<path  d="M11,12.1c-0.3,0-0.6,0-0.9,0c-0.9,0.1-1.6,0.8-1.8,1.6c0,0.1-0.1,0.1-0.2,0.1c-0.1,0-0.2,0-0.3,0\n\t\tc-0.1,0-0.1,0-0.1-0.1c0.1-0.5,0.3-0.9,0.6-1.3c0.5-0.6,1.2-1,2-1c0.1,0,0.1,0,0.1,0C10.5,11.8,10.7,11.9,11,12.1z"/>\n\t<path  d="M22.6,20.2c-0.1,0-0.1,0-0.2,0c-1.6,0-3.3,0-4.9,0c-0.1,0-0.1,0-0.2,0c0.1-0.3,0.1-0.7,0.2-1\n\t\tc0.2-1.2,0.4-2.4,0.5-3.7c0.1-0.6-0.3-1-0.9-1c-3,0-6.1,0-9.1,0c-0.6,0-1,0.4-0.9,1c0.2,1.5,0.4,3.1,0.7,4.6c0,0-0.1,0-0.2,0\n\t\tc-1.6,0-3.3,0-4.9,0c-0.1,0-0.1,0-0.2,0c-0.1,0.1-0.2,0.2-0.2,0.3c0,0.1,0.1,0.3,0.3,0.3c0.1,0,0.1,0,0.2,0c6.6,0,13.1,0,19.7,0\n\t\tc0.1,0,0.1,0,0.2,0c0.1,0,0.3-0.1,0.3-0.3C22.8,20.3,22.7,20.2,22.6,20.2z M16.3,20.2c-0.7,0-1.3,0-2,0c-1.8,0-3.6,0-5.5,0\n\t\tc-0.3,0-0.5-0.1-0.5-0.4c-0.2-1.4-0.4-2.9-0.6-4.3c0-0.3,0-0.3,0.3-0.3c1.5,0,3,0,4.5,0c1.5,0,3,0,4.5,0c0.3,0,0.3,0.1,0.3,0.3\n\t\tc-0.2,1.5-0.4,2.9-0.6,4.4C16.7,20,16.5,20.2,16.3,20.2z"/>\n\t<path  d="M12.5,7.5c-1.2,0-2.2,1-2.2,2.2c0,1.2,1,2.2,2.2,2.2c1.2,0,2.2-1,2.2-2.2C14.7,8.5,13.7,7.5,12.5,7.5z\n\t\t M12.5,11.4c-0.9,0-1.6-0.7-1.6-1.6c0-0.9,0.7-1.6,1.6-1.6c0.9,0,1.6,0.7,1.6,1.6C14.1,10.6,13.4,11.4,12.5,11.4z"/>\n\t<path  d="M12.5,16.6c-0.6,0-1,0.5-1,1c0,0.6,0.5,1,1,1c0.6,0,1-0.5,1.1-1C13.6,17.1,13.1,16.6,12.5,16.6z M12.5,18.1\n\t\tc-0.2,0-0.4-0.2-0.5-0.4c0-0.2,0.2-0.5,0.4-0.5c0.2,0,0.4,0.2,0.5,0.4C13,17.9,12.8,18.1,12.5,18.1z"/>\n\t<path  d="M23.4,20.8h0.4c0.2,0,0.3-0.1,0.3-0.3v0c0-0.2-0.1-0.3-0.3-0.3h-0.4c-0.2,0-0.3,0.1-0.3,0.3v0\n\t\tC23.1,20.6,23.2,20.8,23.4,20.8z"/>\n\t<circle  cx="24.7" cy="20.5" r="0.3"/>\n\t<path  d="M1.6,20.8H1.2c-0.2,0-0.3-0.1-0.3-0.3v0c0-0.2,0.1-0.3,0.3-0.3h0.4c0.2,0,0.3,0.1,0.3,0.3v0\n\t\tC1.9,20.6,1.8,20.8,1.6,20.8z"/>\n\t<circle  cx="0.3" cy="20.5" r="0.3"/>\n\t<path  d="M17.6,22h-1.2c-0.2,0-0.3-0.1-0.3-0.3v0c0-0.2,0.1-0.3,0.3-0.3h1.2c0.2,0,0.3,0.1,0.3,0.3v0\n\t\tC17.9,21.8,17.7,22,17.6,22z"/>\n\t<path  d="M8.6,22H7.5c-0.2,0-0.3-0.1-0.3-0.3v0c0-0.2,0.1-0.3,0.3-0.3h1.2c0.2,0,0.3,0.1,0.3,0.3v0\n\t\tC8.9,21.8,8.8,22,8.6,22z"/>\n\t<path  d="M15.5,21.4h-6c-0.2,0-0.3,0.1-0.3,0.3v0c0,0.2,0.1,0.3,0.3,0.3h2.4v0.3h-1.3c-0.2,0-0.3,0.1-0.3,0.3\n\t\ts0.1,0.3,0.3,0.3h3.9c0.2,0,0.3-0.1,0.3-0.3s-0.1-0.3-0.3-0.3h-1.4V22h2.3c0.2,0,0.3-0.1,0.3-0.3v0C15.8,21.5,15.6,21.4,15.5,21.4z\n\t\t"/>\n</g>\n</svg>\n',
+    data: {
+      childrenGroupName: GroupNames.ADMIN
+    }
   },
   {
     id: 7,
@@ -2136,7 +2213,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_AID_LOOKUP,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 1,
     svg: '<svg fill="currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">\n<g>\n\t<g>\n\t\t<path class="st0" d="M23.3,12.7c1.7-2.2,2.1-4.6,1.2-7.2c-1.7-4.9-7.7-6.6-11.8-3.4c-0.2,0.2-0.3,0.2-0.6,0\n\t\t\tc-1.4-1.1-2.9-1.6-4.9-1.6c-0.2,0-0.7,0-1.1,0.1c-5.9,1.1-8,7.8-4.6,12.1c0.2,0.2,0.2,0.3,0,0.5c-0.5,0.5-0.8,1.2-0.7,1.9\n\t\t\tc0.2,1.2,0.9,1.8,2.2,2c0.2,0,0.3,0,0.3,0.3c0,1.3,0.9,2.1,2.2,2.2c0.2,0,0.3,0,0.3,0.2C5.9,21.1,6.8,22,8.1,22\n\t\t\tc0.3,0,0.3,0.1,0.3,0.3c0.1,0.9,0.5,1.6,1.4,2c0.9,0.3,1.7,0.1,2.4-0.5c0.2-0.2,0.3-0.2,0.4,0c0.7,0.7,1.5,0.9,2.4,0.6\n\t\t\tc0.9-0.4,1.4-1.1,1.4-2.1c0-0.2,0.1-0.3,0.3-0.3c1.3-0.1,2.1-0.9,2.2-2.2c0-0.2,0.1-0.3,0.3-0.3c1.4-0.2,1.9-0.7,2.2-2.1\n\t\t\tc0-0.3,0.1-0.4,0.4-0.4c0.2,0,0.5-0.1,0.7-0.2c1.5-0.6,1.8-2.5,0.7-3.7C23.2,13,23.1,12.9,23.3,12.7z M5.9,1.7\n\t\t\tc2.3-0.6,4.3,0,6,1.6c1,1,2,2,3,3c0.6,0.6,0.6,1.6,0,2.1c-0.6,0.6-1.5,0.6-2.1,0c-0.4-0.4-0.8-0.8-1.2-1.2\n\t\t\tc-0.2-0.2-0.4-0.3-0.8-0.3c-0.3,0-0.6,0-0.9,0c-1,0.3-1.6-0.2-2.2-0.9C7.4,5.6,7.1,5.4,6.9,5.1C6.6,4.9,6.4,4.9,6.1,5.1\n\t\t\tC5.9,5.3,5.9,5.5,6.2,5.8C6.6,6.2,7,6.6,7.4,7c0.1,0.1,0.2,0.2,0,0.4C5.9,8.9,4.3,10.5,2.8,12c-0.2,0.2-0.3,0.2-0.5,0\n\t\t\tC-0.4,8.4,1.1,2.9,5.9,1.7z M8.5,21c-0.5,0.2-1.1,0-1.4-0.5C6.8,20,6.8,19.4,7.2,19c0.6-0.6,1.2-1.2,1.8-1.8\n\t\t\tc0.1-0.1,0.2-0.2,0.3-0.3c0.2-0.3,0.2-0.6,0-0.7C9,15.9,8.8,16,8.5,16.2c-0.6,0.6-1.3,1.3-1.9,1.9c-0.3,0.3-0.7,0.5-1.2,0.4\n\t\t\tc-1-0.2-1.3-1.3-0.6-2.1c0.6-0.6,1.2-1.2,1.8-1.8c0.1-0.1,0.1-0.1,0.2-0.2c0.2-0.3,0.2-0.5,0.1-0.7c-0.2-0.2-0.5-0.2-0.8,0.1\n\t\t\tc-0.6,0.6-1.2,1.2-1.7,1.7c-0.1,0.1-0.3,0.2-0.4,0.3c-0.5,0.4-1.2,0.3-1.6-0.2c-0.4-0.4-0.4-1.1-0.1-1.6c0.1-0.1,0.2-0.3,0.3-0.4\n\t\t\tc1.9-1.9,3.7-3.7,5.6-5.6c0.2-0.2,0.5-0.3,0.8-0.3c0.2,0,0.5,0,0.8,0c0.9-0.2,1.5,0.2,2,0.8c0.4,0.5,0.9,0.9,1.5,1.1\n\t\t\tc1.1,0.3,2.3-0.1,2.9-1.1c0.6-1,0.5-2.2-0.4-3.1c-0.7-0.7-1.5-1.4-2.2-2.1c-0.2-0.2-0.2-0.3,0-0.5c2-1.5,4.2-1.8,6.5-0.9\n\t\t\tc2.2,0.9,3.6,2.6,4,5c0.3,1.8-0.2,3.5-1.3,5c-0.2,0.2-0.3,0.2-0.5,0c-0.3-0.3-0.6-0.6-0.9-0.9c-0.7-0.7-1.5-0.9-2.5-0.5\n\t\t\tc-0.9,0.4-1.4,1.1-1.4,2.1c0,0.2-0.1,0.2-0.3,0.3c-1.3,0-2.1,0.9-2.2,2.2c0,0.2-0.1,0.3-0.3,0.3c-1.3,0.1-2.1,0.9-2.2,2.2\n\t\t\tc0,0.2-0.1,0.3-0.2,0.3c-0.2,0-0.4,0.1-0.7,0.2c-0.8,0.2-1.3,0.7-1.5,1.5C9.7,20.2,9.2,20.6,8.5,21z M11.7,23.1\n\t\t\tc-0.3,0.3-1.1,0.5-1.5,0.4c-0.5-0.2-0.8-0.7-0.8-1.3c0-0.4,0.2-0.7,0.6-1c0.1-0.1,0.1-0.1,0.2,0c0.4,0.6,1,1.1,1.5,1.6\n\t\t\tC11.7,22.8,11.8,22.9,11.7,23.1z M14.9,23.4c-0.4,0.2-0.9,0.2-1.3-0.1c-0.9-0.8-1.7-1.6-2.5-2.5c-0.4-0.5-0.3-1.2,0.1-1.6\n\t\t\tc0.5-0.5,1.2-0.5,1.7-0.1c0.8,0.8,1.6,1.6,2.4,2.4c0.2,0.2,0.3,0.5,0.3,0.8C15.6,22.8,15.3,23.2,14.9,23.4z M18,20.4\n\t\t\tc-0.2,0.5-0.6,0.7-1.1,0.7c-0.3,0-0.6-0.1-0.9-0.3c-0.8-0.8-1.5-1.5-2.3-2.3c-0.4-0.4-0.5-0.8-0.3-1.3c0.2-0.5,0.6-0.7,1.1-0.8\n\t\t\tc0.3,0,0.6,0.1,0.8,0.3c0.8,0.8,1.6,1.6,2.4,2.4C18.1,19.4,18.2,19.9,18,20.4z M19.8,18.5c-0.5,0.2-1,0.1-1.3-0.2\n\t\t\tc-0.8-0.8-1.5-1.5-2.3-2.3c-0.5-0.5-0.5-1.2,0-1.7c0.5-0.5,1.2-0.5,1.7-0.1c0.8,0.7,1.5,1.5,2.3,2.3c0.2,0.2,0.4,0.5,0.3,0.8\n\t\t\tC20.5,17.8,20.3,18.3,19.8,18.5z M23,15.4c-0.2,0.5-0.6,0.7-1.1,0.7c-0.3,0-0.5-0.1-0.8-0.3c-0.8-0.8-1.6-1.5-2.4-2.4\n\t\t\tc-0.5-0.5-0.5-1.2,0-1.7c0.5-0.5,1.2-0.5,1.8-0.1c0.8,0.7,1.6,1.5,2.3,2.4C23.1,14.5,23.2,14.9,23,15.4z"/>\n\t</g>\n</g>\n</svg>\n'
   },
@@ -2149,7 +2226,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_PROFILE,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 2,
     svg: null
   },
@@ -2162,7 +2239,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_EXTERNAL_USER_DYNAMIC, // added from employeeService (not available in permissions list from db)
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 4,
     svg: '<svg fill="currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">\n<g>\n\t<path class="st0" d="M14.9,14.8c1.2-0.8,2-2.1,2-3.7c0-2.4-1.9-4.4-4.4-4.4s-4.4,1.9-4.4,4.4c0,1.5,0.8,2.9,2,3.7\n\t\tc-2.6,0.9-4.5,3.4-4.5,6.4h1.1c0-3.1,2.5-5.7,5.7-5.7s5.7,2.5,5.7,5.7h1.1C19.3,18.2,17.5,15.7,14.9,14.8z M9.4,11.1\n\t\tc0-1.8,1.4-3.2,3.2-3.2s3.2,1.4,3.2,3.2s-1.4,3.2-3.2,3.2S9.4,12.8,9.4,11.1z"/>\n\t<g>\n\t\t<path class="st0" d="M20.6,11.9c1.2-0.8,2-2.1,2-3.7c0-2.4-1.9-4.4-4.4-4.4c-1.6,0-3.1,0.9-3.8,2.3c0.4,0.1,0.7,0.3,1,0.5\n\t\t\tC16,5.7,17.1,5,18.2,5c1.8,0,3.2,1.4,3.2,3.2s-1.4,3.2-3.2,3.2c-0.1,0-0.3,0-0.4,0c0,0.4-0.1,0.9-0.2,1.3c0.2,0,0.4,0,0.6,0\n\t\t\tc3.1,0,5.7,2.5,5.7,5.7H25C25,15.4,23.2,12.9,20.6,11.9z"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M4.4,11.9c-1.2-0.8-2-2.1-2-3.7c0-2.4,1.9-4.4,4.4-4.4c1.6,0,3.1,0.9,3.8,2.3c-0.4,0.1-0.7,0.3-1,0.5\n\t\t\tC9,5.7,7.9,5,6.8,5C5,5,3.6,6.5,3.6,8.2s1.4,3.2,3.2,3.2c0.1,0,0.3,0,0.4,0c0,0.4,0.1,0.9,0.2,1.3c-0.2,0-0.4,0-0.6,0\n\t\t\tc-3.1,0-5.7,2.5-5.7,5.7H0C0,15.4,1.8,12.9,4.4,11.9z"/>\n\t</g>\n</g>\n</svg>\n'
   },
@@ -2175,7 +2252,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_LOCALIZATION,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 6,
     svg: '<svg stroke="none" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">\n<g>\n\t<g>\n\t\t<path  d="M22.3,16.9c0,0-0.2-0.2-0.2-0.2c-1.4-1.4-2.7-2.8-4.1-4.2c-0.5-0.5-1-0.7-1.7-0.7c-1.3,0-2.6,0-3.9,0\n\t\t\tc-1,0-1.7-0.6-1.7-1.7c0-0.2,0-0.4,0-0.5h0.9c0,0.2,0,0.4,0,0.6c0,0.5,0.2,0.7,0.7,0.7c1.3,0,2.6,0,4,0c0.9,0,1.7,0.3,2.3,1\n\t\t\tc0.8,0.8,1.6,1.6,2.4,2.5c0.1,0.1,0.1,0.1,0.1,0.2c0,0,0,0,0.1,0c0-0.2,0-0.3,0-0.5c0-0.5-0.1-1-0.1-1.5c-0.1-0.9,0.5-1.6,1.4-1.6\n\t\t\tc0.3,0,0.6,0,0.9,0c0.4,0,0.7-0.2,0.7-0.7c0-2.1,0-4.2,0-6.3c0-0.5-0.2-0.7-0.7-0.7c-0.6,0-1.2,0-1.9,0c-3,0-6.1,0-9.1,0\n\t\t\tc-0.6,0-0.8,0.2-0.8,0.8c0,1.2,0,2.3,0,3.5c0,0.1,0,0.2,0,0.3h-0.9c0-0.1,0-0.2,0-0.2c0-1.2,0-2.4,0-3.6c0-1,0.6-1.6,1.6-1.6\n\t\t\tc3.7,0,7.3,0,11,0c1,0,1.6,0.6,1.6,1.6c0,2.1,0,4.2,0,6.2c0,1-0.6,1.6-1.6,1.6c-0.3,0-0.6,0-0.9,0c-0.4,0-0.6,0.2-0.6,0.6\n\t\t\tc0.1,1.2,0.3,3.3,0.4,4C22.4,16.5,22.4,16.7,22.3,16.9L22.3,16.9z"/>\n\t\t<path  d="M3.8,20.3c0.8-0.9,1.7-1.7,2.5-2.6c0.6-0.6,1.2-0.9,2-1c0.1,0,0.2,0,0.3,0c1.3,0,2.6,0,4,0\n\t\t\tc0.6,0,0.8-0.2,0.8-0.8c0-1.2,0-2.4,0-3.5c0-0.1,0-0.2,0-0.2c0.3,0,0.6,0,0.9,0c0,0.1,0,0.2,0,0.2c0,1.2,0,2.4,0,3.7\n\t\t\tc0,0.9-0.6,1.6-1.6,1.6c-1.3,0-2.6,0-4,0c-0.7,0-1.2,0.2-1.7,0.7c-1.4,1.4-4.3,4.4-4.3,4.4s0-0.5,0-0.8c0.1-1.3,0.2-2.6,0.3-3.9\n\t\t\tc0-0.3-0.2-0.5-0.5-0.5c-0.3,0-0.6,0-1,0C0.6,17.6,0,17,0,16c0-2.1,0-4.2,0-6.3c0-0.9,0.6-1.6,1.6-1.6c3.7,0,7.4,0,11.1,0\n\t\t\tc0.9,0,1.6,0.7,1.6,1.6c0,0.2,0,0.4,0,0.6c-0.3,0-0.6,0-0.9,0c0-0.2,0-0.4,0-0.6c0-0.5-0.2-0.7-0.7-0.7c-3.7,0-7.4,0-11.1,0\n\t\t\tc-0.4,0-0.7,0.2-0.7,0.7c0,2.1,0,4.2,0,6.2c0,0.5,0.2,0.7,0.7,0.7c0.3,0,0.6,0,1,0c0.8,0,1.5,0.7,1.4,1.5c0,0.6-0.1,1.1-0.2,1.7\n\t\t\tC3.8,20,3.8,20.2,3.8,20.3C3.8,20.3,3.8,20.3,3.8,20.3z"/>\n\t\t<path  d="M9.5,15.2c0,0.3-0.1,0.4-0.3,0.5c-0.2,0-0.4,0-0.5-0.3c-0.2-0.4-0.3-0.8-0.5-1.1C8.1,14.1,8,14,7.9,14.1\n\t\t\tc-0.5,0-1,0-1.5,0c-0.2,0-0.2,0.1-0.3,0.2c-0.1,0.4-0.3,0.7-0.4,1.1c-0.1,0.3-0.4,0.4-0.6,0.3c-0.2-0.1-0.3-0.4-0.2-0.6\n\t\t\tc0.6-1.5,1.3-3.1,1.9-4.6c0.1-0.2,0.2-0.3,0.4-0.3c0.2,0,0.4,0.1,0.4,0.3c0.6,1.5,1.3,3.1,1.9,4.6C9.5,15.1,9.5,15.1,9.5,15.2z\n\t\t\t M6.5,13.1c0.4,0,0.8,0,1.2,0c-0.2-0.5-0.4-0.9-0.6-1.4C6.9,12.2,6.7,12.7,6.5,13.1z"/>\n\t</g>\n\t<g>\n\t\t<path  d="M19.9,9c0,0-0.6,0.8-1.5,0.9c-1.1,0-1.6-0.8-1.6-1.3c-0.1-0.9,0.3-1.8,0.6-2.1c0,0-0.6-0.3-0.7-0.6\n\t\t\tc0,0,0-1.3,0.9-1.4c0.6-0.1,1,0.5,1,0.5s-1.2-0.2-1.4,0.6c0,0,0.5,0.4,0.9,0.3c0,0,0.4-0.2,1-0.4l-0.1,0.8c0,0-2,0.6-2,2\n\t\t\tc0,0.9,0.8,1,1.5,1.1C18.8,9.2,19.6,9.1,19.9,9z"/>\n\t</g>\n</g>\n</svg>\n'
   },
@@ -2188,7 +2265,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_CUSTOM_ROLE,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 7,
     svg: '<svg fill="currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">\n<g>\n\t<g>\n\t\t<path class="st0" d="M12.4,11.1c-0.2,0-0.4,0-0.6,0c-0.2,0-0.3-0.1-0.4-0.4c0-0.1,0-0.3-0.1-0.4c0-0.1,0-0.2-0.1-0.4\n\t\t\tc-0.3-0.1-0.6-0.2-0.8-0.3c-0.1,0.1-0.2,0.2-0.3,0.3c-0.1,0.1-0.2,0.2-0.3,0.3c-0.1,0.1-0.3,0.1-0.4,0c-0.3-0.2-0.6-0.4-0.8-0.6\n\t\t\tC8.5,9.5,8.4,9.4,8.5,9.2c0.1-0.1,0.1-0.3,0.2-0.4c0.1-0.1,0.1-0.2,0.2-0.4C8.7,8.2,8.6,8,8.4,7.8c-0.1,0-0.3,0-0.4,0\n\t\t\tc-0.1,0-0.3,0-0.4,0c-0.2,0-0.3-0.1-0.4-0.2C7.1,7.3,7,7,6.9,6.6c0-0.2,0-0.4,0.2-0.5C7.3,6.1,7.4,6,7.5,6\n\t\t\tc0.1-0.1,0.2-0.1,0.3-0.2c0,0,0,0,0,0c0-0.3,0-0.5,0-0.8c0,0,0,0,0,0c0,0,0,0,0,0C7.7,4.9,7.6,4.8,7.5,4.8\n\t\t\tC7.4,4.7,7.3,4.6,7.2,4.6C7,4.5,6.9,4.3,7,4.1C7,3.8,7.1,3.6,7.3,3.2C7.4,3,7.5,2.9,7.8,2.9C7.9,3,8,3,8.2,3c0.1,0,0.2,0,0.4,0.1\n\t\t\tC8.7,2.9,8.9,2.6,9,2.4C9,2.3,8.9,2.2,8.9,2C8.8,1.9,8.8,1.8,8.7,1.6C8.6,1.5,8.7,1.3,8.8,1.2C9.1,1,9.4,0.8,9.7,0.6\n\t\t\tc0.2-0.1,0.3-0.1,0.5,0.1c0.1,0.1,0.2,0.2,0.3,0.3c0.1,0.1,0.2,0.2,0.3,0.3c0,0,0,0,0,0C11,1.1,11.2,1.1,11.5,1c0,0,0,0,0,0\n\t\t\tc0,0,0,0,0,0c0-0.1,0-0.2,0.1-0.4c0-0.1,0.1-0.3,0.1-0.4c0-0.2,0.2-0.4,0.4-0.4c0.3,0,0.7,0,1,0c0.2,0,0.3,0.1,0.4,0.3\n\t\t\tc0,0.1,0,0.3,0.1,0.4c0,0.1,0,0.2,0.1,0.4c0,0,0,0.1,0,0.1h0c0,0,0,0,0,0c0.3,0.1,0.5,0.2,0.7,0.3c0.1-0.1,0.2-0.2,0.3-0.3\n\t\t\tC14.7,1,14.9,0.9,15,0.8c0.1-0.1,0.3-0.2,0.5,0c0.3,0.2,0.5,0.4,0.8,0.6c0.2,0.1,0.2,0.3,0.1,0.5c-0.1,0.1-0.1,0.2-0.2,0.4\n\t\t\tc-0.1,0.1-0.1,0.2-0.2,0.4c0,0,0,0,0,0c0.2,0.2,0.3,0.5,0.5,0.7c0,0,0,0,0,0l0,0c0.1,0,0.2,0,0.2,0c0.2,0,0.4,0,0.6-0.1\n\t\t\tc0.2,0,0.3,0.1,0.4,0.2c0.1,0.3,0.2,0.7,0.3,1c0.1,0.3-0.1,0.4-0.2,0.4c-0.1,0.1-0.2,0.1-0.4,0.2C17.3,5,17.2,5.1,17,5.2\n\t\t\tc0,0,0,0,0,0c0,0,0,0,0,0c0,0.3,0,0.5,0,0.8c0.1,0.1,0.2,0.1,0.3,0.2c0.1,0.1,0.3,0.1,0.4,0.2l0,0c0.2,0.1,0.2,0.3,0.2,0.4\n\t\t\tc-0.1,0.3-0.2,0.6-0.3,1C17.5,8,17.4,8.1,17.2,8C17,8,16.9,8,16.8,8c-0.1,0-0.3,0-0.5-0.1c-0.1,0.2-0.3,0.4-0.5,0.7c0,0,0,0,0,0\n\t\t\tc0,0,0,0,0,0C15.9,8.7,16,8.9,16,9c0.1,0.1,0.1,0.2,0.2,0.3c0.1,0.2,0.1,0.3-0.1,0.5c-0.3,0.2-0.6,0.4-0.9,0.6\n\t\t\tc-0.1,0.1-0.3,0.1-0.5-0.1c-0.1-0.1-0.2-0.2-0.3-0.3c-0.1-0.1-0.2-0.2-0.3-0.3c-0.2,0.1-0.5,0.1-0.8,0.2c0,0.1-0.1,0.3-0.1,0.4\n\t\t\tc0,0.1-0.1,0.3-0.1,0.4c0,0.2-0.2,0.3-0.3,0.3C12.7,11.1,12.6,11.1,12.4,11.1z M11.9,10.7c0.3,0,0.5,0,0.9,0\n\t\t\tc0-0.1,0.1-0.2,0.1-0.4c0-0.1,0.1-0.3,0.1-0.4c0-0.2,0.1-0.3,0.3-0.3c0.3-0.1,0.6-0.2,0.8-0.2c0.2-0.1,0.3,0,0.4,0.1\n\t\t\tc0.1,0.1,0.2,0.2,0.3,0.3c0.1,0.1,0.2,0.2,0.3,0.3c0.3-0.2,0.5-0.3,0.7-0.5c-0.1-0.1-0.1-0.2-0.2-0.3c-0.1-0.1-0.1-0.3-0.2-0.4\n\t\t\tc-0.1-0.2-0.1-0.3,0.1-0.5c0.2-0.2,0.4-0.5,0.5-0.6c0.1-0.1,0.2-0.2,0.4-0.2c0.1,0,0.3,0,0.5,0.1c0.1,0,0.2,0,0.3,0\n\t\t\tc0.1-0.3,0.2-0.6,0.3-0.8c-0.1-0.1-0.2-0.1-0.4-0.2c-0.1-0.1-0.2-0.1-0.3-0.2c-0.1-0.1-0.2-0.2-0.2-0.4c0-0.3,0-0.5,0-0.8\n\t\t\tc0-0.2,0.1-0.3,0.3-0.4c0.1-0.1,0.2-0.1,0.3-0.2c0.1-0.1,0.2-0.1,0.3-0.2c-0.1-0.3-0.2-0.6-0.3-0.9c-0.2,0-0.4,0-0.6,0.1\n\t\t\tc-0.1,0-0.1,0-0.2,0c-0.1,0-0.3,0-0.4-0.2c-0.1-0.2-0.3-0.4-0.5-0.7c-0.1-0.1-0.1-0.3,0-0.5c0.1-0.1,0.1-0.2,0.2-0.4\n\t\t\tc0.1-0.1,0.1-0.2,0.2-0.4c-0.2-0.2-0.5-0.4-0.7-0.5c-0.1,0.1-0.2,0.2-0.3,0.3c-0.1,0.1-0.2,0.2-0.3,0.3c-0.1,0.1-0.3,0.1-0.4,0.1\n\t\t\tc-0.2-0.1-0.5-0.2-0.7-0.2c-0.3-0.1-0.3-0.3-0.4-0.4c0-0.1,0-0.2-0.1-0.4c0-0.1,0-0.2-0.1-0.4c-0.3,0-0.6,0-0.9,0c0,0,0,0,0,0\n\t\t\tc0,0,0,0,0,0c0,0.1-0.1,0.3-0.1,0.4C12,0.8,12,1,11.9,1.1c0,0.2-0.1,0.3-0.3,0.3c-0.3,0.1-0.5,0.1-0.8,0.2\n\t\t\tc-0.2,0.1-0.4-0.1-0.4-0.1c-0.1-0.1-0.2-0.2-0.3-0.3C10,1.2,9.9,1.1,9.8,1C9.6,1.1,9.4,1.3,9.1,1.5c0.1,0.1,0.1,0.3,0.2,0.4\n\t\t\tc0,0.1,0.1,0.2,0.2,0.3c0.1,0.2,0.1,0.3-0.1,0.4C9.2,2.9,9,3.1,8.9,3.3C8.8,3.5,8.6,3.5,8.5,3.5c-0.1,0-0.2,0-0.4-0.1\n\t\t\tc-0.1,0-0.3,0-0.4-0.1C7.5,3.7,7.5,4,7.4,4.2c0.1,0.1,0.2,0.1,0.3,0.2C7.8,4.5,8,4.5,8.1,4.6C8.2,4.7,8.3,4.8,8.3,5\n\t\t\tc0,0.3,0,0.5,0,0.8c0,0.3-0.2,0.4-0.2,0.4C7.9,6.2,7.8,6.3,7.7,6.4C7.6,6.4,7.5,6.5,7.3,6.6c0.1,0.3,0.2,0.6,0.3,0.9\n\t\t\tc0.1,0,0.3,0,0.4,0c0.1,0,0.3,0,0.4,0c0.2,0,0.3,0,0.4,0.2C8.9,7.7,9.1,8,9.3,8.2c0.1,0.1,0.1,0.3,0,0.4C9.2,8.8,9.2,8.9,9.1,9\n\t\t\tC9.1,9.1,9,9.2,8.9,9.4c0.2,0.2,0.5,0.4,0.7,0.5c0.1-0.1,0.2-0.2,0.3-0.3c0.1-0.1,0.2-0.2,0.3-0.3c0,0,0.2-0.2,0.4-0.1\n\t\t\tc0.2,0.1,0.5,0.2,0.8,0.3c0.2,0.1,0.3,0.3,0.3,0.3c0,0.1,0,0.2,0.1,0.3C11.8,10.4,11.9,10.5,11.9,10.7z M13.3,10L13.3,10L13.3,10z\n\t\t\t M15.8,8.6L15.8,8.6L15.8,8.6z M7.6,7.5L7.6,7.5L7.6,7.5z M17.5,6.8C17.5,6.8,17.5,6.8,17.5,6.8S17.5,6.8,17.5,6.8z M17,6L17,6\n\t\t\tL17,6z M7.3,4.2C7.3,4.2,7.3,4.2,7.3,4.2C7.3,4.2,7.3,4.2,7.3,4.2z M9.1,2.4L9.1,2.4L9.1,2.4z M14.4,1.3L14.4,1.3L14.4,1.3z\n\t\t\t M10.7,1.2L10.7,1.2L10.7,1.2z M10.7,1.2L10.7,1.2L10.7,1.2z M11.5,1C11.5,1,11.5,1,11.5,1C11.5,1,11.5,1,11.5,1z M13,0.3L13,0.3\n\t\t\tL13,0.3z M13,0.3L13,0.3L13,0.3z M12.4,8.1C12.4,8.1,12.4,8.1,12.4,8.1c-0.7,0-1.4-0.3-1.9-0.8c-0.5-0.5-0.8-1.2-0.8-1.9\n\t\t\tc0-1.4,1.2-2.6,2.6-2.6c0,0,0,0,0,0c0.7,0,1.4,0.3,1.9,0.8c0.5,0.5,0.8,1.2,0.8,1.9C15.1,7,13.9,8.1,12.4,8.1z M12.4,3.3\n\t\t\tc-1.2,0-2.2,1-2.2,2.2c0,0.6,0.2,1.2,0.6,1.6c0.4,0.4,1,0.6,1.6,0.6c0,0,0,0,0,0c1.2,0,2.2-1,2.2-2.2c0-0.6-0.2-1.1-0.6-1.6\n\t\t\tC13.6,3.5,13,3.3,12.4,3.3C12.4,3.3,12.4,3.3,12.4,3.3z"/>\n\t</g>\n\t<g>\n\t\t<g>\n\t\t\t<path class="st0" d="M18.6,2.9h-0.3c-0.1,0-0.1-0.1-0.1-0.1c0-0.1,0.1-0.1,0.1-0.1h0.3c0.1,0,0.1,0.1,0.1,0.1\n\t\t\t\tC18.8,2.9,18.7,2.9,18.6,2.9z"/>\n\t\t</g>\n\t\t<g>\n\t\t\t<path class="st0" d="M20.5,2.9H20c-0.1,0-0.1-0.1-0.1-0.1c0-0.1,0.1-0.1,0.1-0.1h0.5c0.1,0,0.1,0.1,0.1,0.1\n\t\t\t\tC20.6,2.9,20.6,2.9,20.5,2.9z M19.6,2.9h-0.5C19,2.9,19,2.9,19,2.8c0-0.1,0.1-0.1,0.1-0.1h0.5c0.1,0,0.1,0.1,0.1,0.1\n\t\t\t\tC19.7,2.9,19.6,2.9,19.6,2.9z"/>\n\t\t</g>\n\t\t<g>\n\t\t\t<path class="st0" d="M21.2,3.2c-0.1,0-0.1-0.1-0.1-0.1V2.9H21c-0.1,0-0.1-0.1-0.1-0.1c0-0.1,0.1-0.1,0.1-0.1h0.3\n\t\t\t\tc0.1,0,0.1,0.1,0.1,0.1v0.3C21.4,3.1,21.3,3.2,21.2,3.2z"/>\n\t\t</g>\n\t\t<g>\n\t\t\t<path class="st0" d="M21.2,9.4c-0.1,0-0.1-0.1-0.1-0.1V8.8c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.5\n\t\t\t\tC21.4,9.4,21.3,9.4,21.2,9.4z M21.2,8.4c-0.1,0-0.1-0.1-0.1-0.1V7.7c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.5\n\t\t\t\tC21.4,8.3,21.3,8.4,21.2,8.4z M21.2,7.4c-0.1,0-0.1-0.1-0.1-0.1V6.7c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.5\n\t\t\t\tC21.4,7.3,21.3,7.4,21.2,7.4z M21.2,6.3c-0.1,0-0.1-0.1-0.1-0.1V5.7c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.5\n\t\t\t\tC21.4,6.3,21.3,6.3,21.2,6.3z M21.2,5.3c-0.1,0-0.1-0.1-0.1-0.1V4.6c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.5\n\t\t\t\tC21.4,5.2,21.3,5.3,21.2,5.3z M21.2,4.2c-0.1,0-0.1-0.1-0.1-0.1V3.6c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.5\n\t\t\t\tC21.4,4.2,21.3,4.2,21.2,4.2z"/>\n\t\t</g>\n\t\t<g>\n\t\t\t<path class="st0" d="M21.2,10.2c-0.1,0-0.1-0.1-0.1-0.1V9.8c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.3\n\t\t\t\tC21.4,10.2,21.3,10.2,21.2,10.2z"/>\n\t\t</g>\n\t</g>\n\t<g>\n\t\t<g>\n\t\t\t<path class="st0" d="M6.6,2.9H6.4c-0.1,0-0.1-0.1-0.1-0.1c0-0.1,0.1-0.1,0.1-0.1h0.3c0.1,0,0.1,0.1,0.1,0.1\n\t\t\t\tC6.8,2.9,6.7,2.9,6.6,2.9z"/>\n\t\t</g>\n\t\t<g>\n\t\t\t<path class="st0" d="M5.9,2.9H5.4c-0.1,0-0.1-0.1-0.1-0.1c0-0.1,0.1-0.1,0.1-0.1h0.5C6,2.6,6,2.7,6,2.8C6,2.9,6,2.9,5.9,2.9z\n\t\t\t\t M5,2.9H4.5c-0.1,0-0.1-0.1-0.1-0.1c0-0.1,0.1-0.1,0.1-0.1H5c0.1,0,0.1,0.1,0.1,0.1C5.1,2.9,5.1,2.9,5,2.9z"/>\n\t\t</g>\n\t\t<g>\n\t\t\t<path class="st0" d="M3.8,3.2c-0.1,0-0.1-0.1-0.1-0.1V2.8c0-0.1,0.1-0.1,0.1-0.1H4c0.1,0,0.1,0.1,0.1,0.1c0,0.1-0.1,0.1-0.1,0.1\n\t\t\t\tH3.9v0.1C3.9,3.1,3.9,3.2,3.8,3.2z"/>\n\t\t</g>\n\t\t<g>\n\t\t\t<path class="st0" d="M3.8,9.4c-0.1,0-0.1-0.1-0.1-0.1V8.8c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.5\n\t\t\t\tC3.9,9.4,3.9,9.4,3.8,9.4z M3.8,8.4c-0.1,0-0.1-0.1-0.1-0.1V7.7c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.5\n\t\t\t\tC3.9,8.3,3.9,8.4,3.8,8.4z M3.8,7.4c-0.1,0-0.1-0.1-0.1-0.1V6.7c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.5\n\t\t\t\tC3.9,7.3,3.9,7.4,3.8,7.4z M3.8,6.3c-0.1,0-0.1-0.1-0.1-0.1V5.7c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.5\n\t\t\t\tC3.9,6.3,3.9,6.3,3.8,6.3z M3.8,5.3c-0.1,0-0.1-0.1-0.1-0.1V4.6c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.5\n\t\t\t\tC3.9,5.2,3.9,5.3,3.8,5.3z M3.8,4.2c-0.1,0-0.1-0.1-0.1-0.1V3.6c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.5\n\t\t\t\tC3.9,4.2,3.9,4.2,3.8,4.2z"/>\n\t\t</g>\n\t\t<g>\n\t\t\t<path class="st0" d="M3.8,10.2c-0.1,0-0.1-0.1-0.1-0.1V9.8c0-0.1,0.1-0.1,0.1-0.1c0.1,0,0.1,0.1,0.1,0.1v0.3\n\t\t\t\tC3.9,10.2,3.9,10.2,3.8,10.2z"/>\n\t\t</g>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M12.3,14.6c-0.1,0-0.1-0.1-0.1-0.1v-0.4c0-0.1,0.1-0.1,0.1-0.1s0.1,0.1,0.1,0.1v0.4\n\t\t\tC12.5,14.6,12.4,14.6,12.3,14.6z M12.3,13.7c-0.1,0-0.1-0.1-0.1-0.1V13c0-0.1,0.1-0.1,0.1-0.1s0.1,0.1,0.1,0.1v0.5\n\t\t\tC12.5,13.6,12.4,13.7,12.3,13.7z M12.3,12.6c-0.1,0-0.1-0.1-0.1-0.1v-0.5c0-0.1,0.1-0.1,0.1-0.1s0.1,0.1,0.1,0.1v0.5\n\t\t\tC12.5,12.5,12.4,12.6,12.3,12.6z"/>\n\t</g>\n\t<path class="st0" d="M22.5,15.3c0.7-0.4,1.1-1.2,1.1-2c0-1.3-1.1-2.4-2.4-2.4c-1.3,0-2.4,1.1-2.4,2.4c0,0.9,0.4,1.6,1.1,2\n\t\tc-1.5,0.5-2.5,1.9-2.5,3.5h0.6c0-1.7,1.4-3.1,3.1-3.1s3.1,1.4,3.1,3.1H25C25,17.2,24,15.8,22.5,15.3z M19.5,13.2\n\t\tc0-1,0.8-1.8,1.8-1.8s1.8,0.8,1.8,1.8S22.2,15,21.2,15S19.5,14.2,19.5,13.2z"/>\n\t<path class="st0" d="M5.1,15.3c0.7-0.4,1.1-1.2,1.1-2c0-1.3-1.1-2.4-2.4-2.4s-2.4,1.1-2.4,2.4c0,0.9,0.4,1.6,1.1,2\n\t\tC1,15.8,0,17.2,0,18.8h0.6c0-1.7,1.4-3.1,3.1-3.1s3.1,1.4,3.1,3.1h0.6C7.5,17.2,6.5,15.8,5.1,15.3z M2,13.2c0-1,0.8-1.8,1.8-1.8\n\t\ts1.8,0.8,1.8,1.8S4.8,15,3.8,15S2,14.2,2,13.2z"/>\n\t<path class="st0" d="M14.1,20.7c0.9-0.5,1.4-1.5,1.4-2.6c0-1.7-1.4-3.1-3.1-3.1s-3.1,1.4-3.1,3.1c0,1.1,0.6,2,1.4,2.6\n\t\tc-1.8,0.7-3.1,2.4-3.1,4.5h0.8c0-2.2,1.8-4,4-4s4,1.8,4,4h0.8C17.2,23.1,15.9,21.3,14.1,20.7z M10.2,18.1c0-1.2,1-2.2,2.2-2.2\n\t\ts2.2,1,2.2,2.2c0,1.2-1,2.2-2.2,2.2S10.2,19.3,10.2,18.1z"/>\n</g>\n</svg>\n'
   },
@@ -2201,7 +2278,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.SANADI_PARTIAL_REQUEST_REPORT,
     permissionGroup: null,
     parent: 23,
-    group: 'sanady',
+    group: GroupNames.SANADI,
     itemOrder: 6,
     svg: ''
   },
@@ -2214,11 +2291,11 @@ export const newNavigationMenuList = [
     permission: null,
     permissionGroup: null,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.USER_INBOX,
     svg: null,
     counter: 'personalInbox',
-    excludeFromDefaultParents : true,
+    excludeFromDefaultParents: true,
   },
   {
     id: 16,
@@ -2229,11 +2306,11 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.TEAM_INBOX,
     permissionGroup: null,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.TEAM_INBOX,
     svg: null,
     counter: 'teamInbox',
-    excludeFromDefaultParents : true,
+    excludeFromDefaultParents: true,
   },
   {
     id: 19,
@@ -2244,10 +2321,10 @@ export const newNavigationMenuList = [
     permission: EServicePermissionsEnum.E_SERVICES_SEARCH,
     permissionGroup: null,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SERVICE_SEARCH,
     svg: null,
-    excludeFromDefaultParents : true,
+    excludeFromDefaultParents: true,
   },
   {
     id: 20,
@@ -2258,7 +2335,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_SERVICES_DATA,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 8,
     svg: '<svg stroke="none" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">\n<g>\n\t<g>\n\t\t<path  d="M22.3,16.9c0,0-0.2-0.2-0.2-0.2c-1.4-1.4-2.7-2.8-4.1-4.2c-0.5-0.5-1-0.7-1.7-0.7c-1.3,0-2.6,0-3.9,0\n\t\t\tc-1,0-1.7-0.6-1.7-1.7c0-0.2,0-0.4,0-0.5h0.9c0,0.2,0,0.4,0,0.6c0,0.5,0.2,0.7,0.7,0.7c1.3,0,2.6,0,4,0c0.9,0,1.7,0.3,2.3,1\n\t\t\tc0.8,0.8,1.6,1.6,2.4,2.5c0.1,0.1,0.1,0.1,0.1,0.2c0,0,0,0,0.1,0c0-0.2,0-0.3,0-0.5c0-0.5-0.1-1-0.1-1.5c-0.1-0.9,0.5-1.6,1.4-1.6\n\t\t\tc0.3,0,0.6,0,0.9,0c0.4,0,0.7-0.2,0.7-0.7c0-2.1,0-4.2,0-6.3c0-0.5-0.2-0.7-0.7-0.7c-0.6,0-1.2,0-1.9,0c-3,0-6.1,0-9.1,0\n\t\t\tc-0.6,0-0.8,0.2-0.8,0.8c0,1.2,0,2.3,0,3.5c0,0.1,0,0.2,0,0.3h-0.9c0-0.1,0-0.2,0-0.2c0-1.2,0-2.4,0-3.6c0-1,0.6-1.6,1.6-1.6\n\t\t\tc3.7,0,7.3,0,11,0c1,0,1.6,0.6,1.6,1.6c0,2.1,0,4.2,0,6.2c0,1-0.6,1.6-1.6,1.6c-0.3,0-0.6,0-0.9,0c-0.4,0-0.6,0.2-0.6,0.6\n\t\t\tc0.1,1.2,0.3,3.3,0.4,4C22.4,16.5,22.4,16.7,22.3,16.9L22.3,16.9z"/>\n\t\t<path  d="M3.8,20.3c0.8-0.9,1.7-1.7,2.5-2.6c0.6-0.6,1.2-0.9,2-1c0.1,0,0.2,0,0.3,0c1.3,0,2.6,0,4,0\n\t\t\tc0.6,0,0.8-0.2,0.8-0.8c0-1.2,0-2.4,0-3.5c0-0.1,0-0.2,0-0.2c0.3,0,0.6,0,0.9,0c0,0.1,0,0.2,0,0.2c0,1.2,0,2.4,0,3.7\n\t\t\tc0,0.9-0.6,1.6-1.6,1.6c-1.3,0-2.6,0-4,0c-0.7,0-1.2,0.2-1.7,0.7c-1.4,1.4-4.3,4.4-4.3,4.4s0-0.5,0-0.8c0.1-1.3,0.2-2.6,0.3-3.9\n\t\t\tc0-0.3-0.2-0.5-0.5-0.5c-0.3,0-0.6,0-1,0C0.6,17.6,0,17,0,16c0-2.1,0-4.2,0-6.3c0-0.9,0.6-1.6,1.6-1.6c3.7,0,7.4,0,11.1,0\n\t\t\tc0.9,0,1.6,0.7,1.6,1.6c0,0.2,0,0.4,0,0.6c-0.3,0-0.6,0-0.9,0c0-0.2,0-0.4,0-0.6c0-0.5-0.2-0.7-0.7-0.7c-3.7,0-7.4,0-11.1,0\n\t\t\tc-0.4,0-0.7,0.2-0.7,0.7c0,2.1,0,4.2,0,6.2c0,0.5,0.2,0.7,0.7,0.7c0.3,0,0.6,0,1,0c0.8,0,1.5,0.7,1.4,1.5c0,0.6-0.1,1.1-0.2,1.7\n\t\t\tC3.8,20,3.8,20.2,3.8,20.3C3.8,20.3,3.8,20.3,3.8,20.3z"/>\n\t\t<path  d="M9.5,15.2c0,0.3-0.1,0.4-0.3,0.5c-0.2,0-0.4,0-0.5-0.3c-0.2-0.4-0.3-0.8-0.5-1.1C8.1,14.1,8,14,7.9,14.1\n\t\t\tc-0.5,0-1,0-1.5,0c-0.2,0-0.2,0.1-0.3,0.2c-0.1,0.4-0.3,0.7-0.4,1.1c-0.1,0.3-0.4,0.4-0.6,0.3c-0.2-0.1-0.3-0.4-0.2-0.6\n\t\t\tc0.6-1.5,1.3-3.1,1.9-4.6c0.1-0.2,0.2-0.3,0.4-0.3c0.2,0,0.4,0.1,0.4,0.3c0.6,1.5,1.3,3.1,1.9,4.6C9.5,15.1,9.5,15.1,9.5,15.2z\n\t\t\t M6.5,13.1c0.4,0,0.8,0,1.2,0c-0.2-0.5-0.4-0.9-0.6-1.4C6.9,12.2,6.7,12.7,6.5,13.1z"/>\n\t</g>\n\t<g>\n\t\t<path  d="M19.9,9c0,0-0.6,0.8-1.5,0.9c-1.1,0-1.6-0.8-1.6-1.3c-0.1-0.9,0.3-1.8,0.6-2.1c0,0-0.6-0.3-0.7-0.6\n\t\t\tc0,0,0-1.3,0.9-1.4c0.6-0.1,1,0.5,1,0.5s-1.2-0.2-1.4,0.6c0,0,0.5,0.4,0.9,0.3c0,0,0.4-0.2,1-0.4l-0.1,0.8c0,0-2,0.6-2,2\n\t\t\tc0,0.9,0.8,1,1.5,1.1C18.8,9.2,19.6,9.1,19.9,9z"/>\n\t</g>\n</g>\n</svg>\n'
   },
@@ -2271,7 +2348,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_TEAMS,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 3,
     svg: null
   },
@@ -2284,7 +2361,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_ATTACHMENT_TYPES,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 9,
     svg: null
   },
@@ -2298,9 +2375,12 @@ export const newNavigationMenuList = [
     menuKey: SystemMenuKeys.SANADY,
     permissionGroup: PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.SANADI,
-    svg: '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="5.3 6 12 12">\n  <g>\n    <path\n      d="M13.7,7.343a11.538,11.538,0,0,1,.956,2.023,10.732,10.732,0,0,1,.22,1.419c.083-.007.182-.29.193-.6a1.859,1.859,0,0,0-.132-.731,2.07,2.07,0,0,1,.426,1.244c.086.7-.186,1.356-.049,1.414s.436-1.092.251-2a5.237,5.237,0,0,1,.119,1.185c-.029.523-.256,1.191-.119,1.191a4.308,4.308,0,0,0,.28-2.426,4.21,4.21,0,0,1,.129,1.1c-.01.613-.206,1.014-.092,1.059a2.859,2.859,0,0,0,.261-2.182,3.371,3.371,0,0,1,.145.841c.01.376-.154.767-.016.788S17.248,8.6,13.7,7.343"\n      />\n    <path\n      d="M15.567,12.5a.042.042,0,0,1-.033-.016c-.045-.054-.008-.247.043-.514a5.233,5.233,0,0,0,.1-.672,4.158,4.158,0,0,0-.046-.766,2.957,2.957,0,0,1-.271,1.582.044.044,0,0,1-.047.011c-.07-.03-.046-.186-.009-.422a3.569,3.569,0,0,0,.052-1,2.117,2.117,0,0,0-.381-1.185,1.939,1.939,0,0,1,.107.671c-.011.306-.109.6-.2.61a.021.021,0,0,1-.015-.005c-.02-.018-.025-.091-.033-.255a4.458,4.458,0,0,0-.182-1.166,11.631,11.631,0,0,0-.955-2.02l-.015-.025.027.01a3.947,3.947,0,0,1,2.515,2.152,3.265,3.265,0,0,1,.171,1.939c-.01.043-.065.252-.117.252h0a.067.067,0,0,1-.044-.026c-.037-.052-.018-.173.008-.326a2.419,2.419,0,0,0,.043-.446,3.26,3.26,0,0,0-.1-.683,3.143,3.143,0,0,1-.255,2.022.042.042,0,0,1-.044.011c-.066-.026-.042-.145,0-.341a4.019,4.019,0,0,0,.089-.727,4.408,4.408,0,0,0-.082-.9,4.722,4.722,0,0,1-.277,2.209.055.055,0,0,1-.039.024Zm.01-2.388A5.244,5.244,0,0,1,15.7,11.3a5.238,5.238,0,0,1-.1.674,1.143,1.143,0,0,0-.048.5.022.022,0,0,0,.018.008h0c.007,0,.015-.006.025-.016a4.812,4.812,0,0,0,.245-2.4l.02,0a4.241,4.241,0,0,1,.129,1.1,3.872,3.872,0,0,1-.09.731c-.035.18-.059.3-.008.319.007,0,.017,0,.023-.009a3.331,3.331,0,0,0,.224-2.162l.019-.005a3.364,3.364,0,0,1,.146.844,2.381,2.381,0,0,1-.044.449.6.6,0,0,0-.011.311.047.047,0,0,0,.031.018c.018,0,.087-.131.134-.422a3.308,3.308,0,0,0-.284-1.914,4.006,4.006,0,0,0-2.4-1.959,11.49,11.49,0,0,1,.943,2,4.474,4.474,0,0,1,.183,1.172.82.82,0,0,0,.027.241c.073-.006.172-.28.183-.591a1.874,1.874,0,0,0-.131-.726l-.03-.069.047.058a2.1,2.1,0,0,1,.428,1.25,3.563,3.563,0,0,1-.052,1.005c-.034.219-.059.377,0,.4,0,0,.011,0,.026-.008a3.325,3.325,0,0,0,.211-1.983Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M9.527,7.12a11.6,11.6,0,0,1,2.1.754,10.706,10.706,0,0,1,1.16.849c.053-.064-.077-.335-.288-.561a1.873,1.873,0,0,0-.61-.424,2.073,2.073,0,0,1,1.18.578c.555.433.828,1.091.966,1.035s-.465-1.08-1.238-1.593a5.24,5.24,0,0,1,.922.754c.349.39.661,1.023.758.926a4.322,4.322,0,0,0-1.518-1.914,4.2,4.2,0,0,1,.87.688c.426.44.571.862.684.814s-.311-.98-1.359-1.727a3.352,3.352,0,0,1,.7.491c.273.26.432.652.545.569S12.92,5.5,9.527,7.12"\n      />\n    <path\n      d="M14.458,9.458h0c-.07-.006-.18-.169-.333-.394a5.34,5.34,0,0,0-.405-.545,4.224,4.224,0,0,0-.574-.509,2.96,2.96,0,0,1,.927,1.311.042.042,0,0,1-.026.04c-.07.029-.163-.1-.3-.292a3.612,3.612,0,0,0-.671-.744,2.121,2.121,0,0,0-1.107-.568,1.924,1.924,0,0,1,.55.4c.209.224.349.5.288.574a.021.021,0,0,1-.013.007h0c-.028,0-.083-.049-.2-.157a4.488,4.488,0,0,0-.954-.7,11.609,11.609,0,0,0-2.1-.753L9.5,7.123l.025-.012a3.948,3.948,0,0,1,3.3-.257A3.278,3.278,0,0,1,14.315,8.1c.023.039.136.232.093.263a.063.063,0,0,1-.049.012c-.063-.01-.134-.109-.225-.235A2.4,2.4,0,0,0,13.85,7.8a3.188,3.188,0,0,0-.555-.411A3.143,3.143,0,0,1,14.545,9a.043.043,0,0,1-.023.039c-.066.028-.133-.072-.245-.239a3.9,3.9,0,0,0-.45-.577,4.315,4.315,0,0,0-.693-.576A4.729,4.729,0,0,1,14.5,9.4a.059.059,0,0,1-.011.045A.046.046,0,0,1,14.458,9.458ZM12.807,7.749a5.245,5.245,0,0,1,.924.756,5.239,5.239,0,0,1,.407.547c.138.2.257.38.318.385a.019.019,0,0,0,.018-.007c.005,0,.007-.014.006-.029a4.822,4.822,0,0,0-1.521-1.869l.01-.017a4.256,4.256,0,0,1,.872.69,3.882,3.882,0,0,1,.453.58c.1.152.17.253.22.232a.03.03,0,0,0,.011-.023,3.334,3.334,0,0,0-1.372-1.687l.011-.017a3.4,3.4,0,0,1,.7.493,2.579,2.579,0,0,1,.287.349c.084.117.157.219.211.227a.045.045,0,0,0,.034-.008c.013-.014-.03-.156-.2-.4A3.3,3.3,0,0,0,12.636,6.8a4,4,0,0,0-3.08.313,11.568,11.568,0,0,1,2.081.748,4.448,4.448,0,0,1,.958.7.831.831,0,0,0,.19.152c.047-.056-.077-.32-.289-.548a1.863,1.863,0,0,0-.606-.421l-.07-.027.075.008a2.1,2.1,0,0,1,1.186.58,3.672,3.672,0,0,1,.674.748c.13.179.225.309.281.286,0,0,.011-.005.013-.024A3.321,3.321,0,0,0,12.8,7.766Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M6.416,9.915a11.538,11.538,0,0,1,2.023-.956A10.633,10.633,0,0,1,9.858,8.74c-.007-.083-.29-.183-.6-.193a1.86,1.86,0,0,0-.731.131,2.07,2.07,0,0,1,1.244-.426c.7-.086,1.356.186,1.414.049s-1.092-.435-2-.251a5.237,5.237,0,0,1,1.185-.119c.522.029,1.191.256,1.19.119a4.321,4.321,0,0,0-2.425-.28,4.21,4.21,0,0,1,1.1-.129c.613.01,1.014.206,1.059.092a2.861,2.861,0,0,0-2.182-.26,3.347,3.347,0,0,1,.841-.146c.376-.009.766.155.788.016S7.67,6.37,6.416,9.915"\n      />\n    <path\n      d="M6.4,9.938l.01-.026A3.943,3.943,0,0,1,8.558,7.4a3.276,3.276,0,0,1,1.94-.171c.043.011.259.068.252.12a.065.065,0,0,1-.026.043c-.052.038-.173.018-.326-.007a2.408,2.408,0,0,0-.446-.044,3.251,3.251,0,0,0-.683.1,3.145,3.145,0,0,1,2.022.254.044.044,0,0,1,.012.044c-.027.066-.146.043-.342,0a3.919,3.919,0,0,0-.727-.09h-.062a4.413,4.413,0,0,0-.836.083,4.739,4.739,0,0,1,2.209.276.06.06,0,0,1,.024.04.044.044,0,0,1-.016.034c-.054.045-.247.008-.514-.044a5.415,5.415,0,0,0-.672-.1,4.152,4.152,0,0,0-.766.046,2.957,2.957,0,0,1,1.582.271.045.045,0,0,1,.011.047c-.03.071-.186.046-.422.009a3.607,3.607,0,0,0-1-.052,2.125,2.125,0,0,0-1.185.381,1.963,1.963,0,0,1,.671-.107c.306.011.6.109.61.2a.019.019,0,0,1-.005.014c-.018.021-.091.025-.255.033a4.466,4.466,0,0,0-1.166.183,11.551,11.551,0,0,0-2.02.955ZM9.835,7.172a3.551,3.551,0,0,0-3.4,2.72,11.511,11.511,0,0,1,2-.942,4.483,4.483,0,0,1,1.172-.184.836.836,0,0,0,.241-.026c-.006-.073-.28-.173-.591-.183a1.857,1.857,0,0,0-.726.13l-.068.03L8.52,8.67a2.11,2.11,0,0,1,1.249-.428,3.647,3.647,0,0,1,1.006.052c.219.035.377.059.4,0,0,0,0-.011-.008-.026A3.325,3.325,0,0,0,9.185,8.06l0-.02a5.308,5.308,0,0,1,1.188-.119,5.266,5.266,0,0,1,.674.1,1.152,1.152,0,0,0,.5.047.021.021,0,0,0,.008-.018c0-.007-.006-.015-.016-.024a4.809,4.809,0,0,0-2.4-.246l0-.02a4.276,4.276,0,0,1,1.042-.13h.062a3.957,3.957,0,0,1,.731.09c.18.036.3.059.319.009,0-.008,0-.017-.009-.024a3.327,3.327,0,0,0-2.162-.223l-.005-.02a3.416,3.416,0,0,1,.844-.146,2.581,2.581,0,0,1,.45.044.6.6,0,0,0,.31.011.043.043,0,0,0,.018-.03c0-.018-.13-.088-.42-.135A3.148,3.148,0,0,0,9.835,7.172Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M6.193,14.091a11.594,11.594,0,0,1,.754-2.106A10.634,10.634,0,0,1,7.8,10.826c-.064-.054-.335.076-.561.288a1.847,1.847,0,0,0-.424.61,2.069,2.069,0,0,1,.578-1.181c.433-.555,1.091-.828,1.035-.965s-1.08.464-1.593,1.237a5.211,5.211,0,0,1,.754-.921c.39-.349,1.023-.662.925-.758A4.321,4.321,0,0,0,6.6,10.653a4.225,4.225,0,0,1,.688-.87c.44-.426.862-.571.814-.683s-.98.311-1.727,1.358a3.359,3.359,0,0,1,.491-.7c.26-.273.652-.433.569-.546S4.572,10.7,6.193,14.091"\n      />\n    <path\n      d="M6.2,14.121,6.184,14.1a3.948,3.948,0,0,1-.257-3.3A3.268,3.268,0,0,1,7.178,9.3c.038-.023.231-.135.262-.093a.063.063,0,0,1,.012.049c-.01.063-.109.135-.235.225a2.406,2.406,0,0,0-.346.285,3.215,3.215,0,0,0-.412.555,3.245,3.245,0,0,1,1.6-1.251h.013a.043.043,0,0,1,.039.023c.028.065-.072.132-.239.244a3.847,3.847,0,0,0-.577.451,4.341,4.341,0,0,0-.577.693A4.726,4.726,0,0,1,8.473,9.118a.049.049,0,0,1,.044.011.038.038,0,0,1,.013.035c-.006.069-.169.18-.394.332a5.493,5.493,0,0,0-.545.4,4.224,4.224,0,0,0-.509.574,3.057,3.057,0,0,1,1.3-.927h.01a.044.044,0,0,1,.04.026c.029.071-.1.164-.292.3a3.576,3.576,0,0,0-.744.67,2.123,2.123,0,0,0-.568,1.108,1.934,1.934,0,0,1,.4-.551c.224-.209.5-.349.574-.288a.021.021,0,0,1,.007.014c0,.027-.047.082-.157.2a4.443,4.443,0,0,0-.7.953,11.609,11.609,0,0,0-.753,2.1Zm1.219-4.9a1.039,1.039,0,0,0-.387.206A3.317,3.317,0,0,0,5.877,10.98a4.005,4.005,0,0,0,.313,3.081,11.568,11.568,0,0,1,.748-2.081,4.5,4.5,0,0,1,.7-.958.86.86,0,0,0,.152-.189c-.057-.047-.32.076-.547.288a1.852,1.852,0,0,0-.422.606l-.027.07.008-.074a2.1,2.1,0,0,1,.58-1.186,3.651,3.651,0,0,1,.748-.675c.179-.13.308-.224.286-.281a.026.026,0,0,0-.024-.012h-.01a3.4,3.4,0,0,0-1.542,1.253l-.016-.011a5.206,5.206,0,0,1,.755-.924,5.375,5.375,0,0,1,.547-.406c.2-.139.38-.258.385-.318A.019.019,0,0,0,8.5,9.143a.034.034,0,0,0-.029-.005,4.8,4.8,0,0,0-1.869,1.521l-.017-.011a4.332,4.332,0,0,1,.689-.872,3.934,3.934,0,0,1,.581-.453c.152-.1.253-.17.232-.219,0-.008-.014-.01-.023-.011H8.056A3.424,3.424,0,0,0,6.38,10.464l-.017-.01a3.369,3.369,0,0,1,.493-.7A2.437,2.437,0,0,1,7.2,9.467c.117-.085.219-.157.227-.212a.043.043,0,0,0-.009-.034Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M8.988,17.2a11.551,11.551,0,0,1-.956-2.022,10.957,10.957,0,0,1-.22-1.42c-.082.007-.182.291-.192.6a1.86,1.86,0,0,0,.131.731,2.073,2.073,0,0,1-.426-1.244c-.086-.7.186-1.357.049-1.414s-.435,1.092-.251,2A5.229,5.229,0,0,1,7,13.249c.029-.522.256-1.191.119-1.19a4.325,4.325,0,0,0-.28,2.426,4.21,4.21,0,0,1-.129-1.1c.01-.613.206-1.014.092-1.06a2.866,2.866,0,0,0-.26,2.182,3.347,3.347,0,0,1-.146-.841c-.009-.376.155-.766.016-.787s-.973,3.07,2.572,4.323"\n      />\n    <path\n      d="M9.011,17.22l-.026-.009a3.945,3.945,0,0,1-2.516-2.153A3.265,3.265,0,0,1,6.3,13.119c.011-.043.066-.251.117-.251h0a.061.061,0,0,1,.043.026c.038.051.018.172-.007.325a2.426,2.426,0,0,0-.044.446,3.251,3.251,0,0,0,.1.683,3.145,3.145,0,0,1,.254-2.022.044.044,0,0,1,.044-.011c.066.026.043.145,0,.342a3.919,3.919,0,0,0-.09.727,4.315,4.315,0,0,0,.083.9,4.734,4.734,0,0,1,.276-2.208.056.056,0,0,1,.04-.024h0a.043.043,0,0,1,.034.015c.045.054.008.247-.044.515a5.372,5.372,0,0,0-.1.671,4.152,4.152,0,0,0,.046.766,2.962,2.962,0,0,1,.271-1.582.045.045,0,0,1,.047-.011c.071.03.046.186.009.422a3.61,3.61,0,0,0-.052,1,2.122,2.122,0,0,0,.381,1.185,1.931,1.931,0,0,1-.107-.671c.011-.306.109-.6.2-.61a.027.027,0,0,1,.014.005c.021.018.025.091.033.255a4.473,4.473,0,0,0,.183,1.167A11.591,11.591,0,0,0,9,17.2Zm-2.6-4.332c-.019,0-.088.13-.135.421a3.308,3.308,0,0,0,.284,1.914,4,4,0,0,0,2.4,1.959,11.511,11.511,0,0,1-.942-2,4.477,4.477,0,0,1-.184-1.172.826.826,0,0,0-.027-.241c-.073.006-.172.28-.182.591a1.859,1.859,0,0,0,.13.727l.03.068L7.743,15.1a2.107,2.107,0,0,1-.428-1.249,3.649,3.649,0,0,1,.052-1.006c.035-.219.059-.377,0-.4,0,0-.01-.005-.026.008a3.321,3.321,0,0,0-.211,1.982l-.02,0a5.286,5.286,0,0,1-.119-1.187,5.24,5.24,0,0,1,.1-.674,1.157,1.157,0,0,0,.047-.5.023.023,0,0,0-.018-.008h0c-.007,0-.015.006-.024.017a4.8,4.8,0,0,0-.246,2.4l-.02,0a4.274,4.274,0,0,1-.129-1.1,3.956,3.956,0,0,1,.09-.73c.036-.18.059-.3.009-.319-.008,0-.017,0-.024.008a3.331,3.331,0,0,0-.223,2.163l-.02,0a3.415,3.415,0,0,1-.146-.843,2.478,2.478,0,0,1,.044-.45.6.6,0,0,0,.011-.31A.043.043,0,0,0,6.415,12.888Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M13.164,17.424a11.509,11.509,0,0,1-2.106-.754A10.737,10.737,0,0,1,9.9,15.822c-.054.063.076.334.288.561a1.858,1.858,0,0,0,.61.423,2.062,2.062,0,0,1-1.181-.578c-.555-.433-.828-1.09-.965-1.034s.464,1.08,1.237,1.592a5.184,5.184,0,0,1-.921-.753c-.349-.39-.662-1.024-.758-.926A4.31,4.31,0,0,0,9.726,17.02a4.239,4.239,0,0,1-.87-.687c-.426-.441-.571-.863-.683-.815s.311.98,1.358,1.728a3.387,3.387,0,0,1-.7-.492c-.273-.259-.433-.652-.546-.568s1.482,2.859,4.876,1.238"\n      />\n    <path\n      d="M11.145,17.943a3.275,3.275,0,0,1-2.77-1.5c-.023-.038-.135-.231-.093-.262a.06.06,0,0,1,.049-.013c.063.01.134.109.225.235a2.359,2.359,0,0,0,.285.347,3.293,3.293,0,0,0,.554.411,3.146,3.146,0,0,1-1.25-1.61.045.045,0,0,1,.024-.039c.065-.028.132.073.244.239a3.863,3.863,0,0,0,.451.578,4.325,4.325,0,0,0,.693.576,4.718,4.718,0,0,1-1.366-1.757A.054.054,0,0,1,8.2,15.1a.04.04,0,0,1,.035-.013c.069.006.18.169.332.394a5.493,5.493,0,0,0,.4.545,4.092,4.092,0,0,0,.574.509,2.962,2.962,0,0,1-.927-1.31.046.046,0,0,1,.026-.041c.07-.028.164.1.3.292a3.608,3.608,0,0,0,.67.744,2.116,2.116,0,0,0,1.107.568,1.939,1.939,0,0,1-.55-.4c-.209-.224-.349-.5-.288-.575a.017.017,0,0,1,.014-.006h0c.028,0,.083.048.2.156a4.454,4.454,0,0,0,.954.7,11.523,11.523,0,0,0,2.1.753l.027.007-.025.012A4.707,4.707,0,0,1,11.145,17.943ZM8.321,16.184a.041.041,0,0,0-.027.01c-.013.013.031.155.2.394a3.3,3.3,0,0,0,1.555,1.152,4,4,0,0,0,3.081-.313,11.568,11.568,0,0,1-2.081-.748,4.5,4.5,0,0,1-.958-.7.9.9,0,0,0-.188-.151h0c-.047.056.076.319.288.547a1.873,1.873,0,0,0,.606.421l.07.027-.074-.008a2.089,2.089,0,0,1-1.186-.58,3.625,3.625,0,0,1-.675-.748c-.13-.179-.224-.308-.281-.285,0,0-.01,0-.012.024a3.309,3.309,0,0,0,1.252,1.551l-.011.017a5.284,5.284,0,0,1-.924-.756,5.275,5.275,0,0,1-.407-.547c-.138-.2-.257-.379-.317-.385a.023.023,0,0,0-.019.007.039.039,0,0,0,0,.029,4.8,4.8,0,0,0,1.521,1.869l-.011.017a4.332,4.332,0,0,1-.872-.689,3.934,3.934,0,0,1-.453-.581c-.1-.152-.17-.253-.219-.231-.008,0-.011.014-.011.022a3.326,3.326,0,0,0,1.371,1.687l-.01.018a3.4,3.4,0,0,1-.7-.494,2.383,2.383,0,0,1-.287-.349c-.085-.117-.157-.218-.212-.227Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M16.274,14.629a11.551,11.551,0,0,1-2.022.956,10.759,10.759,0,0,1-1.42.22c.007.082.291.182.6.193a1.85,1.85,0,0,0,.73-.132,2.06,2.06,0,0,1-1.243.426c-.7.086-1.357-.186-1.415-.049s1.093.435,2,.251a5.229,5.229,0,0,1-1.185.119c-.522-.029-1.191-.256-1.19-.118a4.319,4.319,0,0,0,2.426.279,4.21,4.21,0,0,1-1.1.129c-.613-.01-1.014-.206-1.06-.092a2.859,2.859,0,0,0,2.182.261,3.371,3.371,0,0,1-.841.145c-.376.01-.766-.154-.787-.016s3.07.974,4.323-2.572"\n      />\n    <path\n      d="M12.864,17.4a2.8,2.8,0,0,1-.671-.076c-.044-.01-.26-.067-.252-.119a.061.061,0,0,1,.026-.044c.051-.037.172-.018.325.007a2.264,2.264,0,0,0,.446.044,3.187,3.187,0,0,0,.683-.1,3.138,3.138,0,0,1-2.022-.254.044.044,0,0,1-.011-.044c.026-.066.145-.042.341,0a4.044,4.044,0,0,0,.728.089,4.405,4.405,0,0,0,.9-.082,4.717,4.717,0,0,1-2.208-.277.057.057,0,0,1-.024-.039.042.042,0,0,1,.015-.034c.054-.045.247-.008.514.043a5.233,5.233,0,0,0,.672.1,4.152,4.152,0,0,0,.766-.046,2.962,2.962,0,0,1-1.582-.271.044.044,0,0,1-.011-.047c.03-.07.186-.046.422-.009a3.61,3.61,0,0,0,1,.052A2.114,2.114,0,0,0,14.1,15.9a1.935,1.935,0,0,1-.671.107c-.306-.011-.6-.109-.61-.2a.03.03,0,0,1,.005-.015c.018-.02.091-.025.255-.033a4.431,4.431,0,0,0,1.167-.183,11.664,11.664,0,0,0,2.02-.954l.024-.015-.009.027a3.947,3.947,0,0,1-2.152,2.515A3.37,3.37,0,0,1,12.864,17.4Zm-.806-.24a.138.138,0,0,0-.079.017.045.045,0,0,0-.018.031c0,.018.13.087.419.134.461.075,2.807.3,3.875-2.685a11.49,11.49,0,0,1-2,.943,4.469,4.469,0,0,1-1.172.183.826.826,0,0,0-.241.027c.006.073.28.172.591.183a1.863,1.863,0,0,0,.726-.131l.069-.03-.058.047a2.093,2.093,0,0,1-1.249.428,3.573,3.573,0,0,1-1.006-.052c-.218-.034-.377-.059-.4,0,0,0-.005.011.007.026a3.325,3.325,0,0,0,1.983.211l0,.02a5.169,5.169,0,0,1-1.187.119,5.253,5.253,0,0,1-.675-.1,1.177,1.177,0,0,0-.5-.048.025.025,0,0,0-.008.018c0,.007.006.015.017.025a4.814,4.814,0,0,0,2.4.246l0,.019a4.209,4.209,0,0,1-1.042.13h-.062a3.849,3.849,0,0,1-.73-.09c-.181-.035-.3-.059-.319-.008,0,.007,0,.017.008.024a3.345,3.345,0,0,0,2.163.223l0,.019a3.416,3.416,0,0,1-.844.146,2.4,2.4,0,0,1-.449-.044A1.719,1.719,0,0,0,12.058,17.155Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M16.5,10.454a11.536,11.536,0,0,1-.754,2.106,10.982,10.982,0,0,1-.848,1.159c.063.053.334-.077.561-.288a1.868,1.868,0,0,0,.423-.61A2.06,2.06,0,0,1,15.3,14c-.433.555-1.09.828-1.034.966s1.08-.465,1.592-1.238a5.212,5.212,0,0,1-.753.922c-.39.349-1.024.661-.926.758a4.316,4.316,0,0,0,1.913-1.518,4.209,4.209,0,0,1-.687.87c-.441.426-.863.571-.815.684s.98-.311,1.728-1.359a3.379,3.379,0,0,1-.492.7c-.259.273-.651.432-.568.545s2.859-1.482,1.238-4.875"\n      />\n    <path\n      d="M14.635,15.473h-.014a.044.044,0,0,1-.039-.023c-.028-.065.073-.133.239-.244a3.985,3.985,0,0,0,.578-.451,4.37,4.37,0,0,0,.576-.693,4.729,4.729,0,0,1-1.757,1.366.053.053,0,0,1-.045-.011.043.043,0,0,1-.013-.035c.006-.07.169-.18.394-.333a5.341,5.341,0,0,0,.545-.405,4.092,4.092,0,0,0,.509-.574,3.047,3.047,0,0,1-1.3.927H14.3a.044.044,0,0,1-.041-.026c-.029-.07.1-.163.292-.3a3.587,3.587,0,0,0,.744-.671,2.113,2.113,0,0,0,.568-1.107,1.939,1.939,0,0,1-.4.55c-.224.209-.5.349-.575.288a.016.016,0,0,1-.006-.013c0-.028.046-.083.156-.2a4.454,4.454,0,0,0,.7-.954,11.609,11.609,0,0,0,.753-2.1l.007-.027.012.025a3.946,3.946,0,0,1,.257,3.3,3.269,3.269,0,0,1-1.25,1.491c-.039.024-.231.136-.262.093a.063.063,0,0,1-.013-.049c.01-.063.11-.134.236-.225a2.4,2.4,0,0,0,.346-.284,3.242,3.242,0,0,0,.411-.556A3.251,3.251,0,0,1,14.635,15.473Zm1.45-1.588.017.011a4.271,4.271,0,0,1-.689.872,3.934,3.934,0,0,1-.581.453c-.152.1-.253.17-.231.22,0,.007.014.01.022.011h.011A3.41,3.41,0,0,0,16.31,14.08l.018.011a3.454,3.454,0,0,1-.494.7,2.449,2.449,0,0,1-.349.287c-.117.084-.218.157-.227.211a.042.042,0,0,0,.009.034c.013.013.155-.03.395-.2a3.3,3.3,0,0,0,1.151-1.555,4,4,0,0,0-.313-3.081,11.54,11.54,0,0,1-.748,2.081,4.448,4.448,0,0,1-.7.958.8.8,0,0,0-.151.19c.056.047.32-.077.547-.289a1.863,1.863,0,0,0,.421-.606l.027-.069-.008.074a2.1,2.1,0,0,1-.58,1.186,3.589,3.589,0,0,1-.748.674c-.179.13-.308.225-.285.281,0,0,0,.011.024.013h.009a3.387,3.387,0,0,0,1.542-1.253l.017.011a5.245,5.245,0,0,1-.756.924,5.136,5.136,0,0,1-.547.407c-.2.138-.379.257-.385.318a.021.021,0,0,0,.007.018.038.038,0,0,0,.029.006A4.817,4.817,0,0,0,16.085,13.885Z"\n      fill="#f2f2f2"/>\n  </g>\n</svg>\n'
+    svg: '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="5.3 6 12 12">\n  <g>\n    <path\n      d="M13.7,7.343a11.538,11.538,0,0,1,.956,2.023,10.732,10.732,0,0,1,.22,1.419c.083-.007.182-.29.193-.6a1.859,1.859,0,0,0-.132-.731,2.07,2.07,0,0,1,.426,1.244c.086.7-.186,1.356-.049,1.414s.436-1.092.251-2a5.237,5.237,0,0,1,.119,1.185c-.029.523-.256,1.191-.119,1.191a4.308,4.308,0,0,0,.28-2.426,4.21,4.21,0,0,1,.129,1.1c-.01.613-.206,1.014-.092,1.059a2.859,2.859,0,0,0,.261-2.182,3.371,3.371,0,0,1,.145.841c.01.376-.154.767-.016.788S17.248,8.6,13.7,7.343"\n      />\n    <path\n      d="M15.567,12.5a.042.042,0,0,1-.033-.016c-.045-.054-.008-.247.043-.514a5.233,5.233,0,0,0,.1-.672,4.158,4.158,0,0,0-.046-.766,2.957,2.957,0,0,1-.271,1.582.044.044,0,0,1-.047.011c-.07-.03-.046-.186-.009-.422a3.569,3.569,0,0,0,.052-1,2.117,2.117,0,0,0-.381-1.185,1.939,1.939,0,0,1,.107.671c-.011.306-.109.6-.2.61a.021.021,0,0,1-.015-.005c-.02-.018-.025-.091-.033-.255a4.458,4.458,0,0,0-.182-1.166,11.631,11.631,0,0,0-.955-2.02l-.015-.025.027.01a3.947,3.947,0,0,1,2.515,2.152,3.265,3.265,0,0,1,.171,1.939c-.01.043-.065.252-.117.252h0a.067.067,0,0,1-.044-.026c-.037-.052-.018-.173.008-.326a2.419,2.419,0,0,0,.043-.446,3.26,3.26,0,0,0-.1-.683,3.143,3.143,0,0,1-.255,2.022.042.042,0,0,1-.044.011c-.066-.026-.042-.145,0-.341a4.019,4.019,0,0,0,.089-.727,4.408,4.408,0,0,0-.082-.9,4.722,4.722,0,0,1-.277,2.209.055.055,0,0,1-.039.024Zm.01-2.388A5.244,5.244,0,0,1,15.7,11.3a5.238,5.238,0,0,1-.1.674,1.143,1.143,0,0,0-.048.5.022.022,0,0,0,.018.008h0c.007,0,.015-.006.025-.016a4.812,4.812,0,0,0,.245-2.4l.02,0a4.241,4.241,0,0,1,.129,1.1,3.872,3.872,0,0,1-.09.731c-.035.18-.059.3-.008.319.007,0,.017,0,.023-.009a3.331,3.331,0,0,0,.224-2.162l.019-.005a3.364,3.364,0,0,1,.146.844,2.381,2.381,0,0,1-.044.449.6.6,0,0,0-.011.311.047.047,0,0,0,.031.018c.018,0,.087-.131.134-.422a3.308,3.308,0,0,0-.284-1.914,4.006,4.006,0,0,0-2.4-1.959,11.49,11.49,0,0,1,.943,2,4.474,4.474,0,0,1,.183,1.172.82.82,0,0,0,.027.241c.073-.006.172-.28.183-.591a1.874,1.874,0,0,0-.131-.726l-.03-.069.047.058a2.1,2.1,0,0,1,.428,1.25,3.563,3.563,0,0,1-.052,1.005c-.034.219-.059.377,0,.4,0,0,.011,0,.026-.008a3.325,3.325,0,0,0,.211-1.983Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M9.527,7.12a11.6,11.6,0,0,1,2.1.754,10.706,10.706,0,0,1,1.16.849c.053-.064-.077-.335-.288-.561a1.873,1.873,0,0,0-.61-.424,2.073,2.073,0,0,1,1.18.578c.555.433.828,1.091.966,1.035s-.465-1.08-1.238-1.593a5.24,5.24,0,0,1,.922.754c.349.39.661,1.023.758.926a4.322,4.322,0,0,0-1.518-1.914,4.2,4.2,0,0,1,.87.688c.426.44.571.862.684.814s-.311-.98-1.359-1.727a3.352,3.352,0,0,1,.7.491c.273.26.432.652.545.569S12.92,5.5,9.527,7.12"\n      />\n    <path\n      d="M14.458,9.458h0c-.07-.006-.18-.169-.333-.394a5.34,5.34,0,0,0-.405-.545,4.224,4.224,0,0,0-.574-.509,2.96,2.96,0,0,1,.927,1.311.042.042,0,0,1-.026.04c-.07.029-.163-.1-.3-.292a3.612,3.612,0,0,0-.671-.744,2.121,2.121,0,0,0-1.107-.568,1.924,1.924,0,0,1,.55.4c.209.224.349.5.288.574a.021.021,0,0,1-.013.007h0c-.028,0-.083-.049-.2-.157a4.488,4.488,0,0,0-.954-.7,11.609,11.609,0,0,0-2.1-.753L9.5,7.123l.025-.012a3.948,3.948,0,0,1,3.3-.257A3.278,3.278,0,0,1,14.315,8.1c.023.039.136.232.093.263a.063.063,0,0,1-.049.012c-.063-.01-.134-.109-.225-.235A2.4,2.4,0,0,0,13.85,7.8a3.188,3.188,0,0,0-.555-.411A3.143,3.143,0,0,1,14.545,9a.043.043,0,0,1-.023.039c-.066.028-.133-.072-.245-.239a3.9,3.9,0,0,0-.45-.577,4.315,4.315,0,0,0-.693-.576A4.729,4.729,0,0,1,14.5,9.4a.059.059,0,0,1-.011.045A.046.046,0,0,1,14.458,9.458ZM12.807,7.749a5.245,5.245,0,0,1,.924.756,5.239,5.239,0,0,1,.407.547c.138.2.257.38.318.385a.019.019,0,0,0,.018-.007c.005,0,.007-.014.006-.029a4.822,4.822,0,0,0-1.521-1.869l.01-.017a4.256,4.256,0,0,1,.872.69,3.882,3.882,0,0,1,.453.58c.1.152.17.253.22.232a.03.03,0,0,0,.011-.023,3.334,3.334,0,0,0-1.372-1.687l.011-.017a3.4,3.4,0,0,1,.7.493,2.579,2.579,0,0,1,.287.349c.084.117.157.219.211.227a.045.045,0,0,0,.034-.008c.013-.014-.03-.156-.2-.4A3.3,3.3,0,0,0,12.636,6.8a4,4,0,0,0-3.08.313,11.568,11.568,0,0,1,2.081.748,4.448,4.448,0,0,1,.958.7.831.831,0,0,0,.19.152c.047-.056-.077-.32-.289-.548a1.863,1.863,0,0,0-.606-.421l-.07-.027.075.008a2.1,2.1,0,0,1,1.186.58,3.672,3.672,0,0,1,.674.748c.13.179.225.309.281.286,0,0,.011-.005.013-.024A3.321,3.321,0,0,0,12.8,7.766Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M6.416,9.915a11.538,11.538,0,0,1,2.023-.956A10.633,10.633,0,0,1,9.858,8.74c-.007-.083-.29-.183-.6-.193a1.86,1.86,0,0,0-.731.131,2.07,2.07,0,0,1,1.244-.426c.7-.086,1.356.186,1.414.049s-1.092-.435-2-.251a5.237,5.237,0,0,1,1.185-.119c.522.029,1.191.256,1.19.119a4.321,4.321,0,0,0-2.425-.28,4.21,4.21,0,0,1,1.1-.129c.613.01,1.014.206,1.059.092a2.861,2.861,0,0,0-2.182-.26,3.347,3.347,0,0,1,.841-.146c.376-.009.766.155.788.016S7.67,6.37,6.416,9.915"\n      />\n    <path\n      d="M6.4,9.938l.01-.026A3.943,3.943,0,0,1,8.558,7.4a3.276,3.276,0,0,1,1.94-.171c.043.011.259.068.252.12a.065.065,0,0,1-.026.043c-.052.038-.173.018-.326-.007a2.408,2.408,0,0,0-.446-.044,3.251,3.251,0,0,0-.683.1,3.145,3.145,0,0,1,2.022.254.044.044,0,0,1,.012.044c-.027.066-.146.043-.342,0a3.919,3.919,0,0,0-.727-.09h-.062a4.413,4.413,0,0,0-.836.083,4.739,4.739,0,0,1,2.209.276.06.06,0,0,1,.024.04.044.044,0,0,1-.016.034c-.054.045-.247.008-.514-.044a5.415,5.415,0,0,0-.672-.1,4.152,4.152,0,0,0-.766.046,2.957,2.957,0,0,1,1.582.271.045.045,0,0,1,.011.047c-.03.071-.186.046-.422.009a3.607,3.607,0,0,0-1-.052,2.125,2.125,0,0,0-1.185.381,1.963,1.963,0,0,1,.671-.107c.306.011.6.109.61.2a.019.019,0,0,1-.005.014c-.018.021-.091.025-.255.033a4.466,4.466,0,0,0-1.166.183,11.551,11.551,0,0,0-2.02.955ZM9.835,7.172a3.551,3.551,0,0,0-3.4,2.72,11.511,11.511,0,0,1,2-.942,4.483,4.483,0,0,1,1.172-.184.836.836,0,0,0,.241-.026c-.006-.073-.28-.173-.591-.183a1.857,1.857,0,0,0-.726.13l-.068.03L8.52,8.67a2.11,2.11,0,0,1,1.249-.428,3.647,3.647,0,0,1,1.006.052c.219.035.377.059.4,0,0,0,0-.011-.008-.026A3.325,3.325,0,0,0,9.185,8.06l0-.02a5.308,5.308,0,0,1,1.188-.119,5.266,5.266,0,0,1,.674.1,1.152,1.152,0,0,0,.5.047.021.021,0,0,0,.008-.018c0-.007-.006-.015-.016-.024a4.809,4.809,0,0,0-2.4-.246l0-.02a4.276,4.276,0,0,1,1.042-.13h.062a3.957,3.957,0,0,1,.731.09c.18.036.3.059.319.009,0-.008,0-.017-.009-.024a3.327,3.327,0,0,0-2.162-.223l-.005-.02a3.416,3.416,0,0,1,.844-.146,2.581,2.581,0,0,1,.45.044.6.6,0,0,0,.31.011.043.043,0,0,0,.018-.03c0-.018-.13-.088-.42-.135A3.148,3.148,0,0,0,9.835,7.172Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M6.193,14.091a11.594,11.594,0,0,1,.754-2.106A10.634,10.634,0,0,1,7.8,10.826c-.064-.054-.335.076-.561.288a1.847,1.847,0,0,0-.424.61,2.069,2.069,0,0,1,.578-1.181c.433-.555,1.091-.828,1.035-.965s-1.08.464-1.593,1.237a5.211,5.211,0,0,1,.754-.921c.39-.349,1.023-.662.925-.758A4.321,4.321,0,0,0,6.6,10.653a4.225,4.225,0,0,1,.688-.87c.44-.426.862-.571.814-.683s-.98.311-1.727,1.358a3.359,3.359,0,0,1,.491-.7c.26-.273.652-.433.569-.546S4.572,10.7,6.193,14.091"\n      />\n    <path\n      d="M6.2,14.121,6.184,14.1a3.948,3.948,0,0,1-.257-3.3A3.268,3.268,0,0,1,7.178,9.3c.038-.023.231-.135.262-.093a.063.063,0,0,1,.012.049c-.01.063-.109.135-.235.225a2.406,2.406,0,0,0-.346.285,3.215,3.215,0,0,0-.412.555,3.245,3.245,0,0,1,1.6-1.251h.013a.043.043,0,0,1,.039.023c.028.065-.072.132-.239.244a3.847,3.847,0,0,0-.577.451,4.341,4.341,0,0,0-.577.693A4.726,4.726,0,0,1,8.473,9.118a.049.049,0,0,1,.044.011.038.038,0,0,1,.013.035c-.006.069-.169.18-.394.332a5.493,5.493,0,0,0-.545.4,4.224,4.224,0,0,0-.509.574,3.057,3.057,0,0,1,1.3-.927h.01a.044.044,0,0,1,.04.026c.029.071-.1.164-.292.3a3.576,3.576,0,0,0-.744.67,2.123,2.123,0,0,0-.568,1.108,1.934,1.934,0,0,1,.4-.551c.224-.209.5-.349.574-.288a.021.021,0,0,1,.007.014c0,.027-.047.082-.157.2a4.443,4.443,0,0,0-.7.953,11.609,11.609,0,0,0-.753,2.1Zm1.219-4.9a1.039,1.039,0,0,0-.387.206A3.317,3.317,0,0,0,5.877,10.98a4.005,4.005,0,0,0,.313,3.081,11.568,11.568,0,0,1,.748-2.081,4.5,4.5,0,0,1,.7-.958.86.86,0,0,0,.152-.189c-.057-.047-.32.076-.547.288a1.852,1.852,0,0,0-.422.606l-.027.07.008-.074a2.1,2.1,0,0,1,.58-1.186,3.651,3.651,0,0,1,.748-.675c.179-.13.308-.224.286-.281a.026.026,0,0,0-.024-.012h-.01a3.4,3.4,0,0,0-1.542,1.253l-.016-.011a5.206,5.206,0,0,1,.755-.924,5.375,5.375,0,0,1,.547-.406c.2-.139.38-.258.385-.318A.019.019,0,0,0,8.5,9.143a.034.034,0,0,0-.029-.005,4.8,4.8,0,0,0-1.869,1.521l-.017-.011a4.332,4.332,0,0,1,.689-.872,3.934,3.934,0,0,1,.581-.453c.152-.1.253-.17.232-.219,0-.008-.014-.01-.023-.011H8.056A3.424,3.424,0,0,0,6.38,10.464l-.017-.01a3.369,3.369,0,0,1,.493-.7A2.437,2.437,0,0,1,7.2,9.467c.117-.085.219-.157.227-.212a.043.043,0,0,0-.009-.034Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M8.988,17.2a11.551,11.551,0,0,1-.956-2.022,10.957,10.957,0,0,1-.22-1.42c-.082.007-.182.291-.192.6a1.86,1.86,0,0,0,.131.731,2.073,2.073,0,0,1-.426-1.244c-.086-.7.186-1.357.049-1.414s-.435,1.092-.251,2A5.229,5.229,0,0,1,7,13.249c.029-.522.256-1.191.119-1.19a4.325,4.325,0,0,0-.28,2.426,4.21,4.21,0,0,1-.129-1.1c.01-.613.206-1.014.092-1.06a2.866,2.866,0,0,0-.26,2.182,3.347,3.347,0,0,1-.146-.841c-.009-.376.155-.766.016-.787s-.973,3.07,2.572,4.323"\n      />\n    <path\n      d="M9.011,17.22l-.026-.009a3.945,3.945,0,0,1-2.516-2.153A3.265,3.265,0,0,1,6.3,13.119c.011-.043.066-.251.117-.251h0a.061.061,0,0,1,.043.026c.038.051.018.172-.007.325a2.426,2.426,0,0,0-.044.446,3.251,3.251,0,0,0,.1.683,3.145,3.145,0,0,1,.254-2.022.044.044,0,0,1,.044-.011c.066.026.043.145,0,.342a3.919,3.919,0,0,0-.09.727,4.315,4.315,0,0,0,.083.9,4.734,4.734,0,0,1,.276-2.208.056.056,0,0,1,.04-.024h0a.043.043,0,0,1,.034.015c.045.054.008.247-.044.515a5.372,5.372,0,0,0-.1.671,4.152,4.152,0,0,0,.046.766,2.962,2.962,0,0,1,.271-1.582.045.045,0,0,1,.047-.011c.071.03.046.186.009.422a3.61,3.61,0,0,0-.052,1,2.122,2.122,0,0,0,.381,1.185,1.931,1.931,0,0,1-.107-.671c.011-.306.109-.6.2-.61a.027.027,0,0,1,.014.005c.021.018.025.091.033.255a4.473,4.473,0,0,0,.183,1.167A11.591,11.591,0,0,0,9,17.2Zm-2.6-4.332c-.019,0-.088.13-.135.421a3.308,3.308,0,0,0,.284,1.914,4,4,0,0,0,2.4,1.959,11.511,11.511,0,0,1-.942-2,4.477,4.477,0,0,1-.184-1.172.826.826,0,0,0-.027-.241c-.073.006-.172.28-.182.591a1.859,1.859,0,0,0,.13.727l.03.068L7.743,15.1a2.107,2.107,0,0,1-.428-1.249,3.649,3.649,0,0,1,.052-1.006c.035-.219.059-.377,0-.4,0,0-.01-.005-.026.008a3.321,3.321,0,0,0-.211,1.982l-.02,0a5.286,5.286,0,0,1-.119-1.187,5.24,5.24,0,0,1,.1-.674,1.157,1.157,0,0,0,.047-.5.023.023,0,0,0-.018-.008h0c-.007,0-.015.006-.024.017a4.8,4.8,0,0,0-.246,2.4l-.02,0a4.274,4.274,0,0,1-.129-1.1,3.956,3.956,0,0,1,.09-.73c.036-.18.059-.3.009-.319-.008,0-.017,0-.024.008a3.331,3.331,0,0,0-.223,2.163l-.02,0a3.415,3.415,0,0,1-.146-.843,2.478,2.478,0,0,1,.044-.45.6.6,0,0,0,.011-.31A.043.043,0,0,0,6.415,12.888Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M13.164,17.424a11.509,11.509,0,0,1-2.106-.754A10.737,10.737,0,0,1,9.9,15.822c-.054.063.076.334.288.561a1.858,1.858,0,0,0,.61.423,2.062,2.062,0,0,1-1.181-.578c-.555-.433-.828-1.09-.965-1.034s.464,1.08,1.237,1.592a5.184,5.184,0,0,1-.921-.753c-.349-.39-.662-1.024-.758-.926A4.31,4.31,0,0,0,9.726,17.02a4.239,4.239,0,0,1-.87-.687c-.426-.441-.571-.863-.683-.815s.311.98,1.358,1.728a3.387,3.387,0,0,1-.7-.492c-.273-.259-.433-.652-.546-.568s1.482,2.859,4.876,1.238"\n      />\n    <path\n      d="M11.145,17.943a3.275,3.275,0,0,1-2.77-1.5c-.023-.038-.135-.231-.093-.262a.06.06,0,0,1,.049-.013c.063.01.134.109.225.235a2.359,2.359,0,0,0,.285.347,3.293,3.293,0,0,0,.554.411,3.146,3.146,0,0,1-1.25-1.61.045.045,0,0,1,.024-.039c.065-.028.132.073.244.239a3.863,3.863,0,0,0,.451.578,4.325,4.325,0,0,0,.693.576,4.718,4.718,0,0,1-1.366-1.757A.054.054,0,0,1,8.2,15.1a.04.04,0,0,1,.035-.013c.069.006.18.169.332.394a5.493,5.493,0,0,0,.4.545,4.092,4.092,0,0,0,.574.509,2.962,2.962,0,0,1-.927-1.31.046.046,0,0,1,.026-.041c.07-.028.164.1.3.292a3.608,3.608,0,0,0,.67.744,2.116,2.116,0,0,0,1.107.568,1.939,1.939,0,0,1-.55-.4c-.209-.224-.349-.5-.288-.575a.017.017,0,0,1,.014-.006h0c.028,0,.083.048.2.156a4.454,4.454,0,0,0,.954.7,11.523,11.523,0,0,0,2.1.753l.027.007-.025.012A4.707,4.707,0,0,1,11.145,17.943ZM8.321,16.184a.041.041,0,0,0-.027.01c-.013.013.031.155.2.394a3.3,3.3,0,0,0,1.555,1.152,4,4,0,0,0,3.081-.313,11.568,11.568,0,0,1-2.081-.748,4.5,4.5,0,0,1-.958-.7.9.9,0,0,0-.188-.151h0c-.047.056.076.319.288.547a1.873,1.873,0,0,0,.606.421l.07.027-.074-.008a2.089,2.089,0,0,1-1.186-.58,3.625,3.625,0,0,1-.675-.748c-.13-.179-.224-.308-.281-.285,0,0-.01,0-.012.024a3.309,3.309,0,0,0,1.252,1.551l-.011.017a5.284,5.284,0,0,1-.924-.756,5.275,5.275,0,0,1-.407-.547c-.138-.2-.257-.379-.317-.385a.023.023,0,0,0-.019.007.039.039,0,0,0,0,.029,4.8,4.8,0,0,0,1.521,1.869l-.011.017a4.332,4.332,0,0,1-.872-.689,3.934,3.934,0,0,1-.453-.581c-.1-.152-.17-.253-.219-.231-.008,0-.011.014-.011.022a3.326,3.326,0,0,0,1.371,1.687l-.01.018a3.4,3.4,0,0,1-.7-.494,2.383,2.383,0,0,1-.287-.349c-.085-.117-.157-.218-.212-.227Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M16.274,14.629a11.551,11.551,0,0,1-2.022.956,10.759,10.759,0,0,1-1.42.22c.007.082.291.182.6.193a1.85,1.85,0,0,0,.73-.132,2.06,2.06,0,0,1-1.243.426c-.7.086-1.357-.186-1.415-.049s1.093.435,2,.251a5.229,5.229,0,0,1-1.185.119c-.522-.029-1.191-.256-1.19-.118a4.319,4.319,0,0,0,2.426.279,4.21,4.21,0,0,1-1.1.129c-.613-.01-1.014-.206-1.06-.092a2.859,2.859,0,0,0,2.182.261,3.371,3.371,0,0,1-.841.145c-.376.01-.766-.154-.787-.016s3.07.974,4.323-2.572"\n      />\n    <path\n      d="M12.864,17.4a2.8,2.8,0,0,1-.671-.076c-.044-.01-.26-.067-.252-.119a.061.061,0,0,1,.026-.044c.051-.037.172-.018.325.007a2.264,2.264,0,0,0,.446.044,3.187,3.187,0,0,0,.683-.1,3.138,3.138,0,0,1-2.022-.254.044.044,0,0,1-.011-.044c.026-.066.145-.042.341,0a4.044,4.044,0,0,0,.728.089,4.405,4.405,0,0,0,.9-.082,4.717,4.717,0,0,1-2.208-.277.057.057,0,0,1-.024-.039.042.042,0,0,1,.015-.034c.054-.045.247-.008.514.043a5.233,5.233,0,0,0,.672.1,4.152,4.152,0,0,0,.766-.046,2.962,2.962,0,0,1-1.582-.271.044.044,0,0,1-.011-.047c.03-.07.186-.046.422-.009a3.61,3.61,0,0,0,1,.052A2.114,2.114,0,0,0,14.1,15.9a1.935,1.935,0,0,1-.671.107c-.306-.011-.6-.109-.61-.2a.03.03,0,0,1,.005-.015c.018-.02.091-.025.255-.033a4.431,4.431,0,0,0,1.167-.183,11.664,11.664,0,0,0,2.02-.954l.024-.015-.009.027a3.947,3.947,0,0,1-2.152,2.515A3.37,3.37,0,0,1,12.864,17.4Zm-.806-.24a.138.138,0,0,0-.079.017.045.045,0,0,0-.018.031c0,.018.13.087.419.134.461.075,2.807.3,3.875-2.685a11.49,11.49,0,0,1-2,.943,4.469,4.469,0,0,1-1.172.183.826.826,0,0,0-.241.027c.006.073.28.172.591.183a1.863,1.863,0,0,0,.726-.131l.069-.03-.058.047a2.093,2.093,0,0,1-1.249.428,3.573,3.573,0,0,1-1.006-.052c-.218-.034-.377-.059-.4,0,0,0-.005.011.007.026a3.325,3.325,0,0,0,1.983.211l0,.02a5.169,5.169,0,0,1-1.187.119,5.253,5.253,0,0,1-.675-.1,1.177,1.177,0,0,0-.5-.048.025.025,0,0,0-.008.018c0,.007.006.015.017.025a4.814,4.814,0,0,0,2.4.246l0,.019a4.209,4.209,0,0,1-1.042.13h-.062a3.849,3.849,0,0,1-.73-.09c-.181-.035-.3-.059-.319-.008,0,.007,0,.017.008.024a3.345,3.345,0,0,0,2.163.223l0,.019a3.416,3.416,0,0,1-.844.146,2.4,2.4,0,0,1-.449-.044A1.719,1.719,0,0,0,12.058,17.155Z"\n      fill="#f2f2f2"/>\n    <path\n      d="M16.5,10.454a11.536,11.536,0,0,1-.754,2.106,10.982,10.982,0,0,1-.848,1.159c.063.053.334-.077.561-.288a1.868,1.868,0,0,0,.423-.61A2.06,2.06,0,0,1,15.3,14c-.433.555-1.09.828-1.034.966s1.08-.465,1.592-1.238a5.212,5.212,0,0,1-.753.922c-.39.349-1.024.661-.926.758a4.316,4.316,0,0,0,1.913-1.518,4.209,4.209,0,0,1-.687.87c-.441.426-.863.571-.815.684s.98-.311,1.728-1.359a3.379,3.379,0,0,1-.492.7c-.259.273-.651.432-.568.545s2.859-1.482,1.238-4.875"\n      />\n    <path\n      d="M14.635,15.473h-.014a.044.044,0,0,1-.039-.023c-.028-.065.073-.133.239-.244a3.985,3.985,0,0,0,.578-.451,4.37,4.37,0,0,0,.576-.693,4.729,4.729,0,0,1-1.757,1.366.053.053,0,0,1-.045-.011.043.043,0,0,1-.013-.035c.006-.07.169-.18.394-.333a5.341,5.341,0,0,0,.545-.405,4.092,4.092,0,0,0,.509-.574,3.047,3.047,0,0,1-1.3.927H14.3a.044.044,0,0,1-.041-.026c-.029-.07.1-.163.292-.3a3.587,3.587,0,0,0,.744-.671,2.113,2.113,0,0,0,.568-1.107,1.939,1.939,0,0,1-.4.55c-.224.209-.5.349-.575.288a.016.016,0,0,1-.006-.013c0-.028.046-.083.156-.2a4.454,4.454,0,0,0,.7-.954,11.609,11.609,0,0,0,.753-2.1l.007-.027.012.025a3.946,3.946,0,0,1,.257,3.3,3.269,3.269,0,0,1-1.25,1.491c-.039.024-.231.136-.262.093a.063.063,0,0,1-.013-.049c.01-.063.11-.134.236-.225a2.4,2.4,0,0,0,.346-.284,3.242,3.242,0,0,0,.411-.556A3.251,3.251,0,0,1,14.635,15.473Zm1.45-1.588.017.011a4.271,4.271,0,0,1-.689.872,3.934,3.934,0,0,1-.581.453c-.152.1-.253.17-.231.22,0,.007.014.01.022.011h.011A3.41,3.41,0,0,0,16.31,14.08l.018.011a3.454,3.454,0,0,1-.494.7,2.449,2.449,0,0,1-.349.287c-.117.084-.218.157-.227.211a.042.042,0,0,0,.009.034c.013.013.155-.03.395-.2a3.3,3.3,0,0,0,1.151-1.555,4,4,0,0,0-.313-3.081,11.54,11.54,0,0,1-.748,2.081,4.448,4.448,0,0,1-.7.958.8.8,0,0,0-.151.19c.056.047.32-.077.547-.289a1.863,1.863,0,0,0,.421-.606l.027-.069-.008.074a2.1,2.1,0,0,1-.58,1.186,3.589,3.589,0,0,1-.748.674c-.179.13-.308.225-.285.281,0,0,0,.011.024.013h.009a3.387,3.387,0,0,0,1.542-1.253l.017.011a5.245,5.245,0,0,1-.756.924,5.136,5.136,0,0,1-.547.407c-.2.138-.379.257-.385.318a.021.021,0,0,0,.007.018.038.038,0,0,0,.029.006A4.817,4.817,0,0,0,16.085,13.885Z"\n      fill="#f2f2f2"/>\n  </g>\n</svg>\n',
+    data: {
+      childrenGroupName: GroupNames.SANADI
+    }
   },
   {
     id: 24,
@@ -2311,7 +2391,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_COUNTRIES,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 10,
     svg: null
   },
@@ -2324,7 +2404,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_INTERNAL_USERS,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 5,
     svg: null
   },
@@ -2337,7 +2417,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_INTERNAL_DEPARTMENTS,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 11,
     svg: null
   },
@@ -2350,7 +2430,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_JOB_TITLES,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 12,
     svg: null
   },
@@ -2363,7 +2443,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_ADMIN_LOOKUP,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 13,
     svg: null
   },
@@ -2376,9 +2456,12 @@ export const newNavigationMenuList = [
     permission: null,
     permissionGroup: PermissionGroupsEnum.TRAINING_PROGRAMS_PAGE_GROUP,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.TRAINING,
-    svg: null
+    svg: null,
+    data: {
+      childrenGroupName: GroupNames.TRAINING
+    }
   },
   {
     id: 36,
@@ -2389,7 +2472,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.TRAINING_ADD_TRAINEE,
     permissionGroup: null,
     parent: 35,
-    group: 'training-services',
+    group: GroupNames.TRAINING,
     itemOrder: 1,
     svg: null
   },
@@ -2402,7 +2485,7 @@ export const newNavigationMenuList = [
     permission: null,
     permissionGroup: PermissionGroupsEnum.TRAINING_PROGRAMS_MENU_ITEM_GROUP,
     parent: 35,
-    group: 'training-services',
+    group: GroupNames.TRAINING,
     itemOrder: 2,
     svg: null
   },
@@ -2415,7 +2498,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.TRAINING_CHARITY_MANAGEMENT,
     permissionGroup: null,
     parent: 35,
-    group: 'training-services',
+    group: GroupNames.TRAINING,
     itemOrder: 3,
     svg: null
   },
@@ -2428,7 +2511,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.TRAINING_CERTIFICATE_TEMPLATE,
     permissionGroup: null,
     parent: 35,
-    group: 'training-services',
+    group: GroupNames.TRAINING,
     itemOrder: 4,
     svg: null
   },
@@ -2441,7 +2524,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.TRAINING_SURVEY_QUESTION,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 17,
     svg: null
   },
@@ -2454,7 +2537,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.TRAINING_SURVEY_TEMPLATE,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 18,
     svg: null
   },
@@ -2467,7 +2550,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_SDG,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 14,
     svg: null
   },
@@ -2480,7 +2563,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_BANK,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 15,
     svg: null
   },
@@ -2493,7 +2576,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_DONORS,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 16,
     svg: null
   },
@@ -2506,7 +2589,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.SANADI_INQUIRY_LOGS,
     permissionGroup: null,
     parent: 23,
-    group: 'sanady',
+    group: GroupNames.SANADI,
     itemOrder: 7,
     svg: null
   },
@@ -2519,11 +2602,11 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.EXTERNAL_FOLLOWUP,
     permissionGroup: null,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.EXTERNAL_FOLLOWUP,
     svg: null,
     counter: 'externalFollowUp',
-    excludeFromDefaultParents : true,
+    excludeFromDefaultParents: true,
   },
   {
     id: 55,
@@ -2534,11 +2617,11 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.INTERNAL_FOLLOWUP,
     permissionGroup: null,
     parent: null,
-    group: 'main',
+    group: GroupNames.MAIN,
     itemOrder: DefaultItemOrder.INTERNAL_FOLLOWUP,
     svg: null,
     counter: 'internalFollowUp',
-    excludeFromDefaultParents : true,
+    excludeFromDefaultParents: true,
   },
   {
     id: 61,
@@ -2549,7 +2632,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_FIELD_ASSESSMENT,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 19,
     svg: null
   },
@@ -2562,7 +2645,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_VACATIONS_DATE,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 20,
     svg: null
   },
@@ -2575,7 +2658,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_CUSTOM_MENU_ITEM,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 21,
     svg: null
   },
@@ -2588,7 +2671,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_EXTERNAL_USER_REQUEST_APPROVALS_DYNAMIC, // added from employeeService (not available in permissions list from db)
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 4,
     svg: null
   },
@@ -2601,7 +2684,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_SUB_TEAM,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 23,
     svg: null
   },
@@ -2614,7 +2697,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_PROCESS_TEMPLATE,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 24,
     svg: null
   },
@@ -2627,7 +2710,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_DYNAMIC_MODEL,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 25,
     svg: null
   },
@@ -2640,7 +2723,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_DEDUCTION_RATIO_ITEM,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 25,
     svg: null
   },
@@ -2653,7 +2736,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_SYSTEM_PREFERENCES,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 26,
     svg: null
   },
@@ -2666,7 +2749,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.MANAGE_LICENSES_AND_PERMITS,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 27,
     svg: null
   },
@@ -2679,7 +2762,7 @@ export const newNavigationMenuList = [
     permission: PermissionsEnum.TRAINING_PROGRAM_PARTNER,
     permissionGroup: null,
     parent: 6,
-    group: 'administration',
+    group: GroupNames.ADMIN,
     itemOrder: 22,
     svg: null
   },
