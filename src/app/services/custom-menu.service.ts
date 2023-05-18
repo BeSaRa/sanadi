@@ -1,4 +1,6 @@
-import { CustomMenuDefaultsPopupComponent } from './../administration/popups/custom-menu-defaults-popup/custom-menu-defaults-popup.component';
+import {
+  CustomMenuDefaultsPopupComponent
+} from './../administration/popups/custom-menu-defaults-popup/custom-menu-defaults-popup.component';
 import {ComponentType} from '@angular/cdk/portal';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -161,7 +163,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     let data = new CustomMenu().clone({status: CommonStatusEnum.ACTIVATED});
     data.defaultParent = parentMenu
     data.parentMenuItemId = -1;
-    data.systemMenuKey =  parentMenu.menuKey;
+    data.systemMenuKey = parentMenu.menuKey;
     return this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
       model: data,
       operation: OperationTypes.CREATE,
@@ -194,13 +196,15 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
       })
     );
   }
-  openDefaultChildrenViewDialog( item:MenuItem): Observable<DialogRef> {
+
+  openDefaultChildrenViewDialog(item: MenuItem): Observable<DialogRef> {
     return of(this.dialog.show(CustomMenuDefaultsPopupComponent, {
-       parent: item,
+      parent: item,
       operation: OperationTypes.VIEW,
       selectedTab: 'sub',
     }));
   }
+
   updateStatus(recordId: number, newStatus: CommonStatusEnum) {
     return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(recordId) : this._deactivate(recordId);
   }
@@ -279,13 +283,15 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     }
     return Math.max(...(childMenuList.map(item => item.itemOrder)));
   }
-  private _getMaxSystemChildItemOrder(systemParentMenuId: number){
-    const childSystemItemList = this.menuItemService.menuItems.filter(x=>x.parent === systemParentMenuId );
+
+  private _getMaxSystemChildItemOrder(systemParentMenuId: number) {
+    const childSystemItemList = this.menuItemService.menuItems.filter(x => x.parent === systemParentMenuId);
     if (!childSystemItemList || childSystemItemList.length === 0) {
       return 0;
     }
     return Math.max(...(childSystemItemList.map(item => item.itemOrder)));
   }
+
   private _transformParentMenu(customMenu: CustomMenu, newId: number, newItemOrder: number, hasChildren: boolean): MenuItem {
     return (new MenuItemInterceptor).receive(new MenuItem().clone({
       id: newId,
@@ -296,13 +302,13 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
       enName: customMenu.enName,
       group: 'main',
       isSvg: false,
-      icon: ActionIconsEnum.MENU,
+      icon: customMenu.icon ?? ActionIconsEnum.MENU,
       path: (hasChildren ? this.dynamicMainMenuUrl : this.dynamicMainMenuDetailsUrl).change({parentId: customMenu.id}),
       customMenu: customMenu,
     }));
   }
 
-  private _transformChildMenu(customMenu: CustomMenu, newId: number, newItemOrder: number, newParentId: number): MenuItem {
+  private _transformChildMenu(customMenu: CustomMenu, newId: number, newItemOrder: number, newParentId: number, group: string): MenuItem {
     return (new MenuItemInterceptor).receive(new MenuItem().clone({
       id: newId,
       itemOrder: newItemOrder,
@@ -310,9 +316,9 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
       // langKey: '',
       arName: customMenu.arName,
       enName: customMenu.enName,
-      group: 'dynamic-menus-' + customMenu.parentMenuItemId,
+      group: group,// 'dynamic-menus-' + customMenu.parentMenuItemId,
       isSvg: false,
-      icon: ActionIconsEnum.MENU,
+      icon: customMenu.icon ?? ActionIconsEnum.MENU,
       path: this.dynamicChildMenuUrl.change({parentId: customMenu.parentMenuItemId, id: customMenu.id}),
       customMenu: customMenu
     }));
@@ -321,22 +327,22 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
   private _transformToMenuItems(customMenuList: CustomMenu[]): MenuItem[] {
     let maxId = this.menuItemService.getMaxMenuItemId();
     let finalList: MenuItem[] = [];
-    let parentList:CustomMenu[] = [];
-    let childrenList:CustomMenu[] = [];
-    let systemChildrenList:CustomMenu[] = [];
-    const systemMenu = customMenuList.find(x=>x.isSystem)!;
+    let parentList: CustomMenu[] = [];
+    let childrenList: CustomMenu[] = [];
+    let systemChildrenList: CustomMenu[] = [];
+    // const systemMenu = customMenuList.find(x=>x.isSystem)!;
 
-    customMenuList.forEach((item:CustomMenu)=>{
-      if(!item.parentMenuItemId && !item.isDefaultItem()){
+    customMenuList.forEach((item: CustomMenu) => {
+      if (!item.parentMenuItemId && !item.isDefaultItem()) {
         parentList.push(item);
         return;
       }
-      if(!!item.parentMenuItemId && !!item.menuURL){
-        if(!item.hasDefaultParent(systemMenu)){
+      if (!!item.parentMenuItemId && !!item.menuURL) {
+        if (!item.systemMenuKey) {
           childrenList.push(item);
           return;
         }
-        if(item.hasDefaultParent(systemMenu)){
+        if (!!item.systemMenuKey) {
           systemChildrenList.push(item);
           return;
         }
@@ -371,16 +377,18 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
         finalList.push(this._transformParentMenu(childMenu, maxId, itemOrder, false));
       } else {
         let itemOrder = this._getMaxChildItemOrder(finalList, childMenu.parentMenuItemId!) + 1;
-        finalList.push(this._transformChildMenu(childMenu, maxId, itemOrder, newParent!.id));
+        let groupName = 'dynamic-menus-' + childMenu.parentMenuItemId;
+        finalList.push(this._transformChildMenu(childMenu, maxId, itemOrder, newParent!.id, groupName));
       }
     });
-    systemChildrenList.forEach((childMenu: CustomMenu) =>{
+    systemChildrenList.forEach((childMenu: CustomMenu) => {
       let systemParent = childMenu.getSystemParent();
-      if(!systemParent){
+      if (!systemParent) {
         return;
       }
       let itemOrder = this._getMaxChildItemOrder(finalList, systemParent.id!) + this._getMaxSystemChildItemOrder(systemParent.id);
-      finalList.push(this._transformChildMenu(childMenu, maxId, itemOrder, systemParent.id!));
+      let groupName = (systemParent.data && systemParent.data.childrenGroupName) || systemParent.group;
+      finalList.push(this._transformChildMenu(childMenu, maxId, itemOrder, systemParent.id!, groupName));
 
     })
     return finalList;
