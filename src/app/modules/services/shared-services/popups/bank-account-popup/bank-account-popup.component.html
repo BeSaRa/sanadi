@@ -1,44 +1,48 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
     <button type="button" class="btn-close btn-close-white"
             tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content no-fixed-height" #dialogContent>
+<div class="dialog-content w800px no-fixed-height" #dialogContent>
   <div [formGroup]="form">
     <div class="row">
       <!-- Bank Name -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="bankName" for="bankName" class="form-label">{{lang.map.bank_name}}</label>
         <input id="bankName" validationClasses="bankName" formControlName="bankName" trimInput class="form-control">
         <app-field-error-message controlName="bankName"></app-field-error-message>
       </div>
       <!-- Account Number -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="accountNumber" for="accountNumber"
                class="form-label">{{lang.map.account_number}}</label>
         <input id="accountNumber" validationClasses="accountNumber" formControlName="accountNumber" trimInput
                class="form-control">
         <app-field-error-message controlName="accountNumber"></app-field-error-message>
       </div>
-      <!-- IBAN -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+    </div>
+    <div class="row">
+      <!-- iBan -->
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="iBan" for="iBan" class="form-label">{{lang.map.iban}}</label>
         <input id="iBan" validationClasses="iBan" formControlName="iBan" trimInput class="form-control">
         <app-field-error-message controlName="iBan"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
       <!-- Swift Code -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="swiftCode" for="swiftCode" class="form-label">{{lang.map.swift_code}}</label>
         <input id="swiftCode" validationClasses="swiftCode" formControlName="swiftCode" trimInput
                class="form-control">
         <app-field-error-message controlName="swiftCode"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <!-- Country -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="country" for="country" class="form-label">{{lang.map.country}}</label>
         <ng-select [selectOnTab]="true" labelForId="country" [clearable]="false" placeholder="{{lang.map.select}}"
                    id="country" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
@@ -50,7 +54,7 @@
         <app-field-error-message controlName="country"></app-field-error-message>
       </div>
       <!-- Currency -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="currency" for="currency" class="form-label">{{lang.map.currency}}</label>
         <ng-select [selectOnTab]="true" labelForId="currency" [clearable]="false" placeholder="{{lang.map.select}}"
                    id="currency" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
@@ -64,7 +68,7 @@
     </div>
     <div class="row">
       <!-- Bank Category -->
-      <div *ngIf="caseType !== caseTypes.PARTNER_APPROVAL" class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div *ngIf="caseType !== caseTypes.PARTNER_APPROVAL" class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="category" for="category" class="form-label">{{lang.map.bank_category}}</label>
         <ng-select [selectOnTab]="true" labelForId="category" [clearable]="false" placeholder="{{lang.map.select}}"
                    id="category" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
@@ -76,7 +80,7 @@
         <app-field-error-message controlName="category"></app-field-error-message>
       </div>
       <!-- Partner Name -->
-      <div *ngIf="caseType === caseTypes.PARTNER_APPROVAL" class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div *ngIf="caseType === caseTypes.PARTNER_APPROVAL" class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="partnerName" for="partnerName"
                class="form-label">{{lang.map.org_name_in_bank}}</label>
         <input id="partnerName" validationClasses="partnerName" formControlName="partnerName" trimInput

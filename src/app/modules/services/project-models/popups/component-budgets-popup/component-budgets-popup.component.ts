@@ -22,6 +22,7 @@ export class ComponentBudgetsPopupComponent extends UiCrudDialogGenericComponent
   model!: ProjectComponent;
   form!: UntypedFormGroup;
   popupTitleKey!: keyof ILanguageKeys;
+  hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ProjectComponent>,
               public lang: LangService,

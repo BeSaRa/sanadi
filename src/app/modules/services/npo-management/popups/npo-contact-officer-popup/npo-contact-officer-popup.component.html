@@ -1,15 +1,17 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
     <button type="button" class="btn-close btn-close-white"
             tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content no-fixed-height" #dialogContent>
+<div class="dialog-content w800px no-fixed-height" #dialogContent>
   <div [formGroup]="form">
     <div class="row">
       <!-- identification number -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="identificationNumber" for="identificationNumber"
           class="form-label">{{lang.map.identification_number}}</label>
         <input formControlName="identificationNumber" type="text" validationClasses="identificationNumber"
@@ -17,45 +19,47 @@
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
       <!-- Full Name -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.full_name}}</label>
         <input formControlName="fullName" type="text" validationClasses="fullName" trimInput class="form-control"
           id="fullName">
         <app-field-error-message controlName="fullName"></app-field-error-message>
       </div>
-      <!-- Email -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="email" for="email"
-          class="form-label">{{lang.map.email_address_of_the_employer}}</label>
-        <input formControlName="email" type="text" validationClasses="email" trimInput class="form-control"
-          id="email">
-        <app-field-error-message controlName="email"></app-field-error-message>
-      </div>
     </div>
     <div class="row">
+      <!-- Email -->
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="email" for="email"
+               class="form-label">{{lang.map.email_address_of_the_employer}}</label>
+        <input formControlName="email" type="text" validationClasses="email" trimInput class="form-control"
+               id="email">
+        <app-field-error-message controlName="email"></app-field-error-message>
+      </div>
       <!-- Phone -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="phone" for="phone"
           class="form-label">{{lang.map.phone_of_the_employer}}</label>
         <input formControlName="phone" type="text" validationClasses="phone" trimInput class="form-control"
           id="phone">
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <!-- extraPhone -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="extraPhone" for="extraPhone"
-          class="form-label">{{lang.map.mobile_number}}</label>
+               class="form-label">{{lang.map.mobile_number}}</label>
         <input formControlName="extraPhone" type="text" validationClasses="extraPhone" trimInput
-          class="form-control" id="extraPhone">
+               class="form-control" id="extraPhone">
         <app-field-error-message controlName="extraPhone"></app-field-error-message>
       </div>
       <!-- job title id -->
-      <div class="col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label for="jobTitleId" class="form-label" asteriskIfRequired="jobTitleId">{{ lang.map.job_title
           }}</label>
         <ng-select [selectOnTab]="true" labelForId="jobTitleId" [clearable]="true"
-          placeholder="{{ lang.map.select }}" id="jobTitleId" [notFoundText]="lang.map.msg_not_found"
-          appendTo="body" formControlName="jobTitleId">
+                   placeholder="{{ lang.map.select }}" id="jobTitleId" [notFoundText]="lang.map.msg_not_found"
+                   appendTo="body" formControlName="jobTitleId">
           <ng-option *ngFor="let title of jobTitleAdminLookup" [value]="title.id">{{ title.getName() }}
           </ng-option>
         </ng-select>

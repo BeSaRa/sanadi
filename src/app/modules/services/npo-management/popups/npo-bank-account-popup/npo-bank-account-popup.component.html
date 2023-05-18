@@ -1,14 +1,16 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
     <button type="button" class="btn-close btn-close-white"
             tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content w600px no-fixed-height" #dialogContent>
+<div class="dialog-content w800px no-fixed-height" #dialogContent>
   <div [formGroup]="form">
     <div class="row">
-      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
         <label asteriskIfRequired="bankId" for="bankId" class="form-label">{{lang.map.bank_name}}</label>
         <ng-select [selectOnTab]="true" labelForId="bankId" [clearable]="false" placeholder="{{lang.map.select}}"
                    id="bankId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
@@ -34,7 +36,7 @@
                class="form-control">
         <app-field-error-message controlName="iban"></app-field-error-message>
       </div>
-      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
         <label asteriskIfRequired="currency" for="currency" class="form-label">{{lang.map.currency}}</label>
         <ng-select [selectOnTab]="true"
                    labelForId="currency"

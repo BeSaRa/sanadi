@@ -31,6 +31,8 @@ export class InterventionFieldListPopupComponent extends UiCrudDialogGenericComp
   mainOchaCategories: AdminLookup[] = [];
   subOchaCategories: AdminLookup[] = [];
 
+  hideFullScreen = true;
+
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<InterventionField>,
               public lang: LangService,
               public dialogRef: DialogRef,

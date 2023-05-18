@@ -1,6 +1,8 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
     <button type="button" class="btn-close btn-close-white"
             tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
   </div>
@@ -10,7 +12,7 @@
   <div [formGroup]="form">
     <div class="row">
       <!-- identification number -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="identificationNumber" for="identificationNumber"
                class="form-label">{{lang.map.identification_number}}</label>
         <input formControlName="identificationNumber" type="text"
@@ -18,7 +20,7 @@
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
       <!-- Full Name -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.full_name}}</label>
         <input formControlName="fullName" type="text"
                validationClasses="fullName" trimInput class="form-control" id="fullName">
@@ -27,7 +29,7 @@
     </div>
     <div class="row">
       <!-- Email -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="email" for="email"
                class="form-label">{{lang.map.email_address_of_the_employer}}</label>
         <input formControlName="email" type="text"
@@ -41,7 +43,6 @@
                validationClasses="phone" trimInput class="form-control" id="phone">
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
-
     </div>
     <div class="row">
       <!-- extraPhone -->

@@ -27,6 +27,7 @@ export class EvaluationIndicatorsPopupComponent extends UiCrudDialogGenericCompo
   model: EvaluationIndicator;
   operation: OperationTypes;
   indicators: AdminLookup[] = [];
+  hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<EvaluationIndicator>,
               public lang: LangService,

@@ -23,7 +23,7 @@ export class StageListPopupComponent extends UiCrudDialogGenericComponent<Stage>
   popupTitleKey!: keyof ILanguageKeys;
   form!: UntypedFormGroup;
   model!: Stage;
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  hideFullScreen = true
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<Stage>,
               public lang: LangService,

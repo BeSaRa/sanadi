@@ -22,6 +22,7 @@ export class InterventionRegionListPopupComponent extends UiCrudDialogGenericCom
   form!: UntypedFormGroup;
   operation: OperationTypes;
   popupTitleKey!: keyof ILanguageKeys;
+  hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<InterventionRegion>,
               public lang: LangService,

@@ -24,6 +24,7 @@ export class ForeignCountriesProjectPopupComponent extends UiCrudDialogGenericCo
   operation: OperationTypes;
   popupTitleKey!: keyof ILanguageKeys;
   foreignCountriesProjectsNeeds!: ForeignCountriesProjectsNeed[];
+  hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ProjectModelForeignCountriesProject>,
               public lang: LangService,

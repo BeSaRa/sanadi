@@ -22,6 +22,7 @@ export class ApprovalReasonPopupComponent extends UiCrudDialogGenericComponent<A
   form!: UntypedFormGroup;
   operation: OperationTypes;
   popupTitleKey!: keyof ILanguageKeys;
+  hideFullScreen = true;
 
   _getNewInstance(override?: Partial<ApprovalReason> | undefined): ApprovalReason {
     return new ApprovalReason().clone(override ?? {});

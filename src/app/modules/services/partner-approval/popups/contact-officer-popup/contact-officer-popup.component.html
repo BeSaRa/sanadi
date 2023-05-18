@@ -1,45 +1,49 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
     <button type="button" class="btn-close btn-close-white"
             tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content no-fixed-height" #dialogContent>
+<div class="dialog-content w800px no-fixed-height" #dialogContent>
   <div [formGroup]="form">
     <div class="row">
       <!-- Arabic Name -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="arabicName" for="arabicName" class="form-label">{{lang.map.arabic_name}}</label>
         <input formControlName="arabicName" type="text"
                validationClasses="arabicName" trimInput class="form-control" id="arabicName">
         <app-field-error-message controlName="arabicName"></app-field-error-message>
       </div>
       <!-- English Name -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="englishName" for="englishName" class="form-label">{{lang.map.english_name}}</label>
         <input formControlName="englishName" type="text"
                validationClasses="englishName" trimInput class="form-control" id="englishName">
         <app-field-error-message controlName="englishName"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <!-- Phone -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="phone" for="phone" class="form-label">{{lang.map.lbl_phone}}</label>
         <input formControlName="phone" type="text"
                validationClasses="phone" trimInput class="form-control" id="phone">
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
       <!-- Email -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
         <input formControlName="email" type="text"
                validationClasses="email" trimInput class="form-control" id="email">
         <app-field-error-message controlName="email"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <!-- Passport -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="passportNumber" for="passportNumber" class="form-label">{{lang.map.passport_number}}</label>
         <input id="passportNumber" validationClasses="passportNumber" formControlName="passportNumber" trimInput class="form-control">
         <app-field-error-message controlName="passportNumber"></app-field-error-message>

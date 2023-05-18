@@ -29,6 +29,7 @@ export class LessonsLearntPopupComponent extends UiCrudDialogGenericComponent<Le
   popupTitleKey!: keyof ILanguageKeys;
   customValidators = CustomValidators
   lessonsLearntList: AdminResult[] = [];
+  hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<LessonsLearned>,
               public lang: LangService,

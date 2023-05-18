@@ -26,6 +26,7 @@ export class ProjectAddressesPopupComponent extends UiCrudDialogGenericComponent
   form!: UntypedFormGroup;
   model: ProjectAddress;
   operation: OperationTypes;
+  hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ProjectAddress>,
               public lang: LangService,

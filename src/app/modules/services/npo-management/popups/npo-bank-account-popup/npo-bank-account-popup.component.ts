@@ -29,6 +29,7 @@ export class NpoBankAccountPopupComponent extends UiCrudDialogGenericComponent<N
   popupTitleKey!: keyof ILanguageKeys;
   bankList!: Bank[];
   currenciesList: Lookup[] = this.lookupService.listByCategory.Currency;
+  hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<NpoBankAccount>,
               public lang: LangService,

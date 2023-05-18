@@ -25,6 +25,7 @@ export class WorkAreasPopupComponent extends UiCrudDialogGenericComponent<WorkAr
   operation: OperationTypes;
   popupTitleKey!: keyof ILanguageKeys;
   countries: Country[] = [];
+  hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<WorkArea>,
               public lang: LangService,

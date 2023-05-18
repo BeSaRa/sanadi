@@ -27,6 +27,7 @@ export class BestPracticesPopupComponent extends UiCrudDialogGenericComponent<Be
   operation: OperationTypes;
   popupTitleKey!: keyof ILanguageKeys;
   bestPracticesList: AdminResult[] = [];
+  hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<BestPractices>,
               public lang: LangService,

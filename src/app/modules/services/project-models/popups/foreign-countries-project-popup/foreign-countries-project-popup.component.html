@@ -1,14 +1,14 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
-    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
             tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
     <button type="button" class="btn-close btn-close-white"
             tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
   </div>
 </div>
 <div class="dialog-content w800px no-fixed-height" #dialogContent>
-<ng-container [formGroup]="form">
+  <ng-container [formGroup]="form">
     <div class="row">
       <div class="col-12 mb-4 position-relative">
         <label class="form-label" for="objectDBId"

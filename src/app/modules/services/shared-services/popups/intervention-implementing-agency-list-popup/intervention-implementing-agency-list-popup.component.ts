@@ -26,6 +26,7 @@ export class InterventionImplementingAgencyListPopupComponent extends UiCrudDial
   form!: UntypedFormGroup;
   operation: OperationTypes;
   popupTitleKey!: keyof ILanguageKeys;
+  hideFullScreen = true;
 
   _getNewInstance(override?: Partial<ImplementingAgency> | undefined): ImplementingAgency {
     return new ImplementingAgency().clone(override ?? {});

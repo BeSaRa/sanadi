@@ -1,42 +1,46 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
     <button type="button" class="btn-close btn-close-white"
             tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content no-fixed-height" #dialogContent>
+<div class="dialog-content w800px no-fixed-height" #dialogContent>
   <div [formGroup]="form">
     <div class="row">
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="identificationNumber"
                for="identificationNumber">{{lang.map.identification_number}}</label>
         <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber"
                class="form-control" [readonly]="(readonly)">
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="fullName"
                for="fullName">{{lang.map.full_name}}</label>
         <input id="fullName" validationClasses="fullName" formControlName="fullName"
                class="form-control" [readonly]="(readonly)">
         <app-field-error-message controlName="fullName"></app-field-error-message>
       </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
         <input id="email" validationClasses="email" formControlName="email" class="form-control"
                [readonly]="(readonly)">
         <app-field-error-message controlName="email"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="phone" for="phone">{{lang.map.lbl_phone}}</label>
         <input id="phone" validationClasses="officerPhone" formControlName="phone" class="form-control"
                trimInput [readonly]="(readonly)">
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="extraPhone"
                for="extraPhone">{{lang.map.lbl_extra_phone_number}}</label>
         <input id="extraPhone" validationClasses="extraPhone" formControlName="extraPhone" class="form-control"

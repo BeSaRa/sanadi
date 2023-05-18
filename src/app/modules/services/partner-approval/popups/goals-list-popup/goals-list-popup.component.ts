@@ -34,6 +34,23 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
   domainsList: Lookup[] = this.lookupService.listByCategory.Domain;
   mainDACCategoriesList: AdminResult[] = [];
   mainUNOCHACategoriesList: AdminResult[] = [];
+  displayByDomain: 'DAC' | 'OCHA' | null = null;
+  hideFullScreen = true;
+
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<GoalList>,
+              public lang: LangService,
+              public dialogRef: DialogRef,
+              public dialogService: DialogService,
+              public fb: UntypedFormBuilder,
+              public toast: ToastService,
+              private lookupService: LookupService,
+              private dacOchaService: DacOchaService) {
+    super();
+    this.model = data.model;
+    this.operation = data.operation;
+    this.list = data.list;
+  }
+
   _getNewInstance(override?: Partial<GoalList> | undefined): GoalList {
     return new GoalList().clone(override ?? {});
   }
@@ -41,7 +58,6 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
   initPopup(): void {
     this.popupTitleKey = 'domain';
     this.displayByDomain = null;
-    // this.listenToGoalListChange();
     this.loadOCHADACClassifications();
   }
 
@@ -106,49 +122,6 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
     this.form = this.fb.group(this.model.buildForm(true));
   }
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<GoalList>,
-    public lang: LangService,
-    public dialogRef: DialogRef,
-    public dialogService: DialogService,
-    public fb: UntypedFormBuilder,
-    public toast: ToastService,
-    private lookupService: LookupService,
-    private dacOchaService: DacOchaService) {
-    super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
-  }
-
-
-  displayByDomain: 'DAC' | 'OCHA' | null = null;
-
-
-
-  private listenToGoalListChange(): void {
-    this.form.get('domain')!.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        if (value === DomainTypes.DEVELOPMENT) {
-          this.displayByDomain = 'DAC';
-          this.mainDACCategoryField.setValidators([
-            CustomValidators.required,
-          ]);
-          this.mainUNOCHACategoryField.setValidators([]);
-          this.mainUNOCHACategoryField.setValue(null);
-        } else if (value === DomainTypes.HUMANITARIAN) {
-          this.displayByDomain = 'OCHA';
-          this.mainUNOCHACategoryField.setValidators([
-            CustomValidators.required,
-          ]);
-          this.mainDACCategoryField.setValidators([]);
-          this.mainDACCategoryField.setValue(null);
-        }
-
-        this.mainDACCategoryField.updateValueAndValidity();
-        this.mainUNOCHACategoryField.updateValueAndValidity();
-      });
-  }
   get mainDACCategoryField(): UntypedFormControl {
     return this.form.get(
       'mainDACCategory'
@@ -160,6 +133,7 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
       'mainUNOCHACategory'
     ) as UntypedFormControl;
   }
+
   private loadOCHADACClassifications() {
     return this.dacOchaService
       .loadAsLookups()
@@ -180,8 +154,9 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
       )
       .subscribe();
   }
+
   onDomainChange(value: any, userInteraction: boolean = false) {
-    if(userInteraction){
+    if (userInteraction) {
       this.mainDACCategoryField.setValue(null);
       this.mainUNOCHACategoryField.setValue(null);
     }
@@ -211,7 +186,8 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
     this.mainDACCategoryField.updateValueAndValidity();
     this.mainUNOCHACategoryField.updateValueAndValidity();
   }
-  _afterViewInit(){
-    this.onDomainChange(this.model.domain,false);
+
+  _afterViewInit() {
+    this.onDomainChange(this.model.domain, false);
   }
 }

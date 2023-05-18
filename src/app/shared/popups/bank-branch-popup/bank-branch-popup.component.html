@@ -1,25 +1,25 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
-    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
             tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
     <button type="button" class="btn-close btn-close-white"
             tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
   </div>
 </div>
 
-<div class="dialog-content no-fixed-height" #dialogContent>
+<div class="dialog-content w800px no-fixed-height" #dialogContent>
   <div [formGroup]="form">
     <div class="row">
       <!-- Full Name -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.full_name}}</label>
         <input formControlName="fullName" type="text"
                 validationClasses="fullName" trimInput class="form-control" id="fullName">
         <app-field-error-message controlName="fullName"></app-field-error-message>
       </div>
       <!-- Establishment Date -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="establishmentDate" for="establishmentDate"
                 class="form-label">{{lang.map.establishment_date}}</label>
         <div class="input-group">
@@ -33,47 +33,49 @@
           <app-field-error-message controlName="establishmentDate"></app-field-error-message>
         </div>
       </div>
-      <!-- Email -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
-        <input formControlName="email" type="text"
-                validationClasses="email" trimInput class="form-control" id="email">
-        <app-field-error-message controlName="email"></app-field-error-message>
-      </div>
     </div>
     <div class="row">
+      <!-- Email -->
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
+        <input formControlName="email" type="text"
+               validationClasses="email" trimInput class="form-control" id="email">
+        <app-field-error-message controlName="email"></app-field-error-message>
+      </div>
       <!-- Phone -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="phone" for="phone" class="form-label">{{lang.map.lbl_phone}}</label>
         <input formControlName="phone" type="text"
                 validationClasses="phone" trimInput class="form-control" id="phone">
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <!-- Fax Number -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="fax" for="fax" class="form-label">{{lang.map.fax_number}}</label>
         <input formControlName="fax" type="text"
-                validationClasses="fax" trimInput class="form-control" id="fax">
+               validationClasses="fax" trimInput class="form-control" id="fax">
         <app-field-error-message controlName="fax"></app-field-error-message>
       </div>
       <!-- Record Number -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="recordNo" for="recordNo" class="form-label">{{lang.map.record_number}}</label>
         <input formControlName="recordNo" type="text"
-                validationClasses="recordNo" trimInput class="form-control" id="recordNo">
+               validationClasses="recordNo" trimInput class="form-control" id="recordNo">
         <app-field-error-message controlName="recordNo"></app-field-error-message>
       </div>
     </div>
     <div class="row">
       <!-- Address -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="address" for="address" class="form-label">{{lang.map.lbl_address}}</label>
         <input formControlName="address" type="text"
                 validationClasses="address" trimInput class="form-control" id="address">
         <app-field-error-message controlName="address"></app-field-error-message>
       </div>
       <!-- Postal Code -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="postalCode" for="postalCode" class="form-label">{{lang.map.postal_code}}</label>
         <input formControlName="postalCode" type="text"
                 validationClasses="postalCode" trimInput class="form-control" id="postalCode">

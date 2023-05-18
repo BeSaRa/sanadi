@@ -22,6 +22,7 @@ export class GoalPopupComponent extends UiCrudDialogGenericComponent<Goal>{
   form!: UntypedFormGroup;
   operation: OperationTypes;
   popupTitleKey!: keyof ILanguageKeys;
+  hideFullScreen = true;
 
   _getNewInstance(override?: Partial<Goal> | undefined): Goal {
     return new Goal().clone(override ?? {});

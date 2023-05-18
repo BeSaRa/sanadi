@@ -31,6 +31,7 @@ export class ImplementationEvaluationPopupComponent extends UiCrudDialogGenericC
   customValidators = CustomValidators
   evaluationHubList: AdminResult[] = [];
   evaluationResultList = this.lookupService.listByCategory.EvaluationResult;
+  hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<OfficeEvaluation>,
               public lang: LangService,

@@ -24,6 +24,7 @@ export class CommercialActivityPopupComponent extends UiCrudDialogGenericCompone
   form!: UntypedFormGroup;
   operation: OperationTypes;
   popupTitleKey!: keyof ILanguageKeys;
+  hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<CommercialActivity>,
               public lang: LangService,
