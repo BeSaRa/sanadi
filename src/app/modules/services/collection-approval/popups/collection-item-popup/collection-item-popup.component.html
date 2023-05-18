@@ -8,10 +8,10 @@
     <div class="row">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="" [control]="searchControl"
-          for="searchControl">{{lang.map.search_by_serial_number}}</label>
+               for="searchControl">{{lang.map.search_by_serial_number}}</label>
         <div validationClasses="" [control]="searchControl" class="input-group">
           <input (keydown.enter)="isSearchAllowed() && searchForLicense()" id="searchControl" validationClasses=""
-            [control]="searchControl" [formControl]="searchControl" class="form-control">
+                 [control]="searchControl" [formControl]="searchControl" class="form-control">
           <button *ngIf="isSearchAllowed()" (click)="searchForLicense()" class="input-group-text">
             <i class="mdi mdi-magnify text-primary"></i>
           </button>
@@ -20,16 +20,16 @@
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
-          for="oldLicenseFullSerial">{{lang.map.serial_number}}</label>
+               for="oldLicenseFullSerial">{{lang.map.serial_number}}</label>
         <input id="oldLicenseFullSerial" validationClasses="oldLicenseFullSerial" formControlName="oldLicenseFullSerial"
-          class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
+               class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
         <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="identificationNumber"
-          for="identificationNumber">{{lang.map.identification_number}}</label>
+               for="identificationNumber">{{lang.map.identification_number}}</label>
         <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber"
-          class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
+               class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
     </div>
@@ -38,21 +38,21 @@
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="locationDetails"
-              for="locationDetails">{{lang.map.location_details}}</label>
+                   for="locationDetails">{{lang.map.location_details}}</label>
             <input id="locationDetails" validationClasses="locationDetails" formControlName="locationDetails"
-              class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
+                   class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
             <app-field-error-message controlName="locationDetails"></app-field-error-message>
           </div>
           <div class="col-sm-12 mb-4 position-relative" *ngIf="isTemporaryLicenseDuration()">
             <label for="licenseEndDate" asteriskIfRequired="licenseEndDate"
-              class="form-label">{{lang.map.license_end_date}}</label>
+                   class="form-label">{{lang.map.license_end_date}}</label>
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" formControlName="licenseEndDate" id="licenseEndDate"
-                [options]="datepickerOptionsMap.licenseEndDate"
-                [ngClass]="{'input-disabled': isEditLicenseEndDateDisabled()}"
-                (click)="!isEditLicenseEndDateDisabled() && dpLicenseEndDate.toggleCalendar()"
-                #dpLicenseEndDate="angular-mydatepicker" angular-mydatepicker validationClasses="licenseEndDate">
+                   [options]="datepickerOptionsMap.licenseEndDate"
+                   [ngClass]="{'input-disabled': isEditLicenseEndDateDisabled()}"
+                   (click)="!isEditLicenseEndDateDisabled() && dpLicenseEndDate.toggleCalendar()"
+                   #dpLicenseEndDate="angular-mydatepicker" angular-mydatepicker validationClasses="licenseEndDate">
               </div>
               <app-field-error-message controlName="licenseEndDate"></app-field-error-message>
             </div>
@@ -73,14 +73,14 @@
       </div>
       <div class="col-sm-12 col-md-4 mb-4">
         <building-plate #buildingPlate [record]="item" [readOnly]="(isCancelRequestType() || readOnly || viewOnly)"
-          [propertyMap]="{buildingNo: 'buildingNumber', street:'streetNumber', zone: 'zoneNumber', unit: 'unitNumber'}">
+                        [propertyMap]="{buildingNo: 'buildingNumber', street:'streetNumber', zone: 'zoneNumber', unit: 'unitNumber'}">
         </building-plate>
       </div>
     </div>
   </form>
 </div>
 <div class="dialog-actions">
-  <button (click)="save()" *ngIf="!readOnly && !viewOnly" [disabled]="!form.valid" class="btn btn-primary">{{editIndex ? lang.map.btn_save :
-    lang.map.btn_add}}</button>
+  <button (click)="save()" *ngIf="!readOnly && !viewOnly" [disabled]="isInvalidForm()"
+          class="btn btn-primary">{{editIndex ? lang.map.btn_save : lang.map.btn_add}}</button>
   <button (click)="cancel()" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

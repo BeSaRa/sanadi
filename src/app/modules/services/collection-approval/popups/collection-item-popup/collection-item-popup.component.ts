@@ -1,24 +1,25 @@
-import { Component, Inject, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { AbstractControl, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { CollectionRequestType } from '@app/enums/service-request-types';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { ICoordinates } from '@app/interfaces/ICoordinates';
-import { CollectionItem } from '@app/models/collection-item';
-import { LangService } from '@app/services/lang.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { DateUtils } from '@app/helpers/date-utils';
-import { DatepickerOptionsMap } from '@app/types/types';
-import { CollectionApproval } from '@app/models/collection-approval';
-import { LicenseDurationType } from '@app/enums/license-duration-type';
-import { Observable, Subject } from 'rxjs';
-import { exhaustMap, filter, map, takeUntil, tap } from 'rxjs/operators';
-import { LicenseService } from '@app/services/license.service';
-import { CollectionLicense } from '@app/license-models/collection-license';
-import { DialogService } from '@app/services/dialog.service';
-import { HasCollectionItemBuildForm } from '@app/interfaces/has-collection-item-build-form';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { BuildingPlateComponent } from '@app/shared/components/building-plate/building-plate.component';
+import {Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {CollectionRequestType} from '@app/enums/service-request-types';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {ICoordinates} from '@app/interfaces/ICoordinates';
+import {CollectionItem} from '@app/models/collection-item';
+import {LangService} from '@app/services/lang.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {DateUtils} from '@app/helpers/date-utils';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {CollectionApproval} from '@app/models/collection-approval';
+import {LicenseDurationType} from '@app/enums/license-duration-type';
+import {Observable, Subject} from 'rxjs';
+import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {LicenseService} from '@app/services/license.service';
+import {CollectionLicense} from '@app/license-models/collection-license';
+import {DialogService} from '@app/services/dialog.service';
+import {HasCollectionItemBuildForm} from '@app/interfaces/has-collection-item-build-form';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
+import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'app-collection-item-popup',
@@ -38,9 +39,10 @@ export class CollectionItemPopupComponent implements OnInit, OnDestroy {
   @ViewChild('buildingPlate') buildingPlate!: BuildingPlateComponent;
 
   datepickerOptionsMap: DatepickerOptionsMap = {
-    licenseEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
+    licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
   };
   licenseSearch$: Subject<string> = new Subject<string>();
+
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
@@ -94,7 +96,7 @@ export class CollectionItemPopupComponent implements OnInit, OnDestroy {
       .pipe(filter((license) => {
         let isAlreadyAdded = this.isLicenseAlreadyAdded(license);
         if (isAlreadyAdded) {
-          this.dialog.info(this.lang.map.x_already_exists.change({ x: this.lang.map.license }));
+          this.dialog.info(this.lang.map.x_already_exists.change({x: this.lang.map.license}));
         }
         return !isAlreadyAdded;
       }))
@@ -104,25 +106,32 @@ export class CollectionItemPopupComponent implements OnInit, OnDestroy {
         this.updateForm(this.item);
       });
   }
+
   isLicenseAlreadyAdded(selectedLicense: any): boolean {
     return this.model.collectionItemList.some(x => x.oldLicenseFullSerial === selectedLicense.fullSerial);
   }
+
   private validateSingleLicense(license: CollectionLicense): Observable<undefined | CollectionLicense> {
     return this.licenseService.validateLicenseByRequestType<CollectionLicense>(this.model.caseType, this.model.requestType, license.id) as Observable<undefined | CollectionLicense>;
   }
+
   private openSelectLicense(licenses: CollectionLicense[]): Observable<undefined | CollectionLicense> {
     return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns)
       .onAfterClose$
-      .pipe(map((result: ({ selected: CollectionLicense, details: CollectionLicense } | undefined)) => result ? result.details : result));
+      .pipe(map((result: ({
+        selected: CollectionLicense,
+        details: CollectionLicense
+      } | undefined)) => result ? result.details : result));
   }
 
   private updateForm(model: HasCollectionItemBuildForm): void {
     this.form.patchValue(model.buildForm(false));
   }
+
   openMapMarker() {
     (this.item!).openMap(this.isCancelRequestType() || this.readOnly || this.viewOnly)
       .onAfterClose$
-      .subscribe(({ click, value }: { click: UserClickOn, value: ICoordinates }) => {
+      .subscribe(({click, value}: { click: UserClickOn, value: ICoordinates }) => {
         if (click === UserClickOn.YES) {
           this.item!.latitude = value.latitude;
           this.item!.longitude = value.longitude;
@@ -135,9 +144,11 @@ export class CollectionItemPopupComponent implements OnInit, OnDestroy {
   isNewRequestType(): boolean {
     return !!this.model && !!this.model.requestType && (this.model.requestType === CollectionRequestType.NEW);
   }
+
   isCancelRequestType(): boolean {
     return !!this.model && !!this.model.requestType && (this.model.requestType === CollectionRequestType.CANCEL);
   }
+
   isTemporaryLicenseDuration(): boolean {
     return this.item!.licenseDurationType === LicenseDurationType.TEMPORARY;
   }
@@ -171,12 +182,46 @@ export class CollectionItemPopupComponent implements OnInit, OnDestroy {
     this.data.oldLicenseFullSerial.updateValueAndValidity();
     return isAllowed;
   }
+
   cancel() {
     this.dialogRef.close(null)
   }
+
   save() {
-    this.dialogRef.close({ buildingPlate: this.buildingPlate });
+    if (this.isInvalidForm()) {
+      this.formInvalidMessage();
+      return;
+    }
+    if (this.isInvalidLatitudeLongitude()) {
+      this.longitudeLatitudeInvalidMessage();
+      return;
+    }
+    this.dialogRef.close({buildingPlate: this.buildingPlate});
   }
+
+  isInvalidForm(): boolean {
+    if (!this.buildingPlate) {
+      return true;
+    }
+    return this.buildingPlate.form.invalid || this.form.invalid;
+  }
+
+  private formInvalidMessage(): void {
+    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
+    this.form.markAllAsTouched();
+    this.buildingPlate.displayFormValidity();
+  }
+
+  private isInvalidLatitudeLongitude(): boolean {
+    return !this.form
+      || !CommonUtils.isValidValue(this.latitude.value)
+      || !CommonUtils.isValidValue(this.longitude.value);
+  }
+
+  private longitudeLatitudeInvalidMessage() {
+    this.dialog.error(this.lang.map.longitude_latitude_required);
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
