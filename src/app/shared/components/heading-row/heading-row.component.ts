@@ -15,6 +15,7 @@ export class HeadingRowComponent {
   @Input() label: string = '';
   @Input() hideHorizontalLine: boolean = false;
   @Input() extraButtonsTemplate?: TemplateRef<any>;
+  @Input() removeBottomMargin: boolean = false;
 
   get headingText(): string {
     if (this.label) {
