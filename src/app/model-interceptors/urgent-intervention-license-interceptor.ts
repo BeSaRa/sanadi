@@ -49,6 +49,7 @@ export class UrgentInterventionLicenseInterceptor implements IModelInterceptor<U
     delete model.currencyInfo;
     delete model.projectNameInfo;
     delete model.licenseStartDateString;
+    delete model.licenseStartDateTimestamp;
   }
 
 }
