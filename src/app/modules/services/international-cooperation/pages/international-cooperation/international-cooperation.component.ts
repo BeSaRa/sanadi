@@ -1,11 +1,10 @@
 import {Component} from '@angular/core';
-import {AdminstrationDepartmentCodes} from '@enums/department-code.enum';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {InternationalCooperation} from '@app/models/international-cooperation';
 import {InternationalCooperationService} from '@services/international-cooperation.service';
 import {SaveTypes} from '@app/enums/save-types';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {LangService} from '@services/lang.service';
 import {InternalDepartmentService} from '@services/internal-department.service';
 import {CountryService} from '@services/country.service';
@@ -16,10 +15,12 @@ import {EmployeeService} from '@services/employee.service';
 import {TabMap} from '@app/types/types';
 import {Country} from '@app/models/country';
 import {InternalDepartment} from '@app/models/internal-department';
-import {takeUntil} from 'rxjs/operators';
+import {map, takeUntil} from 'rxjs/operators';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {CommonUtils} from '@helpers/common-utils';
+import {CaseTypes} from "@enums/case-types.enum";
+import {ServiceDataService} from "@services/service-data.service";
 
 @Component({
   selector: 'international-cooperation',
@@ -33,6 +34,7 @@ export class InternationalCooperationComponent extends EServicesGenericComponent
               public fb: UntypedFormBuilder,
               private dialog: DialogService,
               public intDepService: InternalDepartmentService,
+              public serviceDataService: ServiceDataService,
               private countryService: CountryService,
               private toast: ToastService,
               public employeeService: EmployeeService) {
@@ -41,7 +43,6 @@ export class InternationalCooperationComponent extends EServicesGenericComponent
 
   form!: UntypedFormGroup;
   countries: Country[] = [];
-  internationalCooperationAllowedDepartments = [AdminstrationDepartmentCodes.SVC, AdminstrationDepartmentCodes.LCN, AdminstrationDepartmentCodes.RC, AdminstrationDepartmentCodes.IN];
   allowEditRecommendations: boolean = true;
   loadAttachments: boolean = false;
   tabsData: TabMap = {
@@ -76,7 +77,7 @@ export class InternationalCooperationComponent extends EServicesGenericComponent
   };
 
   _initComponent(): void {
-    this.loadDepartments();
+    this.loadDepartmentsByCaseType();
     this.loadCountries();
   }
 
@@ -198,10 +199,21 @@ export class InternationalCooperationComponent extends EServicesGenericComponent
     return !isAllowed;
   }
 
-  private loadDepartments(): void {
-    this.intDepService.loadAsLookups()
+  private loadDepartmentsByCaseType(): void {
+    const serviceData = this.serviceDataService.loadByCaseType(CaseTypes.INTERNATIONAL_COOPERATION)
+      .pipe(
+        map(result => result.concernedDepartmentsIdsParsed ?? []),
+      );
+
+    const internalDepartments = this.intDepService.loadAsLookups()
+
+    forkJoin([serviceData, internalDepartments])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => this.service.departments = deps.filter(dep => this.internationalCooperationAllowedDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
+      .subscribe(([relatedDepartments, allDepartments]) => {
+        this.service.departments = allDepartments.filter(dep => {
+          return relatedDepartments.includes(dep.id);
+        });
+      })
   }
 
   private loadCountries() {
