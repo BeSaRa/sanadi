@@ -34,6 +34,9 @@ export class ObjectUtils {
   }): Partial<M> {
     let values: Partial<M> = {};
     for (const [controlKey, valueObj] of Object.entries(controlValuesWithLabels)) {
+      if (valueObj.skipAuditComparison) {
+        continue;
+      }
       if ('comparisonValue' in valueObj) {
         // @ts-ignore
         values[controlKey] = valueObj.comparisonValue;

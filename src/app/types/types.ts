@@ -75,5 +75,11 @@ export type FollowUpDateModels = ForeignCountriesProjects | CharityOrganizationU
 
 export type FieldControlAndLabelKey = { control: AbstractControl, labelKey: keyof ILanguageKeys };
 
-export type ControlValueLabelLangKey = { langKey: keyof ILanguageKeys, value: any, comparisonValue?: any, label?: () => string };
+export type ControlValueLabelLangKey = {
+  langKey: keyof ILanguageKeys,
+  value: any,
+  comparisonValue?: any,
+  label?: () => string,
+  skipAuditComparison?: boolean
+};
 export type LabelTextLangKey = { langKey: keyof ILanguageKeys, labelText?: string };
