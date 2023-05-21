@@ -12,16 +12,18 @@ import {LookupService} from '@services/lookup.service';
 import {ToastService} from '@services/toast.service';
 import {EmployeeService} from '@services/employee.service';
 import {InternalDepartmentService} from '@services/internal-department.service';
-import {takeUntil} from 'rxjs/operators';
+import {map, takeUntil} from 'rxjs/operators';
 import {InternalDepartment} from '@app/models/internal-department';
 import {SaveTypes} from '@app/enums/save-types';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {Lookup} from '@app/models/lookup';
 import {CommonUtils} from '@helpers/common-utils';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {ConsultationService} from '@services/consultation.service';
 import {ProfileService} from '@services/profile.service';
 import {Profile} from '@app/models/profile';
+import {ServiceDataService} from "@services/service-data.service";
+import {CaseTypes} from "@enums/case-types.enum";
 
 @Component({
   selector: 'consultation',
@@ -38,6 +40,7 @@ export class ConsultationComponent extends EServicesGenericComponent<Consultatio
               private toast: ToastService,
               public employeeService: EmployeeService,
               private intDepService: InternalDepartmentService,
+              private serviceDataService: ServiceDataService,
               private profileService: ProfileService) {
     super();
   }
@@ -86,7 +89,7 @@ export class ConsultationComponent extends EServicesGenericComponent<Consultatio
   _initComponent(): void {
     this.loadOrganizations();
     if (this.isInternalUser) {
-      this.loadDepartments();
+      this.loadDepartmentsByCaseType();
     }
   }
 
@@ -227,10 +230,21 @@ export class ConsultationComponent extends EServicesGenericComponent<Consultatio
       });
   }
 
-  private loadDepartments(): void {
-    this.intDepService.loadAsLookups()
+  private loadDepartmentsByCaseType(): void {
+    const serviceData = this.serviceDataService.loadByCaseType(CaseTypes.CONSULTATION)
+      .pipe(
+        map(result => result.concernedDepartmentsIdsParsed ?? []),
+      );
+
+    const internalDepartments = this.intDepService.loadAsLookups()
+
+    forkJoin([serviceData, internalDepartments])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => this.departments = deps);
+      .subscribe(([relatedDepartments, allDepartments]) => {
+        this.departments = allDepartments.filter(dep => {
+          return relatedDepartments.includes(dep.id);
+        });
+      })
   }
 
   get competentDepartmentAuthNameField(): UntypedFormControl {
