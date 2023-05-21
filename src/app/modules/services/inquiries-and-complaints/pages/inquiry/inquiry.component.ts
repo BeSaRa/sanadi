@@ -4,7 +4,7 @@ import {EServicesGenericComponent} from '@app/generics/e-services-generic-compon
 import {Inquiry} from '@app/models/inquiry';
 import {InquiryService} from '@services/inquiry.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {LangService} from '@services/lang.service';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {DialogService} from '@services/dialog.service';
@@ -12,13 +12,15 @@ import {LookupService} from '@services/lookup.service';
 import {ToastService} from '@services/toast.service';
 import {EmployeeService} from '@services/employee.service';
 import {InternalDepartmentService} from '@services/internal-department.service';
-import {takeUntil} from 'rxjs/operators';
+import {map, takeUntil} from 'rxjs/operators';
 import {InternalDepartment} from '@app/models/internal-department';
 import {TabMap} from '@app/types/types';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {CommonUtils} from '@helpers/common-utils';
 import {Lookup} from '@app/models/lookup';
+import {CaseTypes} from "@enums/case-types.enum";
+import {ServiceDataService} from "@services/service-data.service";
 
 @Component({
   selector: 'inquiry',
@@ -33,6 +35,7 @@ export class InquiryComponent extends EServicesGenericComponent<Inquiry, Inquiry
               private lookupService: LookupService,
               private toast: ToastService,
               private intDepService: InternalDepartmentService,
+              private serviceDataService: ServiceDataService,
               public employeeService: EmployeeService,) {
     super();
   }
@@ -75,7 +78,7 @@ export class InquiryComponent extends EServicesGenericComponent<Inquiry, Inquiry
   };
 
   _initComponent(): void {
-    this.loadDepartments();
+    this.loadDepartmentsByCaseType();
   }
 
   _buildForm(): void {
@@ -157,6 +160,23 @@ export class InquiryComponent extends EServicesGenericComponent<Inquiry, Inquiry
     this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => this.departments = deps);
+  }
+
+  private loadDepartmentsByCaseType(): void {
+    const serviceData = this.serviceDataService.loadByCaseType(CaseTypes.INQUIRY)
+      .pipe(
+        map(result => result.concernedDepartmentsIdsParsed ?? []),
+      );
+
+    const internalDepartments = this.intDepService.loadAsLookups()
+
+    forkJoin([serviceData, internalDepartments])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([relatedDepartments, allDepartments]) => {
+        this.departments = allDepartments.filter(dep => {
+          return relatedDepartments.includes(dep.id);
+        });
+      })
   }
 
   onCompetentDepChange(depId: number): void {
