@@ -1,5 +1,5 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {UntypedFormGroup} from '@angular/forms';
+import {AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Nationalities} from '@app/enums/nationalities.enum';
 import {DateUtils} from '@app/helpers/date-utils';
 import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
@@ -11,19 +11,21 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {DatepickerOptionsMap} from '@app/types/types';
 import {CommonUtils} from "@helpers/common-utils";
+import {OperationTypes} from "@enums/operation-types.enum";
 
 @Component({
   selector: 'app-real-beneficiaries-popup',
   templateUrl: './real-beneficiaries-popup.component.html',
   styleUrls: ['./real-beneficiaries-popup.component.scss']
 })
-export class RealBeneficiariesPopupComponent implements OnInit {
+export class RealBeneficiariesPopupComponent implements OnInit, AfterViewInit {
   model!: RealBeneficiary;
   form: UntypedFormGroup;
   readonly: boolean;
   hideSave: boolean;
   editRecordIndex: number;
   hideFullScreen = false;
+  operation!: OperationTypes;
 
   idColumns = ['identificationNumber', 'idDate', 'idExpiryDate'];
   passportColumns = ['passportNumber', 'passportDate', 'passportExpiryDate'];
@@ -65,17 +67,17 @@ export class RealBeneficiariesPopupComponent implements OnInit {
       });
     }
   };
+
   datepickerOptionsMap: DatepickerOptionsMap = {
-    birthDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    idDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    passportExpiryDate: DateUtils.getDatepickerOptions({
-      disablePeriod: 'past',
-    }),
-    idExpiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
-    passportDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    startDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
+    birthDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
+    idDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
+    passportExpiryDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
+    idExpiryDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
+    passportDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
+    startDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
+    lastUpdateDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
   };
+
   controls: ControlWrapper[] = [
     {
       controlName: 'arabicName',
@@ -182,24 +184,26 @@ export class RealBeneficiariesPopupComponent implements OnInit {
       type: 'textarea',
     },
   ];
-  constructor(
-    @Inject(DIALOG_DATA_TOKEN)
-    public data: {
-      form: UntypedFormGroup,
-      readonly: boolean,
-      hideSave: boolean,
-      editRecordIndex: number,
-      model: RealBeneficiary
-    },
-    public lang: LangService,
-    private dialogRef: DialogRef,
-    private lookupService: LookupService
-  ) {
+  @ViewChild('dialogContent') dialogContent!: ElementRef;
+
+  constructor(@Inject(DIALOG_DATA_TOKEN)
+              public data: {
+                form: UntypedFormGroup,
+                readonly: boolean,
+                hideSave: boolean,
+                editRecordIndex: number,
+                model: RealBeneficiary,
+                operation: OperationTypes
+              },
+              public lang: LangService,
+              private dialogRef: DialogRef,
+              private lookupService: LookupService) {
     this.form = data.form;
     this.hideSave = data.hideSave;
     this.readonly = data.readonly;
     this.editRecordIndex = data.editRecordIndex;
     this.model = data.model;
+    this.operation = data.operation;
   }
 
   ngOnInit(): void {
@@ -209,13 +213,39 @@ export class RealBeneficiariesPopupComponent implements OnInit {
     row.startDate = DateUtils.changeDateToDatepicker(row.startDate);
     row.idDate = DateUtils.changeDateToDatepicker(row.idDate);
     row.idExpiryDate = DateUtils.changeDateToDatepicker(row.idExpiryDate);
-    row.passportExpiryDate = DateUtils.changeDateToDatepicker(
-      row.passportExpiryDate
-    );
+    row.passportExpiryDate = DateUtils.changeDateToDatepicker(row.passportExpiryDate);
     row.passportDate = DateUtils.changeDateToDatepicker(row.passportDate);
     row.lastUpdateDate = DateUtils.changeDateToDatepicker(row.lastUpdateDate);
-    this._handleChangeNationality(row.nationality)
+    this._handleChangeNationality(row.nationality);
+    this.enablePastSelectedDates();
     this.form.patchValue(row);
+  }
+
+  private enablePastSelectedDates(): void {
+    if (this.operation !== OperationTypes.UPDATE) {
+      return;
+    }
+    for (const [key, value] of Object.entries(this.datepickerOptionsMap)) {
+      if (CommonUtils.isValidValue(value.disableUntil)) {
+        // @ts-ignore
+        const dateValue = DateUtils.getYearMonthDayFromDate(this.model[key] ?? undefined);
+        if (CommonUtils.isValidValue(dateValue)) {
+          this.datepickerOptionsMap[key].enableDates = [dateValue!];
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    Promise.resolve().then(() => {
+      if (this.operation === OperationTypes.UPDATE) {
+        this.displayFormValidity(this.form, this.dialogContent.nativeElement);
+      }
+    })
+  }
+
+  get passportExpiryDateField(): UntypedFormControl {
+    return this.form.get('passportExpiryDate') as UntypedFormControl;
   }
 
   mapForm(form: any): RealBeneficiary {

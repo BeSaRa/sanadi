@@ -51,7 +51,7 @@
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" [formControlName]="control.controlName"
                    [ngClass]="{ 'input-disabled': readonly || form.get(control.controlName)?.disabled || hideSave }"
-                   [disabled]="readonly || hideSave" [id]="control.controlName"
+                   [id]="control.controlName"
                    [options]="datepickerOptionsMap[control.controlName]"
                    (click)="(!readonly && !hideSave) && dp.toggleCalendar()" #dp="angular-mydatepicker"
                    angular-mydatepicker

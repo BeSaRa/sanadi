@@ -21,6 +21,16 @@ import { OrganizationOfficerInterceptor } from './organization-officer-intercept
 import { RealBeneficiaryInterceptor } from './real-beneficiary-interceptors';
 import { WorkAreaInterceptor } from './workarea-interceptor';
 
+const bylawInterceptor = new ByLawInterceptor();
+const charityReportInterceptor = new CharityReportInterceptor();
+const charityDecisionInterceptor = new CharityDecisionInterceptor();
+const realBeneficiaryInterceptor = new RealBeneficiaryInterceptor();
+const membersInterceptor = new OrgMemberInterceptor();
+const organizationOfficer = new OrganizationOfficerInterceptor();
+const foreignAidClassificationInterceptor = new ForeignAidClassificationInterceptor();
+const charityBranchInterceptor = new CharityBranchInterceptor();
+const workAreaInterceptor = new WorkAreaInterceptor();
+
 export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<CharityOrganizationUpdate> {
   caseInterceptor?: IModelInterceptor<CharityOrganizationUpdate> | undefined;
   send(model: Partial<CharityOrganizationUpdate>): Partial<CharityOrganizationUpdate> {
@@ -35,15 +45,7 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     delete model.establishmentDateStamp;
     delete model.firstReleaseDateStamp;
     delete model.lastUpdateDateStamp;
-    const foreignAidClassificationInterceptor = new ForeignAidClassificationInterceptor();
-    const charityReportInterceptor = new CharityReportInterceptor();
-    const charityDecisionInterceptor = new CharityDecisionInterceptor();
-    const realBeneficiaryInterceptor = new RealBeneficiaryInterceptor();
-    const membersInterceptor = new OrgMemberInterceptor();
-    const bylawInterceptor = new ByLawInterceptor()
-    const organizationOfficer = new OrganizationOfficerInterceptor();
-    const charityBranchInterceptor = new CharityBranchInterceptor();
-    const workAreaInterceptor = new WorkAreaInterceptor();
+
     model.workAreaObjectList = model.workAreaObjectList?.map(e => workAreaInterceptor.send(e) as WorkArea);
     model.charityBranchList = model.charityBranchList?.map(e => charityBranchInterceptor.send(e) as CharityBranch);
     model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.send(e) as RealBeneficiary);
@@ -69,16 +71,7 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
   }
   receive(model: CharityOrganizationUpdate): CharityOrganizationUpdate {
     model.registrationAuthorityInfo = AdminResult.createInstance(model.registrationAuthorityInfo);
-    const bylawInterceptor = new ByLawInterceptor();
-    const charityReportInterceptor = new CharityReportInterceptor();
-    const charityDecisionInterceptor = new CharityDecisionInterceptor();
-    const realBeneficiaryInterceptor = new RealBeneficiaryInterceptor();
-    const membersInterceptor = new OrgMemberInterceptor();
-    const organizationOfficer = new OrganizationOfficerInterceptor();
-    const foreignAidClassificationInterceptor = new ForeignAidClassificationInterceptor();
-    const charityBranchInterceptor = new CharityBranchInterceptor();
 
-    const workAreaInterceptor = new WorkAreaInterceptor();
     model.workAreaObjectList = model.workAreaObjectList?.map(e => workAreaInterceptor.receive(e) as WorkArea);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
     (model.assignDate && (model.assignDate = DateUtils.getDateStringFromDate(model.assignDate)));
@@ -89,7 +82,7 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     (model.establishmentDate && (model.establishmentDate = DateUtils.getDateStringFromDate(model.establishmentDate)));
     model.charityBranchList = model.charityBranchList?.map(e => new CharityBranch().clone(charityBranchInterceptor.receive(e)));
     model.wFClassificationList = model.wFClassificationList?.map(e => foreignAidClassificationInterceptor.receive(e));
-    model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.receive(e) as RealBeneficiary);
+    model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.receive(new RealBeneficiary().clone(e)) as RealBeneficiary);
     model.boardMemberList = model.boardMemberList?.map(e => membersInterceptor.receive(e) as OrgMember);
     model.authorizedSignatoryMemberList = model.authorizedSignatoryMemberList?.map(e => membersInterceptor.receive(e) as OrgMember);
     model.founderMemberList = model.founderMemberList?.map(e => membersInterceptor.receive(e) as OrgMember);
