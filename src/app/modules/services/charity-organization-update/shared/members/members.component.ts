@@ -9,6 +9,7 @@ import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import { ComponentType } from '@angular/cdk/portal';
 import { MembersPopupComponent } from '../../popups/members-popup/members-popup.component';
+import {OperationTypes} from "@enums/operation-types.enum";
 
 @Component({
   selector: 'members',
@@ -61,7 +62,7 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
     }
   }
 
-  _selectOne(row: OrgMember): void {
+  _selectOne(row: OrgMember, viewOnly = false): void {
     const _row = {...row};
     (_row.joinDate && (_row.joinDate = DateUtils.changeDateToDatepicker(_row.joinDate)));
     this.form.patchValue(_row);
@@ -71,7 +72,8 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
       model: this.model,
       hideSave: this.hideSave,
       readonly: this.readonly,
-      customData: this.customData
+      customData: this.customData,
+      operation: viewOnly ? OperationTypes.VIEW : OperationTypes.UPDATE
     }).onAfterClose$.subscribe((data) => {
       if (data) {
         this.save(data);

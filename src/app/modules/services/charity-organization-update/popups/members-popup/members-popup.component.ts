@@ -1,15 +1,16 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
-import { DateUtils } from '@app/helpers/date-utils';
-import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { AdminResult } from '@app/models/admin-result';
-import { JobTitle } from '@app/models/job-title';
-import { OrgMember } from '@app/models/org-member';
-import { LangService } from '@app/services/lang.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { DatepickerOptionsMap } from '@app/types/types';
+import {Component, Inject, OnInit} from '@angular/core';
+import {UntypedFormGroup} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {DateUtils} from '@app/helpers/date-utils';
+import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {AdminResult} from '@app/models/admin-result';
+import {JobTitle} from '@app/models/job-title';
+import {OrgMember} from '@app/models/org-member';
+import {LangService} from '@app/services/lang.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {DatepickerOptionsMap} from '@app/types/types';
 import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
@@ -28,9 +29,11 @@ export class MembersPopupComponent implements OnInit {
   pageTitle!: keyof ILanguageKeys;
   jobTitles: JobTitle[] = [];
   controls!: ControlWrapper[];
+  operation!: OperationTypes;
   datepickerOptionsMap: DatepickerOptionsMap = {
-    joinDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
+    joinDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
   };
+
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
@@ -39,7 +42,8 @@ export class MembersPopupComponent implements OnInit {
       hideSave: boolean,
       editRecordIndex: number,
       model: OrgMember,
-      customData: any
+      customData: any,
+      operation: OperationTypes
     },
     public lang: LangService,
     private dialogRef: DialogRef,
@@ -48,6 +52,7 @@ export class MembersPopupComponent implements OnInit {
     this.hideSave = data.hideSave;
     this.readonly = data.readonly;
     this.editRecordIndex = data.editRecordIndex;
+    this.operation = data.operation;
     this.model = data.model;
     this.extended = data.customData.extended;
     this.pageTitle = data.customData.pageTitle;
@@ -114,7 +119,7 @@ export class MembersPopupComponent implements OnInit {
     const member: OrgMember = new OrgMember().clone(form);
 
     const jobTitle = this.jobTitles.find(e => e.id === form.jobTitleId);
-    member.jobTitleInfo = AdminResult.createInstance({ ...jobTitle });
+    member.jobTitleInfo = AdminResult.createInstance({...jobTitle});
     (member.joinDate && (member.joinDate = DateUtils.getDateStringFromDate(form.joinDate)));
     return member;
   }

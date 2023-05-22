@@ -1,15 +1,16 @@
-import { ComponentType } from '@angular/cdk/portal';
-import { Directive, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { Cloneable } from '@app/models/cloneable';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { DialogService } from '@app/services/dialog.service';
-import { FactoryService } from '@app/services/factory.service';
-import { LangService } from '@app/services/lang.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {ComponentType} from '@angular/cdk/portal';
+import {Directive, OnDestroy, OnInit} from '@angular/core';
+import {UntypedFormGroup} from '@angular/forms';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {Cloneable} from '@app/models/cloneable';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {DialogService} from '@app/services/dialog.service';
+import {FactoryService} from '@app/services/factory.service';
+import {LangService} from '@app/services/lang.service';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {OperationTypes} from "@enums/operation-types.enum";
 
 @Directive({})
 export abstract class ListModelComponent<T extends Cloneable<T>>
@@ -76,7 +77,8 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
           model: this.model,
           hideSave: this.hideSave,
           readonly: this.readonly,
-          customData: this.customData
+          customData: this.customData,
+          operation: OperationTypes.CREATE
         }).onAfterClose$.subscribe((data) => {
           if (data) {
             this.save(data);
@@ -123,9 +125,9 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
     const index = this._list.findIndex(e => e === row);
     this.model = this._list[index];
     this.editRecordIndex = index;
-    this._selectOne(row);
+    this._selectOne(row, viewOnly);
   }
-  _selectOne(row: T) {
+  _selectOne(row: T, viewOnly = false) {
     this.form.patchValue(row);
     this.dialogService.show(this._getPopupComponent(), {
       form: this.form,
@@ -133,7 +135,8 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
       model: this.model,
       hideSave: this.hideSave,
       readonly: this.readonly,
-      customData: this.customData
+      customData: this.customData,
+      operation: viewOnly ? OperationTypes.VIEW : OperationTypes.UPDATE
     }).onAfterClose$.subscribe((data) => {
       if (data) {
         this.save(data);
