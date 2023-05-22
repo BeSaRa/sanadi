@@ -51,6 +51,7 @@ import {DatepickerOptionsMap} from '@app/types/types';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {Observable, of} from 'rxjs';
 import {map, share, switchMap, takeUntil} from 'rxjs/operators';
+import {ITabData} from "@contracts/i-tab-data";
 
 @Component({
   selector: 'charity-organization-update',
@@ -62,8 +63,8 @@ export class CharityOrganizationUpdateComponent
     CharityOrganizationUpdateService>
   implements AfterViewInit {
   form!: UntypedFormGroup;
-  tabs: IKeyValue[] = [];
-  _tabs: IKeyValue[] = [];
+  tabs: ITabData[] = [];
+  _tabs: ITabData[] = [];
   charityOrganizations: CharityOrganization[] = [];
   logoFile?: File;
   loadedLogo?: BlobModel;
@@ -254,177 +255,249 @@ export class CharityOrganizationUpdateComponent
         name: 'requestTypeTab',
         template: tabsTemplates[0],
         title: this.lang.map.section,
+        langKey: 'section',
         validStatus: () => true,
+        isTouchedOrDirty: () => true,
+        index: 0
       },
       {
         name: 'metaDataTab',
         template: tabsTemplates[1],
         title: this.lang.map.meta_data,
+        langKey: 'meta_data',
         validStatus: () => !!this.form && this.metaDataForm.valid,
         category: CharityUpdateSection.META_DATA,
+        isTouchedOrDirty: () => true,
+        index: 1
       },
       {
         name: 'contactInformationTab',
         template: tabsTemplates[2],
         title: this.lang.map.contact_information,
+        langKey: 'contact_information',
         validStatus: () => !!this.form && this.contactInformationForm.valid,
         category: CharityUpdateSection.META_DATA,
+        isTouchedOrDirty: () => true,
+        index: 2
       },
       {
         name: 'complainceOfficerTab',
         template: tabsTemplates[3],
         title: this.lang.map.complaince_office_data,
+        langKey: 'complaince_office_data',
         validStatus: () => true,
         category: CharityUpdateSection.META_DATA,
+        isTouchedOrDirty: () => true,
+        index: 3
       },
       {
         name: 'liaisonOfficerTab',
         template: tabsTemplates[4],
         title: this.lang.map.liaison_office_data,
+        langKey: 'liaison_office_data',
         validStatus: () => true,
         category: CharityUpdateSection.META_DATA,
+        isTouchedOrDirty: () => true,
+        index: 4
       },
       {
         name: 'banchTab',
         template: tabsTemplates[5],
         title: this.lang.map.internal_branches,
+        langKey: 'internal_branches',
         validStatus: () => true,
         category: CharityUpdateSection.META_DATA,
+        isTouchedOrDirty: () => true,
+        index: 5
       },
       {
         name: 'externalBranchTab',
         template: tabsTemplates[6],
         title: this.lang.map.external_offices,
+        langKey: 'external_offices',
         validStatus: () => true,
         category: CharityUpdateSection.META_DATA,
+        isTouchedOrDirty: () => true,
+        index: 6
       },
       {
         name: 'foundingMembersTab',
         template: tabsTemplates[7],
         title: this.lang.map.founding_members,
+        langKey: 'founding_members',
         validStatus: () => true,
         category: CharityUpdateSection.ADMINISTRATIVE_DATA,
+        isTouchedOrDirty: () => true,
+        index: 7
       },
       {
         name: 'generalAssemblyMembersTab',
         template: tabsTemplates[8],
         title: this.lang.map.general_assembly_members,
+        langKey: 'general_assembly_members',
         validStatus: () => true,
         category: CharityUpdateSection.ADMINISTRATIVE_DATA,
+        isTouchedOrDirty: () => true,
+        index: 8
       },
       {
         name: 'boardMembersTab',
         template: tabsTemplates[9],
         title: this.lang.map.board_members,
+        langKey: 'board_members',
         validStatus: () => true,
         category: CharityUpdateSection.ADMINISTRATIVE_DATA,
+        isTouchedOrDirty: () => true,
+        index: 9
       },
       {
         name: 'executiveManagmentTab',
         template: tabsTemplates[10],
         title: this.lang.map.executive_management,
+        langKey: 'executive_management',
         validStatus: () => true,
         category: CharityUpdateSection.ADMINISTRATIVE_DATA,
+        isTouchedOrDirty: () => true,
+        index: 10
       },
       {
         name: 'authorizedMembersTab',
         template: tabsTemplates[11],
         title: this.lang.map.authrized_members,
+        langKey: 'authrized_members',
         validStatus: () => true,
         category: CharityUpdateSection.ADMINISTRATIVE_DATA,
+        isTouchedOrDirty: () => true,
+        index: 11
       },
       {
         name: 'realBenefeciariesTab',
         template: tabsTemplates[12],
         title: this.lang.map.real_benefeciaries,
+        langKey: 'real_benefeciaries',
         validStatus: () => true,
         category: CharityUpdateSection.ADMINISTRATIVE_DATA,
+        isTouchedOrDirty: () => true,
+        index: 12
       },
       {
         name: 'primaryLawTab',
         template: tabsTemplates[13],
         title: this.lang.map.primary_law,
+        langKey: 'primary_law',
         validStatus: () => this.primaryLawForm.valid,
         category: CharityUpdateSection.GOVERNANCE_DOCUMENTS,
         order: 0,
+        isTouchedOrDirty: () => true,
+        index: 13
       },
       {
         name: 'classifcationOfAidTab',
         template: tabsTemplates[14],
         title: this.lang.map.classification_of_foreign_aid,
+        langKey: 'classification_of_foreign_aid',
         validStatus: () => true,
         category: CharityUpdateSection.GOVERNANCE_DOCUMENTS,
         order: 3,
+        isTouchedOrDirty: () => true,
+        index: 14
       },
       {
         name: 'workAreasTab',
         template: tabsTemplates[15],
         title: this.lang.map.work_areas,
+        langKey: 'work_areas',
         validStatus: () => true,
         category: CharityUpdateSection.GOVERNANCE_DOCUMENTS,
         order: 4,
+        isTouchedOrDirty: () => true,
+        index: 15
 
       },
       {
         name: 'byLawsTab',
         template: tabsTemplates[16],
         title: this.lang.map.bylaws,
+        langKey: 'bylaws',
         validStatus: () => true,
         category: CharityUpdateSection.GOVERNANCE_DOCUMENTS,
-        order: 2
+        order: 2,
+        isTouchedOrDirty: () => true,
+        index: 16
       },
       {
         name: 'riskReportsTab',
         template: tabsTemplates[17],
         title: this.lang.map.risk_reports,
+        langKey: 'risk_reports',
         validStatus: () => true,
         category: CharityUpdateSection.COORDINATION_AND_CONTROL_REPORTS,
+        isTouchedOrDirty: () => true,
+        index: 17
       },
 
       {
         name: 'coordinationAndSupportsTab',
         template: tabsTemplates[18],
         title: this.lang.map.coordination_and_support_reports,
+        langKey: 'coordination_and_support_reports',
         validStatus: () => true,
         category: CharityUpdateSection.COORDINATION_AND_CONTROL_REPORTS,
+        isTouchedOrDirty: () => true,
+        index: 18
       },
 
       {
         name: 'organizationsReportTab',
         template: tabsTemplates[19],
         title: this.lang.map.reports_received_from_organization,
+        langKey: 'reports_received_from_organization',
         validStatus: () => true,
         category: CharityUpdateSection.COORDINATION_AND_CONTROL_REPORTS,
+        isTouchedOrDirty: () => true,
+        index: 19
       },
       {
         name: 'outgoingDecisionsTab',
         template: tabsTemplates[20],
         title: this.lang.map.decisions_by_organizations,
+        langKey: 'decisions_by_organizations',
         validStatus: () => true,
         category: CharityUpdateSection.APPROVE_MEASURES_AND_PENALTIES,
+        isTouchedOrDirty: () => true,
+        index: 20
       },
       {
         name: 'internalDecisionsTab',
         template: tabsTemplates[21],
         title: this.lang.map.internal_decisions,
+        langKey: 'internal_decisions',
         validStatus: () => true,
         category: CharityUpdateSection.APPROVE_MEASURES_AND_PENALTIES,
+        isTouchedOrDirty: () => true,
+        index: 21
       },
       {
         name: 'generalAssocationMeetingsTab',
         template: tabsTemplates[22],
         title: this.lang.map.meeting,
+        langKey: 'meeting',
         category: CharityUpdateSection.GOVERNANCE_DOCUMENTS,
         validStatus: () => true,
         order: 1,
+        isTouchedOrDirty: () => true,
+        index: 22
       },
       {
 
         name: 'allOfEmployeesTabs',
         template: tabsTemplates[23],
         title: this.lang.map.all_employees,
+        langKey: 'all_employees',
         category: CharityUpdateSection.ADMINISTRATIVE_DATA,
-        validStatus: () => true
+        validStatus: () => true,
+        isTouchedOrDirty: () => true,
+        index: 23
       }
     ];
     this.tabs = [this._tabs[0]];
@@ -433,8 +506,11 @@ export class CharityOrganizationUpdateComponent
         name: 'attachmentsTab',
         template: tabsTemplates[tabsTemplates.length - 1],
         title: this.lang.map.attachments,
+        langKey: 'attachments',
         validStatus: () => true,
-        hideIcon: true
+        hideIcon: true,
+        isTouchedOrDirty: () => true,
+        index: (tabsTemplates.length - 1)
       });
       this.tabs.push(this._tabs[this._tabs.length - 1]);
     }

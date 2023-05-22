@@ -16,7 +16,6 @@ import {SaveTypes} from '@enums/save-types';
 import {CollectionRequestType} from '@enums/service-request-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {CommonUtils} from '@helpers/common-utils';
-import {IKeyValue} from '@contracts/i-key-value';
 import {ForeignCountriesProjects} from '@models/foreign-countries-projects';
 import {ForeignCountriesProjectsResult} from '@models/foreign-countries-projects-results';
 import {ForeignCountriesProjectsSearchCriteria} from '@models/foreign-countries-projects-seach-criteria';
@@ -38,6 +37,7 @@ import {Profile} from '@models/profile';
 import {EmployeeService} from '@services/employee.service';
 import {ProfileCountryService} from '@services/profile-country.service';
 import {ProfileCountry} from '@models/profile-country';
+import {ITabData} from "@contracts/i-tab-data";
 
 @Component({
   selector: 'app-foreign-countries-projects',
@@ -47,7 +47,7 @@ import {ProfileCountry} from '@models/profile-country';
 export class ForeignCountriesProjectsComponent extends EServicesGenericComponent<ForeignCountriesProjects, ForeignCountriesProjectsService>
   implements AfterViewInit {
   form!: UntypedFormGroup;
-  tabs: IKeyValue[] = [];
+  tabs: ITabData[] = [];
   requestTypes: Lookup[] = this.lookupService.listByCategory.CollectionRequestType?.sort((a, b) => a.lookupKey - b.lookupKey);
   externalCooperations$ = this.profileService.getInternationalCooperation();
   organizationUnits: Profile[] = [];
@@ -55,22 +55,22 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   countries: ProfileCountry[] = [];
   selectedLicense?: ForeignCountriesProjects;
 
-  @ViewChildren('tabContent', { read: TemplateRef })
+  @ViewChildren('tabContent', {read: TemplateRef})
   tabsTemplates!: QueryList<TemplateRef<any>>;
 
   @ViewChild(ProjectNeedsComponent) projectNeedsComponentRef!: ProjectNeedsComponent;
 
   constructor(public lang: LangService,
-    public fb: UntypedFormBuilder,
-    public service: ForeignCountriesProjectsService,
-    private lookupService: LookupService,
-    private dialog: DialogService,
-    private licenseService: LicenseService,
-    private cd: ChangeDetectorRef,
-    private employeeService: EmployeeService,
-    private toast: ToastService,
-    private profileService: ProfileService,
-    private profileCountryService: ProfileCountryService,
+              public fb: UntypedFormBuilder,
+              public service: ForeignCountriesProjectsService,
+              private lookupService: LookupService,
+              private dialog: DialogService,
+              private licenseService: LicenseService,
+              private cd: ChangeDetectorRef,
+              private employeeService: EmployeeService,
+              private toast: ToastService,
+              private profileService: ProfileService,
+              private profileCountryService: ProfileCountryService,
   ) {
     super();
   }
@@ -110,6 +110,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
       }
     }
   }
+
   ngAfterViewInit(): void {
     const tabsTemplates = this.tabsTemplates.toArray();
     setTimeout(() => {
@@ -118,18 +119,27 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
           name: 'basicInfoTab',
           template: tabsTemplates[0],
           title: this.lang.map.lbl_basic_info,
+          langKey: 'lbl_basic_info',
+          index: 0,
+          isTouchedOrDirty: () => true,
           validStatus: () => this.isCancelRequestType || (this.form && this.basicInfo?.valid),
         },
         {
           name: 'projectNeedsTab',
           template: tabsTemplates[1],
           title: this.lang.map.project_needs,
+          langKey: 'project_needs',
+          index: 1,
+          isTouchedOrDirty: () => true,
           validStatus: () => this.isCancelRequestType || (this.form && this.projectNeedsComponentRef?.list.length > 0),
         },
         {
           name: 'specialExplanationsTab',
           template: tabsTemplates[2],
           title: this.lang.map.special_explanations,
+          langKey: 'special_explanations',
+          index: 2,
+          isTouchedOrDirty: () => true,
           validStatus: () => this.isCancelRequestType || (this.form && this.specialExplanation?.valid),
         },
       ];
@@ -138,6 +148,9 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
           name: 'attachmentsTab',
           template: tabsTemplates[tabsTemplates.length - 1],
           title: this.lang.map.attachments,
+          langKey: 'attachments',
+          index: tabsTemplates.length - 1,
+          isTouchedOrDirty: () => true,
           validStatus: () => true,
           hideIcon: true
         });
@@ -158,6 +171,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
         this.organizationUnits = list
       });
   }
+
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
     let value = '';
@@ -174,6 +188,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
       criteria as Partial<ForeignCountriesProjectsSearchCriteria>
     );
   }
+
   handleExternalCooperationAuthorityChange(e: any) {
     this.countryField.reset();
     this.profileCountryService.getCountriesByProfile(e).subscribe((data) => {
@@ -184,6 +199,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
       this.countries = data;
     })
   }
+
   listenToLicenseSearch(): void {
     this.licenseSearch$
       .pipe(
@@ -213,7 +229,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
                   if (!data) {
                     return of(null);
                   }
-                  return { selected: licenses[0], details: data };
+                  return {selected: licenses[0], details: data};
                 }),
                 catchError(() => {
                   return of(null);
@@ -280,19 +296,19 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
         takeUntil(this.destroy$),
         switchMap(() => this.confirmChangeRequestType(userInteraction))
       ).subscribe((clickOn: UserClickOn) => {
-        if (clickOn === UserClickOn.YES) {
-          if (userInteraction) {
-            this.resetForm$.next();
-            this.requestTypeField.setValue(requestTypeValue);
-            this.handleReadonly();
-            if (this.operation == OperationTypes.CREATE)
-              this.organizationIdFeild.setValue(this.employeeService.getProfile()?.id);
-          }
-          this.requestType$.next(requestTypeValue);
-        } else {
-          this.requestTypeField.setValue(this.requestType$.value);
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestTypeField.setValue(requestTypeValue);
+          this.handleReadonly();
+          if (this.operation == OperationTypes.CREATE)
+            this.organizationIdFeild.setValue(this.employeeService.getProfile()?.id);
         }
-      });
+        this.requestType$.next(requestTypeValue);
+      } else {
+        this.requestTypeField.setValue(this.requestType$.value);
+      }
+    });
   }
 
   getTabInvalidStatus(i: number): boolean {
@@ -351,6 +367,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   _beforeLaunch(): boolean | Observable<boolean> {
     return !!this.model && this.form.valid && this.model.canStart();
   }
+
   _afterLaunch(): void {
     this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
@@ -376,7 +393,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -442,15 +459,19 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   get oldLicenseFullSerialField(): UntypedFormControl {
     return this.basicInfo?.get('oldLicenseFullSerial') as UntypedFormControl;
   }
+
   get organizationIdFeild(): UntypedFormControl {
     return this.basicInfo?.get('organizationId')! as UntypedFormControl;
   }
+
   get countryField(): UntypedFormControl {
     return this.basicInfo.get('country')! as UntypedFormControl;
   }
+
   get specialExplanation(): UntypedFormGroup {
     return this.form.get('explanation')! as UntypedFormGroup;
   }
+
   get isExternalUser() {
     return this.employeeService.isExternalUser();
   }

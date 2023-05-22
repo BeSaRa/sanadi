@@ -2,7 +2,8 @@
   <form autocomplete="off" [formGroup]="form" id="form">
     <tabs-list [accordionView]="accordionView" [hasForm]="true">
       <ng-container *ngIf="tabs.length > 0">
-        <tab *ngFor="let tab of tabs; let i = index" [name]="tab.name" [template]="tab.template" [title]="tab.title"
+        <tab *ngFor="let tab of tabs; let i = index" [name]="tab.name" [template]="tab.template"
+             [title]="lang.map[tab.langKey]"
              [hasError]="getTabInvalidStatus(i)" [hideIcon]="tab.hideIcon">
         </tab>
       </ng-container>

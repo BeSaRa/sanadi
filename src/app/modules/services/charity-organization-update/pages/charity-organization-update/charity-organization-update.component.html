@@ -6,7 +6,7 @@
           *ngFor="let tab of tabs; let i = index"
           [name]="tab.name"
           [template]="tab.template"
-          [title]="tab.title"
+          [title]="lang.map[tab.langKey]"
           [hasError]="getTabInvalidStatus(i)"
           [hideIcon]="tab.hideIcon"
         >
@@ -449,7 +449,6 @@
               (click)="!readonly && dp1.toggleCalendar()"
               #dp1="angular-mydatepicker"
               angular-mydatepicker
-              [disabled]="readonly"
               validationClasses="firstReleaseDate"
             ></div>
             <app-field-error-message
@@ -476,7 +475,6 @@
               (click)="!readonly && dp.toggleCalendar()"
               #dp="angular-mydatepicker"
               angular-mydatepicker
-              [disabled]="readonly"
               validationClasses="lastUpdateDate"
             ></div>
             <app-field-error-message
