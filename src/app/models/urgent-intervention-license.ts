@@ -88,7 +88,7 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
   employeeService: EmployeeService;
   projectNameInfo!: AdminResult;
   licenseStartDateString: string = '';
-  licenseStartDateTimestamp!: number;
+  licenseStartDateTimestamp?: number | null;
 
   searchFields: ISearchFieldsMap<UrgentInterventionLicense> = {
     ...infoSearchFields(['caseStatusInfo', 'projectNameInfo', 'ouInfo']),

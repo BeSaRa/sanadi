@@ -23,6 +23,7 @@ export class UrgentInterventionLicenseInterceptor implements IModelInterceptor<U
     model.domainInfo && (model.domainInfo = AdminResult.createInstance(model.domainInfo));
     model.projectNameInfo = AdminResult.createInstance({arName: model.arName, enName: model.enName});
     model.licenseStartDateString = DateUtils.getDateStringFromDate(model.licenseStartDate);
+    model.licenseStartDateTimestamp = DateUtils.getTimeStampFromDate(model.licenseStartDate!);
     return model;
   }
 
