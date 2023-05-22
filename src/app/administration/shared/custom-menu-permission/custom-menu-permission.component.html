@@ -12,9 +12,7 @@
     </div>
   </div>-->
   <tabs-list>
-    <tab [name]="tabsData.menus.name" [template]="menusTabTemplate" [title]="langService.map.menus">
-
-    </tab>
+    <tab [name]="tabsData.menus.name" [template]="menusTabTemplate" [title]="langService.map.lbl_custom_menus"></tab>
     <tab [name]="tabsData.defaultMenus.name" [template]="defaultMenusTapTemplate" [title]="langService.map.systemMenus"></tab>
   </tabs-list>
   <ng-template #menusTabTemplate>

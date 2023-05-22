@@ -58,6 +58,8 @@ export class ExternalUserUpdateChangesPopupComponent implements OnInit {
   removedPermissionsList: Permission[] = [];
   addedUserMenusList: CustomMenu[] = [];
   removedUserMenusList: CustomMenu[] = [];
+  addedSystemUserMenusList: CustomMenu[] = [];
+  removedSystemUserMenusList: CustomMenu[] = [];
   servicePermissionDifferences: IExternalUserServicePermissionDifference[] = [];
 
   basicInfoDisplayedColumns: string[] = ['fieldName', 'oldValue', 'newValue'];
@@ -145,7 +147,11 @@ export class ExternalUserUpdateChangesPopupComponent implements OnInit {
       if (!this.model.oldMenuList.includes(newMenuId)) {
         const addedMenu = this.allCustomMenus.find(item => item.id === newMenuId);
         if (!!addedMenu) {
-          this.addedUserMenusList.push(addedMenu);
+          if (!!addedMenu.systemMenuKey){
+            this.addedSystemUserMenusList.push(addedMenu);
+          } else {
+            this.addedUserMenusList.push(addedMenu);
+          }
         }
       }
     });
@@ -156,7 +162,11 @@ export class ExternalUserUpdateChangesPopupComponent implements OnInit {
       if (!this.model.newMenuList.includes(oldMenuId)) {
         const removedMenu = this.allCustomMenus.find(item => item.id === oldMenuId);
         if (!!removedMenu) {
-          this.removedUserMenusList.push(removedMenu);
+          if (!!removedMenu.systemMenuKey){
+            this.removedSystemUserMenusList.push(removedMenu);
+          } else {
+            this.removedUserMenusList.push(removedMenu);
+          }
         }
       }
     });

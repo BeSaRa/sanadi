@@ -8,32 +8,7 @@
 </div>
 <div class="dialog-content w800px" #dialogContent>
   <heading-row [labelKey]="'lbl_basic_info'"></heading-row>
-  <div class="row">
-    <div class="col-12">
-      <app-table #table [data]="basicInfoDifferences"
-                 [columns]="basicInfoDisplayedColumns">
-        <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
-          <ng-container cdkColumnDef="fieldName">
-            <th cdk-header-cell *cdkHeaderCellDef></th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.labelInfo ? row.labelInfo.getName() : ''}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="oldValue">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.old_value}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.oldValueInfo ? row.oldValueInfo.getName() : ''}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="newValue">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.new_value}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.newValueInfo ? row.newValueInfo.getName() : ''}}</span></td>
-          </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
-          <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
-          <tr *cdkNoDataRow>
-            <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-          </tr>
-        </table>
-      </app-table>
-    </div>
-  </div>
+  <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
 
   <heading-row [labelKey]="'lbl_permissions'"></heading-row>
   <div class="row">
@@ -75,39 +50,81 @@
 
   <heading-row [labelKey]="'menus'"></heading-row>
   <div class="row">
-    <div class="col-sm-12 col-md-6">
-      <app-table #addedMenusTable [data]="addedUserMenusList"
-                 [columns]="addedMenusDisplayedColumns">
-        <table class="table table-striped table-bordered caption-top" cdk-table
-               [dataSource]="addedMenusTable.dataSource">
-          <ng-container cdkColumnDef="menus">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.added_menus}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.getName()}}</span></td>
-          </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="addedMenusTable.columns" class="table-row-header"></tr>
-          <tr cdk-row *cdkRowDef="let row; columns: addedMenusTable.columns;"></tr>
-          <tr *cdkNoDataRow>
-            <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-          </tr>
-        </table>
-      </app-table>
-    </div>
-    <div class="col-sm-12 col-md-6">
-      <app-table #removedMenusTable [data]="removedUserMenusList"
-                 [columns]="removedMenusDisplayedColumns">
-        <table class="table table-striped table-bordered caption-top" cdk-table
-               [dataSource]="removedMenusTable.dataSource">
-          <ng-container cdkColumnDef="menus">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.removed_menus}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.getName()}}</span></td>
-          </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="removedMenusTable.columns" class="table-row-header"></tr>
-          <tr cdk-row *cdkRowDef="let row; columns: removedMenusTable.columns;"></tr>
-          <tr *cdkNoDataRow>
-            <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-          </tr>
-        </table>
-      </app-table>
+    <div class="col-12">
+      <div class="row ps-3">
+        <heading-row [labelKey]="'lbl_custom_menus'"></heading-row>
+        <div class="col-sm-12 col-md-6">
+          <app-table #addedMenusTable [data]="addedUserMenusList"
+                     [columns]="addedMenusDisplayedColumns">
+            <table class="table table-striped table-bordered caption-top" cdk-table
+                   [dataSource]="addedMenusTable.dataSource">
+              <ng-container cdkColumnDef="menus">
+                <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.added_menus}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.getName()}}</span></td>
+              </ng-container>
+              <tr cdk-header-row *cdkHeaderRowDef="addedMenusTable.columns" class="table-row-header"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: addedMenusTable.columns;"></tr>
+              <tr *cdkNoDataRow>
+                <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+              </tr>
+            </table>
+          </app-table>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <app-table #removedMenusTable [data]="removedUserMenusList"
+                     [columns]="removedMenusDisplayedColumns">
+            <table class="table table-striped table-bordered caption-top" cdk-table
+                   [dataSource]="removedMenusTable.dataSource">
+              <ng-container cdkColumnDef="menus">
+                <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.removed_menus}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.getName()}}</span></td>
+              </ng-container>
+              <tr cdk-header-row *cdkHeaderRowDef="removedMenusTable.columns" class="table-row-header"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: removedMenusTable.columns;"></tr>
+              <tr *cdkNoDataRow>
+                <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+              </tr>
+            </table>
+          </app-table>
+        </div>
+      </div>
+      <div class="row ps-3">
+        <heading-row [labelKey]="'systemMenus'"></heading-row>
+        <div class="col-sm-12 col-md-6">
+          <app-table #addedSystemMenusTable [data]="addedSystemUserMenusList"
+                     [columns]="addedMenusDisplayedColumns">
+            <table class="table table-striped table-bordered caption-top" cdk-table
+                   [dataSource]="addedSystemMenusTable.dataSource">
+              <ng-container cdkColumnDef="menus">
+                <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.added_menus}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.getName()}}</span></td>
+              </ng-container>
+              <tr cdk-header-row *cdkHeaderRowDef="addedSystemMenusTable.columns" class="table-row-header"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: addedSystemMenusTable.columns;"></tr>
+              <tr *cdkNoDataRow>
+                <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+              </tr>
+            </table>
+          </app-table>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <app-table #removedSystemMenusTable [data]="removedSystemUserMenusList"
+                     [columns]="removedMenusDisplayedColumns">
+            <table class="table table-striped table-bordered caption-top" cdk-table
+                   [dataSource]="removedSystemMenusTable.dataSource">
+              <ng-container cdkColumnDef="menus">
+                <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.removed_menus}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.getName()}}</span></td>
+              </ng-container>
+              <tr cdk-header-row *cdkHeaderRowDef="removedSystemMenusTable.columns" class="table-row-header"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: removedSystemMenusTable.columns;"></tr>
+              <tr *cdkNoDataRow>
+                <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+              </tr>
+            </table>
+          </app-table>
+        </div>
+      </div>
     </div>
   </div>
 
