@@ -7,6 +7,7 @@ export class UserTeamInterceptor implements IModelInterceptor<UserTeam> {
     delete model.teamInfo;
     delete model.arName;
     delete model.enName;
+    delete model.langService;
     return model;
   }
 

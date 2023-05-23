@@ -398,7 +398,10 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
       caseType: this.BD_CASE_TYPE
     });
   }
-
+  assign(domainName:string){
+    this.OWNER =  domainName;
+    return this;
+  }
   getResponses(): string[] {
     return this.RESPONSES;
   }

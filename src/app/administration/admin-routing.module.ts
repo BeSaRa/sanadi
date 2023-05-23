@@ -37,6 +37,7 @@ import {
 } from '@app/administration/pages/external-user-update-approval/external-user-update-request-approval.component';
 import {GlobalSettingsComponent} from '@app/administration/pages/global-settings/global-settings.component';
 import {ErrorPageComponent} from '@app/shared/components/error-page/error-page.component';
+import { ManageUserInboxComponent } from './pages/manage-user-inbox/manage-user-inbox.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -229,6 +230,11 @@ const routes: Routes = [
   },
   {
     path: 'admin-license', component: AdminLicenseComponent,
+    canActivate: [PermissionGuard.canActivate],
+    data: {permissionKey: '', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'manage-user-inbox', component: ManageUserInboxComponent,
     canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: '', configPermissionGroup: null, checkAnyPermission: false}
   },

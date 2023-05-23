@@ -149,6 +149,7 @@ import { SetVacationPopupComponent } from './popups/set-vacation-popup/set-vacat
 
 import {CaseAuditLogComponent} from '@app/shared/components/case-audit-log/case-audit-log.component';
 import {ValueDifferencesListComponent} from './components/value-differences-list/value-differences-list.component';
+import { LangNamePipe } from './pipes/lang-name.pipe';
 
 @NgModule({
   declarations: [
@@ -267,7 +268,8 @@ import {ValueDifferencesListComponent} from './components/value-differences-list
     ValueDifferencesListComponent,
     EServiceWrapperButtonsComponent,
     VacationTableComponent,
-    SetVacationPopupComponent
+    SetVacationPopupComponent,
+    LangNamePipe
   ],
   imports: [
     CommonModule,
@@ -368,7 +370,8 @@ import {ValueDifferencesListComponent} from './components/value-differences-list
     HeaderSearchFieldComponent,
     CountryPopupComponent,
     CaseAuditLogComponent,
-    ValueDifferencesListComponent
+    ValueDifferencesListComponent,
+    LangNamePipe
   ]
 })
 export class SharedModule {

@@ -1,3 +1,4 @@
+import { LangService } from './../services/lang.service';
 import { AdminResult } from "./admin-result";
 import { Cloneable } from "@app/models/cloneable";
 import { Observable } from "rxjs";
@@ -7,6 +8,7 @@ import { map } from "rxjs/operators";
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { InterceptModel } from "@decorators/intercept-model";
 import { UserTeamInterceptor } from "@app/model-interceptors/user-team-interceptor";
+import { INames } from '@app/interfaces/i-names';
 
 const interceptor = new UserTeamInterceptor()
 
@@ -24,10 +26,14 @@ export class UserTeam extends Cloneable<UserTeam> {
   arName?: string;
   enName?: string;
   service!: UserTeamService
+  langService!: LangService;
+
 
   constructor() {
     super();
     this.service = FactoryService.getService('UserTeamService');
+    this.langService = FactoryService.getService('LangService');
+
   }
 
   denormalize(): UserTeam {
@@ -35,7 +41,9 @@ export class UserTeam extends Cloneable<UserTeam> {
     this.enName = this.teamInfo.enName;
     return this;
   }
-
+  getName(): string | undefined {
+    return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
   isActive(): boolean {
     return Number(this.status) === CommonStatusEnum.ACTIVATED;
   }

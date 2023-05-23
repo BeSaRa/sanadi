@@ -1,0 +1,122 @@
+<div class="row mb-4">
+  <div class="col-sm-6" *ngIf="isInternal">
+    <div class="d-flex align-items-center justify-content-start">
+      <h1 class="h6 text-primary">{{lang.map.lbl_user_type}}</h1>
+      <div style="width: 90%; margin-inline-start: .5rem;">
+        <select [formControl]="userTypesControl" class="form-select">
+          <option [ngValue]="userType.lookupKey" *ngFor="let userType of userTypes">{{userType | langName}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6" *ngIf="!isInternal">
+    <div class="d-flex align-items-center justify-content-start">
+      <h1 class="h6 text-primary">{{lang.map.menu_teams}}</h1>
+      <div style="width: 90%; margin-inline-start: .5rem;">
+        <select [formControl]="teamsControl" class="form-select">
+          <option [ngValue]="team.teamId" *ngFor="let team of userTeams">{{team | langName }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="d-flex align-items-center justify-content-start ">
+      <h1 class="h6 text-primary">{{lang.map.employees}}</h1>
+      <div style="width: 90%; margin-inline-start: .5rem;">
+        <select [formControl]="userControl" class="form-select" [disabled]="true">
+          <option [ngValue]="user" *ngFor="let user of users">{{user | langName}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <app-table #table [filter]="filterControl.value" [useSearchToFilter]="true" [selectable]="true"
+      [data]="queryResultSet?.items?? []" [columns]="columns" sortableTable>
+      <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="menu_user_inbox" (textChange)="filterControl.setValue($event)"
+              [sort]="table.dataSource.sort">
+              <!-- <ng-container *ngTemplateOutlet="bulk"></ng-container> -->
+            </table-header>
+          </th>
+        </ng-container>
+        <ng-container cdkColumnDef="rowSelection">
+          <th class="select-all-td" cdk-header-cell *cdkHeaderCellDef>
+            <input type="checkbox" [disabled]="table.filter"
+              [indeterminate]="table.selection.hasValue() && !table.allSelected()"
+              (change)="$event ? table.toggleAll() : null" [checked]="table.selection.hasValue() && table.allSelected()"
+              class="form-check-input">
+          </th>
+          <td cdk-cell *cdkCellDef="let row">
+            <input type="checkbox" (click)="$event.stopPropagation()" [checked]="table.selection.isSelected(row)"
+              (change)="$event ? table.selection.toggle(row) : null" class="form-check-input">
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="BD_FULL_SERIAL">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+          <td cdk-cell *cdkCellDef="let row">
+            <span class="dir-ltr text-primary cursor-pointer text-decoration-underline">{{row.BD_FULL_SERIAL}}</span>
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="workItemStatus">
+          <th style="width:8px" class="p-0" cdk-header-cell sortable-header *cdkHeaderCellDef></th>
+          <td cdk-cell class="position-relative p-0" *cdkCellDef="let row">
+            <work-item-status [item]="row"></work-item-status>
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="ACTIVATED">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.received_data}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.ACTIVATED|date}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="action">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">{{lang.map.action}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.displayNameInfo ? row.displayNameInfo.getName() : ''}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="PI_CREATE">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.PI_CREATE|date}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="PI_DUE">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.due_date}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.PI_DUE|date}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="BD_CASE_TYPE">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.service_type}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{getServiceName(row.BD_CASE_TYPE)}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="fromUserInfo">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.sender}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.fromUserInfo.getName()}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="BD_SUBJECT">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.subject}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.BD_SUBJECT}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="orgInfo">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.orgInfo.getName()}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="actions">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+          <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+            </grid-actions>
+          </td>
+        </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+        <tr cdk-header-row *cdkHeaderRowDef="columns" class="table-row-header"></tr>
+        <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: columns;"></tr>
+        <tr *cdkNoDataRow>
+          <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+        </tr>
+      </table>
+
+    </app-table>
+    <context-menu-item #menu [actions]="actions"></context-menu-item>
+  </div>
+</div>

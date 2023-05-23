@@ -1967,4 +1967,6 @@ export interface ILanguageKeys {
   izzab_has_estate: string;
   izzab_has_no_estate: string;
   msg_upload_missing_x: string;
+  menu_manage_user_inbox: string;
+  reassign_task:string;
 }
