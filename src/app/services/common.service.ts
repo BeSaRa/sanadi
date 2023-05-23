@@ -7,6 +7,7 @@ import {Common} from '@app/models/common';
 import {catchError, map, tap} from 'rxjs/operators';
 import {AdminResult} from '@app/models/admin-result';
 import {ImplementingAgencyTypes} from "@app/enums/implementing-agency-types.enum";
+import { QueryResult } from '@app/models/query-result';
 
 @Injectable({
   providedIn: 'root'
@@ -69,6 +70,30 @@ export class CommonService {
         fromObject: {
           type,
           country
+        }
+      })
+    })
+  }
+  @CastResponse(() => AdminResult)
+  loadExternalAssignUsers(profileId:number,tasks:QueryResult[] = []): Observable<AdminResult[]> {
+    return this.http.get<AdminResult[]>(this._getURLSegment() + '/external/assign-user', {
+
+      params: new HttpParams({
+        fromObject: {
+          tasks:JSON.stringify(tasks),
+          profileId
+        }
+      })
+    })
+  }
+  @CastResponse(() => AdminResult)
+  loadInternalAssignUsers(departmentId :number,tasks:QueryResult[] = []): Observable<AdminResult[]> {
+
+    return this.http.get<AdminResult[]>(this._getURLSegment() + '/internal/assign-user', {
+      params: new HttpParams({
+        fromObject: {
+          tasks:JSON.stringify(tasks),
+          departmentId
         }
       })
     })

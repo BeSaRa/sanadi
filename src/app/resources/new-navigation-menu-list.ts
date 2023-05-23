@@ -2766,4 +2766,17 @@ export const newNavigationMenuList = [
     itemOrder: 22,
     svg: null
   },
+  {
+    id: 89,
+    langKey: 'menu_manage_user_inbox',
+    path: '/home/administration/manage-user-inbox',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.INBOX_FOLLOW_UP,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 23,
+    svg: null
+  },
 ];
