@@ -1,85 +1,93 @@
-<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-  <h1 class="h6 text-white">{{ editItem > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
-    lang.map.executive }}</h1>
-  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
+  </div>
 </div>
-<div class="dialog-content no-fixed-height">
+<div class="dialog-content w800px" #dialogContent>
   <div [formGroup]="form">
     <div class="row">
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="nameLikePassport" class="form-label"
                for="nameLikePassport">{{lang.map.name_in_local_language_like_passport}}</label>
-        <input [readonly]="(readonly)" class="form-control"
-               formControlName="nameLikePassport"
-               id="nameLikePassport" validationClasses="nameLikePassport">
+        <input [readonly]="(readonly)" class="form-control" formControlName="nameLikePassport"
+               id="nameLikePassport" validationClasses="nameLikePassport" trimInput>
         <app-field-error-message controlName="nameLikePassport"></app-field-error-message>
       </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="englishNameLikePassport" class="form-label"
                for="englishNameLikePassport">{{lang.map.name_in_English_language_like_passport}}</label>
         <input [readonly]="(readonly)" class="form-control" formControlName="englishNameLikePassport"
-               id="englishNameLikePassport" validationClasses="englishNameLikePassport">
+               id="englishNameLikePassport" validationClasses="englishNameLikePassport" trimInput>
         <app-field-error-message controlName="englishNameLikePassport"></app-field-error-message>
-      </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
-        <label asteriskIfRequired="jobTitle" class="form-label"
-               for="jobTitle">{{lang.map.job_title}}</label>
-        <input [readonly]="(readonly)" class="form-control" formControlName="jobTitle"
-               id="jobTitle" validationClasses="jobTitle">
-        <app-field-error-message controlName="jobTitle"></app-field-error-message>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="jobTitle" class="form-label"
+               for="jobTitle">{{lang.map.job_title}}</label>
+        <input [readonly]="(readonly)" class="form-control" formControlName="jobTitle"
+               id="jobTitle" validationClasses="jobTitle" trimInput>
+        <app-field-error-message controlName="jobTitle"></app-field-error-message>
+      </div>
+      <div class="col-md-6 col-sm-12 mb-4 ng-select-wrapper">
         <label asteriskIfRequired="executiveNationality" class="form-label"
                for="executiveNationality">{{lang.map.lbl_nationality}}</label>
         <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
                    formControlName="executiveNationality"
+                   placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found"
                    id="executiveNationality" validationClasses="executiveNationality">
           <ng-option *ngFor="let option of nationalities"
                      [value]="option.lookupKey">{{option.getName()}}</ng-option>
         </ng-select>
         <app-field-error-message controlName="executiveNationality"></app-field-error-message>
       </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="executiveIdentificationNumber" class="form-label"
                for="executiveIdentificationNumber">{{lang.map.national_id_number}}</label>
-        <input [readonly]="(readonly)" class="form-control"
-               formControlName="executiveIdentificationNumber"
-               id="executiveIdentificationNumber" validationClasses="executiveIdentificationNumber">
+        <input [readonly]="(readonly)" class="form-control" formControlName="executiveIdentificationNumber"
+               id="executiveIdentificationNumber" validationClasses="executiveIdentificationNumber" trimInput>
         <app-field-error-message controlName="executiveIdentificationNumber"></app-field-error-message>
       </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="passportNumber" class="form-label"
                for="passportNumber">{{lang.map.passport_number}}</label>
-        <input [readonly]="(readonly)" class="form-control"
-               formControlName="passportNumber"
-               id="passportNumber" validationClasses="passportNumber">
+        <input [readonly]="(readonly)" class="form-control" formControlName="passportNumber"
+               id="passportNumber" validationClasses="passportNumber" trimInput>
         <app-field-error-message controlName="passportNumber"></app-field-error-message>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="executivephone1" class="form-label"
                for="executivephone1">{{lang.map.lbl_phone_1}}</label>
-        <input [readonly]="(readonly)" class="form-control"
-               formControlName="executivephone1"
-               id="executivephone1" validationClasses="executivephone1">
+        <input [readonly]="(readonly)" class="form-control" formControlName="executivephone1"
+               id="executivephone1" validationClasses="executivephone1" trimInput>
         <app-field-error-message controlName="executivephone1"></app-field-error-message>
       </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="executivephone2" class="form-label"
                for="executivephone2">{{lang.map.lbl_phone_2}}</label>
-        <input [readonly]="(readonly)" class="form-control"
-               formControlName="executivephone2"
-               id="executivephone2" validationClasses="executivephone2">
+        <input [readonly]="(readonly)" class="form-control" formControlName="executivephone2"
+               id="executivephone2" validationClasses="executivephone2" trimInput>
         <app-field-error-message controlName="executivephone2"></app-field-error-message>
       </div>
     </div>
   </div>
 </div>
 <div class="dialog-actions">
-  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly"
-    class="btn btn-primary m-2">{{editItem > -1 ? lang.map.btn_save : lang.map.btn_add}}</button>
-  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

@@ -62,9 +62,11 @@ import {
   IGeneralAssociationMeetingAttendanceFinalApprove
 } from '@contracts/i-general-association-meeting-attendance-final-approve';
 import {ProjectImplementation} from '@models/project-implementation';
-import {CommonUtils} from '@helpers/common-utils';
 import {WrapperButtonsGroupEnum} from '@enums/wrapper-buttons-group-enum';
 import {UrgentInterventionLicenseFollowup} from '@models/urgent-intervention-license-followup';
+import {
+  TransferringIndividualFundsAbroadComponent
+} from "@modules/services/transferring-individual-funds-abroad/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -1723,9 +1725,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     if (this.isCompleteWithSave(item)) {
       if (item.getCaseType() === CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD) {
         const model = item as unknown as ITransferIndividualFundsAbroadComplete;
-        const component = this.component as unknown as ITransferFundsAbroadComponent;
-
-        model.completeWithForm(component.form, component.selectedExecutives, component.selectedPurposes).onAfterClose$.subscribe(actionTaken => {
+        const component = this.component as unknown as TransferringIndividualFundsAbroadComponent;
+        let executives = component.executiveManagementListComponentRef?.list ?? [];
+        let purposes = component.transferPurposeListRef?.list ?? [];
+        model.completeWithForm(component.form, executives, purposes).onAfterClose$.subscribe(actionTaken => {
           actionTaken && this.navigateToSamePageThatUserCameFrom();
         });
       } else if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {

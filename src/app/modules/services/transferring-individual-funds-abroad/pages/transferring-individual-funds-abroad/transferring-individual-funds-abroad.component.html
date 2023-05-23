@@ -1,38 +1,44 @@
 <div class="row">
   <tabs-list [accordionView]="accordionView" [hasForm]="true">
-    <tab [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info" name="basic_info">
+    <tab [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"
+         [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')">
     </tab>
-    <tab [hasError]="requesterInfo.invalid" [template]="requester_info" [title]="lang.map.requester_info"
-         name="requester_info">
+    <tab [template]="requesterInfoTemplate" [title]="lang.map.requester_info"
+         [name]="tabsData.requesterInfo.name" [hasError]="getTabInvalidStatus('requesterInfo')">
     </tab>
-    <tab *ngIf="isExternalOrganizationTransferee" [hasError]="receiverOrganizationInfo.invalid"
-         [template]="receiver_organization_info" [title]="lang.map.receiver_organization_info"
-         name="receiver_organization_info">
+    <tab *ngIf="isExternalOrganizationTransferee"
+         [template]="receiverOrganizationInfoTemplate" [title]="lang.map.receiver_organization_info"
+         [name]="tabsData.receiverOrganizationInfo.name" [hasError]="getTabInvalidStatus('receiverOrganizationInfo')">
     </tab>
-    <tab *ngIf="isExternalOrganizationTransferee" [template]="executive_management_info"
-         [title]="lang.map.executive_management_info" name="executive_management_info"
-         [hasError]="(selectedExecutives && selectedExecutives.length === 0) && isExternalOrganizationTransferee">
+    <tab *ngIf="isExternalOrganizationTransferee" [template]="executiveManagementInfoTemplate"
+         [title]="lang.map.executive_management_info" [name]="tabsData.executiveManagementInfo.name"
+         [hasError]="getTabInvalidStatus('executiveManagementInfo')">
     </tab>
-    <tab *ngIf="isIndividualTransferee" [hasError]="receiverPersonInfo.invalid" [template]="receiver_person_info"
-         [title]="lang.map.receiver_person_info" name="receiver_person_info">
+    <tab *ngIf="isIndividualTransferee" [template]="receiverPersonInfoTemplate"
+         [title]="lang.map.receiver_person_info" [name]="tabsData.receiverPersonInfo.name"
+         [hasError]="getTabInvalidStatus('receiverPersonInfo')">
     </tab>
-    <tab [template]="transfer_purpose_info" [title]="lang.map.transfer_purpose" name="transfer_purpose_info"
-         [hasError]="(selectedPurposes && selectedPurposes.length === 0 && !isCancel)">
+    <tab [template]="transferPurposeInfoTemplate" [title]="lang.map.transfer_purpose"
+         [name]="tabsData.transferPurposeInfo.name"
+         [hasError]="getTabInvalidStatus('transferPurposeInfo')">
     </tab>
-    <tab [hasError]="financialTransactionInfo.invalid" [template]="financial_transaction_info"
-         [title]="lang.map.financial_transaction_info" name="financial_transaction_info">
+    <tab [template]="financialTransactionInfoTemplate"
+         [title]="lang.map.financial_transaction_info" [name]="tabsData.financialTransactionInfo.name"
+         [hasError]="getTabInvalidStatus('financialTransactionInfo')">
     </tab>
-    <tab *ngIf="isPeriodicalTransferType" [hasError]="(selectedPayments && selectedPayments.length === 0 && !isCancel)"
-         [template]="payment_info" [title]="lang.map.payments" name="payment_info">
+    <tab *ngIf="isPeriodicalTransferType"
+         [template]="paymentInfoTemplate" [title]="lang.map.payments" [name]="tabsData.payments.name"
+         [hasError]="getTabInvalidStatus('payments')">
     </tab>
-    <tab [hasError]="specialExplanation.invalid" [template]="special_explanations"
-         [title]="lang.map.special_explanations" name="special_explanations"></tab>
+    <tab [template]="specialExplanationsTemplate"
+         [title]="lang.map.special_explanations" [name]="tabsData.specialExplanations.name"
+         [hasError]="getTabInvalidStatus('specialExplanations')"></tab>
     <tab *ngIf="!accordionView" [hideIcon]="true" [template]="attachmentsTab" [title]="lang.map.attachments"
-         name="attachments"></tab>
+         [name]="tabsData.attachments.name"></tab>
   </tabs-list>
   <ng-container [formGroup]="form">
     <ng-container formGroupName="basicInfo">
-      <ng-template #basic_info>
+      <ng-template #basicInfoTemplate>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="requestType" class="form-label"
@@ -69,53 +75,50 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-12 position-relative">
-            <div class="row" *ngIf="hasSearchedForLicense">
-              <div class="col-12 position-relative">
-                <h1 class="h6 text-primary">{{lang.map.selected_license_info}}</h1>
-                <div class="table-responsive">
-                  <app-table #table [useSearchToFilter]="true" [selectable]="true" [data]="selectedLicenses"
-                             [columns]="selectedLicenseDisplayedColumns" sortableTable>
-                    <table cdk-table [dataSource]="table.dataSource"
-                           class="table table-striped table-bordered caption-top">
-                      <ng-container cdkColumnDef="serial">
-                        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
-                        <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>
-                      </ng-container>
-                      <ng-container cdkColumnDef="requestType">
-                        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.request_type}}</th>
-                        <td cdk-cell *cdkCellDef="let row"> {{row.requestTypeInfo.getName()}} </td>
-                      </ng-container>
-                      <ng-container cdkColumnDef="licenseStatus">
-                        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
-                        <td cdk-cell *cdkCellDef="let row"> {{row.licenseStatusInfo.getName()}} </td>
-                      </ng-container>
-                      <ng-container cdkColumnDef="actions">
-                        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-                        <td cdk-cell *cdkCellDef="let row">
-                          <a type="button" [tooltip]="lang.map.view" (click)="viewSelectedLicense()">
-                            <i class="mdi mdi-file-pdf-box text-primary"></i>
-                          </a>
-                        </td>
-                      </ng-container>
-                      <tr cdk-header-row *cdkHeaderRowDef="selectedLicenseDisplayedColumns"></tr>
-                      <tr cdk-row *cdkRowDef="let row; columns: selectedLicenseDisplayedColumns;"></tr>
-                      <!--suppress HtmlUnknownBooleanAttribute -->
-                      <tr *cdkNoDataRow>
-                        <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-                      </tr>
-                    </table>
-                  </app-table>
-                </div>
-              </div>
+        <ng-container *ngIf="hasSearchedForLicense">
+          <heading-row [labelKey]="'selected_license_info'" [hideHorizontalLine]="true"
+                       [removeBottomMargin]="true"></heading-row>
+          <div class="row">
+            <div class="col-12">
+              <app-table #table [useSearchToFilter]="true" [selectable]="true" [data]="selectedLicenses"
+                         [columns]="selectedLicenseDisplayedColumns" sortableTable>
+                <table cdk-table [dataSource]="table.dataSource"
+                       class="table table-striped table-bordered caption-top">
+                  <ng-container cdkColumnDef="serial">
+                    <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+                    <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>
+                  </ng-container>
+                  <ng-container cdkColumnDef="requestType">
+                    <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.request_type}}</th>
+                    <td cdk-cell *cdkCellDef="let row"> {{row.requestTypeInfo.getName()}} </td>
+                  </ng-container>
+                  <ng-container cdkColumnDef="licenseStatus">
+                    <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
+                    <td cdk-cell *cdkCellDef="let row"> {{row.licenseStatusInfo.getName()}} </td>
+                  </ng-container>
+                  <ng-container cdkColumnDef="actions">
+                    <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+                    <td cdk-cell *cdkCellDef="let row">
+                      <a type="button" [tooltip]="lang.map.view" (click)="viewSelectedLicense()">
+                        <i class="mdi mdi-file-pdf-box text-primary"></i>
+                      </a>
+                    </td>
+                  </ng-container>
+                  <tr cdk-header-row *cdkHeaderRowDef="selectedLicenseDisplayedColumns" class="table-row-header"></tr>
+                  <tr cdk-row *cdkRowDef="let row; columns: selectedLicenseDisplayedColumns;"></tr>
+                  <!--suppress HtmlUnknownBooleanAttribute -->
+                  <tr *cdkNoDataRow>
+                    <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+                  </tr>
+                </table>
+              </app-table>
             </div>
           </div>
-        </div>
+        </ng-container>
       </ng-template>
     </ng-container>
     <ng-container formGroupName="requesterInfo">
-      <ng-template #requester_info>
+      <ng-template #requesterInfoTemplate>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="arName" class="form-label" for="arName">{{lang.map.arabic_name}}</label>
@@ -178,7 +181,7 @@
       </ng-template>
     </ng-container>
     <ng-container formGroupName="receiverOrganizationInfo">
-      <ng-template #receiver_organization_info>
+      <ng-template #receiverOrganizationInfoTemplate>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="organizationArabicName" class="form-label"
@@ -310,73 +313,16 @@
         </div>
       </ng-template>
     </ng-container>
-    <ng-container [formGroup]="executiveManagementForm">
-      <ng-template #executive_management_info>
-        <div class="row">
-          <div class="col-12">
-            <app-table #table [columns]="executiveDisplayedColumns" [data]="selectedExecutives" [selectable]="true"
-                       [useSearchToFilter]="true" sortableTable>
-              <table [dataSource]="table.dataSource" cdk-table class="table table-striped table-bordered caption-top">
-                <ng-container cdkColumnDef="extra-header">
-                  <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-                    <table-header tableTitle="executives" [skipSearch]="true"
-                                  [add$]="addExecutive$" [allowAdd]="isExternalUser && !isCancel"
-                                  [skipClearSort]="true">
-                    </table-header>
-                  </th>
-                </ng-container>
-                <ng-container cdkColumnDef="localName">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header>
-                    {{lang.map.name_in_local_language_like_passport}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.nameLikePassport}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="englishName">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header>
-                    {{lang.map.name_in_English_language_like_passport}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.englishNameLikePassport}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="jobTitle">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.job_title}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.jobTitle}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="nationality">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.lbl_nationality}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.executiveNationalityInfo?.getName() || ''}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="identificationNumber">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.national_id_number}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.executiveIdentificationNumber}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="actions">
-                  <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
-                  <td *cdkCellDef="let row" cdk-cell class="table-actions">
-                    <div class="d-flex flex-row">
-                      <button (click)="removeExecutive($event, row)" [disabled]="(readonly || isCancel)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
-                        <i class="mdi mdi-close-box"></i>
-                      </button>
-                      <button (click)="selectExecutive($event, row)" [disabled]="(readonly || isCancel)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
-                        <i class="mdi mdi-pen"></i>
-                      </button>
-                    </div>
-                  </td>
-                </ng-container>
-                <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-                <tr *cdkHeaderRowDef="executiveDisplayedColumns" cdk-header-row></tr>
-                <tr *cdkRowDef="let row; columns: executiveDisplayedColumns;" cdk-row></tr>
-                <!--suppress HtmlUnknownBooleanAttribute -->
-                <tr *cdkNoDataRow>
-                  <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
-                </tr>
-              </table>
-            </app-table>
-          </div>
-        </div>
+    <ng-container>
+      <ng-template #executiveManagementInfoTemplate>
+        <tifa-executive-management-list #executiveManagementListComponent
+                                        [list]="model?.executiveManagementList || []"
+                                        [isCancel]="isCancel" [readonly]="readonly">
+        </tifa-executive-management-list>
       </ng-template>
     </ng-container>
     <ng-container formGroupName="receiverPersonInfo">
-      <ng-template #receiver_person_info>
+      <ng-template #receiverPersonInfoTemplate>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverNameLikePassport" class="form-label"
@@ -456,77 +402,16 @@
         </div>
       </ng-template>
     </ng-container>
-    <ng-container [formGroup]="transferPurposeForm">
-      <ng-template #transfer_purpose_info>
-        <div class="row">
-          <div class="col-12">
-            <app-table #table [columns]="purposeDisplayedColumns" [data]="selectedPurposes" [selectable]="true"
-                       [useSearchToFilter]="true" [filter]="filterControl.value" sortableTable>
-              <table [dataSource]="table.dataSource" cdk-table class="table table-striped table-bordered caption-top">
-                <ng-container cdkColumnDef="extra-header">
-                  <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-                    <table-header tableTitle="purposes"
-                                  (textChange)="filterControl.setValue($event)" [add$]="addPropose$"
-                                  [allowAdd]="isExternalUser && !isCancel"
-                                  [skipClearSort]="true">
-                    </table-header>
-                  </th>
-                </ng-container>
-                <ng-container cdkColumnDef="projectName">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.project_name}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.projectName}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="projectType">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.project_type}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.projectTypeInfo?.getName() || ''}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="domain">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.domain}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.domainInfo?.getName() || ''}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="totalCost">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.total_cost}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{(row.totalCost ?? 0) |
-                    mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="beneficiaryCountry">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.beneficiary_country}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.beneficiaryCountryInfo?.getName() || ''}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="executionCountry">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.execution_country}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.executionCountryInfo?.getName() || ''}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="actions">
-                  <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
-                  <td *cdkCellDef="let row" cdk-cell class="table-actions">
-                    <div class="d-flex flex-row">
-                      <button (click)="removePurpose($event, row)" [disabled]="(readonly || isCancel)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
-                        <i class="mdi mdi-close-box"></i>
-                      </button>
-                      <button (click)="selectPurpose($event, row)" [disabled]="(readonly || isCancel)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
-                        <i class="mdi mdi-pen"></i>
-                      </button>
-                    </div>
-                  </td>
-                </ng-container>
-                <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-                <tr *cdkHeaderRowDef="purposeDisplayedColumns" cdk-header-row></tr>
-                <tr *cdkRowDef="let row; columns: purposeDisplayedColumns;" cdk-row></tr>
-                <!--suppress HtmlUnknownBooleanAttribute -->
-                <tr *cdkNoDataRow>
-                  <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
-                </tr>
-              </table>
-            </app-table>
-          </div>
-        </div>
+    <ng-container>
+      <ng-template #transferPurposeInfoTemplate>
+        <tifa-transfer-purpose-list #transferPurposeListComponent
+                                    [isCancel]="isCancel" [list]="model?.charityPurposeTransferList || []"
+                                    [readonly]="readonly" [countriesList]="countries"
+        ></tifa-transfer-purpose-list>
       </ng-template>
     </ng-container>
     <ng-container formGroupName="financialTransactionInfo">
-      <ng-template #financial_transaction_info>
+      <ng-template #financialTransactionInfoTemplate>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="qatariTransactionAmount" class="form-label"
@@ -611,57 +496,13 @@
         </div>
       </ng-template>
     </ng-container>
-    <ng-container [formGroup]="paymentForm">
-      <ng-template #payment_info>
-        <div class="row">
-          <div class="col-12">
-            <app-table #table [columns]="paymentDisplayedColumns" [data]="selectedPayments" [selectable]="true"
-                       [useSearchToFilter]="true" sortableTable>
-              <table [dataSource]="table.dataSource" cdk-table class="table table-striped table-bordered caption-top">
-                <ng-container cdkColumnDef="extra-header">
-                  <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-                    <table-header tableTitle="payments" [skipSearch]="true" [add$]="addPayment$"
-                                  [allowAdd]="isExternalUser && !isCancel" [skipClearSort]="true">
-                    </table-header>
-                  </th>
-                </ng-container>
-                <ng-container cdkColumnDef="paymentNo">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.payment_name}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.paymentNo}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="totalCost">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.amount}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.totalCost}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="dueDate">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.due_date}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.dueDate | date: 'mediumDate'}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="actions">
-                  <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
-                  <td *cdkCellDef="let row" cdk-cell class="table-actions">
-                    <div class="d-flex flex-row">
-                      <button (click)="removePayment($event, row)" [disabled]="(readonly || isCancel)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
-                        <i class="mdi mdi-close-box"></i>
-                      </button>
-                      <button (click)="selectPayment($event, row)" [disabled]="(readonly || isCancel)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
-                        <i class="mdi mdi-pen"></i>
-                      </button>
-                    </div>
-                  </td>
-                </ng-container>
-                <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-                <tr *cdkHeaderRowDef="paymentDisplayedColumns" cdk-header-row></tr>
-                <tr *cdkRowDef="let row; columns: paymentDisplayedColumns;" cdk-row></tr>
-                <tr *cdkNoDataRow>
-                  <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
-                </tr>
-              </table>
-            </app-table>
-          </div>
-        </div>
+    <ng-container>
+      <ng-template #paymentInfoTemplate>
+        <tifa-payments-list #tifaPaymentsListComponent
+                            [isCancel]="isCancel" [list]="model?.payment || []"
+                            [readonly]="readonly"
+                            (onEmitTotalCost)="totalPaymentsAmount = $event"
+        ></tifa-payments-list>
         <ng-container>
           <div class="row">
             <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -679,22 +520,22 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-12 position-relative" style="text-align: center"
+            <div class="col-sm-12 position-relative text-center"
                  *ngIf="qatariTransactionAmount.value && ((+qatariTransactionAmount.value) === totalPaymentsAmount)">
-              <label class="form-label" style="font-weight: bold">* {{lang.map.the_transfer_amount_has_been_depleted}}
-                *</label>
+              <label class="form-label fw-bold">* {{lang.map.the_transfer_amount_has_been_depleted}}*</label>
             </div>
-            <div class="col-sm-12 position-relative" style="text-align: center"
+            <div class="col-sm-12 position-relative text-center"
                  *ngIf="totalPaymentsAmount > (+qatariTransactionAmount.value)">
-              <label class="form-label" style="font-weight: bold; color: #dc3545">*
-                {{lang.map.total_payments_is_greater_than_transfer_amount}} *</label>
+              <label
+                class="form-label fw-bold text-danger">* {{lang.map.total_payments_is_greater_than_transfer_amount}}
+                *</label>
             </div>
           </div>
         </ng-container>
       </ng-template>
     </ng-container>
     <ng-container formGroupName="explanation">
-      <ng-template #special_explanations>
+      <ng-template #specialExplanationsTemplate>
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="description" class="form-label"

@@ -25,6 +25,9 @@ import { AuditTransferringIndividualFundsAbroadComponent } from './audit/audit-t
 import { AuditTransferFundsExecutiveManagementComponent } from './audit/audit-transfer-funds-executive-management/audit-transfer-funds-executive-management.component';
 import { AuditTransferPurposeComponent } from './audit/audit-transfer-purpose/audit-transfer-purpose.component';
 import { SharedServicesModule } from '../shared-services/shared-services.module';
+import { TifaTransferPurposeListComponent } from '@modules/services/transferring-individual-funds-abroad/shared/tifa-transfer-purpose-list/tifa-transfer-purpose-list.component';
+import { TifaExecutiveManagementListComponent } from '@modules/services/transferring-individual-funds-abroad/shared/tifa-executive-management-list/tifa-executive-management-list.component';
+import { TifaPaymentsListComponent } from './shared/tifa-payments-list/tifa-payments-list.component';
 
 
 @NgModule({
@@ -39,7 +42,10 @@ import { SharedServicesModule } from '../shared-services/shared-services.module'
     TransferFundsAbroadCompleteTaskPopupComponent,
     AuditTransferringIndividualFundsAbroadComponent,
     AuditTransferFundsExecutiveManagementComponent,
-    AuditTransferPurposeComponent
+    AuditTransferPurposeComponent,
+    TifaTransferPurposeListComponent,
+    TifaExecutiveManagementListComponent,
+    TifaPaymentsListComponent
   ],
   imports: [
     CommonModule,

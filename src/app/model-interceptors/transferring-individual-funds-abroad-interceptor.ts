@@ -7,45 +7,25 @@ import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-execu
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
 import {AdminResult} from '@app/models/admin-result';
 import {Payment} from '@app/models/payment';
+import {PaymentInterceptor} from "@model-interceptors/payment-interceptor";
+import {ExecutiveManagementListInterceptor} from "@model-interceptors/executive-management-list-interceptor";
+import {TransferFundsCharityPurposeInterceptor} from "@model-interceptors/transfer-funds-charity-purpose-interceptor";
+
+const executiveManagementListInterceptor = new ExecutiveManagementListInterceptor();
+const transferFundsCharityPurposeInterceptor = new TransferFundsCharityPurposeInterceptor();
+const tifaPaymentInterceptor = new PaymentInterceptor();
 
 export class TransferringIndividualFundsAbroadInterceptor implements IModelInterceptor<TransferringIndividualFundsAbroad> {
   caseInterceptor?: IModelInterceptor<TransferringIndividualFundsAbroad> | undefined;
+
   send(model: Partial<TransferringIndividualFundsAbroad>): Partial<TransferringIndividualFundsAbroad> {
-    let service: TransferringIndividualFundsAbroadService = FactoryService.getService('TransferringIndividualFundsAbroadService');
-    delete model.licenseStatusInfo;
-    delete model.managerDecisionInfo;
-    delete model.reviewerDepartmentDecisionInfo;
-    delete model.specialistDecisionInfo;
-    delete model.chiefDecisionInfo;
-    delete model.requestTypeInfo;
-    delete model.transfereeTypeInfo;
-    delete model.domainInfo;
-    delete model.mainDACCategoryInfo;
-    delete model.mainUNOCHACategoryInfo;
-    delete model.beneficiaryCountryInfo;
-    delete model.executionCountryInfo;
-    delete model.countryInfo;
-    delete model.transferCountryInfo;
-    delete model.nationalityInfo;
-    delete model.ReceiverNationalityInfo;
-    delete model.headQuarterTypeInfo;
-    delete model.currencyInfo;
-    delete model.projectTypeInfo;
-    delete model.transferMethodInfo;
-    delete model.transferTypeInfo;
-    delete model.receiverNationalityInfo;
-    delete model.employeeService;
-    delete model.encrypt;
-    delete model.searchFields;
-    delete model.service;
-    if (model.executiveManagementList && model.executiveManagementList.length > 0) {
-      model.executiveManagementList = model.executiveManagementList.map(x => service.executiveManagementListInterceptor.send(x) as TransferFundsExecutiveManagement);
-    }
-    if (model.charityPurposeTransferList && model.charityPurposeTransferList.length > 0) {
-      model.charityPurposeTransferList = model.charityPurposeTransferList.map(x => service.transferFundsCharityPurposeInterceptor.send(x) as TransferFundsCharityPurpose);
-    }
+    model.executiveManagementList = (model.executiveManagementList ?? []).map(x => executiveManagementListInterceptor.send(x) as TransferFundsExecutiveManagement);
+    model.charityPurposeTransferList = (model.charityPurposeTransferList ?? []).map(x => transferFundsCharityPurposeInterceptor.send(x) as TransferFundsCharityPurpose);
+    model.payment = (model.payment ?? []).map(x => tifaPaymentInterceptor.send(x) as Payment);
+
     model.establishmentDate = DateUtils.getDateStringFromDate(model.establishmentDate);
 
+    TransferringIndividualFundsAbroadInterceptor._deleteBeforeSend(model);
     return model;
   }
 
@@ -76,17 +56,46 @@ export class TransferringIndividualFundsAbroadInterceptor implements IModelInter
     model.receiverNationalityInfo = model.receiverNationalityInfo ? AdminResult.createInstance(model.receiverNationalityInfo) : AdminResult.createInstance({});
 
     if (model.executiveManagementList && model.executiveManagementList.length > 0) {
-      model.executiveManagementList = model.executiveManagementList.map(x => service.executiveManagementListInterceptor.receive(new TransferFundsExecutiveManagement().clone(x)) as TransferFundsExecutiveManagement);
+      model.executiveManagementList = model.executiveManagementList.map(x => executiveManagementListInterceptor.receive(new TransferFundsExecutiveManagement().clone(x)) as TransferFundsExecutiveManagement);
     }
 
     if (model.charityPurposeTransferList && model.charityPurposeTransferList.length > 0) {
-      model.charityPurposeTransferList = model.charityPurposeTransferList.map(x => service.transferFundsCharityPurposeInterceptor.receive(new TransferFundsCharityPurpose().clone(x)) as TransferFundsCharityPurpose);
+      model.charityPurposeTransferList = model.charityPurposeTransferList.map(x => transferFundsCharityPurposeInterceptor.receive(new TransferFundsCharityPurpose().clone(x)) as TransferFundsCharityPurpose);
     }
 
     if (model.payment && model.payment.length > 0) {
-      model.payment = model.payment.map(x => service.paymentInterceptor.receive(new Payment().clone(x)) as Payment);
+      model.payment = model.payment.map(x => tifaPaymentInterceptor.receive(new Payment().clone(x)));
     }
 
     return model;
+  }
+
+  private static _deleteBeforeSend(model: Partial<TransferringIndividualFundsAbroad>): void {
+    delete model.licenseStatusInfo;
+    delete model.managerDecisionInfo;
+    delete model.reviewerDepartmentDecisionInfo;
+    delete model.specialistDecisionInfo;
+    delete model.chiefDecisionInfo;
+    delete model.requestTypeInfo;
+    delete model.transfereeTypeInfo;
+    delete model.domainInfo;
+    delete model.mainDACCategoryInfo;
+    delete model.mainUNOCHACategoryInfo;
+    delete model.beneficiaryCountryInfo;
+    delete model.executionCountryInfo;
+    delete model.countryInfo;
+    delete model.transferCountryInfo;
+    delete model.nationalityInfo;
+    delete model.ReceiverNationalityInfo;
+    delete model.headQuarterTypeInfo;
+    delete model.currencyInfo;
+    delete model.projectTypeInfo;
+    delete model.transferMethodInfo;
+    delete model.transferTypeInfo;
+    delete model.receiverNationalityInfo;
+    delete model.employeeService;
+    delete model.encrypt;
+    delete model.searchFields;
+    delete model.service;
   }
 }

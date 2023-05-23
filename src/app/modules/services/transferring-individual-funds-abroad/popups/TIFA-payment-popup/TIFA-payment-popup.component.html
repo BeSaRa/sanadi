@@ -1,33 +1,35 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-  <h1 class="h6 text-white">{{ editItem > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
-    lang.map.payment }}</h1>
-  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
+  </div>
 </div>
-<div class="dialog-content no-fixed-height">
+<div class="dialog-content w800px" #dialogContent>
   <div [formGroup]="form">
     <div class="row">
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="paymentNo" class="form-label" for="paymentNo">{{lang.map.payment_name}}</label>
         <input [readonly]="(readonly)" class="form-control" formControlName="paymentNo" id="paymentNo"
-          validationClasses="paymentNo">
+               validationClasses="paymentNo">
         <app-field-error-message controlName="paymentNo"></app-field-error-message>
       </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="totalCost" class="form-label" for="amount">{{lang.map.amount}}</label>
         <input [readonly]="(readonly)" class="form-control" formControlName="totalCost" id="amount"
-          validationClasses="totalCost" [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
-          [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+               validationClasses="totalCost" [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+               [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
         <app-field-error-message controlName="totalCost"></app-field-error-message>
       </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
-        <label asteriskIfRequired="dueDate" class="form-label" for="dueDate">{{lang.map.establishment_date}}</label>
-        <div class="reg-start-date-container">
-          <div class="input-group">
-            <i class="input-group-text mdi mdi-calendar"></i>
-            <div #dpDueDate="angular-mydatepicker" (click)="!readonly && dpDueDate.toggleCalendar()"
-              [ngClass]="{'input-disabled': (readonly)}" [options]="datepickerOptionsMap.dueDate" angular-mydatepicker
-              class="form-control" formControlName="dueDate" id="dueDate" validationClasses="dueDate"></div>
-          </div>
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="dueDate" class="form-label" for="dueDate">{{lang.map.due_date}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div #dpDueDate="angular-mydatepicker" (click)="!readonly && dpDueDate.toggleCalendar()"
+               [ngClass]="{'input-disabled': (readonly)}" [options]="datepickerOptionsMap.dueDate" angular-mydatepicker
+               class="form-control" formControlName="dueDate" id="dueDate" validationClasses="dueDate"></div>
         </div>
         <app-field-error-message controlName="dueDate"></app-field-error-message>
       </div>
@@ -36,14 +38,19 @@
       <div class="col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="notes" class="form-label" for="notes">{{lang.map.notes}}</label>
         <textarea [readonly]="(readonly)" class="form-control" formControlName="notes" id="notes" name="notes" rows="4"
-          validationClasses="notes"></textarea>
+                  validationClasses="notes"></textarea>
         <app-field-error-message controlName="notes"></app-field-error-message>
       </div>
     </div>
   </div>
 </div>
 <div class="dialog-actions">
-  <button (click)="save()" [disabled]="form.invalid" *ngIf="!readonly" class="btn btn-primary m-2">{{editItem > -1 ?
-    lang.map.btn_save : lang.map.btn_add}}</button>
-  <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

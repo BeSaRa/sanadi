@@ -1,11 +1,13 @@
-import { IAuditModelProperties } from './../interfaces/i-audit-model-properties';
-import { ControlValueLabelLangKey } from './../types/types';
+import { IAuditModelProperties } from '@contracts/i-audit-model-properties';
+import {ControlValueLabelLangKey, ISearchFieldsMap} from './../types/types';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { AdminResult } from '@app/models/admin-result';
 import { SearchableCloneable } from '@app/models/searchable-cloneable';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { ObjectUtils } from '@app/helpers/object-utils';
+import {normalSearchFields} from "@helpers/normal-search-fields";
+import {infoSearchFields} from "@helpers/info-search-fields";
 
 export class TransferFundsCharityPurpose extends SearchableCloneable<TransferFundsCharityPurpose> implements IAuditModelProperties<TransferFundsCharityPurpose> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -24,6 +26,11 @@ export class TransferFundsCharityPurpose extends SearchableCloneable<TransferFun
   projectTypeInfo!: AdminResult;
   beneficiaryCountryInfo!: AdminResult;
   executionCountryInfo!: AdminResult;
+
+  searchFields: ISearchFieldsMap<TransferFundsCharityPurpose> = {
+    ...normalSearchFields(['projectName', 'totalCost']),
+    ...infoSearchFields(['projectTypeInfo', 'domainInfo', 'beneficiaryCountryInfo', 'executionCountryInfo'])
+  }
 
   isEqual(purpose: TransferFundsCharityPurpose): boolean {
     return purpose.projectName === this.projectName &&

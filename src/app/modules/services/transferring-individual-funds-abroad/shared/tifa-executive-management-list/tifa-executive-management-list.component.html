@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-12">
+    <app-table #table [columns]="displayColumns" [paginator]="paginator" [data]="list"
+               [useSearchToFilter]="true" [filter]="filterControl.value" sortableTable>
+      <table [dataSource]="table.dataSource" cdk-table class="table table-striped table-bordered caption-top">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="executives" (textChange)="filterControl.setValue($event)" [add$]="add$"
+                          [allowAdd]="isExternalUser && !isCancel"
+                          [sort]="table.dataSource.sort">
+            </table-header>
+          </th>
+        </ng-container>
+        <ng-container cdkColumnDef="localName">
+          <th *cdkHeaderCellDef cdk-header-cell sortable-header [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.localName">{{lang.map.name_in_local_language_like_passport}}</th>
+          <td *cdkCellDef="let row" cdk-cell> {{row.nameLikePassport}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="englishName">
+          <th *cdkHeaderCellDef cdk-header-cell sortable-header [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.englishName">{{lang.map.name_in_English_language_like_passport}}</th>
+          <td *cdkCellDef="let row" cdk-cell> {{row.englishNameLikePassport}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="jobTitle">
+          <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.job_title}}</th>
+          <td *cdkCellDef="let row" cdk-cell> {{row.jobTitle}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="nationality">
+          <th *cdkHeaderCellDef cdk-header-cell sortable-header [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.nationality"> {{lang.map.lbl_nationality}}</th>
+          <td *cdkCellDef="let row" cdk-cell> {{row.executiveNationalityInfo?.getName() || ''}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="executiveIdentificationNumber">
+          <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.national_id_number}}</th>
+          <td *cdkCellDef="let row" cdk-cell> {{row.executiveIdentificationNumber}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="actions">
+          <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
+          <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="i" [rebindTrigger]="readonly"></grid-actions>
+          </td>
+        </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+        <tr *cdkHeaderRowDef="table.columns" cdk-header-row class="table-row-header"></tr>
+        <tr *cdkRowDef="let row; columns: table.columns;" cdk-row (contextmenu)="menu.open($event , row)"></tr>
+        <!--suppress HtmlUnknownBooleanAttribute -->
+        <tr *cdkNoDataRow>
+          <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
+        </tr>
+      </table>
+      <app-paginator #paginator></app-paginator>
+    </app-table>
+    <context-menu-item #menu [actions]="actions"></context-menu-item>
+  </div>
+</div>

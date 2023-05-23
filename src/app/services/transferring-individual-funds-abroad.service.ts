@@ -8,10 +8,10 @@ import {DialogService} from './dialog.service';
 import {DynamicOptionsService} from './dynamic-options.service';
 import {UrlService} from './url.service';
 import {FactoryService} from '@services/factory.service';
-import {TransferringIndividualFundsAbroadSearchCriteria} from '@app/models/transferring-individual-funds-abroad-search-criteria';
+import {
+  TransferringIndividualFundsAbroadSearchCriteria
+} from '@app/models/transferring-individual-funds-abroad-search-criteria';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
-import {ExecutiveManagementListInterceptor} from '@app/model-interceptors/executive-management-list-interceptor';
-import {TransferFundsCharityPurposeInterceptor} from '@app/model-interceptors/transfer-funds-charity-purpose-interceptor';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {
@@ -19,7 +19,9 @@ import {
 } from '@app/modules/services/transferring-individual-funds-abroad/popups/transfer-funds-abroad-approve-task-popup/transfer-funds-abroad-approve-task-popup.component';
 import {Observable} from 'rxjs';
 import {ReceiverOrganization} from '@app/models/receiver-organization';
-import {SelectReceiverEntityPopupComponent} from '@app/modules/services/transferring-individual-funds-abroad/popups/select-receiver-entity-popup/select-receiver-entity-popup.component';
+import {
+  SelectReceiverEntityPopupComponent
+} from '@app/modules/services/transferring-individual-funds-abroad/popups/select-receiver-entity-popup/select-receiver-entity-popup.component';
 import {ReceiverPerson} from '@app/models/receiver-person';
 import {
   TransferFundsAbroadCompleteTaskPopupComponent
@@ -27,7 +29,6 @@ import {
 import {UntypedFormGroup} from '@angular/forms';
 import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
-import {PaymentInterceptor} from '@app/model-interceptors/payment-interceptor';
 
 @CastResponseContainer({
   $default: {
@@ -42,9 +43,6 @@ export class TransferringIndividualFundsAbroadService extends BaseGenericEServic
   serviceKey: keyof ILanguageKeys = 'menu_transferring_individual_funds_abroad';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'arName', 'enName', 'subject', 'caseStatus', 'creatorInfo', 'createdOn'];
-  executiveManagementListInterceptor: ExecutiveManagementListInterceptor = new ExecutiveManagementListInterceptor();
-  transferFundsCharityPurposeInterceptor: TransferFundsCharityPurposeInterceptor = new TransferFundsCharityPurposeInterceptor();
-  paymentInterceptor: PaymentInterceptor = new PaymentInterceptor();
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,

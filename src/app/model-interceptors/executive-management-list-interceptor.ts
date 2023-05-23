@@ -5,6 +5,7 @@ import {AdminResult} from '@app/models/admin-result';
 export class ExecutiveManagementListInterceptor implements IModelInterceptor<TransferFundsExecutiveManagement> {
   send(model: Partial<TransferFundsExecutiveManagement>): Partial<TransferFundsExecutiveManagement> {
     delete model.searchFields;
+    delete model.langService;
     delete model.executiveNationalityInfo;
     return model;
   }
