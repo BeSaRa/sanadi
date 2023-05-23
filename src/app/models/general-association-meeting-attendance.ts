@@ -1,34 +1,42 @@
-import { mixinRequestType } from '@app/mixins/mixin-request-type';
-import { CaseModel } from '@app/models/case-model';
-import { GeneralAssociationMeetingAttendanceInterceptor } from '@app/model-interceptors/general-association-meeting-attendance-interceptor';
-import { InterceptModel } from '@decorators/intercept-model';
-import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
-import { HasRequestType } from '@contracts/has-request-type';
-import { FactoryService } from '@services/factory.service';
-import { IMyDateModel } from 'angular-mydatepicker';
-import { AdminResult } from '@app/models/admin-result';
-import { GeneralAssociationInternalMember } from '@app/models/general-association-internal-member';
-import { GeneralAssociationExternalMember } from '@app/models/general-association-external-member';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { UntypedFormGroup } from '@angular/forms';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { GeneralAssociationMeetingStepNameEnum } from '@app/enums/general-association-meeting-step-name-enum';
-import { IGeneralAssociationMeetingAttendanceSpecialActions } from '@contracts/i-general-association-meeting-attendance-special-actions';
-import { IGeneralAssociationMeetingAttendanceComplete } from '@contracts/i-general-association-meeting-attendance-complete';
-import { Observable } from 'rxjs';
-import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
-import { dateSearchFields } from '@helpers/date-search-fields';
-import { infoSearchFields } from '@helpers/info-search-fields';
-import { normalSearchFields } from '@helpers/normal-search-fields';
-import { IGeneralAssociationMeetingAttendanceFinalApprove } from '@contracts/i-general-association-meeting-attendance-final-approve';
-import { AuditOperationTypes } from '@app/enums/audit-operation-types';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
-import { ObjectUtils } from '@app/helpers/object-utils';
-import { GeneralAssociationAgenda } from './general-association-meeting-agenda';
-import { DateUtils } from '@app/helpers/date-utils';
+import {mixinRequestType} from '@app/mixins/mixin-request-type';
+import {CaseModel} from '@app/models/case-model';
+import {
+  GeneralAssociationMeetingAttendanceInterceptor
+} from '@app/model-interceptors/general-association-meeting-attendance-interceptor';
+import {InterceptModel} from '@decorators/intercept-model';
+import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
+import {HasRequestType} from '@contracts/has-request-type';
+import {FactoryService} from '@services/factory.service';
+import {IMyDateModel} from 'angular-mydatepicker';
+import {AdminResult} from '@app/models/admin-result';
+import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
+import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {UntypedFormGroup} from '@angular/forms';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {GeneralAssociationMeetingStepNameEnum} from '@app/enums/general-association-meeting-step-name-enum';
+import {
+  IGeneralAssociationMeetingAttendanceSpecialActions
+} from '@contracts/i-general-association-meeting-attendance-special-actions';
+import {
+  IGeneralAssociationMeetingAttendanceComplete
+} from '@contracts/i-general-association-meeting-attendance-complete';
+import {Observable} from 'rxjs';
+import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
+import {dateSearchFields} from '@helpers/date-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
+import {normalSearchFields} from '@helpers/normal-search-fields';
+import {
+  IGeneralAssociationMeetingAttendanceFinalApprove
+} from '@contracts/i-general-association-meeting-attendance-final-approve';
+import {AuditOperationTypes} from '@app/enums/audit-operation-types';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IAuditModelProperties} from '@app/interfaces/i-audit-model-properties';
+import {ObjectUtils} from '@app/helpers/object-utils';
+import {GeneralAssociationAgenda} from './general-association-meeting-agenda';
+import {DateUtils} from '@app/helpers/date-utils';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
@@ -71,7 +79,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   meetingTypeInfo!: AdminResult;
   meetingClassificationInfo!: AdminResult;
   managerDecisionInfo!: AdminResult;
-  agendaList:GeneralAssociationAgenda[]=[];
+  agendaList: GeneralAssociationAgenda[] = [];
   isFinal!: boolean;
   meetingDateTimestamp!: number | null;
 
@@ -94,6 +102,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
     super();
     this.service = FactoryService.getService('GeneralAssociationMeetingAttendanceService');
   }
+
   getAdminResultByProperty(property: keyof GeneralAssociationMeetingAttendance): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
@@ -114,7 +123,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
         adminResultValue = AdminResult.createInstance({arName: dateValue, enName: dateValue});
         break;
       case 'meetingTime':
-        const timeValue = DateUtils.getHoursList().find(x=>x.val === this.meetingTime)!.key;
+        const timeValue = DateUtils.getHoursList().find(x => x.val === this.meetingTime)!.key;
         adminResultValue = AdminResult.createInstance({arName: timeValue, enName: timeValue});
         break;
       default:
@@ -122,31 +131,34 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
           value = '';
         }
-        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
     }
     return adminResultValue ?? new AdminResult();
   }
+
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
 
   getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      requestType: { langKey: 'request_type', value: this.requestType },
-      oldLicenseFullSerial: { langKey: 'serial_number', value: this.oldLicenseFullSerial },
-      meetingType:{ langKey: 'general_association_meeting_type', value: this.meetingType },
-      location:{ langKey: 'location', value: this.location },
-      meetingDate:{ langKey: 'meeting_date', value: this.meetingDate, comparisonValue: this.meetingDateTimestamp },
-      meetingTime:{ langKey: 'meeting_time', value: this.meetingTime },
-      meetingInitiator:{ langKey: 'meeting_initiator', value: this.meetingInitiator },
-      meetingClassification:{ langKey: 'meeting_classification', value: this.meetingClassification },
-      periodical:{ langKey: 'meeting_periodical', value: this.periodical },
-      year:{ langKey: 'year', value: this.year }
+      requestType: {langKey: 'request_type', value: this.requestType},
+      oldLicenseFullSerial: {langKey: 'serial_number', value: this.oldLicenseFullSerial},
+      meetingType: {langKey: 'general_association_meeting_type', value: this.meetingType},
+      location: {langKey: 'location', value: this.location},
+      meetingDate: {langKey: 'meeting_date', value: this.meetingDate, comparisonValue: this.meetingDateTimestamp},
+      meetingTime: {langKey: 'meeting_time', value: this.meetingTime},
+      meetingInitiator: {langKey: 'meeting_initiator', value: this.meetingInitiator},
+      meetingClassification: {langKey: 'meeting_classification', value: this.meetingClassification},
+      periodical: {langKey: 'meeting_periodical', value: this.periodical},
+      year: {langKey: 'year', value: this.year}
     }
   }
+
   getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      description: { langKey: 'special_explanations', value: this.description },
+      description: {langKey: 'special_explanations', value: this.description},
     }
   }
+
   buildBasicInfo(controls: boolean = false): any {
     const {
       oldFullSerial,
@@ -159,7 +171,9 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
       meetingClassification,
       periodical,
       year
-    } = ObjectUtils.getControlValues<GeneralAssociationMeetingAttendance>(this.getBasicInfoValuesWithLabels());;;
+    } = ObjectUtils.getControlValues<GeneralAssociationMeetingAttendance>(this.getBasicInfoValuesWithLabels());
+    ;
+    ;
     return {
       oldFullSerial: controls ? [oldFullSerial] : oldFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
@@ -178,7 +192,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   }
 
   buildExplanation(controls: boolean = false): any {
-    const { description } = ObjectUtils.getControlValues<GeneralAssociationMeetingAttendance>(this.getExplanationValuesWithLabels());;;
+    const {description} = ObjectUtils.getControlValues<GeneralAssociationMeetingAttendance>(this.getExplanationValuesWithLabels());
     return {
       description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : description,
     };
@@ -211,9 +225,11 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   isDecisionMakerReviewStep(): boolean {
     return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.DECISION_MAKER_REVIEW;
   }
+
   isDecisionMakerReworkStep(): boolean {
     return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.DECISION_MAKER_REWORK;
   }
+
   isManagerFinalReviewStep(): boolean {
     return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.MANAGER_FINAL_REVIEW;
   }

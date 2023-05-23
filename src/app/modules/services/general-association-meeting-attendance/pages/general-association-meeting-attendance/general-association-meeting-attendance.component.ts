@@ -1,40 +1,54 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { OperationTypes } from '@enums/operation-types.enum';
-import { SaveTypes } from '@enums/save-types';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { GeneralAssociationMeetingAttendance } from '@models/general-association-meeting-attendance';
-import { LangService } from '@services/lang.service';
-import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
-import { Observable, of, Subject } from 'rxjs';
-import { LookupService } from '@services/lookup.service';
-import { DialogService } from '@services/dialog.service';
-import { ToastService } from '@services/toast.service';
-import { LicenseService } from '@services/license.service';
-import { FormManager } from '@models/form-manager';
-import { DatepickerControlsMap, DatepickerOptionsMap } from '@app/types/types';
-import { DateUtils } from '@helpers/date-utils';
-import { EmployeeService } from '@services/employee.service';
-import { GeneralAssociationExternalMember } from '@models/general-association-external-member';
-import { Lookup } from '@models/lookup';
-import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { SelectedLicenseInfo } from '@contracts/selected-license-info';
-import { InternalProjectLicenseResult } from '@models/internal-project-license-result';
-import { SharedService } from '@services/shared.service';
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { CommonCaseStatus } from '@enums/common-case-status.enum';
-import { OpenFrom } from '@enums/open-from.enum';
-import { GeneralAssociationInternalMember } from '@models/general-association-internal-member';
-import { MeetingAttendanceReport } from '@models/meeting-attendance-report';
-import { GeneralAssociationMeetingRequestTypeEnum } from '@enums/service-request-types';
-import { MeetingAttendanceSubItem } from '@models/meeting-attendance-sub-item';
-import { MeetingAttendanceMainItem } from '@models/meeting-attendance-main-item';
-import { GeneralMeetingAttendanceNote } from '@models/general-meeting-attendance-note';
-import { MeetingMemberTaskStatus } from '@models/meeting-member-task-status';
-import { MeetingPointMemberComment } from '@models/meeting-point-member-comment';
-import { UserClickOn } from '@enums/user-click-on.enum';
-import { CommonUtils } from '@helpers/common-utils';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup
+} from '@angular/forms';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {GeneralAssociationMeetingAttendance} from '@models/general-association-meeting-attendance';
+import {LangService} from '@services/lang.service';
+import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
+import {Observable, of, Subject} from 'rxjs';
+import {LookupService} from '@services/lookup.service';
+import {DialogService} from '@services/dialog.service';
+import {ToastService} from '@services/toast.service';
+import {LicenseService} from '@services/license.service';
+import {DatepickerControlsMap, DatepickerOptionsMap, TabMap} from '@app/types/types';
+import {DateUtils} from '@helpers/date-utils';
+import {EmployeeService} from '@services/employee.service';
+import {Lookup} from '@models/lookup';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {SelectedLicenseInfo} from '@contracts/selected-license-info';
+import {InternalProjectLicenseResult} from '@models/internal-project-license-result';
+import {SharedService} from '@services/shared.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {OpenFrom} from '@enums/open-from.enum';
+import {GeneralAssociationInternalMember} from '@models/general-association-internal-member';
+import {MeetingAttendanceReport} from '@models/meeting-attendance-report';
+import {GeneralAssociationMeetingRequestTypeEnum} from '@enums/service-request-types';
+import {MeetingAttendanceSubItem} from '@models/meeting-attendance-sub-item';
+import {MeetingAttendanceMainItem} from '@models/meeting-attendance-main-item';
+import {GeneralMeetingAttendanceNote} from '@models/general-meeting-attendance-note';
+import {MeetingMemberTaskStatus} from '@models/meeting-member-task-status';
+import {MeetingPointMemberComment} from '@models/meeting-point-member-comment';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {CommonUtils} from '@helpers/common-utils';
+import {
+  ManageMembersComponent
+} from "@modules/services/general-association-meeting-attendance/shared/manage-members/manage-members.component";
+import {
+  MeetingAgendaListComponent
+} from "@modules/services/general-association-meeting-attendance/shared/meeting-agenda-list/meeting-agenda-list.component";
+import {
+  GeneralMeetingAttendanceNotesListComponent
+} from "@modules/services/general-association-meeting-attendance/shared/general-meeting-attendance-notes-list/general-meeting-attendance-notes-list.component";
 
 @Component({
   selector: 'general-association-meeting-attendance',
@@ -45,10 +59,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   form!: FormGroup;
   oldModel!: GeneralAssociationMeetingAttendance;
   internalMembersForm!: FormGroup;
-  fm!: FormManager;
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
-  addAdministrativeBoardMembersLabel: keyof ILanguageKeys = 'add_administrative_board_member';
-  addGeneralAssociationMembersLabel: keyof ILanguageKeys = 'add_general_association_members';
   importFinalReport$: Subject<void> = new Subject<void>();
 
   selectedLicenses: GeneralAssociationMeetingAttendance[] = [];
@@ -68,26 +79,12 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   datepickerOptionsMap!: DatepickerOptionsMap;
 
   isExternalUser!: boolean;
-  selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[] = [];
-  selectedGeneralAssociationMembers: GeneralAssociationExternalMember[] = [];
   selectedInternalUsers: GeneralAssociationInternalMember[] = [];
   oldSelectedInternalUsers: GeneralAssociationInternalMember[] = [];
 
-  addAgendaFormActive!: boolean;
-  agendaForm!: FormGroup;
-  agendaItems: string[] = [];
-  selectedAgendaItem!: string | null;
-  selectedAgendaItemIndex!: number | null;
-  agendaItemsDisplayedColumns: string[] = ['index', 'description', 'actions'];
-
-  addGeneralNotesFormActive!: boolean;
-  generalNotesForm!: FormGroup;
   generalNotes: GeneralMeetingAttendanceNote[] = [];
   membersGeneralNotes: GeneralMeetingAttendanceNote[] = [];
   oldMembersGeneralNotes: GeneralMeetingAttendanceNote[] = [];
-  selectedGeneralNote!: GeneralMeetingAttendanceNote | null;
-  selectedGeneralNoteIndex!: number | null;
-  generalNotesDisplayedColumns: string[] = ['index', 'comment', 'actions'];
 
   userCommentsDisplayedColumns: string[] = ['index', 'arName', 'enName', 'status', 'actions'];
   meetingUserTaskStatus: MeetingMemberTaskStatus[] = [];
@@ -111,17 +108,120 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   meetingReport!: MeetingAttendanceReport;
   oldMeetingReport!: MeetingAttendanceReport;
 
+  @ViewChild('manageMembersAdministrativeBoardMembers') administrativeBoardMembersRef!: ManageMembersComponent;
+  @ViewChild('manageMembersGeneralAssociation') generalAssociationMembersRef!: ManageMembersComponent;
+  @ViewChild('meetingAgendaListComponent') meetingAgendaListComponentRef!: MeetingAgendaListComponent;
+  @ViewChild('generalNotesListComponent') generalNotesListComponentRef!: GeneralMeetingAttendanceNotesListComponent;
+
+  tabsData: TabMap = {
+    basicInfo: {
+      name: 'basicInfo',
+      langKey: 'lbl_basic_info',
+      index: 0,
+      validStatus: () => {
+        return !!this.basicInfo && !this.basicInfo.invalid
+      },
+      isTouchedOrDirty: () => true
+    },
+    administrativeBoardMembers: {
+      name: 'administrativeBoardMembers',
+      langKey: 'administrative_board_members',
+      index: 1,
+      validStatus: () => {
+        if (!this.administrativeBoardMembersRef) {
+          return true;
+        }
+        return this.administrativeBoardMembersRef.list.length > 0;
+      },
+      isTouchedOrDirty: () => true
+    },
+    generalAssociationMembers: {
+      name: 'generalAssociationMembers',
+      langKey: 'general_association_members',
+      index: 2,
+      validStatus: () => {
+        if (!this.generalAssociationMembersRef) {
+          return true;
+        }
+        return this.generalAssociationMembersRef.list.length > 0;
+      },
+      isTouchedOrDirty: () => true
+    },
+    meetingAgenda: {
+      name: 'meetingAgenda',
+      langKey: 'meeting_agenda',
+      index: 3,
+      validStatus: () => {
+        if (!this.meetingAgendaListComponentRef) {
+          return true;
+        }
+        return this.meetingAgendaListComponentRef.list.length > 0;
+      },
+      isTouchedOrDirty: () => true
+    },
+    internalMembers: {
+      name: 'internalMembers',
+      langKey: 'internal_members',
+      index: 4,
+      validStatus: () => {
+        if (this.isExternalUser) {
+          return true;
+        }
+        return this.selectedInternalUsers && this.selectedInternalUsers.length > 0;
+      },
+      isTouchedOrDirty: () => true
+    },
+    meetingPoints: {
+      name: 'meetingPoints',
+      langKey: 'meeting_points',
+      index: 5,
+      validStatus: () => {
+        return true;
+      },
+      isTouchedOrDirty: () => true
+    },
+    generalNotes: {
+      name: 'generalNotes',
+      langKey: 'general_notes',
+      index: 6,
+      validStatus: () => {
+        return true;
+      },
+      isTouchedOrDirty: () => true
+    },
+    specialExplanations: {
+      name: 'specialExplanations',
+      langKey: 'special_explanations',
+      index: 7,
+      validStatus: () => {
+        return !!this.specialExplanation && !this.specialExplanation.invalid;
+      },
+      isTouchedOrDirty: () => true
+    },
+    attachments: {
+      name: 'attachments',
+      langKey: 'attachments',
+      index: 8,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    }
+  }
+
   constructor(public lang: LangService,
-    public fb: FormBuilder,
-    private cd: ChangeDetectorRef,
-    public service: GeneralAssociationMeetingAttendanceService,
-    private lookupService: LookupService,
-    private dialog: DialogService,
-    private toast: ToastService,
-    private licenseService: LicenseService,
-    private employeeService: EmployeeService,
-    private sharedService: SharedService) {
+              public fb: FormBuilder,
+              private cd: ChangeDetectorRef,
+              public service: GeneralAssociationMeetingAttendanceService,
+              private lookupService: LookupService,
+              private dialog: DialogService,
+              private toast: ToastService,
+              private licenseService: LicenseService,
+              private employeeService: EmployeeService,
+              private sharedService: SharedService) {
     super();
+  }
+
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
   }
 
   get basicInfo(): FormGroup {
@@ -168,25 +268,15 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return this.form?.get('basicInfo.periodical')! as FormControl;
   }
 
-
   get specialExplanation(): FormGroup {
     return this.form?.get('explanation')! as FormGroup;
-  }
-
-  get agendaItem(): FormControl {
-    return this.agendaForm?.get('description')! as FormControl;
-  }
-
-  get generalNote(): FormGroup {
-    return this.generalNotesForm?.value as FormGroup;
   }
 
   _initComponent(): void {
     // load initials here
     this.isExternalUser = this.employeeService.isExternalUser();
     this.memberId = this.employeeService.getCurrentUser()?.generalUserId!;
-    this.buildAgendaForm();
-    this.buildGeneralNotesForm();
+
     this.listenToImportFinalReport();
     // this.listenToDownloadFinalReport();
     // this.initMeetingPointsForm();
@@ -202,7 +292,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.setDatePeriodValidation();
 
     this._buildDatepickerControlsMap();
-    this.fm = new FormManager(this.form, this.lang);
   }
 
   _afterBuildForm(): void {
@@ -214,16 +303,13 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       return;
     }
 
-    this.model = new GeneralAssociationMeetingAttendance().clone({ ...this.model, ...model });
+    this.model = new GeneralAssociationMeetingAttendance().clone({...this.model, ...model});
     this.form.patchValue({
       basicInfo: this.model?.buildBasicInfo(),
       explanation: this.model?.buildExplanation()
     });
 
-    this.selectedAdministrativeBoardMembers = this.model?.administrativeBoardMembers;
-    this.selectedGeneralAssociationMembers = this.model?.generalAssociationMembers;
     this.selectedInternalUsers = this.model?.internalMembersDTO;
-    this.agendaItems = this.getAgendaItemsAsJson(this.model?.agenda);
 
     this.setDatePeriodValidation();
     this.handleRequestTypeChange(model.requestType, false);
@@ -250,18 +336,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
           this.generalNotes = notes.filter(n => n.finalComment !== 1);
         });
       }
-
-
-      // let generalNotesObservable = (this.isDecisionMakerReview && this.model?.isSendToMember) ? this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, this.model?.id) : this.service.getMeetingGeneralNotes(this.memberId, this.model?.id)
-      // generalNotesObservable
-      //   .subscribe(notes => {
-      //
-      //     if(this.isDecisionMakerReview && this.model?.isSendToMember) {
-      //       this.membersGeneralNotes = notes;
-      //     } else {
-      //       this.generalNotes = notes;
-      //     }
-      //   });
     }
 
     if (this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep() || this.model?.isManagerFinalReviewStep()) {
@@ -336,50 +410,52 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         .pipe(map((licenses) => {
           return licenses[0];
         })).subscribe((license) => {
-          this.oldModel = license;
-          this.service.getMeetingPointsForDecisionMaker(license.id).subscribe(meetingReport => {
-            this.oldMeetingReport = meetingReport;
-          });
+        this.oldModel = license;
+        this.service.getMeetingPointsForDecisionMaker(license.id).subscribe(meetingReport => {
+          this.oldMeetingReport = meetingReport;
+        });
 
-          let allGeneralMeetingNotesObs = this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, license?.id);
-          allGeneralMeetingNotesObs.subscribe(notes => {
-            this.oldMembersGeneralNotes = notes;
-          });
-          this.oldSelectedInternalUsers = license?.internalMembersDTO;
+        let allGeneralMeetingNotesObs = this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, license?.id);
+        allGeneralMeetingNotesObs.subscribe(notes => {
+          this.oldMembersGeneralNotes = notes;
+        });
+        this.oldSelectedInternalUsers = license?.internalMembersDTO;
 
-          this.service.getMemberTaskStatus(license?.id).subscribe(membersStatus => {
-            this.oldMeetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
-            this.oldSelectedInternalUsers = this.oldSelectedInternalUsers.map(user => {
-              user.pId = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
-              user.name = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
-              user.tkiid = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
-              user.userId = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
-              return user;
-            });
+        this.service.getMemberTaskStatus(license?.id).subscribe(membersStatus => {
+          this.oldMeetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
+          this.oldSelectedInternalUsers = this.oldSelectedInternalUsers.map(user => {
+            user.pId = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
+            user.name = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
+            user.tkiid = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
+            user.userId = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
+            return user;
           });
         });
+      });
     }
   }
+
   isUpdateRequest() {
     return this.requestTypeField.value == GeneralAssociationMeetingRequestTypeEnum.UPDATE;
   }
+
   private setDatePeriodValidation() {
     if (this.operation === OperationTypes.CREATE || this.model?.caseStatus === this.commonCaseStatus.DRAFT || this.model?.caseStatus === this.commonCaseStatus.NEW || this.model?.isCharityManagerReviewStep() || this.model?.isSupervisionAndControlReviewStep() || this.model?.isSupervisionManagerReviewStep() || this.model?.isSupervisionAndControlReworkStep()) {
       this.datepickerOptionsMap = {
-        meetingDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' })
+        meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
       };
     } else {
       this.datepickerOptionsMap = {
-        meetingDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' })
+        meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
       };
     }
   }
 
   _resetForm(): void {
     this.form.reset();
-    this.selectedAdministrativeBoardMembers = [];
-    this.selectedGeneralAssociationMembers = [];
-    this.agendaItems = [];
+    this.administrativeBoardMembersRef?.forceClearComponent();
+    this.generalAssociationMembersRef?.forceClearComponent();
+    this.meetingAgendaListComponentRef?.forceClearComponent();
     this.hasSearchedForLicense = false;
   }
 
@@ -388,10 +464,10 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       ...this.model,
       ...this.basicInfo.getRawValue(),
       ...this.specialExplanation.getRawValue(),
-      administrativeBoardMembers: this.selectedAdministrativeBoardMembers,
-      generalAssociationMembers: this.selectedGeneralAssociationMembers,
+      administrativeBoardMembers: this.administrativeBoardMembersRef?.list ?? [],
+      generalAssociationMembers: this.generalAssociationMembersRef?.list ?? [],
       internalMembersDTO: this.selectedInternalUsers,
-      agenda: this.getAgendaItemsAsString(this.agendaItems)
+      agendaList: this.meetingAgendaListComponentRef?.list ?? []
     });
   }
 
@@ -405,17 +481,17 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         return true;
       }
     } else {
-      if (this.selectedAdministrativeBoardMembers && this.selectedAdministrativeBoardMembers.length < 1) {
+      if (this.administrativeBoardMembersRef && this.administrativeBoardMembersRef.list.length < 1) {
         this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_administrative_board_members);
         return false;
       }
 
-      if (this.selectedGeneralAssociationMembers && this.selectedGeneralAssociationMembers.length < 1) {
+      if (this.generalAssociationMembersRef && this.generalAssociationMembersRef.list.length < 1) {
         this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_general_association_members);
         return false;
       }
 
-      if (this.agendaItems && this.agendaItems.length < 1) {
+      if (this.meetingAgendaListComponentRef && this.meetingAgendaListComponentRef.list.length < 1) {
         this.dialog.error(this.lang.map.you_should_add_at_least_one_item_to_meeting_agenda);
         return false;
       }
@@ -435,7 +511,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -560,12 +636,15 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   private openSelectLicense(licenses: GeneralAssociationMeetingAttendance[]) {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns, this.oldFullSerialField.value, true).onAfterClose$ as Observable<{ selected: GeneralAssociationMeetingAttendance, details: GeneralAssociationMeetingAttendance }>;
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns, this.oldFullSerialField.value, true).onAfterClose$ as Observable<{
+      selected: GeneralAssociationMeetingAttendance,
+      details: GeneralAssociationMeetingAttendance
+    }>;
   }
 
   searchForLicense() {
     this.licenseService
-      .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({ fullSerial: this.oldFullSerialField.value })
+      .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({fullSerial: this.oldFullSerialField.value})
       .pipe(takeUntil(this.destroy$))
       .pipe(map(licenses =>
         licenses.filter((l: GeneralAssociationMeetingAttendance) => l.caseStatus == CommonCaseStatus.INITIAL_APPROVE)))
@@ -576,7 +655,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       }))
       .pipe(
         filter<null | SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>, SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>>
-          ((info): info is SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance> => !!info))
+        ((info): info is SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance> => !!info))
       .subscribe((_info) => {
         this.setSelectedLicense(_info.details)
       });
@@ -642,186 +721,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       });
   }
 
-  onAdministrativeBoardMembersChanged(memberList: GeneralAssociationExternalMember[]) {
-    this.selectedAdministrativeBoardMembers = memberList;
-  }
-
-  onGeneralAssociationMembersChanged(memberList: GeneralAssociationExternalMember[]) {
-    this.selectedGeneralAssociationMembers = memberList;
-  }
-
   onInternalMembersChanged(memberList: GeneralAssociationInternalMember[]) {
     this.selectedInternalUsers = memberList;
-  }
-
-  // add agenda items functionality
-  buildAgendaForm(): void {
-    this.agendaForm = this.fb.group({
-      description: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]]
-    });
-  }
-
-  openAddAgendaForm() {
-    this.addAgendaFormActive = true;
-  }
-
-  selectAgendaItem(event: MouseEvent, item: string) {
-    this.addAgendaFormActive = true;
-    event.preventDefault();
-    this.selectedAgendaItem = item;
-    this.agendaForm.patchValue({ description: this.selectedAgendaItem! });
-    this.selectedAgendaItemIndex = this.agendaItems.indexOf(item);
-  }
-
-  saveAgendaItem() {
-    const item = this.agendaItem.value;
-    if (!this.selectedAgendaItem) {
-      if (!this.isExistAgendaItemInCaseOfAdd(this.agendaItems, item)) {
-        this.agendaItems = this.agendaItems.concat(item);
-        this.resetAgendaForm();
-        this.addAgendaFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    } else {
-      if (!this.isExistAgendaItemInCaseOfEdit(this.agendaItems, item, this.selectedAgendaItemIndex!)) {
-        let newList = this.agendaItems.slice();
-        newList.splice(this.selectedAgendaItemIndex!, 1);
-        newList.splice(this.selectedAgendaItemIndex!, 0, item);
-        this.agendaItems = newList;
-        this.resetAgendaForm();
-        this.addAgendaFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    }
-  }
-
-  cancelAddAgendaItem() {
-    this.resetAgendaForm();
-    this.addAgendaFormActive = false;
-  }
-
-  resetAgendaForm() {
-    this.selectedAgendaItem = null;
-    this.selectedAgendaItemIndex = null;
-    this.agendaForm.reset();
-  }
-
-  removeAgendaItem(event: MouseEvent, item: string) {
-    event.preventDefault();
-    this.agendaItems = this.agendaItems.filter(x => x != item);
-    this.resetAgendaForm();
-  }
-
-  isExistAgendaItemInCaseOfAdd(agendaItems: string[], toBeAddedAgendaItem: string): boolean {
-    return agendaItems.includes(toBeAddedAgendaItem);
-  }
-
-  isExistAgendaItemInCaseOfEdit(agendaItems: string[], toBeEditedAgendaItem: string, selectedIndex: number): boolean {
-    for (let i = 0; i < agendaItems.length; i++) {
-      if (i === selectedIndex) {
-        continue;
-      }
-
-      if (agendaItems[i] === toBeEditedAgendaItem) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  getAgendaItemsAsString(agendaItems: string[]): string {
-    return JSON.stringify(agendaItems);
-  }
-
-  getAgendaItemsAsJson(agendaItems: string) {
-    if (agendaItems) {
-      return JSON.parse(agendaItems);
-    }
-    return [];
-  }
-
-  // add general notes functionality
-  buildGeneralNotesForm(): void {
-    this.generalNotesForm = this.fb.group({
-      id: [],
-      caseID: [],
-      memberID: [],
-      comment: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]]
-    });
-  }
-
-  openAddGeneralNotesForm() {
-    this.addGeneralNotesFormActive = true;
-  }
-
-  selectGeneralNote(event: MouseEvent, item: GeneralMeetingAttendanceNote) {
-    this.addGeneralNotesFormActive = true;
-    event.preventDefault();
-    this.selectedGeneralNote = item;
-    this.generalNotesForm.patchValue(item);
-    this.selectedGeneralNoteIndex = this.generalNotes.indexOf(item);
-  }
-
-  saveGeneralNote() {
-    const item = new GeneralMeetingAttendanceNote().clone({ ...new GeneralMeetingAttendanceNote(), ...this.generalNote });
-    item.caseID = item?.caseID ? item.caseID : this.model!.id;
-    item.memberID = item?.memberID ? item.memberID : this.memberId;
-    if (!this.selectedGeneralNote) {
-      if (!this.isExistGeneralNoteInCaseOfAdd(this.generalNotes, item)) {
-        this.generalNotes = this.generalNotes.concat(item);
-        this.resetGeneralNotesForm();
-        this.addGeneralNotesFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    } else {
-      if (!this.isExistGeneralNoteInCaseOfEdit(this.generalNotes, item, this.selectedGeneralNoteIndex!)) {
-        let newList = this.generalNotes.slice();
-        newList.splice(this.selectedGeneralNoteIndex!, 1);
-        newList.splice(this.selectedGeneralNoteIndex!, 0, item);
-        this.generalNotes = newList;
-        this.resetGeneralNotesForm();
-        this.addGeneralNotesFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    }
-  }
-
-  cancelAddGeneralNote() {
-    this.resetGeneralNotesForm();
-    this.addGeneralNotesFormActive = false;
-  }
-
-  resetGeneralNotesForm() {
-    this.selectedGeneralNote = null;
-    this.selectedGeneralNoteIndex = null;
-    this.generalNotesForm.reset();
-  }
-
-  removeGeneralNote(event: MouseEvent, item: GeneralMeetingAttendanceNote) {
-    event.preventDefault();
-    this.generalNotes = this.generalNotes.filter(x => x.id ? x.id !== item.id : x.comment !== item.comment);
-    this.resetGeneralNotesForm();
-  }
-
-  isExistGeneralNoteInCaseOfAdd(generalNotes: GeneralMeetingAttendanceNote[], toBeAddedGeneralNote: GeneralMeetingAttendanceNote): boolean {
-    return generalNotes.map(x => x.comment).includes(toBeAddedGeneralNote.comment);
-  }
-
-  isExistGeneralNoteInCaseOfEdit(generalNotes: GeneralMeetingAttendanceNote[], toBeEditedGeneralNote: GeneralMeetingAttendanceNote, selectedIndex: number): boolean {
-    for (let i = 0; i < generalNotes.length; i++) {
-      if (i === selectedIndex) {
-        continue;
-      }
-
-      if (generalNotes[i].comment === toBeEditedGeneralNote.comment) {
-        return true;
-      }
-    }
-    return false;
   }
 
   handleReadonly(): void {
@@ -865,11 +766,11 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   getMeetingDateClass() {
     if (this.readonly && this.canUpdateMeetingDate()) {
-      return { 'input-disabled': false };
+      return {'input-disabled': false};
     } else if (this.readonly || this.isCancel) {
-      return { 'input-disabled': true };
+      return {'input-disabled': true};
     } else {
-      return { 'input-disabled': false };
+      return {'input-disabled': false};
     }
   }
 
@@ -998,25 +899,25 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   getRemoveMainItemClass() {
     if (this.lang.map.lang === 'en') {
-      return { 'remove-main-item-right': true, 'remove-main-item-left': false };
+      return {'remove-main-item-right': true, 'remove-main-item-left': false};
     } else {
-      return { 'remove-main-item-right': false, 'remove-main-item-left': true };
+      return {'remove-main-item-right': false, 'remove-main-item-left': true};
     }
   }
 
   getRemoveSubItemClass() {
     if (this.lang.map.lang === 'en') {
-      return { 'remove-sub-item-right': true, 'remove-sub-item-left': false };
+      return {'remove-sub-item-right': true, 'remove-sub-item-left': false};
     } else {
-      return { 'remove-sub-item-right': false, 'remove-sub-item-left': true };
+      return {'remove-sub-item-right': false, 'remove-sub-item-left': true};
     }
   }
 
   getViewSubItemClass() {
     if (this.lang.map.lang === 'en') {
-      return { 'view-sub-item-right': true, 'view-sub-item-left': false };
+      return {'view-sub-item-right': true, 'view-sub-item-left': false};
     } else {
-      return { 'view-sub-item-right': false, 'view-sub-item-left': true };
+      return {'view-sub-item-right': false, 'view-sub-item-left': true};
     }
   }
 
@@ -1062,31 +963,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return report;
   }
 
-  saveGeneralNotes() {
-    const meetingGeneralNotes = this.generalNotes.map(x => {
-      return new GeneralMeetingAttendanceNote().clone(x);
-    });
-    this.service.addMeetingGeneralNotes(meetingGeneralNotes, this.model?.id).subscribe(ret => {
-      this.dialog.success(this.lang.map.general_notes_saved_successfully);
-      this.generalNotes = ret.map(x => {
-        return new GeneralMeetingAttendanceNote().clone(x);
-      });
-    });
-  }
-
-  saveFinalGeneralNotes() {
-    const meetingGeneralNotes = this.generalNotes.map(x => {
-      return new GeneralMeetingAttendanceNote().clone(x);
-    });
-    this.service.addFinalMeetingGeneralNotes(meetingGeneralNotes, this.model?.id).subscribe(ret => {
-      this.dialog.success(this.lang.map.general_notes_saved_successfully);
-      this.generalNotes = ret.map(x => {
-        return new GeneralMeetingAttendanceNote().clone(x);
-      });
-    });
-  }
-
-  terminateUserTask(event: MouseEvent, item: MeetingMemberTaskStatus) {
+  terminateUserTask(item: MeetingMemberTaskStatus) {
     this.service.terminateMemberTask(item.tkiid).subscribe(_ => {
       this.dialog.success(this.lang.map.member_task_terminated_successfully);
       this.loadMembersTaskStatus();
@@ -1138,7 +1015,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     if (files && files[0]) {
       const extension = files[0].name.getExtension().toLowerCase();
       if (this.finalReportExtensions.indexOf(extension) === -1) {
-        this.dialog.error(this.lang.map.msg_invalid_format_allowed_formats.change({ formats: this.finalReportExtensions.join(', ') }));
+        this.dialog.error(this.lang.map.msg_invalid_format_allowed_formats.change({formats: this.finalReportExtensions.join(', ')}));
         this._clearReportUploader();
         return;
       }

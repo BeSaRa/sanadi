@@ -1,27 +1,25 @@
-import { Component } from '@angular/core';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { AuditOperationTypes } from '@app/enums/audit-operation-types';
-import { AuditListGenericComponent } from '@app/generics/audit-list-generic-component';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IFindInList } from '@app/interfaces/i-find-in-list';
-import { GeneralAssociationAgenda } from '@app/models/general-association-meeting-agenda';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { CaseAuditService } from '@app/services/case-audit.service';
-import { LangService } from '@app/services/lang.service';
-import { ControlValueLabelLangKey } from '@app/types/types';
-import { CustomValidators } from '@app/validators/custom-validators';
+import {Component} from '@angular/core';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {AuditOperationTypes} from '@app/enums/audit-operation-types';
+import {AuditListGenericComponent} from '@app/generics/audit-list-generic-component';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IFindInList} from '@app/interfaces/i-find-in-list';
+import {GeneralAssociationAgenda} from '@app/models/general-association-meeting-agenda';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {CaseAuditService} from '@app/services/case-audit.service';
+import {LangService} from '@app/services/lang.service';
+import {ControlValueLabelLangKey} from '@app/types/types';
 
 @Component({
-    selector: 'audit-meeting-agenda',
-    templateUrl: 'audit-meeting-agenda.component.html',
-    styleUrls: ['audit-meeting-agenda.component.scss']
+  selector: 'audit-meeting-agenda',
+  templateUrl: 'audit-meeting-agenda.component.html',
+  styleUrls: ['audit-meeting-agenda.component.scss']
 })
 export class AuditMeetingAgendaComponent extends AuditListGenericComponent<GeneralAssociationAgenda> {
   constructor(public lang: LangService,
-    public caseAuditService: CaseAuditService) {
+              public caseAuditService: CaseAuditService) {
     super();
   }
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   displayColumns: string[] = ['description', 'actions'];
   actions: IMenuItem<GeneralAssociationAgenda>[] = [

@@ -36,6 +36,7 @@ export enum ActionIconsEnum {
   OPEN_MAIL = 'mdi-email-open',
   CLOSE_MAIL = 'mdi-email',
   TERMINATE = 'mdi-stop',
+  STOP_CIRCLE = 'mdi-stop-circle-outline',
   ATTACHMENT = 'mdi-attachment',
   LAUNCH = 'mdi-rocket-launch-outline',
   APPROVE = 'mdi-check-decagram-outline',

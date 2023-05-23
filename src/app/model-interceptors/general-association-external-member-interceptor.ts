@@ -9,6 +9,7 @@ export class GeneralAssociationExternalMemberInterceptor implements IModelInterc
     delete model.jobTitleInfo;
     delete model.langService;
     delete model.searchFields;
+    delete model.searchFieldsGeneralAssociation;
     return model;
   }
 

@@ -32,6 +32,11 @@ import {
 import { ManagePrevInternalUsersComponent } from '@modules/services/general-association-meeting-attendance/shared/manage-prev-internal-users/manage-prev-internal-users.component';
 import { AuditGeneralAssociationExternalMemberComponent } from './audit/audit-general-association-external-member/audit-general-association-external-member.component';
 import { AuditMeetingAgendaComponent } from './audit/audit-meeting-agenda/audit-meeting-agenda.component';
+import { ManageMembersPopupComponent } from './popups/manage-members-popup/manage-members-popup.component';
+import { MeetingAgendaListComponent } from './shared/meeting-agenda-list/meeting-agenda-list.component';
+import { MeetingAgendaPopupComponent } from './popups/meeting-agenda-popup/meeting-agenda-popup.component';
+import { GeneralMeetingAttendanceNotesListComponent } from '@modules/services/general-association-meeting-attendance/shared/general-meeting-attendance-notes-list/general-meeting-attendance-notes-list.component';
+import { GeneralMeetingAttendanceNotesPopupComponent } from './popups/general-meeting-attendance-notes-popup/general-meeting-attendance-notes-popup.component';
 
 
 @NgModule({
@@ -48,7 +53,12 @@ import { AuditMeetingAgendaComponent } from './audit/audit-meeting-agenda/audit-
     ManagePrevInternalUsersComponent,
     AuditGeneralAssociationMeetingAttendanceComponent,
     AuditGeneralAssociationExternalMemberComponent,
-    AuditMeetingAgendaComponent
+    AuditMeetingAgendaComponent,
+    ManageMembersPopupComponent,
+    MeetingAgendaListComponent,
+    MeetingAgendaPopupComponent,
+    GeneralMeetingAttendanceNotesListComponent,
+    GeneralMeetingAttendanceNotesPopupComponent
   ],
   imports: [
     CommonModule,
