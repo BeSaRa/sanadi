@@ -11,6 +11,10 @@ import {CaseTypes} from '@enums/case-types.enum';
 import {DialogService} from '@services/dialog.service';
 import {ToastService} from '@services/toast.service';
 import {ILanguageKeys} from '@contracts/i-language-keys';
+import {UiCrudDialogComponentDataContract} from "@contracts/ui-crud-dialog-component-data-contract";
+import {CommonUtils} from "@helpers/common-utils";
+import {DateUtils} from "@helpers/date-utils";
+import {DatepickerOptionsMap} from "@app/types/types";
 
 @Directive()
 export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterViewInit, OnDestroy {
@@ -44,6 +48,7 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
   commonStatusEnum = CommonStatusEnum;
   caseTypes = CaseTypes;
   list: M[] = [];
+  listIndex: number = -1;
   readonly: boolean = false;
   hideFullScreen: boolean = false;
 
@@ -139,6 +144,13 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
    */
   abstract buildForm(): void;
 
+  setInitDialogData(data: UiCrudDialogComponentDataContract<M>){
+    this.model = data.model;
+    this.operation = data.operation;
+    this.listIndex = data.listIndex;
+    this.list = data.list;
+  }
+
   /**
    * @description default implementation to listen to save method you can override it if you need custom logic
    */
@@ -201,5 +213,17 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
 
   setReadonly(readonly: boolean) {
     this.readonly = readonly;
+  }
+
+  enablePastSelectedDates(datepickerOptionsMap: DatepickerOptionsMap): void {
+    for (const [key, options] of Object.entries(datepickerOptionsMap)) {
+      if (CommonUtils.isValidValue(options.disableUntil)) {
+        // @ts-ignore
+        const dateValue = DateUtils.getYearMonthDayFromDate(this.model[key] ?? undefined);
+        if (CommonUtils.isValidValue(dateValue)) {
+          datepickerOptionsMap[key].enableDates = [dateValue!];
+        }
+      }
+    }
   }
 }
