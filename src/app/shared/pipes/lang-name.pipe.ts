@@ -6,9 +6,9 @@ import { CommonUtils } from '@app/helpers/common-utils';
 })
 export class LangNamePipe implements PipeTransform {
 
-  transform(value: any, args?: any): any {
+  transform(value: any, funcName?:string): any {
     if (!CommonUtils.isValidValue(value)) return '';
-
+    if(funcName) return value[funcName]()
     return value.getName();
   }
 

@@ -1,4 +1,4 @@
-<!-- <div class="dialog-toolbar bg-primary d-flex justify-content-between">
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
     <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
@@ -7,18 +7,16 @@
             tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content w800px" #dialogContent>
+<div class="dialog-content no-fixed-height" style="width: 400px;" #dialogContent>
   <div class="row">
-    <div class="col col-md-6">
-      <div class="d-flex align-items-center justify-content-start">
-        <h1 class="h6 text-primary">{{lang.map.menu_users}}</h1>
-        <div>
-          <select [formControl]="userControl" class="form-select mx-4">
-            <option [ngValue]="user.domainName" *ngFor="let user of users">{{user.getName()}}</option>
-          </select>
-        </div>
-      </div>
+    <div>
+      <label for="user" class="h6 text-primary">{{lang.map.employees}}</label>
+      <ng-select [selectOnTab]="true" [clearable]="false" id="user" placeholder="{{lang.map.select}}"
+        [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="userControl">
+        <ng-option [value]="user.domainName" *ngFor="let user of users">{{user | langName}}</ng-option>
+      </ng-select>
     </div>
+
   </div>
 </div>
 <div class="dialog-actions">
@@ -26,4 +24,4 @@
   <button [disabled]="userControl.invalid"  (click)="save()"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
-</div> -->
+</div>

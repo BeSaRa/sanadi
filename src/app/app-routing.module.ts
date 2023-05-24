@@ -411,6 +411,7 @@ const routes: Routes = [
         data: {configPermissionGroup: PermissionGroupsEnum.OFFICE_SERVICES_PERMISSIONS_GROUP, checkAnyPermission: true}
       },*/
       {path: 'user-inbox', loadChildren: () => import('./user-inbox/user-inbox.module').then(m => m.UserInboxModule)},
+      {path: 'manage-user-inbox', loadChildren: () => import('./modules/inbox/inbox.module').then(m => m.InboxModule)},
       {
         path: 'team-inbox',
         canActivate: [PermissionGuard.canActivate],

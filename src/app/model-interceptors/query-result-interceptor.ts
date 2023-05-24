@@ -8,6 +8,12 @@ export class QueryResultInterceptor implements IModelInterceptor<QueryResult> {
     delete model.orgInfo;
     delete model.riskStatusInfo;
     delete model.displayNameInfo;
+    delete model.teamInfo;
+    delete model.service;
+    delete model.dialog;
+    delete model.lang;
+    delete model.employeeService;
+    delete model.encrypt;
     return model;
   }
 

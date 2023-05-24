@@ -1,13 +1,15 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {UrlService} from '@services/url.service';
-import {Observable, of} from 'rxjs';
-import {CastResponse} from '@decorators/cast-response';
-import {Common} from '@app/models/common';
-import {catchError, map, tap} from 'rxjs/operators';
-import {AdminResult} from '@app/models/admin-result';
-import {ImplementingAgencyTypes} from "@app/enums/implementing-agency-types.enum";
+import { GeneralInterceptor } from './../model-interceptors/general-interceptor';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { UrlService } from '@services/url.service';
+import { Observable, of } from 'rxjs';
+import { CastResponse } from '@decorators/cast-response';
+import { Common } from '@app/models/common';
+import { catchError, map, tap } from 'rxjs/operators';
+import { AdminResult } from '@app/models/admin-result';
+import { ImplementingAgencyTypes } from "@app/enums/implementing-agency-types.enum";
 import { QueryResult } from '@app/models/query-result';
+import { QueryResultInterceptor } from '@app/model-interceptors/query-result-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,7 @@ export class CommonService {
   flags?: Common['flags']
 
   constructor(private http: HttpClient,
-              private urlService: UrlService) {
+    private urlService: UrlService) {
   }
 
   _getURLSegment(): string {
@@ -55,7 +57,7 @@ export class CommonService {
     queryParams = queryParams.append('type', agencyType);
     executionCountry && (
       queryParams = queryParams.append('country', executionCountry))
-    return this.http.get(this._getURLSegment() + '/agency', {params: queryParams})
+    return this.http.get(this._getURLSegment() + '/agency', { params: queryParams })
       .pipe(
         catchError((_err: any) => of([])),
         map((result: any) => result.rs.map((x: AdminResult) => AdminResult.createInstance(x)))
@@ -75,27 +77,37 @@ export class CommonService {
     })
   }
   @CastResponse(() => AdminResult)
-  loadExternalAssignUsers(profileId:number,tasks:QueryResult[] = []): Observable<AdminResult[]> {
-    return this.http.get<AdminResult[]>(this._getURLSegment() + '/external/assign-user', {
+  loadExternalAssignUsers(profileId: number, tasks: Partial<QueryResult>[]): Observable<AdminResult[]> {
 
-      params: new HttpParams({
-        fromObject: {
-          tasks:JSON.stringify(tasks),
-          profileId
-        }
-      })
-    })
+    return this.http.post<AdminResult[]>(this._getURLSegment() + '/external/assign-user',
+      this.prepareQueryResults(tasks),{
+        params: new HttpParams({
+          fromObject:{
+            profileId
+          }
+        })
+      }
+    )
   }
   @CastResponse(() => AdminResult)
-  loadInternalAssignUsers(departmentId :number,tasks:QueryResult[] = []): Observable<AdminResult[]> {
+  loadInternalAssignUsers(departmentId: number, tasks: Partial<QueryResult>[]): Observable<AdminResult[]> {
 
-    return this.http.get<AdminResult[]>(this._getURLSegment() + '/internal/assign-user', {
-      params: new HttpParams({
-        fromObject: {
-          tasks:JSON.stringify(tasks),
-          departmentId
-        }
+    return this.http.post<AdminResult[]>(this._getURLSegment() + '/internal/assign-user',
+      this.prepareQueryResults(tasks),{
+        params: new HttpParams({
+          fromObject: {
+            departmentId
+          }
+        })
       })
-    })
+  }
+
+  private prepareQueryResults(queryResults: Partial<QueryResult>[]) {
+    return queryResults.map(e => {
+      return {
+        TKIID: e.TKIID,
+        BD_CASE_TYPE: e.BD_CASE_TYPE
+      }
+    });
   }
 }
