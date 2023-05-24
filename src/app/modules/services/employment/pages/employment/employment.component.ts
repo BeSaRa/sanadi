@@ -155,14 +155,15 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
       invalidDraftField.control.markAsTouched();
       return false;
     }
-    if (this.isNewRequestType()) {
-      return true;
-    } else {
-      if (!this._hasEmployeeItems()) {
-        this.invalidItemMessage();
-        return false;
-      }
-    }
+    // if (this.isNewRequestType()) {
+    //   return true;
+    // }
+    // else {
+    //   if (!this._hasEmployeeItems()) {
+    //     this.invalidItemMessage();
+    //     return false;
+    //   }
+    // }
     return true;
   }
 
