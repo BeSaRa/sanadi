@@ -50,13 +50,29 @@ export class InterventionImplementingAgencyListPopupComponent extends UiCrudDial
     this.dialogRef.close(savedModel);
   }
 
+  private isEqual(record1: Partial<ImplementingAgency>, record2: Partial<ImplementingAgency>): boolean {
+    return record1.implementingAgencyType === record2.implementingAgencyType
+      && record1.implementingAgency === record2.implementingAgency
+  }
+
+  isDuplicate(formValue: any): boolean {
+    if (this.operation === OperationTypes.CREATE) {
+      return this.list.some((item) => this.isEqual(item, formValue));
+    }
+    if (this.operation === OperationTypes.UPDATE) {
+      return this.list.some((item: ImplementingAgency, index: number) => {
+        return index !== this.listIndex && this.isEqual(item, formValue);
+      });
+    }
+    return false;
+  }
+
   beforeSave(model: ImplementingAgency, form: UntypedFormGroup): Observable<boolean> | boolean {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
       return false;
     }
-    const isDuplicate = this.list.some((x) => x === form.getRawValue());
-    if (isDuplicate) {
+    if (this.isDuplicate(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }
@@ -95,6 +111,7 @@ export class InterventionImplementingAgencyListPopupComponent extends UiCrudDial
     this.model = data.model;
     this.operation = data.operation;
     this.list = data.list;
+    this.listIndex = data.listIndex;
     this.executionCountry = (data.extras && data.extras.executionCountry) ?? undefined;
   }
 
