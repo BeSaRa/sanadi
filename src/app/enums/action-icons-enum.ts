@@ -64,5 +64,6 @@ export enum ActionIconsEnum {
   INFO = 'mdi-information',
   FILE_HISTORY = 'mdi-file-clock',
   COMMENT = 'mdi-comment',
-  CHANGE_DATE = 'mdi-calendar-edit'
+  CHANGE_DATE = 'mdi-calendar-edit',
+  REASSIGN = 'mdi-account-convert'
 }

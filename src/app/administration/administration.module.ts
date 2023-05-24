@@ -136,8 +136,8 @@ import {
 } from "@app/administration/shared/user-permission-external/user-permission-external.component";
 import { ServiceDataCustomTemplatesComponent } from './shared/service-data-custom-templates/service-data-custom-templates.component';
 import { ServiceDataCustomTemplatePopupComponent } from './popups/service-data-custom-template-popup/service-data-custom-template-popup.component';
-import { ManageUserInboxComponent } from './pages/manage-user-inbox/manage-user-inbox.component';
-import { ReassignTaskPopupComponent } from './popups/reassign-task-popup/reassign-task-popup.component';
+import { ManageUserInboxComponent } from '../modules/inbox/pages/manage-user-inbox/manage-user-inbox.component';
+import { ReassignTaskPopupComponent } from '../modules/inbox/popups/reassign-task-popup/reassign-task-popup.component';
 
 @NgModule({
   declarations: [
@@ -233,9 +233,7 @@ import { ReassignTaskPopupComponent } from './popups/reassign-task-popup/reassig
     UserPermissionExternalComponent,
     CustomMenuDefaultsPopupComponent,
     ServiceDataCustomTemplatesComponent,
-    ServiceDataCustomTemplatePopupComponent,
-    ManageUserInboxComponent,
-    ReassignTaskPopupComponent
+    ServiceDataCustomTemplatePopupComponent
   ],
   imports: [
     SharedModule,

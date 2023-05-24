@@ -55,6 +55,7 @@ enum SystemPathsEnum {
 enum DefaultItemOrder {
   USER_INBOX = 1,
   TEAM_INBOX = 2,
+  INBOX_FOLLOW_UP=2,
   INTERNAL_FOLLOWUP = 3,
   EXTERNAL_FOLLOWUP = 4,
   SANADI = 5,
@@ -2769,14 +2770,15 @@ export const newNavigationMenuList = [
   {
     id: 89,
     langKey: 'menu_manage_user_inbox',
-    path: '/home/administration/manage-user-inbox',
+    path: '/home/manage-user-inbox',
     icon: 'mdi-badge-account-horizontal-outline',
     isSvg: false,
-    permission: PermissionsEnum.INBOX_FOLLOW_UP,
+    // permission: PermissionsEnum.INBOX_FOLLOW_UP,
+    permission:'',
     permissionGroup: null,
-    parent: 6,
-    group: GroupNames.ADMIN,
-    itemOrder: 23,
+    parent: null,
+    group: GroupNames.MAIN,
+    itemOrder: DefaultItemOrder.INBOX_FOLLOW_UP,
     svg: null
   },
 ];

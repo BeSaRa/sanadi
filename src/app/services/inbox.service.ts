@@ -1,3 +1,4 @@
+import { QueryResultInterceptor } from '@app/model-interceptors/query-result-interceptor';
 import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
 import {
   ReturnToOrganizationWithCommentPopupComponent
@@ -74,6 +75,7 @@ import { CharityOrganizationUpdateService } from './charity-organization-update.
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { ProjectFundraisingService } from '@services/project-fundraising.service';
 import { ProjectImplementationService } from '@services/project-implementation.service';
+import { GeneralInterceptor } from '@app/model-interceptors/general-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -446,16 +448,26 @@ export class InboxService {
     return this._loadUserInboxByDomainName(domainName);
   }
   @CastResponse(() => QueryResultSet)
-  private _reassignBulk(queryResults: QueryResult[], domainName: string): Observable<QueryResultSet> {
-    return this.http.post<QueryResultSet>(this.urlService.URLS.REASSIGN_BULK , queryResults,{
+  private _reassignBulk(queryResults: Partial<QueryResult>[], domainName: string): Observable<QueryResultSet> {
+
+    return this.http.post<QueryResultSet>(this.urlService.URLS.REASSIGN_BULK,
+      this.prepareQueryResults(queryResults), {
       params: new HttpParams({
         fromObject: {
-          toUser:domainName,
+          toUser: domainName,
         }
       })
     });
   }
-  reassignBulk(queryResults: QueryResult[], domainName: string): Observable<QueryResultSet> {
+  reassignBulk(queryResults: Partial<QueryResult>[], domainName: string): Observable<QueryResultSet> {
     return this._reassignBulk(queryResults, domainName);
+  }
+  private prepareQueryResults(queryResults: Partial<QueryResult>[]) {
+    return queryResults.map(e => {
+      return {
+        TKIID: e.TKIID,
+        BD_CASE_TYPE: e.BD_CASE_TYPE
+      }
+    });
   }
 }
