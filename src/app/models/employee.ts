@@ -82,7 +82,7 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
       contractExpiryDate: { langKey: 'contract_expiry_date', value: this.contractExpiryDate, comparisonValue: this.contractExpiryDateStamp },
       workStartDate: { langKey: 'work_start_date', value: this.workStartDate, comparisonValue: this.workStartDateStamp },
       workEndDate: { langKey: 'work_end_date', value: this.workEndDate, comparisonValue: this.workEndDateStamp },
-      updatedOn: { langKey: {} as keyof ILanguageKeys, value: this.updatedOn, comparisonValue: this.updatedOnStamp },
+      updatedOn: { langKey: {} as keyof ILanguageKeys, value: this.updatedOn, comparisonValue: this.updatedOnStamp, skipAuditComparison:true },
       jobNumber: { langKey: 'job_number', value: this.jobNumber },
       expIdPass: { langKey: this.identificationType === IdentificationType.Identification ? 'identification_number_exp_date' : 'passport_expiry_date', value: this.expIdPass,comparisonValue:this.expIdPassStamp },
       functionalGroup: { langKey: 'functional_group', value: this.functionalGroup },
