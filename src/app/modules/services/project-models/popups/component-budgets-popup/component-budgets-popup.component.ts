@@ -1,14 +1,11 @@
 import {Component, Inject} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {UiCrudDialogGenericComponent} from "@app/generics/ui-crud-dialog-generic-component.directive";
 import {ProjectComponent} from "@models/project-component";
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
 import {Observable} from 'rxjs';
 import {UiCrudDialogComponentDataContract} from "@contracts/ui-crud-dialog-component-data-contract";
 
@@ -18,26 +15,18 @@ import {UiCrudDialogComponentDataContract} from "@contracts/ui-crud-dialog-compo
   styleUrls: ['./component-budgets-popup.component.scss']
 })
 export class ComponentBudgetsPopupComponent extends UiCrudDialogGenericComponent<ProjectComponent> {
-  operation: OperationTypes;
-  model!: ProjectComponent;
-  form!: UntypedFormGroup;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ProjectComponent>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService) {
+              public fb: UntypedFormBuilder) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'project_components_budgets';
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'project_components_budgets';
   }
 
   getPopupHeadingText(): string {

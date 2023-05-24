@@ -4,12 +4,9 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {NpoContactOfficer} from '@app/models/npo-contact-officer';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {JobTitle} from '@app/models/job-title';
-import {LangService} from '@app/services/lang.service';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
 import {Observable} from 'rxjs';
 import {AdminResult} from '@app/models/admin-result';
 import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
@@ -21,23 +18,16 @@ import {JobTitleService} from '@app/services/job-title.service';
   styleUrls: ['./npo-contact-officer-popup.component.scss']
 })
 export class NpoContactOfficerPopupComponent extends UiCrudDialogGenericComponent<NpoContactOfficer> {
-  operation: OperationTypes;
-  model: NpoContactOfficer;
-  form!: UntypedFormGroup;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
   jobTitleAdminLookup: JobTitle[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<NpoContactOfficer>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
               public fb: UntypedFormBuilder,
-              public toast: ToastService,
               private JobTitleService: JobTitleService) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'contact_officers';
   }
 
   _getNewInstance(override?: Partial<NpoContactOfficer> | undefined): NpoContactOfficer {
@@ -45,10 +35,7 @@ export class NpoContactOfficerPopupComponent extends UiCrudDialogGenericComponen
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'contact_officers';
-    this.JobTitleService.loadActive().subscribe((data) => {
-      this.jobTitleAdminLookup = data;
-    })
+   this.loadJobTitles();
   }
 
   getPopupHeadingText(): string {
@@ -92,5 +79,11 @@ export class NpoContactOfficerPopupComponent extends UiCrudDialogGenericComponen
 
   buildForm(): void {
     this.form = this.fb.group(this.model.getContactOfficerFields(true));
+  }
+
+  private loadJobTitles(): void {
+    this.JobTitleService.loadActive().subscribe((data) => {
+      this.jobTitleAdminLookup = data;
+    })
   }
 }

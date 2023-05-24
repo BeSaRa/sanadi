@@ -7,10 +7,7 @@ import {OperationTypes} from "@enums/operation-types.enum";
 import {ILanguageKeys} from "@contracts/i-language-keys";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {UiCrudDialogComponentDataContract} from "@contracts/ui-crud-dialog-component-data-contract";
-import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {DialogService} from "@services/dialog.service";
-import {ToastService} from "@services/toast.service";
 import {JobTitleService} from "@services/job-title.service";
 import {GeneralAssociationMeetingAttendanceService} from "@services/general-association-meeting-attendance.service";
 import {Observable, of} from "rxjs";
@@ -24,10 +21,7 @@ import {exhaustMap, filter, map, tap} from "rxjs/operators";
   styleUrls: ['./manage-members-popup.component.scss']
 })
 export class ManageMembersPopupComponent extends UiCrudDialogGenericComponent<GeneralAssociationExternalMember> {
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
   popupTitleKey: keyof ILanguageKeys;
-  model: GeneralAssociationExternalMember;
   addLabel!: keyof ILanguageKeys;
   searchVisible!: boolean;
   selectedMemberFromPopup?: GeneralAssociationExternalMember;
@@ -36,18 +30,12 @@ export class ManageMembersPopupComponent extends UiCrudDialogGenericComponent<Ge
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<GeneralAssociationExternalMember>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
               public fb: UntypedFormBuilder,
-              public toast: ToastService,
               public jobTitleService: JobTitleService,
               private generalAssociationMeetingService: GeneralAssociationMeetingAttendanceService) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.listIndex = data.listIndex;
-    this.list = data.list;
+    this.setInitDialogData(data);
     this.addLabel = (data.extras && data.extras.addLabel) ?? null;
     this.isGeneralAssociationMembers = (data.extras && data.extras.isGeneralAssociationMembers) ?? false;
     this.popupTitleKey = this.addLabel;

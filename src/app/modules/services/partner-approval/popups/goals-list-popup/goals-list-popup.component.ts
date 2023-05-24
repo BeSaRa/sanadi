@@ -1,12 +1,10 @@
 import {Component, Inject} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {GoalList} from '@app/models/goal-list';
-import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Lookup} from '@app/models/lookup';
-import {map, takeUntil} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {DomainTypes} from '@app/enums/domain-types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable} from 'rxjs';
@@ -15,8 +13,6 @@ import {DacOchaService} from '@app/services/dac-ocha.service';
 import {LookupService} from '@app/services/lookup.service';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
@@ -26,11 +22,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
   styleUrls: ['./goals-list-popup.component.scss']
 })
 export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalList> {
-  model: GoalList;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
-  commonStatusEnum = CommonStatusEnum;
+  popupTitleKey: keyof ILanguageKeys;
   domainsList: Lookup[] = this.lookupService.listByCategory.Domain;
   mainDACCategoriesList: AdminResult[] = [];
   mainUNOCHACategoriesList: AdminResult[] = [];
@@ -38,17 +30,13 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<GoalList>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
               public fb: UntypedFormBuilder,
-              public toast: ToastService,
               private lookupService: LookupService,
               private dacOchaService: DacOchaService) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'domain';
   }
 
   _getNewInstance(override?: Partial<GoalList> | undefined): GoalList {
@@ -56,7 +44,6 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'domain';
     this.displayByDomain = null;
     this.loadOCHADACClassifications();
   }

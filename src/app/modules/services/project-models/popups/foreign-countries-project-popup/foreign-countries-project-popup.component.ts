@@ -6,9 +6,6 @@ import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {ForeignCountriesProjectsNeed} from '@app/models/foreign-countries-projects-need';
 import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable} from 'rxjs';
@@ -19,23 +16,16 @@ import {Observable} from 'rxjs';
   styleUrls: ['./foreign-countries-project-popup.component.scss']
 })
 export class ForeignCountriesProjectPopupComponent extends UiCrudDialogGenericComponent<ProjectModelForeignCountriesProject> {
-  model: ProjectModelForeignCountriesProject;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
-  foreignCountriesProjectsNeeds!: ForeignCountriesProjectsNeed[];
+  popupTitleKey: keyof ILanguageKeys;
+  foreignCountriesProjectsNeeds: ForeignCountriesProjectsNeed[] = [];
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ProjectModelForeignCountriesProject>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService) {
+              public fb: UntypedFormBuilder) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'project_model_foreign_countries_projects';
     this.foreignCountriesProjectsNeeds = (data.extras && data.extras.foreignCountriesProjectsNeeds) ?? [];
   }
 
@@ -44,7 +34,6 @@ export class ForeignCountriesProjectPopupComponent extends UiCrudDialogGenericCo
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'project_model_foreign_countries_projects';
   }
 
   getPopupHeadingText(): string {

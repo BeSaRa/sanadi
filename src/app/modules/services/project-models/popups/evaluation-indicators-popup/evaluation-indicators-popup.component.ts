@@ -1,52 +1,40 @@
-import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { UiCrudDialogGenericComponent } from '@app/generics/ui-crud-dialog-generic-component.directive';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { AdminLookup } from '@app/models/admin-lookup';
-import { AdminResult } from '@app/models/admin-result';
-import { EvaluationIndicator } from '@app/models/evaluation-indicator';
-import { AdminLookupService } from '@app/services/admin-lookup.service';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { Observable } from 'rxjs';
+import {Component, Inject} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {AdminLookup} from '@app/models/admin-lookup';
+import {AdminResult} from '@app/models/admin-result';
+import {EvaluationIndicator} from '@app/models/evaluation-indicator';
+import {AdminLookupService} from '@app/services/admin-lookup.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'evaluation-indicators-popup',
   templateUrl: './evaluation-indicators-popup.component.html',
   styleUrls: ['./evaluation-indicators-popup.component.scss']
 })
-export class EvaluationIndicatorsPopupComponent extends UiCrudDialogGenericComponent<EvaluationIndicator>{
-  popupTitleKey!: keyof ILanguageKeys;
-  form!: UntypedFormGroup;
-  model: EvaluationIndicator;
-  operation: OperationTypes;
+export class EvaluationIndicatorsPopupComponent extends UiCrudDialogGenericComponent<EvaluationIndicator> {
+  popupTitleKey: keyof ILanguageKeys;
+
   indicators: AdminLookup[] = [];
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<EvaluationIndicator>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
               public fb: UntypedFormBuilder,
-              public toast: ToastService,
-              private adminLookupService:AdminLookupService) {
+              private adminLookupService: AdminLookupService) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'project_evaluation_indicators';
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'project_evaluation_indicators';
-    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.TEMPLATE_INDICATOR).subscribe(list => {
-      this.indicators = list;
-    });
+    this.loadIndicators();
   }
 
   getPopupHeadingText(): string {
@@ -94,5 +82,12 @@ export class EvaluationIndicatorsPopupComponent extends UiCrudDialogGenericCompo
   }
 
   destroyPopup(): void {
+  }
+
+  private loadIndicators(): void {
+    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.TEMPLATE_INDICATOR)
+      .subscribe(list => {
+        this.indicators = list;
+      });
   }
 }

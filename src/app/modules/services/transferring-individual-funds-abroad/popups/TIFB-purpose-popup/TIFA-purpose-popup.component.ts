@@ -7,14 +7,11 @@ import {AdminResult} from '@app/models/admin-result';
 import {Lookup} from '@app/models/lookup';
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
 import {DacOchaService} from '@app/services/dac-ocha.service';
-import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {UiCrudDialogGenericComponent} from "@app/generics/ui-crud-dialog-generic-component.directive";
 import {UiCrudDialogComponentDataContract} from "@contracts/ui-crud-dialog-component-data-contract";
-import {DialogService} from "@services/dialog.service";
-import {ToastService} from '@app/services/toast.service';
 import {CountryService} from "@services/country.service";
 import {ILanguageKeys} from "@contracts/i-language-keys";
 import {OperationTypes} from "@enums/operation-types.enum";
@@ -28,30 +25,21 @@ import {LookupService} from "@services/lookup.service";
   styleUrls: ['./TIFA-purpose-popup.component.scss']
 })
 export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<TransferFundsCharityPurpose> {
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
-  model: TransferFundsCharityPurpose;
+  popupTitleKey: keyof ILanguageKeys;
   isCancel: boolean = false;
   countries: Country[] = [];
-  listIndex: number;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<TransferFundsCharityPurpose>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
               public fb: UntypedFormBuilder,
-              public toast: ToastService,
               private dacOchaService: DacOchaService,
               private lookupService: LookupService,
               private countryService: CountryService) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.listIndex = data.listIndex;
-    this.list = data.list;
+    this.setInitDialogData(data);
     this.isCancel = (data.extras && data.extras.isCancel) ?? false;
     this.countries = data.extras?.countries ?? [];
+    this.popupTitleKey = 'purpose';
   }
 
   projectTypes: Lookup[] = this.lookupService.listByCategory.InternalProjectType
@@ -65,7 +53,6 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
   isDevelopment = false;
 
   initPopup(): void {
-    this.popupTitleKey = 'purpose';
     if (!this.countries.length) {
       this.loadCountries();
     }

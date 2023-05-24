@@ -9,10 +9,7 @@ import {UiCrudDialogComponentDataContract} from "@contracts/ui-crud-dialog-compo
 import {OperationTypes} from "@enums/operation-types.enum";
 import {ILanguageKeys} from "@contracts/i-language-keys";
 import {Observable} from "rxjs";
-import {LangService} from "@services/lang.service";
 import {DialogRef} from "@app/shared/models/dialog-ref";
-import {DialogService} from "@services/dialog.service";
-import {ToastService} from "@services/toast.service";
 
 @Component({
   selector: 'app-TIFA-payment-popup',
@@ -20,10 +17,7 @@ import {ToastService} from "@services/toast.service";
   styleUrls: ['./TIFA-payment-popup.component.scss']
 })
 export class TIFAPaymentPopupComponent extends UiCrudDialogGenericComponent<Payment> {
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
   popupTitleKey: keyof ILanguageKeys;
-  model: Payment;
   isCancel: boolean = false;
   hideFullScreen = true;
 
@@ -33,18 +27,12 @@ export class TIFAPaymentPopupComponent extends UiCrudDialogGenericComponent<Paym
   };
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<Payment>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService) {
+              public fb: UntypedFormBuilder) {
     super();
-    this.model = data.model;
+    this.setInitDialogData(data);
     this.model.dueDate = DateUtils.changeDateToDatepicker(data.model.dueDate);
 
-    this.operation = data.operation;
-    this.listIndex = data.listIndex;
-    this.list = data.list;
     this.isCancel = (data.extras && data.extras.isCancel) ?? false;
     this.popupTitleKey = 'payment';
   }

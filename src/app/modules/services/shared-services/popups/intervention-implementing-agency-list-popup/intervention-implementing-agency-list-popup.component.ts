@@ -1,15 +1,12 @@
 import {Component, Inject} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ImplementingAgency} from '@models/implementing-agency';
-import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {AdminResult} from '@app/models/admin-result';
 import {Lookup} from '@app/models/lookup';
 import {CommonService} from '@app/services/common.service';
 import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
-import {DialogService} from '@app/services/dialog.service';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
 import {OperationTypes} from '@app/enums/operation-types.enum';
@@ -22,18 +19,29 @@ import {Observable} from 'rxjs';
   styleUrls: ['./intervention-implementing-agency-list-popup.component.scss']
 })
 export class InterventionImplementingAgencyListPopupComponent extends UiCrudDialogGenericComponent<ImplementingAgency> {
-  model: ImplementingAgency;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
+  executionCountry: number;
   hideFullScreen = true;
+  implementingAgencyTypeList: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType.slice()
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+  implementingAgencyList: AdminResult[] = [];
+
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ImplementingAgency>,
+              public dialogRef: DialogRef,
+              public fb: UntypedFormBuilder,
+              private lookupService: LookupService,
+              private commonService: CommonService) {
+    super();
+    this.setInitDialogData(data);
+    this.executionCountry = (data.extras && data.extras.executionCountry) ?? undefined;
+    this.popupTitleKey = 'entities';
+  }
 
   _getNewInstance(override?: Partial<ImplementingAgency> | undefined): ImplementingAgency {
     return new ImplementingAgency().clone(override ?? {});
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'entities';
     this.loadImplementingAgenciesByAgencyType(this.form.value.implementingAgencyType);
   }
 
@@ -98,27 +106,6 @@ export class InterventionImplementingAgencyListPopupComponent extends UiCrudDial
   buildForm(): void {
     this.form = this.fb.group(this.model.getAgencyFields(true));
   }
-
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ImplementingAgency>,
-              public lang: LangService,
-              public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService,
-              private lookupService: LookupService,
-              private commonService: CommonService) {
-    super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
-    this.listIndex = data.listIndex;
-    this.executionCountry = (data.extras && data.extras.executionCountry) ?? undefined;
-  }
-
-
-  executionCountry: number;
-  implementingAgencyTypeList: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
-  implementingAgencyList: AdminResult[] = [];
 
   handleImplementingAgencyTypeChange(agencyType: number, userInteraction: boolean = false): void {
     if (userInteraction) {

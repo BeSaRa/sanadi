@@ -7,13 +7,9 @@ import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {AdminResult} from '@app/models/admin-result';
 import {LessonsLearned} from '@app/models/lessons-learned';
-import {DialogService} from '@app/services/dialog.service';
 import {FieldAssessmentService} from '@app/services/field-assessment.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 
@@ -23,25 +19,17 @@ import {catchError, map} from 'rxjs/operators';
   styleUrls: ['./lessons-learnt-popup.component.scss']
 })
 export class LessonsLearntPopupComponent extends UiCrudDialogGenericComponent<LessonsLearned> {
-  model: LessonsLearned;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
-  customValidators = CustomValidators
+  popupTitleKey: keyof ILanguageKeys;
   lessonsLearntList: AdminResult[] = [];
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<LessonsLearned>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
               public fb: UntypedFormBuilder,
-              public toast: ToastService,
               private fieldAssessmentService: FieldAssessmentService) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'lessons_learnt';
   }
 
   _getNewInstance(override?: Partial<LessonsLearned> | undefined): LessonsLearned {
@@ -49,7 +37,6 @@ export class LessonsLearntPopupComponent extends UiCrudDialogGenericComponent<Le
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'lessons_learnt';
     this.loadLessonsLearnt();
   }
 

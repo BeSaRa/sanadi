@@ -6,10 +6,7 @@ import {UiCrudDialogGenericComponent} from "@app/generics/ui-crud-dialog-generic
 import {GeneralMeetingAttendanceNote} from "@models/general-meeting-attendance-note";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {UiCrudDialogComponentDataContract} from "@contracts/ui-crud-dialog-component-data-contract";
-import {LangService} from "@services/lang.service";
 import {DialogRef} from "@app/shared/models/dialog-ref";
-import {DialogService} from "@services/dialog.service";
-import {ToastService} from "@services/toast.service";
 import {Observable} from "rxjs";
 import {EmployeeService} from "@services/employee.service";
 
@@ -20,25 +17,17 @@ import {EmployeeService} from "@services/employee.service";
 })
 export class GeneralMeetingAttendanceNotesPopupComponent extends UiCrudDialogGenericComponent<GeneralMeetingAttendanceNote> {
   private employeeService = inject(EmployeeService);
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
+
   popupTitleKey: keyof ILanguageKeys;
-  model: GeneralMeetingAttendanceNote;
+  caseId: string;
   hideFullScreen = true;
   memberId: number = this.employeeService.getCurrentUser()?.generalUserId!
-  caseId: string;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<GeneralMeetingAttendanceNote>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService,) {
+              public fb: UntypedFormBuilder) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.listIndex = data.listIndex;
-    this.list = data.list;
+    this.setInitDialogData(data);
     this.caseId = (data.extras && data.extras.serviceModel) ?? '';
     this.popupTitleKey = 'general_notes';
   }

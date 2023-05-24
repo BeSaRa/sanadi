@@ -5,10 +5,6 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CommercialActivity} from '@app/models/commercial-activity';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {CustomValidators} from '@app/validators/custom-validators';
@@ -20,23 +16,15 @@ import {Observable} from 'rxjs';
   styleUrls: ['./commercial-activity-popup.component.scss']
 })
 export class CommercialActivityPopupComponent extends UiCrudDialogGenericComponent<CommercialActivity> {
-  model: CommercialActivity;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<CommercialActivity>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService,
-              private lookupService: LookupService) {
+              public fb: UntypedFormBuilder) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'commercial_activity'
   }
 
   _getNewInstance(override?: Partial<CommercialActivity> | undefined): CommercialActivity {
@@ -44,7 +32,6 @@ export class CommercialActivityPopupComponent extends UiCrudDialogGenericCompone
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'commercial_activity'
   }
 
   destroyPopup(): void {

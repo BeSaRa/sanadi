@@ -8,13 +8,9 @@ import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {ExternalProjectLicensing} from '@app/models/external-project-licensing';
 import {FinancialTransfersProject} from '@app/models/financial-transfers-project';
-import {DialogService} from '@app/services/dialog.service';
 import {FinancialTransferLicensingService} from '@app/services/financial-transfer-licensing.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable, of} from 'rxjs';
 import {catchError, debounceTime, filter, switchMap, takeUntil} from 'rxjs/operators';
 
@@ -24,30 +20,21 @@ import {catchError, debounceTime, filter, switchMap, takeUntil} from 'rxjs/opera
   styleUrls: ['./financial-transfers-projects-popup.component.scss']
 })
 export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGenericComponent<FinancialTransfersProject> {
-  model: FinancialTransfersProject;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
-  financialTransferProjectControl!: UntypedFormControl;
+  popupTitleKey: keyof ILanguageKeys;
   selectedProject: FinancialTransfersProject;
-  inputMaskPatterns = CustomValidators.inputMaskPatterns
-  approvedFinancialTransferProjects: ExternalProjectLicensing[] = []
+  approvedFinancialTransferProjects: ExternalProjectLicensing[] = [];
+  requestType: number;
+  submissionMechanism: number;
+  financialTransferProjectControl!: UntypedFormControl;
   lastQatariTransactionAmountValue: any;
-  requestType!: number;
-  submissionMechanism!: number;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<FinancialTransfersProject>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
               public fb: UntypedFormBuilder,
-              public toast: ToastService,
-              private financialTransferLicensingService: FinancialTransferLicensingService
-  ) {
+              private financialTransferLicensingService: FinancialTransferLicensingService) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'lbl_projects';
     this.selectedProject = data.extras?.selectedProject
     this.requestType = data.extras?.requestType
     this.submissionMechanism = data.extras?.submissionMechanism
@@ -59,7 +46,6 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'lbl_projects';
     this._listenToFinancialTransferProjectChange();
     this._listenQatariTransactionAmountChange()
   }

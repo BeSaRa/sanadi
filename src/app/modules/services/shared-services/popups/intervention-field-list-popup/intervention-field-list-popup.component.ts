@@ -2,7 +2,6 @@ import {InterventionField} from '@app/models/intervention-field';
 import {Component, Inject} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {AdminResult} from '@app/models/admin-result';
 import {AdminLookup} from '@app/models/admin-lookup';
@@ -13,8 +12,6 @@ import {Observable} from 'rxjs';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
 import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
 
 @Component({
@@ -23,10 +20,7 @@ import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-c
   styleUrls: ['./intervention-field-list-popup.component.scss']
 })
 export class InterventionFieldListPopupComponent extends UiCrudDialogGenericComponent<InterventionField> {
-  model: InterventionField;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
 
   mainOchaCategories: AdminLookup[] = [];
   subOchaCategories: AdminLookup[] = [];
@@ -34,20 +28,15 @@ export class InterventionFieldListPopupComponent extends UiCrudDialogGenericComp
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<InterventionField>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
               public fb: UntypedFormBuilder,
-              public toast: ToastService,
               private dacOchaService: DacOchaService) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'intervention_fields';
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'intervention_fields';
     this.loadSubOchaList(this.form.value.mainUNOCHACategory);
     this.loadMainOchaList();
   }

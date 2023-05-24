@@ -1,16 +1,13 @@
-import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { UiCrudDialogGenericComponent } from '@app/generics/ui-crud-dialog-generic-component.directive';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { Goal } from '@app/models/goal';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { Observable } from 'rxjs';
+import {Component, Inject} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {Goal} from '@app/models/goal';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-goal-popup',
@@ -18,18 +15,22 @@ import { Observable } from 'rxjs';
   styleUrls: ['./goal-popup.component.scss']
 })
 export class GoalPopupComponent extends UiCrudDialogGenericComponent<Goal>{
-  model: Goal;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
   hideFullScreen = true;
+
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<Goal>,
+              public dialogRef: DialogRef,
+              public fb: UntypedFormBuilder) {
+    super();
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'goal';
+  }
 
   _getNewInstance(override?: Partial<Goal> | undefined): Goal {
     return new Goal().clone(override ?? {});
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'goal';
   }
 
   getPopupHeadingText(): string {
@@ -73,16 +74,4 @@ export class GoalPopupComponent extends UiCrudDialogGenericComponent<Goal>{
   buildForm(): void {
     this.form = this.fb.group(this.model.getGoalsFields(true));
   }
-
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<Goal>,
-               public lang: LangService,
-               public dialogRef: DialogRef,
-               public dialogService: DialogService,
-               public fb: UntypedFormBuilder,
-               public toast: ToastService) {
-     super();
-     this.model = data.model;
-     this.operation = data.operation;
-     this.list = data.list;
-   }
 }

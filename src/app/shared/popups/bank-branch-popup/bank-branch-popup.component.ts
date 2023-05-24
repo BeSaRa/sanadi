@@ -6,9 +6,6 @@ import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic
 import {DateUtils} from '@app/helpers/date-utils';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {BankBranch} from '@app/models/bank-branch';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {DatepickerOptionsMap} from '@app/types/types';
@@ -20,10 +17,15 @@ import {Observable} from 'rxjs';
   styleUrls: ['./bank-branch-popup.component.scss']
 })
 export class BankBranchPopupComponent extends UiCrudDialogGenericComponent<BankBranch> {
-  model: BankBranch;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
+
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<BankBranch>,
+              public dialogRef: DialogRef,
+              public fb: UntypedFormBuilder) {
+    super();
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'branches';
+  }
 
   _getNewInstance(override?: Partial<BankBranch> | undefined): BankBranch {
     return new BankBranch().clone(override ?? {});
@@ -34,7 +36,6 @@ export class BankBranchPopupComponent extends UiCrudDialogGenericComponent<BankB
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'branches';
   }
 
   destroyPopup(): void {
@@ -73,18 +74,6 @@ export class BankBranchPopupComponent extends UiCrudDialogGenericComponent<BankB
 
   buildForm(): void {
     this.form = this.fb.group(this.model.getBranchFields(true));
-  }
-
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<BankBranch>,
-              public lang: LangService,
-              public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService) {
-    super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
   }
 
   datepickerOptionsMap: DatepickerOptionsMap = {

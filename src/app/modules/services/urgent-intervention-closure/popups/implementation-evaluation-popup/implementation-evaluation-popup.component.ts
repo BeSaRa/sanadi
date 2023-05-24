@@ -7,14 +7,10 @@ import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {AdminResult} from '@app/models/admin-result';
 import {OfficeEvaluation} from '@app/models/office-evaluation';
-import {DialogService} from '@app/services/dialog.service';
 import {FieldAssessmentService} from '@app/services/field-assessment.service';
-import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 
@@ -24,27 +20,19 @@ import {catchError, map} from 'rxjs/operators';
   styleUrls: ['./implementation-evaluation-popup.component.scss']
 })
 export class ImplementationEvaluationPopupComponent extends UiCrudDialogGenericComponent<OfficeEvaluation> {
-  model: OfficeEvaluation;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
-  customValidators = CustomValidators
+  popupTitleKey: keyof ILanguageKeys;
   evaluationHubList: AdminResult[] = [];
   evaluationResultList = this.lookupService.listByCategory.EvaluationResult;
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<OfficeEvaluation>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
               public fb: UntypedFormBuilder,
-              public toast: ToastService,
               private lookupService: LookupService,
               private fieldAssessmentService: FieldAssessmentService) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'entities';
   }
 
   _getNewInstance(override?: Partial<OfficeEvaluation> | undefined): OfficeEvaluation {
@@ -52,7 +40,6 @@ export class ImplementationEvaluationPopupComponent extends UiCrudDialogGenericC
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'entities';
     this.loadEvaluationHubs();
   }
 

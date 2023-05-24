@@ -10,10 +10,7 @@ import {BankAccount} from '@app/models/bank-account';
 import {Country} from '@app/models/country';
 import {Lookup} from '@app/models/lookup';
 import {CountryService} from '@app/services/country.service';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable} from 'rxjs';
@@ -25,33 +22,25 @@ import {takeUntil} from 'rxjs/operators';
   styleUrls: ['./bank-account-popup.component.scss']
 })
 export class BankAccountPopupComponent extends UiCrudDialogGenericComponent<BankAccount> {
-  popupTitleKey!: keyof ILanguageKeys;
-  form!: UntypedFormGroup;
-  model: BankAccount;
-  operation: OperationTypes;
+  popupTitleKey: keyof ILanguageKeys;
   caseType: CaseTypes;
   bankCategoriesList: Lookup[] = this.lookupService.listByCategory.BankCategory;
   currenciesList: Lookup[] = this.lookupService.listByCategory.Currency;
   countriesList: Country[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<BankAccount>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public toast: ToastService,
               public fb: UntypedFormBuilder,
               private lookupService: LookupService,
               private countryService: CountryService) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
     this.caseType = data.caseType!;
     this.countriesList = data.extras?.countriesList ?? [];
+    this.popupTitleKey = 'bank_details';
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'bank_details';
     if (!this.countriesList.length) {
       this.loadCountries();
     }

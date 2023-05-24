@@ -5,10 +5,6 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {ContactOfficer} from '@app/models/contact-officer';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable} from 'rxjs';
@@ -19,10 +15,15 @@ import {Observable} from 'rxjs';
   styleUrls: ['./contact-officer-popup.component.scss']
 })
 export class ContactOfficerPopupComponent extends UiCrudDialogGenericComponent<ContactOfficer> {
-  model: ContactOfficer;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
+
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ContactOfficer>,
+              public dialogRef: DialogRef,
+              public fb: UntypedFormBuilder) {
+    super();
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'contact_officers';
+  }
 
   _getNewInstance(override?: Partial<ContactOfficer> | undefined): ContactOfficer {
     return new ContactOfficer().clone(override ?? {});
@@ -33,7 +34,6 @@ export class ContactOfficerPopupComponent extends UiCrudDialogGenericComponent<C
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'contact_officers';
   }
 
   destroyPopup(): void {
@@ -72,18 +72,5 @@ export class ContactOfficerPopupComponent extends UiCrudDialogGenericComponent<C
 
   buildForm(): void {
     this.form = this.fb.group(this.model.getContactOfficerFields(true));
-  }
-
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ContactOfficer>,
-              public lang: LangService,
-              public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService,
-              private lookupService: LookupService) {
-    super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
   }
 }

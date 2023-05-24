@@ -7,10 +7,7 @@ import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {AdminResult} from '@app/models/admin-result';
 import {BestPractices} from '@app/models/best-practices';
-import {DialogService} from '@app/services/dialog.service';
 import {FieldAssessmentService} from '@app/services/field-assessment.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable, of} from 'rxjs';
@@ -22,24 +19,21 @@ import {catchError, map} from 'rxjs/operators';
   styleUrls: ['./best-practices-popup.component.scss']
 })
 export class BestPracticesPopupComponent extends UiCrudDialogGenericComponent<BestPractices> {
-  model: BestPractices;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
   bestPracticesList: AdminResult[] = [];
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<BestPractices>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
               public fb: UntypedFormBuilder,
-              public toast: ToastService,
               private fieldAssessmentService: FieldAssessmentService) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'best_practices';
+  }
+
+  initPopup(): void {
+    this.loadBestPractices();
   }
 
   buildForm(): void {
@@ -93,8 +87,7 @@ export class BestPracticesPopupComponent extends UiCrudDialogGenericComponent<Be
     return '';
   }
 
-  initPopup(): void {
-    this.popupTitleKey = 'best_practices';
+  private loadBestPractices(): void {
     this.fieldAssessmentService.loadByType(FieldAssessmentTypesEnum.BEST_PRACTICES)
       .pipe(
         catchError(() => of([])),

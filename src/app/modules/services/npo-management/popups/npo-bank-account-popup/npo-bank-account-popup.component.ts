@@ -9,10 +9,7 @@ import {Bank} from '@app/models/bank';
 import {Lookup} from '@app/models/lookup';
 import {NpoBankAccount} from '@app/models/npo-bank-account';
 import {BankService} from '@app/services/bank.service';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable} from 'rxjs';
@@ -23,26 +20,19 @@ import {Observable} from 'rxjs';
   styleUrls: ['./npo-bank-account-popup.component.scss']
 })
 export class NpoBankAccountPopupComponent extends UiCrudDialogGenericComponent<NpoBankAccount> {
-  model: NpoBankAccount;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
-  bankList!: Bank[];
+  popupTitleKey: keyof ILanguageKeys;
   currenciesList: Lookup[] = this.lookupService.listByCategory.Currency;
   hideFullScreen = true;
+  bankList: Bank[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<NpoBankAccount>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
               public fb: UntypedFormBuilder,
-              public toast: ToastService,
               private lookupService: LookupService,
               private bankService: BankService) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'bank_details';
   }
 
   _getNewInstance(override?: Partial<NpoBankAccount> | undefined): NpoBankAccount {
@@ -50,10 +40,7 @@ export class NpoBankAccountPopupComponent extends UiCrudDialogGenericComponent<N
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'bank_details';
-    this.bankService.loadAsLookups().subscribe((data) => {
-      this.bankList = data;
-    })
+    this.loadBankList();
   }
 
   getPopupHeadingText(): string {
@@ -98,5 +85,11 @@ export class NpoBankAccountPopupComponent extends UiCrudDialogGenericComponent<N
 
   buildForm(): void {
     this.form = this.fb.group(this.model.getBankAccountFields(true));
+  }
+
+  private loadBankList(): void {
+    this.bankService.loadAsLookups().subscribe((data) => {
+      this.bankList = data;
+    })
   }
 }

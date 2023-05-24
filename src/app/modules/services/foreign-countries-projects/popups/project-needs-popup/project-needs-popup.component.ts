@@ -5,10 +5,6 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {ProjectNeed} from '@app/models/project-needs';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable} from 'rxjs';
@@ -19,17 +15,21 @@ import {Observable} from 'rxjs';
   styleUrls: ['./project-needs-popup.component.scss']
 })
 export class ProjectNeedsPopupComponent extends UiCrudDialogGenericComponent<ProjectNeed> {
-  model: ProjectNeed;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
+
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ProjectNeed>,
+              public dialogRef: DialogRef,
+              public fb: UntypedFormBuilder) {
+    super();
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'project_needs'
+  }
 
   _getNewInstance(override?: Partial<ProjectNeed> | undefined): ProjectNeed {
     return new ProjectNeed().clone(override ?? {});
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'project_needs'
   }
 
   getPopupHeadingText(): string {
@@ -72,18 +72,5 @@ export class ProjectNeedsPopupComponent extends UiCrudDialogGenericComponent<Pro
 
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
-  }
-
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ProjectNeed>,
-              public lang: LangService,
-              public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService,
-              private lookupService: LookupService) {
-    super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
   }
 }

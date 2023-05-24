@@ -5,9 +5,6 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {ApprovalReason} from '@app/models/approval-reason';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable} from 'rxjs';
@@ -18,11 +15,16 @@ import {Observable} from 'rxjs';
   styleUrls: ['./approval-reason-popup.component.scss']
 })
 export class ApprovalReasonPopupComponent extends UiCrudDialogGenericComponent<ApprovalReason> {
-  model: ApprovalReason;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
   hideFullScreen = true;
+
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ApprovalReason>,
+              public dialogRef: DialogRef,
+              public fb: UntypedFormBuilder,) {
+    super();
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'approval_reasons';
+  }
 
   _getNewInstance(override?: Partial<ApprovalReason> | undefined): ApprovalReason {
     return new ApprovalReason().clone(override ?? {});
@@ -33,7 +35,6 @@ export class ApprovalReasonPopupComponent extends UiCrudDialogGenericComponent<A
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'approval_reasons';
   }
 
   destroyPopup(): void {
@@ -72,18 +73,6 @@ export class ApprovalReasonPopupComponent extends UiCrudDialogGenericComponent<A
 
   buildForm(): void {
     this.form = this.fb.group(this.model.getApprovalReasonFields(true));
-  }
-
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ApprovalReason>,
-              public lang: LangService,
-              public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService) {
-    super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
   }
 
 }

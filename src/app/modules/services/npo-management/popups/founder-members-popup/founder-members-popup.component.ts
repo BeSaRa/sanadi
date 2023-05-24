@@ -8,15 +8,11 @@ import {AdminResult} from '@app/models/admin-result';
 import {FounderMembers} from '@app/models/founder-members';
 import {JobTitle} from '@app/models/job-title';
 import {Lookup} from '@app/models/lookup';
-import {DialogService} from '@app/services/dialog.service';
 import {JobTitleService} from '@app/services/job-title.service';
-import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable} from 'rxjs';
-import {NPORequestType} from "@enums/service-request-types";
 
 @Component({
   selector: 'founder-members-popup',
@@ -24,22 +20,26 @@ import {NPORequestType} from "@enums/service-request-types";
   styleUrls: ['./founder-members-popup.component.scss']
 })
 export class FounderMembersPopupComponent extends UiCrudDialogGenericComponent<FounderMembers> {
-  form!: UntypedFormGroup;
-  model: FounderMembers;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
   nationalityList: Lookup[] = this.lookupService.listByCategory.Nationality;
-  jobTitleAdminLookup!: JobTitle[];
+  jobTitleAdminLookup: JobTitle[] = [];
+
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<FounderMembers>,
+              public dialogRef: DialogRef,
+              public fb: UntypedFormBuilder,
+              private lookupService: LookupService,
+              private JobTitleService: JobTitleService) {
+    super();
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'lbl_founder_members';
+  }
 
   _getNewInstance(override?: Partial<FounderMembers> | undefined): FounderMembers {
     return new FounderMembers().clone(override ?? {});
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'lbl_founder_members';
-    this.JobTitleService.loadActive().subscribe((data) => {
-      this.jobTitleAdminLookup = data;
-    })
+    this.loadJobTitles();
   }
 
   getPopupHeadingText(): string {
@@ -86,24 +86,14 @@ export class FounderMembersPopupComponent extends UiCrudDialogGenericComponent<F
     this.form = this.fb.group(this.model.getFounderMembersFields(true));
   }
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<FounderMembers>,
-              public lang: LangService,
-              public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService,
-              private lookupService: LookupService,
-              private JobTitleService: JobTitleService,
-  ) {
-    super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
-  }
-
   searchNgSelect(term: string, item: any): boolean {
     return item.ngSelectSearch(term);
   }
 
-    protected readonly NPORequestType = NPORequestType;
+  private loadJobTitles(): void {
+    this.JobTitleService.loadActive()
+      .subscribe((data) => {
+        this.jobTitleAdminLookup = data;
+      })
+  }
 }

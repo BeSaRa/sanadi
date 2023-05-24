@@ -1,4 +1,4 @@
-import {AfterViewInit, Directive, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@enums/operation-types.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -19,13 +19,7 @@ import {DatepickerOptionsMap} from "@app/types/types";
 @Directive()
 export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterViewInit, OnDestroy {
   abstract fb: UntypedFormBuilder;
-  abstract model: M;
-  abstract form: UntypedFormGroup;
-  abstract operation: OperationTypes;
   abstract dialogRef: DialogRef;
-  abstract dialogService: DialogService;
-  abstract lang: LangService;
-  abstract toast: ToastService;
   abstract popupTitleKey: keyof ILanguageKeys;
 
   /**
@@ -37,6 +31,15 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
   abstract getPopupHeadingText(): string;
 
   abstract _getNewInstance(override?: Partial<M>): M;
+
+
+  lang = inject(LangService);
+  toast = inject(ToastService);
+  dialogService = inject(DialogService);
+
+  model!: M;
+  form!: UntypedFormGroup;
+  operation!: OperationTypes;
 
   destroy$: Subject<any> = new Subject<any>();
   save$: Subject<any> = new Subject<any>();

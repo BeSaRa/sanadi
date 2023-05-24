@@ -5,12 +5,8 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {Result} from '@app/models/result';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -19,22 +15,14 @@ import {Observable} from 'rxjs';
   styleUrls: ['./result-list-popup.component.scss']
 })
 export class ResultListPopupComponent extends UiCrudDialogGenericComponent<Result> {
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
-  form!: UntypedFormGroup;
-  model!: Result;
-  customValidators = CustomValidators
+  popupTitleKey: keyof ILanguageKeys;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<Result>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService) {
+              public fb: UntypedFormBuilder) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'output_and_impact_analysis';
   }
 
   _getNewInstance(override?: Partial<Result> | undefined): Result {
@@ -42,7 +30,6 @@ export class ResultListPopupComponent extends UiCrudDialogGenericComponent<Resul
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'output_and_impact_analysis';
   }
 
   getPopupHeadingText(): string {

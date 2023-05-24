@@ -7,10 +7,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {AdminResult} from '@app/models/admin-result';
 import {Lookup} from '@app/models/lookup';
 import {ManagementCouncil} from '@app/models/management-council';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable} from 'rxjs';
@@ -21,17 +18,23 @@ import {Observable} from 'rxjs';
   styleUrls: ['./management-council-popup.component.scss']
 })
 export class ManagementCouncilPopupComponent extends UiCrudDialogGenericComponent<ManagementCouncil> {
-  model: ManagementCouncil;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
+  nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
+
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ManagementCouncil>,
+              public dialogRef: DialogRef,
+              public fb: UntypedFormBuilder,
+              private lookupService: LookupService) {
+    super();
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'management_council';
+  }
 
   _getNewInstance(override?: Partial<ManagementCouncil> | undefined): ManagementCouncil {
     return new ManagementCouncil().clone(override ?? {});
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'management_council';
   }
 
   getPopupHeadingText(): string {
@@ -75,20 +78,5 @@ export class ManagementCouncilPopupComponent extends UiCrudDialogGenericComponen
 
   buildForm(): void {
     this.form = this.fb.group(this.model.getManagementCouncilFields(true));
-  }
-
-  nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
-
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ManagementCouncil>,
-              public lang: LangService,
-              public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService,
-              private lookupService: LookupService) {
-    super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
   }
 }

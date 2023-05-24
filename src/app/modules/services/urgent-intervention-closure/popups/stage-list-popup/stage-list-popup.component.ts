@@ -5,12 +5,8 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {Stage} from '@app/models/stage';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -19,22 +15,15 @@ import {Observable} from 'rxjs';
   styleUrls: ['./stage-list-popup.component.scss']
 })
 export class StageListPopupComponent extends UiCrudDialogGenericComponent<Stage> {
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
-  form!: UntypedFormGroup;
-  model!: Stage;
+  popupTitleKey: keyof ILanguageKeys;
   hideFullScreen = true
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<Stage>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService) {
+              public fb: UntypedFormBuilder) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'stage';
   }
 
   _getNewInstance(override?: Partial<Stage> | undefined): Stage {
@@ -42,7 +31,6 @@ export class StageListPopupComponent extends UiCrudDialogGenericComponent<Stage>
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'stage';
   }
 
   getPopupHeadingText(): string {

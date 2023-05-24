@@ -7,9 +7,6 @@ import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic
 import {ICoordinates} from '@app/interfaces/ICoordinates';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {ProjectAddress} from '@app/models/project-address';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable} from 'rxjs';
@@ -21,23 +18,15 @@ import {CommonUtils} from "@helpers/common-utils";
   styleUrls: ['./project-addresses-popup.component.scss']
 })
 export class ProjectAddressesPopupComponent extends UiCrudDialogGenericComponent<ProjectAddress> {
-
-  popupTitleKey!: keyof ILanguageKeys;
-  form!: UntypedFormGroup;
-  model: ProjectAddress;
-  operation: OperationTypes;
+  popupTitleKey: keyof ILanguageKeys;
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ProjectAddress>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService) {
+              public fb: UntypedFormBuilder) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.list = data.list;
+    this.setInitDialogData(data);
+    this.popupTitleKey = 'project_addresses';
   }
 
   _getNewInstance(override?: Partial<ProjectAddress> | undefined): ProjectAddress {
@@ -45,7 +34,6 @@ export class ProjectAddressesPopupComponent extends UiCrudDialogGenericComponent
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'project_addresses';
   }
 
   getPopupHeadingText(): string {

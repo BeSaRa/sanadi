@@ -6,10 +6,7 @@ import {OperationTypes} from "@enums/operation-types.enum";
 import {ILanguageKeys} from "@contracts/i-language-keys";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {UiCrudDialogComponentDataContract} from "@contracts/ui-crud-dialog-component-data-contract";
-import {LangService} from "@services/lang.service";
 import {DialogRef} from "@app/shared/models/dialog-ref";
-import {DialogService} from "@services/dialog.service";
-import {ToastService} from "@services/toast.service";
 import {Observable} from "rxjs";
 
 @Component({
@@ -18,23 +15,14 @@ import {Observable} from "rxjs";
   styleUrls: ['./meeting-agenda-popup.component.scss']
 })
 export class MeetingAgendaPopupComponent extends UiCrudDialogGenericComponent<GeneralAssociationAgenda> {
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
   popupTitleKey: keyof ILanguageKeys;
-  model: GeneralAssociationAgenda;
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<GeneralAssociationAgenda>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService,) {
+              public fb: UntypedFormBuilder) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
-    this.listIndex = data.listIndex;
-    this.list = data.list;
+    this.setInitDialogData(data);
     this.popupTitleKey = 'meeting_agenda';
   }
 

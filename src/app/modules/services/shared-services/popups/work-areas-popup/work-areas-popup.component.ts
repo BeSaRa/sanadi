@@ -3,15 +3,12 @@ import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {AdminResult} from '@app/models/admin-result';
 import {Country} from '@app/models/country';
 import {WorkArea} from '@app/models/work-area';
-import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {UiCrudDialogGenericComponent} from "@app/generics/ui-crud-dialog-generic-component.directive";
 import {UiCrudDialogComponentDataContract} from "@contracts/ui-crud-dialog-component-data-contract";
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -20,23 +17,17 @@ import {Observable} from 'rxjs';
   styleUrls: ['./work-areas-popup.component.scss']
 })
 export class WorkAreasPopupComponent extends UiCrudDialogGenericComponent<WorkArea> implements OnInit {
-  model: WorkArea;
-  form!: UntypedFormGroup;
-  operation: OperationTypes;
-  popupTitleKey!: keyof ILanguageKeys;
+  popupTitleKey: keyof ILanguageKeys;
   countries: Country[] = [];
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<WorkArea>,
-              public lang: LangService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public fb: UntypedFormBuilder,
-              public toast: ToastService,) {
+              public fb: UntypedFormBuilder) {
     super();
-    this.model = data.model;
-    this.operation = data.operation;
+    this.setInitDialogData(data);
     this.countries = data.extras?.countries ?? [];
+    this.popupTitleKey = 'work_area';
   }
 
   _getNewInstance(override?: Partial<WorkArea> | undefined): WorkArea {
@@ -44,7 +35,6 @@ export class WorkAreasPopupComponent extends UiCrudDialogGenericComponent<WorkAr
   }
 
   initPopup(): void {
-    this.popupTitleKey = 'work_area';
   }
 
   getPopupHeadingText(): string {
