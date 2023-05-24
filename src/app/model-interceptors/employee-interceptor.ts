@@ -47,6 +47,11 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
     delete model.contractLocationTypeInfo
     delete model.qId
     delete model.qInfo
+    delete model.contractExpiryDateStamp
+    delete model.workStartDateStamp
+    delete model.workEndDateStamp
+    delete model.updatedOnStamp
+    delete model.expIdPassStamp
     return model;
   }
   receive(model: Employee): Employee {
@@ -54,6 +59,11 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
     model.workEndDate = DateUtils.changeDateToDatepicker(model.workEndDate);
     model.updatedOn = DateUtils.changeDateToDatepicker(model.updatedOn);
     model.expIdPass = DateUtils.changeDateToDatepicker(model.expIdPass);
+    model.contractExpiryDateStamp = !model.contractExpiryDate ? null : DateUtils.getTimeStampFromDate(model.contractExpiryDate)
+    model.workStartDateStamp = !model.workStartDate ? null : DateUtils.getTimeStampFromDate(model.workStartDate)
+    model.workEndDateStamp = !model.workEndDate ? null : DateUtils.getTimeStampFromDate(model.workEndDate)
+    model.updatedOnStamp = !model.updatedOn ? null : DateUtils.getTimeStampFromDate(model.updatedOn)
+    model.expIdPassStamp = !model.expIdPass ? null : DateUtils.getTimeStampFromDate(model.expIdPass)
 
     model.jobTitleInfo && (model.jobTitleInfo = AdminResult.createInstance({
       id: model.jobTitleInfo.id,
