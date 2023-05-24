@@ -1,21 +1,20 @@
-import { LangService } from '@services/lang.service';
-import { Component, Input, OnInit } from '@angular/core';
-import { CustomMenuService } from '@services/custom-menu.service';
-import { CustomMenu } from '@app/models/custom-menu';
-import { map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { InternalUser } from '@app/models/internal-user';
-import { LookupService } from '@services/lookup.service';
-import { CheckGroupHandler } from '@app/models/check-group-handler';
-import { Lookup } from '@app/models/lookup';
-import { CheckGroup } from '@app/models/check-group';
-import { UserCustomMenuService } from '@services/user-custom-menu.service';
-import { UserCustomMenu } from '@app/models/user-custom-menu';
-import { SharedService } from '@services/shared.service';
-import { ExternalUser } from '@app/models/external-user';
-import { ExternalUserUpdateRequest } from '@app/models/external-user-update-request';
-import { TabMap } from '@app/types/types';
-import { DateUtils } from '@app/helpers/date-utils';
+import {LangService} from '@services/lang.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {CustomMenuService} from '@services/custom-menu.service';
+import {CustomMenu} from '@app/models/custom-menu';
+import {map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {InternalUser} from '@app/models/internal-user';
+import {LookupService} from '@services/lookup.service';
+import {CheckGroupHandler} from '@app/models/check-group-handler';
+import {Lookup} from '@app/models/lookup';
+import {CheckGroup} from '@app/models/check-group';
+import {UserCustomMenuService} from '@services/user-custom-menu.service';
+import {UserCustomMenu} from '@app/models/user-custom-menu';
+import {SharedService} from '@services/shared.service';
+import {ExternalUser} from '@app/models/external-user';
+import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
+import {TabMap} from '@app/types/types';
 
 @Component({
   selector: 'custom-menu-permission',
@@ -33,11 +32,11 @@ export class CustomMenuPermissionComponent implements OnInit {
   @Input() userUpdateRequest?: ExternalUserUpdateRequest;
 
   constructor(public lang: LangService,
-    private lookupService: LookupService,
-    private customMenuService: CustomMenuService,
-    private userCustomMenuService: UserCustomMenuService,
-    private sharedService: SharedService,
-    public langService: LangService) {
+              private lookupService: LookupService,
+              private customMenuService: CustomMenuService,
+              private userCustomMenuService: UserCustomMenuService,
+              private sharedService: SharedService,
+              public langService: LangService) {
   }
 
   allCustomMenusList: CustomMenu[] = [];
@@ -65,6 +64,7 @@ export class CustomMenuPermissionComponent implements OnInit {
 
 
   };
+
   ngOnInit(): void {
     this._loadCustomMenuPermissions();
   }
@@ -111,7 +111,7 @@ export class CustomMenuPermissionComponent implements OnInit {
           this.oldSelection$.next([]);
           return of([]);
         }
-        return this.userCustomMenuService.loadByCriteria({ generalUserId: this.user.generalUserId })
+        return this.userCustomMenuService.loadByCriteria({generalUserId: this.user.generalUserId})
           .pipe(
             map((userCustomMenus: UserCustomMenu[]) => userCustomMenus.map(p => p.menuItemId)),
             tap((selectedMenus: number[]) => this.oldSelection$.next([...selectedMenus]))
@@ -129,7 +129,7 @@ export class CustomMenuPermissionComponent implements OnInit {
 
   private _fillParentChunkSpace(menus: CustomMenu[], parent: CustomMenu): CustomMenu[] {
     for (let i = 0; i < (this.chunkSize - 1); i++) {
-      menus = menus.concat(new CustomMenu().clone({ menuType: parent.menuType, parentMenuItemId: undefined }));
+      menus = menus.concat(new CustomMenu().clone({menuType: parent.menuType, parentMenuItemId: undefined}));
     }
     return menus;
   }
@@ -215,6 +215,7 @@ export class CustomMenuPermissionComponent implements OnInit {
       }
     });
   }
+
   private buildDefaultPermissionGroups(groups: Lookup[], menus: CustomMenu[]): void {
     const permissionsByGroup = new Map<number, CustomMenu[]>();
     this.defaultPermissionGroups = [];
@@ -278,6 +279,7 @@ export class CustomMenuPermissionComponent implements OnInit {
       }
     }
   }
+
   private onDefaultPermissionChanged(item: CustomMenu, isChecked: boolean, group: CheckGroup<CustomMenu>): void {
     if (item.isSystemParentItem()) {
       // if parent is toggled, toggle all children items accordingly
@@ -291,8 +293,7 @@ export class CustomMenuPermissionComponent implements OnInit {
           this._isAlreadySelected(childMenu.id) && this._forceRemovePermission(childMenu, group);
         }
       });
-    }
-    else {
+    } else {
       // if child is selected and parent is not selected, force select the parent
       if (isChecked && !this._isAlreadySelected(item.parentMenuItemId)) {
         let parent = this.allCustomMenusList.find((menu) => menu.id === item.parentMenuItemId);
@@ -304,20 +305,20 @@ export class CustomMenuPermissionComponent implements OnInit {
   isParentRow(row: CustomMenu[]): boolean {
     return !row[0].parentMenuItemId;
   }
+
   isDefaultParentRow(row: CustomMenu[]): boolean {
-    return (!!row[0].systemMenuKey && row[0].isSystemParent)
-      ;
+    return (!!row[0].systemMenuKey && row[0].isSystemParent);
   }
 
   getOldUserMenuPermissions(): number[] {
-    return this.oldSelection$.value;
+    return [...new Set(this.oldSelection$.value)] ?? [];
   }
 
   getFinalUserMenuPermissions(): number[] {
     let selection: number[] = [];
     selection = selection.concat(this.groupHandler.getSelection().filter((item, index, list) => list.indexOf(item) === index));
     selection = selection.concat(this.defaultGroupHandler.getSelection().filter((item, index, list) => list.indexOf(item) === index));
-    return selection;
+    return [...new Set(selection)] ?? [];
   }
 
   saveUserCustomMenuPermissions(): Observable<UserCustomMenu[]> {
@@ -332,13 +333,16 @@ export class CustomMenuPermissionComponent implements OnInit {
         this.sharedService.downloadFileToSystem(data, 'UserCustomMenuPermission_' + this.user.getName());
       });
   }
+
   isMainMenu(menu: CustomMenu) {
     return menu.id === 1;
   }
+
   getRandomValue(index: number) {
     return new Date(index).getMilliseconds();
   }
-  onDefaultPermissionClicked(item: CustomMenu, { target }: Event, group: CheckGroup<CustomMenu>, groupHandler: CheckGroupHandler<CustomMenu>): void {
+
+  onDefaultPermissionClicked(item: CustomMenu, {target}: Event, group: CheckGroup<CustomMenu>, groupHandler: CheckGroupHandler<CustomMenu>): void {
     let check = CheckGroupHandler.getCheckState(target);
     if (item.isSystemParentItem()) {
       if (check) {
@@ -355,7 +359,7 @@ export class CustomMenuPermissionComponent implements OnInit {
   unCheckAllChildren(menu: CustomMenu, group: CheckGroup<CustomMenu>, groupHandler: CheckGroupHandler<CustomMenu>) {
     menu.getChildrenIds().forEach(id => {
       if (!groupHandler.selection.includes(id)) return;
-      const child = { id: id } as CustomMenu;
+      const child = {id: id} as CustomMenu;
       groupHandler.removeFromSelection(child, group);
     });
   }
@@ -364,7 +368,7 @@ export class CustomMenuPermissionComponent implements OnInit {
     menu.getChildrenIds().forEach(id => {
       if (groupHandler.selection.includes(id))
         return;
-      const child = { id: id } as CustomMenu;
+      const child = {id: id} as CustomMenu;
       groupHandler.addToSelection(child, group);
     });
   }
