@@ -1,42 +1,42 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { AdminLookupComponent } from '@app/administration/pages/admin-lookup/admin-lookup.component';
-import { BankComponent } from '@app/administration/pages/bank/bank.component';
-import { DonorComponent } from '@app/administration/pages/donor/donor.component';
-import {
-  ExternalUserUpdateRequestApprovalComponent
-} from '@app/administration/pages/external-user-update-approval/external-user-update-request-approval.component';
-import { FieldAssessmentComponent } from '@app/administration/pages/field-assessment/field-assessment.component';
-import { GlobalSettingsComponent } from '@app/administration/pages/global-settings/global-settings.component';
+import {TrainingProgramPartnerComponent} from './pages/training-program-partner/training-program-partner.component';
+import {AdminLicenseComponent} from './pages/admin-license/admin-license.component';
+import {CustomMenuComponent} from './pages/custom-menu/custom-menu.component';
+import {GeneralProcessComponent} from './pages/general-process/general-process.component';
+import {SubTeamComponent} from './pages/sub-team/sub-team.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
+import {LocalizationComponent} from './pages/localization/localization.component';
+import {CustomRoleComponent} from './pages/custom-role/custom-role.component';
+import {AidLookupContainerComponent} from './pages/aid-lookup-container/aid-lookup-container.component';
+import {ExternalUserComponent} from './pages/external-user/external-user.component';
+import {PermissionGuard} from '@app/guards/permission.guard';
+import {AttachmentTypesComponent} from './pages/attachment-types/attachment-types.component';
+import {ServiceDataComponent} from './pages/service-data/service-data.component';
+import {TeamComponent} from './pages/team/team.component';
+import {CountryComponent} from './pages/country/country.component';
+import {InternalUserComponent} from './pages/internal-user/internal-user.component';
 import {
   InternalDepartmentComponent,
 } from '@app/administration/pages/internal-department/internal-department.component';
-import { JobTitleComponent } from '@app/administration/pages/job-title/job-title.component';
-import { SdGoalComponent } from '@app/administration/pages/sd-goal/sd-goal.component';
-import { SurveyQuestionComponent } from '@app/administration/pages/survey-question/survey-question.component';
-import { SurveyTemplateComponent } from '@app/administration/pages/survey-template/survey-template.component';
-import { PermissionsEnum } from '@app/enums/permissions-enum';
-import { PermissionGuard } from '@app/guards/permission.guard';
-import { ErrorPageComponent } from '@app/shared/components/error-page/error-page.component';
-import { AdminHomeComponent } from './pages/admin-home/admin-home.component';
-import { AdminLicenseComponent } from './pages/admin-license/admin-license.component';
-import { AidLookupContainerComponent } from './pages/aid-lookup-container/aid-lookup-container.component';
-import { AttachmentTypesComponent } from './pages/attachment-types/attachment-types.component';
-import { CountryComponent } from './pages/country/country.component';
-import { CustomMenuComponent } from './pages/custom-menu/custom-menu.component';
-import { CustomRoleComponent } from './pages/custom-role/custom-role.component';
-import { DeductionRatioComponent } from './pages/deduction-ratio/deduction-ratio.component';
-import { DynamicModelsComponent } from './pages/dynamic-models/dynamic-models.component';
-import { ExternalUserComponent } from './pages/external-user/external-user.component';
-import { GeneralProcessComponent } from './pages/general-process/general-process.component';
-import { InternalUserComponent } from './pages/internal-user/internal-user.component';
-import { LocalizationComponent } from './pages/localization/localization.component';
-import { ProfilesComponent } from './pages/profiles/profiles.component';
-import { ServiceDataComponent } from './pages/service-data/service-data.component';
-import { SubTeamComponent } from './pages/sub-team/sub-team.component';
-import { TeamComponent } from './pages/team/team.component';
-import { TrainingProgramPartnerComponent } from './pages/training-program-partner/training-program-partner.component';
-import { VactionDatesComponent } from './pages/vaction-dates/vaction-dates.component';
+import {JobTitleComponent} from '@app/administration/pages/job-title/job-title.component';
+import {SurveyQuestionComponent} from '@app/administration/pages/survey-question/survey-question.component';
+import {SurveyTemplateComponent} from '@app/administration/pages/survey-template/survey-template.component';
+import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {SdGoalComponent} from '@app/administration/pages/sd-goal/sd-goal.component';
+import {BankComponent} from '@app/administration/pages/bank/bank.component';
+import {DonorComponent} from '@app/administration/pages/donor/donor.component';
+import {FieldAssessmentComponent} from '@app/administration/pages/field-assessment/field-assessment.component';
+import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
+import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
+import {ProfilesComponent} from './pages/profiles/profiles.component';
+import {DynamicModelsComponent} from './pages/dynamic-models/dynamic-models.component';
+import {DeductionRatioComponent} from './pages/deduction-ratio/deduction-ratio.component';
+import {
+  ExternalUserUpdateRequestApprovalComponent
+} from '@app/administration/pages/external-user-update-approval/external-user-update-request-approval.component';
+import {GlobalSettingsComponent} from '@app/administration/pages/global-settings/global-settings.component';
+import {ErrorPageComponent} from '@app/shared/components/error-page/error-page.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},

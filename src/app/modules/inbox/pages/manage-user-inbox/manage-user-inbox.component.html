@@ -9,38 +9,28 @@
   <div class="container-fluid">
     <div class="row justify-content-start mb-2">
       <div class="col-md-6" *ngIf="isInternal">
-
         <label for="userType" class="h6 text-primary">{{lang.map.lbl_user_type}}</label>
         <ng-select [selectOnTab]="true" [clearable]="false" id="userType" placeholder="{{lang.map.select}}"
           [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="userTypesControl">
-          <ng-option [value]="userType.lookupKey" *ngFor="let userType of userTypes">{{userType |langName}}
-
-          </ng-option>
+          <ng-option [value]="userType.lookupKey" *ngFor="let userType of userTypes">{{userType |langName}}</ng-option>
         </ng-select>
-
       </div>
       <div class="col-md-6" *ngIf="!isInternal">
         <label for="team" class="h6 text-primary">{{lang.map.menu_teams}}</label>
         <ng-select [selectOnTab]="true" [clearable]="false" id="team" placeholder="{{lang.map.select}}"
           [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="teamsControl">
-          <ng-option [value]="team.teamId" *ngFor="let team of userTeams">{{team | langName}}
-          </ng-option>
+          <ng-option [value]="team.teamId" *ngFor="let team of userTeams">{{team | langName}}</ng-option>
         </ng-select>
-
       </div>
-
       <div class="col-md-6">
         <label for="user" class="h6 text-primary">{{lang.map.employees}}</label>
         <ng-select [selectOnTab]="true" [clearable]="false" id="user" placeholder="{{lang.map.select}}"
           [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="userControl">
           <ng-option [value]="user" *ngFor="let user of users">{{user | langName}}</ng-option>
         </ng-select>
-
-
       </div>
     </div>
   </div>
-
 </ng-template>
 
 
@@ -56,7 +46,7 @@
               <ng-container *ngTemplateOutlet="bulk"></ng-container>
             </table-header>
           </th>
-        </ng-container>Selector
+        </ng-container>
         <ng-container cdkColumnDef="userSelectorHeader">
           <th cdk-header-cell colspan="100" *cdkHeaderCellDef="let row">
             <ng-container [ngTemplateOutlet]="userSelector"></ng-container>
