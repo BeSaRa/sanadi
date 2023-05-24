@@ -28,6 +28,7 @@ import {ObjectUtils} from '@helpers/object-utils';
 import {CommonUtils} from '@helpers/common-utils';
 import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 import {AuditOperationTypes} from '@enums/audit-operation-types';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 
 const {send, receive} = new PartnerApprovalInterceptor();
 
@@ -131,6 +132,8 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
     return {
       requestType: {langKey: 'request_type', value: this.requestType},
       oldLicenseFullSerial: {langKey: 'license_number', value: this.oldLicenseFullSerial},
+      oldLicenseId: {langKey: {} as keyof ILanguageKeys, value: this.oldLicenseId,skipAuditComparison:true},
+      oldLicenseSerial: {langKey: {} as keyof ILanguageKeys, value: this.oldLicenseSerial,skipAuditComparison:true},
       requestClassification: {langKey: 'request_classification', value: this.requestClassification},
       arName: {langKey: 'arabic_name', value: this.arName},
       enName: {langKey: 'english_name', value: this.enName},
