@@ -1,13 +1,14 @@
-import { ControlValueLabelLangKey } from '@app/types/types';
-import { Component } from '@angular/core';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { AuditOperationTypes } from '@app/enums/audit-operation-types';
-import { AuditListGenericComponent } from '@app/generics/audit-list-generic-component';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { CaseAuditService } from '@app/services/case-audit.service';
-import { LangService } from '@app/services/lang.service';
-import { InterventionField } from '@app/models/intervention-field';
+import {ControlValueLabelLangKey} from '@app/types/types';
+import {Component} from '@angular/core';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {AuditOperationTypes} from '@app/enums/audit-operation-types';
+import {AuditListGenericComponent} from '@app/generics/audit-list-generic-component';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {CaseAuditService} from '@app/services/case-audit.service';
+import {LangService} from '@app/services/lang.service';
+import {InterventionField} from '@app/models/intervention-field';
+import {IFindInList} from "@contracts/i-find-in-list";
 
 @Component({
   selector: 'audit-intervention-field-list',
@@ -41,5 +42,12 @@ export class AuditInterventionFieldListComponent extends AuditListGenericCompone
 
   getControlLabels(item: InterventionField): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
+  }
+
+  existsInList(objComparison: IFindInList<InterventionField>): InterventionField | undefined {
+    return objComparison.listToCompareWith.find((item) => (
+      item.mainUNOCHACategory === objComparison.itemToCompare.mainUNOCHACategory
+      && item.subUNOCHACategory === objComparison.itemToCompare.subUNOCHACategory)
+    );
   }
 }

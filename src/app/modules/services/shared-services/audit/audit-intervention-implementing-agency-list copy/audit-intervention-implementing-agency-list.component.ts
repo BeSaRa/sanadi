@@ -8,6 +8,7 @@ import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { CaseAuditService } from '@app/services/case-audit.service';
 import { LangService } from '@app/services/lang.service';
 import { ImplementingAgency } from '@app/models/implementing-agency';
+import {IFindInList} from "@contracts/i-find-in-list";
 
 @Component({
   selector: 'audit-intervention-implementing-agency-list',
@@ -41,5 +42,12 @@ export class AuditInterventionImplementingAgencyListComponent extends AuditListG
 
   getControlLabels(item: ImplementingAgency): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
+  }
+
+  existsInList(objComparison: IFindInList<ImplementingAgency>): ImplementingAgency | undefined {
+    return objComparison.listToCompareWith.find((item) => (
+      item.implementingAgencyType === objComparison.itemToCompare.implementingAgencyType
+      && item.implementingAgency === objComparison.itemToCompare.implementingAgency)
+    );
   }
 }
