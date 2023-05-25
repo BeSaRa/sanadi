@@ -466,7 +466,8 @@ export class InboxService {
     return queryResults.map(e => {
       return {
         TKIID: e.TKIID,
-        BD_CASE_TYPE: e.BD_CASE_TYPE
+        BD_CASE_TYPE: e.BD_CASE_TYPE,
+        PI_PARENT_CASE_ID: e.PI_PARENT_CASE_ID
       }
     });
   }
