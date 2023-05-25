@@ -30,6 +30,7 @@ import { AuditOperationTypes } from "@app/enums/audit-operation-types";
 import { CommonUtils } from "@app/helpers/common-utils";
 import { ObjectUtils } from '@app/helpers/object-utils';
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import {ILanguageKeys} from "@contracts/i-language-keys";
 
 const { send, receive } = new ProjectFundraisingInterceptor()
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
@@ -139,6 +140,8 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
       sanadiMainClassification: { langKey: 'sanady_main_classification', value: this.sanadiMainClassification },
       licenseDuration: { langKey: 'license_duration', value: this.licenseDuration },
       oldLicenseFullSerial: { langKey: 'license_number', value: this.oldLicenseFullSerial },
+      oldLicenseId: { langKey: {} as keyof ILanguageKeys, value: this.oldLicenseId, skipAuditComparison: true },
+      oldLicenseSerial: { langKey: {} as keyof ILanguageKeys, value: this.oldLicenseSerial, skipAuditComparison: true },
       projectTotalCost: { langKey: 'project_total_cost', value: this.projectTotalCost },
     };
   }
