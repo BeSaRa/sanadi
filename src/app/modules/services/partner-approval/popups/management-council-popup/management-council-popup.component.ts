@@ -50,13 +50,17 @@ export class ManagementCouncilPopupComponent extends UiCrudDialogGenericComponen
     this.dialogRef.close(savedModel);
   }
 
+  _isDuplicate(record1: Partial<ManagementCouncil>, record2: Partial<ManagementCouncil>): boolean {
+    return (record1 as ManagementCouncil).isEqual(record2 as ManagementCouncil);
+  }
+
   beforeSave(model: ManagementCouncil, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
       return false;
     }
-    const isDuplicate = this.list.some((x) => x === form.getRawValue());
-    if (isDuplicate) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

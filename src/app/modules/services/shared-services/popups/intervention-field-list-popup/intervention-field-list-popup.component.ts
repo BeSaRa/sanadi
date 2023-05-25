@@ -54,21 +54,8 @@ export class InterventionFieldListPopupComponent extends UiCrudDialogGenericComp
     this.dialogRef.close(savedModel);
   }
 
-  private isEqual(record1: Partial<InterventionField>, record2: Partial<InterventionField>): boolean {
-    return record1.mainUNOCHACategory === record2.mainUNOCHACategory
-      && record1.subUNOCHACategory === record2.subUNOCHACategory
-  }
-
-  isDuplicate(formValue: any): boolean {
-    if (this.operation === OperationTypes.CREATE) {
-      return this.list.some((item) => this.isEqual(item, formValue));
-    }
-    if (this.operation === OperationTypes.UPDATE) {
-      return this.list.some((item: InterventionField, index: number) => {
-        return index !== this.listIndex && this.isEqual(item, formValue);
-      });
-    }
-    return false;
+  _isDuplicate(record1: Partial<InterventionField>, record2: Partial<InterventionField>): boolean {
+    return (record1 as InterventionField).isEqual(record2 as InterventionField);
   }
 
   beforeSave(model: InterventionField, form: UntypedFormGroup): boolean | Observable<boolean> {
@@ -76,7 +63,7 @@ export class InterventionFieldListPopupComponent extends UiCrudDialogGenericComp
       this.displayRequiredFieldsMessage();
       return false;
     }
-    if (this.isDuplicate(form.getRawValue())) {
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

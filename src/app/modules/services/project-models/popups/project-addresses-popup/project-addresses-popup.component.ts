@@ -61,14 +61,17 @@ export class ProjectAddressesPopupComponent extends UiCrudDialogGenericComponent
     return this.form.valid && CommonUtils.isValidValue(this.latitude.value) && CommonUtils.isValidValue(this.longitude.value);
   }
 
+  _isDuplicate(record1: Partial<ProjectAddress>, record2: Partial<ProjectAddress>): boolean {
+    return (record1 as ProjectAddress).isEqual(record2 as ProjectAddress);
+  }
+
   beforeSave(model: ProjectAddress, form: UntypedFormGroup): Observable<boolean> | boolean {
     if (!this.isValidForm()) {
       this.displayRequiredFieldsMessage();
       return false;
     }
 
-    const isDuplicate = this.list.some((x) => x === form.getRawValue());
-    if (isDuplicate) {
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

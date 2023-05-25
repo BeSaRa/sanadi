@@ -21,7 +21,6 @@ export class AuditNpoContactOfficerComponent extends AuditListGenericComponent<N
     super();
   }
 
-  @Input()
   displayColumns: string[] = ['idNumber', 'fullName', 'email', 'phone', 'extraPhone', 'actions'];
   actions: IMenuItem<NpoContactOfficer>[] = [
     // show difference

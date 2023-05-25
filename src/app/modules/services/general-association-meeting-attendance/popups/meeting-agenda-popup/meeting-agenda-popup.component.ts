@@ -47,16 +47,8 @@ export class MeetingAgendaPopupComponent extends UiCrudDialogGenericComponent<Ge
     this.dialogRef.close(savedModel);
   }
 
-  private isDuplicate(formValue: any): boolean {
-    if (this.operation === OperationTypes.CREATE) {
-      return this.list.some((item) => item.description === formValue.description);
-    }
-    if (this.operation === OperationTypes.UPDATE) {
-      return this.list.some((item: GeneralAssociationAgenda, index: number) => {
-        return index !== this.listIndex && item.description === formValue.description;
-      });
-    }
-    return false;
+  _isDuplicate(record1: Partial<GeneralAssociationAgenda>, record2: Partial<GeneralAssociationAgenda>): boolean {
+    return (record1 as GeneralAssociationAgenda).isEqual(record2 as GeneralAssociationAgenda);
   }
 
   beforeSave(model: GeneralAssociationAgenda, form: UntypedFormGroup): Observable<boolean> | boolean {
@@ -64,7 +56,8 @@ export class MeetingAgendaPopupComponent extends UiCrudDialogGenericComponent<Ge
       this.displayRequiredFieldsMessage();
       return false;
     }
-    if (this.isDuplicate(form.getRawValue())) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

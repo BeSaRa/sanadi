@@ -43,13 +43,17 @@ export class CommercialActivityPopupComponent extends UiCrudDialogGenericCompone
     this.dialogRef.close(savedModel);
   }
 
+  _isDuplicate(record1: Partial<CommercialActivity>, record2: Partial<CommercialActivity>): boolean {
+    return (record1 as CommercialActivity).isEqual(record2 as CommercialActivity);
+  }
+
   beforeSave(model: CommercialActivity, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
       return false;
     }
-    const isDuplicate = this.list.some((x) => x === form.getRawValue());
-    if (isDuplicate) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

@@ -1,13 +1,13 @@
-import { ControlValueLabelLangKey } from './../../../../../types/types';
-import { Component, Input, OnInit } from '@angular/core';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { AuditOperationTypes } from '@app/enums/audit-operation-types';
-import { AuditListGenericComponent } from '@app/generics/audit-list-generic-component';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { CaseAuditService } from '@app/services/case-audit.service';
-import { LangService } from '@app/services/lang.service';
-import { BestPractices } from '@app/models/best-practices';
+import {ControlValueLabelLangKey} from '@app/types/types';
+import {Component} from '@angular/core';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {AuditOperationTypes} from '@app/enums/audit-operation-types';
+import {AuditListGenericComponent} from '@app/generics/audit-list-generic-component';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {CaseAuditService} from '@app/services/case-audit.service';
+import {LangService} from '@app/services/lang.service';
+import {BestPractices} from '@app/models/best-practices';
 
 @Component({
   selector: 'audit-best-practices-list',
@@ -16,11 +16,10 @@ import { BestPractices } from '@app/models/best-practices';
 })
 export class AuditBestPracticesListComponent extends AuditListGenericComponent<BestPractices> {
   constructor(public lang: LangService,
-    public caseAuditService: CaseAuditService) {
+              public caseAuditService: CaseAuditService) {
     super();
   }
 
-  @Input()
   displayColumns: string[] = ['bestPracticesListString', 'statement', 'actions'];
   actions: IMenuItem<BestPractices>[] = [
     // show difference

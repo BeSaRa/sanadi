@@ -67,4 +67,8 @@ export class NpoBankAccount extends SearchableCloneable<NpoBankAccount> implemen
     ...normalSearchFields(['accountNumber', 'iban']),
     ...infoSearchFields(['bankInfo'])
   };
+
+  isEqual(record: NpoBankAccount): boolean {
+    return this.iban === record.iban;
+  }
 }

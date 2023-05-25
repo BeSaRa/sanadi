@@ -93,4 +93,13 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
     return valuesWithLabels;
   }
 
+  isEqual(record: ExecutiveManagement): boolean {
+    return this.arabicName === record.arabicName
+    && this.englishName === record.englishName
+    && this.email === record.email
+    && this.phone === record.phone
+    && this.nationality === record.nationality
+    && this.jobTitle === record.jobTitle
+    && this.passportNumber === record.passportNumber;
+  }
 }

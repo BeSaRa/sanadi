@@ -51,4 +51,10 @@ export class ApprovalReason extends SearchableCloneable<ApprovalReason> implemen
       fieldVisit: control ? [values.fieldVisit, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.fieldVisit,
     };
   }
+
+  isEqual(record: ApprovalReason): boolean {
+    return record.research === this.research
+      && record.projects === this.projects
+      && record.fieldVisit === this.fieldVisit;
+  }
 }

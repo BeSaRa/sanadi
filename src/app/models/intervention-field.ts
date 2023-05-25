@@ -54,4 +54,10 @@ export class InterventionField extends SearchableCloneable<InterventionField> im
     }
     return adminResultValue ?? new AdminResult();
   }
+
+  isEqual(record: InterventionField): boolean {
+    return this.mainUNOCHACategory === record.mainUNOCHACategory
+    && this.subUNOCHACategory === record.subUNOCHACategory;
+  }
+
 }

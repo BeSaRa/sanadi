@@ -61,13 +61,17 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
     this.dialogRef.close(savedModel);
   }
 
+  _isDuplicate(record1: Partial<GoalList>, record2: Partial<GoalList>): boolean {
+    return (record1 as GoalList).isEqual(record2 as GoalList);
+  }
+
   beforeSave(model: GoalList, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
       return false;
     }
-    const isDuplicate = this.list.some((x) => x === form.getRawValue());
-    if (isDuplicate) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

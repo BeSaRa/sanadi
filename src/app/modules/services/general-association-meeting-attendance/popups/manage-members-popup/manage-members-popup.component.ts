@@ -85,20 +85,12 @@ export class ManageMembersPopupComponent extends UiCrudDialogGenericComponent<Ge
     }
   }
 
-  private isDuplicate(formValue: any): boolean {
-    if (this.operation === OperationTypes.CREATE) {
-      return this.list.some((item) => item.identificationNumber === formValue.identificationNumber);
-    }
-    if (this.operation === OperationTypes.UPDATE) {
-      return this.list.some((item: GeneralAssociationExternalMember, index: number) => {
-        return index !== this.listIndex && item.identificationNumber === formValue.identificationNumber;
-      });
-    }
-    return false;
+  _isDuplicate(record1: Partial<GeneralAssociationExternalMember>, record2: Partial<GeneralAssociationExternalMember>): boolean {
+    return (record1 as GeneralAssociationExternalMember).isEqual(record2 as GeneralAssociationExternalMember);
   }
 
   private _beforeSaveSearch(): boolean {
-    if (this.isDuplicate(this.selectedMemberFromPopup)) {
+    if (this.isDuplicateInList(this.selectedMemberFromPopup)) {
       this.displayDuplicatedItemMessage();
       return false;
     }
@@ -110,7 +102,7 @@ export class ManageMembersPopupComponent extends UiCrudDialogGenericComponent<Ge
       this.displayRequiredFieldsMessage();
       return false;
     }
-    if (this.isDuplicate(form.getRawValue())) {
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

@@ -69,4 +69,8 @@ export class OrganizationOfficer extends SearchableCloneable<OrganizationOfficer
       extraPhone: controls ? [values.extraPhone, CustomValidators.commonValidations.phone] : values.extraPhone
     }
   }
+
+  isEqual(record: OrganizationOfficer): boolean {
+    return this.identificationNumber === record.identificationNumber;
+  }
 }

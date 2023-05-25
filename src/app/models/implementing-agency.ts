@@ -62,4 +62,9 @@ export class ImplementingAgency extends SearchableCloneable<ImplementingAgency> 
     }
     return adminResultValue ?? new AdminResult();
   }
+
+  isEqual(record: ImplementingAgency): boolean {
+    return this.implementingAgencyType === record.implementingAgencyType
+    && this.implementingAgency === record.implementingAgency;
+  }
 }

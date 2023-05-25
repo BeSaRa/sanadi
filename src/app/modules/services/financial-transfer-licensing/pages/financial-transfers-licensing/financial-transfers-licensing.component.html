@@ -239,7 +239,7 @@
         [readonly]="readonly" (listUpdated)="updateTransactionAmount($event)"
         [submissionMechanism]="submissionMechanism"
         [approvedFinancialTransferProjects]="approvedFinancialTransferProjectsList"
-        [requestType]="model?.requestType || 0">
+        [requestType]="model?.requestType || financialTransferRequestTypesEnum.NEW">
       </financial-transfers-projects>
     </ng-container>
   </ng-template>

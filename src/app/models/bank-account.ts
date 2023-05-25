@@ -122,4 +122,8 @@ export class BankAccount extends SearchableCloneable<BankAccount> implements IAu
     }
     return adminResultValue ?? new AdminResult();
   }
+
+  isEqual(record: BankAccount): boolean {
+    return this.iBan === record.iBan
+  }
 }

@@ -46,21 +46,8 @@ export class InterventionRegionListPopupComponent extends UiCrudDialogGenericCom
     this.dialogRef.close(savedModel);
   }
 
-  private isEqual(record1: Partial<InterventionRegion>, record2: Partial<InterventionRegion>): boolean {
-    return record1.region === record2.region
-      && record1.description === record2.description;
-  }
-
-  isDuplicate(formValue: any): boolean {
-    if (this.operation === OperationTypes.CREATE) {
-      return this.list.some((item) => this.isEqual(item, formValue));
-    }
-    if (this.operation === OperationTypes.UPDATE) {
-      return this.list.some((item: InterventionRegion, index: number) => {
-        return index !== this.listIndex && this.isEqual(item, formValue);
-      });
-    }
-    return false;
+  _isDuplicate(record1: Partial<InterventionRegion>, record2: Partial<InterventionRegion>): boolean {
+    return (record1 as InterventionRegion).isEqual(record2 as InterventionRegion);
   }
 
   beforeSave(model: InterventionRegion, form: UntypedFormGroup): boolean | Observable<boolean> {
@@ -68,7 +55,8 @@ export class InterventionRegionListPopupComponent extends UiCrudDialogGenericCom
       this.displayRequiredFieldsMessage();
       return false;
     }
-    if (this.isDuplicate(form.getRawValue())) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

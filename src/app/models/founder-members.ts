@@ -71,4 +71,8 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
   searchFields: ISearchFieldsMap<FounderMembers> = {
     ...normalSearchFields(['identificationNumber', 'fullName', 'email', 'phone', 'extraPhone'])
   };
+
+  isEqual(record: FounderMembers): boolean {
+    return this.identificationNumber === record.identificationNumber;
+  }
 }

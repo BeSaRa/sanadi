@@ -76,6 +76,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   //#region Setup
   form!: UntypedFormGroup;
   loadAttachments: boolean = false;
+  financialTransferRequestTypesEnum = FinancialTransferRequestTypes;
   requestTypesList: Lookup[] =
     this.lookupService.listByCategory.FinancialTransferRequestType.sort(
       (a, b) => a.lookupKey - b.lookupKey

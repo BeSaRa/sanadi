@@ -87,4 +87,11 @@ export class ProjectAddress extends SearchableCloneable<ProjectAddress> implemen
       longitude: controls ? [{value: values.longitude, disabled: true}, [CustomValidators.required]] : values.longitude,
     };
   }
+
+  isEqual(record: ProjectAddress): boolean {
+    return this.beneficiaryRegion === record.beneficiaryRegion
+      && this.address === record.address
+      && this.latitude === record.latitude
+      && this.longitude === record.longitude;
+  }
 }

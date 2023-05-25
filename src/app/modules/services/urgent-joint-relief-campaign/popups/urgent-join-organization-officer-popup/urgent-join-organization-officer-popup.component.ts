@@ -45,13 +45,17 @@ export class UrgentJoinOrganizationOfficerPopupComponent extends UiCrudDialogGen
     this.dialogRef.close(savedModel);
   }
 
+  _isDuplicate(record1: Partial<OrganizationOfficer>, record2: Partial<OrganizationOfficer>): boolean {
+    return (record1 as OrganizationOfficer).isEqual(record2 as OrganizationOfficer);
+  }
+
   beforeSave(model: OrganizationOfficer, form: UntypedFormGroup): Observable<boolean> | boolean {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
       return false;
     }
-    const isDuplicate = this.list.some((x) => x === form.getRawValue());
-    if (isDuplicate) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

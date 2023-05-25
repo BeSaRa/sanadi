@@ -51,7 +51,20 @@ export class WorkAreasPopupComponent extends UiCrudDialogGenericComponent<WorkAr
     this.dialogRef.close(savedModel);
   }
 
+  _isDuplicate(record1: Partial<WorkArea>, record2: Partial<WorkArea>): boolean {
+    return (record1 as WorkArea).isEqual(record2 as WorkArea);
+  }
+
   beforeSave(model: WorkArea, form: UntypedFormGroup): boolean | Observable<boolean> {
+    if (this.form.invalid) {
+      this.displayRequiredFieldsMessage();
+      return false;
+    }
+
+    if (this.isDuplicateInList(form.getRawValue())) {
+      this.displayDuplicatedItemMessage();
+      return false;
+    }
     return true;
   }
 

@@ -10,8 +10,8 @@ import {AuditOperationTypes} from '@app/enums/audit-operation-types';
 import {CommonUtils} from '@app/helpers/common-utils';
 
 export class BankBranch extends SearchableCloneable<BankBranch> implements IAuditModelProperties<BankBranch> {
-   // extra properties
-   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  // extra properties
+  auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
 
   fullName!: string;
   establishmentDate!: string;
@@ -28,16 +28,17 @@ export class BankBranch extends SearchableCloneable<BankBranch> implements IAudi
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      fullName:{langKey: 'full_name', value: this.fullName},
-      establishmentDate:{langKey: 'establishment_date', value: this.establishmentDate},
-      address:{langKey: 'lbl_address', value: this.address},
-      email:{langKey: 'lbl_email', value: this.email},
-      fax:{langKey: 'fax_number', value: this.fax},
-      recordNo:{langKey: 'record_number', value: this.recordNo},
-      phone:{langKey: 'lbl_phone', value: this.phone},
-      postalCode:{langKey: 'postal_code', value: this.postalCode}
+      fullName: {langKey: 'full_name', value: this.fullName},
+      establishmentDate: {langKey: 'establishment_date', value: this.establishmentDate},
+      address: {langKey: 'lbl_address', value: this.address},
+      email: {langKey: 'lbl_email', value: this.email},
+      fax: {langKey: 'fax_number', value: this.fax},
+      recordNo: {langKey: 'record_number', value: this.recordNo},
+      phone: {langKey: 'lbl_phone', value: this.phone},
+      postalCode: {langKey: 'postal_code', value: this.postalCode}
     };
   }
+
   getBranchFields(control: boolean = false): any {
     const values = ObjectUtils.getControlValues<BankBranch>(this.getValuesWithLabels());
     return {
@@ -51,6 +52,7 @@ export class BankBranch extends SearchableCloneable<BankBranch> implements IAudi
       postalCode: control ? [values.postalCode, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : values.postalCode
     }
   }
+
   // don't delete (used in case audit history)
   getAdminResultByProperty(property: keyof BankBranch): AdminResult {
     let adminResultValue: AdminResult;
@@ -63,5 +65,9 @@ export class BankBranch extends SearchableCloneable<BankBranch> implements IAudi
         adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
     }
     return adminResultValue ?? new AdminResult();
+  }
+
+  isEqual(record: BankBranch): boolean {
+    return this.fullName === record.fullName;
   }
 }

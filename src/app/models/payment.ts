@@ -8,6 +8,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {ObjectUtils} from '@app/helpers/object-utils';
 import {IAuditModelProperties} from '@app/interfaces/i-audit-model-properties';
 import {normalSearchFields} from "@helpers/normal-search-fields";
+import {DateUtils} from "@helpers/date-utils";
 
 export class Payment extends SearchableCloneable<Payment> implements IAuditModelProperties<Payment> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -25,8 +26,8 @@ export class Payment extends SearchableCloneable<Payment> implements IAuditModel
   isEqual(payment: Payment): boolean {
     return payment.paymentNo === this.paymentNo &&
       payment.totalCost === this.totalCost &&
-      payment.dueDate === this.dueDate &&
-      payment.notes === this.notes;
+      payment.notes === this.notes
+      && DateUtils.getTimeStampFromDate(payment.dueDate!) === DateUtils.getTimeStampFromDate(this.dueDate!);
   }
 
   isNotEqual(payment: Payment): boolean {

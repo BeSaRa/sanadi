@@ -1,19 +1,19 @@
-import { infoSearchFields } from '@app/helpers/info-search-fields';
-import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { AdminResult } from './admin-result';
-import { SearchableCloneable } from './searchable-cloneable';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {AdminResult} from './admin-result';
+import {SearchableCloneable} from './searchable-cloneable';
 import {AuditOperationTypes} from '@enums/audit-operation-types';
 import {CommonUtils} from '@helpers/common-utils';
 import {ObjectUtils} from '@helpers/object-utils';
-import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import {IAuditModelProperties} from '@app/interfaces/i-audit-model-properties';
 
 export class WorkArea extends SearchableCloneable<WorkArea> implements IAuditModelProperties<WorkArea> {
   arabicName!: string;
   englishName!: string;
   country!: number;
-  region!:string;
+  region!: string;
   objectDBId?: number;
   id!: number;
   countryInfo!: AdminResult;
@@ -37,17 +37,17 @@ export class WorkArea extends SearchableCloneable<WorkArea> implements IAuditMod
     const values = ObjectUtils.getControlValues<WorkArea>(this.getValuesWithLabels());
     return {
       country: controls ? [values.country, [CustomValidators.required]] : values.country,
-      region: controls ? [values.region, [CustomValidators.required,CustomValidators.maxLength(50)]] : values.region,
+      region: controls ? [values.region, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.region,
 
     }
   }
 
   toCharityOrgnizationUpdate() {
-    const { id, country } = this;
+    const {id, country} = this;
     return new WorkArea().clone({
       objectDBId: id,
       country,
-      countryInfo: AdminResult.createInstance({ arName: this.arabicName, enName: this.englishName })
+      countryInfo: AdminResult.createInstance({arName: this.arabicName, enName: this.englishName})
     })
   }
 
@@ -66,6 +66,11 @@ export class WorkArea extends SearchableCloneable<WorkArea> implements IAuditMod
         adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
     }
     return adminResultValue ?? new AdminResult();
+  }
+
+  isEqual(record: WorkArea): boolean {
+    return this.country === record.country
+      && this.region === record.region;
   }
 
 }

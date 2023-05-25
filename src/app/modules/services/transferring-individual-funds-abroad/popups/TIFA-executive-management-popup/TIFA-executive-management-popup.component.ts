@@ -51,16 +51,8 @@ export class TIFAExecutiveManagementPopupComponent extends UiCrudDialogGenericCo
     this.dialogRef.close(savedModel);
   }
 
-  private isDuplicate(formValue: any): boolean {
-    if (this.operation === OperationTypes.CREATE) {
-      return this.list.some((item) => item.executiveIdentificationNumber === formValue.executiveIdentificationNumber);
-    }
-    if (this.operation === OperationTypes.UPDATE) {
-      return this.list.some((item: TransferFundsExecutiveManagement, index: number) => {
-        return index !== this.listIndex && item.executiveIdentificationNumber === formValue.executiveIdentificationNumber;
-      });
-    }
-    return false;
+  _isDuplicate(record1: Partial<TransferFundsExecutiveManagement>, record2: Partial<TransferFundsExecutiveManagement>): boolean {
+    return (record1 as TransferFundsExecutiveManagement).isEqual(record2 as TransferFundsExecutiveManagement);
   }
 
   beforeSave(model: TransferFundsExecutiveManagement, form: UntypedFormGroup): Observable<boolean> | boolean {
@@ -68,7 +60,8 @@ export class TIFAExecutiveManagementPopupComponent extends UiCrudDialogGenericCo
       this.displayRequiredFieldsMessage();
       return false;
     }
-    if (this.isDuplicate(form.getRawValue())) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }
@@ -94,6 +87,6 @@ export class TIFAExecutiveManagementPopupComponent extends UiCrudDialogGenericCo
   }
 
   getPopupHeadingText(): string {
-    return this.lang.map.lang === 'ar' ?  this.model.nameLikePassport : this.model.englishNameLikePassport;
+    return this.lang.map.lang === 'ar' ? this.model.nameLikePassport : this.model.englishNameLikePassport;
   }
 }

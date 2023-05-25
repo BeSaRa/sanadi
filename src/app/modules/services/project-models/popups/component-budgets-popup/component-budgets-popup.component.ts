@@ -47,11 +47,21 @@ export class ComponentBudgetsPopupComponent extends UiCrudDialogGenericComponent
     this.dialogRef.close(savedModel);
   }
 
+  _isDuplicate(record1: Partial<ProjectComponent>, record2: Partial<ProjectComponent>): boolean {
+    return (record1 as ProjectComponent).isEqual(record2 as ProjectComponent);
+  }
+
   beforeSave(model: ProjectComponent, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
       return false;
     }
+
+    if (this.isDuplicateInList(form.getRawValue())) {
+      this.displayDuplicatedItemMessage();
+      return false;
+    }
+
     return true;
   }
 

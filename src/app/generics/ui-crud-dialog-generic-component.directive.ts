@@ -31,7 +31,7 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
   abstract getPopupHeadingText(): string;
 
   abstract _getNewInstance(override?: Partial<M>): M;
-
+  abstract _isDuplicate(record1: Partial<M>, record2: Partial<M>): boolean;
 
   lang = inject(LangService);
   toast = inject(ToastService);
@@ -228,5 +228,17 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
         }
       }
     }
+  }
+
+  isDuplicateInList(formValue: any): boolean {
+    if (this.operation === OperationTypes.CREATE) {
+      return this.list.some((item) => this._isDuplicate(item, formValue));
+    }
+    if (this.operation === OperationTypes.UPDATE) {
+      return this.list.some((item: M, index: number) => {
+        return index !== this.listIndex && this._isDuplicate(item, formValue);
+      });
+    }
+    return false;
   }
 }

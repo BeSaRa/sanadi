@@ -1,16 +1,16 @@
-import { ControlValueLabelLangKey } from './../types/types';
-import { AdminResult } from '@app/models/admin-result';
-import { SearchableCloneable } from '@app/models/searchable-cloneable';
-import { ISearchFieldsMap } from '@app/types/types';
-import { normalSearchFields } from '@helpers/normal-search-fields';
-import { infoSearchFields } from '@helpers/info-search-fields';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { AuditOperationTypes } from '@app/enums/audit-operation-types';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { ObjectUtils } from '@app/helpers/object-utils';
-import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import {ControlValueLabelLangKey} from './../types/types';
+import {AdminResult} from '@app/models/admin-result';
+import {SearchableCloneable} from '@app/models/searchable-cloneable';
+import {ISearchFieldsMap} from '@app/types/types';
+import {normalSearchFields} from '@helpers/normal-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {AuditOperationTypes} from '@app/enums/audit-operation-types';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {ObjectUtils} from '@app/helpers/object-utils';
+import {IAuditModelProperties} from '@app/interfaces/i-audit-model-properties';
 
-export class OfficeEvaluation extends SearchableCloneable<OfficeEvaluation> implements IAuditModelProperties<OfficeEvaluation>{
+export class OfficeEvaluation extends SearchableCloneable<OfficeEvaluation> implements IAuditModelProperties<OfficeEvaluation> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   evaluationHub!: number;
   evaluationResult!: number;
@@ -41,18 +41,19 @@ export class OfficeEvaluation extends SearchableCloneable<OfficeEvaluation> impl
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
           value = '';
         }
-        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
     }
     return adminResultValue ?? new AdminResult();
   }
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      evaluationHub: { langKey: 'evaluation_hub', value: this.evaluationHub },
-      evaluationResult: { langKey: 'evaluation_result', value: this.evaluationResult },
-      notes: { langKey: 'notes', value: this.notes },
+      evaluationHub: {langKey: 'evaluation_hub', value: this.evaluationHub},
+      evaluationResult: {langKey: 'evaluation_result', value: this.evaluationResult},
+      notes: {langKey: 'notes', value: this.notes},
     };
   }
+
   buildForm(controls?: boolean) {
     const values = ObjectUtils.getControlValues<OfficeEvaluation>(this.getValuesWithLabels())
 
@@ -61,5 +62,11 @@ export class OfficeEvaluation extends SearchableCloneable<OfficeEvaluation> impl
       evaluationResult: controls ? [values.evaluationResult, [CustomValidators.required]] : values.evaluationResult,
       notes: controls ? [values.notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.notes
     };
+  }
+
+  isEqual(record: OfficeEvaluation): boolean {
+    return this.evaluationHub === record.evaluationHub
+      && this.evaluationResult === record.evaluationResult
+      && this.notes === record.notes;
   }
 }

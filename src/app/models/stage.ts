@@ -53,4 +53,11 @@ export class Stage extends SearchableCloneable<Stage> implements IAuditModelProp
       notes: controls ? [values.notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.notes
     };
   }
+
+  isEqual(record: Stage): boolean {
+    return this.stage === record.stage
+      && this.duration === record.duration
+      && this.interventionCost === record.interventionCost
+      && this.notes === record.notes;
+  }
 }

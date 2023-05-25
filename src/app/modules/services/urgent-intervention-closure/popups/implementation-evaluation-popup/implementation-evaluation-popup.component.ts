@@ -56,13 +56,17 @@ export class ImplementationEvaluationPopupComponent extends UiCrudDialogGenericC
     this.dialogRef.close(savedModel);
   }
 
+  _isDuplicate(record1: Partial<OfficeEvaluation>, record2: Partial<OfficeEvaluation>): boolean {
+    return (record1 as OfficeEvaluation).isEqual(record2 as OfficeEvaluation);
+  }
+
   beforeSave(model: OfficeEvaluation, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
       return false;
     }
-    const isDuplicate = this.list.some((x) => x === form.getRawValue());
-    if (isDuplicate) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

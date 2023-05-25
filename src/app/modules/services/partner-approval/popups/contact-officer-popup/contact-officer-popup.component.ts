@@ -45,13 +45,17 @@ export class ContactOfficerPopupComponent extends UiCrudDialogGenericComponent<C
     this.dialogRef.close(savedModel);
   }
 
+  _isDuplicate(record1: Partial<ContactOfficer>, record2: Partial<ContactOfficer>): boolean {
+    return (record1 as ContactOfficer).isEqual(record2 as ContactOfficer);
+  }
+
   beforeSave(model: ContactOfficer, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
       return false;
     }
-    const isDuplicate = this.list.some((x) => x === form.getRawValue());
-    if (isDuplicate) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

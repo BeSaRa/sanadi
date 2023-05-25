@@ -46,13 +46,17 @@ export class TargetGroupPopupComponent extends UiCrudDialogGenericComponent<Targ
     this.dialogRef.close(savedModel);
   }
 
+  _isDuplicate(record1: Partial<TargetGroup>, record2: Partial<TargetGroup>): boolean {
+    return (record1 as TargetGroup).isEqual(record2 as TargetGroup);
+  }
+
   beforeSave(model: TargetGroup, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
       return false;
     }
-    const isDuplicate = this.list.some((x) => x === form.getRawValue());
-    if (isDuplicate) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

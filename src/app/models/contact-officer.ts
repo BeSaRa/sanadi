@@ -75,4 +75,13 @@ export class ContactOfficer extends SearchableCloneable<ContactOfficer> implemen
       passportNumber: control ? [values.passportNumber, [...CustomValidators.commonValidations.passport]] : values.passportNumber,
     };
   }
+
+  isEqual(record: ContactOfficer): boolean {
+    return this.arabicName === record.arabicName
+      && this.englishName === record.englishName
+      && this.email === record.email
+      && this.phone === record.phone
+      && this.mobileNo === record.mobileNo
+      && this.passportNumber === record.passportNumber;
+  }
 }

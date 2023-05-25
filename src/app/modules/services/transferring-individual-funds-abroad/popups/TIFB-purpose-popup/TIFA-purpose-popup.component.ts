@@ -73,16 +73,8 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
     this.dialogRef.close(savedModel);
   }
 
-  private isDuplicate(formValue: any): boolean {
-    if (this.operation === OperationTypes.CREATE) {
-      return this.list.some((item) => item.isEqual(formValue));
-    }
-    if (this.operation === OperationTypes.UPDATE) {
-      return this.list.some((item: TransferFundsCharityPurpose, index: number) => {
-        return index !== this.listIndex && item.isEqual(formValue);
-      });
-    }
-    return false;
+  _isDuplicate(record1: Partial<TransferFundsCharityPurpose>, record2: Partial<TransferFundsCharityPurpose>): boolean {
+    return (record1 as TransferFundsCharityPurpose).isEqual(record2 as TransferFundsCharityPurpose);
   }
 
   beforeSave(model: TransferFundsCharityPurpose, form: UntypedFormGroup): Observable<boolean> | boolean {
@@ -90,7 +82,7 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
       this.displayRequiredFieldsMessage();
       return false;
     }
-    if (this.isDuplicate(form.getRawValue())) {
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

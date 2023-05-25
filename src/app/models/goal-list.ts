@@ -62,4 +62,10 @@ export class GoalList extends SearchableCloneable<GoalList> implements IAuditMod
     }
     return adminResultValue ?? new AdminResult();
   }
+
+  isEqual(record: GoalList): boolean {
+    return this.domain === record.domain
+      && this.mainDACCategory === record.mainDACCategory
+      && this.mainUNOCHACategory === record.mainUNOCHACategory;
+  }
 }

@@ -53,4 +53,8 @@ export class GeneralAssociationAgenda extends SearchableCloneable<GeneralAssocia
     }
   }
 
+  isEqual(record: GeneralAssociationAgenda): boolean {
+    return this.description === record.description;
+  }
+
 }

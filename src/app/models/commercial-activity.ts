@@ -70,4 +70,9 @@ export class CommercialActivity extends SearchableCloneable<CommercialActivity> 
       details: {langKey: 'details', value: this.details}
     };
   }
+
+  isEqual(record: CommercialActivity): boolean {
+    return this.activityName === record.activityName
+      && this.details === record.details;
+  }
 }

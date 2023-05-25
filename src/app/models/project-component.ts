@@ -53,4 +53,8 @@ export class ProjectComponent extends SearchableCloneable<ProjectComponent> impl
   searchFields: ISearchFieldsMap<ProjectComponent> = {
     ...normalSearchFields(['componentName', 'details', 'totalCost'])
   };
+
+  isEqual(record: ProjectComponent): boolean {
+    return this.componentName === record.componentName;
+  }
 }

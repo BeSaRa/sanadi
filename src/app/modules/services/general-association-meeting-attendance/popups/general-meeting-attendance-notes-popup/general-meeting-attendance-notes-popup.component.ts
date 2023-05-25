@@ -56,16 +56,8 @@ export class GeneralMeetingAttendanceNotesPopupComponent extends UiCrudDialogGen
     this.dialogRef.close(savedModel);
   }
 
-  private isDuplicate(formValue: any): boolean {
-    if (this.operation === OperationTypes.CREATE) {
-      return this.list.some((item) => item.comment === formValue.comment);
-    }
-    if (this.operation === OperationTypes.UPDATE) {
-      return this.list.some((item: GeneralMeetingAttendanceNote, index: number) => {
-        return index !== this.listIndex && item.comment === formValue.comment;
-      });
-    }
-    return false;
+  _isDuplicate(record1: Partial<GeneralMeetingAttendanceNote>, record2: Partial<GeneralMeetingAttendanceNote>): boolean {
+    return record1.comment === record2.comment;
   }
 
   beforeSave(model: GeneralMeetingAttendanceNote, form: UntypedFormGroup): Observable<boolean> | boolean {
@@ -73,7 +65,7 @@ export class GeneralMeetingAttendanceNotesPopupComponent extends UiCrudDialogGen
       this.displayRequiredFieldsMessage();
       return false;
     }
-    if (this.isDuplicate(form.getRawValue())) {
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

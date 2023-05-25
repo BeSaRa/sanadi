@@ -14,24 +14,28 @@
   <value-differences-list [differenceList]="contactInfoDifferences"></value-differences-list>
   <heading-row labelKey="contact_officers"></heading-row>
   <audit-npo-contact-officer [newVersionList]="newVersion.contactOfficerList"
-    [oldVersionList]="oldVersion.contactOfficerList" [caseType]="newVersion.caseType">
+                             [oldVersionList]="oldVersion.contactOfficerList"
+                             [caseType]="newVersion.caseType"
+                             [uniqueComparisonProperty]="'identificationNumber'">
   </audit-npo-contact-officer>
 </ng-template>
 
 <ng-template #founderMemberTabTemplate>
   <audit-founder-members [newVersionList]="newVersion.founderMemberList" [oldVersionList]="oldVersion.founderMemberList"
-    [caseType]="newVersion.caseType">
+                         [caseType]="newVersion.caseType">
   </audit-founder-members>
 </ng-template>
 
 <ng-template #bankAccountTabTemplate>
-  <audit-npo-bank-account [newVersionList]="newVersion.bankAccountList" [oldVersionList]="oldVersion.bankAccountList"
-    [caseType]="newVersion.caseType">
+  <audit-npo-bank-account [newVersionList]="newVersion.bankAccountList"
+                          [oldVersionList]="oldVersion.bankAccountList"
+                          [caseType]="newVersion.caseType"
+                          [uniqueComparisonProperty]="'iban'">
   </audit-npo-bank-account>
 </ng-template>
 
 <ng-template #realBeneficiaryTabTemplate>
-    <audit-real-beneficiary [newVersionList]="newVersion.realBeneficiaryList"
-      [oldVersionList]="oldVersion.realBeneficiaryList" [caseType]="newVersion.caseType">
-    </audit-real-beneficiary>
+  <audit-real-beneficiary [newVersionList]="newVersion.realBeneficiaryList"
+                          [oldVersionList]="oldVersion.realBeneficiaryList" [caseType]="newVersion.caseType">
+  </audit-real-beneficiary>
 </ng-template>

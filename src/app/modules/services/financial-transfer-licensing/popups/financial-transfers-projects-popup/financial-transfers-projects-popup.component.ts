@@ -63,6 +63,10 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
     this.dialogRef.close(savedModel);
   }
 
+  _isDuplicate(record1: Partial<FinancialTransfersProject>, record2: Partial<FinancialTransfersProject>): boolean {
+    return (record1 as FinancialTransfersProject).isEqual(record2 as FinancialTransfersProject);
+  }
+
   beforeSave(model: FinancialTransfersProject, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
@@ -73,8 +77,8 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
       this.toast.error(this.lang.map.msg_qatari_transaction_should_not_exceed_due_amount);
       return false;
     }
-    const isDuplicate = this.list.some((x) => x === form.getRawValue());
-    if (isDuplicate) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

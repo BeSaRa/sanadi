@@ -87,4 +87,14 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> im
       passportNumber: control ? [values.passportNumber, [...CustomValidators.commonValidations.passport]] : values.passportNumber
     };
   }
+
+  isEqual(record: ManagementCouncil): boolean {
+    return this.arabicName === record.arabicName
+      && this.englishName === record.englishName
+      && this.email === record.email
+      && this.phone === record.phone
+      && this.nationality === record.nationality
+      && this.passportNumber === record.passportNumber
+      && this.jobTitle === record.jobTitle;
+  }
 }

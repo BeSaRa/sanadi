@@ -58,16 +58,8 @@ export class TIFAPaymentPopupComponent extends UiCrudDialogGenericComponent<Paym
     this.dialogRef.close(savedModel);
   }
 
-  private isDuplicate(formValue: any): boolean {
-    if (this.operation === OperationTypes.CREATE) {
-      return this.list.some((item) => item.isEqual(formValue));
-    }
-    if (this.operation === OperationTypes.UPDATE) {
-      return this.list.some((item: Payment, index: number) => {
-        return index !== this.listIndex && item.isEqual(formValue);
-      });
-    }
-    return false;
+  _isDuplicate(record1: Partial<Payment>, record2: Partial<Payment>): boolean {
+    return (record1 as Payment).isEqual(record2 as Payment);
   }
 
   beforeSave(model: Payment, form: UntypedFormGroup): Observable<boolean> | boolean {
@@ -75,7 +67,8 @@ export class TIFAPaymentPopupComponent extends UiCrudDialogGenericComponent<Paym
       this.displayRequiredFieldsMessage();
       return false;
     }
-    if (this.isDuplicate(form.getRawValue())) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

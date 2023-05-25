@@ -21,7 +21,6 @@ export class AuditNpoBankAccountComponent extends AuditListGenericComponent<NpoB
     super();
   }
 
-  @Input()
   displayColumns: string[] = ['bankName', 'accountNumber', 'iban', 'actions'];
   actions: IMenuItem<NpoBankAccount>[] = [
     // show difference

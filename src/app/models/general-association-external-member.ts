@@ -91,4 +91,8 @@ export class GeneralAssociationExternalMember extends SearchableCloneable<Genera
     }
     return formData;
   }
+
+  isEqual(record: GeneralAssociationExternalMember): boolean {
+    return this.identificationNumber === record.identificationNumber;
+  }
 }

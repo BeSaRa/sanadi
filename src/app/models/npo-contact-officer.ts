@@ -64,4 +64,8 @@ export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer> im
   searchFields: ISearchFieldsMap<NpoContactOfficer> = {
     ...normalSearchFields(['identificationNumber', 'fullName', 'email', 'phone', 'extraPhone'])
   };
+
+  isEqual(record: NpoContactOfficer): boolean {
+    return this.identificationNumber === record.identificationNumber;
+  }
 }

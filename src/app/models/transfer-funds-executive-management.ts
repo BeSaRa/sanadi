@@ -82,4 +82,8 @@ export class TransferFundsExecutiveManagement extends SearchableCloneable<Transf
     }
     return adminResultValue ?? new AdminResult();
   }
+
+  isEqual(record: TransferFundsExecutiveManagement): boolean {
+    return this.executiveIdentificationNumber === record.executiveIdentificationNumber;
+  }
 }

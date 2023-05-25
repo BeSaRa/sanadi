@@ -47,4 +47,9 @@ export class TargetGroup extends SearchableCloneable<TargetGroup> {
     }
     return adminResultValue ?? new AdminResult();
   }
+
+  isEqual(record: TargetGroup): boolean {
+    return this.services === record.services
+      && this.targetedGroup === record.targetedGroup;
+  }
 }

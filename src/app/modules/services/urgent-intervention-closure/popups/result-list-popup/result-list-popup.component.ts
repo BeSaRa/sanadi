@@ -45,13 +45,17 @@ export class ResultListPopupComponent extends UiCrudDialogGenericComponent<Resul
     this.dialogRef.close(savedModel);
   }
 
+  _isDuplicate(record1: Partial<Result>, record2: Partial<Result>): boolean {
+    return (record1 as Result).isEqual(record2 as Result);
+  }
+
   beforeSave(model: Result, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
       return false;
     }
-    const isDuplicate = this.list.some((x) => x === form.getRawValue());
-    if (isDuplicate) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

@@ -51,4 +51,9 @@ export class InterventionRegion extends SearchableCloneable<InterventionRegion> 
     }
     return adminResultValue ?? new AdminResult();
   }
+
+  isEqual(record: InterventionRegion): boolean {
+    return this.region === record.region
+      && this.description === record.description;
+  }
 }

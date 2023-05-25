@@ -8,7 +8,7 @@ import {CommonUtils} from '@helpers/common-utils';
 import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 import {ObjectUtils} from '@helpers/object-utils';
 
-export class Goal extends SearchableCloneable<Goal> implements IAuditModelProperties<Goal>{
+export class Goal extends SearchableCloneable<Goal> implements IAuditModelProperties<Goal> {
   goal!: string;
 
   // extra properties
@@ -21,8 +21,7 @@ export class Goal extends SearchableCloneable<Goal> implements IAuditModelProper
   getGoalsFields(control: boolean): any {
     const values = ObjectUtils.getControlValues<Goal>(this.getValuesWithLabels());
     return {
-      goal: control ? [values.goal, [
-        CustomValidators.required,
+      goal: control ? [values.goal, [CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)
       ]] : values.goal,
     }
@@ -46,5 +45,9 @@ export class Goal extends SearchableCloneable<Goal> implements IAuditModelProper
         adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
     }
     return adminResultValue ?? new AdminResult();
+  }
+
+  isEqual(record: Goal): boolean {
+    return this.goal === record.goal;
   }
 }

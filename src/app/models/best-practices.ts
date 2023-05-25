@@ -1,15 +1,15 @@
-import { ControlValueLabelLangKey } from './../types/types';
-import { AdminResult } from '@app/models/admin-result';
-import { SearchableCloneable } from '@app/models/searchable-cloneable';
-import { LangService } from '@services/lang.service';
-import { FactoryService } from '@services/factory.service';
-import { ISearchFieldsMap } from '@app/types/types';
-import { normalSearchFields } from '@helpers/normal-search-fields';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { AuditOperationTypes } from '@app/enums/audit-operation-types';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { ObjectUtils } from '@app/helpers/object-utils';
-import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import {ControlValueLabelLangKey} from './../types/types';
+import {AdminResult} from '@app/models/admin-result';
+import {SearchableCloneable} from '@app/models/searchable-cloneable';
+import {LangService} from '@services/lang.service';
+import {FactoryService} from '@services/factory.service';
+import {ISearchFieldsMap} from '@app/types/types';
+import {normalSearchFields} from '@helpers/normal-search-fields';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {AuditOperationTypes} from '@app/enums/audit-operation-types';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {ObjectUtils} from '@app/helpers/object-utils';
+import {IAuditModelProperties} from '@app/interfaces/i-audit-model-properties';
 
 export class BestPractices extends SearchableCloneable<BestPractices> implements IAuditModelProperties<BestPractices> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -44,15 +44,15 @@ export class BestPractices extends SearchableCloneable<BestPractices> implements
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
           value = '';
         }
-        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
     }
     return adminResultValue ?? new AdminResult();
   }
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      bestPractices: { langKey: 'best_practices', value: this.bestPractices },
-      statement: { langKey: 'statement', value: this.statement },
+      bestPractices: {langKey: 'best_practices', value: this.bestPractices},
+      statement: {langKey: 'statement', value: this.statement},
     };
   }
 
@@ -67,5 +67,10 @@ export class BestPractices extends SearchableCloneable<BestPractices> implements
 
   get bestPracticesListString(): string {
     return this.bestPracticesInfo?.map(x => x.getName()).join(', ') ?? '';
+  }
+
+  isEqual(record: BestPractices): boolean {
+    return this.statement === record.statement
+      && (this.bestPractices ?? []).sort().join(',') === (record.bestPractices ?? []).sort().join(',');
   }
 }

@@ -46,13 +46,17 @@ export class BestPracticesPopupComponent extends UiCrudDialogGenericComponent<Be
     this.dialogRef.close(savedModel);
   }
 
+  _isDuplicate(record1: Partial<BestPractices>, record2: Partial<BestPractices>): boolean {
+    return (record1 as BestPractices).isEqual(record2 as BestPractices);
+  }
+
   beforeSave(model: BestPractices, form: UntypedFormGroup): Observable<boolean> | boolean {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
       return false;
     }
-    const isDuplicate = this.list.some((x) => x === form.getRawValue());
-    if (isDuplicate) {
+
+    if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
       return false;
     }

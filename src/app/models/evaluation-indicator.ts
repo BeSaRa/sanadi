@@ -56,4 +56,10 @@ export class EvaluationIndicator extends SearchableCloneable<EvaluationIndicator
       notes: controls ? [values.notes, [CustomValidators.maxLength(250)]] : values.notes
     }
   }
+
+  isEqual(record: EvaluationIndicator): boolean {
+    return this.indicator === record.indicator
+      && this.percentage === record.percentage
+      && this.notes === record.notes;
+  }
 }

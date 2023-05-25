@@ -69,6 +69,14 @@ export class ProjectNeed extends SearchableCloneable<ProjectNeed> implements IAu
   searchFields: ISearchFieldsMap<ProjectNeed> = {
     ...normalSearchFields(['projectName', 'projectDescription', 'totalCost', 'beneficiaries', 'goals'])
   };
+
+  isEqual(record: ProjectNeed): boolean {
+    return this.projectName === record.projectName
+      && this.totalCost === record.totalCost
+      && this.goals === record.goals
+      && this.projectDescription === record.projectDescription
+      && this.beneficiaries === record.beneficiaries;
+  }
 }
 
 export type ProjectNeeds = Partial<ProjectNeed>[];
