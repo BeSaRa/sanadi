@@ -22,7 +22,7 @@ export class AuditBankAccountComponent extends AuditListGenericComponent<BankAcc
     super();
   }
 
-  displayColumns: string[] = ['bankName', 'accountNumber', 'iBan', 'country', 'actions'];
+  displayColumns: string[] = ['bankName', 'accountNumber', 'iBan', 'country','currency','category', 'actions'];
   actions: IMenuItem<BankAccount>[] = [
     // show difference
     {
