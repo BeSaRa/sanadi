@@ -24,6 +24,14 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.country}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo?.getName() || ''}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="currency">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.currency}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.currencyInfo?.getName() || ''}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="category">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.bank_category}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.bankCategoryInfo?.getName() || ''}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions audit-actions">
