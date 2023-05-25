@@ -211,7 +211,7 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
   }
 
   displayDuplicatedItemMessage(): void {
-    this.toast.alert(this.lang.map.msg_duplicated_item);
+    this.toast.alert(this.lang.map.msg_duplicate_record_in_list);
   }
 
   setReadonly(readonly: boolean) {
