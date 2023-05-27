@@ -482,6 +482,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       result.contactEmail = licenseDetails.contactEmail;
       result.contactPhone = licenseDetails.contactPhone;
       result.contactExtraPhone = licenseDetails.contactExtraPhone;
+      result.beneficiaries = licenseDetails.beneficiaries;
+      result.beneficiariesNumber = licenseDetails.beneficiariesNumber;
 
       result.subject = licenseDetails.subject;
       result.goal = licenseDetails.goal;
