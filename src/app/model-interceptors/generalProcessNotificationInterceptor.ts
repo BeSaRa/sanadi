@@ -40,10 +40,10 @@ export class GeneralProcessNotificationInterceptor implements IModelInterceptor<
 
   private static parseTemplates(model: GeneralProcessNotification) {
     try {
-      model.parsedTemplates = JSON.parse(model.template);
+      model.parsedTemplates =  JSON.parse(model.template);
     } catch (error) {
       model.parsedTemplates = [];
     }
-    model.parsedTemplates = model.parsedTemplates.map(x => templateFieldInterceptor.receive(new TemplateField().clone(x)))
+    model.parsedTemplates = ( model.parsedTemplates??[]).map(x => templateFieldInterceptor.receive(new TemplateField().clone(x)))
   }
 }
