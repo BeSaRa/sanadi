@@ -22,7 +22,7 @@ export class ProjectNeedsPopupComponent extends UiCrudDialogGenericComponent<Pro
               public fb: UntypedFormBuilder) {
     super();
     this.setInitDialogData(data);
-    this.popupTitleKey = 'project_needs'
+    this.popupTitleKey = 'lbl_projects'
   }
 
   _getNewInstance(override?: Partial<ProjectNeed> | undefined): ProjectNeed {
