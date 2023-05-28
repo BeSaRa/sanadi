@@ -38,7 +38,8 @@ export class CaseAuditPopupComponent implements AfterViewInit {
   componentContainer!: ViewContainerRef;
 
   get popupTitle(): string {
-    return this.lang.map.view_changes + ' : ' + this.newVersion.fullSerial + ' (' + this.caseAudit.version + ')';
+    return this.lang.map.view_changes + ' : ' + this.newVersion.fullSerial
+      + ' (' + this.lang.map.version_x.change({x: this.caseAudit.version }) + ')';
   }
 
   private _clearContainer(): void {
