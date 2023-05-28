@@ -29,10 +29,9 @@
               <label for="userPassword" class="form-label">{{lang.map.lbl_password}}</label>
               <div class="input-group shadow-sm">
                 <i class="input-group-text mdi mdi-lock"></i>
-                <input formControlName="userPassword" tabindex="2" class="form-control p-right"
+                <input type="password" formControlName="userPassword" tabindex="2" class="form-control p-right"
                        [placeholder]="lang.map.lbl_enter_your_password_here"
-                       id="userPassword"
-                       [type]="passwordFieldType">
+                       id="userPassword" [attr.type]="passwordFieldType">
               </div>
               <button type="button" class="view-password-btn"
                       tooltip="{{passwordFieldType === 'password' ? lang.map.btn_show_password : lang.map.btn_hide_password}}"
@@ -47,7 +46,7 @@
             <div class="d-flex align-items-center justify-content-center">
               <a href="#" (click)="toggleLang($event)" class="text-decoration-none">
                 <span>{{lang.getCurrentLanguage().toggleTo}}</span>
-<!--                <img alt="lang code" class="lang-icon" src="assets/images/{{lang.getCurrentLanguage().code}}.svg"/>-->
+                <!--                <img alt="lang code" class="lang-icon" src="assets/images/{{lang.getCurrentLanguage().code}}.svg"/>-->
               </a>
             </div>
             <div class="mt-2 d-flex align-items-center justify-content-center">
@@ -61,7 +60,8 @@
       </div>
     </div>
     <div class="position-relative w-100 h-100">
-      <div [style.background-image]="loginBackground"  class="position-absolute top-0 start-0 end-0 bottom-0 login-background">
+      <div [style.background-image]="loginBackground"
+           class="position-absolute top-0 start-0 end-0 bottom-0 login-background">
       </div>
     </div>
   </div>
