@@ -25,6 +25,7 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
   gender!: number;
   nationality!: number;
   phone!: string;
+  email!: string;
   department!: string;
   contractLocation!: string;
   contractLocationType!: number;
@@ -72,6 +73,7 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
       gender: { langKey: 'gender', value: this.gender },
       nationality: { langKey: 'lbl_nationality', value: this.nationality },
       phone: { langKey: 'lbl_phone', value: this.phone },
+      email: { langKey: 'lbl_email', value: this.email },
       department: { langKey: 'department', value: this.department },
       contractLocation: { langKey: 'contract_location', value: this.contractLocation },
       contractLocationType: { langKey: 'contract_location_type', value: this.contractLocationType },

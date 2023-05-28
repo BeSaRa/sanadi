@@ -100,6 +100,13 @@
           [readonly]="!isEditRequestTypeAllowed" />
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
+      <!-- email -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
+        <input id="email" validationClasses="email" formControlName="email" class="form-control"
+          [readonly]="!isEditRequestTypeAllowed" />
+        <app-field-error-message controlName="email"></app-field-error-message>
+      </div>
       <!-- jobNumber -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="jobNumber" for="jobNumber" class="form-label">{{
