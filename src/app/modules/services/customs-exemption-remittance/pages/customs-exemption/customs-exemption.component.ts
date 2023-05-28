@@ -1,31 +1,32 @@
-import {Component} from '@angular/core';
-import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {CustomsExemptionRemittance} from '@models/customs-exemption-remittance';
-import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {SaveTypes} from '@enums/save-types';
-import {LangService} from '@services/lang.service';
-import {Observable, of, Subject} from 'rxjs';
-import {LookupService} from '@services/lookup.service';
-import {Lookup} from '@models/lookup';
-import {CustomsExemptionRequestTypes} from '@enums/service-request-types';
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {ReceiverTypes} from '@enums/receiver-type.enum';
-import {LinkedProjectTypes} from '@enums/linked-project-type.enum';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {DialogService} from '@services/dialog.service';
-import {ToastService} from '@services/toast.service';
-import {Country} from '@models/country';
-import {CountryService} from '@services/country.service';
-import {OpenFrom} from '@enums/open-from.enum';
-import {EmployeeService} from '@services/employee.service';
-import {CustomsExemptionSearchCriteria} from '@models/customs-exemption-search-criteria';
-import {FileIconsEnum} from '@enums/file-extension-mime-types-icons.enum';
-import {CommonUtils} from '@helpers/common-utils';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {AdminResult} from '@models/admin-result';
-import {UserClickOn} from '@enums/user-click-on.enum';
+import { Component } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { CustomsExemptionRemittance } from '@models/customs-exemption-remittance';
+import { CustomsExemptionRemittanceService } from '@services/customs-exemption-remittance.service';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { SaveTypes } from '@enums/save-types';
+import { LangService } from '@services/lang.service';
+import { Observable, of, Subject } from 'rxjs';
+import { LookupService } from '@services/lookup.service';
+import { Lookup } from '@models/lookup';
+import { CustomsExemptionRequestTypes } from '@enums/service-request-types';
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ReceiverTypes } from '@enums/receiver-type.enum';
+import { LinkedProjectTypes } from '@enums/linked-project-type.enum';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { DialogService } from '@services/dialog.service';
+import { ToastService } from '@services/toast.service';
+import { Country } from '@models/country';
+import { CountryService } from '@services/country.service';
+import { OpenFrom } from '@enums/open-from.enum';
+import { EmployeeService } from '@services/employee.service';
+import { CustomsExemptionSearchCriteria } from '@models/customs-exemption-search-criteria';
+import { FileIconsEnum } from '@enums/file-extension-mime-types-icons.enum';
+import { CommonUtils } from '@helpers/common-utils';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { AdminResult } from '@models/admin-result';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { AllRequestTypesEnum } from '@app/enums/all-request-types-enum';
 
 @Component({
   selector: 'customs-exemption',
@@ -40,13 +41,13 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
   selectedDocument?: CustomsExemptionRemittance;
 
   constructor(public lang: LangService,
-              public fb: UntypedFormBuilder,
-              public service: CustomsExemptionRemittanceService,
-              private lookupService: LookupService,
-              private dialog: DialogService,
-              private toast: ToastService,
-              private countryService: CountryService,
-              public employeeService: EmployeeService) {
+    public fb: UntypedFormBuilder,
+    public service: CustomsExemptionRemittanceService,
+    private lookupService: LookupService,
+    private dialog: DialogService,
+    private toast: ToastService,
+    private countryService: CountryService,
+    public employeeService: EmployeeService) {
     super();
   }
 
@@ -152,25 +153,25 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     if (!orderNumber) {
       return;
     }
-    this.loadDocumentsByCriteria({fullSerial: orderNumber, requestType: this.requestType.value})
+    this.loadDocumentsByCriteria({ fullSerial: orderNumber, requestType: this.requestType.value })
       .pipe(
         takeUntil(this.destroy$),
         filter(document => !!document),
         catchError(() => of(null))
       ).subscribe((document) => {
-      if (!document) {
-        return;
-      }
-      this.setSelectedDocument(document[0], true);
+        if (!document) {
+          return;
+        }
+        this.setSelectedDocument(document[0], true);
 
-      callback && callback();
-    });
+        callback && callback();
+      });
   }
 
   private _handleOrderNumberValidators(isRequired: boolean): void {
     if (isRequired) {
       this.orderNumberField.setValidators([CustomValidators.required, CustomValidators.maxLength(250), (control) => {
-        return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : {select_document: true};
+        return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : { select_document: true };
       }]);
     } else {
       this.orderNumberField.clearValidators();
@@ -181,7 +182,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
   private _handleDocumentNumberValidators(isRequired: boolean): void {
     if (isRequired) {
       this.documentNumberField.addValidators([CustomValidators.required, CustomValidators.maxLength(250), (control) => {
-        return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : {select_document: true};
+        return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : { select_document: true };
       }]);
     } else {
       this.documentNumberField.clearValidators();
@@ -285,7 +286,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -344,7 +345,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
       .pipe(takeUntil(this.destroy$))
       .pipe(
         exhaustMap((oldBookSerial) => {
-          return this.loadDocumentsByCriteria({fullSerial: oldBookSerial, requestType: this.requestType.value})
+          return this.loadDocumentsByCriteria({ fullSerial: oldBookSerial, requestType: this.requestType.value })
             .pipe(catchError(() => of([])));
         })
       )
@@ -370,7 +371,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
       .pipe(takeUntil(this.destroy$))
       .pipe(
         exhaustMap((oldBookFullSerial) => {
-          return this.loadDocumentsByCriteria({oldFullSerial : oldBookFullSerial, requestType: this.requestType.value})
+          return this.loadDocumentsByCriteria({ oldFullSerial: oldBookFullSerial, requestType: this.requestType.value })
             .pipe(catchError(() => of([])));
         })
       )
@@ -398,7 +399,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
 
   private openSelectDocument(documents: CustomsExemptionRemittance[]): Observable<undefined | CustomsExemptionRemittance> {
     return this.service
-      .openSelectDocumentDialog<CustomsExemptionRemittance>(documents, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectDocumentDisplayColumns)
+      .openSelectDocumentDialog<CustomsExemptionRemittance>(documents, this.model?.clone({ requestType: this.requestType.value || null }), true, this.service.selectDocumentDisplayColumns)
       .onAfterClose$.pipe(
         map((result: ({ selected: CustomsExemptionRemittance; details: CustomsExemptionRemittance } | undefined)) => (result ? result.details : result))
       );
@@ -418,7 +419,9 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
       delete value.fullSerial;
       delete value.serial;
       delete value.exportedBookFullSerial;
-
+      if (this.requestType.value === AllRequestTypesEnum.CANCEL) {
+        value.npoApproved = false;
+      }
       this._updateForm(value);
     }
   }
