@@ -20,6 +20,7 @@ export class AuditFinancialTransfersLicensingComponent implements IAuditCaseProp
   transfereeBankAccountDifferences: IValueDifference[] = [];
   transferBankAccountDifferences: IValueDifference[] = [];
   affidavitOfCompletionDifferences: IValueDifference[] = [];
+  specialExplanationDifferences: IValueDifference[] = [];
   constructor(public lang: LangService) {
   }
 
@@ -29,6 +30,7 @@ export class AuditFinancialTransfersLicensingComponent implements IAuditCaseProp
     this._getTransfereeBankAccountDifferences();
     this._getTransferBankAccountDifferences();
     this._getAffidavitOfCompletionDifferences();
+    this._getSpecialExplanationDifferences();
   }
 
   private _getBasicInfoDifferences(): void {
@@ -60,6 +62,12 @@ export class AuditFinancialTransfersLicensingComponent implements IAuditCaseProp
     const oldVersionDataModel: Partial<FinancialTransferLicensing> = ObjectUtils.getControlComparisonValues<FinancialTransferLicensing>(this.oldVersion.getAffidavitOfCompletionValuesWithLabels());
     const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getAffidavitOfCompletionValuesWithLabels());
     this.affidavitOfCompletionDifferences = ObjectUtils.getValueDifferencesList<FinancialTransferLicensing, FinancialTransferLicensing>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+  }
+  private _getSpecialExplanationDifferences(): void {
+    const newVersionDataModel: Partial<FinancialTransferLicensing> = ObjectUtils.getControlComparisonValues<FinancialTransferLicensing>(this.newVersion.getSpecialExplanationValuesWithLabels());
+    const oldVersionDataModel: Partial<FinancialTransferLicensing> = ObjectUtils.getControlComparisonValues<FinancialTransferLicensing>(this.oldVersion.getSpecialExplanationValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getSpecialExplanationValuesWithLabels());
+    this.specialExplanationDifferences = ObjectUtils.getValueDifferencesList<FinancialTransferLicensing, FinancialTransferLicensing>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
   showProjects(): boolean {
     return (

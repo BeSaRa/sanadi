@@ -398,6 +398,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
       transferringEntityId: this.transferringEntityId,
     });
   }
+
   buildApprovalForm(control: boolean = false): any {
     const {
       followUpDate
@@ -411,5 +412,10 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
   }
   finalApprove(): DialogRef {
     return this.service.finalApprove(this, WFResponseType.FINAL_APPROVE)
+  }
+  getSpecialExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      description: {langKey: 'special_explanations', value: this.description},
+    }
   }
 }
