@@ -20,9 +20,8 @@
               <div class="input-group shadow-sm">
                 <i class="input-group-text mdi mdi-account"></i>
                 <input formControlName="userName" cdkTrapFocus tabindex="1" id="employeeName"
-                       [placeholder]="lang.map.lbl_username"
-                       class="form-control"
-                       type="text">
+                       [placeholder]="lang.map.lbl_username" class="form-control"
+                       type="text" autocomplete="off">
               </div>
             </div>
             <div class="mb-3 position-relative">
@@ -31,7 +30,7 @@
                 <i class="input-group-text mdi mdi-lock"></i>
                 <input type="password" formControlName="userPassword" tabindex="2" class="form-control p-right"
                        [placeholder]="lang.map.lbl_enter_your_password_here"
-                       id="userPassword" [attr.type]="passwordFieldType">
+                       id="userPassword" [attr.type]="passwordFieldType" autocomplete="off">
               </div>
               <button type="button" class="view-password-btn"
                       tooltip="{{passwordFieldType === 'password' ? lang.map.btn_show_password : lang.map.btn_hide_password}}"
