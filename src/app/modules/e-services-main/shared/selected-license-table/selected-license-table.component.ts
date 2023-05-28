@@ -89,6 +89,10 @@ export class SelectedLicenseTableComponent implements OnInit {
     }
     if (this.caseType === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) {
       let doc = {...license, documentTitle: license.fullSerial};
+      if(!doc.bookId){
+        this.dialog.error(this.lang.map.no_documents_to_show);
+        return;
+      }
       this.customsExemptionRemittanceService.showDocumentContent(doc, this.caseType)
         .subscribe((file) => {
           return this.sharedService.openViewContentDialog(file, doc);
