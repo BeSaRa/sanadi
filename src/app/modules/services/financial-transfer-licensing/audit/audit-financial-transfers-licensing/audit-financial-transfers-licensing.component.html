@@ -1,12 +1,17 @@
 <tabs-list>
   <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
   <tab name="transferOperation" [template]="transferOperationTemplate" [title]="lang.map.transfer_operation"></tab>
-  <tab name="transfereeBankAccount" [template]="transfereeBankAccountTemplate" [title]="lang.map.transferee_bank_account"></tab>
-  <tab name="transferBankAccount" [template]="transferBankAccountTemplate" [title]="lang.map.transfer_bank_account"></tab>
-  <tab name="affidavitOfCompletion" [template]="affidavitOfCompletionTemplate" [title]="lang.map.affidavit_of_completion"></tab>
-  <tab  name="financialTransferProjects" [template]="financialTransferProjectsTemplate"
-       [title]="lang.map.financial_transfers_projects"></tab>
- </tabs-list>
+  <tab name="transfereeBankAccount" [template]="transfereeBankAccountTemplate"
+    [title]="lang.map.transferee_bank_account"></tab>
+  <tab name="transferBankAccount" [template]="transferBankAccountTemplate" [title]="lang.map.transfer_bank_account">
+  </tab>
+  <tab name="affidavitOfCompletion" [template]="affidavitOfCompletionTemplate"
+    [title]="lang.map.affidavit_of_completion"></tab>
+  <tab name="financialTransferProjects" [template]="financialTransferProjectsTemplate"
+    [title]="lang.map.financial_transfers_projects"></tab>
+  <tab name="specialExplanations" [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations">
+  </tab>
+</tabs-list>
 <ng-template #basicInfoTemplate>
   <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
 </ng-template>
@@ -24,8 +29,10 @@
 </ng-template>
 <ng-template #financialTransferProjectsTemplate>
   <audit-financial-transfers-projects [newVersionList]="newVersion.financialTransfersProjects"
-                      [oldVersionList]="oldVersion.financialTransfersProjects"
-                      [caseType]="newVersion.caseType"
-                      [uniqueComparisonProperty]="'fullSerial'">
+    [oldVersionList]="oldVersion.financialTransfersProjects" [caseType]="newVersion.caseType"
+    [uniqueComparisonProperty]="'fullSerial'">
   </audit-financial-transfers-projects>
+</ng-template>
+<ng-template #specialExplanationsTabTemplate>
+  <value-differences-list [differenceList]="specialExplanationDifferences"></value-differences-list>
 </ng-template>
