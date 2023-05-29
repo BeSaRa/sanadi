@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
 import {LangService} from '@app/services/lang.service';
@@ -33,6 +33,10 @@ import {TabMap} from '@app/types/types';
 import {IGdxCriteria} from '@contracts/i-gdx-criteria';
 import {GdxMophResponse} from '@app/models/gdx-moph-response';
 import {PermissionsEnum} from '@enums/permissions-enum';
+import {TabComponent} from "@app/shared/components/tab/tab.component";
+import {
+  IntegrationInquiriesComponent
+} from "@modules/gdx-integration/integration-inquiries/integration-inquiries.component";
 
 @Component({
   selector: 'app-user-inquiry',
@@ -130,6 +134,8 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     },
   };
 
+  @ViewChild(IntegrationInquiriesComponent) integrationInquiriesComponentRef!: IntegrationInquiriesComponent;
+
   ngOnInit(): void {
     this.buildPageForm();
     this.listenToInquiryTypeChange();
@@ -208,7 +214,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   }
 
   get currentForm(): UntypedFormGroup | null {
-    return <UntypedFormGroup> this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
+    return <UntypedFormGroup>this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
   }
 
   private buildPageForm(): void {
@@ -464,6 +470,21 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     } else {
       return '';
     }
+  }
+
+  onTabChange(tab: TabComponent): void {
+    if (tab.name === this.resultTabs.integrationInquiries.name) {
+      this._collapseIntegrationTabs();
+    }
+  }
+
+  private _collapseIntegrationTabs(): void {
+    if (!this.integrationInquiriesComponentRef) {
+      return;
+    }
+    this.integrationInquiriesComponentRef.governmentTabsListRef?.collapseAll();
+    this.integrationInquiriesComponentRef.charitableEntitiesTabsListRef?.collapseAll();
+    this.integrationInquiriesComponentRef.mainTabIndex$.next(0);
   }
 
 }

@@ -5,7 +5,8 @@
        [title]="lang.map[mainTabsData.charitableEntities.langKey]"></tab>
 </tabs-list>
 <ng-template #GovernmentAgenciesTemplate>
-  <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="govTabIndex$"
+  <tabs-list #governmentTabsList [accordionView]="true" [collapse]="true" [tabByIndex$]="govTabIndex$"
+             [skipSetFirstAccordionItemActive]="true"
              (onTabChange)="onGovTabChange($event)" accordionButtonClass="bg-accordion-raca-adaam">
     <tab [name]="govTabsData.moj.name" [template]="MOJTemplate" [title]="lang.map[govTabsData.moj.langKey]"></tab>
     <tab [name]="govTabsData.moci.name" [template]="MOCITemplate" [title]="lang.map[govTabsData.moci.langKey]"></tab>
@@ -138,7 +139,8 @@
 </ng-template>
 
 <ng-template #CharitableEntitiesTemplate>
-  <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="charityTabIndex$"
+  <tabs-list #charitableEntitiesTabsList [accordionView]="true" [collapse]="true" [tabByIndex$]="charityTabIndex$"
+             [skipSetFirstAccordionItemActive]="true"
              (onTabChange)="onCharityTabChange($event)" accordionButtonClass="bg-accordion-raca-adaam">
     <tab [name]="charityTabsData.qatarZakatFund.name" [template]="QatarZakatFundTemplate"
          [title]="lang.map[charityTabsData.qatarZakatFund.langKey]"></tab>

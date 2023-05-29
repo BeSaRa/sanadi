@@ -26,6 +26,7 @@ import {GdxMoeResponse} from '@app/models/gdx-moe-pending-installments';
 import {MoeStudentInfoComponent} from '../related-data/moe-student-info/moe-student-info.component';
 import {MoeInstallmentsComponent} from '../related-data/moe-installments/moe-installments.component';
 import {MoePendingPaymentComponent} from '../related-data/moe-pending-payment/moe-pending-payment.component';
+import {TabsListComponent} from "@app/shared/components/tabs/tabs-list.component";
 
 @Component({
   selector: 'integration-inquiries',
@@ -39,6 +40,9 @@ export class IntegrationInquiriesComponent {
   }
 
   private logListComponentsMap: Map<GdxServicesEnum, any> = new Map<GdxServicesEnum, any>();
+
+  @ViewChild('governmentTabsList') governmentTabsListRef!: TabsListComponent;
+  @ViewChild('charitableEntitiesTabsList') charitableEntitiesTabsListRef!: TabsListComponent;
 
   @ViewChild('garsiaPensionList') garsiaPensionListComponentRef!: GarsiaPensionListComponent;
   @ViewChild('garsiaPaymentList') garsiaPaymentListComponentRef!: GarsiaPensionPaymentListComponent;
@@ -257,8 +261,9 @@ export class IntegrationInquiriesComponent {
     [GdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT]: [],
   };
 
-  onMainTabChange($event: TabComponent): void {
-
+  onMainTabChange(tab: TabComponent): void {
+    this.governmentTabsListRef?.collapseAll();
+    this.charitableEntitiesTabsListRef?.collapseAll();
   }
 
   onGovTabChange($event: TabComponent) {
@@ -323,9 +328,9 @@ export class IntegrationInquiriesComponent {
       return;
     }
     this.logListComponentsMap.set(serviceId, componentRef);
-    if (serviceId === GdxServicesEnum.MOJ) {
+    /*if (serviceId === GdxServicesEnum.MOJ) {
       componentRef.reload$.next(null); // load the first tab manually
-    }
+    }*/
   }
 
   loadRecordsDone(serviceId: GdxServicesEnum, tabsData: TabMap) {

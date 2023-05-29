@@ -264,7 +264,7 @@
   </div>
 </div>
 <div *ngIf="!!beneficiary" class="row my-3">
-  <tabs-list>
+  <tabs-list (onTabChange)="onTabChange($event)">
     <tab [name]="resultTabs.providedAids.name" [template]="personalAidsTemplate"
          [title]="langService.map.personal_aid"></tab>
     <tab [name]="resultTabs.integrationInquiries.name" [template]="integrationInquiriesTemplate"
