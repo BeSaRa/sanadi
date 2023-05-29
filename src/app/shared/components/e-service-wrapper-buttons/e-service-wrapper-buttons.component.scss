@@ -13,6 +13,7 @@ $group4ActiveBorder: #B1D5E3; // 40%
 .action-button {
   &:not(.dropdown-item) {
     color: #ffffff;
+    max-width: 15rem;
   }
 
   .action-info {
