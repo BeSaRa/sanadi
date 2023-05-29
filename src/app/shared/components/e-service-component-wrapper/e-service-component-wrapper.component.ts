@@ -1798,7 +1798,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         const model = item as unknown as AwarenessActivitySuggestion;
         const component = this.component as unknown as AwarenessActivitySuggestionComponent;
         if(!component.selectedTemplateControl.value){
-          this.service.dialog.error(this.lang.map.err_required_field + this.lang.map.lbl_template)
+          this.service.dialog.error(this.lang.map.err_required_field + ' ' + this.lang.map.lbl_template)
           return;
         }
         model.approveWithSave(component.form).onAfterClose$.subscribe(actionTaken => {
