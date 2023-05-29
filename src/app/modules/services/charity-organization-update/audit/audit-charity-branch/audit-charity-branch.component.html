@@ -42,7 +42,7 @@
           </ng-container>
 
           <ng-container cdkColumnDef="actions">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.view_changes}}</th>
             <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions audit-actions">
               <grid-actions [record]="row" [actions]="actions" [itemIndex]="i"></grid-actions>
             </td>
