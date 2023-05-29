@@ -148,6 +148,7 @@ export class ProjectImplementation
       implementationTemplate: { langKey: 'templates', value: this.implementationTemplate },
       licenseStartDate: { langKey: 'license_start_date', value: this.licenseStartDate },
       projectEvaluationSLA: { langKey: 'project_evaluation_sla', value: this.projectEvaluationSLA },
+      implementingAgencyType: {langKey: 'implementation_agency_type', value: this.implementingAgencyType},
       licenseDuration: { langKey: 'license_duration', value: this.licenseDuration },
       implementingAgencyList: { langKey: 'implementation_agency', value: this.implementingAgencyList },
       projectTotalCost: { langKey: 'target_amount', value: this.projectTotalCost },
