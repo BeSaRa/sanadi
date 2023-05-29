@@ -137,4 +137,8 @@ export class TabComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  forceCollapse(): void {
+    this.expansionState = 'close';
+  }
+
 }

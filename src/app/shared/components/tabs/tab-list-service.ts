@@ -33,7 +33,7 @@ export class TabListService implements OnDestroy {
   }
 
   setTabs(tabs: QueryList<TabComponent>, activeTabIndex: number, collapse: boolean, scrollToViewPort: boolean,
-          scrollOnInit: boolean, onTabChangeEvent: EventEmitter<TabComponent>): void {
+          scrollOnInit: boolean, skipSetFirstAccordionItemActive: boolean, onTabChangeEvent: EventEmitter<TabComponent>): void {
     this.tabs = tabs;
     this.collapse = collapse;
     this.hasTabs = true;
@@ -42,7 +42,9 @@ export class TabListService implements OnDestroy {
     this.scrollOnInit = scrollOnInit;
     this.activeTabIndex = typeof activeTabIndex !== undefined ? activeTabIndex : 0;
     if (this.tabs.length) {
-      this.selectActiveIndexOrFirst();
+      if (!this.accordionView || !skipSetFirstAccordionItemActive) {
+        this.selectActiveIndexOrFirst();
+      }
     }
   }
 

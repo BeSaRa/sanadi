@@ -37,6 +37,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit, A
   @Input() scrollOnInit: boolean = false;
   @Input() extraButtonsTemplate?: TemplateRef<any>;
   @Input() extraButtonsPositioning: 'relative' | 'flex' = 'flex';
+  @Input() skipSetFirstAccordionItemActive: boolean = false;
 
   private _collapse: boolean = false;
   @Input()
@@ -96,7 +97,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit, A
   }
 
   ngAfterContentInit(): void {
-    this.tabListService.setTabs(this.tabs, this.activeTabIndex, this.collapse, this.scrollToViewPort, this.scrollOnInit, this.onTabChange);
+    this.tabListService.setTabs(this.tabs, this.activeTabIndex, this.collapse, this.scrollToViewPort, this.scrollOnInit, this.skipSetFirstAccordionItemActive, this.onTabChange);
   }
 
   ngAfterViewInit() {
@@ -160,5 +161,9 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit, A
 
   private _getAllTabsStatus(): boolean[] {
     return this.tabs.toArray().map(x => !x.disabled);
+  }
+
+  collapseAll(): void {
+    this.tabs.forEach((tab)=> tab.accordionView && tab.forceCollapse())
   }
 }
