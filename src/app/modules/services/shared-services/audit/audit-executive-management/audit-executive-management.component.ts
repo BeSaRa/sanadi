@@ -22,7 +22,7 @@ export class AuditExecutiveManagementComponent extends AuditListGenericComponent
 
   @Input() hidePassport: boolean = false;
 
-  private columns = ['arabicName', 'englishName', 'email', 'passportNumber', 'actions'];
+  private columns = ['arabicName', 'englishName','jobTitle', 'email', 'phone','nationality', 'actions'];
 
   get displayColumns(): string[] {
     if (this.hidePassport) {
