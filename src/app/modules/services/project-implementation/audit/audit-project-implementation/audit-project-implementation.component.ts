@@ -34,9 +34,9 @@ export class AuditProjectImplementationComponent implements IAuditCaseProperties
     this.basicInfoDifferences = ObjectUtils.getValueDifferencesList<ProjectImplementation, ProjectImplementation>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
   private _getimplementingAgencyTypeDifferences(): void {
-    const newVersionDataModel: Partial<ProjectImplementation> = ObjectUtils.getControlComparisonValues<ProjectImplementation>(this.newVersion.getimplementingAgencyTypeValuesWithLabels());
-    const oldVersionDataModel: Partial<ProjectImplementation> = ObjectUtils.getControlComparisonValues<ProjectImplementation>(this.oldVersion.getimplementingAgencyTypeValuesWithLabels());
-    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getimplementingAgencyTypeValuesWithLabels());
+    const newVersionDataModel: Partial<ProjectImplementation> = ObjectUtils.getControlComparisonValues<ProjectImplementation>(this.newVersion.getImplementingAgencyTypeValuesWithLabels());
+    const oldVersionDataModel: Partial<ProjectImplementation> = ObjectUtils.getControlComparisonValues<ProjectImplementation>(this.oldVersion.getImplementingAgencyTypeValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getImplementingAgencyTypeValuesWithLabels());
     this.implementingAgencyTypeDifferences = ObjectUtils.getValueDifferencesList<ProjectImplementation, ProjectImplementation>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
 

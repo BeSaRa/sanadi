@@ -29,6 +29,7 @@ export class ProjectImplementationInterceptor implements IModelInterceptor<Proje
     delete model.ouInfo;
     delete model.caseStatusInfo;
     delete model.licenseStatusInfo;
+    delete model.langService;
     model.beforeSend && model.beforeSend();
     return model;
   }

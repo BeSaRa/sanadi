@@ -22,7 +22,7 @@ export class AuditImplementationTemplateComponent extends AuditListGenericCompon
   }
   @Input() isGrant: boolean = false;
   inputMaskPatterns = CustomValidators.inputMaskPatterns
-  displayColumns: string[] = ['templateName', 'templateCost', 'executionRegion', 'arabicName', 'englishName', 'region', 'beneficiaryRegion', 'location', 'projectCost', 'actions']
+  displayColumns: string[] = ['templateName', 'templateCost', 'executionRegion', 'arabicName', 'englishName', 'region', 'beneficiaryRegion', 'projectCost', 'actions']
   actions: IMenuItem<ImplementationTemplate>[] = [
     // show difference
     {
