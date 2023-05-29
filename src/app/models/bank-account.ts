@@ -87,6 +87,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> implements IAu
       ]] : values.swiftCode,
       country: control ? [values.country, [CustomValidators.required]] : values.country,
       currency: control ? [values.currency, [CustomValidators.required]] : values.currency,
+      category: control ? [values.category, []] : values.category,
     };
 
     // if no case type or case type is not partner approval

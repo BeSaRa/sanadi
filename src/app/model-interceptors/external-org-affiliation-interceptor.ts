@@ -17,7 +17,6 @@ const contactOfficerInterceptor = new ContactOfficerInterceptor()
 export class ExternalOrgAffiliationInterceptor implements IModelInterceptor<ExternalOrgAffiliation> {
   send(model: Partial<ExternalOrgAffiliation>): Partial<ExternalOrgAffiliation> {
     model.bankAccountDTOs = model.bankAccountDTOs?.map(ba => {
-      delete ba.category;
       return bankAccountInterceptor.send(new BankAccount().clone(ba)) as BankAccount;
     })
     model.executiveManagementDTOs = model.executiveManagementDTOs?.map(em => executiveManagementInterceptor.send(em) as ExecutiveManagement)
