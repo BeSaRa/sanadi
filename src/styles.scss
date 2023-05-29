@@ -487,6 +487,19 @@ th.remain {
     background-color: #BA7588 !important; // 60%
   }
 }
+
+.bg-accordion-raca-dune {
+  // raca secondary dune palette
+  background-color: #A29475 !important; // 80%
+
+  &:active, &:focus {
+    box-shadow: 0 0 0 0.25rem #DCD5C8 !important; // 40%
+  }
+
+  &:disabled {
+    background-color: #C8BFAD !important; // 60%
+  }
+}
 .bg-added-row {
   background-color: #d1e7dd;
 }
