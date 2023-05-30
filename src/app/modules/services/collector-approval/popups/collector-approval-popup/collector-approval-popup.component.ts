@@ -1,10 +1,8 @@
 import { CollectorItem } from '@app/models/collector-item';
 import { CollectorApproval } from '@app/models/collector-approval';
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { LangService } from '@app/services/lang.service';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DialogService } from '@app/services/dialog.service';
 import { LicenseService } from '@app/services/license.service';
 import { Observable, Subject } from 'rxjs';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
@@ -16,63 +14,111 @@ import { CollectionRequestType } from '@app/enums/service-request-types';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { Lookup } from '@app/models/lookup';
 import { LookupService } from '@app/services/lookup.service';
+import { LicenseDurationType } from '@app/enums/license-duration-type';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { ServiceDataService } from '@app/services/service-data.service';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { ServiceCustomSettings } from '@app/models/service-custom-settings';
+import { UiCrudDialogGenericComponent } from '@app/generics/ui-crud-dialog-generic-component.directive';
+import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { AdminResult } from '@app/models/admin-result';
+import { OperationTypes } from '@app/enums/operation-types.enum';
 
 @Component({
   selector: 'app-collector-approval-popup',
   templateUrl: './collector-approval-popup.component.html',
   styleUrls: ['./collector-approval-popup.component.scss']
 })
-export class CollectorApprovalPopupComponent implements OnInit {
+export class CollectorApprovalPopupComponent extends UiCrudDialogGenericComponent<CollectorItem> {
+  popupTitleKey: keyof ILanguageKeys;
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'licenseDurationTypeInfo', 'actions'];
   genders: Lookup[] = this.lookupService.listByCategory.Gender;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   relationships: Lookup[] = this.lookupService.listByCategory.CollectorRelation;
   collectorTypes: Lookup[] = this.lookupService.listByCategory.CollectorType;
   oldLicenseFullSerialControl: UntypedFormControl = new UntypedFormControl();
-  item!: CollectorItem;
-  model: CollectorApproval;
-  form: UntypedFormGroup;
-  readOnly: boolean;
-  viewOnly: boolean;
-  editIndex: number;
+  caseType: CaseTypes;
+  collectorModel: CollectorApproval;
   licenseDurationType: number | undefined;
-  destroy$: Subject<any> = new Subject<any>();
   datepickerOptionsMap: IKeyValue = {
     licenseEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' })
   };
-  isPermanent: boolean;
+  isPermanent!: boolean;
+  maxElementsCount?: number;
   licenseSearch$: Subject<string> = new Subject<string>();
-  constructor(
-    @Inject(DIALOG_DATA_TOKEN)
-    public data: {
-      form: UntypedFormGroup,
-      readOnly: boolean,
-      viewOnly: boolean,
-      editIndex: number,
-      item: CollectorItem,
-      model: CollectorApproval,
-      licenseDurationType: number | undefined,
-      isPermanent: boolean
-    },
-    public lang: LangService,
+
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<CollectorItem>,
+    public dialogRef: DialogRef,
+    public fb: UntypedFormBuilder,
+    private licenseService: LicenseService,
     private lookupService: LookupService,
-    private dialogRef: DialogRef,
-    private dialog: DialogService,
-    private licenseService: LicenseService
+    private serviceDataService: ServiceDataService
   ) {
-    this.form = data.form;
-    this.readOnly = data.readOnly;
-    this.viewOnly = data.viewOnly;
-    this.editIndex = data.editIndex;
-    this.item = data.item;
-    this.model = data.model;
-    this.licenseDurationType = data.licenseDurationType;
-    this.isPermanent = data.isPermanent;
+    super();
+    this.setInitDialogData(data);
+    this.caseType = data.caseType!;
+    this.popupTitleKey = 'collector_items';
+    this.collectorModel = data.extras?.collectorModel;
+    this.licenseDurationType = data.extras?.licenseDurationType;
   }
 
-  ngOnInit() {
+  getPopupHeadingText(): string {
+    return '';
+  }
+  _getNewInstance(override?: Partial<CollectorItem> | undefined): CollectorItem {
+    return new CollectorItem().clone(override ?? {});
+  }
+  _isDuplicate(record1: Partial<CollectorItem>, record2: Partial<CollectorItem>): boolean {
+    return (record1 as CollectorItem).isEqual(record2 as CollectorItem);
+  }
+  initPopup(): void {
     this.listenToLicenseSearch();
-    this.updateForm(this.item);
+    this.loadCustomSettings();
+  }
+  destroyPopup(): void {
+  }
+  afterSave(savedModel: CollectorItem, originalModel: CollectorItem): void {
+    this.toast.success(this.operation === OperationTypes.CREATE
+      ? this.lang.map.msg_added_in_list_success : this.lang.map.msg_updated_in_list_success);
+    this.dialogRef.close(savedModel);
+  }
+  beforeSave(model: CollectorItem, form: UntypedFormGroup): boolean | Observable<boolean> {
+    if (this.form.invalid) {
+      this.displayRequiredFieldsMessage();
+      return false;
+    }
+    if (this.collectorModel.requestType === CollectionRequestType.NEW && this.list.length >= this.maxElementsCount!) {
+      this.dialogService.error(this.lang.map.collectors_max_items_count.change({ x: this.maxElementsCount }));
+      return false;
+    }
+    if (this.collectorModel.requestType !== CollectionRequestType.NEW && this.oldLicenseFullSerialControl.value) {
+      this.selectedLicenseInvalidMessage()
+      return false;
+    }
+    if (this.isDuplicateInList(form.getRawValue())) {
+      this.displayDuplicatedItemMessage();
+      return false;
+    }
+    return true;
+  }
+  private selectedLicenseInvalidMessage() {
+    this.dialogService.error(this.lang.map.edit_cancel_request_need_exists_license);
+  }
+  prepareModel(model: CollectorItem, form: UntypedFormGroup): CollectorItem | Observable<CollectorItem> {
+    let formValue = form.getRawValue();
+    const row = this._getNewInstance({
+      ...this.model,
+      ...formValue
+    });
+    row.collectorTypeInfo = AdminResult.createInstance(this.collectorTypes.find(c => c.lookupKey == row?.collectorType)!);
+    return row;
+  }
+  saveFail(error: Error): void {
+  }
+  buildForm(): void {
+    this.form = this.fb.group(this.model.buildForm(true));
+    this.toggleLicenseEndDate();
   }
 
   searchForLicense() {
@@ -80,7 +126,7 @@ export class CollectorApprovalPopupComponent implements OnInit {
   }
 
   get oldLicenseFullSerialField(): UntypedFormControl {
-    return (this.form.get('oldLicenseFullSerial')) as UntypedFormControl;
+    return (this.form && this.form.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
   private openSelectLicense(licenses: CollectorLicense[]) {
     const licensesByDurationType = licenses.filter(l => l.licenseDurationTypeInfo.lookupKey == this.licenseDurationType);
@@ -97,7 +143,7 @@ export class CollectorApprovalPopupComponent implements OnInit {
             licenseDurationType: this.model.licenseDurationType
           });
       }))
-      .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
+      .pipe(tap(licenses => !licenses.length && this.dialogService.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(licenses => !!licenses.length))
       .pipe(exhaustMap((licenses) => {
         return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
@@ -108,21 +154,21 @@ export class CollectorApprovalPopupComponent implements OnInit {
       .pipe(filter((license) => {
         let isAlreadyAdded = this.isLicenseAlreadyAdded(license.details);
         if (isAlreadyAdded) {
-          this.dialog.info(this.lang.map.x_already_exists.change({ x: this.lang.map.license }));
+          this.dialogService.info(this.lang.map.x_already_exists.change({ x: this.lang.map.license }));
         }
         return !isAlreadyAdded;
       }))
       .subscribe((_info) => {
-        this.updateForm(this.item = _info.details.convertToItem());
+        this.updateForm(this.model = _info.details.convertToItem());
       });
   }
 
   isLicenseAlreadyAdded(selectedLicense: any): boolean {
-    return this.model.collectorItemList.some(x => x.oldLicenseFullSerial === selectedLicense.fullSerial);
+    return this.collectorModel.collectorItemList.some(x => x.oldLicenseFullSerial === selectedLicense.fullSerial);
   }
 
   private validateSingleLicense(license: CollectorLicense): Observable<null | SelectedLicenseInfo<CollectorLicense, CollectorLicense>> {
-    return this.licenseService.validateLicenseByRequestType<CollectorLicense>(this.model.caseType, this.model.requestType, license.id)
+    return this.licenseService.validateLicenseByRequestType<CollectorLicense>(this.collectorModel.caseType, this.collectorModel.requestType, license.id)
       .pipe(map(validated => {
         return (validated ? {
           selected: validated,
@@ -131,43 +177,47 @@ export class CollectorApprovalPopupComponent implements OnInit {
       }));
   }
   isCancelRequestType(): boolean {
-    return !!this.model && !!this.model.requestType && (this.model.requestType === CollectionRequestType.CANCEL);
+    return !!this.collectorModel && !!this.collectorModel.requestType && (this.collectorModel.requestType === CollectionRequestType.CANCEL);
   }
   isNewRequestType(): boolean {
-    return !!this.model && !!this.model.requestType && (this.model.requestType === CollectionRequestType.NEW);
+    return !!this.collectorModel && !!this.collectorModel.requestType && (this.collectorModel.requestType === CollectionRequestType.NEW);
   }
   private updateForm(model: CollectorItem): void {
     this.form.patchValue(model.buildForm(false));
   }
   isEditLicenseEndDateDisabled(): boolean {
-    return (this.isPermanent || !this.isNewRequestType() || this.readOnly || this.viewOnly);
+    return (this.isPermanent || !this.isNewRequestType() || this.readonly);
   }
 
   get licenseEndDate() {
     return this.form?.get('licenseEndDate');
   }
+
+  loadCustomSettings() {
+    this.serviceDataService.loadByCaseType(CaseTypes.COLLECTOR_LICENSING).subscribe((service) => {
+      const customSettings = (new ServiceCustomSettings()).clone(JSON.parse(service.customSettings));
+      this.maxElementsCount = +customSettings.maxElementsCount!;
+    });
+  }
+  private toggleLicenseEndDate() {
+    this.isPermanent = this.licenseDurationType == LicenseDurationType.PERMANENT;
+    const licenseEnDateValidator = this.isPermanent ? [] : [CustomValidators.required];
+    this.licenseEndDate?.setValidators(licenseEnDateValidator);
+    this.isPermanent && this.licenseEndDate?.disable();
+    !this.isPermanent && this.licenseEndDate?.enable();
+  }
+
   isSearchAllowed(): boolean {
     // if readonly or no request type or request type = new, edit is not allowed
     // if new or draft record, edit is allowed
     // if collection item is new, edit is allowed
     let isAllowed = false;
-    if (this.readOnly || this.viewOnly || !this.model.requestType || this.model.requestType === CollectionRequestType.NEW) {
+    if (this.readonly || !this.collectorModel.requestType || this.collectorModel.requestType === CollectionRequestType.NEW) {
       isAllowed = false;
-    } else if (!this.model?.id || (!!this.model?.id && this.model.canCommit()) || !this.item!.itemId) {
+    } else if (!this.collectorModel?.id || (!!this.collectorModel?.id && this.collectorModel.canCommit()) || !this.model!.itemId) {
       isAllowed = true;
     }
     !isAllowed ? this.oldLicenseFullSerialField.disable() : this.oldLicenseFullSerialField.enable()
     return isAllowed;
-  }
-  cancel() {
-    this.dialogRef.close(null)
-  }
-  save() {
-    this.dialogRef.close(true);
-  }
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
   }
 }
