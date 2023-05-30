@@ -977,7 +977,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToChiefAction(item);
         },
         data: {
-          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
           groupOrder: 4
         },
         tooltip: 'btn_info_send_to_chief'
@@ -996,7 +996,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToGeneralManagerAction(item);
         },
         data: {
-          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
           groupOrder: 4
         },
         tooltip: 'btn_info_send_to_general_manager'
