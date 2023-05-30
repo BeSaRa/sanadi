@@ -1,15 +1,15 @@
 <div class="d-flex flex-column">
   <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)" [hasForm]="true">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
-         [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+      [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.contactOfficer.name" [hasError]="getTabInvalidStatus('contactOfficer')"
-         [template]="contactOfficerTabTemplate" [title]="lang.map.contact_officer"></tab>
+      [template]="contactOfficerTabTemplate" [title]="lang.map.contact_officer"></tab>
     <tab [name]="tabsData.beneficiariesNature.name" [hasError]="getTabInvalidStatus('beneficiariesNature')"
-         [template]="beneficiariesNatureTabTemplate" [title]="lang.map.lbl_beneficiaries_nature"></tab>
+      [template]="beneficiariesNatureTabTemplate" [title]="lang.map.lbl_beneficiaries_nature"></tab>
     <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
-         [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
+      [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
     <tab [name]="tabsData.attachments.name" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab"
-         [title]="lang.map.attachments" [hasError]="getTabInvalidStatus('attachments')"></tab>
+      [title]="lang.map.attachments" [hasError]="getTabInvalidStatus('attachments')"></tab>
   </tabs-list>
 
   <ng-template #basicInfoTabTemplate>
@@ -21,10 +21,9 @@
           <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{ lang.map.request_type
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
-                     placeholder="{{ lang.map.select }}" id="requestType" [readonly]="readonly"
-                     (change)="handleRequestTypeChange($event, true)" [notFoundText]="lang.map.msg_not_found"
-                     appendTo="body"
-                     validationClasses="requestType" formControlName="requestType">
+            placeholder="{{ lang.map.select }}" id="requestType" [readonly]="readonly"
+            (change)="handleRequestTypeChange($event, true)" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+            validationClasses="requestType" formControlName="requestType">
             <ng-option *ngFor="let type of collectionRequestType" [value]="type.lookupKey">{{ type.getName() }}
             </ng-option>
           </ng-select>
@@ -33,28 +32,39 @@
         <!-- License Number -->
         <div class="col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="oldLicenseFullSerial" for="oldLicenseFullSerial"
-                 class="form-label">{{lang.map.license_number}}</label>
+            class="form-label">{{lang.map.license_number}}</label>
           <div class="input-group">
             <input (keydown.enter)="isEditOrCancel()" formControlName="oldLicenseFullSerial"
-                   [readonly]="!isEditOrCancel() || readonly" type="text" validationClasses="oldLicenseFullSerial"
-                   class="form-control" id="oldLicenseFullSerial" trimInput>
+              [readonly]="!isEditOrCancel() || readonly" type="text" validationClasses="oldLicenseFullSerial"
+              class="form-control" id="oldLicenseFullSerial" trimInput>
             <button *ngIf="isEditOrCancel() && !readonly" type="button" (click)="licenseSearch($event)"
-                    class="input-group-text">
+              class="input-group-text">
               <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
             <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
           </div>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="activityType"
+            for="activityType">{{lang.map.service_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="activityType" [clearable]="true" placeholder="{{lang.map.select}}"
+            id="activityType" [notFoundText]="lang.map.msg_not_found" appendTo="body" [readonly]="readonly"
+            formControlName="activityType" validationClasses="activityType">
+            <ng-option *ngFor="let option of activitiesTypes" [value]="option.id" [disabled]="option.isRetired()">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="activityType"></app-field-error-message>
         </div>
       </div>
       <div class="row" *ngIf="!!model && !!model.getCaseId()">
         <ng-container *ngIf="isLicensingUser">
           <div class="col-md-4 mb-4 position-relative">
             <label asteriskIfRequired [control]="selectedTemplateControl" class="form-label">{{lang.map.select + ' ' +
-            lang.map.lbl_template}}</label>
+              lang.map.lbl_template}}</label>
             <div class="input-group">
               <input [value]="selectedTemplate?.getName()" [readonly]="true" type="text" class="form-control">
               <button class="btn btn-primary btn-sm" [tooltip]="lang.map.select + ' ' + lang.map.lbl_template"
-                      (click)="selectTemplatePopup(true)"><i
-                class="mdi mdi-file-word"></i></button>
+                (click)="selectTemplatePopup(true)"><i class="mdi mdi-file-word"></i></button>
               <app-field-error-message [control]="selectedTemplateControl"></app-field-error-message>
             </div>
           </div>
@@ -63,34 +73,43 @@
           <div class="col-md-4 mb-4 position-relative">
             <div class="input-group">
               <file-uploader #fileUploader *ngIf="isLicensingUser && selectedTemplate" labelKey="template_file"
-                             [isRequired]="true"
-                             (fileUploadEvent)="uploadTemplate($event)" [allowedExtensions]="[fileExtensionsEnum.DOCX]">
+                [isRequired]="true" (fileUploadEvent)="uploadTemplate($event)"
+                [allowedExtensions]="[fileExtensionsEnum.DOCX]">
               </file-uploader>
               <div style="font-size: 19px; padding-top: 2rem">
                 <button class="btn btn-primary btn-sm ms-2" *ngIf="isInternalUser && this.model?.getCaseId()"
-                        [tooltip]="lang.map.view + ' ' + lang.map.uploaded_templates"
-                        (click)="selectTemplatePopup(false)"><i
-                  class="mdi mdi-file-eye"></i></button>
+                  [tooltip]="lang.map.view + ' ' + lang.map.uploaded_templates" (click)="selectTemplatePopup(false)"><i
+                    class="mdi mdi-file-eye"></i></button>
               </div>
             </div>
           </div>
         </ng-container>
       </div>
       <div class="row">
+        <div class="mb-4 position-relative" [hidden]="!showOther">
+          <label class="form-label" asteriskIfRequired="otherActivity"
+            for="otherActivity">{{lang.map.lbl_other}}</label>
+          <textarea rows="5" id="otherActivity" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+            validationClasses="otherActivity" [readonly]="isCancel() || readonly" formControlName="otherActivity" trimInput
+            class="form-control"></textarea>
+          <app-field-error-message controlName="otherActivity"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
         <!-- goal -->
         <div class="mb-4 position-relative">
           <label for="goal" asteriskIfRequired="goal" class="form-label">{{lang.map.goal}}</label>
           <textarea rows="5" id="goal" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                    validationClasses="goal" [readonly]="isCancel() || readonly" formControlName="goal" trimInput
-                    class="form-control"></textarea>
+            validationClasses="goal" [readonly]="isCancel() || readonly" formControlName="goal" trimInput
+            class="form-control"></textarea>
           <app-field-error-message controlName="goal"></app-field-error-message>
         </div>
         <!-- subject -->
         <div class="mb-4 position-relative">
           <label for="subject" asteriskIfRequired="subject" class="form-label">{{lang.map.subject}}</label>
           <textarea rows="5" id="subject" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                    validationClasses="subject" [readonly]="isCancel() || readonly" formControlName="subject" trimInput
-                    class="form-control"></textarea>
+            validationClasses="subject" [readonly]="isCancel() || readonly" formControlName="subject" trimInput
+            class="form-control"></textarea>
           <app-field-error-message controlName="subject"></app-field-error-message>
         </div>
       </div>
@@ -105,7 +124,7 @@
             lang.map.identification_number
             }}</label>
           <input id="contactQID" formControlName="contactQID" [readonly]="isCancel() || readonly || isSameAsApplican"
-                 validationClasses="contactQID" class="form-control"/>
+            validationClasses="contactQID" class="form-control" />
           <app-field-error-message controlName="contactQID"></app-field-error-message>
         </div>
         <!-- contact Name -->
@@ -114,14 +133,14 @@
             lang.map.full_name
             }}</label>
           <input id="contactName" formControlName="contactName" [readonly]="isCancel() || readonly || isSameAsApplican"
-                 validationClasses="contactName" class="form-control"/>
+            validationClasses="contactName" class="form-control" />
           <app-field-error-message controlName="contactName"></app-field-error-message>
         </div>
         <!-- contactEmail -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="contactEmail" for="contactEmail">{{lang.map.lbl_email}}</label>
           <input validationClasses="contactEmail" [readonly]="isCancel() || readonly || isSameAsApplican"
-                 formControlName="contactEmail" type="text" id="contactEmail" class="form-control">
+            formControlName="contactEmail" type="text" id="contactEmail" class="form-control">
           <app-field-error-message controlName="contactEmail"></app-field-error-message>
         </div>
         <!-- contact Phone -->
@@ -130,8 +149,7 @@
             lang.map.lbl_phone
             }}</label>
           <input type="text" validationClasses="contactPhone" formControlName="contactPhone"
-                 [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control"
-                 id="contactPhone"/>
+            [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control" id="contactPhone" />
           <app-field-error-message controlName="contactPhone"></app-field-error-message>
         </div>
         <!-- contact Extra Phone -->
@@ -139,8 +157,8 @@
           <label asteriskIfRequired="contactExtraPhone" for="contactExtraPhone" class="form-label">{{
             lang.map.lbl_mobile_number }}</label>
           <input type="text" validationClasses="contactExtraPhone" formControlName="contactExtraPhone"
-                 [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control"
-                 id="contactExtraPhone"/>
+            [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control"
+            id="contactExtraPhone" />
           <app-field-error-message controlName="contactExtraPhone"></app-field-error-message>
         </div>
         <!-- Job Title -->
@@ -158,18 +176,18 @@
         <!-- Beneficiaries count -->
         <div class="col-sm-4 position-relative">
           <label asteriskIfRequired="beneficiariesNumber" for="beneficiariesNumber"
-                 class="form-label">{{lang.map.lbl_beneficiaries_count}}</label>
+            class="form-label">{{lang.map.lbl_beneficiaries_count}}</label>
           <input id="beneficiariesNumber" validationClasses="beneficiariesNumber" formControlName="beneficiariesNumber"
-                 class="form-control" [readonly]="readonly" [mask]="inputMaskPatterns.NUMBER_ONLY">
+            class="form-control" [readonly]="readonly" [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="beneficiariesNumber"></app-field-error-message>
         </div>
         <!-- Beneficiaries desc -->
         <div class="mb-4 position-relative">
           <label for="beneficiaries" asteriskIfRequired="beneficiaries"
-                 class="form-label">{{lang.map.lbl_beneficiaries}}</label>
+            class="form-label">{{lang.map.lbl_beneficiaries}}</label>
           <textarea rows="5" id="beneficiaries" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                    validationClasses="beneficiaries" [readonly]="readonly" formControlName="beneficiaries" trimInput
-                    class="form-control"></textarea>
+            validationClasses="beneficiaries" [readonly]="readonly" formControlName="beneficiaries" trimInput
+            class="form-control"></textarea>
           <app-field-error-message controlName="beneficiaries"></app-field-error-message>
         </div>
       </div>
@@ -180,10 +198,10 @@
       <div class="row">
         <div class="col-sm-12 col-md-12 mb-4 position-relative">
           <label for="description" asteriskIfRequired="description"
-                 class="form-label">{{lang.map.special_explanations}}</label>
+            class="form-label">{{lang.map.special_explanations}}</label>
           <textarea rows="5" id="description" validationClasses="description"
-                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="isCancel() || readonly"
-                    formControlName="description" trimInput class="form-control"></textarea>
+            [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="isCancel() || readonly"
+            formControlName="description" trimInput class="form-control"></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>
       </div>
@@ -191,8 +209,7 @@
   </ng-template>
   <ng-template #attachmentsTab>
     <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
-                 [service]="service.documentService" [model]="model" [load]="loadAttachments"
-                 [formProperties]="formProperties">
+      [service]="service.documentService" [model]="model" [load]="loadAttachments" [formProperties]="formProperties">
     </attachments>
   </ng-template>
 </div>
