@@ -45,9 +45,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
         if (!this.basicInfo || this.basicInfo.disabled) {
           return true;
         }
-        return this.basicInfo.valid &&
-          (!this.nestedCollector ||
-            this.nestedCollector.list.length > 0);
+        return this.basicInfo.valid && this.hasCollectorListItems
       },
       isTouchedOrDirty: () => true
     },

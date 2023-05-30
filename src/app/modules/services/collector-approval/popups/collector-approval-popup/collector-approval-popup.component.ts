@@ -40,12 +40,10 @@ export class CollectorApprovalPopupComponent extends UiCrudDialogGenericComponen
   oldLicenseFullSerialControl: UntypedFormControl = new UntypedFormControl();
   caseType: CaseTypes;
   collectorModel: CollectorApproval;
-  licenseDurationType: number | undefined;
   datepickerOptionsMap: IKeyValue = {
     licenseEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' })
   };
   isPermanent!: boolean;
-  maxElementsCount?: number;
   licenseSearch$: Subject<string> = new Subject<string>();
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<CollectorItem>,
@@ -53,14 +51,12 @@ export class CollectorApprovalPopupComponent extends UiCrudDialogGenericComponen
     public fb: UntypedFormBuilder,
     private licenseService: LicenseService,
     private lookupService: LookupService,
-    private serviceDataService: ServiceDataService
   ) {
     super();
     this.setInitDialogData(data);
     this.caseType = data.caseType!;
     this.popupTitleKey = 'collector_items';
     this.collectorModel = data.extras?.collectorModel;
-    this.licenseDurationType = data.extras?.licenseDurationType;
   }
 
   getPopupHeadingText(): string {
@@ -74,7 +70,6 @@ export class CollectorApprovalPopupComponent extends UiCrudDialogGenericComponen
   }
   initPopup(): void {
     this.listenToLicenseSearch();
-    this.loadCustomSettings();
   }
   destroyPopup(): void {
   }
@@ -86,10 +81,6 @@ export class CollectorApprovalPopupComponent extends UiCrudDialogGenericComponen
   beforeSave(model: CollectorItem, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (this.form.invalid) {
       this.displayRequiredFieldsMessage();
-      return false;
-    }
-    if (this.collectorModel.requestType === CollectionRequestType.NEW && this.list.length >= this.maxElementsCount!) {
-      this.dialogService.error(this.lang.map.collectors_max_items_count.change({ x: this.maxElementsCount }));
       return false;
     }
     if (this.collectorModel.requestType !== CollectionRequestType.NEW && this.oldLicenseFullSerialControl.value) {
@@ -129,7 +120,7 @@ export class CollectorApprovalPopupComponent extends UiCrudDialogGenericComponen
     return (this.form && this.form.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
   private openSelectLicense(licenses: CollectorLicense[]) {
-    const licensesByDurationType = licenses.filter(l => l.licenseDurationTypeInfo.lookupKey == this.licenseDurationType);
+    const licensesByDurationType = licenses.filter(l => l.licenseDurationTypeInfo.lookupKey == this.collectorModel.licenseDurationType);
     return this.licenseService.openSelectLicenseDialog(licensesByDurationType, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: CollectorLicense, details: CollectorLicense }>;
   }
 
@@ -140,7 +131,7 @@ export class CollectorApprovalPopupComponent extends UiCrudDialogGenericComponen
         return this.licenseService
           .collectorSearch<CollectorApproval>({
             fullSerial: serial,
-            licenseDurationType: this.model.licenseDurationType
+            licenseDurationType: this.collectorModel.licenseDurationType
           });
       }))
       .pipe(tap(licenses => !licenses.length && this.dialogService.info(this.lang.map.no_result_for_your_search_criteria)))
@@ -193,14 +184,8 @@ export class CollectorApprovalPopupComponent extends UiCrudDialogGenericComponen
     return this.form?.get('licenseEndDate');
   }
 
-  loadCustomSettings() {
-    this.serviceDataService.loadByCaseType(CaseTypes.COLLECTOR_LICENSING).subscribe((service) => {
-      const customSettings = (new ServiceCustomSettings()).clone(JSON.parse(service.customSettings));
-      this.maxElementsCount = +customSettings.maxElementsCount!;
-    });
-  }
   private toggleLicenseEndDate() {
-    this.isPermanent = this.licenseDurationType == LicenseDurationType.PERMANENT;
+    this.isPermanent = this.collectorModel.licenseDurationType == LicenseDurationType.PERMANENT;
     const licenseEnDateValidator = this.isPermanent ? [] : [CustomValidators.required];
     this.licenseEndDate?.setValidators(licenseEnDateValidator);
     this.isPermanent && this.licenseEndDate?.disable();

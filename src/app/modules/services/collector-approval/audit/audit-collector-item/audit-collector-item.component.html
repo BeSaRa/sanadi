@@ -25,14 +25,21 @@
             <td cdk-cell *cdkCellDef="let row"> {{row.jobTitle}} </td>
           </ng-container>
 
-
           <ng-container cdkColumnDef="exportedLicenseFullSerial">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.generated_license_number}}</th>
             <td cdk-cell *cdkCellDef="let row">
-              <span class="text-primary text-decoration-none cursor-pointer">{{row.exportedLicenseFullSerial || ''}}</span>
+              <span class="text-primary text-decoration-none cursor-pointer">{{row.exportedLicenseFullSerial ||
+                ''}}</span>
             </td>
           </ng-container>
 
+          <ng-container cdkColumnDef="oldLicenseFullSerial">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+            <td cdk-cell *cdkCellDef="let row">
+              <span *ngIf="isNewRequestType()">N/A</span>
+              <span *ngIf="!isNewRequestType()">{{row.oldLicenseFullSerial || ''}}</span>
+            </td>
+          </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions audit-actions">
@@ -42,7 +49,7 @@
           <tr cdk-header-row *cdkHeaderRowDef="['legendHeader']"></tr>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"
-              class="{{getAuditRowClass(row.auditOperation)}}"></tr>
+            class="{{getAuditRowClass(row.auditOperation)}}"></tr>
           <tr *cdkNoDataRow>
             <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
           </tr>
@@ -55,11 +62,10 @@
 </div>
 <ng-template #legendHeaderTemplate>
   <div class="d-flex align-items-center justify-content-end gap-1">
-    <div
-      class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.ADDED)}}">{{lang.map.lbl_record_added}}</div>
-    <div
-      class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.UPDATED)}}">{{lang.map.lbl_record_updated}}</div>
-    <div
-      class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.DELETED)}}">{{lang.map.lbl_record_deleted}}</div>
+    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.ADDED)}}">{{lang.map.lbl_record_added}}</div>
+    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.UPDATED)}}">{{lang.map.lbl_record_updated}}
+    </div>
+    <div class="p-1 my-1 fw-normal {{getAuditRowClass(auditOperationTypes.DELETED)}}">{{lang.map.lbl_record_deleted}}
+    </div>
   </div>
 </ng-template>
