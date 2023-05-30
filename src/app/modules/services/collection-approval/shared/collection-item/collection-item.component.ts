@@ -252,8 +252,7 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
           caseType: this.model.caseType,
           listIndex: undefined,
           extras: {
-            collectionModel: this.model,
-            licenseDurationType: this.model?.licenseDurationType
+            collectionModel: this.model
           }
         }).onAfterClose$;
       }))
@@ -280,8 +279,7 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
           caseType: this.model.caseType,
           listIndex: this._itemInOperationIndex(),
           extras: {
-            collectionModel: this.model,
-            licenseDurationType: this.model?.licenseDurationType
+            collectionModel: this.model
           }
         }).onAfterClose$;
       }))
@@ -308,8 +306,7 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
           caseType: this.model.caseType,
           listIndex: this._itemInOperationIndex(),
           extras: {
-            collectionModel: this.model,
-            licenseDurationType: this.model?.licenseDurationType
+            collectionModel: this.model
           }
         }).onAfterClose$;
       }))

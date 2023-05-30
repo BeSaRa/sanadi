@@ -30,8 +30,6 @@ import { CommonUtils } from '@app/helpers/common-utils';
   styleUrls: ['./collection-item-popup.component.scss']
 })
 export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<CollectionItem> {
-  licenseDurationType?: LicenseDurationType;
-
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'licenseDurationTypeInfo', 'ouInfo', 'creatorInfo', 'actions'];
   popupTitleKey: keyof ILanguageKeys;
   caseType: CaseTypes;
@@ -57,7 +55,6 @@ export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<C
     this.caseType = data.caseType!;
     this.popupTitleKey = 'collection_items';
     this.collectionModel = data.extras?.collectionModel;
-    this.licenseDurationType = data.extras?.licenseDurationType;
   }
 
   _getNewInstance(override: Partial<CollectionItem> | undefined): CollectionItem {
@@ -75,22 +72,19 @@ export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<C
   }
 
   beforeSave(model: CollectionItem, form: UntypedFormGroup): Observable<boolean> | boolean {
-    if (!this.buildingPlate) {
-      return true;
-    }
-    if (this.buildingPlate.form.invalid) {
-      this.formInvalidMessage();
+    if (this.form.invalid) {
+      this.displayRequiredFieldsMessage();
       return false;
     }
     if (this.isInvalidLatitudeLongitude()) {
       this.longitudeLatitudeInvalidMessage();
       return false;
     }
-    if (this.form.invalid) {
-      this.displayRequiredFieldsMessage();
+    if (!this.buildingPlate || this.buildingPlate.form.invalid) {
+      this.formInvalidMessage();
       return false;
     }
-    if (this.collectionModel.requestType !== CollectionRequestType.NEW && this.oldLicenseFullSerial.value) {
+    if (this.collectionModel.requestType !== CollectionRequestType.NEW && !this.oldLicenseFullSerial.value) {
       this.selectedLicenseInvalidMessage()
       return false;
     }
@@ -103,7 +97,7 @@ export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<C
 
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
-    this.licenseEndDate.setValidators(this.licenseDurationType === LicenseDurationType.TEMPORARY ? [CustomValidators.required] : null);
+    this.licenseEndDate.setValidators(this.collectionModel.licenseDurationType === LicenseDurationType.TEMPORARY ? [CustomValidators.required] : null);
   }
 
   destroyPopup(): void {
@@ -154,8 +148,8 @@ export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<C
         return this.licenseService
           .collectionSearch<CollectionApproval>({
             fullSerial: serial,
-            requestClassification: this.model.requestClassification,
-            licenseDurationType: this.model.licenseDurationType
+            requestClassification: this.collectionModel.requestClassification,
+            licenseDurationType: this.collectionModel.licenseDurationType
           });
       }))
       .pipe(tap(licenses => !licenses.length && this.dialogService.info(this.lang.map.no_result_for_your_search_criteria)))
@@ -228,7 +222,7 @@ export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<C
   }
 
   isTemporaryLicenseDuration(): boolean {
-    return this.licenseDurationType === LicenseDurationType.TEMPORARY;
+    return this.collectionModel.licenseDurationType === LicenseDurationType.TEMPORARY;
   }
 
   isEditLicenseEndDateDisabled(): boolean {

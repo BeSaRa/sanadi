@@ -1,11 +1,17 @@
 <tabs-list>
   <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
+  <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
  </tabs-list>
 <ng-template #basicInfoTemplate>
   <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
+  <heading-row labelKey="collection_items"></heading-row>
   <audit-collection-item [newVersionList]="newVersion.collectionItemList"
                       [oldVersionList]="oldVersion.collectionItemList"
                       [caseType]="newVersion.caseType"
+                      [requestType]="newVersion.requestType"
                       [uniqueComparisonProperty]="'itemId'">
   </audit-collection-item>
+</ng-template>
+<ng-template #specialExplanationTemplate>
+  <value-differences-list [differenceList]="specialExplanationDifferences"></value-differences-list>
 </ng-template>
