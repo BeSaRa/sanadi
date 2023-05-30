@@ -3,14 +3,14 @@
     lang.map.effective_coordination_capabilities }}</h1>
   <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content no-fixed-height">
+<div class="dialog-content w800px no-fixed-height">
   <div [formGroup]="form">
     <div formGroupName="{{formArrayName}}">
       <ng-container *ngFor="let control of formArray.controls; let i = index">
         <div [formGroupName]="i">
           <div class="row">
             <!-- Research Topic -->
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <div class="col-sm-12 col-md-6 mb-4 position-relative">
               <label asteriskIfRequired="researchTopic" for="researchTopic"
                 class="form-label">{{lang.map.lbl_research_topic}}</label>
               <input id="researchTopic" validationClasses="researchTopic" formControlName="researchTopic" trimInput
@@ -18,7 +18,7 @@
               <app-field-error-message controlName="researchTopic"></app-field-error-message>
             </div>
             <!-- Search Start Date -->
-            <div class="col-12 col-md-4 mb-4 position-relative">
+            <div class="col-12 col-md-6 mb-4 position-relative">
               <label for="searchStartDate" asteriskIfRequired="searchStartDate"
                 class="form-label">{{lang.map.lbl_search_start_date}}</label>
               <div class="input-group">
@@ -32,34 +32,38 @@
                 <app-field-error-message controlName="searchStartDate"></app-field-error-message>
               </div>
             </div>
-            <!-- Search Submission Deadline -->
-            <div class="col-12 col-md-4 mb-4 position-relative">
-              <label for="searchSubmissionDeadline" asteriskIfRequired="searchSubmissionDeadline"
-                class="form-label">{{lang.map.lbl_search_submission_deadline}}</label>
-              <div class="input-group">
-                <i class="input-group-text mdi mdi-calendar"></i>
-                <div class="form-control" formControlName="searchSubmissionDeadline" id="searchSubmissionDeadline"
-                  [options]="datepickerOptionsMap.searchSubmissionDeadline"
-                  (click)="dpsearchSubmissionDeadline.toggleCalendar()"
-                  (inputFieldChanged)="onDateChange($event, 'searchStartDate', 'searchSubmissionDeadline')"
-                  [ngClass]="{'input-disabled': viewOnly}" #dpsearchSubmissionDeadline="angular-mydatepicker"
-                  angular-mydatepicker validationClasses="searchSubmissionDeadline">
-                </div>
-                <app-field-error-message controlName="searchSubmissionDeadline"></app-field-error-message>
-              </div>
-            </div>
+
           </div>
           <div class="row">
+               <!-- Search Submission Deadline -->
+               <div class="col-12 col-md-6 mb-4 position-relative">
+                <label for="searchSubmissionDeadline" asteriskIfRequired="searchSubmissionDeadline"
+                  class="form-label">{{lang.map.lbl_search_submission_deadline}}</label>
+                <div class="input-group">
+                  <i class="input-group-text mdi mdi-calendar"></i>
+                  <div class="form-control" formControlName="searchSubmissionDeadline" id="searchSubmissionDeadline"
+                    [options]="datepickerOptionsMap.searchSubmissionDeadline"
+                    (click)="dpsearchSubmissionDeadline.toggleCalendar()"
+                    (inputFieldChanged)="onDateChange($event, 'searchStartDate', 'searchSubmissionDeadline')"
+                    [ngClass]="{'input-disabled': viewOnly}" #dpsearchSubmissionDeadline="angular-mydatepicker"
+                    angular-mydatepicker validationClasses="searchSubmissionDeadline">
+                  </div>
+                  <app-field-error-message controlName="searchSubmissionDeadline"></app-field-error-message>
+                </div>
+              </div>
             <!-- Required Role -->
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <div class="col-sm-12 col-md-6 mb-4 position-relative">
               <label asteriskIfRequired="requiredRole" for="requiredRole"
                 class="form-label">{{lang.map.lbl_required_role}}</label>
               <input id="requiredRole" validationClasses="requiredRole" formControlName="requiredRole" trimInput
                 class="form-control">
               <app-field-error-message controlName="requiredRole"></app-field-error-message>
             </div>
-            <!-- Financial Cost -->
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+
+          </div>
+          <div class="row">
+             <!-- Financial Cost -->
+             <div class="col-sm-12 col-md-6 mb-4 position-relative">
               <label asteriskIfRequired="financialCost" for="financialCost"
                 class="form-label">{{lang.map.lbl_financial_cost}}</label>
               <input id="financialCost" validationClasses="financialCost" formControlName="financialCost" trimInput
@@ -68,6 +72,7 @@
             </div>
           </div>
           <div class="row">
+
             <!-- Research And Study Objectives -->
             <div class="col-12 mb-4 position-relative">
               <label asteriskIfRequired="researchAndStudyObjectives" for="researchAndStudyObjectives"
