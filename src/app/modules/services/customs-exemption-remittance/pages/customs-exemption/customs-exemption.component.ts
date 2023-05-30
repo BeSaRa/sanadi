@@ -168,8 +168,11 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
       });
   }
 
+  private _isDocumentRequired(isRequired:boolean){
+    return isRequired && !this.readonly
+  }
   private _handleOrderNumberValidators(isRequired: boolean): void {
-    if (isRequired) {
+    if (this._isDocumentRequired(isRequired)) {
       this.orderNumberField.setValidators([CustomValidators.required, CustomValidators.maxLength(250), (control) => {
         return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : { select_document: true };
       }]);
@@ -180,7 +183,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
   }
 
   private _handleDocumentNumberValidators(isRequired: boolean): void {
-    if (isRequired) {
+    if (this._isDocumentRequired(isRequired)) {
       this.documentNumberField.addValidators([CustomValidators.required, CustomValidators.maxLength(250), (control) => {
         return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : { select_document: true };
       }]);
