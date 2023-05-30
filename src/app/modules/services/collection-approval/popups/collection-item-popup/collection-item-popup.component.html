@@ -1,10 +1,14 @@
-<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-  <h1 class="h6 text-white">{{ editIndex > -1 ? lang.map.btn_update : lang.map.btn_add }} {{
-    lang.map.collection_items }}</h1>
-  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
+  </div>
 </div>
-<div class="dialog-content no-fixed-height">
-  <form *ngIf="!!item" [formGroup]="form">
+<div class="dialog-content w800px no-fixed-height" #dialogContent>
+  <form [formGroup]="form">
     <div class="row">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="" [control]="searchControl"
@@ -22,14 +26,14 @@
         <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
                for="oldLicenseFullSerial">{{lang.map.serial_number}}</label>
         <input id="oldLicenseFullSerial" validationClasses="oldLicenseFullSerial" formControlName="oldLicenseFullSerial"
-               class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
+               class="form-control" [readonly]="(isCancelRequestType() || readonly)">
         <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="identificationNumber"
                for="identificationNumber">{{lang.map.identification_number}}</label>
         <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber"
-               class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
+               class="form-control" [readonly]="(isCancelRequestType() || readonly)">
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
     </div>
@@ -40,7 +44,7 @@
             <label class="form-label" asteriskIfRequired="locationDetails"
                    for="locationDetails">{{lang.map.location_details}}</label>
             <input id="locationDetails" validationClasses="locationDetails" formControlName="locationDetails"
-                   class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
+                   class="form-control" [readonly]="(isCancelRequestType() || readonly)">
             <app-field-error-message controlName="locationDetails"></app-field-error-message>
           </div>
           <div class="col-sm-12 mb-4 position-relative" *ngIf="isTemporaryLicenseDuration()">
@@ -71,8 +75,8 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-4 mb-4">
-        <building-plate #buildingPlate [record]="item" [readOnly]="(isCancelRequestType() || readOnly || viewOnly)"
+      <div class="col-sm-12 col-md-8 mb-4">
+        <building-plate #buildingPlate [record]="model" [readOnly]="(isCancelRequestType() || readonly)"
                         [propertyMap]="{buildingNo: 'buildingNumber', street:'streetNumber', zone: 'zoneNumber', unit: 'unitNumber'}">
         </building-plate>
       </div>
@@ -80,7 +84,12 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button (click)="save()" *ngIf="!readOnly && !viewOnly" [disabled]="isInvalidForm()"
-          class="btn btn-primary">{{editIndex ? lang.map.btn_save : lang.map.btn_add}}</button>
-  <button (click)="cancel()" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

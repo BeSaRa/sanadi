@@ -1,10 +1,10 @@
 <div class="row mt-2">
-  <app-table #table attachmentHandler [columns]="columns" [filter]="filterControl.value" [data]="model.collectionItemList">
+  <app-table #table attachmentHandler [columns]="columns" [filter]="filterControl.value" [data]="list">
     <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
       <ng-container cdkColumnDef="extra-header">
         <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
           <table-header (textChange)="filterControl.setValue($event)" *ngIf="!approvalMode"
-            tableTitle="collection_items" [add$]="add$" [allowAdd]="!item && !disableAdd" [skipClearSort]="true">
+            tableTitle="collection_items" [add$]="add$" [allowAdd]="!disableAdd" [skipClearSort]="true">
           </table-header>
           <table-header (textChange)="filterControl.setValue($event)" *ngIf="approvalMode" tableTitle="collection_items"
             [skipClearSort]="true">
