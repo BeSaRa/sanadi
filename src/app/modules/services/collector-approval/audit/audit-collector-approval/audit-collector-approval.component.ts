@@ -15,11 +15,13 @@ export class AuditCollectorApprovalComponent implements IAuditCaseProperties<Col
   oldVersion!: CollectorApproval; // don't delete or rename the property
 
   basicInfoDifferences: IValueDifference[] = [];
+  specialExplanationDifferences: IValueDifference[] = [];
   constructor(public lang: LangService) {
   }
 
   ngOnInit() {
     this._getBasicInfoDifferences();
+    this._specialExplanationDifferences();
   }
 
   private _getBasicInfoDifferences(): void {
@@ -29,4 +31,10 @@ export class AuditCollectorApprovalComponent implements IAuditCaseProperties<Col
     this.basicInfoDifferences = ObjectUtils.getValueDifferencesList<CollectorApproval, CollectorApproval>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
 
+  private _specialExplanationDifferences(): void {
+    const newVersionDataModel: Partial<CollectorApproval> = ObjectUtils.getControlComparisonValues<CollectorApproval>(this.newVersion.getExplanationValuesWithLabels());
+    const oldVersionDataModel: Partial<CollectorApproval> = ObjectUtils.getControlComparisonValues<CollectorApproval>(this.oldVersion.getExplanationValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getExplanationValuesWithLabels());
+    this.specialExplanationDifferences = ObjectUtils.getValueDifferencesList<CollectorApproval, CollectorApproval>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+  }
 }

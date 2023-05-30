@@ -1,9 +1,12 @@
 <div class="row mt-2">
+  <small class="text-danger" *ngIf="list.length >= maxElementsCount!">
+    {{ lang.map.collectors_max_items_count.change({ x: maxElementsCount }) }}
+  </small>
   <app-table #table attachmentHandler [columns]="columns" [filter]="filterControl.value" [data]="list">
     <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
       <ng-container cdkColumnDef="extra-header">
         <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-          <table-header *ngIf="!approvalMode" (textChange)="filterControl.setValue($event)" tableTitle="collector_items" [add$]="add$" [allowAdd]="!disableAdd" [skipClearSort]="true">
+          <table-header *ngIf="!approvalMode" (textChange)="filterControl.setValue($event)" tableTitle="collector_items" [add$]="add$" [allowAdd]="!disableAdd && list.length < maxElementsCount!" [skipClearSort]="true">
           </table-header>
           <table-header *ngIf="approvalMode" (textChange)="filterControl.setValue($event)" tableTitle="collector_items" [skipClearSort]="true">
         </table-header>

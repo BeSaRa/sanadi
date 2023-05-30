@@ -24,6 +24,9 @@ import { ToastService } from '@app/services/toast.service';
 import { ComponentType } from '@angular/cdk/portal';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { ServiceCustomSettings } from '@app/models/service-custom-settings';
+import { ServiceDataService } from '@app/services/service-data.service';
 
 @Component({
   selector: 'collector-item',
@@ -111,6 +114,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
 
   private _disableSearch: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
+  maxElementsCount?: number;
   @Input()
   set disableSearch(val: boolean) {
     this._disableSearch.next(val);
@@ -140,6 +144,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
     private dialog: DialogService,
     private lookupService: LookupService,
     private licenseService: LicenseService,
+    private serviceDataService: ServiceDataService,
     private sharedService: SharedService) {
     super();
   }
@@ -154,6 +159,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
       newColumns.splice(this.columns.length - 1, 0, 'approval_info_status');
       this.columns = newColumns;
     }
+    this.loadCustomSettings();
 
     this.listenToReload();
     this.listenToAdd();
@@ -180,6 +186,16 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
     return !this.itemInOperation ? -1 : this.list.findIndex(x => x === this.itemInOperation);
   }
 
+  // if (this.collectorModel.requestType === CollectionRequestType.NEW && this.list.length >= this.maxElementsCount!) {
+  //   this.dialogService.error(this.);
+  //   return false;
+  // }
+  loadCustomSettings() {
+    this.serviceDataService.loadByCaseType(CaseTypes.COLLECTOR_LICENSING).subscribe((service) => {
+      const customSettings = (new ServiceCustomSettings()).clone(JSON.parse(service.customSettings));
+      this.maxElementsCount = +customSettings.maxElementsCount!;
+    });
+  }
   private _updateList(operation: OperationTypes, addedOrUpdatedRecord?: CollectorItem) {
     const itemInOperationIndex = this._itemInOperationIndex();
     if (operation === OperationTypes.DELETE) {
@@ -218,8 +234,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
           caseType: this.model.caseType,
           listIndex: undefined,
           extras: {
-            collectorModel: this.model,
-            licenseDurationType: this.model?.licenseDurationType
+            collectorModel: this.model
           }
         }).onAfterClose$;
       }))
@@ -246,8 +261,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
           caseType: this.model.caseType,
           listIndex: this._itemInOperationIndex(),
           extras: {
-            collectorModel: this.model,
-            licenseDurationType: this.model?.licenseDurationType
+            collectorModel: this.model
           }
         }).onAfterClose$;
       }))
@@ -274,8 +288,7 @@ export class CollectorItemComponent extends HasAttachmentHandlerDirective implem
           caseType: this.model.caseType,
           listIndex: this._itemInOperationIndex(),
           extras: {
-            collectorModel: this.model,
-            licenseDurationType: this.model?.licenseDurationType
+            collectorModel: this.model
           }
         }).onAfterClose$;
       }))
