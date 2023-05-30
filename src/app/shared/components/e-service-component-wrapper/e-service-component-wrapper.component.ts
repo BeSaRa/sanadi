@@ -1431,7 +1431,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return (item.getResponses().includes(WFResponseType.CLOSE) &&
-            (item.caseType != CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE ||
+            ((item.caseType !== CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE &&
+              item.caseType !== CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) ||
               (item.caseType == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && (item.caseStatus == CommonCaseStatus.CANCELLED || this.employeeService.isCharityManager()))));
         },
         onClick: (item: CaseModel<any, any>) => {
