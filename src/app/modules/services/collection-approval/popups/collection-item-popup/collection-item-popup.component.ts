@@ -29,7 +29,7 @@ import { CommonUtils } from '@app/helpers/common-utils';
   templateUrl: './collection-item-popup.component.html',
   styleUrls: ['./collection-item-popup.component.scss']
 })
-export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<CollectionItem> implements OnInit, OnDestroy {
+export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<CollectionItem> {
   licenseDurationType?: LicenseDurationType;
 
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'licenseDurationTypeInfo', 'ouInfo', 'creatorInfo', 'actions'];
@@ -58,7 +58,6 @@ export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<C
     this.popupTitleKey = 'collection_items';
     this.collectionModel = data.extras?.collectionModel;
     this.licenseDurationType = data.extras?.licenseDurationType;
-    console.log(data);
   }
 
   _getNewInstance(override: Partial<CollectionItem> | undefined): CollectionItem {
@@ -93,6 +92,7 @@ export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<C
     }
     if (this.collectionModel.requestType !== CollectionRequestType.NEW && this.oldLicenseFullSerial.value) {
       this.selectedLicenseInvalidMessage()
+      return false;
     }
     if (this.isDuplicateInList(form.getRawValue())) {
       this.displayDuplicatedItemMessage();
@@ -104,7 +104,6 @@ export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<C
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
     this.licenseEndDate.setValidators(this.licenseDurationType === LicenseDurationType.TEMPORARY ? [CustomValidators.required] : null);
-
   }
 
   destroyPopup(): void {
