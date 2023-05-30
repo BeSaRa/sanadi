@@ -75,4 +75,7 @@ export class CollectionItem extends _LicenseApproval implements HasLicenseApprov
     }
     return adminResultValue ?? new AdminResult();
   }
+  isEqual(record: CollectionItem): boolean {
+    return record.identificationNumber === this.identificationNumber;
+  }
 }

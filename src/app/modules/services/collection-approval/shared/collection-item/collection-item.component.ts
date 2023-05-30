@@ -1,24 +1,25 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CollectionApproval } from '@models/collection-approval';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { exhaustMap, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { CollectionItem } from '@models/collection-item';
-import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { LangService } from '@services/lang.service';
-import { AppEvents } from '@enums/app-events';
 import { DialogService } from '@services/dialog.service';
 import { UserClickOn } from '@enums/user-click-on.enum';
 import { LicenseService } from '@services/license.service';
-import { CustomValidators } from '@app/validators/custom-validators';
 import { CollectionRequestType } from '@enums/service-request-types';
 import { BuildingPlateComponent } from '@app/shared/components/building-plate/building-plate.component';
 import { SharedService } from '@services/shared.service';
 import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
 import { ActionIconsEnum } from '@enums/action-icons-enum';
-import { LicenseDurationType } from '@enums/license-duration-type';
 import { CommonCaseStatus } from '@enums/common-case-status.enum';
 import { AttachmentHandlerDirective } from '@app/shared/directives/attachment-handler.directive';
 import { HasAttachmentHandlerDirective } from '@app/shared/directives/has-attachment-handler.directive';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { ToastService } from '@app/services/toast.service';
+import { ComponentType } from '@angular/cdk/portal';
 import { CollectionItemPopupComponent } from '../../popups/collection-item-popup/collection-item-popup.component';
 
 @Component({
@@ -28,8 +29,9 @@ import { CollectionItemPopupComponent } from '../../popups/collection-item-popup
 })
 export class CollectionItemComponent extends HasAttachmentHandlerDirective implements OnInit, AfterViewInit, OnDestroy {
 
-  constructor(private fb: UntypedFormBuilder,
+  constructor(
     public lang: LangService,
+    public toast: ToastService,
     private licenseService: LicenseService,
     private sharedService: SharedService,
     private dialog: DialogService) {
@@ -43,19 +45,25 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
 
   @Input()
   model!: CollectionApproval;
-
   @Input()
-  formProperties: Record<string, () => Observable<any>> = {}
-  destroy$: Subject<any> = new Subject<any>();
+  list: CollectionItem[] = [];
+  @Input()
+  formProperties: Record<string, () => Observable<any>> = {};
+
+  /**
+     * @description Reloads the list after updating the original list according to operation passed.
+     */
+  reload$: BehaviorSubject<{ operation: OperationTypes, savedRecord?: CollectionItem }> =
+    new BehaviorSubject<{ operation: OperationTypes, savedRecord?: CollectionItem }>({ operation: OperationTypes.VIEW });
   add$: Subject<any> = new Subject<any>();
-  edit$: Subject<{ item: CollectionItem, index: number }> = new Subject<{ item: CollectionItem, index: number }>();
-  view$: Subject<{ item: CollectionItem, index: number }> = new Subject<{ item: CollectionItem, index: number }>();
-  remove$: Subject<{ item: CollectionItem, index: number }> = new Subject<{ item: CollectionItem; index: number }>();
-  save$: Subject<null> = new Subject<null>();
+  edit$: Subject<CollectionItem> = new Subject<CollectionItem>();
+  view$: Subject<CollectionItem> = new Subject<CollectionItem>();
+  confirmDelete$: Subject<CollectionItem> = new Subject<CollectionItem>();
+  destroy$: Subject<any> = new Subject<any>();
 
-  editIndex: number | undefined = undefined;
-
-  item?: CollectionItem;
+  itemInOperationListIndex?: number;
+  itemInOperationIndex?: number;
+  itemInOperation?: CollectionItem;
 
   form!: UntypedFormGroup;
 
@@ -65,26 +73,26 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
       type: 'action',
       label: 'view',
       icon: ActionIconsEnum.VIEW,
-      onClick: (item: CollectionItem, index: number) => this.view$.next({ item: item, index: index }),
-      show: (_item: CollectionItem) => !this.approvalMode && this.readOnly
+      onClick: (item: CollectionItem) => this.view$.next(item),
+      show: (_item: CollectionItem) => !this.approvalMode && this.readonly
     },
     // edit
     {
       type: 'action',
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
-      onClick: (item: CollectionItem, index: number) => this.edit$.next({ item: item, index: index }),
+      onClick: (item: CollectionItem) => this.edit$.next(item),
       show: (_item: CollectionItem) => !this.approvalMode,
-      disabled: (_item: CollectionItem) => this.readOnly
+      disabled: (_item: CollectionItem) => this.readonly
     },
     // delete
     {
       type: 'action',
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE_TRASH,
-      onClick: (item: CollectionItem, index: number) => this.remove$.next({ item: item, index: index }),
+      onClick: (item: CollectionItem) => this.confirmDelete$.next(item),
       show: (_item: CollectionItem) => !this.approvalMode,
-      disabled: (_item: CollectionItem) => this.readOnly
+      disabled: (_item: CollectionItem) => this.readonly
     },
     // edit approval info (if approval mode)
     {
@@ -93,17 +101,13 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
       icon: ActionIconsEnum.EDIT,
       onClick: (item: CollectionItem, index: number) => this.approval.emit({ item: item, index: index }),
       show: (_item: CollectionItem) => this.approvalMode,
-      disabled: (_item: CollectionItem) => this.readOnly
+      disabled: (_item: CollectionItem) => this.readonly
     },
   ];
+
   filterControl: UntypedFormControl = new UntypedFormControl('');
   @Output()
   approval: EventEmitter<{ item: CollectionItem, index: number }> = new EventEmitter<{ item: CollectionItem; index: number }>();
-
-  @Output()
-  eventHappened: EventEmitter<AppEvents> = new EventEmitter<AppEvents>();
-  @Output()
-  formOpenedStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   columns: string[] = ['identificationNumber', 'zoneNumber', 'streetNumber', 'buildingNumber', 'unitNumber', 'licenseEndDate', 'map', 'oldLicenseFullSerial', 'exportedLicenseFullSerial', 'actions'];
   @Input()
@@ -112,19 +116,7 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
   @Input()
   disableAdd: boolean = false;
 
-  @Input() readOnly: boolean = false;
-
-  private currentDurationType: BehaviorSubject<LicenseDurationType | undefined> = new BehaviorSubject<LicenseDurationType | undefined>(undefined);
-
-  @Input()
-  set licenseDurationType(value: LicenseDurationType | undefined) {
-    this.currentDurationType.next(value);
-  }
-
-  get licenseDurationType(): LicenseDurationType | undefined {
-    return this.currentDurationType.value;
-  }
-
+  @Input() readonly: boolean = false;
 
   private _disableSearch: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
@@ -134,13 +126,8 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
   set disableSearch(val: boolean) {
     this._disableSearch.next(val);
   }
-
   get disableSearch(): boolean {
     return this._disableSearch.value;
-  }
-
-  get oldLicenseFullSerial(): AbstractControl {
-    return this.form.get('oldLicenseFullSerial')!;
   }
 
   ngOnInit(): void {
@@ -153,13 +140,11 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
       newColumns.splice(this.columns.length - 1, 0, 'approval_info_status');
       this.columns = newColumns;
     }
-    this.buildForm();
+    this.listenToReload();
     this.listenToAdd();
     this.listenToEdit();
     this.listenToView();
-    this.listenToRemove();
-    this.listenToSave();
-    this.listenToDurationTypeChange();
+    this.listenToConfirmDelete();
   }
 
   ngAfterViewInit() {
@@ -174,187 +159,22 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
-  _getFormDialog() {
-    return CollectionItemPopupComponent;
-  }
-  private listenToAdd() {
-    this.add$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(tap(_ => {
-        this.item = new CollectionItem().clone<CollectionItem>({
-          licenseDurationType: this.model.licenseDurationType,
-          requestClassification: this.model.requestClassification
-        });
-        this.dialog.show(this._getFormDialog(), {
-          viewOnly: false,
-          oldLicenseFullSerial: this.oldLicenseFullSerial,
-          form: this.form,
-          readOnly: this.readOnly,
-          editIndex: this.editIndex,
-          item: this.item,
-          model: this.model
-        }).onAfterClose$.subscribe((data) => {
-          if (data) {
-            this.buildingPlate = data.buildingPlate;
-            this.save$.next();
-          } else {
-            this.cancel();
-          }
-        })
-      }))
-      .subscribe(() => this.formOpenedStatus.emit(true));
-  }
-
-  private listenToEdit() {
-    this.edit$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(tap(info => {
-        // always add one here to the selected index to avoid the if condition while process save
-        this.editIndex = (++info.index);
-        this.item = info.item;
-        this.dialog.show(this._getFormDialog(), {
-          viewOnly: false,
-          oldLicenseFullSerial: this.oldLicenseFullSerial,
-          form: this.form,
-          readOnly: this.readOnly,
-          editIndex: this.editIndex,
-          item: this.item,
-          model: this.model
-        }).onAfterClose$.subscribe((data) => {
-          if (data) {
-            this.buildingPlate = data.buildingPlate;
-            this.save$.next()
-          } else {
-            this.cancel()
-          }
-        })
-      }))
-      .subscribe(() => this.formOpenedStatus.emit(true));
-  }
-
-  private listenToView() {
-    this.view$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(tap(info => {
-        this.item = info.item;
-        this.dialog.show(this._getFormDialog(), {
-          viewOnly: true,
-          oldLicenseFullSerial: this.oldLicenseFullSerial,
-          form: this.form,
-          readOnly: this.readOnly,
-          editIndex: this.editIndex,
-          item: this.item,
-          model: this.model
-        }).onAfterClose$.subscribe(() => {
-          this.cancel()
-        })
-      }))
-      .subscribe(() => this.formOpenedStatus.emit(true));
-  }
-
-  private listenToRemove() {
-    this.remove$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(switchMap(info => {
-        return this.dialog
-          .confirm(this.lang.map.msg_confirm_delete_x.change({ x: info.item.identificationNumber }))
-          .onAfterClose$.pipe(map((click: UserClickOn) => {
-            return {
-              index: info.index,
-              click
-            };
-          }));
-      }))
-      .subscribe((info) => {
-        info.click === UserClickOn.YES ? this.processDelete(info.index) : null;
-      });
-  }
-
-  private buildForm(): void {
-    this.form = this.fb.group((new CollectionItem().buildForm(true)));
-    this.oldLicenseFullSerial.disable();
-  }
-
-  get licenseEndDate(): AbstractControl {
-    return this.form.get('licenseEndDate')!;
-  }
 
   private resetForm(): void {
     this.form.reset();
-  }
-
-  private listenToSave(): void {
-    this.save$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(switchMap(_ => this.validateForm()))
-      .pipe(filter(valid => valid))
-      .subscribe(() => {
-        this.processSave(new CollectionItem().clone({
-          ...this.item,
-          ...this.form.value,
-          ...this.buildingPlate.getValue()
-        }));
-      });
-  }
-
-  private processSave(item: CollectionItem): void {
-    this.editIndex ? this.processEdit(item) : this.processAdd(item);
-    this.cancel();
-  }
-
-  private processAdd(item: CollectionItem): void {
-    this.model.collectionItemList = this.model.collectionItemList.concat([item]);
-    this.eventHappened.emit(AppEvents.ADD);
-  }
-
-  private processEdit(item: CollectionItem): void {
-    this.model.collectionItemList.splice((this.editIndex!) - 1, 1, item);
-    this.model.collectionItemList = [...this.model.collectionItemList];
-    this.eventHappened.emit(AppEvents.EDIT);
-  }
-
-  private processDelete(index: number): void {
-    this.model.collectionItemList.splice(index, 1);
-    this.model.collectionItemList = [...this.model.collectionItemList];
-    this.eventHappened.emit(AppEvents.DELETE);
-  }
-
-  private formInvalidMessage(): void {
-    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
-    this.form.markAllAsTouched();
-    this.buildingPlate.displayFormValidity();
   }
 
   openLocationMap(item: CollectionItem) {
     item.openMap(true);
   }
 
+  private _itemInOperationIndex(): number {
+    return !this.itemInOperation ? -1 : this.list.findIndex(x => x === this.itemInOperation);
+  }
   cancel(): void {
-    this.item = undefined;
-    this.editIndex = undefined;
+    this.itemInOperation = undefined;
+    this.itemInOperationIndex = undefined;
     this.resetForm();
-    this.formOpenedStatus.emit(false);
-  }
-
-  private validateForm(): Observable<boolean> {
-    return of(this.form.valid && this.buildingPlate.isValidForm())
-      .pipe(tap(valid => !valid && this.formInvalidMessage()))
-      .pipe(filter((val) => val)) // allow only the valid form
-      .pipe(map(_ => !(!this.item!.latitude || !this.item!.latitude))) // if no lat/lng return false
-      .pipe(tap(validLatLong => !validLatLong && this.longitudeLatitudeInvalidMessage()))
-      .pipe(filter((val) => val)) // allow only the valid form
-      // .pipe(tap(_ => console.log(this.model.requestType, CollectionRequestType.NEW)))
-      .pipe(map(_ => ((this.model.requestType !== CollectionRequestType.NEW) ? this.oldLicenseFullSerial.value : true)))
-      .pipe(tap(validSelected => (!validSelected && this.selectedLicenseInvalidMessage())))
-      .pipe(filter((val) => val)); // allow only the valid form
-  }
-
-  private longitudeLatitudeInvalidMessage() {
-    this.dialog.error(this.lang.map.longitude_latitude_required);
-  }
-
-  private selectedLicenseInvalidMessage() {
-    this.dialog.error(this.lang.map.edit_cancel_request_need_exists_license);
   }
 
   isNewRequestType(): boolean {
@@ -390,12 +210,145 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
       });
   }
 
+  _getDialogComponent(): ComponentType<any> {
+    return CollectionItemPopupComponent;
+  }
 
-  private listenToDurationTypeChange(): void {
-    this.currentDurationType
+  private _updateList(operation: OperationTypes, addedOrUpdatedRecord?: CollectionItem) {
+    const itemInOperationIndex = this._itemInOperationIndex();
+    if (operation === OperationTypes.DELETE) {
+      itemInOperationIndex > -1 ? this.list.splice(itemInOperationIndex, 1) : null;
+    } else {
+      if (addedOrUpdatedRecord) {
+        if (operation === OperationTypes.CREATE) {
+          this.list.push(addedOrUpdatedRecord);
+        } else if (operation === OperationTypes.UPDATE) {
+          itemInOperationIndex > -1 ? this.list.splice(itemInOperationIndex, 1, addedOrUpdatedRecord) : null;
+        }
+      }
+    }
+    this.list = this.list.slice();
+  }
+
+  listenToReload(): void {
+    this.reload$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((value: LicenseDurationType | undefined) => {
-        this.licenseEndDate.setValidators(value === LicenseDurationType.TEMPORARY ? [CustomValidators.required] : null);
-      });
+      .subscribe((result) => {
+        this._updateList(result.operation, result.savedRecord);
+        this.itemInOperation = undefined;
+        this.itemInOperationListIndex = undefined;
+      })
+  }
+
+  listenToAdd(): void {
+    this.add$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(tap(() => this.itemInOperation = undefined))
+      .pipe(exhaustMap(() => {
+        return this.dialog.show<IDialogData<CollectionItem>>(this._getDialogComponent(), {
+          model: this._getNewInstance(),
+          operation: OperationTypes.CREATE,
+          list: this.list,
+          caseType: this.model.caseType,
+          listIndex: undefined,
+          extras: {
+            collectionModel: this.model,
+            licenseDurationType: this.model?.licenseDurationType
+          }
+        }).onAfterClose$;
+      }))
+      .pipe(switchMap((savedRecord: CollectionItem) => {
+        return this.onClosePopup(savedRecord);
+      }))
+      .subscribe((savedRecord: CollectionItem) => {
+        if (!savedRecord) {
+          return;
+        }
+        this.reload$.next({ operation: OperationTypes.CREATE, savedRecord: savedRecord });
+      })
+  }
+
+  listenToEdit(): void {
+    this.edit$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(tap((model) => this.itemInOperation = model))
+      .pipe(exhaustMap((model) => {
+        return this.dialog.show<IDialogData<CollectionItem>>(this._getDialogComponent(), {
+          model: this._getNewInstance(model),
+          operation: OperationTypes.UPDATE,
+          list: this.list,
+          caseType: this.model.caseType,
+          listIndex: this._itemInOperationIndex(),
+          extras: {
+            collectionModel: this.model,
+            licenseDurationType: this.model?.licenseDurationType
+          }
+        }).onAfterClose$;
+      }))
+      .pipe(switchMap((savedRecord: CollectionItem) => {
+        return this.onClosePopup(savedRecord);
+      }))
+      .subscribe((savedRecord: CollectionItem) => {
+        if (!savedRecord) {
+          return;
+        }
+        this.reload$.next({ operation: OperationTypes.UPDATE, savedRecord: savedRecord });
+      })
+  }
+
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(tap((model) => this.itemInOperation = model))
+      .pipe(exhaustMap((model) => {
+        return this.dialog.show<IDialogData<CollectionItem>>(this._getDialogComponent(), {
+          model: this._getNewInstance(model),
+          operation: OperationTypes.VIEW,
+          list: this.list,
+          caseType: this.model.caseType,
+          listIndex: this._itemInOperationIndex(),
+          extras: {
+            collectionModel: this.model,
+            licenseDurationType: this.model?.licenseDurationType
+          }
+        }).onAfterClose$;
+      }))
+      .subscribe()
+  }
+
+  listenToConfirmDelete(): void {
+    this.confirmDelete$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter(() => !this.readonly))
+      .pipe(exhaustMap((model) => {
+        return this.dialog.confirm(this.lang.map.msg_confirm_delete_selected).onAfterClose$
+          .pipe(tap((userSelection) => {
+            this.itemInOperation = undefined;
+            this.itemInOperationListIndex = undefined;
+            if (userSelection === UserClickOn.YES) {
+              this.itemInOperation = model;
+              this.itemInOperationListIndex = this._itemInOperationIndex();
+            }
+          }));
+      }))
+      .subscribe((userSelection: UserClickOn) => {
+        if (userSelection === UserClickOn.YES) {
+          this.toast.success(this.lang.map.msg_deleted_in_list_success);
+          this.reload$.next({ operation: OperationTypes.DELETE });
+        }
+      })
+  }
+
+  onClosePopup(savedRecord: CollectionItem): Observable<CollectionItem> {
+    return of(savedRecord)
+  }
+
+  forceClearComponent() {
+    this.list = [];
+    this.reload$.next({operation: OperationTypes.VIEW});
+  }
+
+  _getNewInstance(override?: Partial<CollectionItem> | undefined): CollectionItem {
+    return new CollectionItem().clone(override ?? {});
   }
 }

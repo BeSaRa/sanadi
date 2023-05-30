@@ -20,7 +20,7 @@
                        [notFoundText]="lang.map.msg_not_found"
                        validationClasses="requestType" id="requestType"
                        (change)="handleRequestTypeChange($event, true)"
-                       [readonly]="!isEditRequestTypeAllowed()" appendTo="body"
+                       [readonly]="!isEditRequestTypeAllowed() || hasCollectionListItems" appendTo="body"
                        formControlName="requestType">
               <ng-option [value]="option.lookupKey" *ngFor="let option of requestTypes">{{option.getName()}}</ng-option>
             </ng-select>
@@ -32,7 +32,7 @@
             <ng-select validationClasses="requestClassification" appendTo="body" [clearable]="true"
                        id="requestClassification" placeholder="{{lang.map.select}}"
                        [selectOnTab]="true" [notFoundText]="lang.map.msg_not_found"
-                       [readonly]="(readonly)"
+                       [readonly]="(readonly || hasCollectionListItems)"
                        formControlName="requestClassification">
               <ng-option [value]="option.lookupKey"
                          *ngFor="let option of requestClassifications">{{option.getName()}}</ng-option>
@@ -45,7 +45,7 @@
             <ng-select validationClasses="licenseDurationType" appendTo="body" [clearable]="true"
                        id="licenseDurationType" placeholder="{{lang.map.select}}"
                        [selectOnTab]="true" [notFoundText]="lang.map.msg_not_found"
-                       [readonly]="(readonly)"
+                       [readonly]="(readonly || hasCollectionListItems)"
                        formControlName="licenseDurationType">
               <ng-option [value]="option.lookupKey"
                          *ngFor="let option of licenseDurationTypes">{{option.getName()}}</ng-option>
@@ -54,14 +54,14 @@
           </div>
         </div>
         <div class="row">
-          <collection-item [formProperties]="formProperties" [licenseDurationType]="model!.licenseDurationType"
-                           (formOpenedStatus)="collectionItemFormStatusChanged($event)"
-                           [disableAdd]="basicInfo.invalid || readonly"
-                           [readOnly]="(readonly)"
-                           (eventHappened)="checkDisableFields()"
-                           (attachmentHandlerEmitter)="registerAttachmentHandler($event)"
-                           [model]="model!"></collection-item>
-          <!--[disableSearch]="!isEditLicenseAllowed()"-->
+          <collection-item
+            #collectionItemsTab
+            [formProperties]="formProperties"
+            [disableAdd]="basicInfo.invalid || readonly"
+            [readonly]="readonly"
+            [list]="model?.collectionItemList || []"
+            (attachmentHandlerEmitter)="registerAttachmentHandler($event)"
+            [model]="model!"></collection-item>
         </div>
       </ng-template>
     </ng-container>
