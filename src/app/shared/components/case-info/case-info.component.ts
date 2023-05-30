@@ -241,7 +241,14 @@ export class CaseInfoComponent {
 
     // @ts-ignore
     const requestType = this.model.requestType;
-    if (this.employeeService.isExternalUser() || !requestType) {
+    if (this.employeeService.isExternalUser() ) {
+      return;
+    }
+    if(this.model.getCaseType() ===  CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
+      this.canShowVersionHistory = true;
+      return ;
+    }
+    if(!requestType) {
       return;
     }
     this.canShowVersionHistory = [AllRequestTypesEnum.RENEW, AllRequestTypesEnum.CANCEL, AllRequestTypesEnum.UPDATE].includes(requestType) || this.model.isReturned();
