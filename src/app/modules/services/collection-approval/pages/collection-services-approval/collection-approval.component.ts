@@ -55,9 +55,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
         if (!this.basicInfo || this.basicInfo.disabled) {
           return true;
         }
-        return this.basicInfo.valid &&
-          (!this.collectionItemsComponentRef ||
-            this.collectionItemsComponentRef.list.length > 0)
+        return this.basicInfo.valid && this.hasCollectionListItems
       },
       isTouchedOrDirty: () => true
     },

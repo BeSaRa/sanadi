@@ -15,11 +15,13 @@ export class AuditCollectionServicesApprovalComponent implements IAuditCasePrope
   oldVersion!: CollectionApproval; // don't delete or rename the property
 
   basicInfoDifferences: IValueDifference[] = [];
+  specialExplanationDifferences: IValueDifference[] = [];
   constructor(public lang: LangService) {
   }
 
   ngOnInit() {
     this._getBasicInfoDifferences();
+    this._specialExplanationDifferences();
   }
 
   private _getBasicInfoDifferences(): void {
@@ -27,6 +29,12 @@ export class AuditCollectionServicesApprovalComponent implements IAuditCasePrope
     const oldVersionDataModel: Partial<CollectionApproval> = ObjectUtils.getControlComparisonValues<CollectionApproval>(this.oldVersion.getBasicInfoValuesWithLabels());
     const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getBasicInfoValuesWithLabels());
     this.basicInfoDifferences = ObjectUtils.getValueDifferencesList<CollectionApproval, CollectionApproval>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+  }
+  private _specialExplanationDifferences(): void {
+    const newVersionDataModel: Partial<CollectionApproval> = ObjectUtils.getControlComparisonValues<CollectionApproval>(this.newVersion.getExplanationValuesWithLabels());
+    const oldVersionDataModel: Partial<CollectionApproval> = ObjectUtils.getControlComparisonValues<CollectionApproval>(this.oldVersion.getExplanationValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getExplanationValuesWithLabels());
+    this.specialExplanationDifferences = ObjectUtils.getValueDifferencesList<CollectionApproval, CollectionApproval>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
 
 
