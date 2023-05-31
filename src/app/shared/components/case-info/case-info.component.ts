@@ -238,8 +238,6 @@ export class CaseInfoComponent {
   }
 
   private _setShowVersionHistory(): void {
-    this.canShowVersionHistory = true;
-    return;
 
     // @ts-ignore
     const requestType = this.model.requestType;
