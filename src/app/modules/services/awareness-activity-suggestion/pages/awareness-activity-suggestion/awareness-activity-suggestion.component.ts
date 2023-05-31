@@ -288,6 +288,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       requestType: this.form.value.basicInfo.requestType,
       subject: this.form.value.basicInfo.subject,
       goal: this.form.value.basicInfo.goal,
+      activityType: this.form.value.basicInfo.activityType,
+      otherActivity: this.form.value.basicInfo.otherActivity,
       ...this.form.value.contactOfficer,
       ...this.form.value.beneficiariesNature,
       description: this.form.value.description,
