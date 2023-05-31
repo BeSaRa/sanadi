@@ -23,6 +23,7 @@ enum SystemPathsEnum {
   PROJECT_IMPLEMENTATION = '/home/services/project-implementation',
   PROJECT_FUNDRAISING = '/home/services/project-fundraising',
   PROJECT_MODELS = '/home/services/project-models',
+  PROJECT_COMPLETION = '/home/services/project-completion',
   // INTERNAL_PROJECT_LICENSE = '/home/services/internal-project-license',
   GENERAL_PROCESS_NOTIFICATION = '/home/services/general-process-notification',
   AWARENESS_ACTIVITY_SUGGESTION = '/home/services/awareness-activity-suggestion',
@@ -92,6 +93,7 @@ enum DefaultItemOrder {
   SERVICE_URGENT_INTERVENTION_CLOSURE = 36,
   SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION = 37,
   SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP = 38,
+  SERVICE_PROJECT_COMPLETION = 39,
 
   SERVICE_SEARCH,
   TRAINING,
@@ -135,6 +137,7 @@ const GroupNames = {
   SERVICE_URGENT_INTERVENTION_CLOSURE: 'service_' + CaseTypes.URGENT_INTERVENTION_CLOSURE,
   SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION: 'service_' + CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
   SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP: 'service_' + CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
+  SERVICE_PROJECT_COMPLETION:  'service_' + CaseTypes.PROJECT_COMPLETION,
 
   TRAINING: 'training-services',
   ADMIN: 'administration'
@@ -2001,7 +2004,66 @@ export const newNavigationMenuList = [
     itemOrder: 3,
     svg: null
   },
-
+  {
+    id: 3201,
+    langKey: 'menu_project_completion',
+    path: SystemPathsEnum.PROJECT_COMPLETION,
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    caseType: CaseTypes.PROJECT_COMPLETION,
+    menuKey: SystemMenuKeys.PROJECT_COMPLETION,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.PROJECT_COMPLETION_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: GroupNames.MAIN,
+    itemOrder: DefaultItemOrder.SERVICE_PROJECT_COMPLETION,
+    svg: null,
+    data: {
+      childrenGroupName: GroupNames.SERVICE_PROJECT_COMPLETION,
+      servicePath: SystemPathsEnum.PROJECT_COMPLETION + '/service',
+      searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.PROJECT_COMPLETION),
+      outputPath: SystemPathsEnum.PROJECT_COMPLETION + '/outputs'
+    }
+  },
+  {
+    id: 3202,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.PROJECT_COMPLETION + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.PROJECT_COMPLETION,
+    permissionGroup: null,
+    parent: 3201,
+    group: GroupNames.SERVICE_PROJECT_COMPLETION,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 3203,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.PROJECT_COMPLETION),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_PROJECT_COMPLETION,
+    permissionGroup: null,
+    parent: 3201,
+    group: GroupNames.SERVICE_PROJECT_COMPLETION,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 3204,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.PROJECT_COMPLETION + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 3201,
+    group: GroupNames.SERVICE_PROJECT_COMPLETION,
+    itemOrder: 3,
+    svg: null
+  },
   /*{
     id: 100001,
     langKey: 'menu_internal_project_license',

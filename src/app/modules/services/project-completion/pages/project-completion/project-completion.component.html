@@ -1,0 +1,36 @@
+<div class="row">
+  <tabs-list [accordionView]="accordionView" [hasForm]="true">
+    <!-- [hasError]="basicInfo.invalid" -->
+    <tab name="basic_info"
+      [template]="basic_info" [title]="lang.map.lbl_basic_info">
+    </tab>
+    <!-- [hasError]="specialExplanation.invalid" -->
+    <tab
+     name="special_explanations" [template]="specialExplanations"
+         [title]="lang.map.special_explanations"></tab>
+    <tab name="attachments" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+  </tabs-list>
+  <ng-container [formGroup]="form">
+    <ng-template #basic_info>
+    </ng-template>
+    <ng-container formGroupName="explanation">
+      <ng-template #specialExplanations>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <!-- <label class="form-label" asteriskIfRequired="description"
+                   for="description">{{lang.map.special_explanations}}</label>
+            <textarea name="description" formControlName="description" validationClasses="description" id="description"
+                      rows="4" class="form-control" [readOnly]="(readonly)" trimInput
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
+            <app-field-error-message controlName="description"></app-field-error-message> -->
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-template #attachmentsTab>
+      <!-- <attachments [caseId]="model?.id" [caseType]="model?.caseType"
+                   [model]="model" [formProperties]="formProperties"
+                   [service]="service.documentService"></attachments> -->
+    </ng-template>
+  </ng-container>
+</div>
