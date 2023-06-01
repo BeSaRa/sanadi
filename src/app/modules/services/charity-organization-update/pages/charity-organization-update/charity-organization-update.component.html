@@ -190,6 +190,7 @@
             [showFilePreview]="true"
             [loadedFile]="loadedLogo"
             (fileUploadEvent)="setLogoFile($event)"
+            [allowedFileSize]="allowedFileMaxSize"
             [allowedExtensions]="[
               fileExtensionsEnum.PNG,
               fileExtensionsEnum.JPEG,
