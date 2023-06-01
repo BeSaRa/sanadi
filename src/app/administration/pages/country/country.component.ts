@@ -1,6 +1,6 @@
 import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 import {of, Subject} from 'rxjs';
-import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {Country} from '@app/models/country';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {IGridAction} from '@app/interfaces/i-grid-action';
@@ -8,9 +8,7 @@ import {TableComponent} from '@app/shared/components/table/table.component';
 import {LangService} from '@app/services/lang.service';
 import {CountryService} from '@app/services/country.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {ITableOptions} from '@app/interfaces/i-table-options';
 import {SortEvent} from '@app/interfaces/sort-event';
-import {isEmptyObject} from '@app/helpers/utils';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
@@ -19,7 +17,6 @@ import {ToastService} from '@app/services/toast.service';
 import {SharedService} from '@app/services/shared.service';
 import {LookupService} from '@app/services/lookup.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {FilterEventTypes} from '@app/types/types';
 import {AdminGenericComponent} from "@app/generics/admin-generic-component";
 import {CustomValidators} from '@app/validators/custom-validators';
 import {SearchColumnConfigMap} from '@app/interfaces/i-search-column-config';
@@ -31,11 +28,11 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   templateUrl: './country.component.html',
   styleUrls: ['./country.component.scss']
 })
-export class CountryComponent extends AdminGenericComponent<Country, CountryService> implements AfterViewInit {
+export class CountryComponent extends AdminGenericComponent<Country, CountryService> {
   usePagination = true
   actions: IMenuItem<Country>[] = [];
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'riskLevel', 'status', 'statusDateModified', 'actions'];
-  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_riskLevel', 'search_status', 'search_statusDateModified', 'search_actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'riskLevel', 'levelOfDueDiligence', 'status', 'statusDateModified', 'actions'];
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_riskLevel', 'search_levelOfDueDiligence', 'search_status', 'search_statusDateModified', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {
       key: 'arName',
@@ -53,10 +50,25 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
     },
     search_riskLevel: {
       key: 'riskLevel',
-      controlType: 'text',
+      controlType: 'select',
       property: 'riskLevel',
       label: 'risk_level',
-      mask: CustomValidators.inputMaskPatterns.NUMBER_ONLY
+      selectOptions: {
+        options: this.lookupService.listByCategory.RiskLevel,
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
+    },
+    search_levelOfDueDiligence: {
+      key: 'levelOfDueDiligence',
+      controlType: 'select',
+      property: 'levelOfDueDiligence',
+      label: 'level_of_due_diligence',
+      selectOptions: {
+        options: this.lookupService.listByCategory.LevelOfDueDiligence,
+        labelProperty: 'getName',
+        optionValueKey: 'lookupKey'
+      }
     },
     search_status: {
       key: 'status',
@@ -86,61 +98,36 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
     super()
   }
 
-  tableOptions: ITableOptions = {
-    ready: false,
-    columns: this.displayedColumns,
-    searchText: '',
-    isSelectedRecords: () => {
-      if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
-        return false;
-      }
-      return this.table.selection.selected.length !== 0;
-    },
-    searchCallback: (record: any, searchText: string) => {
-      return record.search(searchText);
-    },
-    filterCallback: (_type: FilterEventTypes = 'OPEN') => {
-    },
-    sortingCallbacks: {
-      statusDateModified: (a: Country, b: Country, dir: SortEvent): number => {
+  sortingCallbacks = {
+    statusDateModified: (a: Country, b: Country, dir: SortEvent): number => {
+      // @ts-ignore
+      let value1 = !CommonUtils.isValidValue(a) ? '' : new Date(a.statusDateModified).valueOf(),
         // @ts-ignore
-        let value1 = !CommonUtils.isValidValue(a) ? '' : new Date(a.statusDateModified).valueOf(),
-          // @ts-ignore
-          value2 = !CommonUtils.isValidValue(b) ? '' : new Date(b.statusDateModified).valueOf();
-        return CommonUtils.getSortValue(value1, value2, dir.direction);
-      },
-      statusInfo: (a: Country, b: Country, dir: SortEvent): number => {
-        let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
-          value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
-        return CommonUtils.getSortValue(value1, value2, dir.direction);
-      }
+        value2 = !CommonUtils.isValidValue(b) ? '' : new Date(b.statusDateModified).valueOf();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    statusInfo: (a: Country, b: Country, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    riskLevel: (a: Country, b: Country, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.riskLevelInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.riskLevelInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    levelOfDueDiligence: (a: Country, b: Country, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.levelOfDueDiligenceInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.levelOfDueDiligenceInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  };
+  }
 
   protected _init(): void {
     this.buildActions();
     this.buildBulkActions();
     this.listenToView();
     this.buildFilterForm();
-  }
-
-  ngAfterViewInit(): void {
-    Promise.resolve().then(() => {
-      this.tableOptions.ready = true;
-    });
-  }
-
-  getTitleText(): (keyof ILanguageKeys) {
-    return isEmptyObject(this.headerTitle) ? 'menu_countries' : this.headerTitle;
-  }
-
-  add(): void {
-    const sub = this.service.openCreateDialog().subscribe((dialog: DialogRef) => {
-      dialog.onAfterClose$.subscribe(() => {
-        this.reload$.next(null);
-        sub.unsubscribe();
-      });
-    });
   }
 
   listenToView(): void {
@@ -152,15 +139,6 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
       .subscribe(() => this.reload$.next(null));
-  }
-
-  editCountry(country: Country, tab: 'basic' = 'basic'): void {
-    const sub = this.service.openUpdateDialog(country.id, tab).subscribe((dialog: DialogRef) => {
-      dialog.onAfterClose$.subscribe((_) => {
-        this.reload$.next(null);
-        sub.unsubscribe();
-      });
-    });
   }
 
   deleteCountry(model: Country): void {
@@ -249,7 +227,7 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
         type: 'action',
         icon: ActionIconsEnum.EDIT,
         label: 'btn_edit',
-        onClick: (item: Country) => this.editCountry(item),
+        onClick: (item: Country) => this.edit$.next(item),
       },
       // delete
       /*{
@@ -338,7 +316,7 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
 
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: [''], enName: [''], riskLevel: [''], status: [null]
+      arName: [''], enName: [''], riskLevel: [null], levelOfDueDiligence: [null] , status: [null]
     })
   }
 }

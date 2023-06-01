@@ -1,6 +1,8 @@
-import { Lookup } from '../models/lookup';
+import {Lookup} from '@models/lookup';
 
 export interface ILookupMap {
+  RiskLevel: Lookup[];
+  LevelOfDueDiligence: Lookup[];
   AdminAuditOperation: Lookup[];
   AdminLookupType: Lookup[];
   AffiliationCategory: Lookup[];
