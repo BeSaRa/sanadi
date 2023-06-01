@@ -136,7 +136,9 @@
         <file-uploader labelKey="logo" fileInputKey="upload_logo"
                        [allowedExtensions]="logoExtensions" [allowRemoveLoadedFile]="false"
                        [isRequired]="true" [showFilePreview]="true" [readonly]="readonly"
-                       [loadedFile]="loadedLogo" (fileUploadEvent)="setLogoFile($event)"></file-uploader>
+                       [loadedFile]="loadedLogo"
+                       [allowedFileSize]="allowedFileMaxSize"
+                       (fileUploadEvent)="setLogoFile($event)"></file-uploader>
       </div>
     </div>
   </ng-template>

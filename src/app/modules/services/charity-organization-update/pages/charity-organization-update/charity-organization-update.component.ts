@@ -52,6 +52,8 @@ import {IMyDateModel} from 'angular-mydatepicker';
 import {Observable, of} from 'rxjs';
 import {map, share, switchMap, takeUntil} from 'rxjs/operators';
 import {ITabData} from "@contracts/i-tab-data";
+import { GlobalSettings } from '@app/models/global-settings';
+import { GlobalSettingsService } from '@app/services/global-settings.service';
 
 @Component({
   selector: 'charity-organization-update',
@@ -77,6 +79,9 @@ export class CharityOrganizationUpdateComponent
   allEmployeesOfOrganization$?: Observable<NpoEmployee[]>;
   updateSections = this.lookupService.listByCategory.CharityUpdateSection.sort((a, b) => a.lookupKey - b.lookupKey);
   contactInformationInputs: ControlWrapper[] = [];
+  globalSettings: GlobalSettings = this.globalSettingsService.getGlobalSettings();
+  allowedFileMaxSize: number = this.globalSettings.fileSize * 1000 * 1024;
+
   datepickerOptionsMap: DatepickerOptionsMap = {
     firstReleaseDate: DateUtils.getDatepickerOptions({
       disablePeriod: 'future',
@@ -538,7 +543,8 @@ export class CharityOrganizationUpdateComponent
     private employeeService: EmployeeService,
     private goveranceDocumentService: GoveranceDocumentService,
     private jobTitleService: JobTitleService,
-    private npoEmployeeService: NpoEmployeeService
+    private npoEmployeeService: NpoEmployeeService,
+    private globalSettingsService: GlobalSettingsService
   ) {
     super();
     if (this.employeeService.isExternalUser()) {
