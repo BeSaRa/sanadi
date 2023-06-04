@@ -78,13 +78,14 @@ export class Bylaw extends SearchableCloneable<Bylaw> implements IAuditModelProp
     };
   }
   toCharityOrgnizationUpdate() {
-    const { id, fullName, firstReleaseDate, lastUpdateDate, category } = this;
+    const { id, fullName, firstReleaseDate, lastUpdateDate, category,categoryInfo } = this;
     return new Bylaw().clone({
       objectDBId: id,
       firstReleaseDate: DateUtils.getDateStringFromDate(firstReleaseDate),
       fullName,
       lastUpdateDate: DateUtils.getDateStringFromDate(lastUpdateDate),
-      category
+      category,
+      categoryInfo :categoryInfo
     })
   }
 }

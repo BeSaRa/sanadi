@@ -222,7 +222,8 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
         }
       });
     }
-    if (this.model.domain && this.charityWorkArea !== CharityWorkArea.BOTH) {
+
+    if (this.model.domain ) {
       this.handleGovernanceDomainChange(this.model.domain);
     }
     this.form.patchValue(this.model);
