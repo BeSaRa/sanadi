@@ -205,7 +205,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   @ViewChild('resultListComponent') resultListComponentRef!: ResultListComponent;
   @ViewChild('implementationEvaluationListComponent') implementationEvaluationListComponentRef!: ImplementationEvaluationListComponent;
   @ViewChild('bestPracticesListComponent') bestPracticesListComponentRef!: BestPracticesListComponent;
-  @ViewChild('lessonsLearntListComponent') lessonsLearntListComponentRef!: BestPracticesListComponent;
+  @ViewChild('lessonsLearntListComponent') lessonsLearntListComponentRef!: LessonsLearntListComponent;
 
   onTabChange($event: TabComponent) {
     this.loadAttachments = $event.name === this.tabsData.attachments.name;
