@@ -47,20 +47,20 @@ export class DynamicModelService extends CrudWithDialogGenericService<DynamicMod
   }
 
 
-  updateStatus(jobTitleId: number, newStatus: CommonStatusEnum) {
-    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(jobTitleId) : this._deactivate(jobTitleId);
+  updateStatus(recordId: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(recordId) : this._deactivate(recordId);
   }
 
   updateStatusBulk(recordIds: number[], newStatus: CommonStatusEnum): Observable<any> {
     return newStatus === CommonStatusEnum.ACTIVATED ? this._activateBulk(recordIds) : this._deactivateBulk(recordIds);
   }
 
-  private _activate(jobTitleId: number): Observable<any> {
-    return this.http.put<any>(this._getServiceURL() + '/' + jobTitleId + '/activate', {});
+  private _activate(recordId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + recordId + '/activate', {});
   }
 
-  private _deactivate(jobTitleId: number): Observable<any> {
-    return this.http.put<any>(this._getServiceURL() + '/' + jobTitleId + '/de-activate', {});
+  private _deactivate(recordId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + recordId + '/de-activate', {});
   }
 
   private _activateBulk(recordIds: number[]) {
