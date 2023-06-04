@@ -155,7 +155,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="implementingAgencyType"
                    for="implementingAgencyType">{{lang.map.implementation_agency_type}}</label>
-            <ng-select [readonly]="readonly || ( implementingAgencyList.value.length > 0)??false" validationClasses="implementingAgencyType" appendTo="body"
+            <ng-select [readonly]="readonly || ( implementingAgencyList.value.length > 0)" validationClasses="implementingAgencyType" appendTo="body"
                        [clearable]="true"
                        id="implementingAgencyType"
                        formControlName="implementingAgencyType">
