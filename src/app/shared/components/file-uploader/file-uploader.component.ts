@@ -198,7 +198,7 @@ export class FileUploaderComponent implements OnInit {
   }
 
   private _checkFileSize(file: File) {
-    return file.size < this.allowedFileSize!
+    return file.size <= this.allowedFileSize!
   }
   private _clearFileValues(): void {
     this.uploadedFile = null;

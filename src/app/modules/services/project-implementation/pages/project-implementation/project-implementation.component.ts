@@ -947,7 +947,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       },
       {
         field: this.implementingAgencyType,
-        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType() || this.implementingAgencyList.value.length > 0
       },
       {
         field: this.licenseStartDate,
