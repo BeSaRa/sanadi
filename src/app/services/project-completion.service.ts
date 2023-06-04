@@ -31,7 +31,7 @@ export class ProjectCompletionService extends BaseGenericEService<ProjectComplet
   serviceKey: keyof ILanguageKeys = 'menu_project_completion';
   interceptor: IModelInterceptor<ProjectCompletion> = new ProjectCompletionInterceptor();
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'domainInfo', 'caseStatus', 'projectTypeInfo', 'createdOn'];
+  searchColumns: string[] = ['fullSerial', 'subject', 'caseStatus', 'createdOn', 'ouInfo'];
 
   _getModel() {
     return ProjectCompletion;

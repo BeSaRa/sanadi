@@ -1,36 +1,214 @@
 <div class="row">
   <tabs-list [accordionView]="accordionView" [hasForm]="true">
-    <!-- [hasError]="basicInfo.invalid" -->
-    <tab name="basic_info"
-      [template]="basic_info" [title]="lang.map.lbl_basic_info">
+    <tab name="project_license_info" [hasError]="projectLicenseInfo.invalid" [template]="project_license_info"
+      [title]="lang.map.project_license_information">
     </tab>
-    <!-- [hasError]="specialExplanation.invalid" -->
-    <tab
-     name="special_explanations" [template]="specialExplanations"
-         [title]="lang.map.special_explanations"></tab>
-    <tab name="attachments" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+    <tab name="project_basic_info" [hasError]="projectBasicInfo.invalid" [template]="project_basic_info"
+      [title]="lang.map.project_basic_info">
+    </tab>
+    <tab name="beneficiary_analytics_by_license" [hasError]="beneficiaryAnalyticsByLicense.invalid" [template]="beneficiaryAnalyticsByLicense"
+      [title]="lang.map.beneficiary_analytics_by_license">
+    </tab>
+    <tab name="best_practices_and_lessons_learnt" [hasError]="!isHasErrorLessonsLearnt_BestPracticesTab"
+      [template]="bestPracticesAndLessonsLearnt" [title]="lang.map.best_practices + ' & ' + lang.map.lessons_learnt">
+    </tab>
+    <tab [hasError]="specialExplanation.invalid" name="special_explanations" [template]="specialExplanations"
+      [title]="lang.map.special_explanations"></tab>
+    <tab name="attachments" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab"
+      [title]="lang.map.attachments"></tab>
   </tabs-list>
   <ng-container [formGroup]="form">
-    <ng-template #basic_info>
-    </ng-template>
-    <ng-container formGroupName="explanation">
-      <ng-template #specialExplanations>
+    <ng-template #project_license_info>
+      <ng-container formGroupName="projectLicenseInfo">
         <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
-            <!-- <label class="form-label" asteriskIfRequired="description"
-                   for="description">{{lang.map.special_explanations}}</label>
-            <textarea name="description" formControlName="description" validationClasses="description" id="description"
-                      rows="4" class="form-control" [readOnly]="(readonly)" trimInput
-                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
-            <app-field-error-message controlName="description"></app-field-error-message> -->
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="requestType"
+              for="requestType">{{lang.map.request_type}}</label>
+            <ng-select [selectOnTab]="true" labelForId="requestType" placeholder="{{lang.map.select}}" id="requestType"
+              [clearable]="false" (change)="handleRequestTypeChange($event, true)"
+              [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" formControlName="requestType"
+              validationClasses="requestType">
+              <ng-option [value]="option.lookupKey" *ngFor="let option of requestTypesList">{{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="requestType"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="projectWorkArea"
+              for="projectWorkArea">{{lang.map.project_work_area}}</label>
+            <ng-select validationClasses="projectWorkArea" appendTo="body" [clearable]="false" id="projectWorkArea"
+              formControlName="projectWorkArea" labelForId="projectWorkArea" placeholder="{{lang.map.select}}"
+              [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" (change)="handleWorkAreaChanges($event)">
+              <ng-option [value]="option.lookupKey" *ngFor="let option of workAreas">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="projectWorkArea"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="beneficiaryCountry"
+              for="beneficiaryCountry">{{lang.map.beneficiary_country}}</label>
+            <ng-select validationClasses="beneficiaryCountry" appendTo="body" [clearable]="true" id="beneficiaryCountry"
+              formControlName="beneficiaryCountry" labelForId="beneficiaryCountry" placeholder="{{lang.map.select}}"
+              [notFoundText]="lang.map.msg_not_found" [readonly]="(this.isDisplayInsideQatar || readonly)">
+              <ng-option [value]="option.id" [disabled]="checkCountryDisabled(option)" *ngFor="let option of countries">
+                {{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="beneficiaryCountry"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isDisplayOutsideQatar">
+            <label class="form-label" asteriskIfRequired="domain" for="domain">{{lang.map.domain}}</label>
+            <ng-select validationClasses="domain" appendTo="body" [clearable]="false" id="domain"
+              formControlName="domain" labelForId="domain" placeholder="{{lang.map.select}}"
+              [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" (change)="handleDomainChange($event)">
+              <ng-option [value]="option.lookupKey" *ngFor="let option of domains">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message [ignoreTop]="true" controlName="domain"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isDisplayInsideQatar">
+            <label class="form-label" asteriskIfRequired="internalProjectClassification"
+              for="internalProjectClassification">{{lang.map.internal_projects_classification}}</label>
+            <ng-select validationClasses="internalProjectClassification" appendTo="body" [clearable]="true"
+              id="internalProjectClassification" formControlName="internalProjectClassification"
+              labelForId="internalProjectClassification" placeholder="{{lang.map.select}}"
+              [notFoundText]="lang.map.msg_not_found" [readonly]="readonly">
+              <ng-option [value]="option.lookupKey" *ngFor="let option of internalProjectClassificationList">
+                {{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="internalProjectClassification"></app-field-error-message>
+          </div>
+          <ng-container *ngIf="isDevelopmentDomain">
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+              <label class="form-label" asteriskIfRequired="mainDACCategory"
+                for="mainDACCategory">{{lang.map.main_dac_category}}</label>
+              <ng-select validationClasses="mainDACCategory" appendTo="body" [clearable]="true" id="mainDACCategory"
+                formControlName="mainDACCategory" labelForId="mainDACCategory" placeholder="{{lang.map.select}}"
+                [notFoundText]="lang.map.msg_not_found" [readonly]="readonly">
+                <ng-option [value]="option.id" [disabled]="!option.isActive()" *ngFor="let option of mainDacCategories">
+                  {{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+              <label class="form-label" asteriskIfRequired="subDACCategory"
+                for="subDACCategory">{{lang.map.sub_dac_category}}</label>
+              <ng-select validationClasses="subDACCategory" appendTo="body" [clearable]="true" id="subDACCategory"
+                formControlName="subDACCategory" labelForId="subDACCategory" placeholder="{{lang.map.select}}"
+                [notFoundText]="lang.map.msg_not_found" [readonly]="readonly">
+                <ng-option [disabled]="!option.isActive()" [value]="option.id" *ngFor="let option of subDacCategories">
+                  {{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="subDACCategory"></app-field-error-message>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="isHumanitarianDomain">
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+              <label class="form-label" asteriskIfRequired="mainUNOCHACategory"
+                for="mainUNOCHACategory">{{lang.map.main_unocha_category}}</label>
+              <ng-select validationClasses="mainUNOCHACategory" appendTo="body" [clearable]="true"
+                id="mainUNOCHACategory" formControlName="mainUNOCHACategory" labelForId="mainUNOCHACategory"
+                placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly">
+                <ng-option [disabled]="!option.isActive()" [value]="option.id"
+                  *ngFor="let option of mainUNOCHACategories">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+              <label class="form-label" asteriskIfRequired="subUNOCHACategory"
+                for="subUNOCHACategory">{{lang.map.sub_unocha_category}}</label>
+              <ng-select validationClasses="subUNOCHACategory" appendTo="body" [clearable]="true" id="subUNOCHACategory"
+                formControlName="subUNOCHACategory" labelForId="subUNOCHACategory" placeholder="{{lang.map.select}}"
+                [notFoundText]="lang.map.msg_not_found" [readonly]="readonly">
+                <ng-option [disabled]="!option.isActive()" [value]="option.id"
+                  *ngFor="let option of subUNOCHACategories">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="subUNOCHACategory"></app-field-error-message>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </ng-template>
+    <ng-template #project_basic_info>
+      <ng-container formGroupName="projectBasicInfo">
+        <heading-row labelKey="menu_project_implementation"></heading-row>
+        <selected-license-table [caseType]="caseTypes.PROJECT_COMPLETION" [ignoreDelete]="true"
+          [caseTypeViewLicense]="caseTypes.PROJECT_COMPLETION" [licenseList]="projectImplementationLicenses"
+          [columns]="displayedColumns" [allowSelect]="true" (selectCallback)="selectProject($event)">
+        </selected-license-table>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+            <label class="form-label" for="projectName">{{lang.map.project_name}}</label>
+            <input id="projectName" [value]="model && model.projectName ? model.projectName : ''" class="form-control">
           </div>
         </div>
-      </ng-template>
-    </ng-container>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <label class="form-label" for="projectDescription">{{lang.map.project_description}}</label>
+            <textarea id="projectDescription"
+              [value]="model && model.projectDescription ? model.projectDescription : ''" class="form-control"
+              rows="5"></textarea>
+          </div>
+        </div>
+      </ng-container>
+    </ng-template>
+    <ng-template #beneficiaryAnalyticsByLicense>
+      <div formGroupName="beneficiaryAnalyticsByLicense" class="position-relative mb-4">
+        <div class="row" validationGroupClasses>
+          <div class="col-md-3 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="beneficiaries0to5"
+              for="beneficiaries0to5">{{lang.map.number_of_0_to_5}}</label>
+            <input id="beneficiaries0to5" validationClasses="beneficiaries0to5" formControlName="beneficiaries0to5"
+              [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false" class="form-control">
+            <app-field-error-message controlName="beneficiaries0to5"></app-field-error-message>
+          </div>
+          <div class="col-md-3 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="beneficiaries5to18"
+              for="beneficiaries5to18">{{lang.map.number_of_5_to_18}}</label>
+            <input id="beneficiaries5to18" validationClasses="beneficiaries5to18" formControlName="beneficiaries5to18"
+              [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false" class="form-control">
+            <app-field-error-message controlName="beneficiaries5to18"></app-field-error-message>
+          </div>
+          <div class="col-md-3 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="beneficiaries19to60"
+              for="beneficiaries19to60">{{lang.map.number_of_19_to_60}}</label>
+            <input id="beneficiaries19to60" validationClasses="beneficiaries19to60" [mask]="inputMaskPatterns.PERCENT"
+              [dropSpecialCharacters]="false" formControlName="beneficiaries19to60" class="form-control">
+            <app-field-error-message controlName="beneficiaries19to60"></app-field-error-message>
+          </div>
+          <div class="col-md-3 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="beneficiariesOver60"
+              for="beneficiariesOver60">{{lang.map.number_of_above_60}}</label>
+            <input id="beneficiariesOver60" validationClasses="beneficiariesOver60" [mask]="inputMaskPatterns.PERCENT"
+              [dropSpecialCharacters]="false" formControlName="beneficiariesOver60" class="form-control">
+            <app-field-error-message controlName="beneficiariesOver60"></app-field-error-message>
+          </div>
+        </div>
+        <group-error-message></group-error-message>
+      </div>
+    </ng-template>
+
+    <ng-template #bestPracticesAndLessonsLearnt>
+      <best-practices-list #bestPracticesListComponent [list]="(!model ? [] : model.bestPracticesList)"
+        [readonly]="readonly"></best-practices-list>
+      <hr>
+      <lessons-learnt-list #lessonsLearntListComponent [list]="(!model ? [] : model.lessonsLearnedList)"
+        [readonly]="readonly"></lessons-learnt-list>
+    </ng-template>
+    <ng-template #specialExplanations>
+      <ng-container formGroupName="explanation">
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="description"
+              for="description">{{lang.map.special_explanations}}</label>
+            <textarea name="description" formControlName="description" validationClasses="description" id="description"
+              rows="4" class="form-control" [readOnly]="(readonly)" trimInput
+              [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
+            <app-field-error-message controlName="description"></app-field-error-message>
+          </div>
+        </div>
+      </ng-container>
+    </ng-template>
     <ng-template #attachmentsTab>
-      <!-- <attachments [caseId]="model?.id" [caseType]="model?.caseType"
-                   [model]="model" [formProperties]="formProperties"
-                   [service]="service.documentService"></attachments> -->
+      <attachments [caseId]="model?.id" [caseType]="model?.caseType" [model]="model" [formProperties]="formProperties"
+        [service]="service.documentService"></attachments>
     </ng-template>
   </ng-container>
 </div>

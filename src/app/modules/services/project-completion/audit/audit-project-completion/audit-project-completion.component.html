@@ -1,3 +1,24 @@
-<p>
-  audit-project-completion works!
-</p>
+<tabs-list>
+  <tab name="project_license_info" [template]="project_license_info" [title]="lang.map.project_license_information">
+  </tab>
+  <tab name="bestPractices&LessonsLearnt" [template]="bestPracticesLessonsLearntTabTemplate" [title]="lang.map.best_practices + ' & ' + lang.map.lessons_learnt"></tab>
+  <tab name="special_explanations" [template]="specialExplanationTemplate"
+  [title]="lang.map.special_explanations"></tab>
+</tabs-list>
+<ng-template #project_license_info>
+  <value-differences-list [differenceList]="projectLicenseInfoDifferences"></value-differences-list>
+</ng-template>
+
+<ng-template #bestPracticesLessonsLearntTabTemplate>
+  <heading-row labelKey="best_practices"></heading-row>
+  <audit-best-practices-list [newVersionList]="newVersion.bestPracticesList"
+    [oldVersionList]="oldVersion.bestPracticesList" [caseType]="newVersion.caseType">
+  </audit-best-practices-list>
+  <heading-row labelKey="lessons_learnt"></heading-row>
+  <audit-lessons-learnt-list [newVersionList]="newVersion.lessonsLearnedList"
+    [oldVersionList]="oldVersion.lessonsLearnedList" [caseType]="newVersion.caseType">
+  </audit-lessons-learnt-list>
+</ng-template>
+<ng-template #specialExplanationTemplate>
+  <value-differences-list [differenceList]="explanationDifferences"></value-differences-list>
+</ng-template>

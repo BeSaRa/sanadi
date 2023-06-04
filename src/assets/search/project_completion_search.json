@@ -53,6 +53,14 @@
   {
     "fields": [
       {
+        "key": "projectName",
+        "type": "input",
+        "label": "project_name",
+        "validations": {
+          "required": false
+        }
+      },
+      {
         "key": "organizationId",
         "type": "selectField",
         "label": "lbl_organization",
@@ -61,17 +69,6 @@
           "loader": "organization.loadAsLookups",
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
-        }
-      },
-      {
-        "key": "subject",
-        "type": "input",
-        "label": "subject",
-        "validations": {
-          "required": false
-        },
-        "templateOptions": {
-          "maxLength": 100
         }
       }
     ]

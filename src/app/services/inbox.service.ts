@@ -74,6 +74,7 @@ import {CharityOrganizationUpdateService} from './charity-organization-update.se
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {ProjectFundraisingService} from '@services/project-fundraising.service';
 import {ProjectImplementationService} from '@services/project-implementation.service';
+import { ProjectCompletionService } from './project-completion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -117,7 +118,9 @@ export class InboxService {
               private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
               private organizationsEntitiesSupportService: OrganizationsEntitiesSupportService,
               private financialTransferLicensingService: FinancialTransferLicensingService,
-              private projectImplementationService: ProjectImplementationService) {
+              private projectImplementationService: ProjectImplementationService,
+              private projectCompletionService: ProjectCompletionService,
+              ) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -153,6 +156,7 @@ export class InboxService {
     this.services.set(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT, this.organizationsEntitiesSupportService);
     this.services.set(CaseTypes.FINANCIAL_TRANSFERS_LICENSING, this.financialTransferLicensingService);
     this.services.set(CaseTypes.PROJECT_IMPLEMENTATION, this.projectImplementationService);
+    this.services.set(CaseTypes.PROJECT_COMPLETION, this.projectCompletionService);
   }
 
   @CastResponse(() => QueryResultSet)

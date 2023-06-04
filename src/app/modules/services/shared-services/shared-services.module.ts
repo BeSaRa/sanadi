@@ -59,6 +59,12 @@ import {
 import {
   AuditPaymentComponent
 } from '../transferring-individual-funds-abroad/audit/audit-payment/audit-payment.component';
+import { AuditBestPracticesListComponent } from './audit/audit-best-practices-list/audit-best-practices-list.component';
+import { BestPracticesListComponent } from './components/best-practices-list/best-practices-list.component';
+import { BestPracticesPopupComponent } from './popups/best-practices-popup/best-practices-popup.component';
+import { AuditLessonsLearntListComponent } from './audit/audit-lessons-learnt-list/audit-lessons-learnt-list.component';
+import { LessonsLearntListComponent } from './components/lessons-learnt-list/lessons-learnt-list.component';
+import { LessonsLearntPopupComponent } from './popups/lessons-learnt-popup/lessons-learnt-popup.component';
 
 
 @NgModule({
@@ -88,7 +94,16 @@ import {
     AuditInterventionImplementingAgencyListComponent,
     AuditInterventionFieldListComponent,
     AuditInterventionRegionListComponent,
-    AuditPaymentComponent
+    AuditPaymentComponent,
+
+    AuditBestPracticesListComponent,
+    BestPracticesListComponent,
+    BestPracticesPopupComponent,
+
+    AuditLessonsLearntListComponent,
+    LessonsLearntListComponent,
+    LessonsLearntPopupComponent,
+
   ],
   imports: [
     CommonModule,
@@ -115,7 +130,16 @@ import {
     AuditInterventionImplementingAgencyListComponent,
     AuditInterventionFieldListComponent,
     AuditInterventionRegionListComponent,
-    AuditPaymentComponent
+    AuditPaymentComponent,
+
+    AuditBestPracticesListComponent,
+    BestPracticesListComponent,
+    BestPracticesPopupComponent,
+
+    AuditLessonsLearntListComponent,
+    LessonsLearntListComponent,
+    LessonsLearntPopupComponent,
+
   ]
 })
 export class SharedServicesModule { }

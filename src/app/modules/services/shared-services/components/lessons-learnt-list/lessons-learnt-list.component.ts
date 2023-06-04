@@ -1,11 +1,11 @@
 import {ActionIconsEnum} from '@enums/action-icons-enum';
-import {LessonsLearntPopupComponent} from '../../../../popups/lessons-learnt-popup/lessons-learnt-popup.component';
 import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
 import {ComponentType} from '@angular/cdk/portal';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {Component} from '@angular/core';
 import {LessonsLearned} from '@app/models/lessons-learned';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import { LessonsLearntPopupComponent } from '../../popups/lessons-learnt-popup/lessons-learnt-popup.component';
 
 @Component({
   selector: 'lessons-learnt-list',

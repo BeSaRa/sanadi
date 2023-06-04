@@ -2,10 +2,10 @@ import {Component} from '@angular/core';
 import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {BestPractices} from '@models/best-practices';
-import {BestPracticesPopupComponent} from '../../../../popups/best-practices-popup/best-practices-popup.component';
 import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
 import {ComponentType} from '@angular/cdk/portal';
 import {IKeyValue} from '@app/interfaces/i-key-value';
+import { BestPracticesPopupComponent } from '../../popups/best-practices-popup/best-practices-popup.component';
 
 @Component({
   selector: 'best-practices-list',

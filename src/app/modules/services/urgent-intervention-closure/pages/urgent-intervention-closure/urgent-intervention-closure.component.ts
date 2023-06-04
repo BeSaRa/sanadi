@@ -39,11 +39,10 @@ import {
   ImplementationEvaluationListComponent
 } from '@modules/services/urgent-intervention-closure/pages/urgent-intervention-closure/components/implementation-evaluation-list/implementation-evaluation-list.component';
 import {UrgentInterventionAnnouncementResult} from '@models/urgent-intervention-announcement-result';
-import {
-  BestPracticesListComponent
-} from '@modules/services/urgent-intervention-closure/pages/urgent-intervention-closure/components/best-practices-list/best-practices-list.component';
 import {Localization} from '@models/localization';
 import {UserClickOn} from '@enums/user-click-on.enum';
+import { LessonsLearntListComponent } from '@app/modules/services/shared-services/components/lessons-learnt-list/lessons-learnt-list.component';
+import { BestPracticesListComponent } from '@app/modules/services/shared-services/components/best-practices-list/best-practices-list.component';
 
 @Component({
   selector: 'urgent-intervention-closure',
