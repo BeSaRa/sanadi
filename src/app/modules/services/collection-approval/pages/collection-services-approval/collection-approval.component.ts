@@ -1,23 +1,24 @@
-import {Component} from '@angular/core';
-import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {SaveTypes} from '@enums/save-types';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {CollectionApproval} from '@models/collection-approval';
-import {CollectionApprovalService} from '@services/collection-approval.service';
-import {LangService} from '@services/lang.service';
-import {Observable, of} from 'rxjs';
-import {Lookup} from '@models/lookup';
-import {LookupService} from '@services/lookup.service';
-import {CollectionRequestType} from '@enums/service-request-types';
-import {DialogService} from '@services/dialog.service';
-import {filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {ToastService} from '@services/toast.service';
-import {OpenFrom} from '@enums/open-from.enum';
-import {EmployeeService} from '@services/employee.service';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {TabMap} from '@app/types/types';
+import { CollectionItemComponent } from './../../shared/collection-item/collection-item.component';
+import { Component, ViewChild } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { SaveTypes } from '@enums/save-types';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { CollectionApproval } from '@models/collection-approval';
+import { CollectionApprovalService } from '@services/collection-approval.service';
+import { LangService } from '@services/lang.service';
+import { Observable, of } from 'rxjs';
+import { Lookup } from '@models/lookup';
+import { LookupService } from '@services/lookup.service';
+import { CollectionRequestType } from '@enums/service-request-types';
+import { DialogService } from '@services/dialog.service';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ToastService } from '@services/toast.service';
+import { OpenFrom } from '@enums/open-from.enum';
+import { EmployeeService } from '@services/employee.service';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { TabMap } from '@app/types/types';
 
 @Component({
   selector: 'collection-approval',
@@ -26,14 +27,15 @@ import {TabMap} from '@app/types/types';
 })
 export class CollectionApprovalComponent extends EServicesGenericComponent<CollectionApproval, CollectionApprovalService> {
   constructor(public lang: LangService,
-              private lookupService: LookupService,
-              private dialog: DialogService,
-              private toast: ToastService,
-              public service: CollectionApprovalService,
-              public employeeService: EmployeeService,
-              public fb: UntypedFormBuilder) {
+    private lookupService: LookupService,
+    private dialog: DialogService,
+    private toast: ToastService,
+    public service: CollectionApprovalService,
+    public employeeService: EmployeeService,
+    public fb: UntypedFormBuilder) {
     super();
   }
+  @ViewChild('collectionItemsTab') collectionItemsComponentRef!: CollectionItemComponent;
 
   requestTypes: Lookup[] = this.lookupService.listByCategory.CollectionRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
@@ -53,7 +55,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
         if (!this.basicInfo || this.basicInfo.disabled) {
           return true;
         }
-        return this.basicInfo.valid && this._hasCollectionListItems();
+        return this.basicInfo.valid && this.hasCollectionListItems
       },
       isTouchedOrDirty: () => true
     },
@@ -127,27 +129,25 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
 
   _afterBuildForm(): void {
     this.setDefaultValues();
-    // this.listenToRequestTypeChanges();
-    this.checkDisableFields();
     this.listenToDurationChanges();
     this.listenToRequestClassificationChanges();
     this.handleReadonly();
   }
 
-  private _hasCollectionListItems(): boolean {
-    return !!(this.model && this.model.collectionItemList.length);
+  get hasCollectionListItems(): boolean {
+    return !!(this.collectionItemsComponentRef && this.collectionItemsComponentRef.list.length);
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (!this.requestType.value) {
-      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.request_type}));
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.request_type }));
       return false;
     }
     if (saveType === SaveTypes.DRAFT) {
       if (this.requestType.value === CollectionRequestType.NEW) {
         return true;
       } else {
-        if (!this._hasCollectionListItems()) {
+        if (!this.hasCollectionListItems) {
           this.invalidItemMessage();
           return false;
         }
@@ -157,12 +157,12 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
     return of(this.form.valid)
       .pipe(tap(valid => !valid && this.invalidFormMessage()))
       .pipe(filter(valid => valid))
-      .pipe(map(_ => this._hasCollectionListItems()))
+      .pipe(map(_ => this.hasCollectionListItems))
       .pipe(tap(hasCollectionItems => !hasCollectionItems && this.invalidItemMessage()));
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
-    if (this.model && !this.model.collectionItemList.length) {
+    if (this.model && !this.hasCollectionListItems) {
       this.invalidItemMessage();
     }
     return true;
@@ -181,7 +181,8 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
     return new CollectionApproval().clone({
       ...this.model,
       ...this.basicInfo.getRawValue(),
-      ...this.specialExplanation.getRawValue()
+      ...this.specialExplanation.getRawValue(),
+      collectionItemList: this.collectionItemsComponentRef?.list ?? []
     });
   }
 
@@ -191,7 +192,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -224,10 +225,9 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
 
   _resetForm(): void {
     this.form.reset();
-    this.model && (this.model.collectionItemList = []);
+    this.collectionItemsComponentRef?.forceClearComponent();
     this.operation = OperationTypes.CREATE;
     this.setDefaultValues();
-    this.checkDisableFields();
   }
 
   private setDefaultValues(): void {
@@ -257,39 +257,10 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
     });
   }
 
-  private listenToRequestTypeChanges() {
-    this.requestType
-      .valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((val: CollectionRequestType) => {
-        this.disableSearchField = val === CollectionRequestType.NEW;
-        this.model!.requestType = val;
-      });
-  }
-
-  checkDisableFields(): void {
-    this.model?.collectionItemList.length ? this.disableFields() : this.enableFields();
-  }
-
-  collectionItemFormStatusChanged($event: boolean) {
-    $event ? this.disableFields() : this.checkDisableFields();
-  }
-
   private invalidFormMessage() {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
   }
 
-  private disableFields() {
-    this.requestType.disable();
-    this.licenseDurationType.disable();
-    this.requestClassification.disable();
-  }
-
-  private enableFields(): void {
-    this.requestType.enable();
-    this.licenseDurationType.enable();
-    this.requestClassification.enable();
-  }
 
   private listenToRequestClassificationChanges() {
     this.requestClassification

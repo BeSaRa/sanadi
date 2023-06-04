@@ -1164,6 +1164,7 @@ export interface ILanguageKeys {
   lbl_add_country: string;
   lbl_edit_country: string;
   risk_level: string;
+  level_of_due_diligence: string;
   cities: string;
   lbl_add_city: string;
   lbl_edit_city: string;

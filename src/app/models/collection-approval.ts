@@ -86,6 +86,11 @@ export class CollectionApproval extends _RequestType<CollectionApprovalService, 
     }
   }
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
+  getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      description: {langKey: 'special_explanations', value: this.description},
+    };
+  }
   getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       requestType: {langKey: 'request_type', value: this.requestType},
@@ -104,9 +109,9 @@ export class CollectionApproval extends _RequestType<CollectionApprovalService, 
   }
 
   buildExplanation(controls: boolean = false): any {
-    const { description } = this;
+    const values = ObjectUtils.getControlValues<CollectionApproval>(this.getExplanationValuesWithLabels());
     return {
-      description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
+      description: controls ? [values.description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.description,
     }
   }
 

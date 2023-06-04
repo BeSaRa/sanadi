@@ -238,6 +238,7 @@ export class CaseInfoComponent {
   }
 
   private _setShowVersionHistory(): void {
+
     // @ts-ignore
     const requestType = this.model.requestType;
     if (this.employeeService.isExternalUser() || !requestType) {

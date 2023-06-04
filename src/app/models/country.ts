@@ -1,14 +1,16 @@
-import { BaseModel } from './base-model';
-import { CountryService } from '@services/country.service';
-import { FactoryService } from '@services/factory.service';
-import { INames } from '@contracts/i-names';
-import { LangService } from '@services/lang.service';
-import { AdminResult } from './admin-result';
-import { searchFunctionType } from '../types/types';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { CountryInterceptor } from "@app/model-interceptors/country-interceptor";
-import { InterceptModel } from "@decorators/intercept-model";
+import {BaseModel} from './base-model';
+import {CountryService} from '@services/country.service';
+import {FactoryService} from '@services/factory.service';
+import {INames} from '@contracts/i-names';
+import {LangService} from '@services/lang.service';
+import {AdminResult} from './admin-result';
+import {ISearchFieldsMap} from '../types/types';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {CountryInterceptor} from "@app/model-interceptors/country-interceptor";
+import {InterceptModel} from "@decorators/intercept-model";
+import {normalSearchFields} from "@helpers/normal-search-fields";
+import {infoSearchFields} from "@helpers/info-search-fields";
+import {CustomValidators} from "@app/validators/custom-validators";
 
 const interceptor = new CountryInterceptor()
 
@@ -21,25 +23,19 @@ export class Country extends BaseModel<Country, CountryService> {
   riskLevel!: number;
   statusDateModified!: string;
   status!: number;
+  levelOfDueDiligence!: number;
 
   parentInfo!: AdminResult;
   statusInfo!: AdminResult;
+  riskLevelInfo!: AdminResult;
+  levelOfDueDiligenceInfo!: AdminResult;
   service: CountryService;
   langService: LangService;
   statusDateModifiedString: string = '';
 
-  searchFields: { [key: string]: searchFunctionType | string } = {
-    arName: 'arName',
-    enName: 'enName',
-    status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1,
-    riskLevel: (text) => {
-      // if country is parent country, search for risk level, otherwise no
-      if (this.parentId) {
-        return false;
-      }
-      return !CommonUtils.isValidValue(this.riskLevel) ? false : (this.riskLevel + '').indexOf(text) > -1;
-    },
-    statusDateModified: 'statusDateModifiedString'
+  searchFields: ISearchFieldsMap<Country> = {
+    ...normalSearchFields(['arName', 'enName', 'statusDateModifiedString']),
+    ...infoSearchFields(['riskLevelInfo', 'levelOfDueDiligenceInfo', 'statusInfo'])
   };
 
   constructor() {
@@ -74,6 +70,25 @@ export class Country extends BaseModel<Country, CountryService> {
 
   isActive(): boolean {
     return Number(this.status) === CommonStatusEnum.ACTIVATED;
+  }
+
+  buildForm(controls?: boolean): any {
+    const {arName, enName, status, riskLevel, levelOfDueDiligence} = this;
+    return {
+      arName: controls ? [arName, [CustomValidators.required,
+        CustomValidators.maxLength(100),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('AR_NUM_ONE_AR')
+      ]] : arName,
+      enName: controls ? [enName, [CustomValidators.required,
+        CustomValidators.maxLength(100),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('ENG_NUM_ONE_ENG')
+      ]] : enName,
+      status: controls ? [status, [CustomValidators.required]] : status,
+      riskLevel: controls ? [riskLevel] : riskLevel,
+      levelOfDueDiligence: controls ? [levelOfDueDiligence] : levelOfDueDiligence
+    }
   }
 
 }

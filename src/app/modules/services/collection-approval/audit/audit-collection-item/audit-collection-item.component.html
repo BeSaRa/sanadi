@@ -32,40 +32,13 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_end_date}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.licenseEndDate|date: 'yyyy-MM-dd'}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="map">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.item_location}}</th>
-            <td cdk-cell *cdkCellDef="let row">
-              <button (click)="openLocationMap(row)" [tooltip]="lang.map.show_location_on_map" class="btn icon-btn"><i
-                      class="mdi mdi-map-marker text-primary"></i>
-              </button>
-            </td>
-          </ng-container>
-          <!-- <ng-container cdkColumnDef="approval_info_status">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
-            <td cdk-cell *cdkCellDef="let row; index as itemIndex">
-              <div *ngIf="approvalMode" class="d-flex">
-                <i *ngIf="!row.hasValidApprovalInfo()" [tooltip]="lang.map.missing_approval_info"
-                   class="mdi mdi-alert-circle text-warning"></i>
-                <i *ngIf="row.hasValidApprovalInfo()" [tooltip]="lang.map.approval_information_filled_out"
-                   class="mdi mdi-check-circle text-success"></i>
-              </div>
-            </td>
-          </ng-container> -->
-          <!-- <ng-container cdkColumnDef="oldLicenseFullSerial">
+          <ng-container cdkColumnDef="oldLicenseFullSerial">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
             <td cdk-cell *cdkCellDef="let row">
               <span *ngIf="isNewRequestType()">N/A</span>
-              <span *ngIf="!isNewRequestType()" class="text-primary text-decoration-none cursor-pointer"
-                    (click)="viewOldLicense(row)">{{row.oldLicenseFullSerial || ''}}</span>
+              <span *ngIf="!isNewRequestType()">{{row.oldLicenseFullSerial || ''}}</span>
             </td>
-          </ng-container> -->
-          <!-- <ng-container cdkColumnDef="exportedLicenseFullSerial">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.generated_license_number}}</th>
-            <td cdk-cell *cdkCellDef="let row">
-              <span class="text-primary text-decoration-none cursor-pointer"
-                    (click)="viewGeneratedLicense(row)">{{row.exportedLicenseFullSerial || ''}}</span>
-            </td>
-          </ng-container> -->
+          </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions audit-actions">

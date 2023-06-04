@@ -75,6 +75,11 @@ export class CollectorApproval extends _RequestType<CollectorApprovalService, Co
       licenseDurationType:{langKey: 'request_type', value: this.licenseDurationType},
     };
   }
+  getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      description: {langKey: 'special_explanations', value: this.description},
+    };
+  }
   buildBasicInfo(controls: boolean = false): any {
     const values = ObjectUtils.getControlValues<CollectorApproval>(this.getBasicInfoValuesWithLabels());
 
@@ -85,9 +90,9 @@ export class CollectorApproval extends _RequestType<CollectorApprovalService, Co
   }
 
   buildExplanation(controls: boolean = false): any {
-    const {description} = this;
+    const values = ObjectUtils.getControlValues<CollectorApproval>(this.getExplanationValuesWithLabels());
     return {
-      description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
+      description: controls ? [values.description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.description,
     }
   }
 
