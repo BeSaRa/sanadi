@@ -6,7 +6,7 @@
     <tab name="project_basic_info" [hasError]="projectBasicInfo.invalid" [template]="project_basic_info"
       [title]="lang.map.project_basic_info">
     </tab>
-    <tab name="beneficiary_analytics_by_license" [hasError]="beneficiaryAnalyticsByLicense.invalid" [template]="beneficiaryAnalyticsByLicense"
+    <tab name="beneficiary_analytics_by_license" [hasError]="beneficiaryAnalyticsByLicense.invalid" [template]="beneficiaryAnalyticsByLicenseTemplate"
       [title]="lang.map.beneficiary_analytics_by_license">
     </tab>
     <tab name="best_practices_and_lessons_learnt" [hasError]="!isHasErrorLessonsLearnt_BestPracticesTab"
@@ -149,7 +149,7 @@
         </div>
       </ng-container>
     </ng-template>
-    <ng-template #beneficiaryAnalyticsByLicense>
+    <ng-template #beneficiaryAnalyticsByLicenseTemplate>
       <div formGroupName="beneficiaryAnalyticsByLicense" class="position-relative mb-4">
         <div class="row" validationGroupClasses>
           <div class="col-md-3 col-sm-12 mb-4 position-relative">
