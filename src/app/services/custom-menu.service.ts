@@ -137,6 +137,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
       .pipe(
         catchError(() => of([])),
         map((result) => result.filter(menu => {
+          if(menu.isDefaultItem()) return true;
           return userType === UserTypes.INTERNAL ? !menu.isExternalUserMenu() : !menu.isInternalUserMenu();
         }))
       );
