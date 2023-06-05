@@ -131,7 +131,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       this.customServiceTemplate.loadActiveTemplatesByCaseType(this.model?.getCaseType()).subscribe((data) => {
         this.dialog.show(SelectCustomServiceTemplatePopupComponent, {
           list: data,
-          showSelectBtn: true
+          showSelectBtn: true,
+          showDelete:false
         }).onAfterClose$.subscribe((temp) => {
           if (temp) {
             this.selectedTemplate = temp;
@@ -141,7 +142,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       })
     } else {
       this.customServiceTemplate.loadTemplatesByCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
-        this.dialog.show(SelectCustomServiceTemplatePopupComponent, {list: data, showSelectBtn: false})
+        this.dialog.show(SelectCustomServiceTemplatePopupComponent, {list: data, showSelectBtn: false, showDelete:true})
       })
     }
   }

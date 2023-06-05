@@ -170,4 +170,13 @@ export class CustomServiceTemplateService {
     template.isActive = (newStatus === CommonStatusEnum.ACTIVATED);
     return this.updateProp(caseType, template);
   }
+  @HasInterception
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  deleteDocument(caseType: CaseTypes,  docId: string) {
+   return this.http.delete(this._getServiceURLByCaseType(caseType) + '/document/' + docId )
+  }
+
 }
