@@ -177,8 +177,9 @@ export class CaseInfoComponent implements OnInit {
       if (caseStatus === CommonCaseStatus.FINAL_REJECTION) {
         return ((this.model as ProjectImplementation).requestType === ServiceRequestTypes.NEW && this.model.submissionMechanism === SubmissionMechanisms.REGISTRATION);
       }
-
       return (caseStatus === CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.UNDER_EXAMINATION);
+    } else if (this.model.caseType === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION || this.model.caseType === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
+      return caseStatus === CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION;
     } else if (this.model.caseType === CaseTypes.FINANCIAL_TRANSFERS_LICENSING && this.model.submissionMechanism === SubmissionMechanisms.NOTIFICATION) {
       return caseStatus >= CommonCaseStatus.UNDER_PROCESSING;
     } else {
