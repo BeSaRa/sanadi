@@ -40,6 +40,8 @@ export class ProjectCompletion
   caseType: number = CaseTypes.PROJECT_COMPLETION;
   requestType!: number;
   projectLicenseId!: string;
+  projectLicenseFullSerial!: string;
+  projectLicenseSerial!: number;
   projectWorkArea!: number;
   domain!: number;
   mainDACCategory!: number;
@@ -58,6 +60,7 @@ export class ProjectCompletion
 
   followUpDate!: string | IMyDateModel;
   projectEvaluationSLADate!: string | IMyDateModel;
+  licenseEndDate!: string | IMyDateModel;
   actualEndDate!: string | IMyDateModel;
 
   notes!: string;
@@ -65,8 +68,8 @@ export class ProjectCompletion
   lessonsLearnedList: LessonsLearned[] = [];
   templateCost!: number;
   description!: string;
-  effort!: number;
-  impact!: number;
+  effort: number = 12;
+  impact: number = 122;
 
   // For view only
   projectTotalCost!: number;
@@ -136,6 +139,10 @@ export class ProjectCompletion
         const projectEvaluationSLADate = DateUtils.getDateStringFromDate(this.projectEvaluationSLADate, 'DATEPICKER_FORMAT');
         adminResultValue = AdminResult.createInstance({ arName: projectEvaluationSLADate, enName: projectEvaluationSLADate });
         break;
+      case 'licenseEndDate':
+        const licenseEndDate = DateUtils.getDateStringFromDate(this.licenseEndDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: licenseEndDate, enName: licenseEndDate });
+        break;
       case 'actualEndDate':
         const actualEndDate = DateUtils.getDateStringFromDate(this.actualEndDate, 'DATEPICKER_FORMAT');
         adminResultValue = AdminResult.createInstance({ arName: actualEndDate, enName: actualEndDate });
@@ -173,6 +180,10 @@ export class ProjectCompletion
   }
   getProjectBasicInfoFormValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
+      actualEndDate: { langKey: 'the_date_of_the_end_of_the_actual_execution', value: this.actualEndDate },
+      projectEvaluationSLADate: { langKey: 'project_evaluation_sla_date', value: this.projectEvaluationSLADate },
+      actualTotalCost: { langKey: 'actual_cost', value: this.actualTotalCost },
+      notes: { langKey: 'notes', value: this.notes },
     }
   }
 
@@ -194,8 +205,23 @@ export class ProjectCompletion
   }
 
   formBuilder(controls?: boolean) {
-    const projectLicenseInfoValues = ObjectUtils.getControlValues<ProjectCompletion>(this.getprojectLicenseInfoFormValuesWithLabels());
-    const projectBasicInfoValues = ObjectUtils.getControlValues<ProjectCompletion>(this.getProjectBasicInfoFormValuesWithLabels());
+    const {
+      requestType,
+      projectWorkArea,
+      beneficiaryCountry,
+      domain,
+      internalProjectClassification,
+      mainDACCategory,
+      subDACCategory,
+      mainUNOCHACategory,
+      subUNOCHACategory,
+    } = ObjectUtils.getControlValues<ProjectCompletion>(this.getprojectLicenseInfoFormValuesWithLabels());
+    const {
+      actualEndDate,
+      projectEvaluationSLADate,
+      actualTotalCost,
+      notes
+    } = ObjectUtils.getControlValues<ProjectCompletion>(this.getProjectBasicInfoFormValuesWithLabels());
     const {
       directBeneficiaryNumber,
       indirectBeneficiaryNumber,
@@ -204,21 +230,24 @@ export class ProjectCompletion
       beneficiaries19to60,
       beneficiariesOver60
     } = ObjectUtils.getControlValues<ProjectCompletion>(this.getBeneficiaryAnalyticsByLicenseFormValuesWithLabels());
-    const specialExplanationValues = ObjectUtils.getControlValues<ProjectCompletion>(this.getSpecialExplanationValuesWithLabels());
+    const { description } = ObjectUtils.getControlValues<ProjectCompletion>(this.getSpecialExplanationValuesWithLabels());
     return {
       projectLicenseInfo: {
-        requestType: controls ? [projectLicenseInfoValues.requestType, Validators.required] : projectLicenseInfoValues.requestType,
-        projectWorkArea: controls ? [projectLicenseInfoValues.projectWorkArea, Validators.required] : projectLicenseInfoValues.projectWorkArea,
-        beneficiaryCountry: controls ? [projectLicenseInfoValues.beneficiaryCountry, Validators.required] : projectLicenseInfoValues.beneficiaryCountry,
-        domain: controls ? [projectLicenseInfoValues.domain] : projectLicenseInfoValues.domain,
-        internalProjectClassification: controls ? [projectLicenseInfoValues.internalProjectClassification] : projectLicenseInfoValues.internalProjectClassification,
-        mainDACCategory: controls ? [projectLicenseInfoValues.mainDACCategory] : projectLicenseInfoValues.mainDACCategory,
-        subDACCategory: controls ? [projectLicenseInfoValues.subDACCategory] : projectLicenseInfoValues.subDACCategory,
-        mainUNOCHACategory: controls ? [projectLicenseInfoValues.mainUNOCHACategory] : projectLicenseInfoValues.mainUNOCHACategory,
-        subUNOCHACategory: controls ? [projectLicenseInfoValues.subUNOCHACategory] : projectLicenseInfoValues.subUNOCHACategory,
+        requestType: controls ? [requestType, Validators.required] : requestType,
+        projectWorkArea: controls ? [projectWorkArea, Validators.required] : projectWorkArea,
+        beneficiaryCountry: controls ? [beneficiaryCountry, Validators.required] : beneficiaryCountry,
+        domain: controls ? [domain] : domain,
+        internalProjectClassification: controls ? [internalProjectClassification] : internalProjectClassification,
+        mainDACCategory: controls ? [mainDACCategory] : mainDACCategory,
+        subDACCategory: controls ? [subDACCategory] : subDACCategory,
+        mainUNOCHACategory: controls ? [mainUNOCHACategory] : mainUNOCHACategory,
+        subUNOCHACategory: controls ? [subUNOCHACategory] : subUNOCHACategory,
       },
       projectBasicInfo: {
-
+        actualEndDate: controls ? [actualEndDate, Validators.required] : actualEndDate,
+        projectEvaluationSLADate: controls ? [projectEvaluationSLADate, Validators.required] : projectEvaluationSLADate,
+        actualTotalCost: controls ? [actualTotalCost, Validators.required] : actualTotalCost,
+        notes: controls ? [notes] : notes,
       },
       beneficiaryAnalyticsByLicense: {
         directBeneficiaryNumber: controls ? [directBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : directBeneficiaryNumber,
@@ -229,7 +258,7 @@ export class ProjectCompletion
         beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiariesOver60
       },
       explanation: {
-        description: controls ? [specialExplanationValues.description, Validators.required] : specialExplanationValues.description,
+        description: controls ? [description, Validators.required] : description,
       }
     };
   }

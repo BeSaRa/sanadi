@@ -85,7 +85,8 @@ export class ProjectImplementation
   inRenewalPeriod!: boolean
   usedInProjectCompletion!: boolean
   licenseClassName!: string;
-  projectTotalCost: number = 0
+  projectTotalCost: number = 0;
+  licenseEndDate!: string;
 
   searchFields: ISearchFieldsMap<ProjectImplementation> = {
     ...dateSearchFields(['createdOn']),

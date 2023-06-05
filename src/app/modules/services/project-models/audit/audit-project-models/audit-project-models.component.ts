@@ -70,6 +70,4 @@ export class AuditProjectModelsComponent implements IAuditCaseProperties<Project
     const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getExplanationValuesWithLabels());
     this.explanationDifferences = ObjectUtils.getValueDifferencesList<ProjectModel, ProjectModel>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
-
-
 }

@@ -1974,5 +1974,9 @@ export interface ILanguageKeys {
   menu_project_completion: string;
   project_license_information: string;
   project_basic_info: string;
-  beneficiary_analytics_by_license: string; //TODO: add this to DB
+  beneficiary_analytics: string;
+  predefined_project_cost: string;
+  actual_cost: string;
+  project_evaluation_sla_date: string;
+  the_date_of_the_end_of_the_actual_execution: string;
 }

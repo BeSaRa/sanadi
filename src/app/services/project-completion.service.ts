@@ -38,7 +38,7 @@ export class ProjectCompletionService extends BaseGenericEService<ProjectComplet
   }
 
   _getURLSegment(): string {
-    return this.urlService.URLS.PROJECT_MODELING;
+    return this.urlService.URLS.PROJECT_COMPLETION;
   }
 
   _getInterceptor(): Partial<IModelInterceptor<ProjectCompletion>> {

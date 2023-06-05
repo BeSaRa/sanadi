@@ -9,6 +9,12 @@
   <value-differences-list [differenceList]="projectLicenseInfoDifferences"></value-differences-list>
 </ng-template>
 
+<ng-template #project_license_info>
+  <value-differences-list [differenceList]="projectBasicInfoDifferences"></value-differences-list>
+</ng-template>
+<ng-template #project_license_info>
+  <value-differences-list [differenceList]="beneficiaryAnalyticsByLicenseDifferences"></value-differences-list>
+</ng-template>
 <ng-template #bestPracticesLessonsLearntTabTemplate>
   <heading-row labelKey="best_practices"></heading-row>
   <audit-best-practices-list [newVersionList]="newVersion.bestPracticesList"

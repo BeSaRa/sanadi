@@ -16,6 +16,7 @@ export class LessonsLearnedInterceptor implements IModelInterceptor<LessonsLearn
   }
 
   private static _deleteBeforeSend(model: Partial<LessonsLearned>): void {
+    delete model.auditOperation;
     delete model.lessonsLearnedInfo;
     delete model.langService;
     delete model.searchFields;

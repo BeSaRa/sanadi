@@ -3,11 +3,11 @@
     <tab name="project_license_info" [hasError]="projectLicenseInfo.invalid" [template]="project_license_info"
       [title]="lang.map.project_license_information">
     </tab>
-    <tab name="project_basic_info" [hasError]="projectBasicInfo.invalid" [template]="project_basic_info"
+    <tab name="project_basic_info" [hasError]="projectBasicInfo.invalid || !selectedLicense" [template]="project_basic_info"
       [title]="lang.map.project_basic_info">
     </tab>
-    <tab name="beneficiary_analytics_by_license" [hasError]="beneficiaryAnalyticsByLicense.invalid" [template]="beneficiaryAnalyticsByLicenseTemplate"
-      [title]="lang.map.beneficiary_analytics_by_license">
+    <tab name="beneficiary_analytics_by_license" [hasError]="beneficiaryAnalyticsByLicense.invalid"
+      [template]="beneficiaryAnalyticsByLicenseTemplate" [title]="lang.map.beneficiary_analytics">
     </tab>
     <tab name="best_practices_and_lessons_learnt" [hasError]="!isHasErrorLessonsLearnt_BestPracticesTab"
       [template]="bestPracticesAndLessonsLearnt" [title]="lang.map.best_practices + ' & ' + lang.map.lessons_learnt">
@@ -134,57 +134,138 @@
           [columns]="displayedColumns" [allowSelect]="true" (selectCallback)="selectProject($event)">
         </selected-license-table>
         <div class="row">
-          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <div class="col-md-3 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" for="projectName">{{lang.map.project_name}}</label>
-            <input id="projectName" [value]="model && model.projectName ? model.projectName : ''" class="form-control">
+            <input readonly id="projectName" [value]="model && model.projectName ? model.projectName : ''"
+              class="form-control">
+          </div>
+          <div class="col-md-3 col-sm-12 mb-4 position-relative">
+            <label class="form-label" for="licenseEndDate">{{lang.map.license_end_date}}</label>
+            <input readonly id="licenseEndDate" [value]="model && model.licenseEndDate ? (model.licenseEndDate|date: 'mediumDate') : ''"
+              class="form-control">
+          </div>
+          <div class="col-md-3 col-sm-12 mb-4 position-relative">
+            <label class="form-label" for="templateCost">{{lang.map.predefined_project_cost}}</label>
+            <input readonly id="templateCost" [value]="model && model.templateCost ? model.templateCost : ''"
+              class="form-control">
+          </div>
+          <div class="col-md-3 col-sm-12 mb-4 position-relative">
+            <label class="form-label" for="projectTotalCost">{{lang.map.project_total_cost}}</label>
+            <input readonly id="projectTotalCost"
+              [value]="model && model.projectTotalCost ? model.projectTotalCost : ''" class="form-control">
+          </div>
+          <div class="col-sm-12 mb-4 position-relative">
+            <label class="form-label" for="projectDescription">{{lang.map.project_description}}</label>
+            <textarea readonly id="projectDescription"
+              [value]="model && model.projectDescription ? model.projectDescription : ''" class="form-control"
+              rows="5"></textarea>
           </div>
         </div>
         <div class="row">
+          <div class="col-12 col-md-4 mb-4 position-relative">
+            <label for="projectEvaluationSLADate" asteriskIfRequired="projectEvaluationSLADate"
+              class="form-label">{{lang.map.project_evaluation_sla_date}}</label>
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div class="form-control" formControlName="projectEvaluationSLADate" id="projectEvaluationSLADate"
+                [options]="datepickerOptionsMap.projectEvaluationSLADate"
+                (click)="!readonly && dpprojectEvaluationSLADate.toggleCalendar()"
+                [ngClass]="{'input-disabled': readonly}" #dpprojectEvaluationSLADate="angular-mydatepicker"
+                angular-mydatepicker validationClasses="projectEvaluationSLADate">
+              </div>
+              <app-field-error-message controlName="projectEvaluationSLADate"></app-field-error-message>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 mb-4 position-relative">
+            <label for="actualEndDate" asteriskIfRequired="actualEndDate"
+              class="form-label">{{lang.map.the_date_of_the_end_of_the_actual_execution}}</label>
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div class="form-control" formControlName="actualEndDate" id="actualEndDate"
+                [options]="datepickerOptionsMap.actualEndDate"
+                (click)="!readonly && dpactualEndDate.toggleCalendar()"
+                [ngClass]="{'input-disabled': readonly}" #dpactualEndDate="angular-mydatepicker"
+                angular-mydatepicker validationClasses="actualEndDate">
+              </div>
+              <app-field-error-message controlName="actualEndDate"></app-field-error-message>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="actualTotalCost"
+              for="actualTotalCost">{{lang.map.actual_cost}}</label>
+            <input id="actualTotalCost" validationClasses="actualTotalCost" formControlName="actualTotalCost"
+              class="form-control" [readonly]="readonly" [mask]="inputMaskPatterns.SEPARATOR"
+              [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+            <app-field-error-message controlName="actualTotalCost"></app-field-error-message>
+          </div>
           <div class="col-sm-12 mb-4 position-relative">
-            <label class="form-label" for="projectDescription">{{lang.map.project_description}}</label>
-            <textarea id="projectDescription"
-              [value]="model && model.projectDescription ? model.projectDescription : ''" class="form-control"
-              rows="5"></textarea>
+            <label class="form-label" asteriskIfRequired="notes" for="notes">{{lang.map.notes}}</label>
+            <textarea name="notes" validationClasses="notes" [readonly]="readonly" id="notes" formControlName="notes" rows="4"
+              class="form-control"></textarea>
+            <app-field-error-message controlName="notes"></app-field-error-message>
           </div>
         </div>
       </ng-container>
     </ng-template>
     <ng-template #beneficiaryAnalyticsByLicenseTemplate>
       <div formGroupName="beneficiaryAnalyticsByLicense" class="position-relative mb-4">
-        <div class="row" validationGroupClasses>
-          <div class="col-md-3 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="beneficiaries0to5"
-              for="beneficiaries0to5">{{lang.map.number_of_0_to_5}}</label>
-            <input id="beneficiaries0to5" validationClasses="beneficiaries0to5" formControlName="beneficiaries0to5"
-              [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false" class="form-control">
-            <app-field-error-message controlName="beneficiaries0to5"></app-field-error-message>
+        <div class="row">
+          <div class="col-sm-12 col-md-6 mb-4 position-relative">
+            <label for="directBeneficiaryNumber" asteriskIfRequired="directBeneficiaryNumber"
+              class="form-label">{{lang.map.number_of_direct_beneficiaries}}</label>
+            <input id="directBeneficiaryNumber" validationClasses="directBeneficiaryNumber" onlyNumbers
+              [readOnly]="readonly" formControlName="directBeneficiaryNumber" trimInput class="form-control"
+              type="text">
+            <app-field-error-message controlName="directBeneficiaryNumber"></app-field-error-message>
           </div>
-          <div class="col-md-3 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="beneficiaries5to18"
-              for="beneficiaries5to18">{{lang.map.number_of_5_to_18}}</label>
-            <input id="beneficiaries5to18" validationClasses="beneficiaries5to18" formControlName="beneficiaries5to18"
-              [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false" class="form-control">
-            <app-field-error-message controlName="beneficiaries5to18"></app-field-error-message>
+          <div class="col-sm-12 col-md-6 mb-4 position-relative">
+            <label for="indirectBeneficiaryNumber" asteriskIfRequired="indirectBeneficiaryNumber"
+              class="form-label">{{lang.map.number_of_indirect_beneficiaries}}</label>
+            <input id="indirectBeneficiaryNumber" validationClasses="indirectBeneficiaryNumber" onlyNumbers
+              [readOnly]="readonly" formControlName="indirectBeneficiaryNumber" trimInput class="form-control"
+              type="text">
+            <app-field-error-message controlName="indirectBeneficiaryNumber"></app-field-error-message>
           </div>
-          <div class="col-md-3 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="beneficiaries19to60"
-              for="beneficiaries19to60">{{lang.map.number_of_19_to_60}}</label>
-            <input id="beneficiaries19to60" validationClasses="beneficiaries19to60" [mask]="inputMaskPatterns.PERCENT"
-              [dropSpecialCharacters]="false" formControlName="beneficiaries19to60" class="form-control">
-            <app-field-error-message controlName="beneficiaries19to60"></app-field-error-message>
-          </div>
-          <div class="col-md-3 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="beneficiariesOver60"
-              for="beneficiariesOver60">{{lang.map.number_of_above_60}}</label>
-            <input id="beneficiariesOver60" validationClasses="beneficiariesOver60" [mask]="inputMaskPatterns.PERCENT"
-              [dropSpecialCharacters]="false" formControlName="beneficiariesOver60" class="form-control">
-            <app-field-error-message controlName="beneficiariesOver60"></app-field-error-message>
+          <div class="col=12">
+            <heading-row labelKey="number_of_direct_beneficiaries_by_age_group"></heading-row>
+            <div class="row" validationGroupClasses>
+              <div class="col-md-3 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="beneficiaries0to5"
+                  for="beneficiaries0to5">{{lang.map.number_of_0_to_5}}</label>
+                <input id="beneficiaries0to5" validationClasses="beneficiaries0to5" formControlName="beneficiaries0to5"
+                  [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false" class="form-control">
+                <app-field-error-message controlName="beneficiaries0to5"></app-field-error-message>
+              </div>
+              <div class="col-md-3 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="beneficiaries5to18"
+                  for="beneficiaries5to18">{{lang.map.number_of_5_to_18}}</label>
+                <input id="beneficiaries5to18" validationClasses="beneficiaries5to18"
+                  formControlName="beneficiaries5to18" [mask]="inputMaskPatterns.PERCENT"
+                  [dropSpecialCharacters]="false" class="form-control">
+                <app-field-error-message controlName="beneficiaries5to18"></app-field-error-message>
+              </div>
+              <div class="col-md-3 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="beneficiaries19to60"
+                  for="beneficiaries19to60">{{lang.map.number_of_19_to_60}}</label>
+                <input id="beneficiaries19to60" validationClasses="beneficiaries19to60"
+                  [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false"
+                  formControlName="beneficiaries19to60" class="form-control">
+                <app-field-error-message controlName="beneficiaries19to60"></app-field-error-message>
+              </div>
+              <div class="col-md-3 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="beneficiariesOver60"
+                  for="beneficiariesOver60">{{lang.map.number_of_above_60}}</label>
+                <input id="beneficiariesOver60" validationClasses="beneficiariesOver60"
+                  [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false"
+                  formControlName="beneficiariesOver60" class="form-control">
+                <app-field-error-message controlName="beneficiariesOver60"></app-field-error-message>
+              </div>
+            </div>
+            <group-error-message></group-error-message>
           </div>
         </div>
-        <group-error-message></group-error-message>
       </div>
     </ng-template>
-
     <ng-template #bestPracticesAndLessonsLearnt>
       <best-practices-list #bestPracticesListComponent [list]="(!model ? [] : model.bestPracticesList)"
         [readonly]="readonly"></best-practices-list>

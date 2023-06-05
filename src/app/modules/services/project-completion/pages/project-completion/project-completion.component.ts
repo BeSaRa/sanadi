@@ -31,6 +31,8 @@ import { FieldControlAndLabelKey } from '@app/types/types';
 import { ToastService } from '@app/services/toast.service';
 import { ServiceRequestTypes } from '@app/enums/service-request-types';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { DateUtils } from '@app/helpers/date-utils';
+import { IKeyValue } from '@app/interfaces/i-key-value';
 
 @Component({
   selector: 'app-project-completion',
@@ -54,6 +56,10 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   selectedLicense?: ProjectImplementation;
   @ViewChild('bestPracticesListComponent') bestPracticesListComponentRef!: BestPracticesListComponent;
   @ViewChild('lessonsLearntListComponent') lessonsLearntListComponentRef!: LessonsLearntListComponent;
+  datepickerOptionsMap: IKeyValue = {
+    projectEvaluationSLADate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
+    actualEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
+  };
   formProperties = {
     requestType: () => {
       return this.getObservableField('requestType', 'requestType');
@@ -122,6 +128,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
             country: this.countryField.value
           }).subscribe((data) => {
             this.projectImplementationLicenses = data;
+            this.selectProject(undefined);
           })
       })
   }
@@ -135,6 +142,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
             internalProjectClassification: this.internalProjectClassification.value ? this.internalProjectClassification.value : ''
           }).subscribe((data) => {
             this.projectImplementationLicenses = data;
+            this.selectProject(undefined);
           })
       })
   }
@@ -171,6 +179,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       ...this.model,
       ...this.projectLicenseInfo.getRawValue(),
       ...this.projectBasicInfo.getRawValue(),
+      ...this.beneficiaryAnalyticsByLicense.getRawValue(),
       ...this.specialExplanation.getRawValue(),
       bestPracticesList: this.bestPracticesListComponentRef.list,
       lessonsLearnedList: this.lessonsLearntListComponentRef.list,
@@ -377,11 +386,23 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
 
   selectProject(licenseDetails: ProjectImplementation | undefined, ignoreUpdateForm: boolean = false): void {
     this.selectedLicense = licenseDetails;
-    console.log(this.selectedLicense);
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
-      let value: any = (new ProjectImplementation()).clone({ ...licenseDetails });
+      const value = new ProjectCompletion().clone({...this.model})
+      value.licenseEndDate = DateUtils.changeDateToDatepicker(licenseDetails.licenseEndDate);
+      // value.projectName = licenseDetails.projectName;
+      // value.templateCost = licenseDetails.templateCost;
+      value.projectTotalCost = licenseDetails.projectTotalCost;
+      // value.projectDescription = licenseDetails.projectDescription;
+      value.projectName = 'projectName';
+      value.templateCost = 1000;
+      value.projectDescription = 'projectDescription';
 
+      value.projectLicenseId = licenseDetails.fullSerial;
+      value.projectLicenseFullSerial = licenseDetails.fullSerial;
+      value.projectLicenseSerial = licenseDetails.serial;
+
+      this.model = value;
     }
   }
 

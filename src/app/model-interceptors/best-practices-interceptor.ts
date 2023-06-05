@@ -16,6 +16,7 @@ export class BestPracticesInterceptor implements IModelInterceptor<BestPractices
   }
 
   private static _deleteBeforeSend(model: Partial<BestPractices>): void {
+    delete model.auditOperation;
     delete model.bestPracticesInfo;
     delete model.langService;
     delete model.searchFields;
