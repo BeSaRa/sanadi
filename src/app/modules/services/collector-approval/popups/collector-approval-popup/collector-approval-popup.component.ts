@@ -120,8 +120,8 @@ export class CollectorApprovalPopupComponent extends UiCrudDialogGenericComponen
     return (this.form && this.form.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
   private openSelectLicense(licenses: CollectorLicense[]) {
-    const licensesByDurationType = licenses.filter(l => l.licenseDurationTypeInfo.lookupKey == this.collectorModel.licenseDurationType);
-    return this.licenseService.openSelectLicenseDialog(licensesByDurationType, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: CollectorLicense, details: CollectorLicense }>;
+    //const licensesByDurationType = licenses.filter(l => l.licenseDurationTypeInfo.lookupKey == this.collectorModel.licenseDurationType);
+    return this.licenseService.openSelectLicenseDialog(licenses, this.collectorModel, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: CollectorLicense, details: CollectorLicense }>;
   }
 
   private listenToLicenseSearch(): void {
