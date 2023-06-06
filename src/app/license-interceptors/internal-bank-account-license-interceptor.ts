@@ -4,6 +4,7 @@ import {AdminResult} from '@app/models/admin-result';
 import {isValidAdminResult} from '@app/helpers/utils';
 import {Lookup} from '@app/models/lookup';
 import {NpoEmployee} from '@app/models/npo-employee';
+import {BankAccountExecutiveManagement} from "@models/bank-account-executive-management";
 
 export class InternalBankAccountLicenseInterceptor implements IModelInterceptor<InternalBankAccountLicense> {
   send(model: Partial<InternalBankAccountLicense>): Partial<InternalBankAccountLicense> {
@@ -19,9 +20,7 @@ export class InternalBankAccountLicenseInterceptor implements IModelInterceptor<
     model.requestTypeInfo = (model.requestTypeInfo) ? (new Lookup()).clone(model.requestTypeInfo) : new Lookup();
     model.operationTypeInfo = (model.operationTypeInfo) ? AdminResult.createInstance(model.operationTypeInfo) : AdminResult.createInstance({});
     model.bankAccountExecutiveManagementDTOs ? model.bankAccountExecutiveManagementDTOs = model.bankAccountExecutiveManagementDTOs.map(x => {
-      let y = new NpoEmployee().clone(x);
-      y.jobTitleInfo = (new Lookup()).clone(y.jobTitleInfo);
-      return y;
+      return new BankAccountExecutiveManagement().clone(x);
     }) : model.bankAccountExecutiveManagementDTOs = [];
 
     return model;

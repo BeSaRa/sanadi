@@ -33,12 +33,12 @@
             {{ row.identificationNumber }}
           </td>
         </ng-container>
-        <ng-container cdkColumnDef="jobTitleId">
+        <ng-container cdkColumnDef="jobTitle">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
             {{ lang.map.job_title }}
           </th>
           <td cdk-cell *cdkCellDef="let row">
-            {{ row?.jobTitleInfo?.getName() || row.jobTitleId }}
+            {{ row?.jobTitle }}
           </td>
         </ng-container>
         <ng-container

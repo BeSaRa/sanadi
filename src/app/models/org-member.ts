@@ -1,19 +1,18 @@
-import { InterceptModel } from '@app/decorators/decorators/intercept-model';
-import { DateUtils } from '@app/helpers/date-utils';
-import { infoSearchFields } from '@app/helpers/info-search-fields';
-import { normalSearchFields } from '@app/helpers/normal-search-fields';
-import { OrgMemberInterceptor } from '@app/model-interceptors/org-member-interceptor';
-import { ISearchFieldsMap } from '@app/types/types';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDateModel } from 'angular-mydatepicker';
-import { AdminResult } from './admin-result';
-import { SearchableCloneable } from './searchable-cloneable';
-import { AuditOperationTypes } from '@enums/audit-operation-types';
-import { IAuditModelProperties } from '@contracts/i-audit-model-properties';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { ControlValueLabelLangKey } from '@app/types/types';
+import {InterceptModel} from '@app/decorators/decorators/intercept-model';
+import {DateUtils} from '@app/helpers/date-utils';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import {OrgMemberInterceptor} from '@app/model-interceptors/org-member-interceptor';
+import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {IMyDateModel} from 'angular-mydatepicker';
+import {AdminResult} from './admin-result';
+import {SearchableCloneable} from './searchable-cloneable';
+import {AuditOperationTypes} from '@enums/audit-operation-types';
+import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
+import {CommonUtils} from '@app/helpers/common-utils';
 
-const { send, receive } = new OrgMemberInterceptor();
+const {send, receive} = new OrgMemberInterceptor();
 
 @InterceptModel({
   receive,
@@ -25,7 +24,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   identificationNumber!: string;
   fullName!: string;
   id!: number;
-  jobTitleId!: number;
+  jobTitle!: string;
   email: string | null = null;
   phone: string | null = null;
   joinDate: string | null | IMyDateModel = null;
@@ -35,17 +34,14 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   nationalityInfo!: AdminResult;
 
   searchFields: ISearchFieldsMap<OrgMember> = {
-    ...normalSearchFields(['qid', 'fullName', 'identificationNumber', 'email', 'phone', 'extraPhone']),
-    ...infoSearchFields(['jobTitleInfo', 'nationalityInfo'])
+    ...normalSearchFields(['qid', 'fullName', 'identificationNumber', 'email', 'phone', 'extraPhone', 'jobTitle']),
+    ...infoSearchFields(['nationalityInfo'])
   }
   joinDateStamp!: number | null;
 
   getAdminResultByProperty(property: keyof OrgMember): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
-      case 'jobTitleId':
-        adminResultValue = this.jobTitleInfo;
-        break;
       case 'nationality':
         adminResultValue = this.nationalityInfo;
         break;
@@ -59,56 +55,43 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
           value = '';
         }
-        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
     }
     return adminResultValue ?? new AdminResult();
   }
+
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      fullName: { langKey: 'full_name', value: this.fullName },
-      identificationNumber: { langKey: 'identification_number', value: this.identificationNumber },
-      jobTitleId: { langKey: 'job_title', value: this.jobTitleId },
-      email:{ langKey: 'lbl_email', value: this.email },
-      phone:{ langKey: 'lbl_phone', value: this.phone },
-      joinDate:{ langKey: 'first_join_date', value: this.joinDate ,comparisonValue:this.joinDateStamp},
-      nationality:{ langKey: 'lbl_nationality', value: this.nationality },
-      extraPhone:{ langKey: 'lbl_extra_phone_number', value: this.extraPhone },
+      fullName: {langKey: 'full_name', value: this.fullName},
+      identificationNumber: {langKey: 'identification_number', value: this.identificationNumber},
+      jobTitle: {langKey: 'job_title', value: this.jobTitle},
+      email: {langKey: 'lbl_email', value: this.email},
+      phone: {langKey: 'lbl_phone', value: this.phone},
+      joinDate: {langKey: 'first_join_date', value: this.joinDate, comparisonValue: this.joinDateStamp},
+      nationality: {langKey: 'lbl_nationality', value: this.nationality},
+      extraPhone: {langKey: 'lbl_extra_phone_number', value: this.extraPhone},
     };
 
   }
 
   buildForm(controls = true) {
-    const { fullName, identificationNumber, jobTitleId } = this;
+    const {fullName, identificationNumber, jobTitle} = this;
     return {
-      fullName: controls
-        ? [
-          fullName,
-          [
-            CustomValidators.required,
-            CustomValidators.minLength(
-              CustomValidators.defaultLengths.MIN_LENGTH
-            ),
-            CustomValidators.maxLength(
-              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-            ),
-          ],
-        ]
-        : fullName,
-      identificationNumber: controls
-        ? [identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]]
-        : identificationNumber,
-      jobTitleId: controls
-        ? [jobTitleId, [CustomValidators.required]]
-        : jobTitleId,
+      fullName: controls ? [fullName, [CustomValidators.required,
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]
+      ] : fullName,
+      identificationNumber: controls ? [identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]] : identificationNumber,
+      jobTitle: controls ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitle,
     };
   }
 
   buildExtendedBoardMembersForm(controls = true) {
 
     const form = this.buildForm(controls);
-    const { joinDate } = this;
+    const {joinDate} = this;
     return {
       ...form,
       joinDate: controls ? [joinDate, [CustomValidators.required]] : joinDate,
@@ -116,9 +99,9 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
     };
   }
 
-  bulildExtendedForm(controls = true) {
+  buildExtendedForm(controls = true) {
     const form = this.buildForm(controls);
-    const { joinDate, email, phone } = this;
+    const {joinDate, email, phone} = this;
     return {
       ...form,
       joinDate: controls ? [joinDate, [CustomValidators.required]] : joinDate,
@@ -155,7 +138,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
       email,
       extraPhone,
       phone,
-      jobTitleId,
+      jobTitle,
       joinDate,
       nationality,
       fullName,
@@ -165,7 +148,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
       objectDBId: id,
       identificationNumber: qid,
       fullName,
-      jobTitleId,
+      jobTitle,
       email,
       phone,
       joinDate: DateUtils.getDateStringFromDate(joinDate),

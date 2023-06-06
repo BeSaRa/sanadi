@@ -25,7 +25,6 @@ import {CharityReport} from '@models/charity-report';
 import {Country} from '@models/country';
 import {FinalExternalOfficeApprovalResult} from '@models/final-external-office-approval-result';
 import {GeneralAssociationMeetingAttendance} from '@models/general-association-meeting-attendance';
-import {JobTitle} from '@models/job-title';
 import {NpoEmployee} from '@models/npo-employee';
 import {OrgMember} from '@models/org-member';
 import {RealBeneficiary} from '@models/real-beneficiary';
@@ -40,7 +39,6 @@ import {EmployeeService} from '@services/employee.service';
 import {FinalExternalOfficeApprovalService} from '@services/final-external-office-approval.service';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
 import {GoveranceDocumentService} from '@services/governance-document.service';
-import {JobTitleService} from '@services/job-title.service';
 import {LangService} from '@services/lang.service';
 import {LookupService} from '@services/lookup.service';
 import {MemberRoleService} from '@services/member-role.service';
@@ -50,10 +48,10 @@ import {ToastService} from '@services/toast.service';
 import {DatepickerOptionsMap} from '@app/types/types';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {Observable, of} from 'rxjs';
-import {map, share, switchMap, takeUntil} from 'rxjs/operators';
+import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {ITabData} from "@contracts/i-tab-data";
-import { GlobalSettings } from '@app/models/global-settings';
-import { GlobalSettingsService } from '@app/services/global-settings.service';
+import {GlobalSettings} from '@app/models/global-settings';
+import {GlobalSettingsService} from '@app/services/global-settings.service';
 
 @Component({
   selector: 'charity-organization-update',
@@ -119,7 +117,6 @@ export class CharityOrganizationUpdateComponent
   externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
   organizationMeetings$?: Observable<GeneralAssociationMeetingAttendance[]>;
   buildingTabsDone = false;
-  jobTitles!: JobTitle[];
   @ViewChildren('tabContent', {read: TemplateRef})
   tabsTemplates!: QueryList<TemplateRef<any>>;
 
@@ -194,12 +191,6 @@ export class CharityOrganizationUpdateComponent
       return this.members[t];
     }
     return [];
-  }
-
-  private _loadJobTitles(): void {
-    this.jobTitleService.loadAsLookups().pipe(share()).subscribe(e => {
-      this.jobTitles = [...e];
-    });
   }
 
   private _loadCountries(): void {
@@ -542,7 +533,6 @@ export class CharityOrganizationUpdateComponent
     private charityDecisionService: CharityDecisionService,
     private employeeService: EmployeeService,
     private goveranceDocumentService: GoveranceDocumentService,
-    private jobTitleService: JobTitleService,
     private npoEmployeeService: NpoEmployeeService,
     private globalSettingsService: GlobalSettingsService
   ) {
@@ -756,7 +746,6 @@ export class CharityOrganizationUpdateComponent
   }
 
   _initComponent(): void {
-    this._loadJobTitles();
     this._loadCountries();
     this._loadCharities();
     this._buildContactInformationInputs();

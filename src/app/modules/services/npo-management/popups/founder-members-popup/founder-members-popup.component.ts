@@ -6,9 +6,7 @@ import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {AdminResult} from '@app/models/admin-result';
 import {FounderMembers} from '@app/models/founder-members';
-import {JobTitle} from '@app/models/job-title';
 import {Lookup} from '@app/models/lookup';
-import {JobTitleService} from '@app/services/job-title.service';
 import {LookupService} from '@app/services/lookup.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
@@ -22,13 +20,11 @@ import {Observable} from 'rxjs';
 export class FounderMembersPopupComponent extends UiCrudDialogGenericComponent<FounderMembers> {
   popupTitleKey: keyof ILanguageKeys;
   nationalityList: Lookup[] = this.lookupService.listByCategory.Nationality;
-  jobTitleAdminLookup: JobTitle[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<FounderMembers>,
               public dialogRef: DialogRef,
               public fb: UntypedFormBuilder,
-              private lookupService: LookupService,
-              private JobTitleService: JobTitleService) {
+              private lookupService: LookupService) {
     super();
     this.setInitDialogData(data);
     this.popupTitleKey = 'lbl_founder_members';
@@ -39,7 +35,6 @@ export class FounderMembersPopupComponent extends UiCrudDialogGenericComponent<F
   }
 
   initPopup(): void {
-    this.loadJobTitles();
   }
 
   getPopupHeadingText(): string {
@@ -77,7 +72,6 @@ export class FounderMembersPopupComponent extends UiCrudDialogGenericComponent<F
     return this._getNewInstance({
       ...this.model,
       ...formValue,
-      jobTitleInfo: this.jobTitleAdminLookup.find((x) => x.id === formValue.JobTitle)?.createAdminResult() ?? new AdminResult(),
       nationalityInfo: this.nationalityList.find((x) => x.id === formValue.Nationality)?.createAdminResult() ?? new AdminResult(),
     });
   }
@@ -92,12 +86,5 @@ export class FounderMembersPopupComponent extends UiCrudDialogGenericComponent<F
 
   searchNgSelect(term: string, item: any): boolean {
     return item.ngSelectSearch(term);
-  }
-
-  private loadJobTitles(): void {
-    this.JobTitleService.loadActive()
-      .subscribe((data) => {
-        this.jobTitleAdminLookup = data;
-      })
   }
 }

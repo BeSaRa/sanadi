@@ -365,8 +365,6 @@
       <!-- founding members -->
       <members
         [readonly]="readonly"
-        [jobTitles]="jobTitles"
-        *ngIf="!!jobTitles"
         #adminList
         [list]="model?.founderMemberList || []"
         pageTitle="founding_members"
@@ -377,8 +375,6 @@
       <!-- General Assembly Members  -->
       <members
         [readonly]="readonly"
-        [jobTitles]="jobTitles"
-        *ngIf="!!jobTitles"
         #adminList
         [list]="model?.generalAssemblyMemberList || []"
         pageTitle="general_assembly_members"
@@ -389,8 +385,6 @@
       <!-- . Board Members  -->
       <members
         [readonly]="readonly"
-        [jobTitles]="jobTitles"
-        *ngIf="!!jobTitles"
         #adminList
         [list]="model?.boardMemberList || []"
         pageTitle="board_members"
@@ -401,8 +395,6 @@
       <!-- . Current Executive Management  -->
       <members
         [readonly]="readonly"
-        [jobTitles]="jobTitles"
-        *ngIf="!!jobTitles"
         #adminList
         pageTitle="executive_management"
         [list]="model?.currentExecutiveManagementList || []"
@@ -414,8 +406,6 @@
       <!-- . Current Executive Management  -->
       <members
         [readonly]="readonly"
-        [jobTitles]="jobTitles"
-        *ngIf="!!jobTitles"
         #adminList
         [list]="model?.authorizedSignatoryMemberList || []"
         pageTitle="authrized_members"
@@ -720,7 +710,7 @@
                   {{ lang.map.job_title }}
                 </th>
                 <td cdk-cell *cdkCellDef="let row">
-                  {{ row.jobTitleInfo.getName() }}
+                  {{ row.jobTitle }}
                 </td>
               </ng-container>
 

@@ -29,13 +29,6 @@ export class ManageMembersComponent extends UiCrudListGenericComponent<GeneralAs
 
   isExternalUser = this.employeeService.isExternalUser();
   displayColumns: string[] = ['index', 'arabicName', 'englishName', 'identificationNumber', 'jobTitle', 'actions'];
-  sortingCallbacks = {
-    jobTitle: (a: GeneralAssociationExternalMember, b: GeneralAssociationExternalMember, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.jobTitleInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.jobTitleInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-  }
   actions: IMenuItem<GeneralAssociationExternalMember>[] = [
     // edit
     {

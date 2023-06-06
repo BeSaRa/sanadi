@@ -1,11 +1,11 @@
-import { JobTitle } from './../models/job-title';
-import { AdminResult } from './../models/admin-result';
-import { IMyDateModel } from 'angular-mydatepicker';
+import {AdminResult} from '@models/admin-result';
+import {IMyDateModel} from 'angular-mydatepicker';
+
 export interface IEmployeeDto {
   id: number | null;
   arabicName: string;
   englishName: string;
-  jobTitleId: number;
+  jobTitle: string;
   identificationType: number;
   identificationNumber: string;
   passportNumber: string;
@@ -28,7 +28,6 @@ export interface IEmployeeDto {
   functionalGroup: number;
   qId: string;
   updatedBy: number;
-  jobTitleInfo: AdminResult | JobTitle | undefined;
   contractStatusInfo: AdminResult;
   contractTypeInfo: AdminResult;
   genderInfo: AdminResult;

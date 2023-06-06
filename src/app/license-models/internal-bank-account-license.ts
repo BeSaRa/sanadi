@@ -1,20 +1,20 @@
-import { InternalBankAccountApproval } from '@app/models/internal-bank-account-approval';
-import { AdminResult } from '@app/models/admin-result';
-import { Lookup } from '@app/models/lookup';
-import { BankAccount } from '@app/models/bank-account';
-import { Bank } from '@app/models/bank';
-import { NpoEmployee } from '@app/models/npo-employee';
-import { InterceptModel } from "@decorators/intercept-model";
+import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
+import {AdminResult} from '@app/models/admin-result';
+import {Lookup} from '@app/models/lookup';
+import {BankAccount} from '@app/models/bank-account';
+import {Bank} from '@app/models/bank';
+import {InterceptModel} from "@decorators/intercept-model";
 import {
   InternalBankAccountLicenseInterceptor
 } from "@app/license-interceptors/internal-bank-account-license-interceptor";
+import {BankAccountExecutiveManagement} from "@models/bank-account-executive-management";
 
-const { send, receive } = new InternalBankAccountLicenseInterceptor
+const {send, receive} = new InternalBankAccountLicenseInterceptor
 
-@InterceptModel({ send, receive })
+@InterceptModel({send, receive})
 export class InternalBankAccountLicense {
   accountNumber!: string;
-  bankAccountExecutiveManagementDTOs!: any[];
+  bankAccountExecutiveManagementDTOs!: BankAccountExecutiveManagement[];
   bankCategoryInfo!: AdminResult;
   bankId!: number;
   bankInfo!: AdminResult;
@@ -75,9 +75,7 @@ export class InternalBankAccountLicense {
       })
     });
     internalBankAccountApproval.bankAccountExecutiveManagementDTOs = this.bankAccountExecutiveManagementDTOs.map(x => {
-      let y = new NpoEmployee().clone(x);
-      y.jobTitleInfo = (new Lookup()).clone(y.jobTitleInfo);
-      return y;
+      return new BankAccountExecutiveManagement().clone(x);
     });
 
     return internalBankAccountApproval;

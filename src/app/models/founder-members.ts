@@ -13,7 +13,7 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
   objectDBId!: number;
   identificationNumber!: string;
   fullName!: string;
-  jobTitleId!: number;
+  jobTitle!: string;
   email!: string;
   phone!: string;
   extraPhone!: string;
@@ -31,7 +31,7 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
       email: control ? [values.email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(50)]] : values.email,
       phone: control ? [values.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phone,
       extraPhone: control ? [values.extraPhone, CustomValidators.commonValidations.phone] : values.extraPhone,
-      jobTitleId: control ? [values.jobTitleId, [CustomValidators.required]] : values.jobTitleId,
+      jobTitle: control ? [values.jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : values.jobTitle,
       nationality: control ? [values.nationality, [CustomValidators.required]] : values.nationality,
     };
   }
@@ -40,7 +40,7 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
     return {
       identificationNumber: {langKey: 'lbl_phone', value: this.identificationNumber},
       fullName: {langKey: 'lbl_email', value: this.fullName},
-      jobTitleId: {langKey: 'lbl_email', value: this.jobTitleId},
+      jobTitle: {langKey: 'lbl_email', value: this.jobTitle},
       email: {langKey: 'lbl_email', value: this.email},
       phone: {langKey: 'lbl_email', value: this.phone},
       extraPhone: {langKey: 'lbl_email', value: this.extraPhone},
@@ -51,9 +51,6 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
   getAdminResultByProperty(property: keyof FounderMembers): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
-      case 'jobTitleId':
-        adminResultValue = this.jobTitleInfo;
-        break;
       case 'nationality':
         adminResultValue = this.nationalityInfo;
         break;

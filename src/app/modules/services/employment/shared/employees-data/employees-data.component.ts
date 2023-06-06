@@ -21,7 +21,7 @@ export class EmployeesDataComponent extends HasAttachmentHandlerDirective implem
   Gender: Lookup[] = this.lookupService.listByCategory.Gender.slice().sort(
     (a, b) => a.lookupKey - b.lookupKey
   );
-  _displayedColumns: string[] = ['arabicName', 'englishName', 'jobTitleInfo', 'gender'];
+  _displayedColumns: string[] = ['arabicName', 'englishName', 'jobTitle', 'gender'];
   get displayedColumns() {
     if (!this.isPopup) {
       return [...this._displayedColumns, 'attachment'];

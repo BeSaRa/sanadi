@@ -2,19 +2,19 @@ import { Profile } from '@app/models/profile';
 import { NpoBankInterceptor } from './npo-bank-interceptor';
 import { NpoContactOfficerInterceptor } from './NpoContactOfficerInterceptor';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
-import { NpoBankAccount } from './../models/npo-bank-account';
+import { NpoBankAccount } from '@models/npo-bank-account';
 import { FounderMembers } from '@app/models/founder-members';
 import { NpoContactOfficer } from '@app/models/npo-contact-officer';
 import { RealBeneficiaryInterceptor } from '@app/model-interceptors/real-beneficiary-interceptors';
-import { AdminResult } from './../models/admin-result';
-import { DateUtils } from './../helpers/date-utils';
+import { AdminResult } from '@models/admin-result';
+import { DateUtils } from '@helpers/date-utils';
 import { IMyDateModel } from 'angular-mydatepicker';
-import { NpoManagement } from './../models/npo-management';
+import { NpoManagement } from '@models/npo-management';
 import { IModelInterceptor } from '@contracts/i-model-interceptor';
-import { FounderInterceptor } from './founder-interceptor';
+import { FounderMemberInterceptor } from './founder-member-interceptor';
 
-const contactOffercireInter = new NpoContactOfficerInterceptor();
-const founderInter = new FounderInterceptor();
+const contactOfficerInterceptor = new NpoContactOfficerInterceptor();
+const founderMemberInterceptor = new FounderMemberInterceptor();
 const bankInter = new NpoBankInterceptor();
 const realBeneInter = new RealBeneficiaryInterceptor();
 
@@ -35,10 +35,10 @@ export class NpoManagementInterceptor implements IModelInterceptor<NpoManagement
     model.followUpDate = DateUtils.changeDateToDatepicker(model.followUpDate);
 
     model.contactOfficerList = model.contactOfficerList.map(ei => {
-      return contactOffercireInter.receive(new NpoContactOfficer().clone(ei));
+      return contactOfficerInterceptor.receive(new NpoContactOfficer().clone(ei));
     })
     model.founderMemberList = model.founderMemberList.map(ei => {
-      return founderInter.receive(new FounderMembers().clone(ei));
+      return founderMemberInterceptor.receive(new FounderMembers().clone(ei));
     })
     model.bankAccountList = model.bankAccountList.map(ei => {
       return bankInter.receive(new NpoBankAccount().clone(ei));
@@ -78,10 +78,10 @@ export class NpoManagementInterceptor implements IModelInterceptor<NpoManagement
       )?.toISOString();
 
     model.contactOfficerList = [].concat(model.contactOfficerList.map((ei: NpoContactOfficer) => {
-      return contactOffercireInter.send(ei.clone()) as unknown as NpoContactOfficer;
+      return contactOfficerInterceptor.send(ei.clone()) as unknown as NpoContactOfficer;
     }));
     model.founderMemberList = [].concat(model.founderMemberList.map((ei: FounderMembers) => {
-      return founderInter.send(ei.clone()) as unknown as FounderMembers;
+      return founderMemberInterceptor.send(ei.clone()) as unknown as FounderMembers;
     }));
     model.bankAccountList = [].concat(model.bankAccountList.map((ei: NpoBankAccount) => {
       return bankInter.send(ei.clone()) as unknown as NpoBankAccount;

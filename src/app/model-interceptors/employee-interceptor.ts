@@ -34,7 +34,6 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
       delete model.identificationNumber
     }
 
-    delete model.jobTitleInfo
     delete model.contractStatusInfo
     delete model.contractTypeInfo
     delete model.genderInfo
@@ -64,12 +63,6 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
     model.workEndDateStamp = !model.workEndDate ? null : DateUtils.getTimeStampFromDate(model.workEndDate)
     model.updatedOnStamp = !model.updatedOn ? null : DateUtils.getTimeStampFromDate(model.updatedOn)
     model.expIdPassStamp = !model.expIdPass ? null : DateUtils.getTimeStampFromDate(model.expIdPass)
-
-    model.jobTitleInfo && (model.jobTitleInfo = AdminResult.createInstance({
-      id: model.jobTitleInfo.id,
-      arName: model.jobTitleInfo.arName,
-      enName: model.jobTitleInfo.enName,
-    }));
     model.contractExpiryDate = DateUtils.changeDateToDatepicker(
       model.contractExpiryDate
     );

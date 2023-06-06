@@ -4,7 +4,6 @@ import {AttachmentsComponent} from '@app/shared/components/attachments/attachmen
 import {CommonCaseStatus} from '@enums/common-case-status.enum';
 import {OpenFrom} from '@enums/open-from.enum';
 import {EmploymentSearchCriteria} from '@models/employment-search-criteria';
-import {JobTitleService} from '@services/job-title.service';
 import {DateUtils} from '@helpers/date-utils';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
@@ -20,7 +19,6 @@ import {EmploymentRequestType} from '@enums/service-request-types';
 import {FileIconsEnum} from '@enums/file-extension-mime-types-icons.enum';
 import {SaveTypes} from '@enums/save-types';
 import {Employee} from '@models/employee';
-import {JobTitle} from '@models/job-title';
 import {Lookup} from '@models/lookup';
 import {NavigationService} from '@services/navigation.service';
 import {LookupService} from '@services/lookup.service';
@@ -51,8 +49,6 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
   @ViewChild('ETable') ETable!: EmployeesDataComponent;
   @Input()
   fromDialog: boolean = false;
-  externalJobTitleList: JobTitle[] = [];
-  systemJobTitleList: JobTitle[] = [];
   readonly: boolean = false;
   allowEditRecommendations: boolean = true;
   searchCriteriaForm: UntypedFormGroup = new UntypedFormGroup({
@@ -105,7 +101,6 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
     private navigationService: NavigationService,
     private dialog: DialogService,
     public fb: UntypedFormBuilder,
-    private jobTitleService: JobTitleService,
     private lookupService: LookupService,
     public lang: LangService,
     private toast: ToastService
@@ -124,12 +119,6 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
       this.model && (this.model.employeeInfoDTOs = this.employees);
     });
     this.listenToSearchCriteria();
-    this.jobTitleService.getSystemJobTitle().subscribe((data: JobTitle[]) => {
-      this.systemJobTitleList = [...data];
-    });
-    this.jobTitleService.getExternalJobTitle().subscribe((data: JobTitle[]) => {
-      this.externalJobTitleList = [...data];
-    });
   }
 
   _buildForm(): void {
@@ -293,7 +282,6 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
         workStartDate: DateUtils.changeDateToDatepicker(e.workStartDate),
         workEndDate: DateUtils.changeDateToDatepicker(e.workEndDate),
         updatedOn: DateUtils.changeDateToDatepicker(e.updatedOn),
-        jobTitleInfo: [...this.systemJobTitleList, ...this.externalJobTitleList].find(jt => jt.id == e.jobTitleId),
         contractExpiryDate: DateUtils.changeDateToDatepicker(
           e.contractExpiryDate
         )
@@ -337,9 +325,7 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
   }
 
   openForm() {
-    this.service.openAddNewEmployee(this.form, this.employees, this.model, this.operation,
-      this.category.value == EmploymentCategory.APPROVAL ? this.systemJobTitleList : this.externalJobTitleList
-    );
+    this.service.openAddNewEmployee(this.form, this.employees, this.model, this.operation);
   }
 
   handleCategoryChange(): void {
@@ -431,11 +417,6 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
             workEndDate: DateUtils.changeDateToDatepicker(res[0].workEndDate),
             updatedOn: DateUtils.changeDateToDatepicker(res[0].updatedOn),
             expIdPass: DateUtils.changeDateToDatepicker(res[0].expIdPass),
-            jobTitleInfo: AdminResult.createInstance({
-              id: res[0].jobTitleInfo.id,
-              arName: res[0].jobTitleInfo.arName,
-              enName: res[0].jobTitleInfo.enName,
-            }),
             contractExpiryDate: DateUtils.changeDateToDatepicker(
               res[0].contractExpiryDate
             ),

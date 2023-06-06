@@ -29,6 +29,7 @@ import {BankService} from '@services/bank.service';
 import {InternalBankCategoryEnum} from '@enums/internal-bank-category-enum';
 import {FieldControlAndLabelKey} from '@app/types/types';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {BankAccountExecutiveManagement} from "@models/bank-account-executive-management";
 
 @Component({
   selector: 'internal-bank-account-approval',
@@ -57,14 +58,14 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   bankAccountsBasedOnCurrencyAndBank: BankAccount[] = [];
   selectedBankAccounts: BankAccount[] = [];
   selectedLicenses: InternalBankAccountApproval[] = [];
-  selectedNPOEmployees: NpoEmployee[] = [];
+  selectedNPOEmployees: BankAccountExecutiveManagement[] = [];
   // oldLicenseFullSerialControl: FormControl = new FormControl();
   selectedResponsiblePersonControl: UntypedFormControl = new UntypedFormControl();
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'operationTypeInfo', 'actions'];
   selectedAccountsDisplayedColumns: string[] = [];
   selectedAccountsDisplayedColumnsForMerge: string[] = ['accountNumber', 'bankName', 'bankCategory', 'toBeMergedIn', 'actions'];
   selectedAccountsDisplayedColumnsForCancel: string[] = ['accountNumber', 'bankName', 'bankCategory', 'actions'];
-  selectedPersonsDisplayedColumns: string[] = ['qId', 'arName', 'enName', 'jobTitleInfo', 'actions'];
+  selectedPersonsDisplayedColumns: string[] = ['qId', 'arName', 'enName', 'jobTitle', 'actions'];
   selectedLicenseDisplayedColumns: string[] = ['serial', 'bankName', 'currency', 'bankCategory'];
   updateNewAccountFieldsVisible = false;
   isNewMerge: boolean = false;
@@ -989,15 +990,15 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   addToSelectedResponsiblePersons(employee: NpoEmployee) {
     if (!this.selectedNPOEmployees.map(x => x.id).includes(employee.id)) {
       employee.identificationNumber = employee.qId;
-      this.selectedNPOEmployees = this.selectedNPOEmployees.concat(employee);
+      this.selectedNPOEmployees = this.selectedNPOEmployees.concat(employee.convertToBankAccountExecutiveManagement());
     } else {
       this.dialog.error(this.lang.map.selected_item_already_exists);
     }
   }
 
-  removeResponsiblePersons(npoEmployee: NpoEmployee, event: MouseEvent) {
+  removeResponsiblePersons(record: BankAccountExecutiveManagement, event: MouseEvent) {
     event.preventDefault();
-    this.selectedNPOEmployees = this.selectedNPOEmployees.filter(x => x.id != npoEmployee.id);
+    this.selectedNPOEmployees = this.selectedNPOEmployees.filter(x => x.id != record.id);
   }
 
   handleReadonly(): void {

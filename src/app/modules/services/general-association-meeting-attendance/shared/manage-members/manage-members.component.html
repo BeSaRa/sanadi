@@ -29,9 +29,8 @@
           <td *cdkCellDef="let row" cdk-cell> {{row.identificationNumber}} </td>
         </ng-container>
         <ng-container cdkColumnDef="jobTitle">
-          <th *cdkHeaderCellDef cdk-header-cell sortable-header [sortParamAsFullItem]="true"
-              [sortCallback]="sortingCallbacks.jobTitle"> {{lang.map.job_title}}</th>
-          <td *cdkCellDef="let row" cdk-cell> {{row.jobTitleInfo?.getName() || ''}} </td>
+          <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.job_title}}</th>
+          <td *cdkCellDef="let row" cdk-cell> {{row.jobTitle}} </td>
         </ng-container>
         <ng-container cdkColumnDef="actions">
           <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>

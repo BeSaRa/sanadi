@@ -4,8 +4,6 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DateUtils} from '@app/helpers/date-utils';
 import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {AdminResult} from '@app/models/admin-result';
-import {JobTitle} from '@app/models/job-title';
 import {OrgMember} from '@app/models/org-member';
 import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -27,7 +25,6 @@ export class MembersPopupComponent implements OnInit {
   editRecordIndex: number;
   extended: boolean;
   pageTitle!: keyof ILanguageKeys;
-  jobTitles: JobTitle[] = [];
   controls!: ControlWrapper[];
   operation!: OperationTypes;
   datepickerOptionsMap: DatepickerOptionsMap = {
@@ -56,7 +53,6 @@ export class MembersPopupComponent implements OnInit {
     this.model = data.model;
     this.extended = data.customData.extended;
     this.pageTitle = data.customData.pageTitle;
-    this.jobTitles = data.customData.jobTitles;
   }
 
   ngOnInit(): void {
@@ -103,23 +99,15 @@ export class MembersPopupComponent implements OnInit {
         type: 'text',
       },
       {
-        controlName: 'jobTitleId',
+        controlName: 'jobTitle',
         langKey: 'job_title',
-        load: this.jobTitles,
-        dropdownValue: 'id',
-        type: 'dropdown',
-        dropdownOptionDisabled: (optionItem: JobTitle) => {
-          return !optionItem.isActive();
-        }
+        type: 'text',
       },
     ];
   }
 
   mapFormToMember(form: any): OrgMember {
     const member: OrgMember = new OrgMember().clone(form);
-
-    const jobTitle = this.jobTitles.find(e => e.id === form.jobTitleId);
-    member.jobTitleInfo = AdminResult.createInstance({...jobTitle});
     (member.joinDate && (member.joinDate = DateUtils.getDateStringFromDate(form.joinDate)));
     return member;
   }

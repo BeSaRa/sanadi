@@ -25,6 +25,7 @@ import {ObjectUtils} from '@app/helpers/object-utils';
 import {BankAccountRequestTypes} from "@enums/service-request-types";
 import {BankAccountOperationTypes} from "@enums/bank-account-operation-types";
 import {LangService} from "@services/lang.service";
+import {BankAccountExecutiveManagement} from "@models/bank-account-executive-management";
 
 const _RequestType = mixinRequestType(CaseModel);
 
@@ -45,7 +46,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   iBan!: string;
   swiftCode!: string;
   bankDTOs!: string;
-  bankAccountExecutiveManagementDTOs!: NpoEmployee[];
+  bankAccountExecutiveManagementDTOs!: BankAccountExecutiveManagement[];
   selectedResponsiblePerson!: NpoEmployee;
   description!: string;
   oldLicenseId!: string;

@@ -7,8 +7,8 @@ import {JobTitle} from '@models/job-title';
 import {OrgMember} from '@models/org-member';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
-import { ComponentType } from '@angular/cdk/portal';
-import { MembersPopupComponent } from '../../popups/members-popup/members-popup.component';
+import {ComponentType} from '@angular/cdk/portal';
+import {MembersPopupComponent} from '../../popups/members-popup/members-popup.component';
 import {OperationTypes} from "@enums/operation-types.enum";
 
 @Component({
@@ -22,6 +22,7 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
   }
 
   @Input() readonly!: boolean;
+
   @Input() set list(_list: OrgMember[]) {
     this._list = _list;
   }
@@ -29,7 +30,7 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
   @Input() extended = false;
   @Input() pageTitle!: keyof ILanguageKeys;
   @Input() jobTitles: JobTitle[] = [];
-  columns = ['fullName', 'identificationNumber', 'jobTitleId'];
+  columns = ['fullName', 'identificationNumber', 'jobTitle'];
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
 
@@ -37,18 +38,16 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
     return this._list;
   }
 
-  constructor(
-    private fb: UntypedFormBuilder,
-    private toastr: ToastService,
-    public lang: LangService
-  ) {
+  constructor(private fb: UntypedFormBuilder,
+              private toast: ToastService,
+              public lang: LangService) {
     super(OrgMember);
   }
 
 
   protected _initComponent(): void {
     if (this.extended) {
-      this.form = this.fb.group(this.model.bulildExtendedForm());
+      this.form = this.fb.group(this.model.buildExtendedForm());
     } else if (this.pageTitle === 'board_members') {
       this.form = this.fb.group(this.model.buildExtendedBoardMembersForm());
     } else {
@@ -56,7 +55,6 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
     }
     this.columns.push('actions');
     this.customData = {
-      jobTitles: this.jobTitles,
       pageTitle: this.pageTitle,
       extended: this.extended,
     }
@@ -81,9 +79,10 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
       this.cancel();
     })
   }
+
   _beforeAdd(row: OrgMember): OrgMember | null {
     if (this._list.findIndex(e => e.identificationNumber === row.identificationNumber) !== -1 && (this.editRecordIndex === -1)) {
-      this.toastr.error(this.lang.map.msg_duplicated_item);
+      this.toast.error(this.lang.map.msg_duplicated_item);
       return null;
     }
 
