@@ -8,7 +8,7 @@
       </div>
     </div>
   </div>
-  <case-info [model]="model!"></case-info>
+  <case-info [model]="model!" [allLogs]="allLogs"></case-info>
   <div class="alert alert-{{matrixNotificationType}} alert-dismissible fade show" role="alert"
        *ngIf="canShowMatrixNotification">
     {{matrixNotificationMsg}}
@@ -53,7 +53,8 @@
     <log-viewer [accordionView]="true" displayCategorizedAs="tabs" [categorizeLogs]="true"
                 [caseId]="component?.model?.getCaseId()" [caseType]="component?.model?.caseType"
                 [isMainDeptRequest]="isMainDepartmentRequest()"
-                [service]="service.actionLogService">
+                [service]="service.actionLogService"
+                (onLoadDone)="allLogs = $event">
       <!--[case]="model"-->
     </log-viewer>
   </ng-template>

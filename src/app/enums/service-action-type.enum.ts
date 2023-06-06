@@ -42,5 +42,5 @@ export enum ServiceActionTypesEnum {
   ORG_FINAL_APPROVE = 35,
   INITIAL_APPROVE = 29,
   FINAL_APPROVE = 15,
-  APPROVE_AND_FILL = 19
+  APPROVE_AND_FILL = 19
 }

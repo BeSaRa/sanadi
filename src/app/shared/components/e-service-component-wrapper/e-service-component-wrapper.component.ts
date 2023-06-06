@@ -67,6 +67,7 @@ import {UrgentInterventionLicenseFollowup} from '@models/urgent-intervention-lic
 import {
   TransferringIndividualFundsAbroadComponent
 } from "@modules/services/transferring-individual-funds-abroad/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component";
+import {ActionRegistry} from "@models/action-registry";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -115,6 +116,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   info: IOpenedInfo | null = null;
   destroy$: Subject<any> = new Subject<any>();
   loadAttachments: boolean = false;
+  allLogs: ActionRegistry[] = [];
 
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
   actionIconsEnum = ActionIconsEnum;
