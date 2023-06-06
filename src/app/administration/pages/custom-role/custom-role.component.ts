@@ -91,7 +91,7 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
-      show: ()=> false,
+      show: ()=> true,
       onClick: (item: CustomRole) => this.showAuditLogs(item)
     },
     // activate
