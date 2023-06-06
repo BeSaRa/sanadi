@@ -98,10 +98,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
         CustomValidators.maxLength(50),
         CustomValidators.pattern('ENG_NUM_ONLY')]
       ] : domainName,
-      qid: controls ? [{
-        value: qid,
-        disabled: !!this.id
-      }, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : qid,
+      qid: controls ? [qid,[CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : qid,
       email: controls ? [email, [
         CustomValidators.required,
         ...CustomValidators.commonValidations.email]
