@@ -35,6 +35,7 @@ export class ExternalUserUpdateRequest extends BaseModel<ExternalUserUpdateReque
   phoneExtension!: string;
   email!: string;
   jobTitle!: number;
+  jobTitleName!: string;
   requestType!: ExternalUserUpdateRequestTypeEnum;
   requestStatus!: ExternalUserUpdateRequestStatusEnum;
   newPermissionList: number[] = [];
@@ -93,7 +94,7 @@ export class ExternalUserUpdateRequest extends BaseModel<ExternalUserUpdateReque
       phoneExtension,
       officialPhoneNumber,
       email,
-      jobTitle,
+      jobTitleName,
       status,
       profileId,
       customRoleId
@@ -107,7 +108,7 @@ export class ExternalUserUpdateRequest extends BaseModel<ExternalUserUpdateReque
       phoneExtension,
       officialPhoneNumber,
       email,
-      jobTitle,
+      jobTitleName,
       status,
       profileId,
       customRoleId

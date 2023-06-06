@@ -1,8 +1,8 @@
-import { ExternalUser } from '@models/external-user';
-import { AdminResult } from '@models/admin-result';
-import { DateUtils } from '@helpers/date-utils';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import {ExternalUser} from '@models/external-user';
+import {AdminResult} from '@models/admin-result';
+import {DateUtils} from '@helpers/date-utils';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
 import {UserPreferencesInterceptor} from '@model-interceptors/user-preferences-interceptor';
 import {UserPreferences} from '@models/user-preferences';
 
@@ -11,7 +11,7 @@ const userPreferencesInterceptor = new UserPreferencesInterceptor();
 export class ExternalUserInterceptor implements IModelInterceptor<ExternalUser> {
   receive(model: ExternalUser | any): (ExternalUser | any) {
     model.customRoleInfo = AdminResult.createInstance(model.customRoleInfo)
-    model.jobTitleInfo = AdminResult.createInstance(model.jobTitleInfo)
+    model.jobTitleInfo && (model.jobTitleInfo = AdminResult.createInstance(model.jobTitleInfo));
     model.statusInfo = AdminResult.createInstance(model.statusInfo)
     model.userTypeInfo = AdminResult.createInstance(model.userTypeInfo)
     model.profileInfo = AdminResult.createInstance(model.profileInfo)

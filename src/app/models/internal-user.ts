@@ -68,6 +68,10 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
     return undefined;
   }
 
+  getJobTitle(): number | undefined {
+    return this.jobTitle;
+  }
+
   buildForm(controls?: boolean): any {
     const {
       arName,

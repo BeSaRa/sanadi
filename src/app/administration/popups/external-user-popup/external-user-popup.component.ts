@@ -12,12 +12,8 @@ import {CustomRole} from '@app/models/custom-role';
 import {isObservable, Observable, of} from 'rxjs';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {ExternalUserPermission} from '@app/models/external-user-permission';
-import {PermissionService} from '@app/services/permission.service';
-import {ExternalUserPermissionService} from '@services/external-user-permission.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {AuthService} from '@app/services/auth.service';
-import {JobTitle} from '@app/models/job-title';
-import {JobTitleService} from '@services/job-title.service';
 import {Profile} from '@app/models/profile';
 import {ProfileService} from '@services/profile.service';
 import {CommonUtils} from '@helpers/common-utils';
@@ -50,7 +46,6 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   form!: UntypedFormGroup;
   model: ExternalUser;
   operation: OperationTypes;
-  jobTitleList: JobTitle[] = [];
   profileList: Profile[] = [];
   customRoleList: CustomRole[];
   externalUserPermissions: ExternalUserPermission[];
@@ -107,7 +102,6 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
               public employeeService: EmployeeService,
               private externalUserUpdateRequestService: ExternalUserUpdateRequestService,
               private authService: AuthService,
-              private jobTitleService: JobTitleService,
               private profileService: ProfileService,
               private dialogService: DialogService,
               private cd: ChangeDetectorRef,
@@ -135,7 +129,6 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   }
 
   initPopup(): void {
-    this._loadJobTitles();
     this._loadProfiles();
   }
 
@@ -228,18 +221,6 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
     if (userInteraction) {
       this.customRoleChangedTrigger = !this.customRoleChangedTrigger;
     }
-  }
-
-  private _loadJobTitles(): void {
-    this.jobTitleService.loadAsLookups()
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError(() => {
-          return of([]);
-        })
-      )
-      .pipe(map(res => res.filter(jobTitle => jobTitle.isActive())))
-      .subscribe((result) => this.jobTitleList = result);
   }
 
   private _loadProfiles(): void {

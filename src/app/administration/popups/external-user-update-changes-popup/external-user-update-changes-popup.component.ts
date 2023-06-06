@@ -62,7 +62,6 @@ export class ExternalUserUpdateChangesPopupComponent implements OnInit {
   removedSystemUserMenusList: CustomMenu[] = [];
   servicePermissionDifferences: IExternalUserServicePermissionDifference[] = [];
 
-  basicInfoDisplayedColumns: string[] = ['fieldName', 'oldValue', 'newValue'];
   addedPermissionsDisplayedColumns: string[] = ['permissions'];
   removedPermissionsDisplayedColumns: string[] = ['permissions'];
   addedMenusDisplayedColumns: string[] = ['menus'];
@@ -92,9 +91,6 @@ export class ExternalUserUpdateChangesPopupComponent implements OnInit {
         break;
       case 'userType':
         adminResultValue = value.userTypeInfo;
-        break;
-      case 'jobTitle':
-        adminResultValue = value.jobTitleInfo;
         break;
       default:
         // @ts-ignore

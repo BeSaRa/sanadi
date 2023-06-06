@@ -21,13 +21,13 @@
     <ng-template #basicTabTemplate>
       <div formGroupName="basic">
         <div class="row">
-          <div class="col-sm-6 mb-4 position-relative">
+          <div class="col-sm-12 col-md-6 mb-4 position-relative">
             <label asteriskIfRequired="arName" for="arName"
                    class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName" validationClasses="arName" formControlName="arName" class="form-control" trimInput>
             <app-field-error-message controlName="arName"></app-field-error-message>
           </div>
-          <div class="col-sm-6 mb-4 position-relative">
+          <div class="col-sm-12 col-md-6 mb-4 position-relative">
             <label asteriskIfRequired="enName" for="enName"
                    class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName" validationClasses="enName" formControlName="enName" class="form-control" trimInput>
@@ -35,14 +35,14 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-6 mb-4 position-relative">
+          <div class="col-sm-12 col-md-6 mb-4 position-relative">
             <label for="empNum" asteriskIfRequired="empNum"
                    class="form-label">{{langService.map.lbl_employee_number}}</label>
             <input id="empNum" validationClasses="empNum" formControlName="empNum"
                    class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message controlName="empNum"></app-field-error-message>
           </div>
-          <div class="col-sm-6 mb-4 position-relative">
+          <div class="col-sm-12 col-md-6 mb-4 position-relative">
             <label for="qid" asteriskIfRequired="qid"
                    class="form-label">{{langService.map.lbl_qid}}</label>
             <input id="qid" validationClasses="qid" formControlName="qid"
@@ -51,14 +51,14 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-6 mb-4 position-relative">
+          <div class="col-sm-12 col-md-6 mb-4 position-relative">
             <label for="phoneNumber" asteriskIfRequired="phoneNumber"
                    class="form-label">{{langService.map.lbl_phone}}</label>
             <input id="phoneNumber" validationClasses="phoneNumber" formControlName="phoneNumber"
                    class="form-control" trimInput>
             <app-field-error-message controlName="phoneNumber"></app-field-error-message>
           </div>
-          <div class="col-sm-6 mb-4 position-relative">
+          <div class="col-sm-12 col-md-6 mb-4 position-relative">
             <label for="phoneExtension" class="form-label">{{langService.map.lbl_phone_extension}}</label>
             <input id="phoneExtension" validationClasses="phoneExtension"
                    formControlName="phoneExtension" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
@@ -66,20 +66,20 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-6 mb-4 position-relative">
+          <div class="col-sm-12 col-md-6 mb-4 position-relative">
             <label for="officialPhoneNumber" class="form-label">{{langService.map.lbl_official_phone_number}}</label>
             <input id="officialPhoneNumber" validationClasses="officialPhoneNumber"
                    formControlName="officialPhoneNumber" class="form-control" trimInput>
             <app-field-error-message controlName="officialPhoneNumber"></app-field-error-message>
           </div>
-          <div class="col-sm-6 mb-4 position-relative">
+          <div class="col-sm-12 col-md-6 mb-4 position-relative">
             <label asteriskIfRequired="email" for="email" class="form-label">{{langService.map.lbl_email}}</label>
             <input id="email" validationClasses="email" formControlName="email" class="form-control" trimInput>
             <app-field-error-message controlName="email"></app-field-error-message>
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-6 mb-4 ng-select-wrapper">
+          <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
             <label for="status" asteriskIfRequired="status"
                    class="form-label">{{langService.map.lbl_status}}</label>
             <ng-select [selectOnTab]="true" labelForId="status" [clearable]="true"
@@ -93,23 +93,16 @@
             </ng-select>
             <app-field-error-message controlName="status"></app-field-error-message>
           </div>
-          <div class="col-sm-6 mb-4 ng-select-wrapper">
-            <label for="jobTitle" asteriskIfRequired="jobTitle"
+          <div class="col-sm-12 col-md-6 mb-4 position-relative">
+            <label for="jobTitleName" asteriskIfRequired="jobTitleName"
                    class="form-label">{{langService.map.lbl_job_title}}</label>
-            <ng-select [selectOnTab]="true" labelForId="jobTitle" [clearable]="true"
-                       placeholder="{{langService.map.select}}" id="jobTitle"
-                       [notFoundText]="langService.map.msg_not_found" appendTo="body"
-                       formControlName="jobTitle" validationClasses="jobTitle">
-              <ng-option *ngFor="let option of jobTitleList" [value]="option.id"
-                         [disabled]="!option.isActive()">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="jobTitle"></app-field-error-message>
+            <input id="jobTitleName" validationClasses="jobTitleName"
+                   formControlName="jobTitleName" class="form-control" trimInput>
+            <app-field-error-message controlName="jobTitleName"></app-field-error-message>
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-6 mb-4 ng-select-wrapper">
+          <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
             <label for="profileId" asteriskIfRequired="profileId"
                    class="form-label">{{langService.map.profile}}</label>
             <ng-select [selectOnTab]="true" labelForId="profileId" [clearable]="false"
@@ -131,7 +124,7 @@
     <ng-template #permissionsTabTemplate>
       <div formGroupName="userPermissions">
         <div class="row">
-          <div class="col-sm-6 mb-4 ng-select-wrapper">
+          <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
             <label for="customRoleId" class="form-label">{{langService.map.lbl_custom_role}}</label>
             <ng-select [selectOnTab]="true" labelForId="customRoleId" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="customRoleId"
