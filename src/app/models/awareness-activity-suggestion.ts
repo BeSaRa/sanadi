@@ -2,7 +2,7 @@ import { AdminResult } from './admin-result';
 import { WFResponseType } from './../enums/wfresponse-type.enum';
 import { CustomValidators } from './../validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
-import { AwarenessActivitySuggestionInterceptor } from './../model-interceptors/awareness-activity-suggestion';
+import { AwarenessActivitySuggestionInterceptor } from '@model-interceptors/awareness-activity-suggestion-interceptor';
 import { AwarenessActivitySuggestionService } from './../services/awareness-activity-suggestion.service';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { infoSearchFields } from '@app/helpers/info-search-fields';

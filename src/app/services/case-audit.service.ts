@@ -1,6 +1,6 @@
-import { InternationalCooperationInterceptor } from './../model-interceptors/international-cooperation-interceptor';
-import { AuditGeneralAssociationMeetingAttendanceComponent } from './../modules/services/general-association-meeting-attendance/audit/audit-general-association-meeting-attendance/audit-general-association-meeting-attendance.component';
-import { UrgentInterventionClosureInterceptor } from './../model-interceptors/urgent-intervention-closure-interceptor';
+import { InternationalCooperationInterceptor } from '@model-interceptors/international-cooperation-interceptor';
+import { AuditGeneralAssociationMeetingAttendanceComponent } from '@modules/services/general-association-meeting-attendance/audit/audit-general-association-meeting-attendance/audit-general-association-meeting-attendance.component';
+import { UrgentInterventionClosureInterceptor } from '@model-interceptors/urgent-intervention-closure-interceptor';
 import { ConsultationInterceptor } from '@app/model-interceptors/consultation-interceptor';
 import { Injectable } from '@angular/core';
 import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
@@ -39,7 +39,7 @@ import { Inquiry } from '@app/models/inquiry';
 import { InquiryInterceptor } from '@app/model-interceptors/inquiry-interceptor';
 import { AuditInquiryAndComplaintComponent } from '@app/modules/services/inquiries-and-complaints/audit/audit-inquiry-and-complaint/audit-inquiry-and-complaint.component';
 import { AwarenessActivitySuggestion } from '@app/models/awareness-activity-suggestion';
-import { AwarenessActivitySuggestionInterceptor } from '@app/model-interceptors/awareness-activity-suggestion';
+import { AwarenessActivitySuggestionInterceptor } from '@model-interceptors/awareness-activity-suggestion-interceptor';
 import { AuditAwarenessActivitySuggestionComponent } from '@app/modules/services/awareness-activity-suggestion/audit/audit-awareness-activity-suggestion/audit-awareness-activity-suggestion.component';
 import { CollectionApproval } from '@app/models/collection-approval';
 import { CollectionApprovalInterceptor } from '@app/model-interceptors/collection-approval-interceptor';
