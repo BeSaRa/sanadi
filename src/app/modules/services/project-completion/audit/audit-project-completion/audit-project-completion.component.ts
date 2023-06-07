@@ -15,17 +15,19 @@ export class AuditProjectCompletionComponent implements IAuditCaseProperties<Pro
   oldVersion!: ProjectCompletion; // don't delete or rename the property
 
   projectLicenseInfoDifferences: IValueDifference[] = [];
-  explanationDifferences: IValueDifference[] = [];
   projectBasicInfoDifferences: IValueDifference[] = [];
   beneficiaryAnalyticsByLicenseDifferences: IValueDifference[] = [];
+  EvaluationDifferences: IValueDifference[] = [];
+  explanationDifferences: IValueDifference[] = [];
   constructor(public lang: LangService) {
   }
 
   ngOnInit() {
     this._getProjectLicenseInfoDifferences();
-    this._getExplanationDifferences();
     this._getProjectBasicInfoDifferences();
     this._getBeneficiaryAnalyticsByLicenseDifferences();
+    this._getEvaluationDifferences();
+    this._getExplanationDifferences();
   }
 
 
@@ -47,6 +49,12 @@ export class AuditProjectCompletionComponent implements IAuditCaseProperties<Pro
     const oldVersionDataModel: Partial<ProjectCompletion> = ObjectUtils.getControlComparisonValues<ProjectCompletion>(this.oldVersion.getBeneficiaryAnalyticsByLicenseFormValuesWithLabels());
     const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getBeneficiaryAnalyticsByLicenseFormValuesWithLabels());
     this.beneficiaryAnalyticsByLicenseDifferences = ObjectUtils.getValueDifferencesList<ProjectCompletion, ProjectCompletion>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
+  }
+  private _getEvaluationDifferences(): void {
+    const newVersionDataModel: Partial<ProjectCompletion> = ObjectUtils.getControlComparisonValues<ProjectCompletion>(this.newVersion.getEvaluationValuesWithLabels());
+    const oldVersionDataModel: Partial<ProjectCompletion> = ObjectUtils.getControlComparisonValues<ProjectCompletion>(this.oldVersion.getEvaluationValuesWithLabels());
+    const labelLangKeys = ObjectUtils.getControlLabels(this.newVersion.getEvaluationValuesWithLabels());
+    this.EvaluationDifferences = ObjectUtils.getValueDifferencesList<ProjectCompletion, ProjectCompletion>(this.newVersion, this.oldVersion, newVersionDataModel, oldVersionDataModel, labelLangKeys);
   }
   private _getExplanationDifferences(): void {
     const newVersionDataModel: Partial<ProjectCompletion> = ObjectUtils.getControlComparisonValues<ProjectCompletion>(this.newVersion.getSpecialExplanationValuesWithLabels());

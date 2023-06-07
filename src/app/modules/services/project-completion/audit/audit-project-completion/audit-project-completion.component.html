@@ -4,13 +4,13 @@
   <tab name="projectBasic_info" [template]="projectBasic_info" [title]="lang.map.project_basic_info"></tab>
   <tab name="beneficiaryAnalyticsBy_license" [template]="beneficiaryAnalyticsBy_license" [title]="lang.map.beneficiary_analytics"></tab>
   <tab name="bestPractices&LessonsLearnt" [template]="bestPracticesLessonsLearntTabTemplate" [title]="lang.map.best_practices + ' & ' + lang.map.lessons_learnt"></tab>
+  <tab name="evaluation_differences" [template]="evaluation_differences" [title]="lang.map.evaluation_impact_cost_effort"></tab>
   <tab name="special_explanations" [template]="specialExplanationTemplate"
   [title]="lang.map.special_explanations"></tab>
 </tabs-list>
 <ng-template #project_license_info>
   <value-differences-list [differenceList]="projectLicenseInfoDifferences"></value-differences-list>
 </ng-template>
-
 <ng-template #projectBasic_info>
   <value-differences-list [differenceList]="projectBasicInfoDifferences"></value-differences-list>
 </ng-template>
@@ -26,6 +26,9 @@
   <audit-lessons-learnt-list [newVersionList]="newVersion.lessonsLearnedList"
     [oldVersionList]="oldVersion.lessonsLearnedList" [caseType]="newVersion.caseType">
   </audit-lessons-learnt-list>
+</ng-template>
+<ng-template #evaluation_differences>
+  <value-differences-list [differenceList]="EvaluationDifferences"></value-differences-list>
 </ng-template>
 <ng-template #specialExplanationTemplate>
   <value-differences-list [differenceList]="explanationDifferences"></value-differences-list>

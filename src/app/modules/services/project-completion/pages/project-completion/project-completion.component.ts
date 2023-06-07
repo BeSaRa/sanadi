@@ -186,6 +186,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       ...this.projectLicenseInfo.getRawValue(),
       ...this.projectBasicInfo.getRawValue(),
       ...this.beneficiaryAnalyticsByLicense.getRawValue(),
+      ...this.evaluation.getRawValue(),
       ...this.specialExplanation.getRawValue(),
       bestPracticesList: this.bestPracticesListComponentRef.list,
       lessonsLearnedList: this.lessonsLearntListComponentRef.list,
@@ -242,6 +243,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
           ]
         )
       }),
+      evaluation: this.fb.group(model.formBuilder(true).evaluation),
       explanation: this.fb.group(model.formBuilder(true).explanation)
     })
   }
@@ -254,6 +256,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       projectLicenseInfo: model.formBuilder(false).projectLicenseInfo,
       projectBasicInfo: model.formBuilder(false).projectBasicInfo,
       beneficiaryAnalyticsByLicense: model.formBuilder(false).beneficiaryAnalyticsByLicense,
+      evaluation: model.formBuilder(false).evaluation,
       explanation: model.formBuilder(false).explanation
     });
     this.handleRequestTypeChange(model.requestType, false);
@@ -392,7 +395,6 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       })
   }
 
-
   selectProject(licenseDetails: ProjectImplementation | undefined): void {
     this.selectedLicense = licenseDetails;
     const isReset = !licenseDetails;
@@ -470,6 +472,9 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   }
   get beneficiaryAnalyticsByLicense(): UntypedFormGroup {
     return this.form.get('beneficiaryAnalyticsByLicense') as UntypedFormGroup;
+  }
+  get evaluation(): UntypedFormGroup {
+    return this.form.get('evaluation') as UntypedFormGroup;
   }
   get specialExplanation(): UntypedFormGroup {
     return this.form.get('explanation') as UntypedFormGroup;

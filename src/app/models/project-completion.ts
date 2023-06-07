@@ -72,8 +72,8 @@ export class ProjectCompletion
   lessonsLearnedList: LessonsLearned[] = [];
   templateCost!: number;
   description!: string;
-  effort: number = 12;
-  impact: number = 122;
+  effort!: number;
+  impact!: number;
 
   // For view only
   projectTotalCost!: number;
@@ -201,7 +201,12 @@ export class ProjectCompletion
       beneficiariesOver60: { langKey: 'number_of_above_60', value: this.beneficiariesOver60 }
     }
   }
-
+  getEvaluationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      impact: { langKey: 'impact', value: this.impact },
+      effort: { langKey: 'effort', value: this.effort },
+    }
+  }
   getSpecialExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       description: { langKey: 'special_explanations', value: this.description },
@@ -235,6 +240,8 @@ export class ProjectCompletion
       beneficiariesOver60
     } = ObjectUtils.getControlValues<ProjectCompletion>(this.getBeneficiaryAnalyticsByLicenseFormValuesWithLabels());
     const { description } = ObjectUtils.getControlValues<ProjectCompletion>(this.getSpecialExplanationValuesWithLabels());
+    const { impact, effort } = ObjectUtils.getControlValues<ProjectCompletion>(this.getEvaluationValuesWithLabels());
+
     return {
       projectLicenseInfo: {
         requestType: controls ? [requestType, Validators.required] : requestType,
@@ -261,6 +268,10 @@ export class ProjectCompletion
         beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries19to60,
         beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiariesOver60
       },
+      evaluation: {
+        impact: controls ? [impact, [CustomValidators.required]] : impact,
+        effort: controls ? [effort, [CustomValidators.required]] : effort
+      },
       explanation: {
         description: controls ? [description, Validators.required] : description,
       }
@@ -274,10 +285,10 @@ export class ProjectCompletion
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      followUpDate:{langKey: 'follow_up_date', value: this.followUpDate},
-      conditionalLicenseIndicator:{langKey: 'conditional_license_indicator', value: this.conditionalLicenseIndicator},
-      publicTerms:{langKey: 'public_terms', value: this.publicTerms},
-      customTerms:{langKey: 'custom_terms', value: this.customTerms},
+      followUpDate: { langKey: 'follow_up_date', value: this.followUpDate },
+      conditionalLicenseIndicator: { langKey: 'conditional_license_indicator', value: this.conditionalLicenseIndicator },
+      publicTerms: { langKey: 'public_terms', value: this.publicTerms },
+      customTerms: { langKey: 'custom_terms', value: this.customTerms },
     };
   }
   buildApprovalForm(controls: boolean = false): any {
