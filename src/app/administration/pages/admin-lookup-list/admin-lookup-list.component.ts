@@ -1,3 +1,4 @@
+import { AdminAuditLogService } from '@services/admin-audit-log.service';
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {AdminLookup} from '@app/models/admin-lookup';
 import {DacOchaService} from '@services/dac-ocha.service';
@@ -43,7 +44,8 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
               private dialogService: DialogService,
               private toast: ToastService,
               private fb: FormBuilder,
-              public lookupService: LookupService) {
+              public lookupService: LookupService,
+              private adminAuditLogService:AdminAuditLogService) {
 
   }
 
@@ -136,6 +138,13 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
       label: 'view',
       icon: ActionIconsEnum.VIEW,
       onClick: (item) => this.view$.next(item)
+    },
+    // logs
+    {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item) => this.showAuditLogs(item)
     },
     // children
     {
@@ -478,5 +487,14 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
         this.reload$.next(null);
       }, ()=> this.reload$.next(null));
   }
-
+  showAuditLogs(record: AdminLookup): void {
+    if (!this.adminAuditLogService) {
+      console.error('Kindly inject "AdminAuditLogService"');
+      return;
+    }
+    this.adminAuditLogService.openAuditLogsDialog(record.id, this.adminLookupService._getServiceURL())
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe();
+      });
+  }
 }
