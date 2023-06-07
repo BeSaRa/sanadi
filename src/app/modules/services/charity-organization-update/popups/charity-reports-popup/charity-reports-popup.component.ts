@@ -1,27 +1,27 @@
-import {LangService} from '@services/lang.service';
-import {Component, Inject, OnInit} from '@angular/core';
-import {DateUtils} from '@app/helpers/date-utils';
-import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
-import {DatepickerOptionsMap} from '@app/types/types';
-import {Lookup} from '@app/models/lookup';
-import {LookupService} from '@app/services/lookup.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {CharityReport} from '@app/models/charity-report';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
-import {AdminLookup} from '@app/models/admin-lookup';
-import {AdminResult} from '@app/models/admin-result';
-import {AdminLookupService} from '@app/services/admin-lookup.service';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {CommonUtils} from "@helpers/common-utils";
+import { LangService } from '@services/lang.service';
+import { Component, Inject, OnInit, AfterViewInit } from '@angular/core';
+import { DateUtils } from '@app/helpers/date-utils';
+import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
+import { DatepickerOptionsMap } from '@app/types/types';
+import { Lookup } from '@app/models/lookup';
+import { LookupService } from '@app/services/lookup.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { CharityReport } from '@app/models/charity-report';
+import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { AdminLookup } from '@app/models/admin-lookup';
+import { AdminResult } from '@app/models/admin-result';
+import { AdminLookupService } from '@app/services/admin-lookup.service';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { CommonUtils } from "@helpers/common-utils";
 
 @Component({
   selector: 'app-charity-reports-popup',
   templateUrl: './charity-reports-popup.component.html',
   styleUrls: ['./charity-reports-popup.component.scss']
 })
-export class CharityReportsPopupComponent implements OnInit {
+export class CharityReportsPopupComponent implements OnInit, AfterViewInit {
   hideFullScreen = false;
   datepickerOptionsMap: DatepickerOptionsMap = {
     generalDate: DateUtils.getDatepickerOptions({
@@ -85,6 +85,12 @@ export class CharityReportsPopupComponent implements OnInit {
     this.model = data.model;
     this.pageTitle = data.customData.pageTitle
   }
+  ngAfterViewInit(): void {
+    this.form.patchValue({
+      ...this.model,
+      generalDate: DateUtils.changeDateToDatepicker(this.model.generalDate),
+    });
+  }
 
   ngOnInit() {
     if (this.pageTitle === 'risk_reports') {
@@ -119,15 +125,15 @@ export class CharityReportsPopupComponent implements OnInit {
       );
     } else if (this.pageTitle === 'coordination_and_support_reports') {
       this.controls.push({
-          controlName: 'category',
-          langKey: 'classification',
-          type: 'dropdown',
-          load$: this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION),
-          dropdownValue: 'id',
-          dropdownOptionDisabled: (optionItem: AdminLookup) => {
-            return !optionItem.isActive();
-          }
-        },
+        controlName: 'category',
+        langKey: 'classification',
+        type: 'dropdown',
+        load$: this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION),
+        dropdownValue: 'id',
+        dropdownOptionDisabled: (optionItem: AdminLookup) => {
+          return !optionItem.isActive();
+        }
+      },
         {
           controlName: 'subject',
           type: 'text',
@@ -147,20 +153,18 @@ export class CharityReportsPopupComponent implements OnInit {
         langKey: 'report_subject',
       },
         {
-        controlName: 'procedures',
-        type: 'text',
-        langKey: 'procedures',
-      });
+          controlName: 'procedures',
+          type: 'text',
+          langKey: 'procedures',
+        });
     }
-    this.form.patchValue({
-      ...this.model,
-      generalDate: DateUtils.changeDateToDatepicker(this.model.generalDate),
-    });
+
+
   }
 
   mapFormTo(form: any): CharityReport {
     const model: CharityReport = new CharityReport().clone(form);
-    model.reportStatusInfo = AdminResult.createInstance({...this.lookupService.listByCategory.CharityReportStatus.find(e => e.lookupKey === model.reportStatus)});
+    model.reportStatusInfo = AdminResult.createInstance({ ...this.lookupService.listByCategory.CharityReportStatus.find(e => e.lookupKey === model.reportStatus) });
     model.generalDate = DateUtils.getDateStringFromDate(model.generalDate!)!;
 
     return model;
