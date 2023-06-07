@@ -38,7 +38,7 @@ export class Profile extends BaseModel<Profile, ProfileService> {
   registrationAuthority!: number;
   registrationAuthorityInfo!: AdminResult;
   profileTypeInfo!: AdminResult;
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusInfo!: AdminResult;
   statusDateModified!: string | IMyDateModel;
   email!: string;

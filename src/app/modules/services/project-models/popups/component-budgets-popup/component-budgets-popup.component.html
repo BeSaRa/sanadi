@@ -29,7 +29,7 @@
     <div class="row">
       <div class="col-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="details" for="details">{{lang.map.details}}</label>
-        <textarea rows="5" id="details" validationClasses="details"
+        <textarea rows="5" id="details" validationClasses="details" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
           formControlName="details" class="form-control" trimInput></textarea>
 
         <app-field-error-message controlName="details"></app-field-error-message>

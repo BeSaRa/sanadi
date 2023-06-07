@@ -45,7 +45,7 @@ export class ProjectComponent extends SearchableCloneable<ProjectComponent> impl
 
     return {
       componentName: control ? [componentName, [CustomValidators.required, CustomValidators.maxLength(100)]] : componentName,
-      details: control ? [details, [CustomValidators.required, CustomValidators.maxLength(250)]] : details,
+      details: control ? [details, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : details,
       totalCost: control ? [totalCost, [CustomValidators.required].concat(CustomValidators.commonValidations.decimalWithMinValue(2), CustomValidators.maxLength(20))] : totalCost
     }
   }
