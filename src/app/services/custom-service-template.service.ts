@@ -170,7 +170,6 @@ export class CustomServiceTemplateService {
     template.isActive = (newStatus === CommonStatusEnum.ACTIVATED);
     return this.updateProp(caseType, template);
   }
-  @HasInterception
   @CastResponse(undefined, {
     unwrap: 'rs',
     fallback: '$default'
