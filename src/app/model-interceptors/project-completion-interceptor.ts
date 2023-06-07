@@ -34,7 +34,7 @@ export class ProjectCompletionInterceptor implements IModelInterceptor<ProjectCo
     if (model.lessonsLearnedList && model.lessonsLearnedList.length > 0) {
       model.lessonsLearnedList = model.lessonsLearnedList.map(x => lessonsLearnedInterceptor.send(x) as LessonsLearned);
     }
-    console.log(model)
+
     return model;
   }
 

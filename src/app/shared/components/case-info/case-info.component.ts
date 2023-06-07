@@ -75,7 +75,8 @@ export class CaseInfoComponent {
     CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
     CaseTypes.PROJECT_IMPLEMENTATION,
     CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
-    CaseTypes.ORGANIZATION_ENTITIES_SUPPORT
+    CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
+    CaseTypes.PROJECT_COMPLETION
   ];
 
   // this should be updated when ever you will add a new document service

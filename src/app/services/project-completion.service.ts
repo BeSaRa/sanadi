@@ -13,10 +13,13 @@ import { CastResponseContainer } from "@decorators/cast-response";
 import { ProjectCompletion } from '@app/models/project-completion';
 import { ProjectCompletionInterceptor } from '@app/model-interceptors/project-completion-interceptor';
 import { ProjectCompletionSearchCriteria } from '@app/models/project-completion-search-criteria';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { ProjectCompletionApprovalFormComponent } from '@app/modules/services/project-completion/popups/project-completion-approval-form/project-completion-approval-form.component';
 
 @CastResponseContainer({
   $default: {
-    model: () => ProjectModel
+    model: () => ProjectCompletion
   }
 })
 @Injectable({
@@ -62,4 +65,10 @@ export class ProjectCompletionService extends BaseGenericEService<ProjectComplet
     FactoryService.registerService('ProjectCompletionService', this);
   }
 
+  approve(model: ProjectCompletion, action: WFResponseType): DialogRef {
+    return this.dialog.show(ProjectCompletionApprovalFormComponent, {
+      model,
+      action
+    });
+  }
 }

@@ -117,33 +117,39 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   }
 
   private _lestenToExternalProjectImplementation() {
-    merge(this.domain.valueChanges, this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges, this.countryField.valueChanges)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value: number) => {
-        if (this.isDisplayOutsideQatar)
-          this.projectImplementationService.externalProjectImplementation({
-            domain: this.domain.value ? this.domain.value : '',
-            mainDAC: this.mainDACCategory.value ? this.mainDACCategory.value : '',
-            mainUNOCHA: this.mainUNOCHACategory.value ? this.mainUNOCHACategory.value : '',
-            country: this.countryField.value
-          }).subscribe((data) => {
-            this.projectImplementationLicenses = data;
-            this.selectProject(undefined);
-          })
+    if (this.isDisplayOutsideQatar)
+      this.projectImplementationService.externalProjectImplementation({
+        domain: this.domain.value ? this.domain.value : '',
+        mainDAC: this.mainDACCategory.value ? this.mainDACCategory.value : '',
+        mainUNOCHA: this.mainUNOCHACategory.value ? this.mainUNOCHACategory.value : '',
+        country: this.countryField.value
+      }).subscribe((data) => {
+        this.projectImplementationLicenses = data;
+        this.selectProject(this.projectImplementationLicenses.find(lic => lic.fullSerial == this.model?.projectLicenseFullSerial))
       })
   }
   private _lestenToInternalProjectImplementation() {
-    merge(this.countryField.valueChanges, this.internalProjectClassification.valueChanges)
+    if (this.isDisplayInsideQatar)
+      this.projectImplementationService.internalProjectImplementation({
+        country: this.countryField.value,
+        internalProjectClassification: this.internalProjectClassification.value ? this.internalProjectClassification.value : ''
+      }).subscribe((data) => {
+        this.projectImplementationLicenses = data;
+        this.selectProject(this.projectImplementationLicenses.find(lic => lic.fullSerial == this.model?.projectLicenseFullSerial))
+      })
+  }
+  listenToChangeExternalFields() {
+    merge(this.domain.valueChanges, this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges, this.countryField.valueChanges)
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
-        if (this.isDisplayInsideQatar)
-          this.projectImplementationService.internalProjectImplementation({
-            country: this.countryField.value,
-            internalProjectClassification: this.internalProjectClassification.value ? this.internalProjectClassification.value : ''
-          }).subscribe((data) => {
-            this.projectImplementationLicenses = data;
-            this.selectProject(undefined);
-          })
+        this._lestenToExternalProjectImplementation()
+      })
+  }
+  listenToChangeInternalFields() {
+    merge(this.countryField.valueChanges, this.internalProjectClassification.valueChanges)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this._lestenToInternalProjectImplementation()
       })
   }
   _getNewInstance(): ProjectCompletion {
@@ -251,19 +257,22 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       explanation: model.formBuilder(false).explanation
     });
     this.handleRequestTypeChange(model.requestType, false);
+    this._lestenToExternalProjectImplementation();
+    this._lestenToInternalProjectImplementation();
     this.cd.detectChanges();
   }
   _afterBuildForm(): void {
     this.handleReadonly();
     this.listenToMainDacOchaChanges();
-    this._lestenToExternalProjectImplementation();
-    this._lestenToInternalProjectImplementation();
+    this.listenToChangeExternalFields();
+    this.listenToChangeInternalFields();
+    this._setDefaultValues();
   }
   _resetForm(): void {
     this.model = this._getNewInstance();
     this.form.reset();
     this.operation = this.operationTypes.CREATE;
-    this.selectProject(undefined, true);
+    this.selectProject(undefined);
     this._setDefaultValues();
     this.bestPracticesListComponentRef.forceClearComponent();
     this.lessonsLearntListComponentRef.forceClearComponent();
@@ -327,17 +336,17 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     });
   }
   handleWorkAreaChanges(value: number) {
+    this.selectProject(undefined);
     const insideFields = [this.internalProjectClassification];
-    const outsideFields = [this.domain]
+    const outsideFields = [this.domain, this.mainDACCategory, this.subDACCategory, this.mainUNOCHACategory, this.subUNOCHACategory]
     this.resetFieldsValidation(insideFields.concat(outsideFields))
     this.isDisplayOutsideQatar && (() => {
       // handle Domain
       this.domain.setValidators([Validators.required])
       this.domain.updateValueAndValidity({ emitEvent: false })
-      this.emptyFields([this.domain])
 
       // handle country
-      this.getQatarCountry().id === this.countryField.value && this.emptyFields([this.countryField])
+      this.getQatarCountry().id === this.countryField.value && this.emptyFields([this.countryField], true)
       this.countryField.enable({ emitEvent: false })
     })()
 
@@ -345,13 +354,13 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       // handle internal project classification
       this.internalProjectClassification.setValidators([Validators.required]);
       this.internalProjectClassification.updateValueAndValidity({ emitEvent: false })
-      this.emptyFields([this.internalProjectClassification])
 
       // handle country
       this.countryField.setValue(this.getQatarCountry().id)
       this.countryField.disable({ emitEvent: false })
     })()
-    !value && this.emptyFields(insideFields.concat([this.countryField, ...outsideFields]))
+    this.emptyFields(insideFields.concat(outsideFields), true)
+    !value && this.emptyFields([this.countryField], true)
   }
   handleDomainChange(value: number) {
     const dacFields = [this.mainDACCategory, this.subDACCategory];
@@ -362,16 +371,16 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       this.mainDACCategory.updateValueAndValidity()
       this.subDACCategory.setValidators([Validators.required]);
       this.subDACCategory.updateValueAndValidity();
-      this.emptyFields(ochaFields)
+      this.emptyFields(ochaFields, true)
     })()
     value === DomainTypes.HUMANITARIAN && (() => {
       this.mainUNOCHACategory.setValidators([Validators.required]);
       this.mainUNOCHACategory.updateValueAndValidity();
-      this.emptyFields(dacFields)
+      this.emptyFields(dacFields, true)
     })()
     this.loadDacOuchMain(value);
 
-    !value && this.emptyFields(ochaFields.concat(dacFields))
+    !value && this.emptyFields(ochaFields.concat(dacFields), true)
   }
   private listenToMainDacOchaChanges() {
     merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
@@ -384,28 +393,21 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   }
 
 
-  selectProject(licenseDetails: ProjectImplementation | undefined, ignoreUpdateForm: boolean = false): void {
+  selectProject(licenseDetails: ProjectImplementation | undefined): void {
     this.selectedLicense = licenseDetails;
-    // update form fields if i have license
-    if (licenseDetails && !ignoreUpdateForm) {
-      const value = new ProjectCompletion().clone({...this.model})
-      value.licenseEndDate = DateUtils.changeDateToDatepicker(licenseDetails.licenseEndDate);
-      // value.projectName = licenseDetails.projectName;
-      // value.templateCost = licenseDetails.templateCost;
-      value.projectTotalCost = licenseDetails.projectTotalCost;
-      // value.projectDescription = licenseDetails.projectDescription;
-      value.projectName = 'projectName';
-      value.templateCost = 1000;
-      value.projectDescription = 'projectDescription';
+    const isReset = !licenseDetails;
+    const value = new ProjectCompletion().clone({ ...this.model })
+    value.licenseEndDate = isReset ? '' : DateUtils.changeDateToDatepicker(licenseDetails.licenseEndDate);
+    value.projectTotalCost = isReset ? 0 : licenseDetails.projectTotalCost;
+    value.projectName = isReset ? '' : licenseDetails.implementationTemplate[0] && licenseDetails.implementationTemplate[0].templateName;
+    value.templateCost = isReset ? 0 : licenseDetails.implementationTemplate[0] && licenseDetails.implementationTemplate[0].templateCost;
+    value.projectDescription = isReset ? '' : licenseDetails.implementationTemplate[0] && licenseDetails.implementationTemplate[0].arabicName;
 
-      value.projectLicenseId = licenseDetails.fullSerial;
-      value.projectLicenseFullSerial = licenseDetails.fullSerial;
-      value.projectLicenseSerial = licenseDetails.serial;
-
-      this.model = value;
-    }
+    value.projectLicenseId = isReset ? '' : licenseDetails.id;
+    value.projectLicenseFullSerial = isReset ? '' : licenseDetails.fullSerial;
+    value.projectLicenseSerial = isReset ? 0 : licenseDetails.serial;
+    this.model = value;
   }
-
   private getQatarCountry(): Country {
     return this.countries.find(item => item.enName.toLowerCase() === 'qatar')!
   }

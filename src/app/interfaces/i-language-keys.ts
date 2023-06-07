@@ -1979,4 +1979,5 @@ export interface ILanguageKeys {
   actual_cost: string;
   project_evaluation_sla_date: string;
   the_date_of_the_end_of_the_actual_execution: string;
+  project_license_serial: string;
 }

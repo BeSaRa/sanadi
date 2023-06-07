@@ -128,12 +128,19 @@
     </ng-template>
     <ng-template #project_basic_info>
       <ng-container formGroupName="projectBasicInfo">
-        <heading-row labelKey="menu_project_implementation"></heading-row>
-        <selected-license-table [caseType]="caseTypes.PROJECT_COMPLETION" [ignoreDelete]="true"
-          [caseTypeViewLicense]="caseTypes.PROJECT_COMPLETION" [licenseList]="projectImplementationLicenses"
-          [columns]="displayedColumns" [allowSelect]="true" (selectCallback)="selectProject($event)">
-        </selected-license-table>
+        <ng-container *ngIf="operation === operationTypes.CREATE">
+          <heading-row labelKey="menu_project_implementation"></heading-row>
+          <selected-license-table [caseType]="caseTypes.PROJECT_IMPLEMENTATION" [ignoreDelete]="true"
+            [caseTypeViewLicense]="caseTypes.PROJECT_IMPLEMENTATION" [licenseList]="projectImplementationLicenses"
+            [columns]="displayedColumns" [allowSelect]="!readonly" (selectCallback)="selectProject($event)">
+          </selected-license-table>
+        </ng-container>
         <div class="row">
+          <div class="col-md-3 col-sm-12 mb-4 ng-select-wrapper">
+            <label class="form-label" for="projectLicenseFullSerial">{{lang.map.project_license_serial}}</label>
+            <input readonly id="projectLicenseFullSerial" [value]="model && model.projectLicenseFullSerial ? model.projectLicenseFullSerial : ''"
+              class="form-control">
+          </div>
           <div class="col-md-3 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" for="projectName">{{lang.map.project_name}}</label>
             <input readonly id="projectName" [value]="model && model.projectName ? model.projectName : ''"
@@ -214,7 +221,7 @@
             <label for="directBeneficiaryNumber" asteriskIfRequired="directBeneficiaryNumber"
               class="form-label">{{lang.map.number_of_direct_beneficiaries}}</label>
             <input id="directBeneficiaryNumber" validationClasses="directBeneficiaryNumber" onlyNumbers
-              [readOnly]="readonly" formControlName="directBeneficiaryNumber" trimInput class="form-control"
+              [readonly]="readonly" formControlName="directBeneficiaryNumber" trimInput class="form-control"
               type="text">
             <app-field-error-message controlName="directBeneficiaryNumber"></app-field-error-message>
           </div>
@@ -222,7 +229,7 @@
             <label for="indirectBeneficiaryNumber" asteriskIfRequired="indirectBeneficiaryNumber"
               class="form-label">{{lang.map.number_of_indirect_beneficiaries}}</label>
             <input id="indirectBeneficiaryNumber" validationClasses="indirectBeneficiaryNumber" onlyNumbers
-              [readOnly]="readonly" formControlName="indirectBeneficiaryNumber" trimInput class="form-control"
+              [readonly]="readonly" formControlName="indirectBeneficiaryNumber" trimInput class="form-control"
               type="text">
             <app-field-error-message controlName="indirectBeneficiaryNumber"></app-field-error-message>
           </div>
@@ -233,13 +240,13 @@
                 <label class="form-label" asteriskIfRequired="beneficiaries0to5"
                   for="beneficiaries0to5">{{lang.map.number_of_0_to_5}}</label>
                 <input id="beneficiaries0to5" validationClasses="beneficiaries0to5" formControlName="beneficiaries0to5"
-                  [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false" class="form-control">
+                  [mask]="inputMaskPatterns.PERCENT" [readonly]="readonly" [dropSpecialCharacters]="false" class="form-control">
                 <app-field-error-message controlName="beneficiaries0to5"></app-field-error-message>
               </div>
               <div class="col-md-3 col-sm-12 mb-4 position-relative">
                 <label class="form-label" asteriskIfRequired="beneficiaries5to18"
                   for="beneficiaries5to18">{{lang.map.number_of_5_to_18}}</label>
-                <input id="beneficiaries5to18" validationClasses="beneficiaries5to18"
+                <input id="beneficiaries5to18" [readonly]="readonly" validationClasses="beneficiaries5to18"
                   formControlName="beneficiaries5to18" [mask]="inputMaskPatterns.PERCENT"
                   [dropSpecialCharacters]="false" class="form-control">
                 <app-field-error-message controlName="beneficiaries5to18"></app-field-error-message>
@@ -247,7 +254,7 @@
               <div class="col-md-3 col-sm-12 mb-4 position-relative">
                 <label class="form-label" asteriskIfRequired="beneficiaries19to60"
                   for="beneficiaries19to60">{{lang.map.number_of_19_to_60}}</label>
-                <input id="beneficiaries19to60" validationClasses="beneficiaries19to60"
+                <input id="beneficiaries19to60" [readonly]="readonly" validationClasses="beneficiaries19to60"
                   [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false"
                   formControlName="beneficiaries19to60" class="form-control">
                 <app-field-error-message controlName="beneficiaries19to60"></app-field-error-message>
@@ -255,7 +262,7 @@
               <div class="col-md-3 col-sm-12 mb-4 position-relative">
                 <label class="form-label" asteriskIfRequired="beneficiariesOver60"
                   for="beneficiariesOver60">{{lang.map.number_of_above_60}}</label>
-                <input id="beneficiariesOver60" validationClasses="beneficiariesOver60"
+                <input id="beneficiariesOver60" [readonly]="readonly" validationClasses="beneficiariesOver60"
                   [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false"
                   formControlName="beneficiariesOver60" class="form-control">
                 <app-field-error-message controlName="beneficiariesOver60"></app-field-error-message>

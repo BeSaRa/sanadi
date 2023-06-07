@@ -25,6 +25,8 @@ import { BestPractices } from './best-practices';
 import { DomainTypes } from '@app/enums/domain-types';
 import { DateUtils } from '@app/helpers/date-utils';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new ProjectCompletionInterceptor();
@@ -57,8 +59,10 @@ export class ProjectCompletion
   beneficiariesOver60!: number;
   directBeneficiaryNumber!: number;
   indirectBeneficiaryNumber!: number;
-
+  customTerms!: string;
+  publicTerms!: string;
   followUpDate!: string | IMyDateModel;
+  conditionalLicenseIndicator!: boolean;
   projectEvaluationSLADate!: string | IMyDateModel;
   licenseEndDate!: string | IMyDateModel;
   actualEndDate!: string | IMyDateModel;
@@ -267,13 +271,33 @@ export class ProjectCompletion
     return this.domain === DomainTypes.DEVELOPMENT ? this.mainDACCategory :
       this.mainUNOCHACategory
   }
-  // buildApprovalForm(control: boolean = false): any {
-  //   const {
-  //     followUpDate
-  //   } = this;
-  //   return {
-  //     followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
-  //   }
-  // }
 
+  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      followUpDate:{langKey: 'follow_up_date', value: this.followUpDate},
+      conditionalLicenseIndicator:{langKey: 'conditional_license_indicator', value: this.conditionalLicenseIndicator},
+      publicTerms:{langKey: 'public_terms', value: this.publicTerms},
+      customTerms:{langKey: 'custom_terms', value: this.customTerms},
+    };
+  }
+  buildApprovalForm(controls: boolean = false): any {
+    const values = ObjectUtils.getControlValues<ProjectCompletion>(this.getValuesWithLabels());
+    return {
+      followUpDate: controls ? [DateUtils.changeDateToDatepicker(values.followUpDate)] : DateUtils.changeDateToDatepicker(values.followUpDate),
+      conditionalLicenseIndicator: controls ? [values.conditionalLicenseIndicator] : values.conditionalLicenseIndicator,
+      publicTerms: controls ? [values.publicTerms] : values.publicTerms,
+      customTerms: controls ? [values.customTerms] : values.customTerms
+    }
+  }
+  validateApprove(): DialogRef {
+    return this.service.approve(this, WFResponseType.VALIDATE_APPROVE)
+  }
+
+  approve(): DialogRef {
+    return this.service.approve(this, WFResponseType.APPROVE)
+  }
+
+  finalApprove(): DialogRef {
+    return this.service.approve(this, WFResponseType.FINAL_APPROVE)
+  }
 }
