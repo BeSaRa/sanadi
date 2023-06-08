@@ -182,11 +182,10 @@
                        [multiple]="true"
                        [isOpen]="false"
                        class="no-dropdown"
-                       (add)="onAddProjectClassification($event)"
-                       (remove)="onRemoveProjectClassification($event)"
-                       (clear)="onClearProjectClassification()"
-                       [addTag]="true"
+                       [items]="subInternalProjectClassification.value"
+                       [addTag]="onAddProjectClassification"
                        id="subInternalProjectClassification"
+                       formControlName="subInternalProjectClassification"
                 >
              </ng-select>
             <app-field-error-message controlName="subInternalProjectClassification"></app-field-error-message>
