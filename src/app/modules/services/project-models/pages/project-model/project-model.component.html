@@ -169,7 +169,7 @@
             <app-field-error-message controlName="interventionType"></app-field-error-message>
           </div>
           <div class="col-md-12 col-sm-12 mb-4 ng-select-wrapper" *ngIf="isInsideQatarProject()">
-            <label class="form-label" asteriskIfRequired="subInternalProjectClassification"
+            <label class="form-label"
                    for="subInternalProjectClassification">{{lang.map.sub_classification}}</label>
             <ng-select [readonly]="readonly"
                       #subClassification
@@ -185,7 +185,7 @@
                        (clear)="onClearProjectClassification()"
                        [addTag]="true"
                        id="subInternalProjectClassification"
-                       formControlName="subInternalProjectClassification">
+                >
               <ng-option [value]="option"
                          *ngFor="let option of model!.subInternalProjectClassification">{{option}}</ng-option>
             </ng-select>
