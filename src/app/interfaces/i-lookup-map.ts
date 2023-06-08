@@ -167,4 +167,5 @@ export interface ILookupMap {
   RequestTypeNewUpdate: Lookup[];
   FieldAssessmentServices: Lookup[];
   ApprovalTemplateType: Lookup[];
+  InterventionType: Lookup[];
 }

@@ -49,6 +49,7 @@ import {ComponentBudgetsComponent} from './component-budgets/component-budgets.c
 import {EvaluationIndicatorsComponent} from './evaluation-indicators/evaluation-indicators.component';
 import {ProjectAddressesComponent} from './project-addresses/project-addresses.component';
 import {ForeignCountriesProjectsComponent} from './foreign-countries-projects/foreign-countries-projects.component';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
   selector: 'project-model',
@@ -93,7 +94,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   projectTypes: Lookup[] = this.lookupService.listByCategory.ProjectType;
   requestTypes: Lookup[] = this.lookupService.listByCategory.ProjectModelingReqType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   projectWorkAreas: Lookup[] = this.lookupService.listByCategory.ProjectWorkArea;
-  internalProjectClassifications: Lookup[] = this.lookupService.listByCategory.InternalProjectClassification;
+  interventionTypes: Lookup[] = this.lookupService.listByCategory.InterventionType;
   sanadiDomains: AidLookup[] = [];
   sanadiMainClassifications: AidLookup[] = [];
   mainOchaCategories: AdminLookup[] = [];
@@ -131,6 +132,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   @ViewChild('foreignCountriesProjectsRef')
   foreignCountriesProjectsRef!: ForeignCountriesProjectsComponent
+
+  @ViewChild('subClassification')
+  subClassificationRef!: NgSelectComponent
 
   selectedModel?: ProjectModel;
   displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn'];
@@ -771,6 +775,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   listenToExecutionFieldChange() {
     this.projectWorkArea.valueChanges.subscribe(val => {
+      this.subClassificationRef.clearModel();
       this.domain.setValidators([]);
       if (this.isOutsideQatarProject()) {
         this.removeQatarFromCountries();
