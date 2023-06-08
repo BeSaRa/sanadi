@@ -86,12 +86,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     // }
     return val;
   }
-  onClearProjectClassification(){
-    //this.model!.subInternalProjectClassification = [];
-    }
-  onRemoveProjectClassification(val:any){
-    // this.model!.subInternalProjectClassification = this.model!.subInternalProjectClassification.filter(x=>x !== val.label)
- }
 
   domainTypes: typeof DomainTypes = DomainTypes;
   countries: Country[] = [];
@@ -414,23 +408,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    let model: any = new ProjectModel().clone({
-      ...this.model,
-      ...this.basicInfoTab.getRawValue(),
-      ...this.categoryInfoTab.getRawValue(),
-      ...this.categoryGoalPercentGroup.getRawValue(),
-      ...this.summaryInfoTab.getRawValue(),
-      ...this.summaryPercentGroup.getRawValue(),
-      componentList: this.componentBudgetsRef.list,
-      evaluationIndicatorList: this.evaluationIndicatorsRef.list,
-      projectTotalCost: this.projectTotalCostField.value,
-      foreignCountriesProjectList: this.foreignCountriesProjectsRef?.list ?? [],
-      projectAddressList: this.projectAddressesRef?.list ?? [],
-      description: this.descriptionTab.value
-    });
-    console.log(model);
-    return false;
-
     if (!this.selectedModel && !this.isNewRequestType()) {
       this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.lbl_model}));
       return false;
