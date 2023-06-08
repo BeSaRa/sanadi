@@ -73,6 +73,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
   templateFullSerial!: string;
   templateId!: string;
   templateStatus!: number;
+  subInternalProjectClassification:string[] =[];
   evaluationIndicatorList: EvaluationIndicator[] = [];
   foreignCountriesProjectList: ProjectModelForeignCountriesProject[] = [];
   projectAddressList: ProjectAddress[] = [];
@@ -194,7 +195,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       beneficiaryCountry: { langKey: 'beneficiary_country_info', value: this.beneficiaryCountry },
       beneficiaryRegion: { langKey: 'region', value: this.beneficiaryRegion },
       executionCountry: { langKey: 'country', value: this.executionCountry },
-      executionRegion: { langKey: 'region', value: this.executionRegion }
+      executionRegion: { langKey: 'region', value: this.executionRegion },
+      subInternalProjectClassification:{langKey:'sub_classification' , value :this.subInternalProjectClassification.toString()}
 
     };
   }

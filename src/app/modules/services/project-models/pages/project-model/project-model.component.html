@@ -150,6 +150,30 @@
             <app-field-error-message controlName="projectWorkArea"></app-field-error-message>
           </div>
         </div>
+        <div class="row" *ngIf="isInsideQatarProject()">
+          <div class="col-md-12 col-sm-12 mb-4 ng-select-wrapper">
+            <label class="form-label" asteriskIfRequired="subInternalProjectClassification"
+                   for="subInternalProjectClassification">{{lang.map.sub_classification}}</label>
+            <ng-select [readonly]="readonly"
+                       validationClasses="subInternalProjectClassification"
+                       appendTo="body"
+                       labelForId="subInternalProjectClassification"
+                       placeholder="{{lang.map.add_new_classification}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [clearable]="true"
+                       [multiple]="true"
+                       (add)="onAddProjectClassification($event)"
+                       (remove)="onRemoveProjectClassification($event)"
+                       (clear)="onClearProjectClassification()"
+                       [addTag]="true"
+                       id="subInternalProjectClassification"
+                       formControlName="subInternalProjectClassification">
+              <ng-option [value]="option"
+                         *ngFor="let option of model!.subInternalProjectClassification">{{option}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="subInternalProjectClassification"></app-field-error-message>
+          </div>
+        </div>
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="projectDescription"
@@ -652,8 +676,8 @@
     </ng-container>
   </ng-template>
   <ng-template #componentsBudgetsTab>
-    <component-budgets 
-      #componentBudgetsTap 
+    <component-budgets
+      #componentBudgetsTap
       [readonly]="readonly"
       [list]="(!model || !model.componentList || model.componentList.length === 0) ? [] : model!.componentList!"
     ></component-budgets>

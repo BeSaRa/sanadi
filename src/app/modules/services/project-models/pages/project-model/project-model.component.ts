@@ -75,7 +75,16 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   selectedPMForeignCountriesProject!: ProjectModelForeignCountriesProject | null;
   selectedPMForeignCountriesProjectIndex!: number | null;
   foreignCountriesProjectsNeeds: ForeignCountriesProjectsNeed[] = [];
-
+  projectClassifications:Lookup[] = this.lookupService.listByCategory.InternalProjectClassification;
+  onAddProjectClassification(val:any){
+    this.model!.subInternalProjectClassification.push(val.label);
+  }
+  onClearProjectClassification(){
+    this.model!.subInternalProjectClassification = [];
+    }
+  onRemoveProjectClassification(val:any){
+    this.model!.subInternalProjectClassification = this.model!.subInternalProjectClassification.filter(x=>x !== val.label)
+ }
 
   domainTypes: typeof DomainTypes = DomainTypes;
   countries: Country[] = [];
@@ -570,7 +579,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   get projectType(): AbstractControl {
     return this.basicInfoTab.get('projectType') as AbstractControl;
   }
-
   get firstSDGoal(): AbstractControl {
     return this.categoryInfoTab.get('firstSDGoal') as AbstractControl;
   }

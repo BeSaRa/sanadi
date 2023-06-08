@@ -1971,4 +1971,5 @@ export interface ILanguageKeys {
   msg_upload_missing_x: string;
   menu_manage_user_inbox: string;
   reassign_task:string;
+  add_new_classification:string;
 }
