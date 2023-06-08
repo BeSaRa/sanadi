@@ -223,7 +223,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       beneficiaryRegion,
       executionCountry,
       executionRegion,
-      interventionType
+      interventionType,
+      subInternalProjectClassification
     } = ObjectUtils.getControlValues<ProjectModel>(this.getBasicInfoValuesWithLabels());
     return {
       requestType: controls ? [requestType, CustomValidators.required] : requestType,
@@ -246,6 +247,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       executionCountry: controls ? [executionCountry, CustomValidators.required] : executionCountry,
       executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : executionRegion,
       interventionType: controls ? [interventionType, CustomValidators.required] : interventionType,
+      subInternalProjectClassification: controls ? [subInternalProjectClassification, CustomValidators.required] : subInternalProjectClassification,
+
     };
   }
 
