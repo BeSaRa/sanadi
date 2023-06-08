@@ -73,6 +73,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
   templateFullSerial!: string;
   templateId!: string;
   templateStatus!: number;
+  interventionType!:number;
   subInternalProjectClassification:string[] =[];
   evaluationIndicatorList: EvaluationIndicator[] = [];
   foreignCountriesProjectList: ProjectModelForeignCountriesProject[] = [];
@@ -96,6 +97,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
   secondSDGoalInfo!: AdminResult;
   thirdSDGoalInfo!: AdminResult;
   exitMechanismInfo!: AdminResult;
+  interventionTypeInfo!:AdminResult;
   service!: ProjectModelService;
   targetAmount?: number
 
@@ -172,6 +174,9 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       case 'sanadiMainClassification':
         adminResultValue = this.sanadiMainClassificationInfo;
         break;
+      case 'interventionType':
+        adminResultValue = this.interventionTypeInfo;
+        break;
 
       default:
         let value: any = this[property];
@@ -196,7 +201,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       beneficiaryRegion: { langKey: 'region', value: this.beneficiaryRegion },
       executionCountry: { langKey: 'country', value: this.executionCountry },
       executionRegion: { langKey: 'region', value: this.executionRegion },
-      subInternalProjectClassification:{langKey:'sub_classification' , value :this.subInternalProjectClassification.toString()}
+      subInternalProjectClassification:{langKey:'sub_classification' , value :this.subInternalProjectClassification.toString()},
+      interventionType: { langKey: 'intervention_type', value: this.interventionType },
 
     };
   }
@@ -216,7 +222,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       beneficiaryCountry,
       beneficiaryRegion,
       executionCountry,
-      executionRegion
+      executionRegion,
+      interventionType
     } = ObjectUtils.getControlValues<ProjectModel>(this.getBasicInfoValuesWithLabels());
     return {
       requestType: controls ? [requestType, CustomValidators.required] : requestType,
@@ -237,7 +244,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       beneficiaryCountry: controls ? [beneficiaryCountry, CustomValidators.required] : beneficiaryCountry,
       beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : beneficiaryRegion,
       executionCountry: controls ? [executionCountry, CustomValidators.required] : executionCountry,
-      executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : executionRegion
+      executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : executionRegion,
+      interventionType: controls ? [interventionType, CustomValidators.required] : interventionType,
     };
   }
 

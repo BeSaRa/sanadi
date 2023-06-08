@@ -1972,4 +1972,5 @@ export interface ILanguageKeys {
   menu_manage_user_inbox: string;
   reassign_task:string;
   add_new_classification:string;
+  intervention_type:string;
 }
