@@ -78,6 +78,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   foreignCountriesProjectsNeeds: ForeignCountriesProjectsNeed[] = [];
   projectClassifications:Lookup[] = this.lookupService.listByCategory.InternalProjectClassification;
   onAddProjectClassification(val:any){
+    if(!CommonUtils.isValidValue(val.label)) return;
+    if(this.model!.subInternalProjectClassification.some(x=> x.toLocaleLowerCase() === val.label.toLowerCase())){
+      this.toast.info(this.lang.map.msg_duplicate_record_in_list)
+      return;
+    }
     this.model!.subInternalProjectClassification.push(val.label);
   }
   onClearProjectClassification(){
@@ -775,7 +780,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   listenToExecutionFieldChange() {
     this.projectWorkArea.valueChanges.subscribe(val => {
-      this.subClassificationRef.clearModel();
+      this.subClassificationRef?.clearModel();
       this.domain.setValidators([]);
       if (this.isOutsideQatarProject()) {
         this.removeQatarFromCountries();
