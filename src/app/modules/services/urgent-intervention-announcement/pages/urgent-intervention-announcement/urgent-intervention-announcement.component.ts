@@ -384,7 +384,11 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
 
   private _handleLicenseValidationsByRequestType(): void {
     let requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-
+    if(requestTypeValue === UrgentInterventionAnnouncementRequestType.START){
+      this.readonly = true;
+    }else{
+      this.readonly = false;
+    }
     // set validators to empty
     this.oldLicenseFullSerialField?.setValidators([]);
 
@@ -542,6 +546,7 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
       delete value.id;
       delete value.vsId;
       delete value.serial;
+
 
       this._updateForm(value);
     }
