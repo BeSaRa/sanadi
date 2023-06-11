@@ -6,7 +6,7 @@ import { FactoryService } from '@app/services/factory.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { Validators } from '@angular/forms';
-import { ControlValueLabelLangKey,ISearchFieldsMap } from '@app/types/types';
+import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
 import { dateSearchFields } from '@app/helpers/date-search-fields';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
@@ -18,7 +18,7 @@ import { ProjectModelForeignCountriesProject } from '@app/models/project-model-f
 import { ProjectAddress } from '@app/models/project-address';
 import { EmployeeService } from '@services/employee.service';
 import { ProjectTemplate } from "@app/models/projectTemplate";
-import { ImplementationTemplate } from "@models/implementation-template";import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { ImplementationTemplate } from "@models/implementation-template"; import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ObjectUtils } from '@app/helpers/object-utils';
 
@@ -73,6 +73,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
   templateFullSerial!: string;
   templateId!: string;
   templateStatus!: number;
+  interventionType!: number;
+  subInternalProjectClassification: string[] = [];
   evaluationIndicatorList: EvaluationIndicator[] = [];
   foreignCountriesProjectList: ProjectModelForeignCountriesProject[] = [];
   projectAddressList: ProjectAddress[] = [];
@@ -95,6 +97,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
   secondSDGoalInfo!: AdminResult;
   thirdSDGoalInfo!: AdminResult;
   exitMechanismInfo!: AdminResult;
+  interventionTypeInfo!: AdminResult;
   service!: ProjectModelService;
   targetAmount?: number
 
@@ -171,6 +174,15 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       case 'sanadiMainClassification':
         adminResultValue = this.sanadiMainClassificationInfo;
         break;
+      case 'interventionType':
+        adminResultValue = this.interventionTypeInfo;
+        break;
+      case 'subInternalProjectClassification':
+        adminResultValue = AdminResult.createInstance({
+          arName: this.subInternalProjectClassification.join(', '),
+          enName: this.subInternalProjectClassification.join(', '),
+        });
+        break;
 
       default:
         let value: any = this[property];
@@ -194,7 +206,13 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       beneficiaryCountry: { langKey: 'beneficiary_country_info', value: this.beneficiaryCountry },
       beneficiaryRegion: { langKey: 'region', value: this.beneficiaryRegion },
       executionCountry: { langKey: 'country', value: this.executionCountry },
-      executionRegion: { langKey: 'region', value: this.executionRegion }
+      executionRegion: { langKey: 'region', value: this.executionRegion },
+      subInternalProjectClassification: {
+        langKey: 'sub_classification',
+        value: this.subInternalProjectClassification,
+        comparisonValue: this.subInternalProjectClassification.join(', ')
+      },
+      interventionType: { langKey: 'intervention_type', value: this.interventionType },
 
     };
   }
@@ -214,7 +232,9 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       beneficiaryCountry,
       beneficiaryRegion,
       executionCountry,
-      executionRegion
+      executionRegion,
+      interventionType,
+      subInternalProjectClassification
     } = ObjectUtils.getControlValues<ProjectModel>(this.getBasicInfoValuesWithLabels());
     return {
       requestType: controls ? [requestType, CustomValidators.required] : requestType,
@@ -235,7 +255,10 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       beneficiaryCountry: controls ? [beneficiaryCountry, CustomValidators.required] : beneficiaryCountry,
       beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : beneficiaryRegion,
       executionCountry: controls ? [executionCountry, CustomValidators.required] : executionCountry,
-      executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : executionRegion
+      executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : executionRegion,
+      interventionType: controls ? [interventionType, CustomValidators.required] : interventionType,
+      subInternalProjectClassification: controls ? [subInternalProjectClassification,[]] : subInternalProjectClassification,
+
     };
   }
 
@@ -379,10 +402,10 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
   }
   getSummaryPercentValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      beneficiaries0to5:{ langKey: 'number_of_0_to_5', value: this.beneficiaries0to5 },
-      beneficiaries5to18:{ langKey: 'number_of_5_to_18', value: this.beneficiaries5to18 },
-      beneficiaries19to60:{ langKey: 'number_of_19_to_60', value: this.beneficiaries19to60 },
-      beneficiariesOver60:{ langKey: 'number_of_above_60', value: this.beneficiariesOver60 }
+      beneficiaries0to5: { langKey: 'number_of_0_to_5', value: this.beneficiaries0to5 },
+      beneficiaries5to18: { langKey: 'number_of_5_to_18', value: this.beneficiaries5to18 },
+      beneficiaries19to60: { langKey: 'number_of_19_to_60', value: this.beneficiaries19to60 },
+      beneficiariesOver60: { langKey: 'number_of_above_60', value: this.beneficiariesOver60 }
     }
   }
   buildSummaryPercentGroup(controls: boolean = false): any {

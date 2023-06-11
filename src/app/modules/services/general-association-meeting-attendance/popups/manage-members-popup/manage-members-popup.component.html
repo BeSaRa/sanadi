@@ -32,14 +32,10 @@
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
       <div *ngIf="isGeneralAssociationMembers"
-           class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
-        <label asteriskIfRequired="jobTitleId" class="form-label" for="jobTitleId">{{lang.map.job_title}}</label>
-        <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                   formControlName="jobTitleId" id="jobTitleId" validationClasses="jobTitleId"
-                   placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found">
-          <ng-option *ngFor="let option of jobTitles" [value]="option.id">{{option.getName()}}</ng-option>
-        </ng-select>
-        <app-field-error-message controlName="jobTitleId"></app-field-error-message>
+           class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="jobTitle" class="form-label" for="jobTitle">{{lang.map.job_title}}</label>
+        <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" class="form-control" trimInput>
+        <app-field-error-message controlName="jobTitle"></app-field-error-message>
       </div>
     </div>
   </form>

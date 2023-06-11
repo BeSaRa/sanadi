@@ -16,15 +16,12 @@ export class CaseAuditLogComponent {
               private caseAuditService: CaseAuditService) {
   }
 
-  private _model!: CaseModel<any, any>;
-  @Input()
-  set model(value: CaseModel<any, any>) {
-    this._model = value;
-    this._loadCaseAuditList();
-  }
+  @Input() model!: CaseModel<any, any>;
 
-  get model(): CaseModel<any, any> {
-    return this._model;
+  @Input() set reloadTrigger(value: boolean) {
+    if (value) {
+      this._loadCaseAuditList();
+    }
   }
 
   auditList: CaseAudit[] = [];

@@ -13,16 +13,16 @@
       <!-- identification number -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="identificationNumber" for="identificationNumber"
-          class="form-label">{{lang.map.identification_number}}</label>
+               class="form-label">{{lang.map.identification_number}}</label>
         <input formControlName="identificationNumber" type="text" validationClasses="identificationNumber"
-          trimInput class="form-control" id="identificationNumber">
+               trimInput class="form-control" id="identificationNumber">
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
       <!-- Full Name -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.full_name}}</label>
         <input formControlName="fullName" type="text" validationClasses="fullName" trimInput class="form-control"
-          id="fullName">
+               id="fullName">
         <app-field-error-message controlName="fullName"></app-field-error-message>
       </div>
     </div>
@@ -38,9 +38,9 @@
       <!-- Phone -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="phone" for="phone"
-          class="form-label">{{lang.map.phone_of_the_employer}}</label>
+               class="form-label">{{lang.map.phone_of_the_employer}}</label>
         <input formControlName="phone" type="text" validationClasses="phone" trimInput class="form-control"
-          id="phone">
+               id="phone">
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
     </div>
@@ -53,16 +53,11 @@
                class="form-control" id="extraPhone">
         <app-field-error-message controlName="extraPhone"></app-field-error-message>
       </div>
-      <!-- job title id -->
+      <!-- job title -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
-        <label for="jobTitleId" class="form-label" asteriskIfRequired="jobTitleId">{{ lang.map.job_title
-          }}</label>
-        <ng-select [selectOnTab]="true" labelForId="jobTitleId" [clearable]="true"
-                   placeholder="{{ lang.map.select }}" id="jobTitleId" [notFoundText]="lang.map.msg_not_found"
-                   appendTo="body" formControlName="jobTitleId">
-          <ng-option *ngFor="let title of jobTitleAdminLookup" [value]="title.id">{{ title.getName() }}
-          </ng-option>
-        </ng-select>
+        <label for="jobTitle" class="form-label" asteriskIfRequired="jobTitle">{{ lang.map.job_title}}</label>
+        <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" class="form-control" trimInput>
+        <app-field-error-message controlName="jobTitle"></app-field-error-message>
       </div>
     </div>
   </div>

@@ -39,6 +39,7 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
   officialPhoneNumber: string | undefined;
   email: string | undefined;
   jobTitle: number | undefined;
+  jobTitleName!: string;
   empNum: number | undefined;
   phoneExtension: string | undefined;
   domainName!: string;
@@ -59,7 +60,6 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
   searchFields: ISearchFieldsMap<ExternalUser> = {
     ...normalSearchFields(['arName', 'enName', 'empNum', 'domainName', 'statusDateModifiedString']),
     ...infoSearchFields(['statusInfo'])
-    // status: text => !this.getStatusLookup() ? false : this.getStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1
   };
 
   constructor() {
@@ -91,6 +91,10 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+
+  getJobTitle(): string {
+    return this.jobTitleName;
   }
 
   /*getStatusLookup(): Lookup | null {
@@ -132,7 +136,7 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
       phoneExtension: {langKey: 'lbl_phone_extension', value: this.phoneExtension},
       officialPhoneNumber: {langKey: 'lbl_official_phone_number', value: this.officialPhoneNumber},
       email: {langKey: 'lbl_email', value: this.email},
-      jobTitle: {langKey: 'lbl_job_title', value: this.jobTitle},
+      jobTitleName: {langKey: 'lbl_job_title', value: this.jobTitleName},
       status: {langKey: 'lbl_status', value: this.status},
       profileId: {langKey: 'profile', value: this.profileId},
       customRoleId: {langKey: 'lbl_custom_role', value: this.customRoleId},
@@ -188,7 +192,7 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
       officialPhoneNumber: controls ? [values.officialPhoneNumber, CustomValidators.commonValidations.phone] : values.officialPhoneNumber,
       email: controls ? [values.email, [
         CustomValidators.required, ...CustomValidators.commonValidations.email]] : values.email,
-      jobTitle: controls ? [values.jobTitle, [CustomValidators.required]] : values.jobTitle,
+      jobTitleName: controls ? [values.jobTitleName, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.jobTitleName,
       status: controls ? [values.status, CustomValidators.required] : values.status,
       profileId: controls ? [values.profileId, CustomValidators.required] : values.profileId,
       customRoleId: controls ? [values.customRoleId] : values.customRoleId // not required as it is dummy to be tracked from permissions tab
@@ -198,7 +202,7 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
   setBasicFormCrossValidations(): any {
     return CustomValidators.validateFieldsStatus([
       'arName', 'enName', 'empNum', 'qid', 'phoneNumber', 'phoneExtension',
-      'officialPhoneNumber', 'email', 'jobTitle', 'status', 'profileId', 'customRoleId']
+      'officialPhoneNumber', 'email', 'jobTitleName', 'status', 'profileId', 'customRoleId']
     );
   }
 }

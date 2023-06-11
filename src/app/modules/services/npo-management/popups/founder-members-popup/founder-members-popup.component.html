@@ -67,16 +67,11 @@
       </div>
     </div>
     <div class="row">
-      <!-- job title id -->
+      <!-- job title -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
-        <label for="jobTitleId" asteriskIfRequired="nationality" class="form-label">{{ lang.map.job_title }}</label>
-        <ng-select [selectOnTab]="true" labelForId="jobTitleId" [clearable]="true"
-                   placeholder="{{ lang.map.select }}" id="jobTitleId"
-                   [notFoundText]="lang.map.msg_not_found" appendTo="body"
-                   formControlName="jobTitleId" validationClasses="nationality">
-          <ng-option *ngFor="let title of jobTitleAdminLookup" [value]="title.id">{{ title.getName() }}</ng-option>
-        </ng-select>
-        <app-field-error-message controlName="jobTitleId"></app-field-error-message>
+        <label for="jobTitle" asteriskIfRequired="jobTitle" class="form-label">{{ lang.map.job_title }}</label>
+        <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" class="form-control" trimInput>
+        <app-field-error-message controlName="jobTitle"></app-field-error-message>
       </div>
     </div>
   </div>

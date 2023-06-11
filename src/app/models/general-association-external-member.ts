@@ -15,7 +15,7 @@ export class GeneralAssociationExternalMember extends SearchableCloneable<Genera
   id?: number;
   arabicName!: string;
   englishName!: string;
-  jobTitleId!: number;
+  jobTitle!: string;
   identificationNumber!: number;
   jobTitleInfo!: AdminResult;
   langService!: LangService;
@@ -27,8 +27,7 @@ export class GeneralAssociationExternalMember extends SearchableCloneable<Genera
     ...normalSearchFields(['arabicName', 'englishName', 'identificationNumber'])
   }
   searchFieldsGeneralAssociation: ISearchFieldsMap<GeneralAssociationExternalMember> = {
-    ...normalSearchFields(['arabicName', 'englishName', 'identificationNumber']),
-    ...infoSearchFields(['jobTitleInfo'])
+    ...normalSearchFields(['arabicName', 'englishName', 'identificationNumber', 'jobTitle']),
   }
 
   constructor() {
@@ -40,9 +39,6 @@ export class GeneralAssociationExternalMember extends SearchableCloneable<Genera
   getAdminResultByProperty(property: keyof GeneralAssociationExternalMember): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
-      case 'jobTitleId':
-        adminResultValue = this.jobTitleInfo;
-        break;
       default:
         let value: any = this[property];
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
@@ -61,7 +57,7 @@ export class GeneralAssociationExternalMember extends SearchableCloneable<Genera
       identificationNumber: {langKey: 'identification_number', value: this.identificationNumber}
     }
     if (isGeneralAssociationMembers) {
-      response.jobTitleId = {langKey: 'job_title', value: this.jobTitleId};
+      response.jobTitle = {langKey: 'job_title', value: this.jobTitle};
     }
     return response;
   }
@@ -87,7 +83,7 @@ export class GeneralAssociationExternalMember extends SearchableCloneable<Genera
       identificationNumber: control ? [values.identificationNumber, requiredValidator.concat(CustomValidators.commonValidations.qId)] : values.identificationNumber
     }
     if (isGeneralAssociationMembers) {
-      formData.jobTitleId = control ? [values.jobTitleId, requiredValidator] : values.jobTitleId
+      formData.jobTitle = control ? [values.jobTitle, requiredValidator] : values.jobTitle
     }
     return formData;
   }

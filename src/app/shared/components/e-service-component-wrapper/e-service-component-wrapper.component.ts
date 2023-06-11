@@ -67,6 +67,7 @@ import {UrgentInterventionLicenseFollowup} from '@models/urgent-intervention-lic
 import {
   TransferringIndividualFundsAbroadComponent
 } from "@modules/services/transferring-individual-funds-abroad/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component";
+import {ActionRegistry} from "@models/action-registry";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -115,6 +116,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   info: IOpenedInfo | null = null;
   destroy$: Subject<any> = new Subject<any>();
   loadAttachments: boolean = false;
+  allLogs: ActionRegistry[] = [];
 
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
   actionIconsEnum = ActionIconsEnum;
@@ -977,7 +979,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToChiefAction(item);
         },
         data: {
-          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
           groupOrder: 4
         },
         tooltip: 'btn_info_send_to_chief'
@@ -996,7 +998,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToGeneralManagerAction(item);
         },
         data: {
-          buttonGroup: WrapperButtonsGroupEnum.THREE,
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
           groupOrder: 4
         },
         tooltip: 'btn_info_send_to_general_manager'
@@ -1431,7 +1433,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return (item.getResponses().includes(WFResponseType.CLOSE) &&
-            (item.caseType != CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE ||
+            ((item.caseType !== CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE &&
+              item.caseType !== CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) ||
               (item.caseType == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && (item.caseStatus == CommonCaseStatus.CANCELLED || this.employeeService.isCharityManager()))));
         },
         onClick: (item: CaseModel<any, any>) => {
@@ -1799,6 +1802,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       } else if (item.getCaseType() === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
         const model = item as unknown as AwarenessActivitySuggestion;
         const component = this.component as unknown as AwarenessActivitySuggestionComponent;
+        if(!component.selectedTemplateControl.value){
+          this.service.dialog.error(this.lang.map.err_required_field + ' ' + this.lang.map.lbl_template)
+          return;
+        }
         model.approveWithSave(component.form).onAfterClose$.subscribe(actionTaken => {
           actionTaken && this.navigateToSamePageThatUserCameFrom();
         });

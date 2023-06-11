@@ -24,9 +24,9 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
       </ng-container>
-      <ng-container cdkColumnDef="jobTitleInfo">
+      <ng-container cdkColumnDef="jobTitleName">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.job_title}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.jobTitleInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.jobTitleName}} </td>
       </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>

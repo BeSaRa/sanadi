@@ -16,9 +16,7 @@ export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer> im
   email!: string;
   phone!: string;
   extraPhone!: string;
-  jobTitleId!: number;
-
-  jobInfo!: AdminResult;
+  jobTitle!: string;
 
   getContactOfficerFields(control: boolean): any {
     const values = ObjectUtils.getControlValues<NpoContactOfficer>(this.getValuesWithLabels())
@@ -30,7 +28,7 @@ export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer> im
       email: control ? [values.email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : values.email,
       phone: control ? [values.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phone,
       extraPhone: control ? [values.extraPhone, CustomValidators.commonValidations.phone] : values.extraPhone,
-      jobTitleId: control ? [values.jobTitleId, [CustomValidators.required]] : values.jobTitleId,
+      jobTitle: control ? [values.jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : values.jobTitle,
     };
   }
 
@@ -41,16 +39,13 @@ export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer> im
       email: {langKey: 'email_address_of_the_employer', value: this.email},
       phone: {langKey: 'phone_of_the_employer', value: this.phone},
       extraPhone: {langKey: 'mobile_number', value: this.extraPhone},
-      jobTitleId: {langKey: 'job_title', value: this.jobTitleId},
+      jobTitle: {langKey: 'job_title', value: this.jobTitle},
     };
   }
 
   getAdminResultByProperty(property: keyof NpoContactOfficer): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
-      case 'jobTitleId':
-        adminResultValue = this.jobInfo;
-        break;
       default:
         let value: any = this[property];
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {

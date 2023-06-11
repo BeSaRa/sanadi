@@ -1,14 +1,13 @@
-import {WFResponseType} from './../enums/wfresponse-type.enum';
-import {JobTitle} from './../models/job-title';
+import {WFResponseType} from '@enums/wfresponse-type.enum';
 import {Observable} from 'rxjs';
-import {EmployeeInterceptor} from './../model-interceptors/employee-interceptor';
-import {Employee} from './../models/employee';
+import {EmployeeInterceptor} from '@model-interceptors/employee-interceptor';
+import {Employee} from '@models/employee';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import {UntypedFormGroup} from '@angular/forms';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {EmploymentSearchCriteria} from './../models/employment-search-criteria';
+import {EmploymentSearchCriteria} from '@models/employment-search-criteria';
 import {FactoryService} from './factory.service';
-import {Employment} from './../models/employment';
+import {Employment} from '@models/employment';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 import {HasInterception} from '@decorators/intercept-model';
 import {ComponentFactoryResolver, EventEmitter, Injectable,} from '@angular/core';
@@ -21,7 +20,9 @@ import {UrlService} from './url.service';
 import {
   EmploymentApproveComponent
 } from '@app/modules/services/employment/popups/employment-approve/employment-approve.component';
-import { EmployeeFormPopupComponent } from '@app/modules/services/employment/popups/employee-form-popup/employee-form-popup.component';
+import {
+  EmployeeFormPopupComponent
+} from '@app/modules/services/employment/popups/employee-form-popup/employee-form-popup.component';
 
 const Empinterceptor = new EmployeeInterceptor();
 
@@ -60,7 +61,7 @@ export class EmploymentService extends BaseGenericEService<Employment> {
     return 'EmploymentComponent';
   }
 
-  openAddNewEmployee(form: UntypedFormGroup, employees: Partial<Employee>[], model: Employment | undefined, operation: number, jobTitleList: JobTitle[]): DialogRef {
+  openAddNewEmployee(form: UntypedFormGroup, employees: Partial<Employee>[], model: Employment | undefined, operation: number): DialogRef {
     return this.dialog.show(
       EmployeeFormPopupComponent,
       {
@@ -68,8 +69,7 @@ export class EmploymentService extends BaseGenericEService<Employment> {
         parentForm: form,
         employees,
         model,
-        operation,
-        jobTitleList
+        operation
       },
       {fullscreen: true}
     );

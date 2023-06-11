@@ -4,7 +4,7 @@ import {Lookup} from '@models/lookup';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
 import {OperationTypes} from '@enums/operation-types.enum';
 import {SaveTypes} from '@enums/save-types';
 import {LangService} from '@services/lang.service';
@@ -34,13 +34,17 @@ import {
 import {FileUploaderComponent} from '@app/shared/components/file-uploader/file-uploader.component';
 import {CustomServiceTemplate} from '@app/models/custom-service-template';
 import {CustomServiceTemplateService} from '@app/services/custom-service-template.service';
+import { AdminLookup } from '@app/models/admin-lookup';
+import { AdminLookupService } from '@app/services/admin-lookup.service';
+import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
   selector: 'app-awareness-activity-suggestion',
   templateUrl: './awareness-activity-suggestion.component.html',
   styleUrls: ['./awareness-activity-suggestion.component.scss']
 })
-export class AwarenessActivitySuggestionComponent extends EServicesGenericComponent<AwarenessActivitySuggestion, AwarenessActivitySuggestionService> {
+export class AwarenessActivitySuggestionComponent extends EServicesGenericComponent<AwarenessActivitySuggestion, AwarenessActivitySuggestionService> implements AfterViewInit {
   collectionRequestType: Lookup[] = this.lookupService.listByCategory.CollectionRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
   linkedProject: Lookup[] = this.lookupService.listByCategory.LinkedProject.sort((a, b) => a.lookupKey - b.lookupKey);
   jobTitleList: JobTitle[] = [];
@@ -51,6 +55,9 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   selectedTemplateControl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
   selectedLicense?: AwarenessActivitySuggestion;
   isSameAsApplican = false;
+  activitiesTypes: AdminLookup[] = [];
+  showOther:boolean =false;
+
   @ViewChild('fileUploader') fileUploaderRef!: FileUploaderComponent;
   tabsData: IKeyValue = {
     basicInfo: {
@@ -104,9 +111,15 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     private dialog: DialogService,
     public employeeService: EmployeeService,
     private customServiceTemplate: CustomServiceTemplateService,
-    private licenseService: LicenseService
+    private licenseService: LicenseService,
+    private adminLookupService: AdminLookupService,
+
   ) {
     super();
+  }
+  ngAfterViewInit(): void {
+    this._listenToServiceType();
+    this.cd.detectChanges();
   }
 
 
@@ -118,7 +131,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       this.customServiceTemplate.loadActiveTemplatesByCaseType(this.model?.getCaseType()).subscribe((data) => {
         this.dialog.show(SelectCustomServiceTemplatePopupComponent, {
           list: data,
-          showSelectBtn: true
+          showSelectBtn: true,
+          showDelete:false
         }).onAfterClose$.subscribe((temp) => {
           if (temp) {
             this.selectedTemplate = temp;
@@ -128,7 +142,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       })
     } else {
       this.customServiceTemplate.loadTemplatesByCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
-        this.dialog.show(SelectCustomServiceTemplatePopupComponent, {list: data, showSelectBtn: false})
+        this.dialog.show(SelectCustomServiceTemplatePopupComponent, {list: data, showSelectBtn: false, showDelete:true})
       })
     }
   }
@@ -201,6 +215,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   _initComponent(): void {
     this.listenToLicenseSearch();
     this._loadJobTitles();
+    this._loadActivityTypes();
+
   }
 
   _buildForm(): void {
@@ -273,6 +289,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       requestType: this.form.value.basicInfo.requestType,
       subject: this.form.value.basicInfo.subject,
       goal: this.form.value.basicInfo.goal,
+      activityType: this.form.value.basicInfo.activityType,
+      otherActivity: this.form.value.basicInfo.otherActivity,
       ...this.form.value.contactOfficer,
       ...this.form.value.beneficiariesNature,
       description: this.form.value.description,
@@ -525,5 +543,50 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
 
   get oldLicenseFullSerialField(): UntypedFormControl {
     return this.basicInfo.get('oldLicenseFullSerial') as UntypedFormControl;
+  }
+  get activityType(): UntypedFormControl {
+    return this.basicInfo.get('activityType') as UntypedFormControl;
+  }
+  get otherActivity(): UntypedFormControl {
+    return this.basicInfo.get('otherActivity') as UntypedFormControl;
+  }
+  private _isOthersActivityType(serviceType?: AdminLookup) {
+    if (!serviceType) return false;
+    return serviceType.enName.toLocaleLowerCase() === 'other' ||
+      serviceType.enName.toLocaleLowerCase() === 'others'
+  }
+  private _loadActivityTypes() {
+    this.adminLookupService
+      .loadAsLookups(AdminLookupTypeEnum.SERVICE_TYPE)
+      .subscribe((list) => {
+        this.activitiesTypes = list;
+        const id = this.activityType.value;
+        const activityType = this.activitiesTypes.find((x) => x.id === id)
+        this.showOther = this._isOthersActivityType(activityType);
+      });
+  }
+
+  private _listenToServiceType() {
+    this.activityType.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      map((id) => this.activitiesTypes.find((x) => x.id === id)),
+      tap(_ => {
+        this.otherActivity.reset();
+      }),
+      tap((serviceType) => {
+        if (serviceType) {
+          if (this._isOthersActivityType(serviceType)) {
+            this.showOther = true;
+            this.otherActivity.addValidators([CustomValidators.required]);
+            return;
+          }
+        }
+        this.otherActivity.removeValidators([CustomValidators.required]);
+        this.showOther = false;
+      }),
+      tap(_ => {
+        this.otherActivity.updateValueAndValidity();
+      })
+    ).subscribe();
   }
 }

@@ -455,7 +455,8 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       this.customServiceTemplate.loadActiveTemplatesByCaseType(this.model?.getCaseType()).subscribe((data) => {
         this.dialogService.show(SelectCustomServiceTemplatePopupComponent, {
           list: data,
-          showSelectBtn: true
+          showSelectBtn: true,
+          showDelete:false
         }).onAfterClose$.subscribe((temp) => {
           if (temp) {
             this.selectedTemplate = temp;
@@ -464,7 +465,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       })
     } else {
       this.customServiceTemplate.loadTemplatesByCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
-        this.dialogService.show(SelectCustomServiceTemplatePopupComponent, {list: data, showSelectBtn: false})
+        this.dialogService.show(SelectCustomServiceTemplatePopupComponent, {list: data, showSelectBtn: false,showDelete:true})
       })
 
     }

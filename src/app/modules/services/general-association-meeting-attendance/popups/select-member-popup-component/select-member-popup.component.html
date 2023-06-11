@@ -30,7 +30,7 @@
       </ng-container>
       <ng-container cdkColumnDef="jobTitle" *ngIf="!data.isInternalMembers">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.job_title}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.jobTitleInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.jobTitleName}} </td>
       </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>

@@ -5,8 +5,10 @@ import { CharityOrganizationUpdate } from './charity-organization-update';
 import { ForeignAidClassification } from './foreign-aid-classification';
 import { SearchableCloneable } from './searchable-cloneable';
 import { WorkArea } from './work-area';
+import { ByLawInterceptor } from '@app/model-interceptors/bylaw-interceptor';
 
 const { send, receive } = new GoveranceDocumentInterceptor();
+const byLawInterceptor = new ByLawInterceptor();
 
 @InterceptModel({
   send,
@@ -32,7 +34,7 @@ export class GoveranceDocument extends SearchableCloneable<GoveranceDocument> {
       goals,
       wFClassificationList: wfClassificationList.map(e => new ForeignAidClassification().clone({ ...e }).toCharityOrgnizationUpdate()),
       workAreaObjectList: workAreaList.map(e => new WorkArea().clone({ ...e }).toCharityOrgnizationUpdate()),
-      byLawList: byLawList.map(e => new Bylaw().clone({ ...e }).toCharityOrgnizationUpdate())
+      byLawList: byLawList.map(e => new Bylaw().clone(byLawInterceptor.receive(e)).toCharityOrgnizationUpdate())
     })
   }
 }

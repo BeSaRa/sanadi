@@ -143,10 +143,8 @@ export class InternalBankAccountApprovalService extends BaseGenericEService<Inte
     pipe(map(response => {
       let result: NpoEmployee[] = [];
       response.forEach((r: any) => {
-        r.jobTitleInfo = (new Lookup()).clone(r.jobTitleInfo);
         result.push((new NpoEmployee()).clone(r));
       });
-      console.log('NPOs', result);
       return result;
     }));
   }
@@ -161,7 +159,6 @@ export class InternalBankAccountApprovalService extends BaseGenericEService<Inte
     pipe(map(response => {
       let result: NpoEmployee[] = [];
       response.forEach((r: any) => {
-        r.jobTitleInfo = (new Lookup()).clone(r.jobTitleInfo);
         result.push((new NpoEmployee()).clone(r));
       });
       return result;

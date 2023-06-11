@@ -1,5 +1,5 @@
 import {AssignedTask} from '@models/assigned-task';
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ActionLogService} from '@app/services/action-log.service';
 import {BehaviorSubject, iif, merge, of, Subject} from 'rxjs';
 import {ActionRegistry} from '@app/models/action-registry';
@@ -16,6 +16,8 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 export class LogViewerComponent implements OnInit, OnDestroy {
   constructor(public lang: LangService) {
   }
+
+  @Output() onLoadDone: EventEmitter<ActionRegistry[]> = new EventEmitter<ActionRegistry[]>();
 
   reload$: Subject<void> = new Subject<void>();
   _caseId: BehaviorSubject<string> = new BehaviorSubject<string>('');
@@ -83,6 +85,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
       .pipe(switchMap(id => this.service.load(id)))
       .pipe(
         takeUntil(this.destroy$),
+        tap(logs => this.onLoadDone.emit(logs)),
         tap(logs => this._categorizeLogsByActionType(logs)),
         concatMap(() => iif(() => this.hideItemLocation, of([]), this.service.loadCaseLocation(this.caseId!)))
       )

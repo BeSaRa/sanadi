@@ -117,7 +117,6 @@ export class ManageMembersPopupComponent extends UiCrudDialogGenericComponent<Ge
       return this._getNewInstance({
         ...this.model,
         ...formValue,
-        jobTitleInfo: this.jobTitles.find((x) => x.id === formValue.jobTitleId)?.createAdminResult() ?? new AdminResult(),
       });
     }
   }
@@ -141,7 +140,7 @@ export class ManageMembersPopupComponent extends UiCrudDialogGenericComponent<Ge
   }
 
   get jobTitle(): UntypedFormControl {
-    return this.form.get('jobTitleId')! as UntypedFormControl;
+    return this.form.get('jobTitle')! as UntypedFormControl;
   }
 
 
@@ -152,7 +151,7 @@ export class ManageMembersPopupComponent extends UiCrudDialogGenericComponent<Ge
       arabicName: this.arabicName.value,
       englishName: this.englishName.value,
       qId: this.identificationNumber.value,
-      jobTitle: this.jobTitle?.value
+      jobTitleName: this.jobTitle?.value
     };
 
     this.generalAssociationMeetingService.searchNpoEmployees(criteria)
@@ -179,8 +178,7 @@ export class ManageMembersPopupComponent extends UiCrudDialogGenericComponent<Ge
     member.identificationNumber = npoEmployee.qId || npoEmployee.identificationNumber;
     member.arabicName = npoEmployee.arabicName;
     member.englishName = npoEmployee.englishName;
-    member.jobTitleId = npoEmployee.jobTitleId;
-    member.jobTitleInfo = npoEmployee.jobTitleInfo ? AdminResult.createInstance(npoEmployee.jobTitleInfo) : AdminResult.createInstance({});
+    member.jobTitle = npoEmployee.jobTitleName;
 
     return member;
   }

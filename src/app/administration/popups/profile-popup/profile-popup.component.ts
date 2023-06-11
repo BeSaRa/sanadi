@@ -35,6 +35,8 @@ import {CommonUtils} from "@helpers/common-utils";
 import {FileExtensionsEnum} from "@enums/file-extension-mime-types-icons.enum";
 import {CharityOrganizationProfileExtraDataService} from "@services/charity-organization-profile-extra-data.service";
 import {BlobModel} from "@models/blob-model";
+import { GlobalSettings } from '@app/models/global-settings';
+import { GlobalSettingsService } from '@app/services/global-settings.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -126,6 +128,8 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   logoExtensions: string[] = [FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG];
   loadedLogo!: BlobModel;
   logoFile?: File;
+  globalSettings: GlobalSettings = this.globalSettingsService.getGlobalSettings();
+  allowedFileMaxSize: number = this.globalSettings.fileSize * 1000 * 1024;
 
   servicesSortingCallbacks = {
     serviceName: (a: ProfileServiceModel, b: ProfileServiceModel, dir: SortEvent): number => {
@@ -199,7 +203,8 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
               private countryService: CountryService,
               private service: ProfileService,
               private serviceDataService: ServiceDataService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private globalSettingsService: GlobalSettingsService) {
     super();
     this.model = data.model;
     this.operation = data.operation;

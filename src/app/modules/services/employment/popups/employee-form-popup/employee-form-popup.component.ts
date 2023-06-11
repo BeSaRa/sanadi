@@ -9,7 +9,6 @@ import {Employment} from '@models/employment';
 import {EmploymentService} from '@services/employment.service';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {OperationTypes} from '@enums/operation-types.enum';
-import {JobTitle} from '@models/job-title';
 import {EmploymentRequestType} from '@enums/service-request-types';
 import {DialogService} from "@services/dialog.service";
 import {DatepickerOptionsMap} from "@app/types/types";
@@ -42,7 +41,6 @@ export class EmployeeFormPopupComponent implements OnInit {
   form!: UntypedFormGroup;
   starterId: number = 0;
   employeesList: Partial<Employee>[] = [];
-  JobTitleList: JobTitle[] = [];
   implementingAgencyList: AdminResult[] = [];
   functionalGroupsList: AdminLookup[] = [];
   skipConfirmUnsavedChanges: boolean = false;
@@ -133,8 +131,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       parentForm: UntypedFormGroup;
       employees: Employee[];
       model: Employment | undefined;
-      operation: number,
-      jobTitleList: JobTitle[]
+      operation: number
     }
   ) {
   }
@@ -145,7 +142,6 @@ export class EmployeeFormPopupComponent implements OnInit {
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.FUNCTIONAL_GROUP).subscribe((data) => {
       this.functionalGroupsList = data;
     })
-    this.JobTitleList = this.data.jobTitleList.filter(jobTitle=> jobTitle.isActive());
   }
 
   _buildForm() {
@@ -162,7 +158,7 @@ export class EmployeeFormPopupComponent implements OnInit {
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]],
-      jobTitleId: [null, CustomValidators.required],
+      jobTitle: [null, [CustomValidators.required, CustomValidators.maxLength(150)]],
       identificationType: [null, CustomValidators.required],
       identificationNumber: [null, [CustomValidators.maxLength(50)]],
       passportNumber: [null],
@@ -212,15 +208,10 @@ export class EmployeeFormPopupComponent implements OnInit {
       if (this.form.valid) {
         this.data.service.onSubmit.emit([{
           ...this.form.value,
-          jobTitleInfo: this.selectedJobTitle,
           id: this.form.value.id > 0 ? this.form.value.id : null
         }]);
       }
     }
-  }
-
-  get selectedJobTitle() {
-    return this.JobTitleList.find(jt => jt.id == this.form.value.jobTitleId)
   }
 
   isCreateOperation() {
@@ -244,7 +235,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       }
       if (!this.form.value.id) {
         this.employeesList = [
-          {...this.form.value, jobTitleInfo: this.selectedJobTitle, id: --this.starterId},
+          {...this.form.value, id: --this.starterId},
           ...this.employeesList,
         ];
       } else {
@@ -252,8 +243,7 @@ export class EmployeeFormPopupComponent implements OnInit {
         employee && Object.assign(
           employee,
           {
-            ...this.form.value,
-            jobTitleInfo: this.selectedJobTitle,
+            ...this.form.value
           }
         );
       }
@@ -414,10 +404,6 @@ export class EmployeeFormPopupComponent implements OnInit {
     ) && !this.cancelRequestType()
   }
 
-  get isExternalManagerJobTitle() {
-    return this.jobTitleId.value == this.JobTitleList.find(jt => jt.enName.toLowerCase().includes("external"))?.id
-  }
-
   get contractType() {
     return this.form.controls.contractType as UntypedFormControl
   }
@@ -464,10 +450,6 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   get passportNumber() {
     return this.form.controls.passportNumber as UntypedFormControl;
-  }
-
-  get jobTitleId() {
-    return this.form.controls.jobTitleId as UntypedFormControl;
   }
 
   get id() {

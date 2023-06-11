@@ -1,6 +1,6 @@
 import {FinancialTransferLicensingService} from '@app/services/financial-transfer-licensing.service';
 import {FinancialTransferLicensing} from '@app/models/financial-transfer-licensing';
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {CaseModel} from '@app/models/case-model';
 import {LangService} from '@app/services/lang.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
@@ -22,6 +22,10 @@ import {SubmissionMechanisms} from '@app/enums/submission-mechanisms.enum';
 import {ProjectImplementation} from '@models/project-implementation';
 import {EmployeeService} from '@services/employee.service';
 import {AllRequestTypesEnum} from "@enums/all-request-types-enum";
+import {ActionRegistry} from "@models/action-registry";
+import {ServiceActionTypesEnum} from "@enums/service-action-type.enum";
+import {BehaviorSubject, merge} from "rxjs";
+import {delay} from "rxjs/operators";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -29,7 +33,7 @@ import {AllRequestTypesEnum} from "@enums/all-request-types-enum";
   templateUrl: './case-info.component.html',
   styleUrls: ['./case-info.component.scss']
 })
-export class CaseInfoComponent {
+export class CaseInfoComponent implements OnInit {
   constructor(public lang: LangService,
               private employeeService: EmployeeService,
               private licenseService: LicenseService,
@@ -39,21 +43,34 @@ export class CaseInfoComponent {
               private sharedService: SharedService) {
   }
 
-  private _model!: CaseModel<any, any>;
+  private _model$: BehaviorSubject<CaseModel<any, any>> = new BehaviorSubject<CaseModel<any, any>>({} as CaseModel<any, any>);
+  private _allLogs$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
+  private wasItemReturned: boolean = false;
+  canShowVersionHistory: boolean = false;
+
   @Input()
   set model(value: CaseModel<any, any>) {
-    this._model = value;
-    this._setShowVersionHistory();
+    this._model$.next(value);
   }
 
   get model(): CaseModel<any, any> {
-    return this._model;
+    return this._model$.value;
   }
 
-  /*@Input()
-  model!: CaseModel<any, any>;*/
+  @Input()
+  set allLogs(value: ActionRegistry[]) {
+    this.setWasItemReturned(value);
+    this._allLogs$.next(value);
+  }
 
-  canShowVersionHistory: boolean = false;
+  get allLogs(): ActionRegistry[] {
+    return this._allLogs$.value;
+  }
+
+  ngOnInit(): void {
+    this.onRecordChange()
+  }
 
   // this should be updated when ever you will add a new license service
   private licenseCaseList: number[] = [
@@ -80,7 +97,7 @@ export class CaseInfoComponent {
   ];
 
   // this should be updated when ever you will add a new document service
-  private documentCasList: number[] = [
+  private documentCaseList: number[] = [
     CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
     CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
   ];
@@ -161,8 +178,9 @@ export class CaseInfoComponent {
       if (caseStatus === CommonCaseStatus.FINAL_REJECTION) {
         return ((this.model as ProjectImplementation).requestType === ServiceRequestTypes.NEW && this.model.submissionMechanism === SubmissionMechanisms.REGISTRATION);
       }
-
       return (caseStatus === CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.UNDER_EXAMINATION);
+    } else if (this.model.caseType === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION || this.model.caseType === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
+      return caseStatus === CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION;
     } else if (this.model.caseType === CaseTypes.FINANCIAL_TRANSFERS_LICENSING && this.model.submissionMechanism === SubmissionMechanisms.NOTIFICATION) {
       return caseStatus >= CommonCaseStatus.UNDER_PROCESSING;
     } else {
@@ -171,7 +189,7 @@ export class CaseInfoComponent {
   }
 
   isDocumentCase(): boolean {
-    return this.documentCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
+    return this.documentCaseList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
   }
 
   isGeneralAssociationMeetingAttendanceInitApproveCase() {
@@ -238,13 +256,44 @@ export class CaseInfoComponent {
       });
   }
 
+  private setWasItemReturned(allLogs: ActionRegistry[]) {
+    if (!allLogs || allLogs.length === 0) {
+      this.wasItemReturned = false;
+    }
+    return this.wasItemReturned = allLogs.some((log: ActionRegistry) => log.actionId === ServiceActionTypesEnum.RETURN_TO_ORGANIZATION);
+  }
+
   private _setShowVersionHistory(): void {
+    if (this.employeeService.isExternalUser()) {
+      return;
+    }
+
+    if (this.model.getCaseType() === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+      this.canShowVersionHistory = true;
+      return;
+    }
 
     // @ts-ignore
     const requestType = this.model.requestType;
-    if (this.employeeService.isExternalUser() || !requestType) {
+    if (!requestType) {
       return;
     }
-    this.canShowVersionHistory = [AllRequestTypesEnum.RENEW, AllRequestTypesEnum.CANCEL, AllRequestTypesEnum.UPDATE].includes(requestType) || this.model.isReturned();
+
+    if (
+      ([AllRequestTypesEnum.RENEW, AllRequestTypesEnum.CANCEL, AllRequestTypesEnum.UPDATE].includes(requestType))
+      || (requestType === AllRequestTypesEnum.NEW && this.wasItemReturned)
+    ) {
+      this.canShowVersionHistory = true;
+      return;
+    }
+  }
+
+  private onRecordChange() {
+    merge(this._model$, this._allLogs$).pipe(delay(100)).subscribe((value) => {
+      if (!this.model || !this.allLogs.length) {
+        return;
+      }
+      this._setShowVersionHistory();
+    })
   }
 }

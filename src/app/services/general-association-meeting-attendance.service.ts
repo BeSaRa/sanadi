@@ -75,17 +75,17 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     unwrap: 'rs',
     fallback: '$default'
   })
-  private _searchNpoEmployees(criteria: { arabicName?: string, englishName?: string, qId?: string, jobTitle?: string }): Observable<NpoEmployee[]> {
+  private _searchNpoEmployees(criteria: { arabicName?: string, englishName?: string, qId?: string, jobTitleName?: string }): Observable<NpoEmployee[]> {
     let criteriaSegment = this.getSearchNPOEmployeeCriteriaSegment(criteria);
 
     return this.http.get<NpoEmployee[]>(this.getNpoEmployeeURLSegment() + '/search/criteria?' + criteriaSegment);
   }
 
-  searchNpoEmployees(criteria: { arabicName?: string, englishName?: string, qId?: string }): Observable<NpoEmployee[]> {
+  searchNpoEmployees(criteria: { arabicName?: string, englishName?: string, qId?: string, jobTitleName?:string }): Observable<NpoEmployee[]> {
     return this._searchNpoEmployees(criteria);
   }
 
-  getSearchNPOEmployeeCriteriaSegment(criteria: { arabicName?: string, englishName?: string, qId?: string, jobTitle?: string }) {
+  getSearchNPOEmployeeCriteriaSegment(criteria: { arabicName?: string, englishName?: string, qId?: string, jobTitleName?: string }) {
     let criteriaSegment = '';
 
     if (CommonUtils.isValidValue(criteria.qId)) {
@@ -106,11 +106,11 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
       criteriaSegment += ('english-name=' + criteria.englishName);
     }
 
-    if (CommonUtils.isValidValue(criteria.jobTitle)) {
+    if (CommonUtils.isValidValue(criteria.jobTitleName)) {
       if (criteriaSegment !== '') {
         criteriaSegment += '&';
       }
-      criteriaSegment += ('job-title-id=' + criteria.jobTitle);
+      criteriaSegment += ('job-title-name=' + criteria.jobTitleName);
     }
 
     return criteriaSegment;

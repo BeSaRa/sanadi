@@ -13,6 +13,6 @@ export class Officer extends SearchableCloneable<Officer> {
   extraPhone!: string;
   status!: number;
   tempId!: number;
-  jobTitleId!: number;
+  jobTitle!: string;
   id!: number;
 }

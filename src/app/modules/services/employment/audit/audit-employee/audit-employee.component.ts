@@ -25,7 +25,7 @@ export class AuditEmployeeComponent extends AuditListGenericComponent<Employee> 
   Gender: Lookup[] = this.lookupService.listByCategory.Gender.slice().sort(
     (a, b) => a.lookupKey - b.lookupKey
   );
-  displayColumns: string[] =  ['arabicName', 'englishName', 'jobTitleInfo', 'gender','actions'];
+  displayColumns: string[] =  ['arabicName', 'englishName', 'jobTitle', 'gender','actions'];
   actions: IMenuItem<Employee>[] = [
     // show difference
     {

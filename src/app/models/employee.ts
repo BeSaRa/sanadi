@@ -1,4 +1,3 @@
-import { JobTitle } from './job-title';
 import { AdminResult } from './admin-result';
 import { Cloneable } from "@app/models/cloneable";
 import { IMyDateModel } from "angular-mydatepicker";
@@ -17,7 +16,7 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
   id!: number | null;
   arabicName!: string;
   englishName!: string;
-  jobTitleId!: number;
+  jobTitle!: string;
   identificationType!: number;
   identificationNumber!: string;
   itemId!: string;
@@ -42,7 +41,6 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
   expIdPass!: string | IMyDateModel;
   jobNumber!: string;
   functionalGroup!: number;
-  jobTitleInfo!: AdminResult | JobTitle | undefined;
   contractStatusInfo!: AdminResult;
   contractTypeInfo!: AdminResult;
   genderInfo!: AdminResult;
@@ -66,7 +64,7 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
     return {
       arabicName: { langKey: 'arabic_name', value: this.arabicName },
       englishName: { langKey: 'english_name', value: this.englishName },
-      jobTitleId: { langKey: 'job_title', value: this.jobTitleId },
+      jobTitle: { langKey: 'job_title', value: this.jobTitle },
       identificationType: { langKey: 'identification_type', value: this.identificationType },
       identificationNumber: { langKey: 'identification_number', value: this.identificationNumber },
       passportNumber: { langKey: 'passport_number', value: this.passportNumber },
@@ -96,9 +94,6 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
     switch (property) {
       case 'gender':
         adminResultValue = this.genderInfo;
-        break;
-      case 'jobTitleId':
-        adminResultValue = this.jobTitleInfo as AdminResult;
         break;
       case 'identificationType':
         adminResultValue = this.identificationTypeInfo;

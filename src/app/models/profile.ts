@@ -38,7 +38,7 @@ export class Profile extends BaseModel<Profile, ProfileService> {
   registrationAuthority!: number;
   registrationAuthorityInfo!: AdminResult;
   profileTypeInfo!: AdminResult;
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusInfo!: AdminResult;
   statusDateModified!: string | IMyDateModel;
   email!: string;
@@ -86,7 +86,7 @@ export class Profile extends BaseModel<Profile, ProfileService> {
       ]] : arDesc,
       profileCode: controls ? [profileCode, [CustomValidators.required], []] : profileCode,
       registrationAuthority: controls ? [registrationAuthority] : registrationAuthority,
-      status: controls ? [status] : status,
+      status: controls ? [status,[CustomValidators.required]] : status,
       email: controls ? [email, [CustomValidators.required,
         CustomValidators.pattern('EMAIL'),
         CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX),
