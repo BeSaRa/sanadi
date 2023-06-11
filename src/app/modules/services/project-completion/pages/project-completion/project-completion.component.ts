@@ -394,7 +394,10 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
         this.loadSubDacOchaByParentId(value)
       })
   }
-
+  setImpactEffort(effortVsImpact: { x: number, y: number }) {
+    this.model!.impact = effortVsImpact.x;
+    this.model!.effort = effortVsImpact.y;
+  }
   selectProject(licenseDetails: ProjectImplementation | undefined): void {
     this.selectedLicense = licenseDetails;
     const isReset = !licenseDetails;

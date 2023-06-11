@@ -12,7 +12,7 @@ import { ProjectCompletionApprovalFormComponent } from './popups/project-complet
   declarations: [
     ProjectCompletionComponent,
     AuditProjectCompletionComponent,
-    ProjectCompletionApprovalFormComponent
+    ProjectCompletionApprovalFormComponent,
   ],
   imports: [
     CommonModule,

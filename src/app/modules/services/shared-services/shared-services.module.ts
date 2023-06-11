@@ -65,6 +65,7 @@ import { BestPracticesPopupComponent } from './popups/best-practices-popup/best-
 import { AuditLessonsLearntListComponent } from './audit/audit-lessons-learnt-list/audit-lessons-learnt-list.component';
 import { LessonsLearntListComponent } from './components/lessons-learnt-list/lessons-learnt-list.component';
 import { LessonsLearntPopupComponent } from './popups/lessons-learnt-popup/lessons-learnt-popup.component';
+import { SelectByColorComponent } from '@app/shared/components/select-by-color/select-by-color.component';
 
 
 @NgModule({
@@ -103,6 +104,7 @@ import { LessonsLearntPopupComponent } from './popups/lessons-learnt-popup/lesso
     AuditLessonsLearntListComponent,
     LessonsLearntListComponent,
     LessonsLearntPopupComponent,
+    SelectByColorComponent
 
   ],
   imports: [
@@ -139,7 +141,7 @@ import { LessonsLearntPopupComponent } from './popups/lessons-learnt-popup/lesso
     AuditLessonsLearntListComponent,
     LessonsLearntListComponent,
     LessonsLearntPopupComponent,
-
+    SelectByColorComponent
   ]
 })
 export class SharedServicesModule { }

@@ -1,0 +1,11 @@
+.select-container {
+  .cell {
+    width: 70px;
+    height: 28px;
+    border: solid 2px #000;
+    text-align: center;
+    &.selectable{
+      cursor: pointer;
+    }
+  }
+}

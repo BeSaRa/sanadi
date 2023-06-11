@@ -1983,6 +1983,12 @@ export interface ILanguageKeys {
   evaluation_impact_cost_effort: string;
   impact: string;
   effort: string;
-  add_new_classification:string;
-  intervention_type:string;
+  add_new_classification: string;
+  intervention_type: string;
+  effort_impact_description_step_1: string;
+  effort_impact_description_step_2: string;
+  effort_impact_description_step_3: string;
+  effort_impact_description_step_4: string;
+  effort_impact_description_step_5: string;
+  effort_impact_usage_description: string;
 }

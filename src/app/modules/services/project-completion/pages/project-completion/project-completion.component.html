@@ -286,17 +286,26 @@
     </ng-template>
     <ng-template #evaluation_impact_cost_effort>
       <div class="row">
+        <p>1) {{ lang.map.effort_impact_description_step_1}}</p>
+        <p>2) {{ lang.map.effort_impact_description_step_2}}</p>
+        <p>3) {{ lang.map.effort_impact_description_step_3}}</p>
+        <p>4) {{ lang.map.effort_impact_description_step_4}}</p>
+        <p>5) {{ lang.map.effort_impact_description_step_5}}</p>
+        <small class="text-secondary text-bold">
+          {{ lang.map.effort_impact_usage_description }}
+        </small>
+      </div>
+      <div class="row justify-content-center pt-4">
+        <select-by-color [XLabel]="lang.map.impact"  [YLabel]="lang.map.effort" (change)="setImpactEffort($event)"></select-by-color>
+      </div>
+      <div class="row">
         <div class="col-md-6 col-sm-12 mb-4 ng-select-wrapper">
           <label class="form-label" for="impact">{{lang.map.impact}}</label>
-          <input readonly id="impact"
-            [value]="model && model.impact ? model.impact : 0"
-            class="form-control">
+          <input readonly id="impact" [value]="model && model.impact ? model.impact : 0" class="form-control">
         </div>
         <div class="col-md-6 col-sm-12 mb-4 ng-select-wrapper">
           <label class="form-label" for="effort">{{lang.map.effort}}</label>
-          <input readonly id="effort"
-            [value]="model && model.effort ? model.effort : 0"
-            class="form-control">
+          <input readonly id="effort" [value]="model && model.effort ? model.effort : 0" class="form-control">
         </div>
       </div>
     </ng-template>
