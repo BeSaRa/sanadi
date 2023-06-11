@@ -4,20 +4,22 @@
   <tab name="externalUserData" [template]="participant_organizations" [title]="lang.map.participant_organizations">
   </tab>
   <tab name="organizationOfficer" [template]="organization_officers" [title]="lang.map.organization_officers"></tab>
-   <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
-  </tabs-list>
+  <tab name="specialExplanation" [template]="specialExplanationTemplate" [title]="lang.map.special_explanations"></tab>
+</tabs-list>
 <ng-template #basic_info>
   <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
 </ng-template>
 <ng-template #participant_organizations>
   <value-differences-list [differenceList]="mainInfoDifferences"></value-differences-list>
   <audit-participant-organizations [newVersionList]="newVersion.participatingOrganizaionList"
-    [oldVersionList]="oldVersion.participatingOrganizaionList" [caseType]="newVersion.caseType">
+    [oldVersionList]="oldVersion.participatingOrganizaionList" [caseType]="newVersion.caseType"
+    uniqueComparisonProperty="organizationId">
   </audit-participant-organizations>
 </ng-template>
 <ng-template #organization_officers>
   <audit-organization-officers [newVersionList]="newVersion.organizaionOfficerList"
-    [oldVersionList]="oldVersion.organizaionOfficerList" [caseType]="newVersion.caseType">
+    [oldVersionList]="oldVersion.organizaionOfficerList" [caseType]="newVersion.caseType"
+    uniqueComparisonProperty="identificationNumber">
   </audit-organization-officers>
 </ng-template>
 
