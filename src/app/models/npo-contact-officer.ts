@@ -17,6 +17,7 @@ export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer> im
   phone!: string;
   extraPhone!: string;
   jobTitle!: string;
+  jobInfo!: AdminResult;
 
   getContactOfficerFields(control: boolean): any {
     const values = ObjectUtils.getControlValues<NpoContactOfficer>(this.getValuesWithLabels())
