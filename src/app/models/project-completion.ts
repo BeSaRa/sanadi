@@ -89,6 +89,9 @@ export class ProjectCompletion
   internalProjectClassificationInfo!: AdminResult;
   beneficiaryCountryInfo!: AdminResult;
 
+  actualEndDateTimestamp!: number | null;
+  projectEvaluationSLADateTimestamp!: number | null;
+  licenseEndDateTimestamp!: number | null;
   searchFields: ISearchFieldsMap<ProjectCompletion> = {
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['caseStatusInfo', 'creatorInfo', 'ouInfo']),
@@ -184,9 +187,17 @@ export class ProjectCompletion
   }
   getProjectBasicInfoFormValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      actualEndDate: { langKey: 'the_date_of_the_end_of_the_actual_execution', value: this.actualEndDate },
-      projectEvaluationSLADate: { langKey: 'project_evaluation_sla_date', value: this.projectEvaluationSLADate },
-      actualTotalCost: { langKey: 'actual_cost', value: this.actualTotalCost },
+      actualEndDate: {
+        langKey: 'the_date_of_the_end_of_the_actual_execution', value: this.actualEndDate,
+        comparisonValue: this.actualEndDateTimestamp
+      },
+      projectEvaluationSLADate: {
+        langKey: 'project_evaluation_sla_date', value: this.projectEvaluationSLADate,
+        comparisonValue: this.projectEvaluationSLADateTimestamp
+      },
+      actualTotalCost: {
+        langKey: 'actual_cost', value: this.actualTotalCost
+      },
       notes: { langKey: 'notes', value: this.notes },
     }
   }
@@ -244,9 +255,9 @@ export class ProjectCompletion
 
     return {
       projectLicenseInfo: {
-        requestType: controls ? [requestType, Validators.required] : requestType,
-        projectWorkArea: controls ? [projectWorkArea, Validators.required] : projectWorkArea,
-        beneficiaryCountry: controls ? [beneficiaryCountry, Validators.required] : beneficiaryCountry,
+        requestType: controls ? [requestType, CustomValidators.required] : requestType,
+        projectWorkArea: controls ? [projectWorkArea, CustomValidators.required] : projectWorkArea,
+        beneficiaryCountry: controls ? [beneficiaryCountry, CustomValidators.required] : beneficiaryCountry,
         domain: controls ? [domain] : domain,
         internalProjectClassification: controls ? [internalProjectClassification] : internalProjectClassification,
         mainDACCategory: controls ? [mainDACCategory] : mainDACCategory,
@@ -255,9 +266,9 @@ export class ProjectCompletion
         subUNOCHACategory: controls ? [subUNOCHACategory] : subUNOCHACategory,
       },
       projectBasicInfo: {
-        actualEndDate: controls ? [actualEndDate, Validators.required] : actualEndDate,
-        projectEvaluationSLADate: controls ? [projectEvaluationSLADate, Validators.required] : projectEvaluationSLADate,
-        actualTotalCost: controls ? [actualTotalCost, Validators.required] : actualTotalCost,
+        actualEndDate: controls ? [actualEndDate, CustomValidators.required] : actualEndDate,
+        projectEvaluationSLADate: controls ? [projectEvaluationSLADate, CustomValidators.required] : projectEvaluationSLADate,
+        actualTotalCost: controls ? [actualTotalCost, [CustomValidators.required, CustomValidators.decimal(2)]] : actualTotalCost,
         notes: controls ? [notes] : notes,
       },
       beneficiaryAnalyticsByLicense: {
@@ -273,7 +284,7 @@ export class ProjectCompletion
         effort: controls ? [effort, [CustomValidators.required]] : effort
       },
       explanation: {
-        description: controls ? [description, Validators.required] : description,
+        description: controls ? [description, CustomValidators.required] : description,
       }
     };
   }

@@ -204,7 +204,7 @@
             <label class="form-label" asteriskIfRequired="actualTotalCost"
               for="actualTotalCost">{{lang.map.actual_cost}}</label>
             <input id="actualTotalCost" validationClasses="actualTotalCost" formControlName="actualTotalCost"
-              class="form-control" [readonly]="readonly" [mask]="inputMaskPatterns.SEPARATOR"
+              class="form-control" [readonly]="readonly" [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
               [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
             <app-field-error-message controlName="actualTotalCost"></app-field-error-message>
           </div>

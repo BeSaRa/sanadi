@@ -17,16 +17,8 @@ export class ProjectCompletionInterceptor implements IModelInterceptor<ProjectCo
     model.licenseEndDate && (model.licenseEndDate = DateUtils.changeDateFromDatepicker(model.licenseEndDate as unknown as IMyDateModel)?.toISOString());
     model.actualEndDate && (model.actualEndDate = DateUtils.changeDateFromDatepicker(model.actualEndDate as unknown as IMyDateModel)?.toISOString());
 
-
-    delete model.domainInfo;
-    delete model.workAreaInfo;
-    delete model.mainDACCategoryInfo;
-    delete model.subDACCategoryInfo;
-    delete model.mainUNOCHACategoryInfo;
-    delete model.subUNOCHACategoryInfo;
-    delete model.internalProjectClassificationInfo;
-    delete model.beneficiaryCountryInfo;
-    delete model.searchFields;
+    model.actualEndDate && (model.actualEndDateTimestamp = DateUtils.getTimeStampFromDate(model.actualEndDate))
+    model.projectEvaluationSLADate && (model.projectEvaluationSLADateTimestamp = DateUtils.getTimeStampFromDate(model.projectEvaluationSLADate))
 
     if (model.bestPracticesList && model.bestPracticesList.length > 0) {
       model.bestPracticesList = model.bestPracticesList.map(x => bestPracticesInterceptor.send(x) as BestPractices);
@@ -34,7 +26,7 @@ export class ProjectCompletionInterceptor implements IModelInterceptor<ProjectCo
     if (model.lessonsLearnedList && model.lessonsLearnedList.length > 0) {
       model.lessonsLearnedList = model.lessonsLearnedList.map(x => lessonsLearnedInterceptor.send(x) as LessonsLearned);
     }
-
+    ProjectCompletionInterceptor._deleteBeforeSend(model);
     return model;
   }
 
@@ -59,5 +51,19 @@ export class ProjectCompletionInterceptor implements IModelInterceptor<ProjectCo
       model.lessonsLearnedList = model.lessonsLearnedList.map(x => lessonsLearnedInterceptor.receive(new LessonsLearned().clone(x)));
     }
     return model;
+  }
+  private static _deleteBeforeSend(model: Partial<ProjectCompletion>) {
+
+    delete model.domainInfo;
+    delete model.workAreaInfo;
+    delete model.mainDACCategoryInfo;
+    delete model.subDACCategoryInfo;
+    delete model.mainUNOCHACategoryInfo;
+    delete model.subUNOCHACategoryInfo;
+    delete model.internalProjectClassificationInfo;
+    delete model.beneficiaryCountryInfo;
+    delete model.searchFields;
+    delete model.actualEndDateTimestamp;
+    delete model.projectEvaluationSLADateTimestamp;
   }
 }
