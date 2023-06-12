@@ -7,6 +7,7 @@ import { IModelInterceptor } from "@contracts/i-model-interceptor";
 export class AwarenessActivitySuggestionInterceptor implements IModelInterceptor<AwarenessActivitySuggestion> {
   receive(model: AwarenessActivitySuggestion): AwarenessActivitySuggestion {
 
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.licenseStatusInfo = AdminResult.createInstance(isValidAdminResult(model.licenseStatusInfo) ? model.licenseStatusInfo : {});
     model.activityTypeInfo = AdminResult.createInstance(isValidAdminResult(model.activityTypeInfo) ? model.activityTypeInfo : {});
     model.followUpDate = DateUtils.changeDateToDatepicker(model.followUpDate);
