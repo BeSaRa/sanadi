@@ -14,7 +14,6 @@ import {
 import {
   IGeneralAssociationMeetingAttendanceComplete
 } from '@contracts/i-general-association-meeting-attendance-complete';
-import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
 import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
 
 import {
@@ -1800,13 +1799,15 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       } else if (item.getCaseType() === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
         const model = item as unknown as AwarenessActivitySuggestion;
         const component = this.component as unknown as AwarenessActivitySuggestionComponent;
-        if(!component.selectedTemplateControl.value){
-          this.service.dialog.error(this.lang.map.err_required_field + ' ' + this.lang.map.lbl_template)
-          return;
-        }
-        model.approveWithSave(component.form).onAfterClose$.subscribe(actionTaken => {
-          actionTaken && this.navigateToSamePageThatUserCameFrom();
-        });
+        component.validateTimplate()
+          .pipe(
+            tap(valid => !valid && this.service.dialog.error(this.lang.map.err_required_field + ' ' + this.lang.map.lbl_template)),
+            filter(valid => valid)
+          ).subscribe(() => {
+            model.approveWithSave(component.form).onAfterClose$.subscribe(actionTaken => {
+              actionTaken && this.navigateToSamePageThatUserCameFrom();
+            });
+          })
       }
     } else {
       item.approve().onAfterClose$.subscribe(actionTaken => {
