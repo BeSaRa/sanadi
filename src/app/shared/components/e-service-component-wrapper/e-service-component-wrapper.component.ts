@@ -726,8 +726,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: (_item) => true,
         onClick: (item) => this.markAsUnreadAction(item),
         data: {
-          buttonGroup: WrapperButtonsGroupEnum.TWO,
-          groupOrder: 1
+          buttonGroup: WrapperButtonsGroupEnum.ONE,
+          groupOrder: 3
         },
         tooltip: 'btn_info_mark_as_unread'
       },
@@ -1481,8 +1481,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: (_item) => true,
         onClick: (item) => this.markAsUnreadAction(item),
         data: {
-          buttonGroup: WrapperButtonsGroupEnum.TWO,
-          groupOrder: 4
+          buttonGroup: WrapperButtonsGroupEnum.ONE,
+          groupOrder: 3
         },
         tooltip: 'btn_info_mark_as_unread'
       },
