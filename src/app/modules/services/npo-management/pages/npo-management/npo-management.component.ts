@@ -431,7 +431,7 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
           objectDBId: f.id,
           identificationNumber: f.qid,
           fullName: f.fullName,
-          jobTitle: f.jobTitle,
+          jobTitleId: f.jobTitleId,
           email: f.email,
           phone: f.phone,
           extraPhone: f.extraPhone,

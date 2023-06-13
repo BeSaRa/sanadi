@@ -47,6 +47,9 @@ export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer> im
   getAdminResultByProperty(property: keyof NpoContactOfficer): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
+      case 'jobTitleId':
+        adminResultValue = this.jobInfo;
+        break;
       default:
         let value: any = this[property];
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
