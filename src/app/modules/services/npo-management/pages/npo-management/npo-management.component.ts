@@ -422,7 +422,7 @@ export class NpoManagementComponent extends EServicesGenericComponent<NpoManagem
           email: co.email,
           phone: co.phone,
           extraPhone: co.extraPhone,
-          jobTitle: co.jobTitle,
+          jobTitleId: co.jobTitleId,
         });
         return ob;
       });
