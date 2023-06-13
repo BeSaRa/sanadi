@@ -11,7 +11,7 @@ export class CommonUtils {
     value1 = value1 ? (value1 + '').toLowerCase() : value1;
     value2 = value2 ? (value2 + '').toLowerCase() : value2;
 
-    if(!direction){
+    if (!direction) {
       return 0;
     } else {
       if (value1 < value2) {
@@ -21,26 +21,26 @@ export class CommonUtils {
       }
       return 0;
     }
-   /*let finalValue: number = 0;
-   switch (direction) {
-      case 'asc':
-        if (value1 < value2) {
-          finalValue = -1;
-        } else if (value1 > value2) {
-          finalValue = 1;
-        }
-        break;
-      case 'desc':
-        if (value2 < value1) {
-          finalValue = -1;
-        } else if (value2 > value1) {
-          finalValue = 1;
-        }
-        break;
-      default:
-        finalValue = 0;
-    }
-    return finalValue;*/
+    /*let finalValue: number = 0;
+    switch (direction) {
+       case 'asc':
+         if (value1 < value2) {
+           finalValue = -1;
+         } else if (value1 > value2) {
+           finalValue = 1;
+         }
+         break;
+       case 'desc':
+         if (value2 < value1) {
+           finalValue = -1;
+         } else if (value2 > value1) {
+           finalValue = 1;
+         }
+         break;
+       default:
+         finalValue = 0;
+     }
+     return finalValue;*/
   }
 
   /**
@@ -131,7 +131,7 @@ export class CommonUtils {
     }
 
     if (containerRefToScroll.scrollTop > 0) {
-      containerRefToScroll.scrollTo({top: 0, behavior: "smooth"});
+      containerRefToScroll.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
 
@@ -181,5 +181,28 @@ export class CommonUtils {
 
   openBlobFileByUrl(blobUrl: string): void {
     window.open(blobUrl);
+  }
+
+  /**
+   * @description compere two arrays values if they are equals
+   * @param _list_1:Array<any>
+   * @param _list_2:Array<any>
+   */
+  static isEqualList(_list_1: Array<any>, _list_2: Array<any>) {
+    if (_list_1.length !== _list_2.length) {
+      return false;
+    }
+
+    // .concat() to not mutate arguments
+    const list_1 = _list_1.concat().sort();
+    const list_2 = _list_2.concat().sort();
+
+    for (let i = 0; i < list_1.length; i++) {
+      if (list_1[i] !== list_2[i]) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }

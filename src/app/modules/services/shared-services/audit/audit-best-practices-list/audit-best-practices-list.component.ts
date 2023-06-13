@@ -8,6 +8,7 @@ import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {CaseAuditService} from '@app/services/case-audit.service';
 import {LangService} from '@app/services/lang.service';
 import {BestPractices} from '@app/models/best-practices';
+import { IFindInList } from '@app/interfaces/i-find-in-list';
 
 @Component({
   selector: 'audit-best-practices-list',
@@ -43,4 +44,9 @@ export class AuditBestPracticesListComponent extends AuditListGenericComponent<B
     return item.getValuesWithLabels();
   }
 
+  existsInList(objComparison: IFindInList<BestPractices>): BestPractices | undefined {
+    return objComparison.listToCompareWith.find((item: BestPractices) => {
+      return item.statement === objComparison.itemToCompare.statement && CommonUtils.isEqualList(item.bestPractices, objComparison.itemToCompare.bestPractices)
+    });
+  }
 }
