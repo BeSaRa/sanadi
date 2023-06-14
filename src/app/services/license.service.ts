@@ -575,6 +575,10 @@ export class LicenseService {
     });
   }
   @CastResponse(() => FinancialTransferLicensing)
+  _validateUrgentInterventionLicenseFollowupByVsId<T>(vsId:string): Observable<T> {
+    return this.http.get<T>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP) + '/validate/closure/'+vsId, );
+  }
+  @CastResponse(() => FinancialTransferLicensing)
   _validateFinancialTransferLicensingByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.FINANCIAL_TRANSFERS_LICENSING) + '/draft/validate', {
       requestType,
@@ -653,6 +657,8 @@ export class LicenseService {
       return this._validateProjectImplementationRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.FINANCIAL_TRANSFERS_LICENSING) {
       return this._validateFinancialTransferLicensingByRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP) {
+      return this._validateUrgentInterventionLicenseFollowupByVsId<T>(licenseId);
     }
     return of(undefined);
   }

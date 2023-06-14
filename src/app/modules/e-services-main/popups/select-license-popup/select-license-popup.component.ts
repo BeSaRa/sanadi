@@ -111,7 +111,15 @@ export class SelectLicensePopupComponent {
         }
         this.dialogRef.close({ selected: license, details: requestDetails });
       });
-    } else {
+    }else if (this.caseType === CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP) {
+      this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.vsId).subscribe((requestDetails) => {
+        if (!requestDetails) {
+          return;
+        }
+        this.dialogRef.close({ selected: license, details: requestDetails });
+      });
+    }
+     else {
       this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id)
         .subscribe((licenseDetails) => {
           if (!licenseDetails) {
