@@ -24,7 +24,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   identificationNumber!: string;
   fullName!: string;
   id!: number;
-  jobTitle!: string;
+  jobTitleId!: number;
   email: string | null = null;
   phone: string | null = null;
   joinDate: string | null | IMyDateModel = null;
@@ -34,7 +34,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   nationalityInfo!: AdminResult;
 
   searchFields: ISearchFieldsMap<OrgMember> = {
-    ...normalSearchFields(['qid', 'fullName', 'identificationNumber', 'email', 'phone', 'extraPhone', 'jobTitle']),
+    ...normalSearchFields(['qid', 'fullName', 'identificationNumber', 'email', 'phone', 'extraPhone', 'jobTitleId']),
     ...infoSearchFields(['nationalityInfo'])
   }
   joinDateStamp!: number | null;
@@ -66,7 +66,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
     return {
       fullName: {langKey: 'full_name', value: this.fullName},
       identificationNumber: {langKey: 'identification_number', value: this.identificationNumber},
-      jobTitle: {langKey: 'job_title', value: this.jobTitle},
+      jobTitleId: {langKey: 'job_title', value: this.jobTitleId},
       email: {langKey: 'lbl_email', value: this.email},
       phone: {langKey: 'lbl_phone', value: this.phone},
       joinDate: {langKey: 'first_join_date', value: this.joinDate, comparisonValue: this.joinDateStamp},
@@ -77,14 +77,14 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   }
 
   buildForm(controls = true) {
-    const {fullName, identificationNumber, jobTitle} = this;
+    const {fullName, identificationNumber, jobTitleId} = this;
     return {
       fullName: controls ? [fullName, [CustomValidators.required,
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]
       ] : fullName,
       identificationNumber: controls ? [identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]] : identificationNumber,
-      jobTitle: controls ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitle,
+      jobTitleId: controls ? [jobTitleId, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitleId,
     };
   }
 
@@ -138,7 +138,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
       email,
       extraPhone,
       phone,
-      jobTitle,
+      jobTitleId,
       joinDate,
       nationality,
       fullName,
@@ -148,7 +148,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
       objectDBId: id,
       identificationNumber: qid,
       fullName,
-      jobTitle,
+      jobTitleId,
       email,
       phone,
       joinDate: DateUtils.getDateStringFromDate(joinDate),

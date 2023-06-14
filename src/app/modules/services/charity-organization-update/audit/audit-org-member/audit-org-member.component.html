@@ -27,7 +27,7 @@
               {{ lang.map.job_title }}
             </th>
             <td cdk-cell *cdkCellDef="let row">
-              {{ row?.jobTitle }}
+              {{ row.jobTitleInfo && row.jobTitleInfo.getName() }}
             </td>
           </ng-container>
           <ng-container            cdkColumnDef="joinDate">

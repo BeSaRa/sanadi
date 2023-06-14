@@ -84,7 +84,6 @@ export class ForeignAidClassificationsComponent extends ListModelComponent<Forei
     }
     this.model = new ForeignAidClassification();
     this._list = [];
-    console.log(this.model)
     this._initComponent();
   }
 
