@@ -57,7 +57,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   isSameAsApplican = false;
   activitiesTypes: AdminLookup[] = [];
   showOther: boolean = false;
-
+  openFromEnum = OpenFrom;
   @ViewChild('fileUploader') fileUploaderRef!: FileUploaderComponent;
   tabsData: IKeyValue = {
     basicInfo: {
@@ -122,7 +122,6 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     this.cd.detectChanges();
   }
 
-
   selectTemplatePopup(isUploaded: boolean) {
     if (!this.model) {
       return;
@@ -142,7 +141,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       })
     } else {
       this.customServiceTemplate.loadTemplatesByCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
-        this.dialog.show(SelectCustomServiceTemplatePopupComponent, { list: data, showSelectBtn: false, showDelete: true })
+        this.dialog.show(SelectCustomServiceTemplatePopupComponent, { list: data, showSelectBtn: false, showDelete: this.isLicensingUser && this.openFrom === this.openFromEnum.USER_INBOX  })
       })
     }
   }
@@ -187,7 +186,6 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     if (!this.model?.id) {
       return;
     }
-
     let caseStatus = this.model.getCaseStatus();
     if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
