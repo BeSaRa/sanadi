@@ -217,7 +217,7 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
     unwrap: 'rs',
     fallback: '$default'
   })
-  internalProjectImplementation(criteria: any): Observable<ProjectImplementation[]> {
+  getInternalProjectImplementation(criteria: any): Observable<ProjectImplementation[]> {
     if (!criteria.country)
       return of([])
     return this.http.get<ProjectImplementation[]>(this._getURLSegment() + '/internal/implementation', {
@@ -228,7 +228,7 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
     unwrap: 'rs',
     fallback: '$default'
   })
-  externalProjectImplementation(criteria: any): Observable<ProjectImplementation[]> {
+  getExternalProjectImplementation(criteria: any): Observable<ProjectImplementation[]> {
     if (!criteria.country)
       return of([])
     return this.http.get<ProjectImplementation[]>(this._getURLSegment() + '/external/implementation', {

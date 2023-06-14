@@ -118,7 +118,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
 
   private _lestenToExternalProjectImplementation() {
     if (this.isDisplayOutsideQatar)
-      this.projectImplementationService.externalProjectImplementation({
+      this.projectImplementationService.getExternalProjectImplementation({
         domain: this.domain.value ? this.domain.value : '',
         mainDAC: this.mainDACCategory.value ? this.mainDACCategory.value : '',
         mainUNOCHA: this.mainUNOCHACategory.value ? this.mainUNOCHACategory.value : '',
@@ -130,7 +130,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   }
   private _lestenToInternalProjectImplementation() {
     if (this.isDisplayInsideQatar)
-      this.projectImplementationService.internalProjectImplementation({
+      this.projectImplementationService.getInternalProjectImplementation({
         country: this.countryField.value,
         internalProjectClassification: this.internalProjectClassification.value ? this.internalProjectClassification.value : ''
       }).subscribe((data) => {
