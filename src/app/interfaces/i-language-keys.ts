@@ -1973,4 +1973,11 @@ export interface ILanguageKeys {
   reassign_task:string;
   add_new_classification:string;
   intervention_type:string;
+  menu_admin_permissions:string;
+  lbl_add_permission:string;
+  lbl_edit_permission:string;
+  lbl_group:string;
+  lbl_category:string;
+  lbl_permission_key:string;
+  lookup_permission_group:string;
 }

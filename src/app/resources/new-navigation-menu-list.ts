@@ -2780,4 +2780,17 @@ export const newNavigationMenuList = [
     itemOrder: DefaultItemOrder.INBOX_FOLLOW_UP,
     svg: null
   },
+  {
+    id: 90,
+    langKey: 'menu_admin_permissions',
+    path: '/home/administration/admin-permissions',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_PERMISSIONS,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 23,
+    svg: null
+  },
 ];
