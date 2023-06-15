@@ -72,7 +72,7 @@ export class CollectorApproval extends _RequestType<CollectorApprovalService, Co
   getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       requestType: {langKey: 'request_type', value: this.requestType},
-      licenseDurationType:{langKey: 'request_type', value: this.licenseDurationType},
+      licenseDurationType:{langKey: 'license_type', value: this.licenseDurationType},
     };
   }
   getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {

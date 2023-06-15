@@ -94,8 +94,8 @@ export class CollectionApproval extends _RequestType<CollectionApprovalService, 
   getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       requestType: {langKey: 'request_type', value: this.requestType},
-      requestClassification:{langKey: 'request_type', value: this.requestClassification},
-      licenseDurationType:{langKey: 'request_type', value: this.licenseDurationType},
+      requestClassification:{langKey: 'req_classification', value: this.requestClassification},
+      licenseDurationType:{langKey: 'license_type', value: this.licenseDurationType},
     };
   }
   buildBasicInfo(controls: boolean = false): any {
