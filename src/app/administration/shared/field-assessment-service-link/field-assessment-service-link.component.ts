@@ -142,7 +142,6 @@ export class FieldAssessmentServiceLinkComponen implements OnInit, OnDestroy {
   }
 
   deleteFieldAssessmentServiceLink(FieldAssessmentServiceLink: FieldAssessmentServiceLink): void {
-    console.log(FieldAssessmentServiceLink)
     of(this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({ x: FieldAssessmentServiceLink.serviceInfo.getName() })))
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap(ref => ref.onAfterClose$))
