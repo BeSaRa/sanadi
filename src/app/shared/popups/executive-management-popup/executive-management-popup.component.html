@@ -10,6 +10,13 @@
 <div class="dialog-content w800px" #dialogContent>
   <div [formGroup]="form">
     <div class="row">
+      <!-- identification Number -->
+      <div *ngIf="!hideQId" class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="identificationNumber" for="identificationNumber" class="form-label">{{lang.map.identification_number}}</label>
+        <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber" trimInput
+          class="form-control">
+        <app-field-error-message controlName="identificationNumber"></app-field-error-message>
+      </div>
       <!-- Arabic Name -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="arabicName" for="arabicName" class="form-label">{{lang.map.arabic_name}}</label>
@@ -17,6 +24,8 @@
           class="form-control">
         <app-field-error-message controlName="arabicName"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <!-- English Name -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="englishName" for="englishName" class="form-label">{{lang.map.english_name}}</label>
@@ -24,22 +33,20 @@
           class="form-control">
         <app-field-error-message controlName="englishName"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
       <!-- Phone -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="phone" for="phone" class="form-label">{{lang.map.lbl_phone}}</label>
         <input id="phone" validationClasses="phone" formControlName="phone" trimInput class="form-control">
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <!-- Email -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
         <input id="email" validationClasses="email" formControlName="email" trimInput class="form-control">
         <app-field-error-message controlName="email"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
       <!-- Country -->
       <!-- <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="countriesList.length">
         <label asteriskIfRequired="country" for="country" class="form-label">{{lang.map.country}}</label>

@@ -20,8 +20,9 @@
 <ng-template #executiveManagementsTemplate>
   <audit-executive-management [newVersionList]="newVersion.executiveManagementDTOs"
                               [oldVersionList]="oldVersion.executiveManagementDTOs"
-                              [uniqueComparisonProperty]="'phone'"
+                              [uniqueComparisonProperty]="'identificationNumber'"
                               [hidePassport]="false"
+                              [hideQId]="false"
   ></audit-executive-management>
 </ng-template>
 <ng-template #contactOfficersTemplate>
