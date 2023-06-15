@@ -136,6 +136,9 @@ export class IntegrationInquiryLogListComponent {
       case GdxServicesEnum.MME:
         request = this.beneficiaryService.addMMELeasedContract(this._getGDXCriteria());
         break;
+      case GdxServicesEnum.QATAR_CHARITY:
+        request = this.beneficiaryService.addQatarCharityInquiry(this._getGDXCriteria());
+        break;
       default:
         request = null;
         break;

@@ -1999,4 +1999,5 @@ export interface ILanguageKeys {
   lbl_permission_key: string;
   lookup_permission_group: string;
   permission: string;
+  lbl_qatar_charity_related_data: string;
 }

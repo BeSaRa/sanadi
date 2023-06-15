@@ -42,6 +42,7 @@ import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
 import {GdxSjcMaritalStatusResponse} from '@models/gdx-sjc-marital-status-response';
 import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
 import { GdxMmeResponse } from '@app/models/gdx-mme-leased-contract';
+import { GdxQatarCharityResponse } from '@app/models/gdx-qatar-charity-response';
 
 const beneficiarySearchLogCriteriaInterceptor = new BeneficiarySearchLogCriteriaInterceptor();
 
@@ -251,6 +252,13 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     fallback: '$default'
   })
   addMMELeasedContract(criteria: IGdxCriteria) {
-    return this.http.post<GdxMoeResponse[]>(this._getGDXServiceURL() + '/mme-leased-contracts', criteria);
+    return this.http.post<GdxMmeResponse[]>(this._getGDXServiceURL() + '/mme-leased-contracts', criteria);
+  }
+  @CastResponse(() => GdxQatarCharityResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addQatarCharityInquiry(criteria: IGdxCriteria) {
+    return this.http.post<GdxQatarCharityResponse[]>(this._getGDXServiceURL() + '/qc-historical-data', criteria);
   }
 }

@@ -1,16 +1,16 @@
-import {Component, Input, ViewChild} from '@angular/core';
-import {Subject} from 'rxjs';
-import {Beneficiary} from '@app/models/beneficiary';
-import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
-import {GdxServiceRelatedTypesEnum} from '@app/enums/gdx-service-related-types.enum';
-import {GdxServiceLog} from '@app/models/gdx-service-log';
-import {LangService} from '@services/lang.service';
-import {TabMap} from '@app/types/types';
-import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response';
-import {IGdxServiceRelatedData} from '@contracts/i-gdx-service-related-data';
-import {CommonUtils} from '@helpers/common-utils';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {ITabData} from '@contracts/i-tab-data';
+import { Component, Input, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Beneficiary } from '@app/models/beneficiary';
+import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
+import { GdxServiceRelatedTypesEnum } from '@app/enums/gdx-service-related-types.enum';
+import { GdxServiceLog } from '@app/models/gdx-service-log';
+import { LangService } from '@services/lang.service';
+import { TabMap } from '@app/types/types';
+import { GdxGarsiaPensionResponse } from '@app/models/gdx-garsia-pension-response';
+import { IGdxServiceRelatedData } from '@contracts/i-gdx-service-related-data';
+import { CommonUtils } from '@helpers/common-utils';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { ITabData } from '@contracts/i-tab-data';
 import {
   IntegrationInquiryLogListComponent
 } from '@app/modules/gdx-integration/integration-inquiry-log-list/integration-inquiry-log-list.component';
@@ -20,13 +20,13 @@ import {
 import {
   GarsiaPensionListComponent
 } from '@app/modules/gdx-integration/related-data/garsia-pension-list/garsia-pension-list.component';
-import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
-import {GdxMojResponse} from '@app/models/gdx-moj-response';
-import {GdxMoeResponse} from '@app/models/gdx-moe-pending-installments';
-import {MoeStudentInfoComponent} from '../related-data/moe-student-info/moe-student-info.component';
-import {MoeInstallmentsComponent} from '../related-data/moe-installments/moe-installments.component';
-import {MoePendingPaymentComponent} from '../related-data/moe-pending-payment/moe-pending-payment.component';
-import {TabsListComponent} from "@app/shared/components/tabs/tabs-list.component";
+import { GdxMolPayrollResponse } from '@app/models/gdx-mol-payroll-response';
+import { GdxMojResponse } from '@app/models/gdx-moj-response';
+import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
+import { MoeStudentInfoComponent } from '../related-data/moe-student-info/moe-student-info.component';
+import { MoeInstallmentsComponent } from '../related-data/moe-installments/moe-installments.component';
+import { MoePendingPaymentComponent } from '../related-data/moe-pending-payment/moe-pending-payment.component';
+import { TabsListComponent } from "@app/shared/components/tabs/tabs-list.component";
 
 @Component({
   selector: 'integration-inquiries',
@@ -183,8 +183,8 @@ export class IntegrationInquiriesComponent {
       langKey: 'integration_qatar_charity',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
-      // serviceId: GdxServicesEnum.QATAR_CHARITY,
-      isLoaded: true
+      serviceId: GdxServicesEnum.QATAR_CHARITY,
+      isLoaded: false
     },
     qrcs: {
       name: 'qrcs',
@@ -259,6 +259,7 @@ export class IntegrationInquiriesComponent {
     [GdxServiceRelatedTypesEnum.MOE_INSTALLMENTS]: [],
     [GdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS]: [],
     [GdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT]: [],
+    [GdxServiceRelatedTypesEnum.QATAR_CHARITY]: [],
   };
 
   onMainTabChange(tab: TabComponent): void {
@@ -280,7 +281,16 @@ export class IntegrationInquiriesComponent {
   }
 
   onCharityTabChange($event: TabComponent): void {
-
+    const selectedTab = this._findTab(this.charityTabsData, 'tabName', $event.name);
+    if (!selectedTab || selectedTab.isLoaded) {
+      return;
+    }
+    let listComponent = this._getServiceComponent(selectedTab.serviceId);
+    if (!listComponent) {
+      return;
+    }
+    this.selectedService = selectedTab.serviceId;
+    listComponent?.reload$.next(null);
   }
 
   selectLog(log: GdxServiceLog): void {
@@ -317,6 +327,9 @@ export class IntegrationInquiriesComponent {
         // console.log(log)
         this.relatedData[this.gdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT] = log.gdxServiceResponseList;
         // console.log(this.relatedData)
+        break;
+      case GdxServicesEnum.QATAR_CHARITY:
+        this.relatedData[this.gdxServiceRelatedTypesEnum.QATAR_CHARITY] = log.gdxServiceResponseList;
         break;
       default:
         break;
@@ -398,6 +411,9 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.MME:
         this.relatedData[GdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT] = [];
+        break;
+      case GdxServicesEnum.QATAR_CHARITY:
+        this.relatedData[GdxServiceRelatedTypesEnum.QATAR_CHARITY] = [];
         break;
       default:
         break;

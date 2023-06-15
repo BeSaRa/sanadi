@@ -13,4 +13,5 @@ export enum GdxServiceRelatedTypesEnum {
   MOE_INSTALLMENTS ='moe_installments',
   MOE_PENDING_PAYMENTS = 'moe_pending_payments',
   MME_LEASED_CONTRACT = 'mme_leased_contract',
+  QATAR_CHARITY = 'qatar_charity_related_data',
 }

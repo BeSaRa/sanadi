@@ -164,7 +164,14 @@
     Qatar Zakat Fund
   </ng-template>
   <ng-template #QatarCharityTemplate>
-    Qatar Charity
+    <integration-inquiry-log-list #qatarCharityLogsComponent [gdxServiceId]="gdxServicesEnum.QATAR_CHARITY" [beneficiary]="beneficiary"
+                                  (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, charityTabsData)"
+                                  (onReady)="setLookupComponentMap($event, qatarCharityLogsComponent)"></integration-inquiry-log-list>
+    <div id="qatarCharityRelatedData">
+      <hr class="mt-0">
+      <qatar-charity-related-data [list]="relatedData[gdxServiceRelatedTypesEnum.QATAR_CHARITY]"></qatar-charity-related-data>
+    </div>
+
   </ng-template>
   <ng-template #QRCSTemplate>
     Qatar Red Crescent Society
