@@ -149,6 +149,21 @@ export class ProjectImplementation
   getImplementingAgencyTypeValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       implementingAgencyType: {langKey: 'implementation_agency_type', value: this.implementingAgencyType},
+      licenseStartDate: {langKey: 'license_start_date', value: this.licenseStartDate},
+      projectEvaluationSLA: {
+        langKey: 'project_evaluation_sla',
+        label: () => {
+          return this.langService.map.project_evaluation_sla + ' (' + this.langService.map.months + ')';
+        },
+        value: this.projectEvaluationSLA
+      },
+      licenseDuration: {
+        langKey: 'license_duration',
+        label: () => {
+          return this.langService.map.license_duration + ' (' + this.langService.map.months + ')';
+        },
+        value: this.licenseDuration
+      },
     }
   }
 
@@ -242,6 +257,10 @@ export class ProjectImplementation
         break;
       case 'licenseStatus':
         adminResultValue = this.licenseStatusInfo;
+        break;
+      case 'licenseStartDate':
+        const dateValue = DateUtils.getDateStringFromDate(this.licenseStartDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({ arName: dateValue, enName: dateValue });
         break;
       default:
         let value: any = this[property];
