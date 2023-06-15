@@ -38,13 +38,13 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      identificationNumber: {langKey: 'lbl_phone', value: this.identificationNumber},
-      fullName: {langKey: 'lbl_email', value: this.fullName},
-      jobTitle: {langKey: 'lbl_email', value: this.jobTitle},
+      identificationNumber: {langKey: 'identification_number', value: this.identificationNumber},
+      fullName: {langKey: 'full_name', value: this.fullName},
+      jobTitle: {langKey: 'job_title', value: this.jobTitle},
       email: {langKey: 'lbl_email', value: this.email},
-      phone: {langKey: 'lbl_email', value: this.phone},
-      extraPhone: {langKey: 'lbl_email', value: this.extraPhone},
-      nationality: {langKey: 'lbl_email', value: this.nationality},
+      phone: {langKey: 'lbl_phone', value: this.phone},
+      extraPhone: {langKey: 'mobile_number', value: this.extraPhone},
+      nationality: {langKey: 'lbl_nationality', value: this.nationality},
     };
   }
 
