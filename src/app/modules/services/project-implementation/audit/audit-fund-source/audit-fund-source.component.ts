@@ -20,7 +20,7 @@ export class AuditFundSourceComponent extends AuditListGenericComponent<FundSour
     super();
   }
   @Input() isGrant: boolean = false;
-  displayColumns: string[] = ['fullName', 'notes', 'totalCost', 'actions'];
+  displayColumns: string[] = ['notes', 'totalCost', 'actions'];
   actions: IMenuItem<FundSource>[] = [
     // show difference
     {
