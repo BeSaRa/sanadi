@@ -15,24 +15,29 @@
     [oldVersionList]="oldVersion.implementationTemplate" [caseType]="newVersion.caseType">
   </audit-implementation-template>
   <br>
-  <value-differences-list [differenceList]="implementingAgencyTypeDifferences"></value-differences-list>
+  <heading-row [labelKey]="'implementation_agencies'"></heading-row>
   <audit-intervention-implementing-agency-list [newVersionList]="newVersion.implementingAgencyList"
     [oldVersionList]="oldVersion.implementingAgencyList" [caseType]="newVersion.caseType">
   </audit-intervention-implementing-agency-list>
+  <value-differences-list [differenceList]="implementingAgencyTypeDifferences"></value-differences-list>
 </ng-template>
 <ng-template #funding_sources>
+  <heading-row [labelKey]="'menu_projects_fundraising'"></heading-row>
   <audit-implementation-fundraising [newVersionList]="newVersion.implementationFundraising"
     [oldVersionList]="oldVersion.implementationFundraising" [caseType]="newVersion.caseType">
   </audit-implementation-fundraising>
-  <audit-payment [newVersionList]="newVersion.payment" [oldVersionList]="oldVersion.payment"
-    [caseType]="newVersion.caseType">
-  </audit-payment>
-  <audit-fund-source [newVersionList]="newVersion.selfFinancing" [oldVersionList]="oldVersion.selfFinancing"
-    [caseType]="newVersion.caseType">
-  </audit-fund-source>
+  <heading-row [labelKey]="'grant_financial'"></heading-row>
   <audit-fund-source [isGrant]="true" [newVersionList]="newVersion.financialGrant"
     [oldVersionList]="oldVersion.financialGrant" [caseType]="newVersion.caseType">
   </audit-fund-source>
+  <heading-row [labelKey]="'self_financial'"></heading-row>
+  <audit-fund-source [newVersionList]="newVersion.selfFinancing" [oldVersionList]="oldVersion.selfFinancing"
+    [caseType]="newVersion.caseType">
+  </audit-fund-source>
+  <heading-row [labelKey]="'payments'"></heading-row>
+  <audit-payment [newVersionList]="newVersion.payment" [oldVersionList]="oldVersion.payment"
+    [caseType]="newVersion.caseType">
+  </audit-payment>
 </ng-template>
 <ng-template #specialExplanationTemplate>
   <value-differences-list [differenceList]="explanationDifferences"></value-differences-list>
