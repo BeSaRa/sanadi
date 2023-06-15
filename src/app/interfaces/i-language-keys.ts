@@ -1991,11 +1991,12 @@ export interface ILanguageKeys {
   effort_impact_description_step_4: string;
   effort_impact_description_step_5: string;
   effort_impact_usage_description: string;
-  menu_admin_permissions:string;
-  lbl_add_permission:string;
-  lbl_edit_permission:string;
-  lbl_group:string;
-  lbl_category:string;
-  lbl_permission_key:string;
-  lookup_permission_group:string;
+  menu_admin_permissions: string;
+  lbl_add_permission: string;
+  lbl_edit_permission: string;
+  lbl_group: string;
+  lbl_category: string;
+  lbl_permission_key: string;
+  lookup_permission_group: string;
+  permission: string;
 }

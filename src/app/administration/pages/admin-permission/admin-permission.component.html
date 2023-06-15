@@ -6,7 +6,7 @@
         <ng-container cdkColumnDef="extra-header">
           <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
             <table-header
-                      tableTitle="lbl_permissions"
+                      tableTitle="menu_admin_permissions"
                       [reload$]="reload$"
                       (textChange)="filterControl.setValue($event)"
                       [sort]="table.dataSource.sort"
