@@ -25,6 +25,7 @@ export class ExecutiveManagementPopupComponent extends UiCrudDialogGenericCompon
   popupTitleKey: keyof ILanguageKeys;
   pageTitle: keyof ILanguageKeys;
   hidePassport: boolean;
+  hideQId: boolean;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   countriesList: Country[] = [];
 
@@ -37,6 +38,7 @@ export class ExecutiveManagementPopupComponent extends UiCrudDialogGenericCompon
     this.setInitDialogData(data);
     this.pageTitle = (data.extras && data.extras.pageTitle) ?? 'managers';
     this.hidePassport = (data.extras && data.extras.hidePassport);
+    this.hideQId = (data.extras && data.extras.hideQId);
     this.popupTitleKey = this.pageTitle;
   }
 
@@ -94,11 +96,16 @@ export class ExecutiveManagementPopupComponent extends UiCrudDialogGenericCompon
   get nationalityField(): UntypedFormControl {
     return (this.form.get('nationality')) as UntypedFormControl;
   }
-
+  get getQidField(): UntypedFormControl {
+    return (this.form.get('identificationNumber')) as UntypedFormControl;
+  }
   buildForm(): void {
     this.form = this.fb.group(this.model.getManagerFields(true));
     if (this.nationalities.length) {
       this.nationalityField.setValidators([CustomValidators.required])
+    }
+    if(!this.hideQId) {
+      this.getQidField.setValidators([this.customValidators.required])
     }
   }
 

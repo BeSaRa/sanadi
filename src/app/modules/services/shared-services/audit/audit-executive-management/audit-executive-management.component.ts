@@ -21,12 +21,16 @@ export class AuditExecutiveManagementComponent extends AuditListGenericComponent
   }
 
   @Input() hidePassport: boolean = false;
+  @Input() hideQId: boolean = true;
 
-  private columns = ['arabicName', 'englishName','jobTitle', 'email', 'phone','nationality', 'actions'];
+  private columns = ['identificationNumber', 'arabicName', 'englishName','jobTitle', 'email', 'phone','nationality', 'actions'];
 
   get displayColumns(): string[] {
     if (this.hidePassport) {
       return this.columns.filter(x => x !== 'passportNumber');
+    }
+    if (this.hideQId) {
+      return this.columns.filter(x => x !== 'identificationNumber');
     }
     return this.columns;
   }
@@ -50,6 +54,6 @@ export class AuditExecutiveManagementComponent extends AuditListGenericComponent
   }
 
   getControlLabels(item: ExecutiveManagement): { [p: string]: ControlValueLabelLangKey } {
-    return item.getValuesWithLabels(this.hidePassport);
+    return item.getValuesWithLabels(this.hidePassport, this.hideQId);
   }
 }

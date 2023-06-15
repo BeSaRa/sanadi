@@ -13,6 +13,10 @@
               </table-header>
             </th>
           </ng-container>
+          <ng-container cdkColumnDef="identificationNumber">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.identification_number}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.identificationNumber}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="arabicName">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.arabic_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.arabicName}} </td>

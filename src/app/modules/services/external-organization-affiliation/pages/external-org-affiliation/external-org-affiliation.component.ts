@@ -9,7 +9,6 @@ import { ExternalOrgAffiliationSearchCriteria } from '@models/external-org-affil
 import { LicenseService } from '@services/license.service';
 import { Lookup } from '@models/lookup';
 import { IKeyValue } from '@contracts/i-key-value';
-import { ReadinessStatus } from '@app/types/types';
 import { ContactOfficer } from '@models/contact-officer';
 import { CountryService } from '@services/country.service';
 import { Country } from '@models/country';
