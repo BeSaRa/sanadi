@@ -7,14 +7,12 @@
             tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content" #dialogContent>
-  <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+<div class="dialog-content w800px" #dialogContent>
+  <form novalidate autocomplete="off" [formGroup]="form">
     <div class="row">
       <div class="col-sm-12 mb-4 position-relative">
-        <label asteriskIfRequired="permissionKey" for="permissionKey" class="form-label">{{lang.map.lbl_permission_key}}</label>
-        <input id="permissionKey" validationClasses="permissionKey"
-        [readOnly]="true"  formControlName="permissionKey" class="form-control">
-        <app-field-error-message controlName="permissionKey"></app-field-error-message>
+        <label for="permissionKey" class="form-label">{{lang.map.lbl_permission_key}}</label>
+        <input id="permissionKey" [readOnly]="true" class="form-control" value="{{model.permissionKey}}">
       </div>
     </div>
     <div class="row">
@@ -30,42 +28,40 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-12 col-md-6 mb-4  position-relative">
-        <label for="category" asteriskIfRequired="category"
-          class="form-label">{{lang.map.lbl_user_type}}</label>
-        <ng-select validationClasses="type" [readonly]="isViewForm" labelForId="category" placeholder="{{lang.map.select}}"
-          [notFoundText]="lang.map.msg_not_found" formControlName="category" id="category" appendTo="body">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label for="category" asteriskIfRequired="category" class="form-label">{{lang.map.lbl_user_type}}</label>
+        <ng-select validationClasses="category" [readonly]="readonly" labelForId="category"
+                   placeholder="{{lang.map.select}}" [clearable]="false"
+                   [notFoundText]="lang.map.msg_not_found" formControlName="category" id="category" appendTo="body">
           <ng-option *ngFor="let option of categoryList" [value]="option.lookupKey">
             {{option.getName()}}
           </ng-option>
         </ng-select>
-        <app-field-error-message controlName=" category">
-        </app-field-error-message>
+        <app-field-error-message controlName="category"></app-field-error-message>
       </div>
 
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
-        <label for="groupId" asteriskIfRequired="groupId"
-          class="form-label">{{lang.map.lbl_group}}</label>
-        <ng-select validationClasses="type" [readonly]="isViewForm" labelForId="groupId" placeholder="{{lang.map.select}}"
-          [notFoundText]="lang.map.msg_not_found" formControlName="groupId" id="groupId" appendTo="body">
-          <ng-option *ngFor="let option of groupList" [value]="option.id">
+        <label for="groupId" asteriskIfRequired="groupId" class="form-label">{{lang.map.lbl_group}}</label>
+        <ng-select validationClasses="groupId" [readonly]="readonly" labelForId="groupId"
+                   placeholder="{{lang.map.select}}" [clearable]="false"
+                   [notFoundText]="lang.map.msg_not_found" formControlName="groupId" id="groupId" appendTo="body">
+          <ng-option *ngFor="let option of groupList" [value]="option.id" [disabled]="!option.isActive()">
             {{option.getName()}}
           </ng-option>
         </ng-select>
-        <app-field-error-message controlName=" groupId">
-        </app-field-error-message>
+        <app-field-error-message controlName="groupId"></app-field-error-message>
       </div>
     </div>
     <div class="row">
-     <div class="col-12 mb-4 position-relative">
-      <label asteriskIfRequired="description" for="description"
-        class="form-label">{{
-        lang.map.lbl_description }}</label>
-      <textarea rows="5" id="description" [maxlength]="customValidators.defaultLengths.EXPLANATIONS" validationClasses="description"
-        formControlName="description" class="form-control" trimInput></textarea>
-      <app-field-error-message controlName="description"></app-field-error-message>
+      <div class="col-12 mb-4 position-relative">
+        <label asteriskIfRequired="description" for="description"
+               class="form-label">{{lang.map.lbl_description }}</label>
+        <textarea rows="5" id="description" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                  validationClasses="description"
+                  formControlName="description" class="form-control" trimInput></textarea>
+        <app-field-error-message controlName="description"></app-field-error-message>
+      </div>
     </div>
-   </div>
   </form>
 </div>
 <div class="dialog-actions">

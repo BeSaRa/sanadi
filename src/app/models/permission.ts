@@ -1,14 +1,16 @@
 import {BaseModel} from './base-model';
-import {Observable} from 'rxjs';
 import {FactoryService} from '@services/factory.service';
 import {LangService} from '@services/lang.service';
 import {INames} from '@contracts/i-names';
 import {AdminResult} from '@app/models/admin-result';
 import {PermissionCategoryEnum} from '@app/enums/permission-category.enum';
-import { InterceptModel } from '@app/decorators/decorators/intercept-model';
-import { PermissionInterceptor } from '@app/model-interceptors/permission-interceptor';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { PermissionService } from '@app/services/permission.service';
+import {InterceptModel} from '@app/decorators/decorators/intercept-model';
+import {PermissionInterceptor} from '@app/model-interceptors/permission-interceptor';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {PermissionService} from '@app/services/permission.service';
+import {ISearchFieldsMap} from "@app/types/types";
+import {normalSearchFields} from "@helpers/normal-search-fields";
+import {infoSearchFields} from "@helpers/info-search-fields";
 
 const interceptor: PermissionInterceptor = new PermissionInterceptor()
 
@@ -29,6 +31,10 @@ export class Permission extends BaseModel<Permission, any> {
   private langService: LangService;
   service!: PermissionService;
 
+  searchFields: ISearchFieldsMap<Permission> = {
+    ...normalSearchFields(['arName', 'enName']),
+    ...infoSearchFields(['categoryInfo', 'groupInfo'])
+  }
 
   constructor() {
     super();
@@ -57,9 +63,9 @@ export class Permission extends BaseModel<Permission, any> {
   convertToAdminResult(): AdminResult {
     return AdminResult.createInstance({enName: this.enName, arName: this.arName, id: this.id})
   }
+
   buildForm(controls?: boolean): any {
     const {
-      permissionKey,
       arName,
       enName,
       description,
@@ -67,7 +73,6 @@ export class Permission extends BaseModel<Permission, any> {
       category
     } = this;
     return {
-      permissionKey: controls ?[{value:permissionKey, disabled: true},[]]:permissionKey,
       arName: controls ? [arName, [
         CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
@@ -80,7 +85,7 @@ export class Permission extends BaseModel<Permission, any> {
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
-      description: controls ? [description, [CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
+      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
       groupId: controls ? [groupId, [CustomValidators.required]] : groupId,
       category: controls ? [category, [CustomValidators.required]] : category
     }
