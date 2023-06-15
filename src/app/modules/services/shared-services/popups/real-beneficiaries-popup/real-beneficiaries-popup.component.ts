@@ -148,7 +148,7 @@ export class RealBeneficiariesPopupComponent implements OnInit, AfterViewInit {
       controlName: 'startDate',
       langKey: 'date_becoming_real_benefeciary',
       type: 'date',
-      hide: true,
+      // hide: true,
     },
     {
       gridClass: 'col-sm-6',

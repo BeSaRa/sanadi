@@ -68,6 +68,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   selectedTemplate!: CustomServiceTemplate;
   selectedTemplateControl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
   showOtherService: boolean = false;
+  openFromEnum = OpenFrom;
   formProperties = {
     requestType: () => {
       return this.getObservableField('requestTypeField', 'requestType');
@@ -465,9 +466,8 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       })
     } else {
       this.customServiceTemplate.loadTemplatesByCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
-        this.dialogService.show(SelectCustomServiceTemplatePopupComponent, {list: data, showSelectBtn: false,showDelete:true})
+        this.dialogService.show(SelectCustomServiceTemplatePopupComponent, {list: data, showSelectBtn: false, showDelete:this.isLicensingUser && this.openFrom === this.openFromEnum.USER_INBOX})
       })
-
     }
   }
 
