@@ -83,7 +83,6 @@ export class FieldAssessmentServiceLinkComponen implements OnInit, OnDestroy {
     this.FieldAssessmentServiceLinkChanged$
       .pipe(map(FieldAssessmentServiceLink => this.FieldAssessmentServiceLink = FieldAssessmentServiceLink))
       .subscribe((fieldAssessmentServiceLink) => {
-        console.log(fieldAssessmentServiceLink)
         this.selectedLinksIds = fieldAssessmentServiceLink.map(FieldAssessmentServiceLink => FieldAssessmentServiceLink.serviceId)
       });
   }
@@ -116,7 +115,6 @@ export class FieldAssessmentServiceLinkComponen implements OnInit, OnDestroy {
     addLink$
       .pipe(takeUntil(this.destroy$))
       .subscribe((FieldAssessmentServiceLink) => {
-        console.log(FieldAssessmentServiceLink)
         this.toast.success(this.lang.map.msg_create_x_success.change({ x: FieldAssessmentServiceLink.serviceInfo.getName() }))
         this.FieldAssessmentServiceLinkChanged$.next(this.FieldAssessmentServiceLink.concat([FieldAssessmentServiceLink]));
         this.selectedLinkControl.setValue(null);
