@@ -143,6 +143,14 @@ export class AdminLookupComponent {
       lookupType: AdminLookupTypeEnum.FUNCTIONAL_GROUP,
       validStatus: () => true,
       isTouchedOrDirty: () => true
+    },
+    permissionGroup: {
+      name: 'permissionGroup',
+      index: 13,
+      langKey: 'lookup_permission_group',
+      lookupType: AdminLookupTypeEnum.PERMISSION_GROUP,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     }
   };
   selectedWorkFieldTabIndex$: Subject<number> = new Subject<number>();
@@ -154,6 +162,9 @@ export class AdminLookupComponent {
   getTabLabel(lookupType: AdminLookupTypeEnum): string {
     if (lookupType === AdminLookupTypeEnum.WORK_FIELD) {
       return this.lang.map.work_field;
+    }
+    if (lookupType === AdminLookupTypeEnum.PERMISSION_GROUP) {
+      return this.lang.map.lookup_permission_group;
     }
     return this.lookupService.listByCategory.AdminLookupType.find(lookup => lookup.lookupKey === lookupType)?.getName() || '';
   }

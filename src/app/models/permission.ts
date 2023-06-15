@@ -5,9 +5,18 @@ import {LangService} from '@services/lang.service';
 import {INames} from '@contracts/i-names';
 import {AdminResult} from '@app/models/admin-result';
 import {PermissionCategoryEnum} from '@app/enums/permission-category.enum';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { PermissionInterceptor } from '@app/model-interceptors/permission-interceptor';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { PermissionService } from '@app/services/permission.service';
 
+const interceptor: PermissionInterceptor = new PermissionInterceptor()
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class Permission extends BaseModel<Permission, any> {
-  service: any;
   permissionKey!: string;
   description: string | undefined;
   groupId!: number;
@@ -15,29 +24,19 @@ export class Permission extends BaseModel<Permission, any> {
   category!: number;
 
   categoryInfo!: AdminResult;
+  groupInfo!: AdminResult;
 
   private langService: LangService;
+  service!: PermissionService;
+
 
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');
+    this.service = FactoryService.getService('PermissionService')
+
   }
 
-  create(): Observable<Permission> {
-    throw new Error('No Impl');
-  }
-
-  delete(): Observable<boolean> {
-    throw new Error('No Impl');
-  }
-
-  save(): Observable<Permission> {
-    throw new Error('No Impl');
-  }
-
-  update(): Observable<Permission> {
-    throw new Error('No Impl');
-  }
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
@@ -57,5 +56,33 @@ export class Permission extends BaseModel<Permission, any> {
 
   convertToAdminResult(): AdminResult {
     return AdminResult.createInstance({enName: this.enName, arName: this.arName, id: this.id})
+  }
+  buildForm(controls?: boolean): any {
+    const {
+      permissionKey,
+      arName,
+      enName,
+      description,
+      groupId,
+      category
+    } = this;
+    return {
+      permissionKey: controls ?[{value:permissionKey, disabled: true},[]]:permissionKey,
+      arName: controls ? [arName, [
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('AR_NUM_ONE_AR')
+      ]] : arName,
+      enName: controls ? [enName, [
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('ENG_NUM_ONE_ENG')
+      ]] : enName,
+      description: controls ? [description, [CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
+      groupId: controls ? [groupId, [CustomValidators.required]] : groupId,
+      category: controls ? [category, [CustomValidators.required]] : category
+    }
   }
 }
