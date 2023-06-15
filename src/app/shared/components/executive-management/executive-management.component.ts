@@ -18,13 +18,14 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 export class ExecutiveManagementComponent extends UiCrudListGenericComponent<ExecutiveManagement> {
 
   @Input() hidePassport: boolean = false;
+  @Input() hideQId: boolean = true;
   @Input() pageTitleKey: keyof ILanguageKeys = 'managers';
 
   constructor() {
     super();
   }
 
-  displayColumns: string[] = ['arabicName', 'englishName', 'email', 'passportNumber', 'actions'];
+  displayColumns: string[] = ['identificationNumber', 'arabicName', 'englishName', 'email', 'passportNumber', 'actions'];
   actions: IMenuItem<ExecutiveManagement>[] = [
     {
       type: 'action',
@@ -52,6 +53,9 @@ export class ExecutiveManagementComponent extends UiCrudListGenericComponent<Exe
     if (this.hidePassport) {
       this.displayColumns = this.displayColumns.filter(x => x !== 'passportNumber');
     }
+    if (this.hideQId) {
+      this.displayColumns = this.displayColumns.filter(x => x !== 'identificationNumber');
+    }
   }
 
   _getNewInstance(override?: Partial<ExecutiveManagement> | undefined): ExecutiveManagement {
@@ -69,7 +73,8 @@ export class ExecutiveManagementComponent extends UiCrudListGenericComponent<Exe
   getExtraDataForPopup(): IKeyValue {
     return {
       pageTitle: this.pageTitleKey,
-      hidePassport: this.hidePassport
+      hidePassport: this.hidePassport,
+      hideQId: this.hideQId
     };
   }
 }

@@ -19,11 +19,12 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
   phone!: string;
   nationality!: number;
   passportNumber!: string;
+  identificationNumber!: string;
   nationalityInfo!: AdminResult
 
   searchFields: ISearchFieldsMap<ExecutiveManagement> = {
     ...infoSearchFields(['nationalityInfo']),
-    ...normalSearchFields(['arabicName', 'englishName', 'email', 'passportNumber'])
+    ...normalSearchFields(['arabicName', 'englishName', 'email', 'passportNumber', 'identificationNumber'])
   };
 
   searchFieldsNoPassport: ISearchFieldsMap<ExecutiveManagement> = {
@@ -61,7 +62,8 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
   }
 
   getManagerFields(control: boolean = false): any {
-    const values = ObjectUtils.getControlValues<ExecutiveManagement>(this.getValuesWithLabels());
+    const values = ObjectUtils.getControlValues<ExecutiveManagement>(this.getValuesWithLabels(false, false));
+    console.log(values)
     return {
       arabicName: control ? [values.arabicName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
         CustomValidators.maxLength(100),
@@ -73,12 +75,14 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
       jobTitle: control ? [values.jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : values.jobTitle,
       phone: control ? [values.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phone,
       nationality: control ? [values.nationality] : values.nationality,
-      passportNumber: control ? [values.passportNumber, [...CustomValidators.commonValidations.passport]] : values.passportNumber
+      passportNumber: control ? [values.passportNumber, [...CustomValidators.commonValidations.passport]] : values.passportNumber,
+      identificationNumber: control ? [values.identificationNumber, [...CustomValidators.commonValidations.qId]] : values.identificationNumber
     }
   }
 
-  getValuesWithLabels(hidePassport: boolean = false): { [key: string]: ControlValueLabelLangKey } {
+  getValuesWithLabels(hidePassport: boolean = false, hideQId: boolean = true): { [key: string]: ControlValueLabelLangKey } {
     let valuesWithLabels: { [key: string]: ControlValueLabelLangKey } = {
+      identificationNumber: {langKey: 'identification_number', value: this.identificationNumber},
       arabicName: {langKey: 'arabic_name', value: this.arabicName},
       englishName: {langKey: 'english_name', value: this.englishName},
       email: {langKey: 'lbl_email', value: this.email},
@@ -90,6 +94,9 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
     if (hidePassport) {
       delete valuesWithLabels.passportNumber;
     }
+    if (hideQId) {
+      delete valuesWithLabels.identificationNumber;
+    }
     return valuesWithLabels;
   }
 
@@ -100,6 +107,7 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
     && this.phone === record.phone
     && this.nationality === record.nationality
     && this.jobTitle === record.jobTitle
-    && this.passportNumber === record.passportNumber;
+    && this.passportNumber === record.passportNumber
+    && this.identificationNumber === record.identificationNumber;
   }
 }

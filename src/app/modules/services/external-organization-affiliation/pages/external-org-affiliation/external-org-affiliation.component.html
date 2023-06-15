@@ -324,6 +324,7 @@
         #managersTab
         [list]="model?.executiveManagementDTOs || []"
         [readonly]="isCancelRequestType() || readonly"
+        [hideQId]="false"
       ></executive-management>
     </ng-template>
     <ng-template #contact_officer>
