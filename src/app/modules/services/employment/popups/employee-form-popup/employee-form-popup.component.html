@@ -120,6 +120,19 @@
           "/>
         <app-field-error-message controlName="jobNumber"></app-field-error-message>
       </div>
+      <!-- contractLocationType -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="contractLocationType" for="contractLocationType" labelForId="contractLocationType"
+               class="form-label">{{ lang.map.contract_location_type }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
+                   [notFoundText]="lang.map.msg_not_found" appendTo="body" [readonly]="!isEditRequestTypeAllowed"
+                   (change)="handleOfficeNameValidationsByContractLocationType()" id="contractLocationType"
+                   validationClasses="contractLocationType" formControlName="contractLocationType">
+          <ng-option *ngFor="let option of ContractLocationTypeList" [value]="option.lookupKey">{{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="contractLocationType"></app-field-error-message>
+      </div>
       <!-- officeId -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper">
         <label asteriskIfRequired="officeId" for="officeId" labelForId="officeId" class="form-label">{{
@@ -132,6 +145,13 @@
             {{option.getName()}}</ng-option>
         </ng-select>
         <app-field-error-message controlName="officeId"></app-field-error-message>
+      </div>
+      <!-- department -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="department" for="department" class="form-label">{{ lang.map.department }}</label>
+        <input id="department" validationClasses="department" formControlName="department" class="form-control"
+               [readonly]="!isEditRequestTypeAllowed"/>
+        <app-field-error-message controlName="department"></app-field-error-message>
       </div>
       <!-- functionalGroup -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper">
@@ -147,31 +167,11 @@
         </ng-select>
         <app-field-error-message controlName="functionalGroup"></app-field-error-message>
       </div>
-      <!-- department -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="department" for="department" class="form-label">{{ lang.map.department }}</label>
-        <input id="department" validationClasses="department" formControlName="department" class="form-control"
-               [readonly]="!isEditRequestTypeAllowed"/>
-        <app-field-error-message controlName="department"></app-field-error-message>
-      </div>
       <!-- jobTitle -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="jobTitle" for="jobTitle" class="form-label">{{lang.map.job_title}}</label>
         <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" class="form-control" trimInput>
         <app-field-error-message controlName="jobTitle"></app-field-error-message>
-      </div>
-      <!-- contractLocationType -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="contractLocationType" for="contractLocationType" labelForId="contractLocationType"
-               class="form-label">{{ lang.map.contract_location_type }}</label>
-        <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
-                   [notFoundText]="lang.map.msg_not_found" appendTo="body" [readonly]="!isEditRequestTypeAllowed"
-                   (change)="handleOfficeNameValidationsByContractLocationType()" id="contractLocationType"
-                   validationClasses="contractLocationType" formControlName="contractLocationType">
-          <ng-option *ngFor="let option of ContractLocationTypeList" [value]="option.lookupKey">{{ option.getName() }}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="contractLocationType"></app-field-error-message>
       </div>
       <!-- contractLocation -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
