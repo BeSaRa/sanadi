@@ -1,0 +1,67 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ lang.map[label] }}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content w800px">
+  <div class="row">
+    <form [formGroup]="approvalForm">
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="followUpDate" for="followUpDate"
+            class="form-label">{{lang.map.followup_date}}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="followUpDate" id="followUpDate"
+              [options]="datepickerOptionsMap.followUpDate" (click)="dpFollowUpDate.toggleCalendar()"
+              #dpFollowUpDate="angular-mydatepicker" angular-mydatepicker validationClasses="followUpDate"></div>
+            <app-field-error-message controlName="followUpDate"></app-field-error-message>
+          </div>
+        </div>
+        <div class=" col-md-6 col-sm-12 mb-4 position-relative">
+          <div class="form-check form-switch pt-4">
+            <input type="checkbox" id="conditionalLicenseIndicator" formControlName="conditionalLicenseIndicator"
+              class="form-check-input cursor-pointer">
+            <label for="conditionalLicenseIndicator" class="cursor-pointer">{{lang.map.conditional_license}}
+              : {{conditionalLicenseField?.value ? lang.map.lbl_yes : lang.map.lbl_no}}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-3 position-relative">
+          <label asteriskIfRequired="publicTerms" for="publicTerms" class="form-label">{{lang.map.public_terms}}</label>
+          <textarea id="publicTerms" validationClasses="publicTerms" formControlName="publicTerms"
+            class="form-control"></textarea>
+          <app-field-error-message controlName="publicTerms"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <label for="userCustomTerms" class="col-form-label">{{lang.map.lbl_user_custom_terms}}</label>
+        <div class="col-sm-12 mb-3 input-group d-flex">
+          <ng-select class="flex-grow-1" id="userCustomTerms" [notFoundText]="lang.map.msg_not_found"
+            (change)="onCustomTermsChange($event)">
+            <ng-option [value]="term" *ngFor="let term of customTerms">{{term.terms}}</ng-option>
+          </ng-select>
+          <button type="button" (click)="openAddCustomTermDialog()" class="input-group-text">
+            <i class="mdi mdi-plus text-primary" [tooltip]="lang.map.btn_add"></i>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-3 position-relative">
+          <label asteriskIfRequired="customTerms" for="customTerms" class="form-label">{{lang.map.custom_terms}}</label>
+          <textarea id="customTerms" validationClasses="customTerms" formControlName="customTerms"
+            class="form-control"></textarea>
+          <app-field-error-message controlName="customTerms"></app-field-error-message>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button class="btn btn-primary" (click)="action$.next(null)">
+    {{ lang.map.approve_task }}
+  </button>
+  <button dialogClose class="btn btn-secondary">
+    {{ lang.map.btn_close }}
+  </button>
+</div>

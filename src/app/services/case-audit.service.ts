@@ -114,6 +114,9 @@ import { CaseTemplateFieldsPopupComponent } from '@app/modules/e-services-main/p
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
 import { CharityOrganizationUpdateInterceptor } from '@app/model-interceptors/charity-organization-update-interceptor';
 import { AuditCharityOrganizationUpdateComponent } from '@app/modules/services/charity-organization-update/audit/audit-charity-organization-update/audit-charity-organization-update.component';
+import { ProjectCompletionInterceptor } from '@app/model-interceptors/project-completion-interceptor';
+import { ProjectCompletion } from '@app/models/project-completion';
+import { AuditProjectCompletionComponent } from '@app/modules/services/project-completion/audit/audit-project-completion/audit-project-completion.component';
 
 @CastResponseContainer({
   $default: {
@@ -160,6 +163,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: CoordinationWithOrganizationsRequest,
     [CaseTypes.EXTERNAL_PROJECT_MODELS]: ProjectModel,
     [CaseTypes.CHARITY_ORGANIZATION_UPDATE]: CharityOrganizationUpdate,
+    [CaseTypes.PROJECT_COMPLETION]: ProjectCompletion,
   };
   caseInterceptors: { [key in CaseTypes]?: any } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: CustomsExemptionRemittanceInterceptor,
@@ -192,6 +196,7 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.PROJECT_IMPLEMENTATION]: ProjectImplementationInterceptor,
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: UrgentJointReliefCampaignInterceptor,
     [CaseTypes.NPO_MANAGEMENT]: NpoManagementInterceptor,
+    [CaseTypes.PROJECT_COMPLETION]: ProjectCompletionInterceptor,
   };
   auditCaseComponents: { [key in CaseTypes]?: ComponentType<any> } = {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: AuditCustomsExemptionComponent,
@@ -224,6 +229,8 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     [CaseTypes.PROJECT_IMPLEMENTATION]: AuditProjectImplementationComponent,
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: AuditUrgentJointReliefCampaignComponent,
     [CaseTypes.NPO_MANAGEMENT]: AuditNpoManagementComponent,
+    [CaseTypes.PROJECT_COMPLETION]: AuditProjectCompletionComponent,
+
   };
 
   constructor(public http: HttpClient,

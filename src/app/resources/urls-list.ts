@@ -143,4 +143,5 @@ export const urlsList: Partial<IAppUrls> = {
   FIELD_ASSESSMENT_SERVICE: '/admin/field-assessment-service',
   CASE_AUDIT: '/admin/case-audit',
   REASSIGN_BULK: '/inbox/task/reassign/bulk',
+  PROJECT_COMPLETION: '/project-completion'
 };

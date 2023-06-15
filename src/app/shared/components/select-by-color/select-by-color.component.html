@@ -1,0 +1,20 @@
+<div class="d-flex align-items-center">
+  <div class="me-3 mb-5">
+    <strong>{{YLabel}}</strong>
+  </div>
+  <div class="select-container">
+    <div class="d-flex cell-row" *ngFor="let row of grid; let i = index">
+      <div class="cell" style="width: 28px">{{i + 1}}</div>
+      <div class="cell selectable" (click)="select({x: j + 1, y: i+ 1})" [ngStyle]="{'background': color}"
+        *ngFor="let color of row; let j = index;">
+      </div>
+    </div>
+    <div class="d-flex cell-row">
+      <div class="cell" style="width: 28px"></div>
+      <div class="cell" *ngFor="let _ of grid; let i = index;">{{i + 1}}</div>
+    </div>
+    <div class="text-center mt-3">
+      <strong>{{XLabel}}</strong>
+    </div>
+  </div>
+</div>

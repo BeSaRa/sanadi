@@ -138,5 +138,6 @@ export interface IAppUrls {
   TRAINING_PROGRAM_PARTNER: string;
   CASE_AUDIT: string;
   REASSIGN_BULK:string;
+  PROJECT_COMPLETION:string;
   [index: string]: string;
 }

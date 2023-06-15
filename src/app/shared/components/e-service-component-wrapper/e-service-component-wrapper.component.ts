@@ -1513,6 +1513,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
       || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
       || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT)
+      || item.getResponses().includes(WFResponseType.PROJECT_COMPLETION_SEND_TO_SINGLE_DEPARTMENT)
       || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
       || item.getResponses().includes(WFResponseType.PROJECT_IMPLEMENTATION_SEND_TO_SINGLE_DEPARTMENT)
       || item.getResponses().includes(WFResponseType.FINANCIAL_TRANSFER_SEND_TO_SINGLE_DEPARTMENT)
@@ -1529,7 +1530,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)
       || item.getResponses().includes(WFResponseType.FINANCIAL_TRANSFER_SEND_TO_SINGLE_DEPARTMENT)
     );
-    let isSendToLicenseDepartment = item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT);
+    let isSendToLicenseDepartment = item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT)
+    || item.getResponses().includes(WFResponseType.PROJECT_COMPLETION_SEND_TO_SINGLE_DEPARTMENT);
     let result: { label: string, tooltip: string } = {label: '', tooltip: ''};
     if (isSendToRiskAndCompliance) {
       result.label = this.lang.map.send_to_risk_and_compliance_department;

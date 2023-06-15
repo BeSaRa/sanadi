@@ -3,7 +3,6 @@ import {UntypedFormBuilder, UntypedFormControl} from '@angular/forms';
 import {ListModelComponent} from '@app/generics/ListModel-component';
 import {DateUtils} from '@helpers/date-utils';
 import {ILanguageKeys} from '@contracts/i-language-keys';
-import {JobTitle} from '@models/job-title';
 import {OrgMember} from '@models/org-member';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
@@ -29,7 +28,6 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
 
   @Input() extended = false;
   @Input() pageTitle!: keyof ILanguageKeys;
-  @Input() jobTitles: JobTitle[] = [];
   columns = ['fullName', 'identificationNumber', 'jobTitle'];
   filterControl: UntypedFormControl = new UntypedFormControl('');
 

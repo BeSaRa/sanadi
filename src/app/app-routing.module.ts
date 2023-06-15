@@ -109,6 +109,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/project-completion',
+        canActivate: [NewServicePermissionGuard.canActivate],
+        loadChildren: () => import('./modules/services/project-completion/project-completion.module')
+          .then(m => m.ProjectCompletionModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.PROJECT_COMPLETION_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.PROJECT_COMPLETION
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/general-process-notification',
         canActivate: [NewServicePermissionGuard.canActivate],
         loadChildren: () => import('./modules/services/general-process-notification/general-process-notification.module')

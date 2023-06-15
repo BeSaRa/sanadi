@@ -1,25 +1,25 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, UntypedFormControl} from '@angular/forms';
-import {DialogService} from '@services/dialog.service';
-import {LangService} from '@services/lang.service';
-import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Observable, of} from 'rxjs';
-import {exhaustMap, filter, map, tap} from 'rxjs/operators';
-import {GeneralAssociationInternalMember} from '@models/general-association-internal-member';
-import {InternalUserService} from '@services/internal-user.service';
-import {GeneralAssociationInternalMemberTypeEnum} from '@enums/general-association-internal-member-type-enum';
-import {InternalUser} from '@models/internal-user';
-import {GeneralAssociationMeetingAttendance} from '@models/general-association-meeting-attendance';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {GeneralAssociationMeetingStepNameEnum} from '@enums/general-association-meeting-step-name-enum';
-import {MeetingMemberTaskStatus} from '@models/meeting-member-task-status';
-import {MeetingAttendanceReport} from '@models/meeting-attendance-report';
-import {GeneralMeetingAttendanceNote} from '@models/general-meeting-attendance-note';
-import {GeneralMeetingsMemberStatus} from '@app/interfaces/general-meetings-member-status';
-import {ActionIconsEnum} from "@enums/action-icons-enum";
-import {UserClickOn} from "@enums/user-click-on.enum";
-import {ToastService} from "@services/toast.service";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, UntypedFormControl } from '@angular/forms';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Observable, of } from 'rxjs';
+import { exhaustMap, filter, map, tap } from 'rxjs/operators';
+import { GeneralAssociationInternalMember } from '@models/general-association-internal-member';
+import { InternalUserService } from '@services/internal-user.service';
+import { GeneralAssociationInternalMemberTypeEnum } from '@enums/general-association-internal-member-type-enum';
+import { InternalUser } from '@models/internal-user';
+import { GeneralAssociationMeetingAttendance } from '@models/general-association-meeting-attendance';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { GeneralAssociationMeetingStepNameEnum } from '@enums/general-association-meeting-step-name-enum';
+import { MeetingMemberTaskStatus } from '@models/meeting-member-task-status';
+import { MeetingAttendanceReport } from '@models/meeting-attendance-report';
+import { GeneralMeetingAttendanceNote } from '@models/general-meeting-attendance-note';
+import { GeneralMeetingsMemberStatus } from '@app/interfaces/general-meetings-member-status';
+import { ActionIconsEnum } from "@enums/action-icons-enum";
+import { UserClickOn } from "@enums/user-click-on.enum";
+import { ToastService } from "@services/toast.service";
 
 @Component({
   selector: 'manage-internal-users',
@@ -60,16 +60,20 @@ export class ManageInternalUsersComponent implements OnInit {
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   constructor(private dialog: DialogService,
-              public lang: LangService,
-              private fb: FormBuilder,
-              private toast: ToastService,
-              private generalAssociationMeetingService: GeneralAssociationMeetingAttendanceService,
-              private internalUserService: InternalUserService) {
+    public lang: LangService,
+    private fb: FormBuilder,
+    private toast: ToastService,
+    private generalAssociationMeetingService: GeneralAssociationMeetingAttendanceService,
+    private internalUserService: InternalUserService) {
   }
 
   get allowAddMember(): boolean {
     return !this.readonly && !this.isExternalUser
-      && (this.isSupervisionAndControlReview() || this.isSupervisionAndControlRework() || this.isSupervisionManagerReview())
+      && (this.isSupervisionAndControlTeamReview() ||
+        this.isSupervisionAndControlReview() ||
+        this.isSupervisionAndControlRework() ||
+        this.isSupervisionManagerReview() ||
+        this.isSupervisionAndControlTeamRework())
   }
 
   get arabicName(): FormControl {
@@ -100,7 +104,12 @@ export class ManageInternalUsersComponent implements OnInit {
 
   setReadonly() {
     this.readonly = !this.isClaimed || this.isCancel ||
-      !(this.isSupervisionAndControlReview() || this.isSupervisionManagerReview() || this.isSupervisionAndControlRework()) ||
+      !(
+        this.isSupervisionAndControlReview() ||
+        this.isSupervisionManagerReview() ||
+        this.isSupervisionAndControlRework() ||
+        this.isSupervisionAndControlTeamRework() ||
+        this.isSupervisionAndControlTeamReview()) ||
       (this.model?.getCaseStatus() !== CommonCaseStatus.UNDER_PROCESSING && this.model?.getCaseStatus() !== CommonCaseStatus.RETURNED);
   }
 
@@ -189,15 +198,15 @@ export class ManageInternalUsersComponent implements OnInit {
       return;
     }
 
-    this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({x: model.getName()}))
+    this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({ x: model.getName() }))
       .onAfterClose$.subscribe((click: UserClickOn) => {
-      if (click === UserClickOn.YES) {
-        this.selectedInternalUsers = this.selectedInternalUsers.filter(x => x.domainName != model.domainName);
-        this.resetMemberForm();
-        this.memberListChanged.emit(this.selectedInternalUsers);
-        this.toast.success(this.lang.map.msg_deleted_in_list_success);
-      }
-    });
+        if (click === UserClickOn.YES) {
+          this.selectedInternalUsers = this.selectedInternalUsers.filter(x => x.domainName != model.domainName);
+          this.resetMemberForm();
+          this.memberListChanged.emit(this.selectedInternalUsers);
+          this.toast.success(this.lang.map.msg_deleted_in_list_success);
+        }
+      });
   }
 
   viewMemberCommentsAndNotes(event: MouseEvent, model: GeneralAssociationInternalMember) {
@@ -277,7 +286,12 @@ export class ManageInternalUsersComponent implements OnInit {
   isSupervisionManagerReview() {
     return this.caseStepName === GeneralAssociationMeetingStepNameEnum.SUPERVISION_MANAGER_REVIEW;
   }
-
+  isSupervisionAndControlTeamReview() {
+    return this.caseStepName === GeneralAssociationMeetingStepNameEnum.SupervisionAndControlTeamReview;
+  }
+  isSupervisionAndControlTeamRework() {
+    return this.caseStepName === GeneralAssociationMeetingStepNameEnum.SupervisionAndControlTeamRework;
+  }
   terminateUserTask($event: MouseEvent, item: MeetingMemberTaskStatus) {
     $event.preventDefault();
     this.userTaskTerminated.emit(item);

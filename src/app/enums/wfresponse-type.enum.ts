@@ -56,4 +56,5 @@ export enum WFResponseType {
   KNEW = 'knew',
   SEEN = 'seen',
   TO_GM = 'toGM',
+  PROJECT_COMPLETION_SEND_TO_SINGLE_DEPARTMENT = "askSingle:ReviewProjectCompletionRequest"
 }

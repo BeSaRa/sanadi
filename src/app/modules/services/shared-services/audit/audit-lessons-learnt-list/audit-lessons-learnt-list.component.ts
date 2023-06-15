@@ -8,6 +8,7 @@ import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { CaseAuditService } from '@app/services/case-audit.service';
 import { LangService } from '@app/services/lang.service';
 import { LessonsLearned } from '@app/models/lessons-learned';
+import { IFindInList } from '@app/interfaces/i-find-in-list';
 
 @Component({
   selector: 'audit-lessons-learnt-list',
@@ -42,6 +43,12 @@ export class AuditLessonsLearntListComponent extends AuditListGenericComponent<L
 
   getControlLabels(item: LessonsLearned): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
+  }
+
+  existsInList(objComparison: IFindInList<LessonsLearned>): LessonsLearned | undefined {
+    return objComparison.listToCompareWith.find((item: LessonsLearned) => {
+      return item.statement === objComparison.itemToCompare.statement && CommonUtils.isEqualList(item.lessonsLearned, objComparison.itemToCompare.lessonsLearned)
+    });
   }
 
 }

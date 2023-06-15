@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -8,38 +8,38 @@ import {
   UntypedFormControl,
   UntypedFormGroup
 } from '@angular/forms';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {SaveTypes} from '@enums/save-types';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {GeneralAssociationMeetingAttendance} from '@models/general-association-meeting-attendance';
-import {LangService} from '@services/lang.service';
-import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
-import {Observable, of, Subject} from 'rxjs';
-import {LookupService} from '@services/lookup.service';
-import {DialogService} from '@services/dialog.service';
-import {ToastService} from '@services/toast.service';
-import {LicenseService} from '@services/license.service';
-import {DatepickerControlsMap, DatepickerOptionsMap, TabMap} from '@app/types/types';
-import {DateUtils} from '@helpers/date-utils';
-import {EmployeeService} from '@services/employee.service';
-import {Lookup} from '@models/lookup';
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {SelectedLicenseInfo} from '@contracts/selected-license-info';
-import {InternalProjectLicenseResult} from '@models/internal-project-license-result';
-import {SharedService} from '@services/shared.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {OpenFrom} from '@enums/open-from.enum';
-import {GeneralAssociationInternalMember} from '@models/general-association-internal-member';
-import {MeetingAttendanceReport} from '@models/meeting-attendance-report';
-import {GeneralAssociationMeetingRequestTypeEnum} from '@enums/service-request-types';
-import {MeetingAttendanceSubItem} from '@models/meeting-attendance-sub-item';
-import {MeetingAttendanceMainItem} from '@models/meeting-attendance-main-item';
-import {GeneralMeetingAttendanceNote} from '@models/general-meeting-attendance-note';
-import {MeetingMemberTaskStatus} from '@models/meeting-member-task-status';
-import {MeetingPointMemberComment} from '@models/meeting-point-member-comment';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {CommonUtils} from '@helpers/common-utils';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { SaveTypes } from '@enums/save-types';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { GeneralAssociationMeetingAttendance } from '@models/general-association-meeting-attendance';
+import { LangService } from '@services/lang.service';
+import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
+import { Observable, of, Subject } from 'rxjs';
+import { LookupService } from '@services/lookup.service';
+import { DialogService } from '@services/dialog.service';
+import { ToastService } from '@services/toast.service';
+import { LicenseService } from '@services/license.service';
+import { DatepickerControlsMap, DatepickerOptionsMap, TabMap } from '@app/types/types';
+import { DateUtils } from '@helpers/date-utils';
+import { EmployeeService } from '@services/employee.service';
+import { Lookup } from '@models/lookup';
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { SelectedLicenseInfo } from '@contracts/selected-license-info';
+import { InternalProjectLicenseResult } from '@models/internal-project-license-result';
+import { SharedService } from '@services/shared.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { OpenFrom } from '@enums/open-from.enum';
+import { GeneralAssociationInternalMember } from '@models/general-association-internal-member';
+import { MeetingAttendanceReport } from '@models/meeting-attendance-report';
+import { GeneralAssociationMeetingRequestTypeEnum } from '@enums/service-request-types';
+import { MeetingAttendanceSubItem } from '@models/meeting-attendance-sub-item';
+import { MeetingAttendanceMainItem } from '@models/meeting-attendance-main-item';
+import { GeneralMeetingAttendanceNote } from '@models/general-meeting-attendance-note';
+import { MeetingMemberTaskStatus } from '@models/meeting-member-task-status';
+import { MeetingPointMemberComment } from '@models/meeting-point-member-comment';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { CommonUtils } from '@helpers/common-utils';
 import {
   ManageMembersComponent
 } from "@modules/services/general-association-meeting-attendance/shared/manage-members/manage-members.component";
@@ -208,15 +208,15 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   constructor(public lang: LangService,
-              public fb: FormBuilder,
-              private cd: ChangeDetectorRef,
-              public service: GeneralAssociationMeetingAttendanceService,
-              private lookupService: LookupService,
-              private dialog: DialogService,
-              private toast: ToastService,
-              private licenseService: LicenseService,
-              private employeeService: EmployeeService,
-              private sharedService: SharedService) {
+    public fb: FormBuilder,
+    private cd: ChangeDetectorRef,
+    public service: GeneralAssociationMeetingAttendanceService,
+    private lookupService: LookupService,
+    private dialog: DialogService,
+    private toast: ToastService,
+    private licenseService: LicenseService,
+    private employeeService: EmployeeService,
+    private sharedService: SharedService) {
     super();
   }
 
@@ -303,7 +303,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       return;
     }
 
-    this.model = new GeneralAssociationMeetingAttendance().clone({...this.model, ...model});
+    this.model = new GeneralAssociationMeetingAttendance().clone({ ...this.model, ...model });
     this.form.patchValue({
       basicInfo: this.model?.buildBasicInfo(),
       explanation: this.model?.buildExplanation()
@@ -410,28 +410,28 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         .pipe(map((licenses) => {
           return licenses[0];
         })).subscribe((license) => {
-        this.oldModel = license;
-        this.service.getMeetingPointsForDecisionMaker(license.id).subscribe(meetingReport => {
-          this.oldMeetingReport = meetingReport;
-        });
+          this.oldModel = license;
+          this.service.getMeetingPointsForDecisionMaker(license.id).subscribe(meetingReport => {
+            this.oldMeetingReport = meetingReport;
+          });
 
-        let allGeneralMeetingNotesObs = this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, license?.id);
-        allGeneralMeetingNotesObs.subscribe(notes => {
-          this.oldMembersGeneralNotes = notes;
-        });
-        this.oldSelectedInternalUsers = license?.internalMembersDTO;
+          let allGeneralMeetingNotesObs = this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, license?.id);
+          allGeneralMeetingNotesObs.subscribe(notes => {
+            this.oldMembersGeneralNotes = notes;
+          });
+          this.oldSelectedInternalUsers = license?.internalMembersDTO;
 
-        this.service.getMemberTaskStatus(license?.id).subscribe(membersStatus => {
-          this.oldMeetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
-          this.oldSelectedInternalUsers = this.oldSelectedInternalUsers.map(user => {
-            user.pId = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
-            user.name = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
-            user.tkiid = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
-            user.userId = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
-            return user;
+          this.service.getMemberTaskStatus(license?.id).subscribe(membersStatus => {
+            this.oldMeetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
+            this.oldSelectedInternalUsers = this.oldSelectedInternalUsers.map(user => {
+              user.pId = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
+              user.name = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
+              user.tkiid = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
+              user.userId = this.oldMeetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
+              return user;
+            });
           });
         });
-      });
     }
   }
 
@@ -440,13 +440,21 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   private setDatePeriodValidation() {
-    if (this.operation === OperationTypes.CREATE || this.model?.caseStatus === this.commonCaseStatus.DRAFT || this.model?.caseStatus === this.commonCaseStatus.NEW || this.model?.isCharityManagerReviewStep() || this.model?.isSupervisionAndControlReviewStep() || this.model?.isSupervisionManagerReviewStep() || this.model?.isSupervisionAndControlReworkStep()) {
+    if (this.operation === OperationTypes.CREATE ||
+      this.model?.caseStatus === this.commonCaseStatus.DRAFT ||
+      this.model?.caseStatus === this.commonCaseStatus.NEW ||
+      this.model?.isCharityManagerReviewStep() ||
+      this.model?.isSupervisionAndControlReviewStep() ||
+      this.model?.isSupervisionManagerReviewStep() ||
+      this.model?.isSupervisionAndControlReworkStep() ||
+      this.model?.isSupervisionAndControlTeamReworkStep() ||
+      this.model?.isSupervisionAndControlTeamReviewStep()) {
       this.datepickerOptionsMap = {
-        meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
+        meetingDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' })
       };
     } else {
       this.datepickerOptionsMap = {
-        meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
+        meetingDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' })
       };
     }
   }
@@ -511,7 +519,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -644,7 +652,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   searchForLicense() {
     this.licenseService
-      .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({fullSerial: this.oldFullSerialField.value})
+      .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({ fullSerial: this.oldFullSerialField.value })
       .pipe(takeUntil(this.destroy$))
       .pipe(map(licenses =>
         licenses.filter((l: GeneralAssociationMeetingAttendance) => l.caseStatus == CommonCaseStatus.INITIAL_APPROVE)))
@@ -655,7 +663,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       }))
       .pipe(
         filter<null | SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>, SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>>
-        ((info): info is SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance> => !!info))
+          ((info): info is SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance> => !!info))
       .subscribe((_info) => {
         this.setSelectedLicense(_info.details)
       });
@@ -761,16 +769,22 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   canUpdateMeetingDate() {
-    return this.model?.caseStatus != CommonCaseStatus.CANCELLED && this.model?.taskDetails?.isClaimed() && (this.isSupervisionAndControlReviewStep || this.isSupervisionManagerReviewStep || this.isSupervisionAndControlRework);
+    return this.model?.caseStatus != CommonCaseStatus.CANCELLED && this.model?.taskDetails?.isClaimed() && (
+      this.isSupervisionAndControlReviewStep ||
+      this.isSupervisionManagerReviewStep ||
+      this.isSupervisionAndControlRework ||
+      this.isSupervisionAndControlTeamReview ||
+      this.isSupervisionAndControlTeamRework
+    );
   }
 
   getMeetingDateClass() {
     if (this.readonly && this.canUpdateMeetingDate()) {
-      return {'input-disabled': false};
+      return { 'input-disabled': false };
     } else if (this.readonly || this.isCancel) {
-      return {'input-disabled': true};
+      return { 'input-disabled': true };
     } else {
-      return {'input-disabled': false};
+      return { 'input-disabled': false };
     }
   }
 
@@ -784,6 +798,14 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   get isSupervisionAndControlRework(): boolean {
     return this.model?.isSupervisionAndControlReworkStep()!;
+  }
+
+  get isSupervisionAndControlTeamRework(): boolean {
+    return this.model?.isSupervisionAndControlTeamReworkStep()!;
+  }
+
+  get isSupervisionAndControlTeamReview(): boolean {
+    return this.model?.isSupervisionAndControlTeamReviewStep()!;
   }
 
   // meeting points functionality
@@ -899,25 +921,25 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   getRemoveMainItemClass() {
     if (this.lang.map.lang === 'en') {
-      return {'remove-main-item-right': true, 'remove-main-item-left': false};
+      return { 'remove-main-item-right': true, 'remove-main-item-left': false };
     } else {
-      return {'remove-main-item-right': false, 'remove-main-item-left': true};
+      return { 'remove-main-item-right': false, 'remove-main-item-left': true };
     }
   }
 
   getRemoveSubItemClass() {
     if (this.lang.map.lang === 'en') {
-      return {'remove-sub-item-right': true, 'remove-sub-item-left': false};
+      return { 'remove-sub-item-right': true, 'remove-sub-item-left': false };
     } else {
-      return {'remove-sub-item-right': false, 'remove-sub-item-left': true};
+      return { 'remove-sub-item-right': false, 'remove-sub-item-left': true };
     }
   }
 
   getViewSubItemClass() {
     if (this.lang.map.lang === 'en') {
-      return {'view-sub-item-right': true, 'view-sub-item-left': false};
+      return { 'view-sub-item-right': true, 'view-sub-item-left': false };
     } else {
-      return {'view-sub-item-right': false, 'view-sub-item-left': true};
+      return { 'view-sub-item-right': false, 'view-sub-item-left': true };
     }
   }
 
@@ -1015,7 +1037,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     if (files && files[0]) {
       const extension = files[0].name.getExtension().toLowerCase();
       if (this.finalReportExtensions.indexOf(extension) === -1) {
-        this.dialog.error(this.lang.map.msg_invalid_format_allowed_formats.change({formats: this.finalReportExtensions.join(', ')}));
+        this.dialog.error(this.lang.map.msg_invalid_format_allowed_formats.change({ formats: this.finalReportExtensions.join(', ') }));
         this._clearReportUploader();
         return;
       }
