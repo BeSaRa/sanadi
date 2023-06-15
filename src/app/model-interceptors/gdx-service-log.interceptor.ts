@@ -17,6 +17,8 @@ import { GdxMoeResponseInterceptor } from './gdx-moe-response-interceptor';
 import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
 import { GdxMmeResponseInterceptor } from './gdx-mme-response-interceptor';
 import { GdxMmeResponse } from '@app/models/gdx-mme-leased-contract';
+import { GdxQatarCharityResponseInterceptor } from './gdx-qatar-charity-response-interceptor';
+import { GdxQatarCharityResponse } from '@app/models/gdx-qatar-charity-response';
 
 const gdxMojResponseInterceptor = new GdxMojResponseInterceptor();
 const gdxMociResponseInterceptor = new GdxMociResponseInterceptor();
@@ -27,6 +29,7 @@ const gdxMolPayrollResponseInterceptor = new GdxMolPayrollResponseInterceptor();
 const gdxSjcResponseInterceptor = new GdxSjcResponseInterceptor();
 const gdxMoeResponseInterceptor = new GdxMoeResponseInterceptor();
 const gdxMmeResponseInterceptor = new GdxMmeResponseInterceptor();
+const gdxQatarCharityResponseInterceptor = new GdxQatarCharityResponseInterceptor();
 
 export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog> {
   receive(model: GdxServiceLog): GdxServiceLog {
@@ -99,6 +102,11 @@ export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog
       case GdxServicesEnum.MME:
         model.gdxServiceResponseList = model.gdxServiceResponseList.map((x) => {
           return gdxMmeResponseInterceptor.receive(new GdxMmeResponse().clone(x));
+        });
+        break;
+      case GdxServicesEnum.QATAR_CHARITY:
+        model.gdxServiceResponseList = model.gdxServiceResponseList.map((x) => {
+          return gdxQatarCharityResponseInterceptor.receive(new GdxQatarCharityResponse().clone(x));
         });
         break;
       default:

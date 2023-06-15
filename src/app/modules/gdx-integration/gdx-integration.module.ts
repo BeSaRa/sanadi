@@ -28,6 +28,7 @@ import { MoeInstallmentsComponent } from './related-data/moe-installments/moe-in
 import { MoePendingPaymentComponent } from './related-data/moe-pending-payment/moe-pending-payment.component';
 import { MoeStudentInfoComponent } from './related-data/moe-student-info/moe-student-info.component';
 import { MmeLeasedContractComponent } from './related-data/mme-leased-contract/mme-leased-contract.component';
+import { QatarCharityRelatedDataComponent } from './related-data/qatar-charity-related-data/qatar-charity-related-data.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { MmeLeasedContractComponent } from './related-data/mme-leased-contract/m
     MoeInstallmentsComponent,
     MoePendingPaymentComponent,
     MoeStudentInfoComponent,
-    MmeLeasedContractComponent
+    MmeLeasedContractComponent,
+    QatarCharityRelatedDataComponent
   ],
   exports: [
     IntegrationInquiriesComponent

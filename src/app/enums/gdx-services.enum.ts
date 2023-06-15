@@ -10,4 +10,5 @@ export enum GdxServicesEnum {
   SJC = '9',
   MOE = '10',
   MME = '11',
+  QATAR_CHARITY = '12'
 }
