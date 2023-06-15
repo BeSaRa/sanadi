@@ -1,31 +1,31 @@
-import {FinancialTransferLicensingService} from '@app/services/financial-transfer-licensing.service';
-import {FinancialTransferLicensing} from '@app/models/financial-transfer-licensing';
-import {Component, Input, OnInit} from '@angular/core';
-import {CaseModel} from '@app/models/case-model';
-import {LangService} from '@app/services/lang.service';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {LicenseApprovalModel} from '@app/models/license-approval-model';
-import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
-import {LicenseService} from '@app/services/license.service';
-import {SharedService} from '@app/services/shared.service';
-import {ProjectModel} from '@app/models/project-model';
-import {BlobModel} from '@app/models/blob-model';
-import {ProjectModelService} from '@app/services/project-model.service';
-import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittance';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
-import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
-import {BankAccountRequestTypes, ServiceRequestTypes} from '@app/enums/service-request-types';
-import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
-import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
-import {SubmissionMechanisms} from '@app/enums/submission-mechanisms.enum';
-import {ProjectImplementation} from '@models/project-implementation';
-import {EmployeeService} from '@services/employee.service';
-import {AllRequestTypesEnum} from "@enums/all-request-types-enum";
-import {ActionRegistry} from "@models/action-registry";
-import {ServiceActionTypesEnum} from "@enums/service-action-type.enum";
-import {BehaviorSubject, merge} from "rxjs";
-import {delay} from "rxjs/operators";
+import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
+import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
+import { Component, Input, OnInit } from '@angular/core';
+import { CaseModel } from '@app/models/case-model';
+import { LangService } from '@app/services/lang.service';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { LicenseApprovalModel } from '@app/models/license-approval-model';
+import { InternalProjectLicenseResult } from '@app/models/internal-project-license-result';
+import { LicenseService } from '@app/services/license.service';
+import { SharedService } from '@app/services/shared.service';
+import { ProjectModel } from '@app/models/project-model';
+import { BlobModel } from '@app/models/blob-model';
+import { ProjectModelService } from '@app/services/project-model.service';
+import { CustomsExemptionRemittance } from '@app/models/customs-exemption-remittance';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { CustomsExemptionRemittanceService } from '@services/customs-exemption-remittance.service';
+import { InternalBankAccountApproval } from '@app/models/internal-bank-account-approval';
+import { BankAccountRequestTypes, ServiceRequestTypes } from '@app/enums/service-request-types';
+import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
+import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
+import { SubmissionMechanisms } from '@app/enums/submission-mechanisms.enum';
+import { ProjectImplementation } from '@models/project-implementation';
+import { EmployeeService } from '@services/employee.service';
+import { AllRequestTypesEnum } from "@enums/all-request-types-enum";
+import { ActionRegistry } from "@models/action-registry";
+import { ServiceActionTypesEnum } from "@enums/service-action-type.enum";
+import { BehaviorSubject, merge } from "rxjs";
+import { delay } from "rxjs/operators";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -35,12 +35,12 @@ import {delay} from "rxjs/operators";
 })
 export class CaseInfoComponent implements OnInit {
   constructor(public lang: LangService,
-              private employeeService: EmployeeService,
-              private licenseService: LicenseService,
-              private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
-              private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
-              private financialTransferLicensingService: FinancialTransferLicensingService,
-              private sharedService: SharedService) {
+    private employeeService: EmployeeService,
+    private licenseService: LicenseService,
+    private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
+    private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
+    private financialTransferLicensingService: FinancialTransferLicensingService,
+    private sharedService: SharedService) {
   }
 
   private _model$: BehaviorSubject<CaseModel<any, any>> = new BehaviorSubject<CaseModel<any, any>>({} as CaseModel<any, any>);
@@ -252,7 +252,7 @@ export class CaseInfoComponent implements OnInit {
     }
     (this.model.service as ProjectModelService).exportTemplate(this.generatedTemplateId)
       .subscribe((file: BlobModel) => {
-        this.sharedService.openViewContentDialog(file, {documentTitle: this.templateSerial});
+        this.sharedService.openViewContentDialog(file, { documentTitle: this.templateSerial });
       });
   }
 

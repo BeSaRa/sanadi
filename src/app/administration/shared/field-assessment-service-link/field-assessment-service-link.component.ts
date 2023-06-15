@@ -83,7 +83,6 @@ export class FieldAssessmentServiceLinkComponen implements OnInit, OnDestroy {
     this.FieldAssessmentServiceLinkChanged$
       .pipe(map(FieldAssessmentServiceLink => this.FieldAssessmentServiceLink = FieldAssessmentServiceLink))
       .subscribe((fieldAssessmentServiceLink) => {
-        console.log(fieldAssessmentServiceLink)
         this.selectedLinksIds = fieldAssessmentServiceLink.map(FieldAssessmentServiceLink => FieldAssessmentServiceLink.serviceId)
       });
   }

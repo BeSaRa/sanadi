@@ -54,10 +54,16 @@
         <app-field-error-message controlName="extraPhone"></app-field-error-message>
       </div>
       <!-- job title -->
-      <div class="col-sm-12 col-md-6 mb-4 position-relative">
-        <label for="jobTitle" class="form-label" asteriskIfRequired="jobTitle">{{ lang.map.job_title}}</label>
-        <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" class="form-control" trimInput>
-        <app-field-error-message controlName="jobTitle"></app-field-error-message>
+      <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+        <label asteriskIfRequired="jobTitleId" for="jobTitleId" class="form-label">{{lang.map.job_title}}</label>
+        <ng-select [selectOnTab]="true" labelForId="jobTitleId" [clearable]="false" placeholder="{{lang.map.select}}"
+                   id="jobTitleId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+                   formControlName="jobTitleId" validationClasses="jobTitleId">
+          <ng-option *ngFor="let option of jobTitleAdminLookup" [value]="option.id">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="jobTitleId"></app-field-error-message>
       </div>
     </div>
   </div>

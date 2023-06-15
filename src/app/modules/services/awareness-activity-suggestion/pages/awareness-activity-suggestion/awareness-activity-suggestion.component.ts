@@ -1,39 +1,39 @@
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {LicenseService} from '@services/license.service';
-import {Lookup} from '@models/lookup';
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { LicenseService } from '@services/license.service';
+import { Lookup } from '@models/lookup';
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {SaveTypes} from '@enums/save-types';
-import {LangService} from '@services/lang.service';
-import {Observable, of, Subject} from 'rxjs';
-import {AwarenessActivitySuggestion} from '@models/awareness-activity-suggestion';
-import {IKeyValue} from '@contracts/i-key-value';
-import {DatepickerOptionsMap} from '@app/types/types';
-import {DateUtils} from '@helpers/date-utils';
-import {AwarenessActivitySuggestionService} from '@services/awareness-activity-suggestion.service';
-import {LookupService} from '@services/lookup.service';
-import {ToastService} from '@services/toast.service';
-import {DialogService} from '@services/dialog.service';
-import {EmployeeService} from '@services/employee.service';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {OpenFrom} from '@enums/open-from.enum';
-import {CollectionRequestType} from '@enums/service-request-types';
-import {CommonUtils} from '@helpers/common-utils';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {SearchAwarenessActivitySuggestionCriteria} from '@models/search-awareness-activity-suggestion-criteria';
-import {JobTitle} from '@app/models/job-title';
-import {JobTitleService} from '@app/services/job-title.service';
-import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { SaveTypes } from '@enums/save-types';
+import { LangService } from '@services/lang.service';
+import { Observable, of, Subject } from 'rxjs';
+import { AwarenessActivitySuggestion } from '@models/awareness-activity-suggestion';
+import { IKeyValue } from '@contracts/i-key-value';
+import { DatepickerOptionsMap } from '@app/types/types';
+import { DateUtils } from '@helpers/date-utils';
+import { AwarenessActivitySuggestionService } from '@services/awareness-activity-suggestion.service';
+import { LookupService } from '@services/lookup.service';
+import { ToastService } from '@services/toast.service';
+import { DialogService } from '@services/dialog.service';
+import { EmployeeService } from '@services/employee.service';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { OpenFrom } from '@enums/open-from.enum';
+import { CollectionRequestType } from '@enums/service-request-types';
+import { CommonUtils } from '@helpers/common-utils';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { SearchAwarenessActivitySuggestionCriteria } from '@models/search-awareness-activity-suggestion-criteria';
+import { JobTitle } from '@app/models/job-title';
+import { JobTitleService } from '@app/services/job-title.service';
+import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import {
   SelectCustomServiceTemplatePopupComponent
 } from '@app/modules/services/shared-services/popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
-import {FileUploaderComponent} from '@app/shared/components/file-uploader/file-uploader.component';
-import {CustomServiceTemplate} from '@app/models/custom-service-template';
-import {CustomServiceTemplateService} from '@app/services/custom-service-template.service';
+import { FileUploaderComponent } from '@app/shared/components/file-uploader/file-uploader.component';
+import { CustomServiceTemplate } from '@app/models/custom-service-template';
+import { CustomServiceTemplateService } from '@app/services/custom-service-template.service';
 import { AdminLookup } from '@app/models/admin-lookup';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
@@ -56,8 +56,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   selectedLicense?: AwarenessActivitySuggestion;
   isSameAsApplican = false;
   activitiesTypes: AdminLookup[] = [];
-  showOther:boolean =false;
-
+  showOther: boolean = false;
+  openFromEnum = OpenFrom;
   @ViewChild('fileUploader') fileUploaderRef!: FileUploaderComponent;
   tabsData: IKeyValue = {
     basicInfo: {
@@ -122,7 +122,6 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     this.cd.detectChanges();
   }
 
-
   selectTemplatePopup(isUploaded: boolean) {
     if (!this.model) {
       return;
@@ -132,7 +131,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
         this.dialog.show(SelectCustomServiceTemplatePopupComponent, {
           list: data,
           showSelectBtn: true,
-          showDelete:false
+          showDelete: false
         }).onAfterClose$.subscribe((temp) => {
           if (temp) {
             this.selectedTemplate = temp;
@@ -142,7 +141,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       })
     } else {
       this.customServiceTemplate.loadTemplatesByCaseId(this.model?.getCaseType(), this.model?.getCaseId()).subscribe((data) => {
-        this.dialog.show(SelectCustomServiceTemplatePopupComponent, {list: data, showSelectBtn: false, showDelete:true})
+        this.dialog.show(SelectCustomServiceTemplatePopupComponent, { list: data, showSelectBtn: false, showDelete: this.isLicensingUser && this.openFrom === this.openFromEnum.USER_INBOX  })
       })
     }
   }
@@ -172,13 +171,21 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       })
     }
   }
-
+  validateTimplate() {
+    return of(null).pipe(
+      switchMap(() => {
+        return this.customServiceTemplate.loadTemplatesByCaseId(this.model!.getCaseType(), this.model?.getCaseId())
+      }),
+      map(temps => {
+        return !!temps.length
+      })
+    )
+  }
   handleReadonly(): void {
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
       return;
     }
-
     let caseStatus = this.model.getCaseStatus();
     if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
@@ -316,7 +323,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -457,7 +464,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
                   if (!data) {
                     return of(null);
                   }
-                  return {selected: licenses[0], details: data};
+                  return { selected: licenses[0], details: data };
                 }),
                 catchError(() => {
                   return of(null);
@@ -465,14 +472,14 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
               );
           } else {
             const displayColumns = this.service.selectLicenseDisplayColumns;
-            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, displayColumns).onAfterClose$;
+            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestTypeField.value || null }), true, displayColumns).onAfterClose$;
           }
         }),
         // allow only if the user select license
         filter<{ selected: AwarenessActivitySuggestion, details: AwarenessActivitySuggestion }, any>
-        ((selection): selection is { selected: AwarenessActivitySuggestion, details: AwarenessActivitySuggestion } => {
-          return !!(selection);
-        }),
+          ((selection): selection is { selected: AwarenessActivitySuggestion, details: AwarenessActivitySuggestion } => {
+            return !!(selection);
+          }),
         // allow only if the user select license
         takeUntil(this.destroy$)
       )

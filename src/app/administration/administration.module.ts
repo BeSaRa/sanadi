@@ -136,6 +136,8 @@ import {
 } from "@app/administration/shared/user-permission-external/user-permission-external.component";
 import { ServiceDataCustomTemplatesComponent } from './shared/service-data-custom-templates/service-data-custom-templates.component';
 import { ServiceDataCustomTemplatePopupComponent } from './popups/service-data-custom-template-popup/service-data-custom-template-popup.component';
+import { AdminPermissionComponent } from './pages/admin-permission/admin-permission.component';
+import { AdminPermissionPopupComponent } from './popups/admin-permission-popup/admin-permission-popup.component';
 
 @NgModule({
   declarations: [
@@ -231,7 +233,10 @@ import { ServiceDataCustomTemplatePopupComponent } from './popups/service-data-c
     UserPermissionExternalComponent,
     CustomMenuDefaultsPopupComponent,
     ServiceDataCustomTemplatesComponent,
-    ServiceDataCustomTemplatePopupComponent
+    ServiceDataCustomTemplatePopupComponent,
+    AdminPermissionComponent,
+    AdminPermissionPopupComponent,
+    AdminPermissionPopupComponent
   ],
   imports: [
     SharedModule,

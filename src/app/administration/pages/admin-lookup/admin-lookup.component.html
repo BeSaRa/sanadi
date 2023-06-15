@@ -30,6 +30,8 @@
     [title]="getTabLabel(adminLookupTypeEnum.SERVICE_TYPE)"></tab>
   <tab [name]="tabsData.functionGroup.name" [template]="functionGroupTemplate"
     *ngIf="canShowTab(tabsData.functionGroup)" [title]="getTabLabel(adminLookupTypeEnum.FUNCTIONAL_GROUP)"></tab>
+  <tab [name]="tabsData.permissionGroup.name" [template]="permissionGroupTemplate"
+    *ngIf="canShowTab(tabsData.permissionGroup)" [title]="getTabLabel(adminLookupTypeEnum.PERMISSION_GROUP)"></tab>
 </tabs-list>
 
 <ng-template #workFieldTemplate>
@@ -104,6 +106,11 @@
 <ng-template #functionGroupTemplate>
   <admin-lookup-list #functionGroupComponent [adminLookupTypeId]="adminLookupTypeEnum.FUNCTIONAL_GROUP"
     (onReady)="setLookupComponentMap($event, functionGroupComponent)">
+  </admin-lookup-list>
+</ng-template>
+<ng-template #permissionGroupTemplate>
+  <admin-lookup-list #permissionGroupComponent [adminLookupTypeId]="adminLookupTypeEnum.PERMISSION_GROUP"
+    (onReady)="setLookupComponentMap($event, permissionGroupComponent)">
   </admin-lookup-list>
 </ng-template>
 
