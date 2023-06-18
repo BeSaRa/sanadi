@@ -133,8 +133,8 @@
         </ng-select>
         <app-field-error-message controlName="contractLocationType"></app-field-error-message>
       </div>
-      <!-- officeId -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper">
+      <!-- external office Id -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper" *ngIf="isExternal()">
         <label asteriskIfRequired="officeId" for="officeId" labelForId="officeId" class="form-label">{{
           lang.map.office_name }}</label>
         <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
@@ -143,6 +143,19 @@
                    validationClasses="officeId" formControlName="officeId">
           <ng-option *ngFor="let option of implementingAgencyList" [value]="option.id">
             {{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="officeId"></app-field-error-message>
+      </div>
+      <!-- internal office Id -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper" *ngIf="isInternal()">
+        <label asteriskIfRequired="officeId" for="officeId" labelForId="officeId" class="form-label">{{
+          lang.map.office_name }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="false" placeholder="{{ lang.map.select }}"
+                   [notFoundText]="lang.map.msg_not_found" appendTo="body" id="officeId"
+                   [readonly]="!isEditRequestTypeAllowed"
+                   validationClasses="officeId" formControlName="officeId">
+          <ng-option *ngFor="let option of charityBranch" [value]="option.id">
+            {{option.fullName}}</ng-option>
         </ng-select>
         <app-field-error-message controlName="officeId"></app-field-error-message>
       </div>

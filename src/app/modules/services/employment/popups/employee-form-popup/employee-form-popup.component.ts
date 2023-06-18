@@ -1,35 +1,37 @@
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {AdminLookupService} from '@services/admin-lookup.service';
-import {AdminLookup} from '@models/admin-lookup';
-import {AdminResult} from '@models/admin-result';
-import {CommonService} from '@services/common.service';
-import {EmployeeService} from '@services/employee.service';
-import {Employment} from '@models/employment';
-import {EmploymentService} from '@services/employment.service';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {EmploymentRequestType} from '@enums/service-request-types';
-import {DialogService} from "@services/dialog.service";
-import {DatepickerOptionsMap} from "@app/types/types";
-import {DateUtils} from "@helpers/date-utils";
-import {LookupService} from "@services/lookup.service";
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {LangService} from "@services/lang.service";
-import {Component, Inject, OnInit, ViewChild} from "@angular/core";
-import {ContractTypes} from "@enums/contract-types.enum";
-import {ContractStatus} from "@enums/contract-status.enum";
-import {Employee} from '@models/employee';
-import {Lookup} from '@models/lookup';
-import {IGridAction} from '@contracts/i-grid-action';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {IdentificationType} from '@enums/identification-type.enum';
-import {ContractLocationTypes} from '@enums/contract-location-types.enum';
-import {EmploymentCategory} from '@enums/employment-category.enum';
-import {EmployeesDataComponent} from '@modules/services/employment/shared/employees-data/employees-data.component';
-import {ImplementingAgencyTypes} from '@enums/implementing-agency-types.enum';
-import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { AdminLookupService } from '@services/admin-lookup.service';
+import { AdminLookup } from '@models/admin-lookup';
+import { AdminResult } from '@models/admin-result';
+import { CommonService } from '@services/common.service';
+import { EmployeeService } from '@services/employee.service';
+import { Employment } from '@models/employment';
+import { EmploymentService } from '@services/employment.service';
+import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { EmploymentRequestType } from '@enums/service-request-types';
+import { DialogService } from "@services/dialog.service";
+import { DatepickerOptionsMap } from "@app/types/types";
+import { DateUtils } from "@helpers/date-utils";
+import { LookupService } from "@services/lookup.service";
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
+import { LangService } from "@services/lang.service";
+import { Component, Inject, OnInit, ViewChild } from "@angular/core";
+import { ContractTypes } from "@enums/contract-types.enum";
+import { ContractStatus } from "@enums/contract-status.enum";
+import { Employee } from '@models/employee';
+import { Lookup } from '@models/lookup';
+import { IGridAction } from '@contracts/i-grid-action';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { IdentificationType } from '@enums/identification-type.enum';
+import { ContractLocationTypes } from '@enums/contract-location-types.enum';
+import { EmploymentCategory } from '@enums/employment-category.enum';
+import { EmployeesDataComponent } from '@modules/services/employment/shared/employees-data/employees-data.component';
+import { ImplementingAgencyTypes } from '@enums/implementing-agency-types.enum';
+import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
+import { NpoEmployeeService } from '@app/services/npo-employee.service';
+import { CharityBranch } from '@app/models/charity-branch';
 
 @Component({
   selector: "app-employee-form-popup",
@@ -42,15 +44,18 @@ export class EmployeeFormPopupComponent implements OnInit {
   starterId: number = 0;
   employeesList: Partial<Employee>[] = [];
   implementingAgencyList: AdminResult[] = [];
+  charityBranch: CharityBranch[] = [];
+  isLoadedImplementingAgencyList: boolean = false;
+  isLoadedCharityBranch: boolean = false;
   functionalGroupsList: AdminLookup[] = [];
   skipConfirmUnsavedChanges: boolean = false;
   datepickerOptionsMap: DatepickerOptionsMap = {
     contractExpiryDate: DateUtils.getDatepickerOptions({
       disablePeriod: "none",
     }),
-    workStartDate: DateUtils.getDatepickerOptions({disablePeriod: "none"}),
-    workEndDate: DateUtils.getDatepickerOptions({disablePeriod: "none"}),
-    expIdPass: DateUtils.getDatepickerOptions({disablePeriod: "none"}),
+    workStartDate: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
+    workEndDate: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
+    expIdPass: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
   };
   GenderList: Lookup[] = this.lookupService.listByCategory.Gender.slice().sort(
     (a, b) => a.lookupKey - b.lookupKey
@@ -125,6 +130,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     private employeeService: EmployeeService,
     private adminLookupService: AdminLookupService,
     private commonService: CommonService,
+    private npoEmployeeService: NpoEmployeeService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
       service: EmploymentService;
@@ -138,7 +144,7 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   ngOnInit() {
     this._buildForm();
-    this.loadImplementingAgenciesByAgencyType();
+    this.handleOfficeNameValidationsByContractLocationType();
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.FUNCTIONAL_GROUP).subscribe((data) => {
       this.functionalGroupsList = data;
     })
@@ -235,7 +241,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       }
       if (!this.form.value.id) {
         this.employeesList = [
-          {...this.form.value, id: --this.starterId},
+          { ...this.form.value, id: --this.starterId },
           ...this.employeesList,
         ];
       } else {
@@ -288,6 +294,12 @@ export class EmployeeFormPopupComponent implements OnInit {
     this.officeId?.setValidators([]);
     if (this.isExternal()) {
       this.officeId.setValidators([Validators.required]);
+      this.officeId.reset();
+      if (!this.isLoadedImplementingAgencyList) {
+        this.loadImplementingAgenciesByAgencyType();
+      }
+    } else if (this.isInternal()) {
+      this.loadCharityMainBranch();
     }
     this.officeId.updateValueAndValidity();
   }
@@ -361,9 +373,15 @@ export class EmployeeFormPopupComponent implements OnInit {
     this.commonService.loadAgenciesByAgencyTypeAndCountry(ImplementingAgencyTypes.ExternalOffice)
       .subscribe((result) => {
         this.implementingAgencyList = result;
+        this.isLoadedImplementingAgencyList = true;
       });
   }
-
+  private loadCharityMainBranch() {
+    this.npoEmployeeService.getCharityHeadQuarterBranch().subscribe((data: CharityBranch[]) => {
+      this.charityBranch = data;
+      this.officeId.setValue(data[0].id);
+    })
+  }
   isIdentificationNumberType() {
     return this.identificationType.value == IdentificationType.Identification
   }
@@ -379,7 +397,9 @@ export class EmployeeFormPopupComponent implements OnInit {
   isExternal() {
     return this.contractLocationType.value == ContractLocationTypes.External;
   }
-
+  isInternal() {
+    return this.contractLocationType.value == ContractLocationTypes.Internal;
+  }
   isApproval() {
     return this.category.value == EmploymentCategory.APPROVAL;
   }
