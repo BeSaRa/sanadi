@@ -54,7 +54,7 @@
           <label for="interventionName" asteriskIfRequired="interventionName"
                  class="form-label">{{lang.map.intervention_name}}</label>
           <input formControlName="interventionName" class="form-control" type="text"
-                 [readonly]="readonly"
+                 [readonly]="readonly || isStartRequestType"
                  validationClasses="interventionName" id="interventionName" trimInput>
           <app-field-error-message controlName="interventionName"></app-field-error-message>
         </div>
@@ -71,7 +71,7 @@
         <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
           <label class="form-label" asteriskIfRequired="beneficiaryCountry"
                  for="beneficiaryCountry">{{lang.map.country}}</label>
-          <ng-select [readonly]="readonly" labelForId="beneficiaryCountry"
+          <ng-select [readonly]="readonly || isStartRequestType" labelForId="beneficiaryCountry"
                      placeholder="{{lang.map.select}}"
                      validationClasses="beneficiaryCountry"
                      [notFoundText]="lang.map.msg_not_found"
@@ -86,7 +86,7 @@
           <label class="form-label" asteriskIfRequired="beneficiaryRegion"
                  for="beneficiaryRegion">{{lang.map.region}}</label>
           <input id="beneficiaryRegion" validationClasses="beneficiaryRegion" formControlName="beneficiaryRegion"
-                 class="form-control" [readonly]="readonly">
+                 class="form-control" [readonly]="readonly || isStartRequestType">
           <app-field-error-message controlName="beneficiaryRegion"></app-field-error-message>
         </div>
       </div>
@@ -95,7 +95,7 @@
         <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
           <label class="form-label" asteriskIfRequired="executionCountry"
                  for="executionCountry">{{lang.map.country}}</label>
-          <ng-select [readonly]="readonly" labelForId="beneficiaryCountry"
+          <ng-select [readonly]="readonly || isStartRequestType" labelForId="beneficiaryCountry"
                      placeholder="{{lang.map.select}}"
                      validationClasses="executionCountry"
                      [notFoundText]="lang.map.msg_not_found"
@@ -111,7 +111,7 @@
           <label class="form-label" asteriskIfRequired="executionRegion"
                  for="executionRegion">{{lang.map.region}}</label>
           <input id="executionRegion" validationClasses="executionRegion" formControlName="executionRegion"
-                 class="form-control" [readonly]="readonly">
+                 class="form-control" [readonly]="readonly || isStartRequestType">
           <app-field-error-message controlName="executionRegion"></app-field-error-message>
         </div>
       </div>
@@ -123,7 +123,7 @@
           <label for="projectDescription" asteriskIfRequired="projectDescription"
                  class="form-label">{{lang.map.lbl_description}}</label>
           <textarea formControlName="projectDescription" class="form-control" rows="4"
-                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly || isStartRequestType"
                     validationClasses="projectDescription" id="projectDescription" trimInput></textarea>
           <app-field-error-message controlName="projectDescription"></app-field-error-message>
         </div>
@@ -133,7 +133,7 @@
           <label for="description" asteriskIfRequired="description"
                  class="form-label">{{lang.map.special_explanations}}</label>
           <textarea formControlName="description" class="form-control" rows="4"
-                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly || isStartRequestType"
                     validationClasses="description" id="description" trimInput></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>
