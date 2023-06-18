@@ -62,6 +62,12 @@
     </ng-select>
     <app-field-error-message controlName="departments"></app-field-error-message>
   </div>
+  <div class="col-sm-12 mb-4 position-relative" *ngIf="hasComment()">
+    <label class="form-label" asteriskIfRequired="comment"  for="comment">{{lang.map.comment}}</label>
+    <textarea name="comment" validationClasses="comment" formControlName="comment" id="comment" rows="4"
+              class="form-control"></textarea>
+    <app-field-error-message controlName="comment"></app-field-error-message>
+  </div>
 </div>
 <div class="dialog-actions">
   <div class="flex-grow-1"></div>
