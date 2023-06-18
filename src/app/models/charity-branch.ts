@@ -19,6 +19,7 @@ const interceptor = new CharityBranchInterceptor();
   receive: interceptor.receive,
 })
 export class CharityBranch extends SearchableCloneable<CharityBranch> implements IAuditModelProperties<CharityBranch>{
+  id!: number;
   branchId!: number;
   fullName!: string;
   category!: number;

@@ -1,3 +1,4 @@
+import { CharityBranch } from './../models/charity-branch';
 import { ComponentType } from '@angular/cdk/portal';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -11,6 +12,9 @@ import { UrlService } from './url.service';
 @CastResponseContainer({
   $default: {
     model: () => NpoEmployee,
+  },
+  $charityBranch: {
+    model: () => CharityBranch,
   },
   $pagination: {
     model: () => Pagination,
@@ -43,5 +47,12 @@ export class NpoEmployeeService extends CrudWithDialogGenericService<NpoEmployee
   @CastResponse(undefined)
   getByOrganizationId(id: number) {
     return this.http.get<NpoEmployee[]>(this._getServiceURL() + '/org/' + id);
+  }
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$charityBranch'
+  })
+  getCharityHeadQuarterBranch() {
+    return this.http.get<CharityBranch[]>(this._getServiceURL() + '/charity/branch/headquarters');
   }
 }
