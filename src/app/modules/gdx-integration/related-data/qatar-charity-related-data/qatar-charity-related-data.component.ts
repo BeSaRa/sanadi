@@ -1,12 +1,12 @@
-import { Component, Input } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { DateUtils } from '@app/helpers/date-utils';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { GdxQatarCharityResponse } from '@app/models/gdx-qatar-charity-response';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { LangService } from '@app/services/lang.service';
-import { CustomValidators } from '@app/validators/custom-validators';
+import {Component, Input} from '@angular/core';
+import {UntypedFormControl} from '@angular/forms';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {DateUtils} from '@app/helpers/date-utils';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {GdxQatarCharityResponse} from '@app/models/gdx-qatar-charity-response';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {LangService} from '@app/services/lang.service';
+import {CustomValidators} from '@app/validators/custom-validators';
 
 @Component({
   selector: 'qatar-charity-related-data',
@@ -21,20 +21,18 @@ export class QatarCharityRelatedDataComponent {
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   headerColumn: string[] = ['extra-header'];
 
-  displayedColumns: string[] = [// 'zoneNo',// 'streetNo',// 'buildingNo',// 'floorNo',// 'flatNo',// 'addressText',// 'area',// 'electricityNo',// 'waterNo',// 'pinNO',// 'certificateCode',// 'noAtarizationNo',// 'noAtarizationDate',// 'noAtarizationFromDate',// 'noAtarizationToDate',// 'rentPurpose',
-    'installmentsCount',
-    'periodicType',
+  displayedColumns: string[] = [
     'approvalDate',
-    'aidAmount',
-    'aidSuggestedAmount',
-    'aidTotalPayedAmount',
-    'aidRemainingAmount',
-    'aidDescription',
-    'aidStartPayDate',
-    'aidLookupCategoryId',
     'aidLookupParentId',
     'aidLookupId',
+    'aidSuggestedAmount',
+    'periodicType',
     'donorId',
+    'installmentsCount',
+    'aidStartPayDate',
+    'aidAmount',
+    'aidRemainingAmount',
+    'aidTotalPayedAmount',
   ];
   sortingCallbacks = {
     aidStartPayDate: (a: GdxQatarCharityResponse, b: GdxQatarCharityResponse, dir: SortEvent): number => {

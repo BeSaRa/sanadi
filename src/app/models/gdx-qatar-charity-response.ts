@@ -1,24 +1,23 @@
-import { normalSearchFields } from "@app/helpers/normal-search-fields";
-import { ISearchFieldsMap } from "@app/types/types";
-import { SearchableCloneable } from "./searchable-cloneable";
-import { AdminResult } from "./admin-result";
-import { infoSearchFields } from "@app/helpers/info-search-fields";
-import { dateSearchFields } from "@app/helpers/date-search-fields";
-import { InterceptModel } from "@app/decorators/decorators/intercept-model";
-import { GdxQatarCharityResponseInterceptor } from "@app/model-interceptors/gdx-qatar-charity-response-interceptor";
+import {normalSearchFields} from "@app/helpers/normal-search-fields";
+import {ISearchFieldsMap} from "@app/types/types";
+import {SearchableCloneable} from "./searchable-cloneable";
+import {AdminResult} from "./admin-result";
+import {infoSearchFields} from "@app/helpers/info-search-fields";
+import {InterceptModel} from "@app/decorators/decorators/intercept-model";
+import {GdxQatarCharityResponseInterceptor} from "@app/model-interceptors/gdx-qatar-charity-response-interceptor";
 
 const gdxQatarCharityResponseInterceptor = new GdxQatarCharityResponseInterceptor();
 
 @InterceptModel({
-  send:gdxQatarCharityResponseInterceptor.send,
+  send: gdxQatarCharityResponseInterceptor.send,
   receive: gdxQatarCharityResponseInterceptor.receive
 })
-export class GdxQatarCharityResponse extends SearchableCloneable<GdxQatarCharityResponse>{
+export class GdxQatarCharityResponse extends SearchableCloneable<GdxQatarCharityResponse> {
   installmentsCount!: number;
   periodicType!: number;
   approvalDate!: number;
   aidAmount!: number;
-  aidSuggestedAmount!:number;
+  aidSuggestedAmount!: number;
   aidTotalPayedAmount!: number;
   aidRemainingAmount!: number;
   aidDescription!: string;
@@ -29,15 +28,17 @@ export class GdxQatarCharityResponse extends SearchableCloneable<GdxQatarCharity
   donorId!: number;
 
   // extra properties
-  periodicTypeInfo!:AdminResult;
-  aidLookupCategoryInfo!:AdminResult;
-  aidLookupParentInfo!:AdminResult;
-  aidLookupInfo!:AdminResult;
-  donorInfo!:AdminResult;
+  periodicTypeInfo!: AdminResult;
+  aidLookupCategoryInfo!: AdminResult;
+  aidLookupParentInfo!: AdminResult;
+  aidLookupInfo!: AdminResult;
+  donorInfo!: AdminResult;
+  approvalDateString!: string;
+  aidStartPayDateString!: string;
 
   searchFields: ISearchFieldsMap<GdxQatarCharityResponse> = {
-    ...normalSearchFields(['installmentsCount','aidAmount','aidSuggestedAmount','aidTotalPayedAmount',]),
-    ...infoSearchFields(['periodicTypeInfo','aidLookupCategoryInfo','aidLookupInfo','aidLookupParentInfo','donorInfo']),
-    ...dateSearchFields(['aidStartPayDate'])
+    ...normalSearchFields(['approvalDateString', 'installmentsCount', 'aidSuggestedAmount','aidAmount',
+      'aidRemainingAmount', 'aidTotalPayedAmount', 'aidStartPayDateString']),
+    ...infoSearchFields(['periodicTypeInfo', 'aidLookupInfo', 'aidLookupParentInfo', 'donorInfo']),
   }
 }
