@@ -32,6 +32,7 @@ import { ProjectModelInterceptor } from '@app/model-interceptors/project-model-i
 import { ForeignCountriesProjectsSearchCriteriaInterceptor } from '@app/search-criteria-interceptors/foreign-countries-projects-seach-criteria-interceptor';
 import { EmploymentSearchCriteriaInterceptor } from '@app/search-criteria-interceptors/employment-seach-criteria-interceptor';
 import { ProjectImplementationInterceptor } from '@model-interceptors/project-implementation-interceptor';
+import { ProjectModelSearchCriteriaInterceptor } from '@app/search-criteria-interceptors/project-model-seach-criteria-interceptor';
 
 const interceptors: Map<number, IModelInterceptor<any>> = new Map<number, IModelInterceptor<any>>();
 
@@ -50,6 +51,8 @@ interceptors.set(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT, new SearchUrgentInt
 interceptors.set(CaseTypes.FOREIGN_COUNTRIES_PROJECTS, new ForeignCountriesProjectsSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.EMPLOYMENT, new EmploymentSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.PROJECT_IMPLEMENTATION, new ProjectImplementationInterceptor());
+interceptors.set(CaseTypes.EXTERNAL_PROJECT_MODELS, new ProjectModelSearchCriteriaInterceptor());
+
 
 export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICaseSearchCriteria> {
   // not important we will never use it
