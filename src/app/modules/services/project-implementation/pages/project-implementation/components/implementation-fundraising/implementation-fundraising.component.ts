@@ -1,4 +1,4 @@
-import {Component, EventEmitter, forwardRef, Injector, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, forwardRef, Injector, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -8,19 +8,19 @@ import {
   UntypedFormControl,
   UntypedFormGroup
 } from "@angular/forms";
-import {ImplementationFundraising} from "@models/implementation-fundraising";
-import {Subject} from "rxjs";
-import {LangService} from "@services/lang.service";
-import {debounceTime, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import { ImplementationFundraising } from "@models/implementation-fundraising";
+import { Subject } from "rxjs";
+import { LangService } from "@services/lang.service";
+import { debounceTime, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
 import currency from "currency.js";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {ImplementationCriteriaContract} from "@contracts/implementation-criteria-contract";
-import {ProjectImplementationService} from "@services/project-implementation.service";
-import {DialogService} from "@services/dialog.service";
-import {UserClickOn} from "@enums/user-click-on.enum";
-import {ImplementationTemplate} from "@models/implementation-template";
-import {ReasonPopupComponent} from "@app/shared/popups/reason-popup/reason-popup.component";
-import {ReasonContract} from "@contracts/reason-contract";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { ImplementationCriteriaContract } from "@contracts/implementation-criteria-contract";
+import { ProjectImplementationService } from "@services/project-implementation.service";
+import { DialogService } from "@services/dialog.service";
+import { UserClickOn } from "@enums/user-click-on.enum";
+import { ImplementationTemplate } from "@models/implementation-template";
+import { ReasonPopupComponent } from "@app/shared/popups/reason-popup/reason-popup.component";
+import { ReasonContract } from "@contracts/reason-contract";
 
 @Component({
   selector: 'implementation-fundraising',
@@ -53,7 +53,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
 
   @Output()
   amountConsumed: EventEmitter<boolean> = new EventEmitter<boolean>()
-  addFundraisingLicense$ : Subject<any> = new Subject<any>();
+  addFundraisingLicense$: Subject<any> = new Subject<any>();
   displayedColumns: string[] = [
     'projectLicenseFullSerial',
     'permitType',
@@ -83,9 +83,9 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   totalValue: number = 0;
 
   constructor(private injector: Injector,
-              private service: ProjectImplementationService,
-              private dialog: DialogService,
-              public lang: LangService) {
+    private service: ProjectImplementationService,
+    private dialog: DialogService,
+    public lang: LangService) {
   }
 
   get inputs(): UntypedFormArray {
@@ -115,10 +115,10 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     this.destroyListeners$.next(true)
   }
 
-  listenToAdd(){
+  listenToAdd() {
     this.addFundraisingLicense$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(() => this.addFundraisingLicense())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.addFundraisingLicense())
   }
 
   writeValue(value: ImplementationFundraising[]): void {
@@ -156,23 +156,37 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     ctrl.valueChanges
       .pipe(map(value => Number(value)))
       .pipe(filter(_ => !this.disabled))
+      .pipe(filter(_ => !this._isRequiredValueReached()))
+      .pipe(filter(_ => this.value[index].remainingAmount > this.value[index].totalCost))
       .pipe(debounceTime(250))
       .pipe(takeUntil((this.destroy$)))
-      .pipe(tap(_ => this.calculateTotal()))
+      //.pipe(tap(_ => this.calculateTotal()))
       .pipe(filter(_ => this.value && !!this.value[index]))
       .subscribe((value) => {
         const model = this.value[index];
         const cValue = currency(value)
-        const actualValue = cValue.value > model.remainingAmount ? model.remainingAmount : cValue.value
-        model.totalCost = actualValue
-        ctrl.patchValue(actualValue, {emitEvent: false})
+        const actualValue = cValue.value > model.remainingAmount ? model.remainingAmount : cValue.value;
+        const requiredValue = this.projectTotalCost - this.totalValue;
+        model.totalCost = requiredValue <= actualValue ? requiredValue : actualValue;
+        ctrl.patchValue(model.totalCost, { emitEvent: false })
         this.onChange(this.value)
         this.calculateTotal()
         this.isFullAmountConsumed()
-        const template = this.getTemplatePermit()
-        const currentPermit = this.value[index];
-        template && currentPermit && currentPermit.remainingAmount === currentPermit.totalCost ? ctrl.disable() : ctrl.enable()
+        this._handleCtrlDisable(ctrl, index);
       })
+  }
+
+  private _handleCtrlDisable(ctrl: UntypedFormControl, index: number) {
+    if (this._isRequiredValueReached()) {
+      ctrl.disable();
+      return;
+    }
+    const template = this.getTemplatePermit()
+    const currentPermit = this.value[index];
+    template && currentPermit && currentPermit.remainingAmount === currentPermit.totalCost ? ctrl.disable() : ctrl.enable()
+  }
+  private _isRequiredValueReached() {
+    return this.totalValue >= this.projectTotalCost;
   }
 
   private createInputList(list: ImplementationFundraising[] | undefined) {
@@ -211,6 +225,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     if (!this.value)
       return;
 
+    if (this._isRequiredValueReached()) return true;
     const model = this.value[i]
     return model.remainingAmount === model.totalCost
   }
@@ -247,7 +262,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
 
   deletePermit(item: ImplementationFundraising) {
     this.dialog
-      .confirm(this.lang.map.msg_confirm_delete_x.change({x: this.lang.map.lang === 'ar' ? item.arabicName : item.englishName}))
+      .confirm(this.lang.map.msg_confirm_delete_x.change({ x: this.lang.map.lang === 'ar' ? item.arabicName : item.englishName }))
       .onAfterClose$
       .pipe(filter((value): value is UserClickOn.YES => value === UserClickOn.YES))
       .subscribe(() => {
@@ -288,10 +303,10 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       })
       .onAfterClose$
       .pipe(takeUntil(this.destroy$))
-      .pipe(filter(({click}: { click: UserClickOn, comment: string }) => {
+      .pipe(filter(({ click }: { click: UserClickOn, comment: string }) => {
         return click === UserClickOn.YES
       }))
-      .subscribe(({comment}) => {
+      .subscribe(({ comment }) => {
         this.value[index].notes = comment;
         this.onChange(this.value)
       })
