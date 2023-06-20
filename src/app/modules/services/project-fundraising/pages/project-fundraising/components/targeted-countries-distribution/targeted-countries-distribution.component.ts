@@ -213,8 +213,8 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   }
 
   private updateTotalValue(): void {
-    // this.totalValue = this._model.calculateAllCountriesAmount()
-    this.totalValue = this._model.projectTotalCost;
+    this.totalValue = this._model.calculateAllCountriesAmount()
+    //this.totalValue = this._model.projectTotalCost;
     this.remain = currency(this._model.targetAmount).subtract(this.totalValue).value
   }
 
