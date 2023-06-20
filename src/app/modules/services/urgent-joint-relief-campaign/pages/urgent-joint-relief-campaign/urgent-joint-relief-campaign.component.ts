@@ -82,7 +82,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       show: () => true,
       validStatus: () => {
         return (!this.isExternalUser ||
-          (!this.organizationOfficerComponentRef ||  this.organizationOfficerComponentRef.list.length > 0
+          (!this.organizationOfficerComponentRef ||  this.organizationOfficerComponentRef.offcersList.length > 0
           ));
       },
     },

@@ -67,6 +67,7 @@ import {
   TransferringIndividualFundsAbroadComponent
 } from "@modules/services/transferring-individual-funds-abroad/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component";
 import {ActionRegistry} from "@models/action-registry";
+import { OrganizationOfficer } from '@app/models/organization-officer';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -659,6 +660,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     if (this.model?.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
       const model = this.model as CoordinationWithOrganizationsRequest;
       return model.approved;
+    } else if (this.model?.caseType === CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN) {
+      const orgId = this.employeeService.getProfile()!.id;
+      const officersList = (this.component as any).organizationOfficerComponentRef.list
+      return (this.component as any).externalUserData.valid
+        && officersList.filter((x: OrganizationOfficer) => x.organizationId == orgId).length
     }
     return true;
   }
@@ -1853,7 +1859,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private organizationApproveAction(item: CaseModel<any, any>) {
     item.organizationApprove({
       form: this.component.form,
-      organizationOfficers: (this.component as any).selectedOrganizationOfficers
+      organizationOfficers: (this.component as any).organizationOfficerComponentRef.list
     }).onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
@@ -1954,7 +1960,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private organizationFinalApproveAction(item: CaseModel<any, any>) {
     item.organizationFinalApprove({
       form: this.component.form,
-      organizationOfficers: (this.component as any).selectedOrganizationOfficers
+      organizationOfficers: (this.component as any).organizationOfficerComponentRef.list
     }).onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
