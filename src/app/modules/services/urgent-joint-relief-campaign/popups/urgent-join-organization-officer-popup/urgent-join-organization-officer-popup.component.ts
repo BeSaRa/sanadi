@@ -5,6 +5,7 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {OrganizationOfficer} from '@app/models/organization-officer';
+import { EmployeeService } from '@app/services/employee.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable} from 'rxjs';
@@ -19,6 +20,7 @@ export class UrgentJoinOrganizationOfficerPopupComponent extends UiCrudDialogGen
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<OrganizationOfficer>,
               public dialogRef: DialogRef,
+              private employeeService: EmployeeService,
               public fb: UntypedFormBuilder) {
     super();
     this.setInitDialogData(data);
@@ -46,7 +48,7 @@ export class UrgentJoinOrganizationOfficerPopupComponent extends UiCrudDialogGen
   }
 
   _isDuplicate(record1: Partial<OrganizationOfficer>, record2: Partial<OrganizationOfficer>): boolean {
-    return (record1 as OrganizationOfficer).isEqual(record2 as OrganizationOfficer);
+    return new OrganizationOfficer().clone(record1).isEqual(record2 as OrganizationOfficer);
   }
 
   beforeSave(model: OrganizationOfficer, form: UntypedFormGroup): Observable<boolean> | boolean {
@@ -67,6 +69,7 @@ export class UrgentJoinOrganizationOfficerPopupComponent extends UiCrudDialogGen
     return this._getNewInstance({
       ...this.model,
       ...formValue,
+      organizationId: this.employeeService.getProfile()?.id,
     });
   }
 
