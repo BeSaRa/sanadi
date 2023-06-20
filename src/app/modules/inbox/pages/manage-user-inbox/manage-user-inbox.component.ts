@@ -19,7 +19,7 @@ import { LookupService } from '@app/services/lookup.service';
 import { ProfileService } from '@app/services/profile.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { Subject, of } from 'rxjs';
-import { catchError, switchMap, take, takeUntil, tap, filter } from 'rxjs/operators';
+import { catchError, switchMap, take, takeUntil, tap, filter, map } from 'rxjs/operators';
 import { DialogService } from '../../../../services/dialog.service';
 import { InboxService } from '../../../../services/inbox.service';
 import { InternalDepartmentService } from '../../../../services/internal-department.service';
@@ -28,6 +28,7 @@ import { TeamService } from '../../../../services/team.service';
 import { ExternalUser } from '@app/models/external-user';
 import { InternalUser } from '@app/models/internal-user';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { Profile } from '@app/models/profile';
 
 @Component({
   selector: 'manage-user-inbox',
@@ -41,14 +42,16 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
   reload$: Subject<any> = new Subject<any>();
   userControl: UntypedFormControl = new UntypedFormControl();
   teamsControl: UntypedFormControl = new UntypedFormControl();
+  profileControl: UntypedFormControl = new UntypedFormControl();
   userTypesControl: UntypedFormControl = new UntypedFormControl();
-  columns = ['rowSelection','BD_FULL_SERIAL', 'BD_SUBJECT', 'BD_CASE_TYPE', 'action', 'PI_CREATE', 'ACTIVATED', 'PI_DUE', 'fromUserInfo', 'actions'];
+  columns = ['rowSelection', 'BD_FULL_SERIAL', 'BD_SUBJECT', 'BD_CASE_TYPE', 'action', 'PI_CREATE', 'ACTIVATED', 'PI_DUE', 'fromUserInfo', 'actions'];
   queryResultSet?: QueryResultSet;
   filterControl: UntypedFormControl = new UntypedFormControl('');
   isInternal: boolean = true;
   userTypes: Lookup[] = this.lookupService.listByCategory.UserType.filter(x => (x.lookupKey !== UserTypes.INTEGRATION_USER && x.lookupKey !== UserTypes.ALL));
   userTeams: UserTeam[] = [];
   selectedUser?: ExternalUser | InternalUser;
+  profiles: Profile[] = [];
   @ViewChild('table') table!: TableComponent;
 
   constructor(
@@ -59,7 +62,8 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
     private lookupService: LookupService,
     private teamService: TeamService,
     private inboxService: InboxService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private profileService: ProfileService
   ) {
     this.isInternal = this.employeeService.getCurrentUser().isInternal();
   }
@@ -142,7 +146,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
     this.userControl.valueChanges
       .pipe(
         takeUntil(this.destroy$),
-        filter(user=>!!user),
+        filter(user => !!user),
         tap((user: ExternalUser | InternalUser) => {
           this.selectedUser = user;
         }),
@@ -164,10 +168,11 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
     this.userTypesControl.valueChanges
       .pipe(
         takeUntil(this.destroy$),
-        tap(_=>this.userControl.reset()),
+        tap(_ => this.userControl.reset()),
         tap((userType: number) => {
+          this.users = [];
           if (userType === UserTypes.EXTERNAL) {
-            this.loadExternalEmployees()
+            this._loadProfiles();
           }
           if (userType === UserTypes.INTERNAL) {
             this.loadInternalEmployees()
@@ -179,7 +184,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
     this.teamsControl.valueChanges
       .pipe(
         takeUntil(this.destroy$),
-        tap(_=>this.userControl.reset()),
+        tap(_ => this.userControl.reset()),
         switchMap((teamId: number) => {
           return this.teamService.loadTeamMembers(teamId)
             .pipe(
@@ -221,31 +226,64 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
       },
       operation: OperationTypes.UPDATE
     })
-    .onAfterClose$
+      .onAfterClose$
       .pipe(
         take(1),
-        filter(domainName=>!!domainName),
+        filter(domainName => !!domainName),
         switchMap(domainName => {
           return this.inboxService.reassignBulk(selectedTasks, domainName)
         }),
-        tap(_=>this.reload$.next())
+        tap(_ => this.reload$.next())
       ).subscribe();
   }
-  private _listenToReload(){
+  private _listenToReload() {
     this.reload$.pipe(
       takeUntil(this.destroy$),
-      filter(_=>!!this.userControl.value),
-      switchMap(_=>{
+      filter(_ => !!this.userControl.value),
+      switchMap(_ => {
         return this.inboxService.loadUserInboxByDomainName(this.userControl.value.domainName)
-        .pipe(
-          tap((queryResultSet: QueryResultSet) => {
-            this.queryResultSet = queryResultSet;
-          }),
-          catchError(_ => {
-            return of(null);
-          })
-        )
+          .pipe(
+            tap((queryResultSet: QueryResultSet) => {
+              this.queryResultSet = queryResultSet;
+            }),
+            catchError(_ => {
+              return of(null);
+            })
+          )
       })
     ).subscribe();
+  }
+  isExternalUsers() {
+    return this.userTypesControl.value === UserTypes.EXTERNAL;
+  }
+
+  private _loadProfiles() {
+    this.profileService.loadActive()
+      .pipe(
+        take(1),
+        tap(profiles => {
+          this.profiles = profiles
+        })
+      ).subscribe(_ => {
+        this._listenToProfileSelect();
+      })
+  }
+
+  private _listenToProfileSelect() {
+    this.profileControl.valueChanges
+      .pipe(
+        switchMap((profile: Profile) =>
+          this._loadExternalUsersByProfile(profile)
+        ),
+        tap(users => {
+          this.users = users
+        }),
+        takeUntil(this.destroy$)
+      ).subscribe();
+  }
+  private _loadExternalUsersByProfile(profile: Profile) {
+    return this.externalUserService.getByProfileCriteria({
+      'profile-id': profile.id
+    })
   }
 }
