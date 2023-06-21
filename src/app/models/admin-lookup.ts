@@ -1,14 +1,15 @@
-import { searchFunctionType } from '@app/types/types';
-import { AdminResult } from './admin-result';
-import { LangService } from '@services/lang.service';
-import { AdminLookupService } from '@services/admin-lookup.service';
-import { FactoryService } from '@services/factory.service';
-import { INames } from '@contracts/i-names';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { InterceptModel } from '@decorators/intercept-model';
-import { AdminLookupInterceptor } from '@app/model-interceptors/admin-lookup-interceptor';
-import { BaseModelAdminLookup } from '@app/models/base-model-admin-lookup';
-import { CustomValidators } from '@app/validators/custom-validators';
+import {searchFunctionType} from '@app/types/types';
+import {AdminResult} from './admin-result';
+import {LangService} from '@services/lang.service';
+import {AdminLookupService} from '@services/admin-lookup.service';
+import {FactoryService} from '@services/factory.service';
+import {INames} from '@contracts/i-names';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {InterceptModel} from '@decorators/intercept-model';
+import {AdminLookupInterceptor} from '@app/model-interceptors/admin-lookup-interceptor';
+import {BaseModelAdminLookup} from '@app/models/base-model-admin-lookup';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Lookup} from './lookup';
 
 
 const interceptor = new AdminLookupInterceptor();
@@ -54,7 +55,17 @@ export class AdminLookup extends BaseModelAdminLookup<AdminLookup, AdminLookupSe
   }
 
   convertToAdminResult(): AdminResult {
-    return AdminResult.createInstance({ arName: this.arName, enName: this.enName, id: this.id, status: this.status, disabled: !this.isActive() });
+    return AdminResult.createInstance({
+      arName: this.arName,
+      enName: this.enName,
+      id: this.id,
+      status: this.status,
+      disabled: !this.isActive()
+    });
+  }
+
+  convertToLookup(): Lookup {
+    return new Lookup().clone({arName: this.arName, enName: this.enName, lookupKey: this.id, status: this.status});
   }
 
   isInactive(): boolean {
@@ -97,8 +108,9 @@ export class AdminLookup extends BaseModelAdminLookup<AdminLookup, AdminLookupSe
       type: controls ? [type] : type
     }
   }
+
   buildActivityTypeForm(controls: boolean = false) {
-    const { type, ...form } = this.buildDacOchaForm(controls);
+    const {type, ...form} = this.buildDacOchaForm(controls);
     return form;
   }
 }
