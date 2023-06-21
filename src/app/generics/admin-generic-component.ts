@@ -250,7 +250,6 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
         })
       )
       .subscribe((list: M[]) => {
-        this.count = list.length;
         this.models = list;
         this.afterReload(list);
       })
