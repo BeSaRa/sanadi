@@ -10,7 +10,6 @@
       [approvalMode]="true"
       [model]="data.model"
       [list]="model?.collectionItemList || []"
-      [readonly]="true"
     ></collection-item>
     <approval-form (formCancel)="formCancel()" (saveInfo)="saveLicenseInfo($event)" [license]="selectedLicense"
                    [model]="data.model"></approval-form>

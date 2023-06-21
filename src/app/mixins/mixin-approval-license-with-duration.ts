@@ -32,7 +32,7 @@ export function mixinApprovalLicenseWithDuration<T extends Constructor<{}>>(base
     currentVersionDate!: string
     itemId!: string
 
-    getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    getApprovalValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
       return {
         licenseStartDate:{langKey: 'license_start_date', value: this.licenseStartDate},
         licenseEndDate:{langKey: 'license_end_date', value: this.licenseEndDate},
@@ -43,7 +43,7 @@ export function mixinApprovalLicenseWithDuration<T extends Constructor<{}>>(base
       };
     }
     buildApprovalForm(controls: boolean = false): any {
-      const values = ObjectUtils.getControlValues<Approval>(this.getValuesWithLabels());
+      const values = ObjectUtils.getControlValues<Approval>(this.getApprovalValuesWithLabels());
       return {
         licenseStartDate: controls ? [DateUtils.changeDateToDatepicker(values.licenseStartDate)] : DateUtils.changeDateToDatepicker(values.licenseStartDate),
         licenseEndDate: controls ? [DateUtils.changeDateToDatepicker(values.licenseEndDate)] : DateUtils.changeDateToDatepicker(values.licenseEndDate),
