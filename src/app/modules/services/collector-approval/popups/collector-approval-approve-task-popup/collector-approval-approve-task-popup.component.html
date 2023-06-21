@@ -5,7 +5,13 @@
 </div>
 <div class="dialog-content" [ngClass]="isCancelRequestType() ? 'no-fixed-height min-w400px' : 'w800px'">
   <ng-container *ngIf="!isCancelRequestType()">
-    <collector-item (approval)="setSelectedLicense($event)" [approvalMode]="true" [model]="data.model"></collector-item>
+    <collector-item
+      (approval)="setSelectedLicense($event)"
+      [approvalMode]="true"
+      [model]="data.model"
+      [list]="data.model?.collectorItemList || []"
+      [readonly]="true"
+      ></collector-item>
     <approval-form (formCancel)="formCancel()" (saveInfo)="saveLicenseInfo($event)" [license]="selectedLicense"
                    [model]="data.model"></approval-form>
   </ng-container>
