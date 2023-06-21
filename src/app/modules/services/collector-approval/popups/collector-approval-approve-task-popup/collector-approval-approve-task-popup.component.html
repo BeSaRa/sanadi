@@ -10,8 +10,7 @@
       [approvalMode]="true"
       [model]="data.model"
       [list]="data.model?.collectorItemList || []"
-      [readonly]="true"
-      ></collector-item>
+    ></collector-item>
     <approval-form (formCancel)="formCancel()" (saveInfo)="saveLicenseInfo($event)" [license]="selectedLicense"
                    [model]="data.model"></approval-form>
   </ng-container>
