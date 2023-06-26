@@ -50,7 +50,7 @@ export class UserPreferencesPopupComponent implements OnInit {
       index: 1,
       checkTouchedDirty: false,
       isTouchedOrDirty: () => false,
-      show: () => true,
+      show: () => this.isUserActivate(),
       validStatus: () => {
         return true;
       },
@@ -188,5 +188,8 @@ export class UserPreferencesPopupComponent implements OnInit {
   setDialogButtonsVisibility(tab: any): void {
     this.saveVisible = (tab.name && tab.name === this.tabsData.basicInfo.name);
     this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.basicInfo.name);
+  }
+  isUserActivate(){
+    return this.user.isActive();
   }
 }
