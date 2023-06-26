@@ -83,9 +83,6 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
   ];
-  hasCommentWFResponseType = [
-    WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS,
-  ]
 
   isSendToDepartments(): boolean {
     return this.multiSendToDepartmentWFResponseList.includes(this.data.sendToResponse);
@@ -95,9 +92,6 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     return this.multiSendToUserWFResponseList.includes(this.data.sendToResponse);
   }
 
-  hasComment(): boolean {
-    return this.hasCommentWFResponseType.includes(this.data.sendToResponse);
-  }
   private _loadByServiceData(caseType: CaseTypes) {
     const serviceData = this.serviceDataService.loadByCaseType(caseType)
       .pipe(
@@ -211,9 +205,6 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
       delete data.users;
     } else if (this.isSendToUsers()) {
       delete data.departments;
-    }
-    if(!this.hasComment()) {
-      delete data.comment;
     }
     this.data.inboxService.sendTaskToMultiple(this.data.task.getCaseId(), data, this.data.service)
       .pipe(take(1))
