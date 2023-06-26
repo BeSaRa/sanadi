@@ -2000,4 +2000,5 @@ export interface ILanguageKeys {
   lookup_permission_group: string;
   permission: string;
   lbl_qatar_charity_related_data: string;
+  msg_confirm_continue_oof:string;
 }
