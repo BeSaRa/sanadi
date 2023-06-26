@@ -12,7 +12,8 @@
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
          [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.vacationTap.name" [hasError]="getTabInvalidStatus('vacationTap')"
-         [template]="vacationTapTemplate" [title]="lang.map.out_of_office"></tab>
+         [template]="vacationTapTemplate" [title]="lang.map.out_of_office"
+         *ngIf="tabsData.vacationTap.show!()"></tab>
   </tabs-list>
   <ng-template #basicInfoTabTemplate>
     <form [formGroup]="form" novalidate>
