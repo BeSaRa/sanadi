@@ -2001,4 +2001,5 @@ export interface ILanguageKeys {
   permission: string;
   lbl_qatar_charity_related_data: string;
   msg_confirm_continue_oof:string;
+  reassigned_task:string;
 }

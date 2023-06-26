@@ -76,6 +76,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   RISK_STATUS!: number;
   BD_IS_MAIN!: boolean;
   BD_IS_READ!: boolean;
+  BD_IS_REASSIGNED!: boolean;
   fromUserInfo!: AdminResult;
   orgInfo!: AdminResult;
   riskStatusInfo!: AdminResult;
