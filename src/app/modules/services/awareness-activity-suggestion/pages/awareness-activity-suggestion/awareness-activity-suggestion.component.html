@@ -57,7 +57,7 @@
         </div>
       </div>
       <div class="row" *ngIf="!!model && !!model.getCaseId()">
-        <ng-container *ngIf="isLicensingUser && openFrom === openFromEnum.USER_INBOX">
+        <ng-container *ngIf="isLicensingUser && openFrom === openFromEnum.USER_INBOX && model.taskDetails.isClaimed()">
           <div class="col-md-4 mb-4 position-relative">
             <label asteriskIfRequired [control]="selectedTemplateControl" class="form-label">{{lang.map.select + ' ' +
               lang.map.lbl_template}}</label>
