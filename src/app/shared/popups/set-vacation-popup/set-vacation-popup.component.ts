@@ -58,15 +58,15 @@ export class SetVacationPopupComponent implements OnInit {
     return this.form.get('vacationTo') as UntypedFormGroup;
   }
   isVacationTapValid():boolean{
-    if(!this.vacationFrom.value && !this.vacationTo.value){
-      return true;
-    }
-    if(!this.vacationFrom.value ){
+    if(!this.vacationFrom.value || !this.vacationTo.value){
       return false;
     }
-    if(!this.vacationTo.value ){
-      return false;
-    }
+    // if(!this.vacationFrom.value ){
+    //   return false;
+    // }
+    // if(!this.vacationTo.value ){
+    //   return false;
+    // }
     return  DateUtils.getTimeStampFromDate(this.vacationFrom.value)! < DateUtils.getTimeStampFromDate(this.vacationTo.value)!;
   }
   validateFieldsVisible = true;
@@ -81,7 +81,7 @@ export class SetVacationPopupComponent implements OnInit {
     if (!this.canEditPreferences ) {
       return;
     }
-    this.dialog.confirm(this.lang.map.msg_confirm_continue)
+    this.dialog.confirm(this.lang.map.msg_confirm_continue_oof)
     .onAfterClose$
     .pipe(
       take(1),
