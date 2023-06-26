@@ -73,7 +73,16 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
       type: 'action',
       label: 'reassign_task',
       icon: ActionIconsEnum.REASSIGN,
+      show:(item:QueryResult)=>!item.BD_IS_REASSIGNED,
       onClick: (item: QueryResult) => this.assignToUser(item)
+    },
+    // reassigned
+    {
+      type: 'action',
+      label: 'reassigned_task',
+      icon: ActionIconsEnum.REASSIGNED,
+      show:(item:QueryResult)=>item.BD_IS_REASSIGNED,
+
     },
 
   ];
