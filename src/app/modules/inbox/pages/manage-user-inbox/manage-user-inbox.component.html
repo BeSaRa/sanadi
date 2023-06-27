@@ -11,7 +11,8 @@
       <div class="col-md-6" *ngIf="isInternal">
         <label for="userType" class="h6 text-primary">{{lang.map.lbl_user_type}}</label>
         <ng-select [selectOnTab]="true" [clearable]="false" id="userType" placeholder="{{lang.map.select}}"
-          [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="userTypesControl">
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="userTypesControl"
+          [readonly]="!isSuperAdmin">
           <ng-option [value]="userType.lookupKey" *ngFor="let userType of userTypes">{{userType.getName()}}</ng-option>
         </ng-select>
       </div>
@@ -19,7 +20,7 @@
         <label for="team" class="h6 text-primary">{{lang.map.menu_teams}}</label>
         <ng-select [selectOnTab]="true" [clearable]="false" id="team" placeholder="{{lang.map.select}}"
           [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="teamsControl">
-          <ng-option [value]="team.teamId" *ngFor="let team of userTeams">{{team.getName()}}</ng-option>
+          <ng-option [value]="team.id" *ngFor="let team of userTeams">{{team.getName()}}</ng-option>
         </ng-select>
       </div>
       <div class="col-md-6" *ngIf="isExternalUsers()">
