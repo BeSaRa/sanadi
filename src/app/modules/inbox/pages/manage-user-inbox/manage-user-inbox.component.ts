@@ -175,6 +175,10 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
     this.userControl.valueChanges
       .pipe(
         takeUntil(this.destroy$),
+        tap(_=>{
+          this.table.selection.clear();
+          this.queryResultSet = new QueryResultSet()
+        }),
         filter(user => !!user),
         tap((user: ExternalUser | InternalUser) => {
           this.selectedUser = this._getSelectedUserWithType(user);
