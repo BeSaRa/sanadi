@@ -11,6 +11,7 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { QueryResult } from '@app/models/query-result';
 import { of } from 'rxjs';
+import { UserTypes } from '@app/enums/user-types.enum';
 
 @Component({
   selector: 'reassign-task-popup',
@@ -47,7 +48,7 @@ export class ReassignTaskPopupComponent implements OnInit {
   };
 
   private _loadAllowedUsers() {
-    if (this.selectedUser instanceof ExternalUser) {
+    if (this.selectedUser.userType === UserTypes.EXTERNAL) {
       this.commonService.loadExternalAssignUsers(this.selectedUser.getProfileId()!,this.selectedTasks)
         .pipe(
           take(1),
@@ -60,7 +61,7 @@ export class ReassignTaskPopupComponent implements OnInit {
           })
         ).subscribe();
     }
-    if (this.selectedUser instanceof InternalUser) {
+    if (this.selectedUser.userType === UserTypes.INTERNAL) {
       this.commonService.loadInternalAssignUsers((this.selectedUser as InternalUser).defaultDepartmentId, this.selectedTasks)
         .pipe(
           take(1),

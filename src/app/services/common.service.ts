@@ -107,7 +107,7 @@ export class CommonService {
       return {
         TKIID: e.TKIID,
         BD_CASE_TYPE: e.BD_CASE_TYPE,
-        OWNER:e.OWNER
+        ONWER:e.OWNER
       }
     });
   }
