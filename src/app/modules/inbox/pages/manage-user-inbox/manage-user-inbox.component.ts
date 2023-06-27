@@ -29,6 +29,8 @@ import { ExternalUser } from '@app/models/external-user';
 import { InternalUser } from '@app/models/internal-user';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { Profile } from '@app/models/profile';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
+import { Team } from '@app/models/team';
 
 @Component({
   selector: 'manage-user-inbox',
@@ -48,10 +50,11 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
   filterControl: UntypedFormControl = new UntypedFormControl('');
   isInternal: boolean = true;
-  userTypes: Lookup[] = this.lookupService.listByCategory.UserType.filter(x => (x.lookupKey !== UserTypes.INTEGRATION_USER && x.lookupKey !== UserTypes.ALL));
-  userTeams: UserTeam[] = [];
+  userTypes: Lookup[] = [];
+  userTeams: Team[] = [];
   selectedUser?: ExternalUser | InternalUser;
   profiles: Profile[] = [];
+  isSuperAdmin:boolean =  false;
   @ViewChild('table') table!: TableComponent;
 
   constructor(
@@ -65,7 +68,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private profileService: ProfileService
   ) {
-    this.isInternal = this.employeeService.getCurrentUser().isInternal();
+
   }
   actions: IMenuItem<QueryResult>[] = [
     // edit
@@ -73,7 +76,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
       type: 'action',
       label: 'reassign_task',
       icon: ActionIconsEnum.REASSIGN,
-      show:(item:QueryResult)=>!item.BD_IS_REASSIGNED,
+      show: (item: QueryResult) => !item.BD_IS_REASSIGNED,
       onClick: (item: QueryResult) => this.assignToUser(item)
     },
     // reassigned
@@ -81,7 +84,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
       type: 'action',
       label: 'reassigned_task',
       icon: ActionIconsEnum.REASSIGNED,
-      show:(item:QueryResult)=>item.BD_IS_REASSIGNED,
+      show: (item: QueryResult) => item.BD_IS_REASSIGNED,
 
     },
 
@@ -144,13 +147,30 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._listenToUserSelect();
     this._listenToUserTypeSelect();
+    this._initializeComponentValues();
     if (this.employeeService.getCurrentUser().isExternal()) {
-      this._loadCurrentUserTeams();
+      //this._loadCurrentUserTeams();
       this._listenToTeamSelect();
     }
     this._listenToReload();
   }
 
+  private _initializeComponentValues() {
+    this.isInternal = this.employeeService.getCurrentUser().isInternal();
+    this.isSuperAdmin = this.employeeService.checkPermissions(PermissionsEnum.SUPER_ADMIN);
+    const userType = this.employeeService.getCurrentUser().userType;
+    if (this.isSuperAdmin) {
+      this.userTypes = this.lookupService.listByCategory.UserType
+        .filter(x => (x.lookupKey !== UserTypes.INTEGRATION_USER && x.lookupKey !== UserTypes.ALL));
+
+    } else {
+      this.userTypes = this.lookupService.listByCategory.UserType
+        .filter(x => (x.lookupKey === userType));
+      this.userTypesControl.setValue(userType);
+
+    }
+    this.userTeams = this.employeeService.teams.filter(x=>x.id !== -1);
+  }
   private _listenToUserSelect() {
     this.userControl.valueChanges
       .pipe(
@@ -210,15 +230,15 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
       ).subscribe()
   }
 
-  private _loadCurrentUserTeams() {
-    this.teamService.loadUserTeamsByUserId(this.employeeService.getCurrentUser().generalUserId)
-      .pipe(
-        takeUntil(this.destroy$),
-        tap(userTeams => {
-          this.userTeams = userTeams
-        })
-      ).subscribe();
-  }
+  // private _loadCurrentUserTeams() {
+  //   this.teamService.loadUserTeamsByUserId(this.employeeService.getCurrentUser().generalUserId)
+  //     .pipe(
+  //       takeUntil(this.destroy$),
+  //       tap(userTeams => {
+  //         this.userTeams = userTeams
+  //       })
+  //     ).subscribe();
+  // }
 
   private assignToUser(queryResult: QueryResult) {
     this._openReassignPopup([queryResult]);
@@ -263,7 +283,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
   isExternalUsers() {
-    return this.userTypesControl.value === UserTypes.EXTERNAL;
+    return this.isInternal && this.userTypesControl.value === UserTypes.EXTERNAL;
   }
 
   private _loadProfiles() {
