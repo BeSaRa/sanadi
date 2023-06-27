@@ -305,6 +305,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
           this._loadExternalUsersByProfile(profile)
         ),
         tap(users => {
+          this.userControl.reset();
           this.users = users
         }),
         takeUntil(this.destroy$)

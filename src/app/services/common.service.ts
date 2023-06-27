@@ -106,7 +106,8 @@ export class CommonService {
     return queryResults.map(e => {
       return {
         TKIID: e.TKIID,
-        BD_CASE_TYPE: e.BD_CASE_TYPE
+        BD_CASE_TYPE: e.BD_CASE_TYPE,
+        OWNER:e.OWNER
       }
     });
   }
