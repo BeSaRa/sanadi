@@ -54,7 +54,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
   userTeams: Team[] = [];
   selectedUser?: ExternalUser | InternalUser;
   profiles: Profile[] = [];
-  isSuperAdmin:boolean =  false;
+  isSuperAdmin: boolean = false;
   @ViewChild('table') table!: TableComponent;
 
   constructor(
@@ -169,7 +169,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
       this.userTypesControl.setValue(userType);
 
     }
-    this.userTeams = this.employeeService.teams.filter(x=>x.id !== -1);
+    this.userTeams = this.employeeService.teams.filter(x => x.id !== -1);
   }
   private _listenToUserSelect() {
     this.userControl.valueChanges
@@ -177,7 +177,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         filter(user => !!user),
         tap((user: ExternalUser | InternalUser) => {
-          this.selectedUser = user;
+          this.selectedUser = this._getSelectedUserWithType(user);
         }),
         switchMap((user) => {
           return this.inboxService.loadUserInboxByDomainName(user.domainName)
@@ -264,6 +264,16 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
         }),
         tap(_ => this.reload$.next())
       ).subscribe();
+  }
+  private _getSelectedUserWithType(user: ExternalUser | InternalUser) {
+    return user.userType === UserTypes.EXTERNAL ? new ExternalUser().clone({
+      ...user as ExternalUser,
+      profileId: this._getSelectedUserProfileId()
+    }) :
+      user as InternalUser;
+  }
+  private _getSelectedUserProfileId(){
+    return this.profileControl.value?.id ?? this.employeeService.getProfile()?.id
   }
   private _listenToReload() {
     this.reload$.pipe(
