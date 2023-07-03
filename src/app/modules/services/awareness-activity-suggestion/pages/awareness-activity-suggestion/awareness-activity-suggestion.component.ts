@@ -499,6 +499,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       result.oldLicenseFullSerial = licenseDetails.fullSerial;
       result.oldLicenseId = licenseDetails.id;
       result.oldLicenseSerial = licenseDetails.serial;
+      result.activityType = licenseDetails.activityType;
 
       result.description = licenseDetails.description;
 
