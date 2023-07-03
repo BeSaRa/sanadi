@@ -148,16 +148,17 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
     this._listenToUserSelect();
     this._listenToUserTypeSelect();
     this._initializeComponentValues();
-    if (this.employeeService.getCurrentUser().isExternal()) {
-      //this._loadCurrentUserTeams();
-      this._listenToTeamSelect();
-    }
+    // if (this.employeeService.getCurrentUser().isExternal()) {
+    //   //this._loadCurrentUserTeams();
+    // }
+    this._listenToTeamSelect();
     this._listenToReload();
   }
 
   private _initializeComponentValues() {
     this.isInternal = this.employeeService.getCurrentUser().isInternal();
     this.isSuperAdmin = this.employeeService.checkPermissions(PermissionsEnum.SUPER_ADMIN);
+    // this.isSuperAdmin = true;
     const userType = this.employeeService.getCurrentUser().userType;
     if (this.isSuperAdmin) {
       this.userTypes = this.lookupService.listByCategory.UserType
@@ -175,8 +176,8 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
     this.userControl.valueChanges
       .pipe(
         takeUntil(this.destroy$),
-        tap(_=>{
-          this.table.selection.clear();
+        tap(_ => {
+          this.table?.selection.clear();
           this.queryResultSet = new QueryResultSet()
         }),
         filter(user => !!user),
@@ -208,7 +209,8 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
             this._loadProfiles();
           }
           if (userType === UserTypes.INTERNAL) {
-            this.loadInternalEmployees()
+            // this.loadInternalEmployees()
+            this._loadTeams();
           }
         })
       ).subscribe()
@@ -218,6 +220,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         tap(_ => this.userControl.reset()),
+
         switchMap((teamId: number) => {
           return this.teamService.loadTeamMembers(teamId)
             .pipe(
@@ -243,6 +246,22 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
   //       })
   //     ).subscribe();
   // }
+
+  private _loadTeams() {
+    if (this.isSuperAdmin) {
+      this.teamService.loadAsLookups()
+        .pipe(
+          takeUntil(this.destroy$),
+          tap(userTeams => {
+            this.userTeams = userTeams
+          })
+        ).subscribe();
+    }
+    else {
+      this.userTeams = this.employeeService.teams.filter(x => x.id !== -1);
+    }
+  }
+
 
   private assignToUser(queryResult: QueryResult) {
     this._openReassignPopup([queryResult]);
@@ -276,7 +295,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
     }) :
       user as InternalUser;
   }
-  private _getSelectedUserProfileId(){
+  private _getSelectedUserProfileId() {
     return this.profileControl.value?.id ?? this.employeeService.getProfile()?.id
   }
   private _listenToReload() {
@@ -299,7 +318,12 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
   isExternalUsers() {
     return this.isInternal && this.userTypesControl.value === UserTypes.EXTERNAL;
   }
-
+  isAllowedToSelectTeam() {
+    if (this.isInternal && this.userTypesControl.value !== UserTypes.INTERNAL) {
+      return false;
+    }
+    return true;
+  }
   private _loadProfiles() {
     this.profileService.loadActive()
       .pipe(
