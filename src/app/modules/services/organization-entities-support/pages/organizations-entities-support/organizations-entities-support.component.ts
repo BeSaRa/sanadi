@@ -27,7 +27,7 @@ import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {TabMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable, of, Subject} from 'rxjs';
-import {catchError, map, takeUntil, tap,} from 'rxjs/operators';
+import {catchError, map, switchMap, takeUntil, tap,} from 'rxjs/operators';
 import {JobTitle} from '@models/job-title';
 import {
   SelectCustomServiceTemplatePopupComponent
@@ -365,6 +365,16 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       });
   }
 
+  validateTimplate() {
+    return of(null).pipe(
+      switchMap(() => {
+        return this.customServiceTemplate.loadTemplatesByCaseId(this.model!.getCaseType(), this.model?.getCaseId())
+      }),
+      map(temps => {
+        return !!temps.length
+      })
+    )
+  }
   private _loadExternalUsers() {
     this.externalUserService
       .getByProfileCriteria({
