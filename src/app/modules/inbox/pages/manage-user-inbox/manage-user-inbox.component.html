@@ -16,10 +16,11 @@
           <ng-option [value]="userType.lookupKey" *ngFor="let userType of userTypes">{{userType.getName()}}</ng-option>
         </ng-select>
       </div>
-      <div class="col-md-6" *ngIf="!isInternal">
+      <div class="col-md-6" *ngIf="isAllowedToSelectTeam()">
         <label for="team" class="h6 text-primary">{{lang.map.menu_teams}}</label>
         <ng-select [selectOnTab]="true" [clearable]="false" id="team" placeholder="{{lang.map.select}}"
-          [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="teamsControl">
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="teamsControl"
+         >
           <ng-option [value]="team.id" *ngFor="let team of userTeams">{{team.getName()}}</ng-option>
         </ng-select>
       </div>
