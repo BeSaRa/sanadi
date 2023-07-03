@@ -188,7 +188,7 @@ export class AwarenessActivitySuggestion
     }
   }
 
-  approveWithSave(form: UntypedFormGroup): DialogRef {
+  approve(): DialogRef {
     return this.service.approve(this, WFResponseType.APPROVE)
   }
 
