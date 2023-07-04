@@ -1,16 +1,16 @@
-import {AfterViewInit, Directive, Input} from '@angular/core';
-import {IFindInList} from '@contracts/i-find-in-list';
-import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
-import {AuditOperationTypes} from '@enums/audit-operation-types';
-import {ObjectUtils} from '@helpers/object-utils';
-import {IValueDifference} from '@contracts/i-value-difference';
-import {AdminResult} from '@models/admin-result';
-import {ControlValueLabelLangKey} from '@app/types/types';
-import {CaseAuditService} from '@services/case-audit.service';
-import {CaseTypes} from '@enums/case-types.enum';
-import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
-import {LangService} from '@services/lang.service';
-import {CommonUtils} from '@helpers/common-utils';
+import { AfterViewInit, Directive, Input } from '@angular/core';
+import { IFindInList } from '@contracts/i-find-in-list';
+import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
+import { AuditOperationTypes } from '@enums/audit-operation-types';
+import { ObjectUtils } from '@helpers/object-utils';
+import { IValueDifference } from '@contracts/i-value-difference';
+import { AdminResult } from '@models/admin-result';
+import { ControlValueLabelLangKey } from '@app/types/types';
+import { CaseAuditService } from '@services/case-audit.service';
+import { CaseTypes } from '@enums/case-types.enum';
+import { IAuditModelProperties } from '@contracts/i-audit-model-properties';
+import { LangService } from '@services/lang.service';
+import { CommonUtils } from '@helpers/common-utils';
 
 @Directive()
 export abstract class AuditListGenericComponent<M extends IAuditModelProperties<M>> implements AfterViewInit {
