@@ -267,14 +267,25 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
     this._openReassignPopup([queryResult]);
 
   }
+  private _getQueryId(selectedUser:InternalUser|ExternalUser):number{
+    if(selectedUser.userType === UserTypes.INTERNAL){
+      return this.userTeams.find(x=>x.id === this.teamsControl.value)?.parentDeptId!
+    }
+    if(selectedUser.userType === UserTypes.EXTERNAL){
+      return this.selectedUser?.getProfileId()!
+    }
+    return 0;
+  }
   private _openReassignPopup(selectedTasks: QueryResult[]) {
     return this.dialogService.show<IDialogData<{
       user: InternalUser | ExternalUser,
-      tasks: QueryResult[]
+      tasks: QueryResult[],
+      queryId:number
     }>>(ReassignTaskPopupComponent, {
       model: {
         user: this.selectedUser!,
-        tasks: selectedTasks
+        tasks: selectedTasks,
+        queryId :this._getQueryId(this.selectedUser!)
       },
       operation: OperationTypes.UPDATE
     })

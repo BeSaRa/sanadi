@@ -24,17 +24,20 @@ export class ReassignTaskPopupComponent implements OnInit {
   selectedUser: InternalUser | ExternalUser;
   selectedTasks:QueryResult[]=[];
   users: any[] = [];
+  queryId!:number;
   constructor(
     public dialogRef: DialogRef,
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<{
        user: InternalUser | ExternalUser,
-       tasks:QueryResult[]
+       tasks:QueryResult[],
+       queryId:number
        }>,
     public lang: LangService,
     private commonService: CommonService
   ) {
     this.selectedUser = data.model.user;
     this.selectedTasks = data.model.tasks;
+    this.queryId = data.model.queryId;
 
   }
   ngOnInit(): void {
@@ -49,7 +52,7 @@ export class ReassignTaskPopupComponent implements OnInit {
 
   private _loadAllowedUsers() {
     if (this.selectedUser.userType === UserTypes.EXTERNAL) {
-      this.commonService.loadExternalAssignUsers(this.selectedUser.getProfileId()!,this.selectedTasks)
+      this.commonService.loadExternalAssignUsers(this.queryId,this.selectedTasks)
         .pipe(
           take(1),
           tap(users => {
@@ -62,7 +65,7 @@ export class ReassignTaskPopupComponent implements OnInit {
         ).subscribe();
     }
     if (this.selectedUser.userType === UserTypes.INTERNAL) {
-      this.commonService.loadInternalAssignUsers((this.selectedUser as InternalUser).defaultDepartmentId, this.selectedTasks)
+      this.commonService.loadInternalAssignUsers(this.queryId, this.selectedTasks)
         .pipe(
           take(1),
           tap(users => {
