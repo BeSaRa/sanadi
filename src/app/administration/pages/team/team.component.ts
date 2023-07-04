@@ -26,7 +26,7 @@ import { FormBuilder } from '@angular/forms';
 })
 export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
   usePagination = true;
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'authName', 'updatedOn', 'status', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'authName', 'updatedOn', 'status','email', 'actions'];
   searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_authName','search_updatedOn', 'search_status', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {

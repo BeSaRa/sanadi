@@ -72,6 +72,10 @@
               *cdkHeaderCellDef [sortParamAsFullItem]="true"> {{langService.map.lbl_status}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo.getName()}} </td>
         </ng-container>
+        <ng-container cdkColumnDef="email">
+          <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{langService.map.lbl_email}}</th>
+          <td *cdkCellDef="let row" cdk-cell> {{row.email}} </td>
+        </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
