@@ -30,7 +30,7 @@
           </ng-container>
           <ng-container cdkColumnDef="category">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.bank_category}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.bankCategoryInfo?.getName() || ''}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.bankCategoryInfo && row.bankCategoryInfo?.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.view_changes}}</th>
