@@ -1,20 +1,21 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {TabMap} from '@app/types/types';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {IDialogData} from '@contracts/i-dialog-data';
-import {CommonUtils} from '@helpers/common-utils';
-import {ExternalUser} from '@models/external-user';
-import {InternalUser} from '@models/internal-user';
-import {Lookup} from '@models/lookup';
-import {UserPreferences} from '@models/user-preferences';
-import {EmployeeService} from '@services/employee.service';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {Subject} from 'rxjs';
+import { Component, Inject, OnInit } from '@angular/core';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { TabMap } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { CommonUtils } from '@helpers/common-utils';
+import { ExternalUser } from '@models/external-user';
+import { InternalUser } from '@models/internal-user';
+import { Lookup } from '@models/lookup';
+import { UserPreferences } from '@models/user-preferences';
+import { EmployeeService } from '@services/employee.service';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'user-preferences-popup',
@@ -32,6 +33,7 @@ export class UserPreferencesPopupComponent implements OnInit {
   tabIndex$: Subject<number> = new Subject<number>();
   saveVisible = true;
   validateFieldsVisible = true;
+  isLoggedInUser = false;
   tabsData: TabMap = {
     basicInfo: {
       name: 'basicInfoTab',
@@ -50,7 +52,7 @@ export class UserPreferencesPopupComponent implements OnInit {
       index: 1,
       checkTouchedDirty: false,
       isTouchedOrDirty: () => false,
-      show: () => this.isUserActivate(),
+      show: () => this.canUpdateOutOfOffice(),
       validStatus: () => {
         return true;
       },
@@ -67,13 +69,14 @@ export class UserPreferencesPopupComponent implements OnInit {
   }
 
   constructor(public lang: LangService,
-              @Inject(DIALOG_DATA_TOKEN) data: IDialogData<UserPreferences>,
-              public fb: UntypedFormBuilder,
-              private toast: ToastService,
-              public dialogRef: DialogRef,
-              private employeeService: EmployeeService) {
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<UserPreferences>,
+    public fb: UntypedFormBuilder,
+    private toast: ToastService,
+    public dialogRef: DialogRef,
+    private employeeService: EmployeeService) {
     this.model = data.model;
     this.user = data.user;
+    this.isLoggedInUser = data.isLoggedInUserPreferences
     this.canEditPreferences = data.isLoggedInUserPreferences ? true : this.employeeService.isInternalUser()
   }
 
@@ -121,7 +124,7 @@ export class UserPreferencesPopupComponent implements OnInit {
       return;
     }
     if (this._hasDuplicateEmail()) {
-      this.toast.error(this.lang.map.msg_check_x_duplicate.change({x: this.lang.map.alternate_emails}));
+      this.toast.error(this.lang.map.msg_check_x_duplicate.change({ x: this.lang.map.alternate_emails }));
       return;
     }
 
@@ -189,7 +192,10 @@ export class UserPreferencesPopupComponent implements OnInit {
     this.saveVisible = (tab.name && tab.name === this.tabsData.basicInfo.name);
     this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.basicInfo.name);
   }
-  isUserActivate(){
-    return this.user.isActive();
+  canUpdateOutOfOffice() {
+    if(this.isLoggedInUser){
+      return this.employeeService.checkPermissions(PermissionsEnum.OUT_OF_OFFICE)
+    }
+    return this.user.isActive() && this.employeeService.checkPermissions(PermissionsEnum.MANAGE_VACATIONS_DATE);
   }
 }
