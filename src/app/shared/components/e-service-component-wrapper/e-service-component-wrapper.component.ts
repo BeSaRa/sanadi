@@ -1873,7 +1873,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private organizationApproveAction(item: CaseModel<any, any>) {
     item.organizationApprove({
       form: this.component.form,
-      organizationOfficers: (this.component as any).organizationOfficerComponentRef.list
+      organizationOfficers: (this.component as any).organizationOfficerComponentRef?.list??[]
     }).onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
