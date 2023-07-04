@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CharityUpdateSection } from '@app/enums/charity-update-section.enum';
 import { ObjectUtils } from '@app/helpers/object-utils';
 import { IAuditCaseProperties } from '@app/interfaces/i-audit-case-properties';
 import { IValueDifference } from '@app/interfaces/i-value-difference';
@@ -11,6 +12,7 @@ import { LangService } from '@app/services/lang.service';
     styleUrls: ['audit-charity-organization-update.component.scss']
 })
 export class AuditCharityOrganizationUpdateComponent implements IAuditCaseProperties<CharityOrganizationUpdate>, OnInit {
+  charityUpdateSection = CharityUpdateSection;
   newVersion!: CharityOrganizationUpdate; // don't delete or rename the property
   oldVersion!: CharityOrganizationUpdate; // don't delete or rename the property
 

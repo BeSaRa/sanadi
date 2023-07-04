@@ -23,6 +23,7 @@ export class OrganizationOfficer extends SearchableCloneable<OrganizationOfficer
   phone!: string;
   identificationNumber!: string;
   extraPhone!: string;
+  ouInfo!: AdminResult;
   langService?: LangService;
   searchFields: ISearchFieldsMap<OrganizationOfficer> = {
     ...normalSearchFields(['fullName', 'identificationNumber', 'email', 'phone', 'extraPhone'])
@@ -49,6 +50,9 @@ export class OrganizationOfficer extends SearchableCloneable<OrganizationOfficer
   getAdminResultByProperty(property: keyof OrganizationOfficer): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
+      case 'organizationId':
+        adminResultValue = this.ouInfo;
+        break;
       default:
         let value: any = this[property];
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
