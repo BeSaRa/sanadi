@@ -216,11 +216,14 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
 
   private calculateTotalAdminDeduction(): number {
     this.totalAdminRatio = currency((this.totalDeductionRatio * this._model.projectTotalCost) / 100).value;
-    this._model.setTargetAmount(currency(this.totalAdminRatio).value + currency(this._model.projectTotalCost).value);
+    // this._model.setTargetAmount(currency(this.totalAdminRatio).value + currency(this._model.projectTotalCost).value);
+    this._model.setTargetAmount( currency(this._model.projectTotalCost).value);
     this._model.administrativeDeductionAmount = this.totalAdminRatio;
     return this.totalAdminRatio;
   }
-
+  deductionTargetAmount(){
+   return this._model.targetAmount + currency((this.totalDeductionRatio * this._model.projectTotalCost) / 100).value;
+  }
   removeItem(item: DeductedPercentage, index: number) {
     this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({x: item.deductionTypeInfo.getName()}))
       .onAfterClose$
