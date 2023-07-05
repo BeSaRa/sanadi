@@ -105,8 +105,12 @@
       <ng-container cdkColumnDef="targetAmountCellValue">
         <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
           <div class="d-flex align-items-center">
+            <!-- <span
+              class="h6 mb-0">{{_model.targetAmount | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}
+            </span> -->
             <span
-              class="h6 mb-0">{{_model.targetAmount | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}</span>
+              class="h6 mb-0">{{deductionTargetAmount() | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}
+            </span>
           </div>
         </th>
       </ng-container>

@@ -34,12 +34,12 @@ export class TeamPopupComponent implements OnInit {
   saveVisible: boolean = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Team>,
-              private toast: ToastService,
-              private dialogRef: DialogRef,
-              private fb: UntypedFormBuilder,
-              public langService: LangService,
-              private lookupService: LookupService,
-              private _exceptionHandlerService: ExceptionHandlerService) {
+    private toast: ToastService,
+    private dialogRef: DialogRef,
+    private fb: UntypedFormBuilder,
+    public langService: LangService,
+    private lookupService: LookupService,
+    private _exceptionHandlerService: ExceptionHandlerService) {
     this.model = data.model;
     this.operation = data.operation;
     this.parentDepartmentsList = data.parentDepartmentsList;
@@ -74,7 +74,11 @@ export class TeamPopupComponent implements OnInit {
       }, [CustomValidators.required]],
       parentDeptId: [this.model.parentDeptId, [CustomValidators.required]],
       ldapGroupName: [this.model.ldapGroupName, [CustomValidators.required]],
-      status: [{value:this.model.status, disabled:true} ,[CustomValidators.required]],
+      status: [{ value: this.model.status, disabled: true }, [CustomValidators.required]],
+      email: [this.model.email, [
+        CustomValidators.pattern('EMAIL'),
+        CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX),
+      ]],
       autoClaim: [this.model.autoClaim],
       isHidden: [this.model.isHidden]
     }, {
@@ -87,7 +91,7 @@ export class TeamPopupComponent implements OnInit {
     if (this.operation === OperationTypes.UPDATE) {
       this.fm.displayFormValidity();
     }
-    if (this.operation === OperationTypes.VIEW){
+    if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
@@ -102,7 +106,7 @@ export class TeamPopupComponent implements OnInit {
     this.save$
       .pipe(takeUntil(this.destroy$),
         exhaustMap(() => {
-          const team = (new Team()).clone({...this.model, ...this.form.value});
+          const team = (new Team()).clone({ ...this.model, ...this.form.value });
           return team.save().pipe(
             catchError(() => {
               return of(null);
@@ -114,7 +118,7 @@ export class TeamPopupComponent implements OnInit {
           return;
         }
         const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
-        this.toast.success(message.change({x: result.getName()}));
+        this.toast.success(message.change({ x: result.getName() }));
         this.model = result;
         this.operation = OperationTypes.UPDATE;
         this.dialogRef.close(this.model);
@@ -122,7 +126,7 @@ export class TeamPopupComponent implements OnInit {
   }
 
   get popupTitle(): string {
-    if (this.operation === OperationTypes.CREATE){
+    if (this.operation === OperationTypes.CREATE) {
       return this.langService.map.lbl_add_team;
     } else if (this.operation === OperationTypes.UPDATE) {
       return this.langService.map.lbl_edit_team;

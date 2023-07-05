@@ -23,6 +23,7 @@ export class Team extends BaseModel<Team, TeamService> {
   createdOn!: string;
   createdBy!: number;
   status!: number;
+  email!:string;
   statusDateModified: string | null = '';
 
   createdByInfo!: AdminResult;

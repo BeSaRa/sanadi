@@ -17,23 +17,23 @@ import { take } from 'rxjs/operators';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 
 @Component({
-    selector: 'set-vacation-popup',
-    templateUrl: 'set-vacation-popup.component.html',
-    styleUrls: ['set-vacation-popup.component.scss']
+  selector: 'set-vacation-popup',
+  templateUrl: 'set-vacation-popup.component.html',
+  styleUrls: ['set-vacation-popup.component.scss']
 })
 export class SetVacationPopupComponent implements OnInit {
 
   constructor(
-    private fb : FormBuilder,
+    private fb: FormBuilder,
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<ISetVacationData>,
-    public lang:LangService,
+    public lang: LangService,
     private toast: ToastService,
     public dialogRef: DialogRef,
-    private dialog:DialogService
-    ) {
-      this.model = data.model.userPreferences;
-      this.canEditPreferences = data.model.canEditPreferences;
-      this.user = data.model.user;
+    private dialog: DialogService
+  ) {
+    this.model = data.model.userPreferences;
+    this.canEditPreferences = data.model.canEditPreferences;
+    this.user = data.model.user;
 
   }
   ngOnInit(): void {
@@ -57,8 +57,14 @@ export class SetVacationPopupComponent implements OnInit {
   get vacationTo(): UntypedFormGroup {
     return this.form.get('vacationTo') as UntypedFormGroup;
   }
-  isVacationTapValid():boolean{
-    if(!this.vacationFrom.value || !this.vacationTo.value){
+  private _isVacationToInThePast() {
+    return DateUtils.getTimeStampFromDate(this.vacationTo.value)! < DateUtils.getTimeStampFromDate(new Date().toISOString())!
+  }
+  isVacationTapValid(): boolean {
+    if (this._isVacationToInThePast()) {
+      return false;
+    }
+    if (!this.vacationFrom.value || !this.vacationTo.value) {
       return false;
     }
     // if(!this.vacationFrom.value ){
@@ -67,7 +73,7 @@ export class SetVacationPopupComponent implements OnInit {
     // if(!this.vacationTo.value ){
     //   return false;
     // }
-    return  DateUtils.getTimeStampFromDate(this.vacationFrom.value)! < DateUtils.getTimeStampFromDate(this.vacationTo.value)!;
+    return DateUtils.getTimeStampFromDate(this.vacationFrom.value)! < DateUtils.getTimeStampFromDate(this.vacationTo.value)!;
   }
   validateFieldsVisible = true;
   buildForm(): void {
@@ -78,35 +84,35 @@ export class SetVacationPopupComponent implements OnInit {
     this.vacationTo.updateValueAndValidity();
   }
   save() {
-    if (!this.canEditPreferences ) {
+    if (!this.canEditPreferences) {
       return;
     }
     this.dialog.confirm(this.lang.map.msg_confirm_continue_oof)
-    .onAfterClose$
-    .pipe(
-      take(1),
-    )
-    .subscribe((click: UserClickOn)=>{
-      if (click === UserClickOn.YES) {
-        this._updateUserVacation();
-      }
-    })
+      .onAfterClose$
+      .pipe(
+        take(1),
+      )
+      .subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          this._updateUserVacation();
+        }
+      })
 
   }
-  private _updateUserVacation(){
+  private _updateUserVacation() {
     let updatedModel = new UserPreferences().clone({
       ...this.model,
       ...this.form.value,
     });
     updatedModel.updateUserVacation(this.user.generalUserId).subscribe(model => {
-      if(!model){
+      if (!model) {
         // this.toast.error(this.lang.map.err_invalid_date);
         this.dialogRef.close()
         return;
       }
       this.toast.success(this.lang.map.msg_save_success);
-      const {receive} =new UserPreferencesInterceptor()
-      this.model= receive(updatedModel);
+      const { receive } = new UserPreferencesInterceptor()
+      this.model = receive(updatedModel);
       this.dialogRef.close(this.model);
     });
   }

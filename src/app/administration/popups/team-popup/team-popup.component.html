@@ -73,6 +73,13 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="email" asteriskIfRequired="email" class="form-label">{{langService.map.lbl_email}}</label>
+        <input trimInput id="email" formControlName="email" validationClasses="email" class="form-control"/>
+        <app-field-error-message controlName="email"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-sm-6 mb-4 form-check form-switch">
         <div class="ms-3">
           <input class="form-check-input" type="checkbox" id="autoClaim" formControlName="autoClaim">
