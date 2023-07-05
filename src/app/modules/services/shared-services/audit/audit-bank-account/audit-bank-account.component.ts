@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {BankAccount} from '@models/bank-account';
-import {CaseTypes} from '@enums/case-types.enum';
 import {AuditOperationTypes} from '@enums/audit-operation-types';
 import {LangService} from '@services/lang.service';
 import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
@@ -41,6 +40,6 @@ export class AuditBankAccountComponent extends AuditListGenericComponent<BankAcc
   }
 
   getControlLabels(item: BankAccount): { [key: string]: ControlValueLabelLangKey } {
-    return item.getBankAccountValuesWithLabels(CaseTypes.PARTNER_APPROVAL);
+    return item.getBankAccountValuesWithLabels(this.caseType);
   }
 }
