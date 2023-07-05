@@ -23,6 +23,7 @@ export class AuditExternalOrganizationAffiliationComponent implements IAuditCase
   ngOnInit() {
     this._getBasicInfoDifferences();
     this._specialExplanationDifferences();
+    console.log(this)
   }
 
   private _getBasicInfoDifferences(): void {
