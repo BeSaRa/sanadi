@@ -1,3 +1,4 @@
+import { FinancialTransfersProject } from '@app/models/financial-transfers-project';
 import {ExternalProjectLicensing} from '@models/external-project-licensing';
 import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup,} from '@angular/forms';
@@ -1226,6 +1227,9 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   }
   get specialExplanationsField(): UntypedFormControl {
     return this.form.get('description') as UntypedFormControl;
+  }
+  onProjectsListUpdated(financialTransfersProject:FinancialTransfersProject[]){
+    this.model!.financialTransfersProjects = financialTransfersProject;
   }
   //#endregion
 }
