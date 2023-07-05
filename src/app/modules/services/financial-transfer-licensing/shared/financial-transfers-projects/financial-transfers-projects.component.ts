@@ -1,15 +1,15 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FinancialTransfersProject} from '@models/financial-transfers-project';
-import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
-import {ComponentType} from '@angular/cdk/portal';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import { ComponentType } from '@angular/cdk/portal';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { FinancialTransferRequestTypes } from '@app/enums/service-request-types';
+import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { ExternalProjectLicensing } from '@app/models/external-project-licensing';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { FinancialTransfersProject } from '@models/financial-transfers-project';
 import {
   FinancialTransfersProjectsPopupComponent
 } from '../../popups/financial-transfers-projects-popup/financial-transfers-projects-popup.component';
-import {ExternalProjectLicensing} from '@app/models/external-project-licensing';
-import {FinancialTransferRequestTypes} from '@app/enums/service-request-types';
 
 @Component({
   selector: 'financial-transfers-projects',
@@ -21,6 +21,7 @@ export class FinancialTransfersProjectsComponent extends UiCrudListGenericCompon
   @Input() requestType: number = FinancialTransferRequestTypes.NEW;
   @Input() submissionMechanism!: number;
   @Output() listUpdated = new EventEmitter<number>();
+  @Output() financialTransfersProjectListUpdated= new EventEmitter<FinancialTransfersProject[]>();
 
   constructor() {
     super();
@@ -60,7 +61,7 @@ export class FinancialTransfersProjectsComponent extends UiCrudListGenericCompon
   }
 
   _getDeleteConfirmMessage(record: FinancialTransfersProject): string {
-    return this.lang.map.msg_confirm_delete_x.change({x: record.fullSerial});
+    return this.lang.map.msg_confirm_delete_x.change({ x: record.fullSerial });
   }
 
   getExtraDataForPopup(): IKeyValue {
@@ -82,6 +83,7 @@ export class FinancialTransfersProjectsComponent extends UiCrudListGenericCompon
   afterReload(): void {
     this._calculateQatariTransactionAmount();
     this.listUpdated.emit(this.totalQatariRiyalTransactions);
+   this.financialTransfersProjectListUpdated.emit([...this.list]);
   }
 
   private _calculateQatariTransactionAmount() {
