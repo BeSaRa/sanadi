@@ -11,6 +11,7 @@ import { normalSearchFields } from "@app/helpers/normal-search-fields";
 import { InterceptModel } from "@decorators/intercept-model";
 import { InquiryInterceptor } from "@app/model-interceptors/inquiry-interceptor";
 import { ObjectUtils } from '@app/helpers/object-utils';
+import {CommonUtils} from "@helpers/common-utils";
 
 const interceptor = new InquiryInterceptor()
 
@@ -96,7 +97,11 @@ export class Inquiry extends CaseModel<InquiryService, Inquiry> {
         break;
 
       default:
-        adminResultValue = AdminResult.createInstance({arName: this[property] as string, enName: this[property] as string});
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
     }
     return adminResultValue ?? new AdminResult();
   }

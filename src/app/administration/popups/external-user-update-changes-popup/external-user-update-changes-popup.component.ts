@@ -15,6 +15,7 @@ import {CustomMenu} from '@app/models/custom-menu';
 import {ServiceData} from '@app/models/service-data';
 import {IExternalUserBasicInfoDifference, IExternalUserServicePermissionDifference} from '@contracts/i-external-user-basic-info-difference';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'external-user-update-changes-popup',
@@ -77,24 +78,28 @@ export class ExternalUserUpdateChangesPopupComponent implements OnInit {
   }
 
   private getAdminResultValue(key: keyof ExternalUser, isUpdatedValue: boolean) {
-    let adminResultValue;
-    const value = isUpdatedValue ? this.model : this.externalUser;
+    let adminResultValue: AdminResult;
+    const model = isUpdatedValue ? this.model : this.externalUser;
     switch (key) {
       case 'customRoleId':
-        adminResultValue = value.customRoleInfo;
+        adminResultValue = model.customRoleInfo;
         break;
       case 'profileId':
-        adminResultValue = value.profileInfo;
+        adminResultValue = model.profileInfo;
         break;
       case 'status':
-        adminResultValue = value.statusInfo;
+        adminResultValue = model.statusInfo;
         break;
       case 'userType':
-        adminResultValue = value.userTypeInfo;
+        adminResultValue = model.userTypeInfo;
         break;
       default:
         // @ts-ignore
-        adminResultValue = AdminResult.createInstance({arName: value[key] as string, enName: value[key] as string});
+        let value: any = model[key];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
     }
     return adminResultValue ?? new AdminResult();
   }

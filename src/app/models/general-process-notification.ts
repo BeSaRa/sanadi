@@ -111,8 +111,6 @@ export class GeneralProcessNotification
         adminResultValue = this.processTypeInfo;
         break;
       case 'processid':
-        console.log(this.service.processList);
-
         adminResultValue = this.service.processList.find(x => x.id === this.processid)?.createAdminResult() ?? AdminResult.createInstance({});
         break;
 

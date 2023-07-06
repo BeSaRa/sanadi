@@ -80,7 +80,6 @@ export abstract class AuditListGenericComponent<M extends IAuditModelProperties<
           auditOperation: AuditOperationTypes.ADDED
         }));
       }
-      console.log(this.list)
     });
 
     // get deleted and updated records
@@ -104,7 +103,6 @@ export abstract class AuditListGenericComponent<M extends IAuditModelProperties<
             auditOperation: AuditOperationTypes.UPDATED
           }));
         }
-        console.log(this.list)
       }
     })
   }
