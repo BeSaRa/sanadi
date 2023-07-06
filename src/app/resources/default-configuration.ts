@@ -4,7 +4,7 @@ import {ConfigurationMergingScope} from '@app/types/types';
 export const configurationMergingLevel: ConfigurationMergingScope = 'limited';
 
 export const defaultConfiguration: Partial<IAppConfig> = {
-  VERSION: 'v2.3.3',
+  VERSION: 'v2.3.4',
   PRIVATE_VERSION: '',
   API_VERSION: 'v1',
   BASE_ENVIRONMENT: 'BAW_UI',
