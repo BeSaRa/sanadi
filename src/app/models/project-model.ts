@@ -255,7 +255,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : beneficiaryRegion,
       executionCountry: controls ? [executionCountry, CustomValidators.required] : executionCountry,
       executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : executionRegion,
-      interventionType: controls ? [interventionType, CustomValidators.required] : interventionType,
+      interventionType: controls ? [interventionType, []] : interventionType,
 
     };
   }
