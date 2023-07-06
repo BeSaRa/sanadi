@@ -114,7 +114,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> implements IAu
         adminResultValue = this.currencyInfo;
         break;
       case 'category':
-        adminResultValue = this.bankCategoryInfo.convertToAdminResult();
+        adminResultValue = this.bankCategoryInfo?.convertToAdminResult();
         break;
       default:
         let value: any = this[property];

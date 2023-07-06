@@ -551,7 +551,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.form.get('categoryInfo') as UntypedFormGroup;
   }
   get subInternalProjectClassification(): AbstractControl {
-    return this.basicInfoTab.get('subInternalProjectClassification') as AbstractControl;
+    return this.categoryInfoTab.get('subInternalProjectClassification') as AbstractControl;
   }
 
   get internalProjectClassification(): AbstractControl {
