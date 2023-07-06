@@ -234,7 +234,6 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       executionCountry,
       executionRegion,
       interventionType,
-      subInternalProjectClassification
     } = ObjectUtils.getControlValues<ProjectModel>(this.getBasicInfoValuesWithLabels());
     return {
       requestType: controls ? [requestType, CustomValidators.required] : requestType,
@@ -257,7 +256,6 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       executionCountry: controls ? [executionCountry, CustomValidators.required] : executionCountry,
       executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : executionRegion,
       interventionType: controls ? [interventionType, CustomValidators.required] : interventionType,
-      subInternalProjectClassification: controls ? [subInternalProjectClassification,[]] : subInternalProjectClassification,
 
     };
   }
@@ -290,7 +288,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       thirdSDGoal,
       internalProjectClassification,
       sanadiDomain,
-      sanadiMainClassification
+      sanadiMainClassification,
+      subInternalProjectClassification
     } = ObjectUtils.getControlValues<ProjectModel>(this.getCategoryValuesWithLabels());
     return {
       domain: controls ? [domain, CustomValidators.required] : domain,
@@ -303,7 +302,9 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       thirdSDGoal: controls ? [thirdSDGoal] : thirdSDGoal,
       internalProjectClassification: controls ? [internalProjectClassification] : internalProjectClassification,
       sanadiDomain: controls ? [sanadiDomain] : sanadiDomain,
-      sanadiMainClassification: controls ? [sanadiMainClassification] : sanadiMainClassification
+      sanadiMainClassification: controls ? [sanadiMainClassification] : sanadiMainClassification,
+      subInternalProjectClassification: controls ? [subInternalProjectClassification,[]] : subInternalProjectClassification,
+
     };
   }
   getCategoryGoalPercentValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
