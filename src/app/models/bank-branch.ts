@@ -27,9 +27,10 @@ export class BankBranch extends SearchableCloneable<BankBranch> implements IAudi
   };
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    const establishmentDateStamp = DateUtils.getTimeStampFromDate(this.establishmentDate);
     return {
       fullName: {langKey: 'full_name', value: this.fullName},
-      establishmentDate: {langKey: 'establishment_date', value: this.establishmentDate},
+      establishmentDate: {langKey: 'establishment_date', value: this.establishmentDate,comparisonValue:establishmentDateStamp},
       address: {langKey: 'lbl_address', value: this.address},
       email: {langKey: 'lbl_email', value: this.email},
       fax: {langKey: 'fax_number', value: this.fax},
@@ -57,6 +58,10 @@ export class BankBranch extends SearchableCloneable<BankBranch> implements IAudi
   getAdminResultByProperty(property: keyof BankBranch): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
+      case 'establishmentDate':
+        const startDateValue = DateUtils.getDateStringFromDate(this.establishmentDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({arName: startDateValue, enName: startDateValue});
+        break;
       default:
         let value: any = this[property];
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
