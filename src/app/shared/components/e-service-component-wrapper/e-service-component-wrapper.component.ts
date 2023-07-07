@@ -1684,9 +1684,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private sendToSingleDepartmentAction(item: CaseModel<any, any>) {
-    item.sendToSingleDepartment().subscribe(() => {
-      this.toast.success(this.lang.map.request_has_been_sent_successfully);
-      this.navigateToSamePageThatUserCameFrom();
+    item.sendToSingleDepartment().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
 

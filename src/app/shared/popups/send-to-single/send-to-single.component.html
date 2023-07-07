@@ -1,0 +1,18 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map[title]}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div [formGroup]="form" class="dialog-content no-fixed-height" style="width: 500px">
+  <div class="col-sm-12 mb-4 position-relative">
+    <label class="form-label" asteriskIfRequired="comment"  for="comment">{{lang.map.comment}}</label>
+    <textarea name="comment" validationClasses="comment" formControlName="comment" id="comment" rows="4"
+              class="form-control"></textarea>
+    <app-field-error-message controlName="comment"></app-field-error-message>
+  </div>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button (click)="form.valid && done$.next()" class="btn btn-primary" [disabled]="!isValidForm()">{{lang.map.send}}</button>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

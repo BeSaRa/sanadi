@@ -120,7 +120,7 @@ export interface CaseModelContract<S, T> {
   getAskSingleWFResponseByCaseType(caseType?: number): string
 
 
-  sendToSingleDepartment(): Observable<any>
+  sendToSingleDepartment(): DialogRef
 
   sendToUser(): DialogRef
 

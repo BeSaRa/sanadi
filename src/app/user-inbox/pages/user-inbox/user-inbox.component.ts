@@ -195,7 +195,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   }
 
   actionSendToSingleDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.sendToSingleDepartment().subscribe((_) => {
+    item.sendToSingleDepartment().onAfterClose$.subscribe((_) => {
       viewDialogRef && viewDialogRef.close && viewDialogRef?.close();
       this.reloadInbox$.next(null);
     });
