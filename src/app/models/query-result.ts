@@ -210,15 +210,8 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return servicesMap[caseType];
   }
 
-  sendToSingleDepartment(_claimBefore: boolean = false): Observable<boolean> {
-    let service = this.service.getService(this.BD_CASE_TYPE),
-      taskName: string = this.getAskSingleWFResponseByCaseType();
-    if (taskName.startsWith('ask:')) {
-      taskName = taskName.split('ask:')[1];
-    } else if (taskName.startsWith('askSingle:')) {
-      taskName = taskName.split('askSingle:')[1];
-    }
-    return this.service.sendTaskToMultiple(this.getCaseId(), {taskName: taskName}, service);
+  sendToSingleDepartment(claimBefore: boolean = false): DialogRef {
+    return this.service.sendToSingleDepartment(this.TKIID, this.BD_CASE_TYPE, this.getAskSingleWFResponseByCaseType(this.getCaseType()) as WFResponseType, claimBefore, this);
   }
 
   sendToManager(claimBefore: boolean = false): DialogRef {

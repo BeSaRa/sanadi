@@ -276,6 +276,10 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
     return this.inboxService!.sendToMultiDepartments(this.taskDetails.tkiid, this.caseType, false, this);
   }
 
+  sendToSingleDepartment(): DialogRef {
+    return this.inboxService!.sendToSingleDepartment(this.taskDetails.tkiid, this.caseType, this.getAskSingleWFResponseByCaseType(this.caseType) as WFResponseType, false, this);
+  }
+
   getAskSingleWFResponseByCaseType(caseType?: number): string {
     let servicesMap = {
       [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT,
@@ -305,18 +309,6 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
 
     // @ts-ignore
     return servicesMap[caseType];
-  }
-
-
-  sendToSingleDepartment(): Observable<any> {
-    let service = this.inboxService!.getService(this.caseType),
-      taskName: string = this.getAskSingleWFResponseByCaseType();
-    if (taskName.startsWith('ask:')) {
-      taskName = taskName.split('ask:')[1];
-    } else if (taskName.startsWith('askSingle:')) {
-      taskName = taskName.split('askSingle:')[1];
-    }
-    return this.inboxService!.sendTaskToMultiple(this.getCaseId(), {taskName: taskName}, service);
   }
 
   getRejectCommentLabel(caseType: number): keyof ILanguageKeys {

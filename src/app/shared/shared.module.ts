@@ -150,6 +150,7 @@ import { SetVacationPopupComponent } from './popups/set-vacation-popup/set-vacat
 import {CaseAuditLogComponent} from '@app/shared/components/case-audit-log/case-audit-log.component';
 import {ValueDifferencesListComponent} from './components/value-differences-list/value-differences-list.component';
 import { LangNamePipe } from './pipes/lang-name.pipe';
+import { SendToSingleComponent } from './popups/send-to-single/send-to-single.component';
 
 @NgModule({
   declarations: [
@@ -213,6 +214,7 @@ import { LangNamePipe } from './pipes/lang-name.pipe';
     ValidationGroupClassesDirective,
     GroupErrorMessageComponent,
     SendToMultipleComponent,
+    SendToSingleComponent,
     CustomTermPopupComponent,
     AttachmentsComponent,
     OnlyNumbersDirective,
