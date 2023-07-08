@@ -35,17 +35,6 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
   caseInterceptor?: IModelInterceptor<CharityOrganizationUpdate> | undefined;
   send(model: Partial<CharityOrganizationUpdate>): Partial<CharityOrganizationUpdate> {
     model.registrationAuthority = model.registrationAuthorityInfo?.id;
-    delete model.service;
-    delete model.followUpService;
-    delete model.lookupService;
-    delete model.activityTypeInfo;
-    delete model.registrationAuthorityInfo;
-    delete model.publishDateStamp;
-    delete model.registrationDateStamp;
-    delete model.establishmentDateStamp;
-    delete model.firstReleaseDateStamp;
-    delete model.lastUpdateDateStamp;
-
     model.workAreaObjectList = model.workAreaObjectList?.map(e => workAreaInterceptor.send(e) as WorkArea);
     model.charityBranchList = model.charityBranchList?.map(e => charityBranchInterceptor.send(e) as CharityBranch);
     model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.send(e) as RealBeneficiary);
@@ -64,9 +53,10 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     model.charityContactOfficerList = model.charityContactOfficerList?.map(e => organizationOfficer.send(e) as OrganizationOfficer);
     model.byLawList = model.byLawList?.map(e => bylawInterceptor.send(e) as Bylaw);
     (model.lastUpdateDate && (model.lastUpdateDate = DateUtils.getDateStringFromDate(model.lastUpdateDate)));
-
     (model.firstReleaseDate && (model.firstReleaseDate = DateUtils.getDateStringFromDate(model.firstReleaseDate)));
 
+    CharityOrganizationUpdateInterceptor._deleteBeforeSend(model);
+    debugger
     return model;
   }
   receive(model: CharityOrganizationUpdate): CharityOrganizationUpdate {
@@ -106,5 +96,28 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     model.lastUpdateDateStamp = !model.lastUpdateDate ? null : DateUtils.getTimeStampFromDate(model.lastUpdateDate);
 
     return model;
+  }
+  private static _deleteBeforeSend(model: Partial<CharityOrganizationUpdate> | any): void {
+    delete model.searchFields;
+    delete model.requestTypeInfo;
+    delete model.ouInfo;
+    delete model.service;
+    delete model.followUpService;
+    delete model.lookupService;
+    delete model.activityTypeInfo;
+    delete model.registrationAuthorityInfo;
+    delete model.publishDateStamp;
+    delete model.registrationDateStamp;
+    delete model.establishmentDateStamp;
+    delete model.firstReleaseDateStamp;
+    delete model.lastUpdateDateStamp;
+    delete model.updateSectionInfo;
+    delete model.inboxService;
+    delete model.encrypt;
+    delete model.employeeService;
+    delete model.creatorInfo;
+    delete model.charityWorkAreaInfo;
+    delete model.caseStatusInfo;
+
   }
 }

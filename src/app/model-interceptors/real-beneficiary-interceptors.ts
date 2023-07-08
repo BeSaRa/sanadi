@@ -33,6 +33,7 @@ export class RealBeneficiaryInterceptor implements IModelInterceptor<RealBenefic
     delete model.startDateStamp
     delete model.lastUpdateDateStamp
     delete model.passportExpiryDateStamp
+    delete model.nationalityInfo
     return model;
   }
 }

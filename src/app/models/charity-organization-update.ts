@@ -96,6 +96,8 @@ export class CharityOrganizationUpdate extends CaseModel<
   country!: number;
   domain!: number;
   ouInfo!: AdminResult;
+  updateSectionInfo!: AdminResult;
+  requestTypeInfo!: AdminResult;
 
   workAreaObjectList: WorkArea[] = [];
   wFClassificationList!: ForeignAidClassification[];
