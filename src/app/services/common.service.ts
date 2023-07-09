@@ -10,6 +10,8 @@ import { AdminResult } from '@app/models/admin-result';
 import { ImplementingAgencyTypes } from "@app/enums/implementing-agency-types.enum";
 import { QueryResult } from '@app/models/query-result';
 import { QueryResultInterceptor } from '@app/model-interceptors/query-result-interceptor';
+import { InternalUser } from '@app/models/internal-user';
+import { ExternalUser } from '@app/models/external-user';
 
 @Injectable({
   providedIn: 'root'
@@ -76,10 +78,10 @@ export class CommonService {
       })
     })
   }
-  @CastResponse(() => AdminResult)
-  loadExternalAssignUsers(profileId: number, tasks: Partial<QueryResult>[]): Observable<AdminResult[]> {
+  @CastResponse(() => ExternalUser)
+  loadExternalAssignUsers(profileId: number, tasks: Partial<QueryResult>[]): Observable<ExternalUser[]> {
 
-    return this.http.post<AdminResult[]>(this._getURLSegment() + '/external/assign-user',
+    return this.http.post<ExternalUser[]>(this._getURLSegment() + '/external/assign-user',
       this.prepareQueryResults(tasks),{
         params: new HttpParams({
           fromObject:{
@@ -89,10 +91,10 @@ export class CommonService {
       }
     )
   }
-  @CastResponse(() => AdminResult)
-  loadInternalAssignUsers(departmentId: number, tasks: Partial<QueryResult>[]): Observable<AdminResult[]> {
+  @CastResponse(() => InternalUser)
+  loadInternalAssignUsers(departmentId: number, tasks: Partial<QueryResult>[]): Observable<InternalUser[]> {
 
-    return this.http.post<AdminResult[]>(this._getURLSegment() + '/internal/assign-user',
+    return this.http.post<InternalUser[]>(this._getURLSegment() + '/internal/assign-user',
       this.prepareQueryResults(tasks),{
         params: new HttpParams({
           fromObject: {

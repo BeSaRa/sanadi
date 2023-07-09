@@ -1,4 +1,4 @@
-import { take, tap, catchError } from 'rxjs/operators';
+import { take, tap, catchError, map } from 'rxjs/operators';
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
@@ -55,6 +55,7 @@ export class ReassignTaskPopupComponent implements OnInit {
       this.commonService.loadExternalAssignUsers(this.queryId,this.selectedTasks)
         .pipe(
           take(1),
+          map((users) => users.filter(x=>x.domainName !== this.selectedUser.domainName)),
           tap(users => {
             this.users = users
           }),
@@ -68,6 +69,7 @@ export class ReassignTaskPopupComponent implements OnInit {
       this.commonService.loadInternalAssignUsers(this.queryId, this.selectedTasks)
         .pipe(
           take(1),
+          map((users) => users.filter(x=>x.domainName !== this.selectedUser.domainName)),
           tap(users => {
             this.users = users
           }),
