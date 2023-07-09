@@ -22,7 +22,8 @@
   <audit-organization-officer [newVersionList]="newVersion.organizaionOfficerList"
                       [oldVersionList]="oldVersion.organizaionOfficerList"
                       [caseType]="newVersion.caseType"
-                >
+  [uniqueComparisonProperty]="'identificationNumber'"
+  >
   </audit-organization-officer>
 </ng-template>
 <ng-template #buildingAbilityTemplate>
