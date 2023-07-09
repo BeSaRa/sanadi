@@ -14,6 +14,7 @@
   <audit-general-association-external-member [newVersionList]="newVersion.administrativeBoardMembers"
                                              [oldVersionList]="oldVersion.administrativeBoardMembers"
                                              [caseType]="newVersion.caseType"
+                                             [uniqueComparisonProperty]="'identificationNumber'"
                                              [isGeneralAssociationMembers]="false">
   </audit-general-association-external-member>
 </ng-template>
@@ -21,12 +22,14 @@
   <audit-general-association-external-member [newVersionList]="newVersion.generalAssociationMembers"
                                              [oldVersionList]="oldVersion.generalAssociationMembers"
                                              [caseType]="newVersion.caseType"
+                                             [uniqueComparisonProperty]="'identificationNumber'"
                                              [isGeneralAssociationMembers]="true">
   </audit-general-association-external-member>
 </ng-template>
 <ng-template #meetingAgendaTemplate>
   <audit-meeting-agenda [newVersionList]="newVersion.agendaList"
                         [oldVersionList]="oldVersion.agendaList"
+                        [uniqueComparisonProperty]="'description'"
                         [caseType]="newVersion.caseType">
   </audit-meeting-agenda>
 </ng-template>

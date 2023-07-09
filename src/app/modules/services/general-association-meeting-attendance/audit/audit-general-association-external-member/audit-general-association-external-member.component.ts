@@ -42,6 +42,7 @@ export class AuditGeneralAssociationExternalMemberComponent extends AuditListGen
     if (!this.isGeneralAssociationMembers) {
       this.displayColumns = this.displayColumns.filter(x => x !== 'jobTitle');
     }
+    this.getDifferencesList();
   }
 
   _getNewInstance(override: Partial<GeneralAssociationExternalMember> | undefined): GeneralAssociationExternalMember {
@@ -53,9 +54,5 @@ export class AuditGeneralAssociationExternalMemberComponent extends AuditListGen
 
   getControlLabels(item: GeneralAssociationExternalMember): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels(this.isGeneralAssociationMembers);
-  }
-
-  existsInList(objComparison: IFindInList<GeneralAssociationExternalMember>): GeneralAssociationExternalMember | undefined {
-    return objComparison.listToCompareWith.find((item) => item.id === objComparison.itemToCompare.id);
   }
 }
