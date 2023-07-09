@@ -1785,7 +1785,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     if (item.isApproved && this.internal) {
       return false;
     }
-    return !item.isInitialApproved() || !this.internal;
+    return this.employeeService.isLicensingUser()|| !this.internal;
   }
 
   private _isAllowedToSaveAtSearch(model: CoordinationWithOrganizationsRequest) {
