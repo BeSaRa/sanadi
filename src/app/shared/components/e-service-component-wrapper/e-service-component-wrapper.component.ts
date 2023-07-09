@@ -1439,10 +1439,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return (item.getResponses().includes(WFResponseType.CLOSE) &&
-            ((item.caseType !== CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE &&
-              item.caseType !== CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) ||
-              (item.caseType == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && (item.caseStatus == CommonCaseStatus.CANCELLED || this.employeeService.isCharityManager()))));
+          return (this.isCancelTaskAllowedToShow(item)
+          );
         },
         onClick: (item: CaseModel<any, any>) => {
           this.closeAction(item);
@@ -1507,6 +1505,24 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         tooltip: 'btn_info_back'
       }
     ];
+  }
+
+  private isCancelTaskAllowedToShow(item: CaseModel<any, any>): boolean {
+    if (!item.getResponses().includes(WFResponseType.CLOSE)) return false;
+    if (item.caseType === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE && !this.employeeService.isCharityManager()) {
+      return false;
+    }
+    if (item.caseType === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE &&
+      (item.caseStatus !== CommonCaseStatus.CANCELLED || !this.employeeService.isCharityManager())
+    ) {
+      return false;
+    }
+    return true;
+    // return item.getResponses().includes(WFResponseType.CLOSE) &&
+    //   ((item.caseType !== CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE &&
+    //     item.caseType !== CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) ||
+    //     (item.caseType == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE &&
+    //        (item.caseStatus == CommonCaseStatus.CANCELLED || this.employeeService.isCharityManager())));
   }
 
   private isSendToSingleDepartmentAllowed(item: CaseModel<any, any>): boolean {
@@ -1785,7 +1801,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     if (item.isApproved && this.internal) {
       return false;
     }
-    return this.employeeService.isLicensingUser()|| !this.internal;
+    return this.employeeService.isLicensingUser() || !this.internal;
   }
 
   private _isAllowedToSaveAtSearch(model: CoordinationWithOrganizationsRequest) {
@@ -1873,7 +1889,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private organizationApproveAction(item: CaseModel<any, any>) {
     item.organizationApprove({
       form: this.component.form,
-      organizationOfficers: (this.component as any).organizationOfficerComponentRef?.list??[]
+      organizationOfficers: (this.component as any).organizationOfficerComponentRef?.list ?? []
     }).onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
