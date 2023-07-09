@@ -15,12 +15,15 @@ import { BuildingAbilityInterceptor } from './building-ability-interceptor';
 import { EffectiveCoordinationInterceptor } from './effective-coordination-interceptor';
 import { ParticipatingOrgInterceptor } from './participating-org-interceptor';
 import { ResearchAndStudiesInterceptor } from './research-and-studies-interceptor';
+import { OrganizationOfficer } from '@app/models/organization-officer';
+import { OrganizationOfficerInterceptor } from './organization-officer-interceptor';
 
 const participatingOrgInterceptor = new ParticipatingOrgInterceptor();
 const buildinAbilityInterceptor = new BuildingAbilityInterceptor();
 const effectiveCoordinationInterceptor = new EffectiveCoordinationInterceptor();
 const researchAndStudiesInterceptor = new ResearchAndStudiesInterceptor();
 const coordinationWithOrganizationTemplateInterceptor = new CoordinationWithOrganizationTemplateInterceptor();
+const organizationOfficerInterceptor = new OrganizationOfficerInterceptor();
 export class CoordinationWithOrganizationsRequestInterceptor
   implements IModelInterceptor<CoordinationWithOrganizationsRequest>
 {
@@ -120,7 +123,11 @@ export class CoordinationWithOrganizationsRequestInterceptor
         );
       }
     ) ?? [];
-    model.organizaionOfficerList = model.organizaionOfficerList ?? [];
+    model.organizaionOfficerList = model.organizaionOfficerList?.map((item) => {
+      return organizationOfficerInterceptor.receive(
+        new OrganizationOfficer().clone(item)
+      );
+    }) ?? [];
     model.buildingAbilitiesList = model.buildingAbilitiesList?.map((item) => {
       return buildinAbilityInterceptor.receive(
         new BuildingAbility().clone(item)
@@ -144,7 +151,11 @@ export class CoordinationWithOrganizationsRequestInterceptor
           new CoordinationWithOrganizationTemplate().clone(item)
         );
       }) ?? [];
-    model.temporaryOrganizaionOfficerList = model.temporaryOrganizaionOfficerList ?? [];
+    model.temporaryOrganizaionOfficerList = model.temporaryOrganizaionOfficerList?.map((item) => {
+      return organizationOfficerInterceptor.receive(
+        new OrganizationOfficer().clone(item)
+      );
+    }) ?? [];
     model.temporaryBuildingAbilitiesList = model.temporaryBuildingAbilitiesList?.map((item) => {
       return buildinAbilityInterceptor.receive(
         new BuildingAbility().clone(item)
