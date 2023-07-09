@@ -50,8 +50,20 @@ export class UserService extends CrudGenericService<InternalUser> {
     return this.http.get<InternalUser[]>(this.urlService.URLS.TEAMS + '/members/' + teamId);
   }
 
-
   loadTeamMembers(teamId: number): Observable<InternalUser[]> {
     return this._loadTeamMembers(teamId);
   }
+  loadActiveTeamMembers(teamId: number): Observable<InternalUser[]> {
+    return this._loadActiveTeamMembers(teamId);
+  }
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  private _loadActiveTeamMembers(teamId: number): Observable<InternalUser[]> {
+    return this.http.get<InternalUser[]>(this.urlService.URLS.TEAMS + '/members-all/' + teamId);
+  }
+
+
+
 }
