@@ -15,6 +15,7 @@ import { CommonUtils } from '@app/helpers/common-utils';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { ObjectUtils } from '@app/helpers/object-utils';
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 
 const { send, receive } = new ImplementationTemplateInterceptor()
 
@@ -102,6 +103,7 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> im
       englishName: { langKey: 'lbl_english_name', value: this.englishName },
       projectTotalCost: { langKey: 'project_total_cost', value: this.projectTotalCost },
       notes: { langKey: 'notes', value: this.notes },
+      templateId: { langKey: {} as keyof ILanguageKeys, value: this.templateId },
     };
   }
   setProjectTotalCost(value: number): void {

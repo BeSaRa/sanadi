@@ -1,4 +1,4 @@
-import {ControlValueLabelLangKey, ISearchFieldsMap} from './../types/types';
+import { ControlValueLabelLangKey, ISearchFieldsMap } from './../types/types';
 import {AuditOperationTypes} from '@app/enums/audit-operation-types';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
@@ -9,6 +9,7 @@ import {ObjectUtils} from '@app/helpers/object-utils';
 import {IAuditModelProperties} from '@app/interfaces/i-audit-model-properties';
 import {normalSearchFields} from "@helpers/normal-search-fields";
 import {DateUtils} from "@helpers/date-utils";
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 
 export class Payment extends SearchableCloneable<Payment> implements IAuditModelProperties<Payment> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
@@ -16,6 +17,7 @@ export class Payment extends SearchableCloneable<Payment> implements IAuditModel
   dueDate!: string | IMyDateModel;
   totalCost!: number;
   notes!: string;
+  itemId !:string;
 
   dueDateString!: string;
 
@@ -43,6 +45,7 @@ export class Payment extends SearchableCloneable<Payment> implements IAuditModel
       dueDate: {langKey: 'due_date', value: this.dueDate},
       totalCost: {langKey: 'amount', value: this.totalCost},
       notes: {langKey: 'notes', value: this.notes},
+      itemId : {langKey: {} as keyof ILanguageKeys, value: this.itemId },
     };
   }
 
@@ -53,7 +56,7 @@ export class Payment extends SearchableCloneable<Payment> implements IAuditModel
       paymentNo: control ? [values.paymentNo, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.paymentNo,
       dueDate: control ? [values.dueDate, [CustomValidators.required]] : values.dueDate,
       totalCost: control ? [values.totalCost, [CustomValidators.required]] : values.totalCost,
-      notes: control ? [values.notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : values.notes
+      notes: control ? [values.notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : values.notes,
     }
   }
 
