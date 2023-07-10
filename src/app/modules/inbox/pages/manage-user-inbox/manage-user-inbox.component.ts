@@ -222,7 +222,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
         tap(_ => this.userControl.reset()),
 
         switchMap((teamId: number) => {
-          return this.teamService.loadTeamMembers(teamId)
+          return this.teamService.loadActiveTeamMembers(teamId)
             .pipe(
               take(1),
               tap(internalUsers => {

@@ -32,7 +32,15 @@ export class BankComponent extends AdminGenericComponent<Bank, BankService> impl
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: Bank) => this.edit$.next(item)
-    }
+    },
+    // logs
+    {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      show: () => true,
+      onClick: (item: Bank) => this.showAuditLogs(item)
+    },
   ];
   displayedColumns: string[] = ['arName', 'enName', 'actions'];
   searchColumns: string[] = ['search_arName', 'search_enName', 'search_actions'];

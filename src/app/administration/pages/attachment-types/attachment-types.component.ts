@@ -80,7 +80,7 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
-      show: () => false,
+      show: () => true,
       onClick: (item: AttachmentType) => this.showAuditLogs(item)
     },
     // activate

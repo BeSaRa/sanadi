@@ -248,8 +248,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       countries: [this.beneficiaryCountry.value],
       domain: this.domain.value,
       internalProjectClassification: this.internalProjectClassification.value,
-      mainDAC: this.mainDACCategory.value,
-      mainUNOCHA: this.mainUNOCHACategory.value,
+      // mainDAC: this.mainDACCategory.value,
+      // mainUNOCHA: this.mainUNOCHACategory.value,
       implCaseId: this.model!.getCaseId()
     }
   }
