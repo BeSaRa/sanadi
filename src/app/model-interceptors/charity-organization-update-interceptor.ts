@@ -56,7 +56,6 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     (model.firstReleaseDate && (model.firstReleaseDate = DateUtils.getDateStringFromDate(model.firstReleaseDate)));
 
     CharityOrganizationUpdateInterceptor._deleteBeforeSend(model);
-    debugger
     return model;
   }
   receive(model: CharityOrganizationUpdate): CharityOrganizationUpdate {
