@@ -14,8 +14,11 @@ export class CharityBranchInterceptor implements IModelInterceptor<CharityBranch
     delete model.categoryInfo;
     delete model.usageAdjectiveInfo;
     delete model.branchAdjectiveInfo;
+    delete model.id;
+    delete model.status;
+    delete model.statusInfo;
     const organizationOfficerInterceptor = new OrganizationOfficerInterceptor();
-    model.branchContactOfficer = (model.branchContactOfficer || model.branchContactOfficerList || []).map(e => organizationOfficerInterceptor.send(e) as OrganizationOfficer);
+    model.branchContactOfficer = (model.branchContactOfficer || model.branchContactOfficerList || []).map(e => organizationOfficerInterceptor.send({ ...e, branchId: model.branchId }) as OrganizationOfficer);
     return model;
   }
   receive(model: CharityBranch): CharityBranch {
@@ -25,7 +28,7 @@ export class CharityBranchInterceptor implements IModelInterceptor<CharityBranch
     model.categoryInfo = AdminResult.createInstance(isValidAdminResult(model.categoryInfo) ? model.categoryInfo : {});
     model.branchAdjectiveInfo = AdminResult.createInstance(isValidAdminResult(model.branchAdjectiveInfo) ? model.branchAdjectiveInfo : {});
     model.usageAdjectiveInfo = AdminResult.createInstance(isValidAdminResult(model.usageAdjectiveInfo) ? model.usageAdjectiveInfo : {});
-
+    model.branchId = model.id
     return model;
   }
 }

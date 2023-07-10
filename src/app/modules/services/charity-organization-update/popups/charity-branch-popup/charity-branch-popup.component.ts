@@ -108,7 +108,7 @@ export class CharityBranchPopupComponent implements AfterViewInit {
   }
 
   mapFormTo(form: any): CharityBranch {
-    const branch: CharityBranch = new CharityBranch().clone(form);
+    const branch: CharityBranch = new CharityBranch().clone({...this.model, ...form});
     branch.branchContactOfficer = this.org.list;
     branch.branchContactOfficerList = this.org.list;
 

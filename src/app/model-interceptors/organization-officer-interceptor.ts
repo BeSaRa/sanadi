@@ -6,11 +6,16 @@ export class OrganizationOfficerInterceptor implements IModelInterceptor<Organiz
   send(model: Partial<OrganizationOfficer>): Partial<OrganizationOfficer> {
     delete model.searchFields;
     delete model.langService;
+    delete model.ouInfo;
+    delete model.branchInfo;
+    delete model.id;
+
     return model;
 
   }
   receive(model: OrganizationOfficer): OrganizationOfficer {
     model.identificationNumber ??= model.qid;
+    model.officerId = model.id;
     return model;
   }
 
