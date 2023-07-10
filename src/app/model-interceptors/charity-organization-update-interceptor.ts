@@ -117,6 +117,7 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     delete model.creatorInfo;
     delete model.charityWorkAreaInfo;
     delete model.caseStatusInfo;
+    delete model.taskDetails;
 
   }
 }

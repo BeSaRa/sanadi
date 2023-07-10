@@ -16,14 +16,18 @@ const {receive, send} = new OrganizationOfficerInterceptor();
 
 @InterceptModel({receive, send})
 export class OrganizationOfficer extends SearchableCloneable<OrganizationOfficer> implements IAuditModelProperties<OrganizationOfficer> {
+  id!: number;
   qid!: string;
   organizationId!: number;
+  officerId!: number;
+  branchId!: number;
   fullName!: string;
   email!: string;
   phone!: string;
   identificationNumber!: string;
   extraPhone!: string;
   ouInfo!: AdminResult;
+  branchInfo!: AdminResult;
   langService?: LangService;
   searchFields: ISearchFieldsMap<OrganizationOfficer> = {
     ...normalSearchFields(['fullName', 'identificationNumber', 'email', 'phone', 'extraPhone'])
@@ -52,6 +56,9 @@ export class OrganizationOfficer extends SearchableCloneable<OrganizationOfficer
     switch (property) {
       case 'organizationId':
         adminResultValue = this.ouInfo;
+        break;
+      case 'branchId':
+        adminResultValue = this.branchInfo;
         break;
       default:
         let value: any = this[property];

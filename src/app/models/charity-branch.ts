@@ -9,7 +9,6 @@ import {AuditOperationTypes} from '@enums/audit-operation-types';
 import {AdminResult} from '@models/admin-result';
 import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 import { CommonUtils } from '@app/helpers/common-utils';
-import { DateUtils } from '@app/helpers/date-utils';
 import { ControlValueLabelLangKey } from '@app/types/types';
 
 const interceptor = new CharityBranchInterceptor();
@@ -35,7 +34,8 @@ export class CharityBranch extends SearchableCloneable<CharityBranch> implements
   categoryInfo!:AdminResult;
   branchAdjectiveInfo!:AdminResult;
   usageAdjectiveInfo!:AdminResult;
-
+  status!: number;
+  statusInfo!:AdminResult;
 
   searchFields: ISearchFieldsMap<CharityBranch> = {
     ...normalSearchFields(['fullName', 'address', 'streetNumber', 'zoneNumber', 'buildingNumber']),
