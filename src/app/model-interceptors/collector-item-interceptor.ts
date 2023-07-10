@@ -16,8 +16,12 @@ export class CollectorItemInterceptor implements IModelInterceptor<CollectorItem
   }
 
   receive(model: CollectorItem): CollectorItem {
-    model.collectorTypeInfo = AdminResult.createInstance(model.collectorTypeInfo);
     model.licenseEndDate = DateUtils.changeDateToDatepicker(model.licenseEndDate);
+    model.nationalityInfo = AdminResult.createInstance(model.nationalityInfo);
+    model.genderInfo = AdminResult.createInstance(model.genderInfo);
+    model.relationshipInfo = AdminResult.createInstance(model.relationshipInfo);
+    model.licenseStatusInfo = AdminResult.createInstance(model.licenseStatusInfo);
+    model.collectorTypeInfo = AdminResult.createInstance(model.collectorTypeInfo);
     return model;
   }
 }
