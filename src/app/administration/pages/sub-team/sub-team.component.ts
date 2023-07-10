@@ -92,7 +92,7 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
-      show: () => false,
+      show: () => true,
       onClick: (item: SubTeam) => this.showAuditLogs(item)
     },
     // activate
