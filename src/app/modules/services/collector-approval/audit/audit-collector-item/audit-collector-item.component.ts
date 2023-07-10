@@ -1,10 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CollectionRequestType } from '@app/enums/service-request-types';
 import { AuditListGenericComponent } from '@app/generics/audit-list-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
-import { IFindInList } from '@app/interfaces/i-find-in-list';
 import { AdminResult } from '@app/models/admin-result';
 import { CollectorItem } from '@app/models/collector-item';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
