@@ -181,7 +181,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
       },
       class: (item) => (item.surveyPublished ? 'text-info' : 'text-primary'),
       icon: ActionIconsEnum.POLL,
-      show: (item) => item.readyForSurvey(),
+      show: (item) => item.readyForSurvey() && this.employeeService.hasPermissionTo(PermissionsEnum.TRAINING_MANAGE_TRAINEE),
       onClick: (item) => this.publishSurvey(item)
     },
 
@@ -246,7 +246,8 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   }
 
   private canEditTrainingProgram(trainingProgram: TrainingProgram): boolean {
-    return !(trainingProgram.status == this.trainingStatus.TRAINING_CANCELED || trainingProgram.status == this.trainingStatus.TRAINING_FINISHED);
+    return !(trainingProgram.status == this.trainingStatus.TRAINING_CANCELED ||
+      trainingProgram.status == this.trainingStatus.TRAINING_FINISHED) && this.employeeService.hasPermissionTo(PermissionsEnum.TRAINING_MANAGE_TRAINEE);
   }
 
   isTrainingFinished(status: number): boolean {
@@ -291,7 +292,8 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   }
 
   private canDeleteTrainingProgram(trainingProgram: TrainingProgram): boolean {
-    return !(trainingProgram.status != this.trainingStatus.DATA_ENTERED && trainingProgram.status != this.trainingStatus.PROGRAM_APPROVED)
+    return !(trainingProgram.status != this.trainingStatus.DATA_ENTERED
+      && trainingProgram.status != this.trainingStatus.PROGRAM_APPROVED) && this.employeeService.hasPermissionTo(PermissionsEnum.TRAINING_MANAGE_TRAINEE)
   }
 
   delete(model: TrainingProgram, event?: MouseEvent): void {
