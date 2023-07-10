@@ -47,7 +47,7 @@
           <label class="form-label" asteriskIfRequired="activityType"
             for="activityType">{{lang.map.service_type}}</label>
           <ng-select [selectOnTab]="true" labelForId="activityType" [clearable]="true" placeholder="{{lang.map.select}}"
-            id="activityType" [notFoundText]="lang.map.msg_not_found" appendTo="body" [readonly]="readonly"
+            id="activityType" [notFoundText]="lang.map.msg_not_found" appendTo="body" [readonly]="isCancel() || readonly"
             formControlName="activityType" validationClasses="activityType">
             <ng-option *ngFor="let option of activitiesTypes" [value]="option.id" [disabled]="option.isRetired()">
               {{option.getName()}}

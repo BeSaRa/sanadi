@@ -3,7 +3,6 @@ import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { AuditListGenericComponent } from '@app/generics/audit-list-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
-import { IFindInList } from '@app/interfaces/i-find-in-list';
 import { OrganizationOfficer } from '@app/models/organization-officer';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { CaseAuditService } from '@app/services/case-audit.service';
@@ -50,9 +49,5 @@ export class AuditOrganizationOfficerComponent extends AuditListGenericComponent
 
   getControlLabels(item: OrganizationOfficer): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
-  }
-
-  existsInList(objComparison: IFindInList<OrganizationOfficer>): OrganizationOfficer | undefined {
-    return objComparison.listToCompareWith.find((item) => item.organizationId === objComparison.itemToCompare.organizationId);
   }
 }

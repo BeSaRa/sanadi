@@ -43,8 +43,4 @@ export class AuditMeetingAgendaComponent extends AuditListGenericComponent<Gener
   getControlLabels(item: GeneralAssociationAgenda): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
   }
-
-  existsInList(objComparison: IFindInList<GeneralAssociationAgenda>): GeneralAssociationAgenda | undefined {
-    return objComparison.listToCompareWith.find((item) => item.description === objComparison.itemToCompare.description);
-  }
 }

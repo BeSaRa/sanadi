@@ -59,7 +59,7 @@
               <input (keydown.enter)="searchForLicense()" [readonly]="(readonly)" class="form-control"
                      formControlName="oldFullSerial" id="oldFullSerial" validationClasses="oldFullSerial">
               <app-field-error-message controlName="oldFullSerial"></app-field-error-message>
-              <button (click)="searchForLicense()"
+              <button (click)="searchForLicense()" type="button"
                       [disabled]="(readonly || requestTypeField?.value === generalAssociationMeetingRequestTypeEnum.NEW)"
                       class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>

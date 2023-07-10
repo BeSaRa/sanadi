@@ -31,21 +31,24 @@
 <ng-template #complainceOfficerTemplate>
   <audit-organization-officer  [newVersionList]="newVersion.complianceOfficerList"
   [oldVersionList]="oldVersion.complianceOfficerList"
-  [caseType]="newVersion.caseType">
+  [caseType]="newVersion.caseType"
+  [uniqueComparisonProperty]="'identificationNumber'">
 
   </audit-organization-officer>
 </ng-template>
 <ng-template #liaisonOfficerTemplate>
   <audit-organization-officer  [newVersionList]="newVersion.charityContactOfficerList"
   [oldVersionList]="oldVersion.charityContactOfficerList"
-  [caseType]="newVersion.caseType">
+  [caseType]="newVersion.caseType"
+  [uniqueComparisonProperty]="'identificationNumber'">
 
   </audit-organization-officer>
 </ng-template>
 <ng-template #branchTemplate>
   <audit-organization-officer [newVersionList]="newVersion.charityContactOfficerList"
   [oldVersionList]="oldVersion.charityContactOfficerList"
-  [caseType]="newVersion.caseType">
+  [caseType]="newVersion.caseType"
+  [uniqueComparisonProperty]="'identificationNumber'">
 
   </audit-organization-officer>
   <audit-charity-branch  [newVersionList]="newVersion.charityBranchList"
