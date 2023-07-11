@@ -80,6 +80,9 @@ export class TeamService extends CrudWithDialogGenericService<Team> {
   loadTeamMembers(teamId: number): Observable<InternalUser[]> {
     return this.userService.loadTeamMembers(teamId);
   }
+  loadActiveTeamMembers(teamId: number): Observable<InternalUser[]> {
+    return this.userService.loadActiveTeamMembers(teamId);
+  }
 
   private _loadDialogData(teamId?: number): Observable<{ team: Team, internalDepartments: InternalDepartment[] }> {
     return forkJoin({

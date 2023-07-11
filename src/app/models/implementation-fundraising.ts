@@ -6,6 +6,7 @@ import { AuditOperationTypes } from "@app/enums/audit-operation-types";
 import { CommonUtils } from "@app/helpers/common-utils";
 import { ControlValueLabelLangKey } from "@app/types/types";
 import { IAuditModelProperties } from "@app/interfaces/i-audit-model-properties";
+import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 
 const { send, receive } = new ImplementationFundraisingInterceptor()
 
@@ -56,6 +57,7 @@ export class ImplementationFundraising extends Cloneable<ImplementationFundraisi
       consumedAmount: { langKey: 'consumed_amount', value: this.consumedAmount },
       templateId: { langKey: 'lbl_template', value: this.templateId },
       notes: { langKey: 'notes', value: this.notes },
+      projectLicenseId: { langKey: {} as keyof ILanguageKeys, value: this.projectLicenseId },
     };
   }
 }
