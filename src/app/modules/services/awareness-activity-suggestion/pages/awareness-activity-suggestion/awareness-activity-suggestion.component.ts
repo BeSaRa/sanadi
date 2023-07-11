@@ -512,6 +512,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       result.beneficiaries = licenseDetails.beneficiaries;
       result.beneficiariesNumber = licenseDetails.beneficiariesNumber;
 
+      result.otherActivity = licenseDetails.otherActivity;
       result.subject = licenseDetails.subject;
       result.goal = licenseDetails.goal;
       this._updateForm((new AwarenessActivitySuggestion()).clone(result));
