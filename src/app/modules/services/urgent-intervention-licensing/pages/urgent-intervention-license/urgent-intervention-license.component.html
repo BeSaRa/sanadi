@@ -74,11 +74,19 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="mainUNOCHACategory"
-                 for="mainUNOCHACategory">{{lang.map.main_unocha_category}}</label>
-          <span id="mainUNOCHACategory" class="form-control input-disabled"
-                [innerHTML]="model && model.mainUNOCHAInfo && model.mainUNOCHAInfo.getName() || '&nbsp;'"></span>
+        <div class="col-sm-12 col-md-4 mb-4 ng-select-wrapper">
+          <label for="mainUNOCHACategory" asteriskIfRequired="mainUNOCHACategory"
+            class="form-label">{{lang.map.main_unocha_category}}</label>
+          <ng-select [selectOnTab]="true" labelForId="mainUNOCHACategory" [clearable]="false"
+            placeholder="{{lang.map.select}}" id="mainUNOCHACategory"
+            [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="mainUNOCHACategory"
+            [readonly]="(isExtendOrCancelRequestType() || readonly)" validationClasses="mainUNOCHACategory">
+            <ng-option *ngFor="let option of mainUNOCHACategoriesList" [value]="option.id"
+              [disabled]="option.isActive()">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
         </div>
       </div>
     </div>
