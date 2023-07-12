@@ -18,6 +18,7 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { FormBuilder } from '@angular/forms';
 import { LookupService } from '@app/services/lookup.service';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'app-custom-role',
@@ -94,23 +95,27 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
       show: ()=> true,
       onClick: (item: CustomRole) => this.showAuditLogs(item)
     },
-    // activate
-    {
+     // activate
+     {
       type: 'action',
-      icon: 'mdi-list-status',
+      icon: ActionIconsEnum.STATUS,
       label: 'btn_activate',
       onClick: (item: CustomRole) => this.toggleStatus(item),
-      show: (item) => !item.status,
-      displayInGrid: false
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
+      }
     },
     // deactivate
     {
       type: 'action',
-      icon: 'mdi-list-status',
+      icon: ActionIconsEnum.STATUS,
       label: 'btn_deactivate',
       onClick: (item: CustomRole) => this.toggleStatus(item),
-      show: (item) => item.status,
-      displayInGrid: false
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
+      }
     }
   ];
 
