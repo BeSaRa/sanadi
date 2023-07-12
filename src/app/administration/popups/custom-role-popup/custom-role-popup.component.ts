@@ -1,26 +1,27 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
-import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {LangService} from '@app/services/lang.service';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {CustomRole} from '@app/models/custom-role';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {LookupService} from '@app/services/lookup.service';
-import {combineLatest, Observable, of} from 'rxjs';
-import {PermissionService} from '@app/services/permission.service';
-import {take} from 'rxjs/operators';
-import {Permission} from '@app/models/permission';
-import {CheckGroup} from '@app/models/check-group';
-import {CustomRolePermission} from '@app/models/custom-role-permission';
-import {ToastService} from '@app/services/toast.service';
-import {CustomRolePermissionService} from '@app/services/custom-role-permission.service';
-import {Lookup} from '@app/models/lookup';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {DialogService} from '@app/services/dialog.service';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { LangService } from '@app/services/lang.service';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { CustomRole } from '@app/models/custom-role';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { LookupService } from '@app/services/lookup.service';
+import { combineLatest, Observable, of } from 'rxjs';
+import { PermissionService } from '@app/services/permission.service';
+import { map, take } from 'rxjs/operators';
+import { Permission } from '@app/models/permission';
+import { CheckGroup } from '@app/models/check-group';
+import { CustomRolePermission } from '@app/models/custom-role-permission';
+import { ToastService } from '@app/services/toast.service';
+import { CustomRolePermissionService } from '@app/services/custom-role-permission.service';
+import { Lookup } from '@app/models/lookup';
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { DialogService } from '@app/services/dialog.service';
 import { TabComponent } from "@app/shared/components/tab/tab.component";
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'app-custom-role-popup',
@@ -29,15 +30,15 @@ import { TabComponent } from "@app/shared/components/tab/tab.component";
 })
 export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> implements AfterViewInit {
   constructor(public dialogRef: DialogRef,
-              @Inject(DIALOG_DATA_TOKEN) data: IDialogData<CustomRole>,
-              private lookupService: LookupService,
-              public fb: UntypedFormBuilder,
-              private toast: ToastService,
-              private cd: ChangeDetectorRef,
-              private dialogService: DialogService,
-              private customRolePermissionService: CustomRolePermissionService,
-              private permissionService: PermissionService,
-              public langService: LangService) {
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<CustomRole>,
+    private lookupService: LookupService,
+    public fb: UntypedFormBuilder,
+    private toast: ToastService,
+    private cd: ChangeDetectorRef,
+    private dialogService: DialogService,
+    private customRolePermissionService: CustomRolePermissionService,
+    private permissionService: PermissionService,
+    public langService: LangService) {
     super();
     this.operation = data.operation;
     this.model = data.model;
@@ -52,6 +53,7 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
   model: CustomRole;
   operation: OperationTypes;
   saveVisible = true;
+  status = this.lookupService.listByCategory.CommonStatus.filter((e) => !e.isRetiredCommonStatus());
 
   permissions!: Record<number, Permission[][]>;
   selectedPermissions: number[] = [];
@@ -127,7 +129,7 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
 
   public buildForm(): void {
     this.form = this.fb.group({
-      basic: this.fb.group(this.model.buildForm(true), {validators: this.model.setBasicFormCrossValidations()}),
+      basic: this.fb.group(this.model.buildForm(true), { validators: this.model.setBasicFormCrossValidations() }),
       permissions: [!!this.selectedPermissions.length, Validators.requiredTrue]
     });
   }
@@ -191,7 +193,7 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
       form = this.form;
     }
 
-    let customRole = (new CustomRole()).clone({...model, ...form.value.basic});
+    let customRole = (new CustomRole()).clone({ ...model, ...form.value.basic });
     customRole.setPermissionSet(this.selectedPermissions);
     return customRole;
   }
@@ -206,7 +208,7 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
       : this.langService.map.msg_update_x_success;
     this.model = model;
     this.operation = OperationTypes.UPDATE;
-    this.toast.success(message.change({x: model.getName()}));
+    this.toast.success(message.change({ x: model.getName() }));
   }
 
   saveFail(error: Error): void {

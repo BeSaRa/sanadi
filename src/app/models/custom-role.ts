@@ -12,6 +12,7 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { Validators } from '@angular/forms';
 import { CustomRoleInterceptor } from "@app/model-interceptors/custom-role-interceptor";
 import { InterceptModel } from "@decorators/intercept-model";
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
 
 const interceptor = new CustomRoleInterceptor()
 
@@ -20,7 +21,7 @@ const interceptor = new CustomRoleInterceptor()
   receive: interceptor.receive
 })
 export class CustomRole extends BaseModel<CustomRole, ExternalUserCustomRoleService> {
-  status: boolean = true;
+  status: number = CommonStatusEnum.ACTIVATED;
   permissionSet: CustomRolePermission[] = [];
   description: string = '';
   service: ExternalUserCustomRoleService;
@@ -77,7 +78,7 @@ export class CustomRole extends BaseModel<CustomRole, ExternalUserCustomRoleServ
   }
 
   toggleStatus(): CustomRole {
-    this.status = !this.status;
+    this.status = this.status === CommonStatusEnum.ACTIVATED ? CommonStatusEnum.DEACTIVATED : CommonStatusEnum.ACTIVATED;
     return this;
   }
 
@@ -126,5 +127,10 @@ export class CustomRole extends BaseModel<CustomRole, ExternalUserCustomRoleServ
       } as CustomRolePermission;
     });
   }
-
+  updateStatus(profileId: number, status: CommonStatusEnum) {
+    if (status === CommonStatusEnum.ACTIVATED) {
+      return this.service.deActivate(profileId);
+    }
+    return this.service.activate(profileId);
+  }
 }
