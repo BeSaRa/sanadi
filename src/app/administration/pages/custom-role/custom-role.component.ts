@@ -196,17 +196,10 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Exter
   }
 
   toggleStatus(model: CustomRole) {
-    model.toggleStatus().update()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        // @ts-ignore
-        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
-        this.reload$.next(null);
-      }, () => {
-        // @ts-ignore
-        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
-        this.reload$.next(null);
-      });
+    model.updateStatus(model.id, model.status).subscribe(() => {
+      this.reload$.next(null);
+    });
+
   }
 
   buildFilterForm() {

@@ -127,5 +127,10 @@ export class CustomRole extends BaseModel<CustomRole, ExternalUserCustomRoleServ
       } as CustomRolePermission;
     });
   }
-
+  updateStatus(profileId: number, status: CommonStatusEnum) {
+    if (status === CommonStatusEnum.ACTIVATED) {
+      return this.service.deActivate(profileId);
+    }
+    return this.service.activate(profileId);
+  }
 }

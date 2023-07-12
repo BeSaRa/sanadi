@@ -81,4 +81,12 @@ export class ExternalUserCustomRoleService extends CrudWithDialogGenericService<
         }));
       }));
   }
+  activate(id: number) {
+    return this.http.put(this._getServiceURL() + `/${id}/activate`, {});
+  }
+
+  deActivate(id: number) {
+    return this.http.put(this._getServiceURL() + `/${id}/de-activate`, {});
+  }
+
 }
