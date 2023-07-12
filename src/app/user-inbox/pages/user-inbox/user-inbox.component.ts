@@ -339,16 +339,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         displayInGrid: true,
         onClick: (item: QueryResult) => this.actionViewLogs(item)
       },
-      // reassigned
-      {
-        type: 'action',
-        label: 'reassigned_task',
-        icon: ActionIconsEnum.REASSIGNED,
-        show: (item: QueryResult) => item.BD_IS_REASSIGNED,
-        hideLabel: true,
-        displayInGrid: true,
 
-      },
       // mark as read
       {
         type: 'action',
@@ -668,5 +659,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     } else {
       this.queryResultSet!.items = this.oldQueryResultSet!.items;
     }
+  }
+  isAssignedTask(item: QueryResult){
+    return item.BD_IS_REASSIGNED
   }
 }
