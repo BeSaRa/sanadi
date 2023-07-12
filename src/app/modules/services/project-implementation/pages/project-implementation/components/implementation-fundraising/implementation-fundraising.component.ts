@@ -156,7 +156,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     ctrl.valueChanges
       .pipe(map(value => Number(value)))
       .pipe(filter(_ => !this.disabled))
-      .pipe(filter(_ => !this._isRequiredValueReached()))
+      // .pipe(filter(_ => !this._isRequiredValueReached()))
       .pipe(filter(_ => this.value[index].remainingAmount > this.value[index].totalCost))
       .pipe(debounceTime(250))
       .pipe(takeUntil((this.destroy$)))
@@ -166,13 +166,14 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         const model = this.value[index];
         const cValue = currency(value)
         const actualValue = cValue.value > model.remainingAmount ? model.remainingAmount : cValue.value;
-        const requiredValue = this.projectTotalCost - this.totalValue;
+        const requiredValue = this.projectTotalCost - actualValue < 0?
+         this.projectTotalCost:this.projectTotalCost - actualValue;
         model.totalCost = requiredValue <= actualValue ? requiredValue : actualValue;
         ctrl.patchValue(model.totalCost, { emitEvent: false })
         this.onChange(this.value)
         this.calculateTotal()
         this.isFullAmountConsumed()
-        this._handleCtrlDisable(ctrl, index);
+        // this._handleCtrlDisable(ctrl, index);
       })
   }
 
@@ -218,7 +219,10 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   takeRemaining(index: number) {
     const ctrl = this.inputs.at(index)
     const model = this.value[index];
-    ctrl.setValue(model.remainingAmount)
+    const remainingAmount = model.remainingAmount >= model.projectTotalCost ?
+                           model.projectTotalCost :
+                           model.remainingAmount;
+    ctrl.setValue(remainingAmount)
   }
 
   noRemainingValue(i: number) {
