@@ -9,6 +9,7 @@ export class OrganizationOfficerInterceptor implements IModelInterceptor<Organiz
     delete model.ouInfo;
     delete model.branchInfo;
     delete model.id;
+    delete model.organizationInfo;
 
     return model;
 

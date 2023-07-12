@@ -27,6 +27,7 @@ export class OrganizationOfficer extends SearchableCloneable<OrganizationOfficer
   identificationNumber!: string;
   extraPhone!: string;
   ouInfo!: AdminResult;
+  organizationInfo!: AdminResult;
   branchInfo!: AdminResult;
   langService?: LangService;
   searchFields: ISearchFieldsMap<OrganizationOfficer> = {
@@ -55,7 +56,7 @@ export class OrganizationOfficer extends SearchableCloneable<OrganizationOfficer
     let adminResultValue: AdminResult;
     switch (property) {
       case 'organizationId':
-        adminResultValue = this.ouInfo;
+        adminResultValue = this.ouInfo || this.organizationInfo;
         break;
       case 'branchId':
         adminResultValue = this.branchInfo;

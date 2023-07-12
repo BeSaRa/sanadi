@@ -1,3 +1,5 @@
+import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
+import { CoordinationWithOrganizationsRequestService } from '@services/coordination-with-organizations-request.service';
 import { IAngularMyDpOptions } from 'angular-mydatepicker';
 import { FinalExternalOfficeApproval } from '@app/models/final-external-office-approval';
 import { LicenseDurationType } from '@app/enums/license-duration-type';
@@ -219,6 +221,12 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     return stream$.pipe(
       switchMap(_ => this.displayLicenseForm ? this.updateCase() : of(null)),
       // filter(_ => false),
+      switchMap(() => {
+        if (this.data.task.getCaseType() === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+          return (this.data.task as CaseModel<any, any>).save();
+        }
+        return of(null);
+      }),
       switchMap(() => {
         return this.data.inboxService.takeActionOnTask(this.data.taskId, responseInfo, this.data.service)
       })
