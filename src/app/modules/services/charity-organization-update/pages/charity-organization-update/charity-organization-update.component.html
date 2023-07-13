@@ -393,15 +393,12 @@
 
     <ng-template #tabContent>
       <!-- . Current Executive Management  -->
-      <members
-        [readonly]="readonly"
-        #adminList
-        pageTitle="executive_management"
-        [list]="model?.currentExecutiveManagementList || []"
-        [extended]="true"
-      ></members>
+      <manage-executive-management-members #adminList
+        addLabel="executive_management"
+        [list]="model?.currentExecutiveManagementList ?? []"
+        [readonly]="readonly">
+      </manage-executive-management-members>
     </ng-template>
-
     <ng-template #tabContent>
       <!-- . Current Executive Management  -->
       <members

@@ -24,10 +24,11 @@ export class NpoEmployee extends SearchableCloneable<NpoEmployee> {
   statusInfo!: AdminResult;
   jobTitleName!: string;
 
+  workStartDate!: string;
   statusDateModified!: string;
   id!: number;
-  qId!: number;
-  identificationNumber!: number;
+  qId!: string;
+  identificationNumber!: string;
   nationality!: number;
   nationalityInfo!: AdminResult;
   langService: LangService;

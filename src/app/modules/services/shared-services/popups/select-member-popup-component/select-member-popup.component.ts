@@ -19,9 +19,12 @@ export class SelectMemberPopupComponent{
               @Inject(DIALOG_DATA_TOKEN) public data: {
                 members: any[],
                 select: boolean,
-                isInternalMembers: boolean
+                isInternalMembers: boolean,
+                displayedColumns: string[]
               }) {
-    if(data.isInternalMembers) {
+    if(data.displayedColumns.length) {
+      this.displayedColumns = [...data.displayedColumns, 'actions'];
+    }else if(data.isInternalMembers) {
       this.displayedColumns = ['arabicName', 'englishName', 'actions'];
     } else {
       this.displayedColumns = ['arabicName', 'englishName','identificationNumber', 'jobTitle', 'actions'];

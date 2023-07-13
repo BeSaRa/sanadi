@@ -1,3 +1,4 @@
+import { ManageExecutiveManagementMembersComponent } from './shared/manage-executive-management-members/manage-executive-management-members.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
@@ -43,6 +44,7 @@ import { AuditCharityReportsComponent } from './audit/audit-charity-reports/audi
 import { AuditCharityDecisionsComponent } from './audit/audit-charity-decisions/audit-charity-decisions.component';
 import { AuditBylawsComponent } from './audit/audit-bylaws/audit-bylaws.component';
 import { AuditOrgMemberComponent } from './audit/audit-org-member/audit-org-member.component';
+import { ManageExecutiveManagementMembersPopupComponent } from './popups/manage-executive-management-members-popup/manage-executive-management-members-popup.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +71,9 @@ import { AuditOrgMemberComponent } from './audit/audit-org-member/audit-org-memb
     AuditCharityReportsComponent,
     AuditCharityDecisionsComponent,
     AuditBylawsComponent,
-    AuditOrgMemberComponent
+    AuditOrgMemberComponent,
+    ManageExecutiveManagementMembersComponent,
+    ManageExecutiveManagementMembersPopupComponent
   ],
   imports: [
     CommonModule,

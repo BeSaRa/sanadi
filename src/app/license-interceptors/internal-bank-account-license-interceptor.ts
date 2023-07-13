@@ -3,7 +3,6 @@ import {InternalBankAccountLicense} from '@app/license-models/internal-bank-acco
 import {AdminResult} from '@app/models/admin-result';
 import {isValidAdminResult} from '@app/helpers/utils';
 import {Lookup} from '@app/models/lookup';
-import {NpoEmployee} from '@app/models/npo-employee';
 import {BankAccountExecutiveManagement} from "@models/bank-account-executive-management";
 
 export class InternalBankAccountLicenseInterceptor implements IModelInterceptor<InternalBankAccountLicense> {

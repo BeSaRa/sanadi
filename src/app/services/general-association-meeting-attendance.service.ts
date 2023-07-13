@@ -17,7 +17,6 @@ import {GeneralAssociationExternalMember} from '@app/models/general-association-
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {GeneralAssociationExternalMemberInterceptor} from '@app/model-interceptors/general-association-external-member-interceptor';
 import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
-import {SelectMemberPopupComponent} from '@app/modules/services/general-association-meeting-attendance/popups/select-member-popup-component/select-member-popup.component';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {UntypedFormGroup} from '@angular/forms';
 import {
@@ -42,6 +41,7 @@ import {IMyDateModel} from 'angular-mydatepicker';
 import {
   SpecificMemberCommentsAndNotesComponent
 } from '@app/modules/services/general-association-meeting-attendance/popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
+import { SelectMemberPopupComponent } from '@app/modules/services/shared-services/popups/select-member-popup-component/select-member-popup.component';
 
 @CastResponseContainer({
   $default: {

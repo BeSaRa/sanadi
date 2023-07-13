@@ -66,6 +66,7 @@ import { AuditLessonsLearntListComponent } from './audit/audit-lessons-learnt-li
 import { LessonsLearntListComponent } from './components/lessons-learnt-list/lessons-learnt-list.component';
 import { LessonsLearntPopupComponent } from './popups/lessons-learnt-popup/lessons-learnt-popup.component';
 import { SelectByColorComponent } from '@app/shared/components/select-by-color/select-by-color.component';
+import { SelectMemberPopupComponent } from './popups/select-member-popup-component/select-member-popup.component';
 
 
 @NgModule({
@@ -104,8 +105,8 @@ import { SelectByColorComponent } from '@app/shared/components/select-by-color/s
     AuditLessonsLearntListComponent,
     LessonsLearntListComponent,
     LessonsLearntPopupComponent,
-    SelectByColorComponent
-
+    SelectByColorComponent,
+    SelectMemberPopupComponent
   ],
   imports: [
     CommonModule,

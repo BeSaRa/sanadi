@@ -1,0 +1,56 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1"
+      aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="null"
+      aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content w800px" #dialogContent>
+  <form novalidate autocomplete="off" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="identificationNumber" class="form-label"
+          for="identificationNumber">{{lang.map.identification_number}}</label>
+        <input [readonly]="(readonly)" class="form-control" formControlName="identificationNumber"
+          id="identificationNumber" validationClasses="identificationNumber" trimInput>
+        <app-field-error-message controlName="identificationNumber"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="fullName" class="form-label" for="fullName">{{lang.map.full_name}}</label>
+        <input [readonly]="(readonly)" class="form-control" formControlName="fullName" id="fullName"
+          validationClasses="fullName" trimInput>
+        <app-field-error-message controlName="fullName"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="jobTitleId" class="form-label" for="jobTitleId">{{lang.map.job_title}}</label>
+        <input id="jobTitleId" validationClasses="jobTitleId" formControlName="jobTitleId" class="form-control" trimInput>
+        <app-field-error-message controlName="jobTitleId"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label class="form-label" for="email">{{lang.map.lbl_email}}</label>
+        <input id="email" readonly [value]="model?.email" disabled class="form-control">
+      </div>
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label class="form-label" for="phone">{{lang.map.lbl_phone}}</label>
+        <input id="phone" readonly [value]="model?.phone" disabled class="form-control">
+      </div>
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label class="form-label" for="joinDate">{{lang.map.first_join_date}}</label>
+        <input id="joinDate" readonly [value]="(model?.joinDate|date: 'mediumDate')" disabled class="form-control">
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button (click)="searchMembers()" class="btn btn-primary" *ngIf="searchVisible">{{lang.map.lbl_search}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>
