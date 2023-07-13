@@ -157,11 +157,18 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       .pipe(map(value => Number(value)))
       .pipe(filter(_ => !this.disabled))
       // .pipe(filter(_ => !this._isRequiredValueReached()))
-      .pipe(filter(_ => this.value[index].remainingAmount > this.value[index].totalCost))
+      // .pipe(filter(_ => this.value[index].remainingAmount > this.value[index].totalCost))
       .pipe(debounceTime(250))
       .pipe(takeUntil((this.destroy$)))
       //.pipe(tap(_ => this.calculateTotal()))
       .pipe(filter(_ => this.value && !!this.value[index]))
+      .pipe(map(value=> {
+        const model = this.value[index];
+        if(value > model.projectTotalCost){
+          value = model.remainingAmount
+        }
+        return value
+      }))
       .subscribe((value) => {
         const model = this.value[index];
         const cValue = currency(value)
