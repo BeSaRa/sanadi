@@ -228,6 +228,9 @@ export class ProjectImplementation
   getAdminResultByProperty(property: keyof ProjectImplementation): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
+      case 'requestType':
+        adminResultValue = this.requestTypeInfo;
+        break;
       case 'beneficiaryCountry':
         adminResultValue = this.beneficiaryCountryInfo;
         break;
