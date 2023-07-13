@@ -66,6 +66,17 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
     model.contractExpiryDate = DateUtils.changeDateToDatepicker(
       model.contractExpiryDate
     );
+    model.genderInfo = AdminResult.createInstance(model.genderInfo ?? {});
+    model.contractStatusInfo = AdminResult.createInstance(model.contractStatusInfo  ?? {});
+    model.contractTypeInfo = AdminResult.createInstance(model.contractTypeInfo  ?? {});
+    model.identificationTypeInfo = AdminResult.createInstance(model.identificationTypeInfo  ?? {});
+    model.jobContractTypeInfo = AdminResult.createInstance(model.jobContractTypeInfo  ?? {});
+    model.nationalityInfo = AdminResult.createInstance(model.nationalityInfo  ?? {});
+    model.orgUnitInfo = AdminResult.createInstance(model.orgUnitInfo  ?? {});
+    model.statusInfo = AdminResult.createInstance(model.statusInfo  ?? {});
+    model.countryInfo = AdminResult.createInstance(model.countryInfo  ?? {});
+    model.contractLocationTypeInfo = AdminResult.createInstance(model.contractLocationTypeInfo  ?? {});
+    model.qInfo = AdminResult.createInstance(model.qInfo  ?? {});
     return model;
   }
 }
