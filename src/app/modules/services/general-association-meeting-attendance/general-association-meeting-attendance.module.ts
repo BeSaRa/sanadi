@@ -21,9 +21,6 @@ import {
   ManageInternalUsersComponent
 } from '@modules/services/general-association-meeting-attendance/shared/manage-internal-users/manage-internal-users.component';
 import {
-  SelectMemberPopupComponent
-} from '@modules/services/general-association-meeting-attendance/popups/select-member-popup-component/select-member-popup.component';
-import {
   MeetingPointMembersCommentsPopupComponent
 } from '@modules/services/general-association-meeting-attendance/popups/meeting-point-members-comments-popup/meeting-point-members-comments-popup.component';
 import {
@@ -47,7 +44,6 @@ import { GeneralMeetingAttendanceNotesPopupComponent } from './popups/general-me
     GeneralAssociationMeetingApproveTaskPopupComponent,
     ManageMembersComponent,
     ManageInternalUsersComponent,
-    SelectMemberPopupComponent,
     MeetingPointMembersCommentsPopupComponent,
     SpecificMemberCommentsAndNotesComponent,
     ManagePrevInternalUsersComponent,

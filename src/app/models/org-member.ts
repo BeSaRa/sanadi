@@ -25,6 +25,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   fullName!: string;
   id!: number;
   jobTitleId!: number;
+  jobTitle!: string;
   email: string | null = null;
   phone: string | null = null;
   joinDate: string | null | IMyDateModel = null;
