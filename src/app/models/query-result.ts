@@ -399,4 +399,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   getResponses(): string[] {
     return this.RESPONSES;
   }
+  isAssignedTask(){
+    return this.BD_IS_REASSIGNED
+  }
 }
