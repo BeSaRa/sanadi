@@ -13,13 +13,13 @@
   <value-differences-list [differenceList]="mainInfoDifferences"></value-differences-list>
   <audit-participant-organizations [newVersionList]="newVersion.participatingOrganizaionList"
     [oldVersionList]="oldVersion.participatingOrganizaionList" [caseType]="newVersion.caseType"
-    uniqueComparisonProperty="organizationId">
+    [uniqueComparisonProperty]="'organizationId'">
   </audit-participant-organizations>
 </ng-template>
 <ng-template #organization_officers>
   <audit-organization-officers [newVersionList]="newVersion.organizaionOfficerList"
     [oldVersionList]="oldVersion.organizaionOfficerList" [caseType]="newVersion.caseType"
-    uniqueComparisonProperty="identificationNumber">
+    [uniqueComparisonProperty]="'officerId'">
   </audit-organization-officers>
 </ng-template>
 
