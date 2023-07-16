@@ -1,13 +1,11 @@
 import { OrgMember } from '@app/models/org-member';
-import {Component, inject, Input} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {UiCrudListGenericComponent} from "@app/generics/ui-crud-list-generic-component";
-import {EmployeeService} from "@services/employee.service";
 import {IMenuItem} from "@modules/context-menu/interfaces/i-menu-item";
 import {ActionIconsEnum} from "@enums/action-icons-enum";
 import {ComponentType} from "@angular/cdk/portal";
 import {IKeyValue} from "@contracts/i-key-value";
-import { ManageMembersPopupComponent } from '@app/modules/services/general-association-meeting-attendance/popups/manage-members-popup/manage-members-popup.component';
 import { ManageExecutiveManagementMembersPopupComponent } from '../../popups/manage-executive-management-members-popup/manage-executive-management-members-popup.component';
 
 
