@@ -18,7 +18,7 @@ export class ParticipantOrganization extends SearchableCloneable<ParticipantOrga
   donation?: number;
   workStartDate?: string | IMyDateModel;
   langService: LangService;
-  managerDecisionInfo!: Lookup;
+  managerDecisionInfo!: Lookup|AdminResult;
 
   constructor() {
     super();

@@ -49,6 +49,7 @@ import {
 import {
   GeneralMeetingAttendanceNotesListComponent
 } from "@modules/services/general-association-meeting-attendance/shared/general-meeting-attendance-notes-list/general-meeting-attendance-notes-list.component";
+import { GeneralAssociationAgenda } from '@app/models/general-association-meeting-agenda';
 
 @Component({
   selector: 'general-association-meeting-attendance',
@@ -474,8 +475,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       ...this.specialExplanation.getRawValue(),
       administrativeBoardMembers: this.administrativeBoardMembersRef?.list ?? [],
       generalAssociationMembers: this.generalAssociationMembersRef?.list ?? [],
-      internalMembersDTO: this.selectedInternalUsers,
-      agendaList: this.meetingAgendaListComponentRef?.list ?? []
+      internalMembersDTO: this.selectedInternalUsers
     });
   }
 
@@ -684,6 +684,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       result.followUpDate = licenseDetails.followUpDate;
 
       result.agenda = licenseDetails.agenda;
+      result.agendaList = this.parseAgendasToAgendaList(licenseDetails);
       result.description = licenseDetails.description;
       result.location = licenseDetails.location;
       result.meetingClassification = licenseDetails.meetingClassification;
@@ -716,6 +717,16 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
       this._updateForm((new GeneralAssociationMeetingAttendance()).clone(result));
     }
+  }
+
+  parseAgendasToAgendaList(model: GeneralAssociationMeetingAttendance): GeneralAssociationAgenda[] {
+    let agendas: string[] = [];
+    try {
+      agendas = <string[]>JSON.parse(model.agenda);
+    } catch (_) {
+      agendas = [];
+    }
+    return agendas.map(x => new GeneralAssociationAgenda().clone({description: x}));
   }
 
   viewSelectedLicense(): void {

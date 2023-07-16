@@ -233,7 +233,9 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
       .pipe(takeUntil(this.destroy$))
       .subscribe((linkedProject: LinkedProjectTypes) => {
 
-        this.projectNameField.reset();
+        if(!this.readonly){
+          this.projectNameField.reset();
+        }
         this.projectNameField.disable();
         this.projectNameField.removeValidators(CustomValidators.required);
 

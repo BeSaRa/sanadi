@@ -10,8 +10,6 @@ import {IKeyValue} from "@contracts/i-key-value";
 import {
   ManageMembersPopupComponent
 } from "@modules/services/general-association-meeting-attendance/popups/manage-members-popup/manage-members-popup.component";
-import {SortEvent} from "@contracts/sort-event";
-import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'manage-members',

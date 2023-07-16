@@ -141,7 +141,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       requestType: {langKey: 'request_type', value: this.requestType},
-      oldLicenseFullSerial: {langKey: 'serial_number', value: this.oldLicenseFullSerial},
+      oldFullSerial: {langKey: 'serial_number', value: this.oldFullSerial},
       meetingType: {langKey: 'general_association_meeting_type', value: this.meetingType},
       location: {langKey: 'location', value: this.location},
       meetingDate: {langKey: 'meeting_date', value: this.meetingDate, comparisonValue: this.meetingDateTimestamp},

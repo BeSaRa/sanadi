@@ -660,7 +660,4 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       this.queryResultSet!.items = this.oldQueryResultSet!.items;
     }
   }
-  isAssignedTask(item: QueryResult){
-    return item.BD_IS_REASSIGNED
-  }
 }
