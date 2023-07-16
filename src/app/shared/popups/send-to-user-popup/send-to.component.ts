@@ -1,27 +1,28 @@
-import {AdminstrationDepartmentCodes} from './../../../enums/department-code.enum';
-import {CaseTypes} from './../../../enums/case-types.enum';
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {InboxService} from '@app/services/inbox.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {TeamService} from '@app/services/team.service';
-import {InternalUser} from '@app/models/internal-user';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {filter, switchMap, take, takeUntil} from 'rxjs/operators';
-import {InternalDepartmentService} from '@app/services/internal-department.service';
-import {of, Subject} from 'rxjs';
-import {InternalDepartment} from '@app/models/internal-department';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {ToastService} from '@app/services/toast.service';
-import {DialogService} from '@app/services/dialog.service';
-import {DialogRef} from '../../models/dialog-ref';
-import {QueryResult} from '@app/models/query-result';
-import {IWFResponse} from '@app/interfaces/i-w-f-response';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {CaseModel} from "@app/models/case-model";
-import {BaseGenericEService} from "@app/generics/base-generic-e-service";
+import { AdminstrationDepartmentCodes } from './../../../enums/department-code.enum';
+import { CaseTypes } from './../../../enums/case-types.enum';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { DIALOG_DATA_TOKEN } from '../../tokens/tokens';
+import { InboxService } from '@app/services/inbox.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { TeamService } from '@app/services/team.service';
+import { InternalUser } from '@app/models/internal-user';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { InternalDepartmentService } from '@app/services/internal-department.service';
+import { forkJoin, of, Subject } from 'rxjs';
+import { InternalDepartment } from '@app/models/internal-department';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { ToastService } from '@app/services/toast.service';
+import { DialogService } from '@app/services/dialog.service';
+import { DialogRef } from '../../models/dialog-ref';
+import { QueryResult } from '@app/models/query-result';
+import { IWFResponse } from '@app/interfaces/i-w-f-response';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { CaseModel } from "@app/models/case-model";
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import { ServiceDataService } from '@app/services/service-data.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -56,8 +57,13 @@ export class SendToComponent implements OnInit, OnDestroy {
     private intDepService: InternalDepartmentService,
     private fb: UntypedFormBuilder,
     private dialog: DialogService,
+    private serviceDataService: ServiceDataService,
     public lang: LangService) {
   }
+
+  servicesWithConcernedDepartments = [
+    CaseTypes.CONSULTATION
+  ]
 
   ngOnInit(): void {
     this.buildForm();
@@ -112,6 +118,21 @@ export class SendToComponent implements OnInit, OnDestroy {
   }
 
   loadDepartments(): void {
+    if (this.servicesWithConcernedDepartments.includes(this.data.task.getCaseType())) {
+      const serviceData = this.serviceDataService.loadByCaseType(this.data.task.getCaseType())
+        .pipe(
+          map(result => result.concernedDepartmentsIdsParsed ?? []),
+        );
+
+      const internalDepartments = this.intDepService.loadAsLookups()
+
+      forkJoin([serviceData, internalDepartments])
+        .subscribe(([relatedDepartments, allDepartments]) => {
+          this.departments = allDepartments.filter(dep => relatedDepartments.includes(dep.id) && dep.id !== this.employee.getInternalDepartment()?.id);
+        })
+      return;
+    }
+
     this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => {
