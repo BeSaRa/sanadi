@@ -1,12 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, AfterViewInit } from '@angular/core';
 import { FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ProcessFieldBuilder } from '@app/administration/popups/general-process-popup/process-formly-components/process-fields-builder';
 import { ObjectUtils } from '@app/helpers/object-utils';
 import { IHasParsedTemplates } from '@app/interfaces/i-has-parsed-templates';
 import { IValueDifference } from '@app/interfaces/i-value-difference';
 import { AdminResult } from '@app/models/admin-result';
-import { CoordinationWithOrganizationTemplate } from '@app/models/corrdination-with-organization-template';
-import { DynamicModel } from '@app/models/dynamic-model';
 import { TemplateField } from '@app/models/template-field';
 import { LangService } from '@app/services/lang.service';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
@@ -16,7 +14,7 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
   templateUrl: 'case-template-fields-popup.component.html',
   styleUrls: ['case-template-fields-popup.component.scss']
 })
-export class CaseTemplateFieldsPopupComponent {
+export class CaseTemplateFieldsPopupComponent implements AfterViewInit {
   oldForm!: UntypedFormGroup;
   newForm!: UntypedFormGroup;
   newProcessFieldBuilder!: ProcessFieldBuilder;
@@ -34,14 +32,16 @@ export class CaseTemplateFieldsPopupComponent {
     public lang: LangService,
     private fb: FormBuilder) {
   }
-  protected _afterViewInit() {
+  ngAfterViewInit() {
     this.isProcessChanged = this.data.newItem.templateId !== this.data.newItem.templateId;
-
     if (!this.isProcessChanged) {
       this._getSampleDataDifferences();
     } else {
       this._generateFormlyForms();
     }
+  }
+  get popupTitle(): string {
+    return this.lang.map.view_changes
   }
   private _getSampleDataDifferences(): void {
     this.data.newItem.parsedTemplates.forEach((newVersionFullModel) => {
