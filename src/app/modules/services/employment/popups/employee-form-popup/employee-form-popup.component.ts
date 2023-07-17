@@ -93,7 +93,7 @@ export class EmployeeFormPopupComponent implements OnInit {
         this.form.patchValue({
           ...r,
         });
-        this.handleOfficeNameValidationsByContractLocationType();
+        this.handlePreviewOfficeName();
         this.handleContractExpireDateValidationsByContractType();
         this.handleEndDateValidationsByContractStatus();
         this.handleIdentityNumberValidationsByIdentificationType();
@@ -107,6 +107,10 @@ export class EmployeeFormPopupComponent implements OnInit {
         this.form.patchValue({
           ...r,
         });
+        this.handlePreviewOfficeName();
+        this.handleContractExpireDateValidationsByContractType();
+        this.handleEndDateValidationsByContractStatus();
+        this.handleIdentityNumberValidationsByIdentificationType();
       },
     },
     {
@@ -144,7 +148,6 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   ngOnInit() {
     this._buildForm();
-    this.handleOfficeNameValidationsByContractLocationType();
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.FUNCTIONAL_GROUP).subscribe((data) => {
       this.functionalGroupsList = data;
     })
@@ -303,7 +306,13 @@ export class EmployeeFormPopupComponent implements OnInit {
     }
     this.officeId.updateValueAndValidity();
   }
-
+  handlePreviewOfficeName() {
+    if (this.isExternal()) {
+      this.loadImplementingAgenciesByAgencyType();
+    } else if (this.isInternal()) {
+      this.loadCharityMainBranch();
+    }
+  }
   handleContractExpireDateValidationsByContractType(): void {
     // set validators as empty
     this.contractExpiryDate?.setValidators([]);

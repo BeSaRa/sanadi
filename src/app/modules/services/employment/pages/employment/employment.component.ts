@@ -24,7 +24,6 @@ import {NavigationService} from '@services/navigation.service';
 import {LookupService} from '@services/lookup.service';
 import {LangService} from '@services/lang.service';
 import {EmploymentCategory} from '@enums/employment-category.enum';
-import {AdminResult} from '@models/admin-result';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {Employment} from '@models/employment';
 import {EmploymentService} from '@services/employment.service';
