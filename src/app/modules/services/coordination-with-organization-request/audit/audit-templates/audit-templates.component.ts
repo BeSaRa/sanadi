@@ -85,7 +85,7 @@ export class AuditTemplatesComponent extends AuditListGenericComponent<Coordinat
     if (CommonUtils.isValidValue(override)) {
       return new CoordinationWithOrganizationTemplate().clone(override)
     }
-    return new CoordinationWithOrganizationTemplate();
+    return new CoordinationWithOrganizationTemplate().clone({});
   }
   // _getNewTemplateFieldInstance(override: Partial<CoordinationWithOrganizationTemplate> | undefined): TemplateField[] {
   //   if (CommonUtils.isValidValue(override)) {
