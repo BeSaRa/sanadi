@@ -388,8 +388,8 @@
             <app-field-error-message controlName="sanadiMainClassification"></app-field-error-message>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-12 col-sm-12 mb-4 ng-select-wrapper" *ngIf="isInsideQatarProject()">
+        <div class="row" *ngIf="isInsideQatarProject() && isSoftwareProjectType()">
+          <div class="col-md-12 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="subInternalProjectClassification"
                    for="subInternalProjectClassification">{{lang.map.sub_classification}}</label>
             <ng-select [readonly]="readonly"
