@@ -21,6 +21,7 @@ import {catchError, exhaustMap, filter, switchMap, takeUntil,} from 'rxjs/operat
   styleUrls: ['./vaction-dates.component.scss'],
 })
 export class VactionDatesComponent extends AdminGenericComponent<VacationDates, VacationDatesService> {
+  usePagination = true;
   actions: IMenuItem<VacationDates>[] = [
     // edit
     {
@@ -42,7 +43,15 @@ export class VactionDatesComponent extends AdminGenericComponent<VacationDates, 
       label: 'view',
       icon: ActionIconsEnum.VIEW,
       onClick: (item: VacationDates) => this.view$.next(item)
-    }
+    },
+     // logs
+     {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      show: () => true,
+      onClick: (item: VacationDates) => this.showAuditLogs(item)
+    },
   ];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'vacationDateFrom', 'vacationDateTo', 'actions'];
   searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_vacationDateFrom', 'search_vacationDateTo', 'search_actions'];
