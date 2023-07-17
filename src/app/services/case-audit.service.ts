@@ -277,7 +277,6 @@ export class CaseAuditService extends CrudGenericService<CaseAudit> {
     }).onAfterClose$.subscribe();
   }
   showTemplateFieldsDifferencesPopup(newItem: IHasParsedTemplates,oldItem: IHasParsedTemplates, titleInfo?: AdminResult): void {
-    debugger
     this.dialog.show(CaseTemplateFieldsPopupComponent, {
       newItem: newItem,
       oldItem: oldItem,
