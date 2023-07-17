@@ -22,7 +22,8 @@
 
 <ng-template #founderMemberTabTemplate>
   <audit-founder-members [newVersionList]="newVersion.founderMemberList" [oldVersionList]="oldVersion.founderMemberList"
-                         [caseType]="newVersion.caseType">
+                         [caseType]="newVersion.caseType"
+                         [uniqueComparisonProperty]="'objectDBId'">
   </audit-founder-members>
 </ng-template>
 
