@@ -134,6 +134,11 @@ export class ManageExecutiveManagementMembersPopupComponent extends UiCrudDialog
       .pipe(tap(members => !members.length && this.dialogService.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(members => !!members.length))
       .pipe(map(items => {
+        console.log(items)
+        return items.filter(item => item.qId || item.identificationNumber)
+      }))
+      .pipe(map(items => {
+        console.log(items)
         return items.map(item => this.mapNpoEmployeeToOrgMember(item));
       }))
       .pipe(exhaustMap((members) => {
