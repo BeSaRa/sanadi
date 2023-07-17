@@ -78,7 +78,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   }
 
   buildForm(controls = true) {
-    const {fullName, identificationNumber, jobTitleId} = this;
+    const {fullName, identificationNumber, jobTitleId, jobTitle} = this;
     return {
       fullName: controls ? [fullName, [CustomValidators.required,
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
@@ -86,6 +86,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
       ] : fullName,
       identificationNumber: controls ? [identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]] : identificationNumber,
       jobTitleId: controls ? [jobTitleId, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitleId,
+      jobTitle: controls ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitle,
     };
   }
 
