@@ -1,6 +1,6 @@
 <ng-template #tabsTemplate>
   <ul *ngIf="tabs.length" [id]="tabContainerId" role="tablist" class="nav nav-tabs">
-    <li *ngFor="let tab of tabs" role="presentation" class="nav-item">
+    <li *ngFor="let tab of tabs" role="presentation" class="nav-item" [hidden]="tab.isHidden">
       <a class="nav-link position-relative tab-link" [class.disabled]="tab.disabled" [class.active]="tab.active"
          aria-current="page" data-bs-toggle="tab" role="tab"
          (click)="selectTab(tab)">{{tab.title}}

@@ -15,7 +15,7 @@
     <tab [name]="tabsData.projectAddresses.name"
          [hasError]="getTabInvalidStatus('projectAddresses')"
          [template]="projectAddressesTab" [title]="lang.map.project_addresses"
-         *ngIf="showProjectAddressesTab"></tab>
+         [isHidden]="!showProjectAddressesTab"></tab>
     <tab [name]="tabsData.foreignCountriesProjects.name"
          [hasError]="getTabInvalidStatus('foreignCountriesProjects')"
          [template]="foreignCountriesProjectsTab" [title]="lang.map.project_model_foreign_countries_projects"
@@ -713,10 +713,10 @@
   </ng-template>
   <ng-template #projectAddressesTab>
     <project-addresses
-      #projectAddressesRef
-      [readonly]="readonly"
-      [list]="(!model || !model.projectAddressList || model.projectAddressList.length === 0) ? []: model!.projectAddressList!"
-    ></project-addresses>
+    #projectAddressesRef
+    [readonly]="readonly"
+    [list]="(!model || !model.projectAddressList || model.projectAddressList.length === 0) ? []: model!.projectAddressList!"
+  ></project-addresses>
   </ng-template>
   <ng-template #foreignCountriesProjectsTab>
     <foreign-countries-projects

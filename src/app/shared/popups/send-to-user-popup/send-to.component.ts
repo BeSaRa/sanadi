@@ -61,10 +61,6 @@ export class SendToComponent implements OnInit, OnDestroy {
     public lang: LangService) {
   }
 
-  servicesWithConcernedDepartments = [
-    CaseTypes.CONSULTATION
-  ]
-
   ngOnInit(): void {
     this.buildForm();
 
@@ -118,29 +114,26 @@ export class SendToComponent implements OnInit, OnDestroy {
   }
 
   loadDepartments(): void {
-    if (this.servicesWithConcernedDepartments.includes(this.data.task.getCaseType())) {
-      const serviceData = this.serviceDataService.loadByCaseType(this.data.task.getCaseType())
-        .pipe(
-          map(result => result.concernedDepartmentsIdsParsed ?? []),
-        );
+    const serviceData = this.serviceDataService.loadByCaseType(this.data.task.getCaseType())
+      .pipe(
+        map(result => result.concernedDepartmentsIdsParsed ?? []),
+      );
 
-      const internalDepartments = this.intDepService.loadAsLookups()
+    const internalDepartments = this.intDepService.loadAsLookups()
 
-      forkJoin([serviceData, internalDepartments])
-        .subscribe(([relatedDepartments, allDepartments]) => {
-          this.departments = allDepartments.filter(dep => relatedDepartments.includes(dep.id) && dep.id !== this.employee.getInternalDepartment()?.id);
-        })
-      return;
-    }
+    forkJoin([serviceData, internalDepartments])
+      .subscribe(([relatedDepartments, allDepartments]) => {
+        this.departments = allDepartments.filter(dep => relatedDepartments.includes(dep.id) && dep.id !== this.employee.getInternalDepartment()?.id);
+      })
 
-    this.intDepService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => {
-        this.departments = deps.filter(dep => dep.id !== this.employee.getInternalDepartment()?.id)
-        if (this.data.task.getCaseType() == CaseTypes.INTERNATIONAL_COOPERATION) {
-          this.departments = this.departments.filter(dep => this.internationalCooperationAllowedDepartments.includes(dep.code as AdminstrationDepartmentCodes))
-        }
-      });
+    // this.intDepService.loadAsLookups()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe(deps => {
+    //     this.departments = deps.filter(dep => dep.id !== this.employee.getInternalDepartment()?.id)
+    //     if (this.data.task.getCaseType() == CaseTypes.INTERNATIONAL_COOPERATION) {
+    //       this.departments = this.departments.filter(dep => this.internationalCooperationAllowedDepartments.includes(dep.code as AdminstrationDepartmentCodes))
+    //     }
+    //   });
   }
 
   private buildForm(): void {
