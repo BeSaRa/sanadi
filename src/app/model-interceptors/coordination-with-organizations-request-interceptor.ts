@@ -50,6 +50,9 @@ export class CoordinationWithOrganizationsRequestInterceptor
     model.temporaryOrganizaionOfficerList?.forEach((x) => {
       delete x.langService;
       delete (x as any).searchFields;
+      delete (x as any).organizationInfo;
+      delete (x as any).branchInfo;
+      delete (x as any).ouInfo;
     });
 
     model.temporaryBuildingAbilitiesList &&
