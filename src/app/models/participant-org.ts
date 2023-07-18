@@ -12,7 +12,6 @@ import { ParticipatingOrgInterceptor } from './../model-interceptors/participati
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
-import { DateUtils } from '@app/helpers/date-utils';
 
 const {send, receive} = new ParticipatingOrgInterceptor();
 
@@ -73,8 +72,7 @@ export class ParticipantOrg extends SearchableCloneable<ParticipantOrg> implemen
       value:{ langKey: 'participating_value', value: this.value },
       notes:{ langKey: 'notes', value: this.notes },
       managerDecision:{ langKey: 'request_state', value: this.managerDecision },
-
-
+      organizationOfficerName:{ langKey: 'organization_officers', value: this.organizationOfficerName },
      };
   }
   BuildForm(controls?: boolean) {
