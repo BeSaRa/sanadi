@@ -28,6 +28,7 @@ export class TabComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() tabWidth?: string;
   @Input() hideIcon?: boolean = false;
   @Input() tabAccordionButtonClasses: string = '';
+  @Input() isHidden: boolean = false;
 
   private destroy$: Subject<any> = new Subject<any>();
 
