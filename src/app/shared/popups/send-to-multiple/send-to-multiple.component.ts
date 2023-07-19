@@ -155,7 +155,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
       taskName: [taskName, CustomValidators.required],
       departments: [[], departmentsValidators],
       users: [[], usersValidators],
-      comment: [[]]
+      comment: ['']
     });
   }
 
