@@ -12,27 +12,19 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.full_name}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.fullName}} </td>
       </ng-container>
-      <ng-container cdkColumnDef="arabicName" *ngIf="!data.isInternalMembers">
+      <ng-container cdkColumnDef="arabicName">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.arabicName}} </td>
       </ng-container>
-      <ng-container cdkColumnDef="englishName" *ngIf="!data.isInternalMembers">
+      <ng-container cdkColumnDef="englishName">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
       </ng-container>
-      <ng-container cdkColumnDef="arabicName" *ngIf="data.isInternalMembers">
-        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.arabicName}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="englishName" *ngIf="data.isInternalMembers">
-        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="identificationNumber" *ngIf="!data.isInternalMembers">
+      <ng-container cdkColumnDef="identificationNumber">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.identification_number}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.identificationNumber}} </td>
       </ng-container>
-      <ng-container cdkColumnDef="jobTitle" *ngIf="!data.isInternalMembers">
+      <ng-container cdkColumnDef="jobTitle">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.job_title}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.jobTitleName || row.jobTitle}} </td>
       </ng-container>
