@@ -1,4 +1,4 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {ComponentFactoryResolver, Injectable} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
@@ -11,7 +11,7 @@ import {UrlService} from './url.service';
 import {UrgentJointReliefCampaignInterceptor} from '@app/model-interceptors/urgent-joint-relief-campaign-interceptor';
 import {UrgentJointReliefCampaignSearchCriteria} from '@app/models/urgent-joint-relief-campaign-search-criteria';
 import {FactoryService} from '@services/factory.service';
-import {CastResponseContainer} from '@decorators/cast-response';
+import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {
@@ -133,5 +133,14 @@ implements IReturnToOrganizationService {
       .pipe(map(response => {
         return response.rs.map(x => (new ValidOrgUnit()).clone(x));
       }));
+  }
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  terminateOrganizationTask(caseId:string,orgId:number,taskId:string){
+    return this.http.post<IDefaultResponse<boolean>>(this._getURLSegment() + `/task/terminate/${caseId}/${orgId}`, {}, {
+      params: new HttpParams().set('tkiid', taskId)
+    });
   }
 }
