@@ -45,6 +45,7 @@ import { AuditCharityDecisionsComponent } from './audit/audit-charity-decisions/
 import { AuditBylawsComponent } from './audit/audit-bylaws/audit-bylaws.component';
 import { AuditOrgMemberComponent } from './audit/audit-org-member/audit-org-member.component';
 import { ManageExecutiveManagementMembersPopupComponent } from './popups/manage-executive-management-members-popup/manage-executive-management-members-popup.component';
+import { AuditOrgExecutiveMemberComponent } from './audit/audit-org-executive-member/audit-org-executive-member.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { ManageExecutiveManagementMembersPopupComponent } from './popups/manage-
     AuditCharityDecisionsComponent,
     AuditBylawsComponent,
     AuditOrgMemberComponent,
+    AuditOrgExecutiveMemberComponent,
     ManageExecutiveManagementMembersComponent,
     ManageExecutiveManagementMembersPopupComponent
   ],

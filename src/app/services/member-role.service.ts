@@ -1,3 +1,4 @@
+import { OrgExecutiveMember } from '@app/models/org-executive-member';
 import { ComponentType } from '@angular/cdk/portal';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -39,8 +40,8 @@ export class MemberRoleService extends CrudWithDialogGenericService<MemberRole> 
     return this.urlService.URLS.MEMBER_ROLES;
   }
 
-  getMembersOfCharity(id: number): Observable<{ [key: string]: OrgMember[] }> {
-    return this.http.get<{ [key: string]: { orgMember: OrgMember }[] }>(this._getServiceURL() + '/charity/' + id + '/members').pipe(
+  getMembersOfCharity(id: number): Observable<{ [key: string]: OrgMember[] | OrgExecutiveMember[] }> {
+    return this.http.get<{ [key: string]: { orgMember: OrgMember | OrgExecutiveMember }[] }>(this._getServiceURL() + '/charity/' + id + '/members').pipe(
       map(x =>
         Object.entries(x.rs).reduce((pv, [key, value]) => {
           if (!Array.isArray(value)) {

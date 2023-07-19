@@ -9,22 +9,22 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Observable, of } from "rxjs";
 import { NpoEmployee } from "@models/npo-employee";
 import { exhaustMap, filter, map, tap } from "rxjs/operators";
-import { OrgMember } from '@app/models/org-member';
 import { CharityOrganizationUpdateService } from '@app/services/charity-organization-update.service';
+import { OrgExecutiveMember } from '@app/models/org-executive-member';
 
 @Component({
   selector: 'manage-executive-management-members-popup',
   templateUrl: './manage-executive-management-members-popup.component.html',
   styleUrls: ['./manage-executive-management-members-popup.component.scss']
 })
-export class ManageExecutiveManagementMembersPopupComponent extends UiCrudDialogGenericComponent<OrgMember> {
+export class ManageExecutiveManagementMembersPopupComponent extends UiCrudDialogGenericComponent<OrgExecutiveMember> {
   popupTitleKey: keyof ILanguageKeys;
   addLabel!: keyof ILanguageKeys;
   searchVisible!: boolean;
-  selectedMemberFromPopup?: OrgMember;
+  selectedMemberFromPopup?: OrgExecutiveMember;
   hideFullScreen = true;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<OrgMember>,
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<OrgExecutiveMember>,
     public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
     private charityOrganizationUpdateService: CharityOrganizationUpdateService) {
@@ -40,28 +40,28 @@ export class ManageExecutiveManagementMembersPopupComponent extends UiCrudDialog
 
   initPopup(): void {
   }
-  _isDuplicate(record1: Partial<OrgMember>, record2: Partial<OrgMember>): boolean {
+  _isDuplicate(record1: Partial<OrgExecutiveMember>, record2: Partial<OrgExecutiveMember>): boolean {
     return record1.identificationNumber == record2.identificationNumber;
   }
   protected _afterViewInit() {
     this.searchVisible = !this.readonly;
   }
 
-  _getNewInstance(override?: Partial<OrgMember> | undefined): OrgMember {
-    return new OrgMember().clone(override ?? {});
+  _getNewInstance(override?: Partial<OrgExecutiveMember> | undefined): OrgExecutiveMember {
+    return new OrgExecutiveMember().clone(override ?? {});
   }
 
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
   }
 
-  afterSave(savedModel: OrgMember, originalModel: OrgMember): void {
+  afterSave(savedModel: OrgExecutiveMember, originalModel: OrgExecutiveMember): void {
     this.toast.success(this.operation === OperationTypes.CREATE
       ? this.lang.map.msg_added_in_list_success : this.lang.map.msg_updated_in_list_success);
     this.dialogRef.close(savedModel);
   }
 
-  beforeSave(model: OrgMember, form: UntypedFormGroup): Observable<boolean> | boolean {
+  beforeSave(model: OrgExecutiveMember, form: UntypedFormGroup): Observable<boolean> | boolean {
     if (!!this.selectedMemberFromPopup) {
       return this._beforeSaveSearch()
     } else {
@@ -89,7 +89,7 @@ export class ManageExecutiveManagementMembersPopupComponent extends UiCrudDialog
     return true;
   }
 
-  prepareModel(model: OrgMember, form: UntypedFormGroup): Observable<OrgMember> | OrgMember {
+  prepareModel(model: OrgExecutiveMember, form: UntypedFormGroup): Observable<OrgExecutiveMember> | OrgExecutiveMember {
     if (this.selectedMemberFromPopup) {
       return this.selectedMemberFromPopup
     } else {
@@ -134,12 +134,10 @@ export class ManageExecutiveManagementMembersPopupComponent extends UiCrudDialog
       .pipe(tap(members => !members.length && this.dialogService.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(members => !!members.length))
       .pipe(map(items => {
-        console.log(items)
         return items.filter(item => item.qId || item.identificationNumber)
       }))
       .pipe(map(items => {
-        console.log(items)
-        return items.map(item => this.mapNpoEmployeeToOrgMember(item));
+        return items.map(item => this.mapNpoEmployeeToOrgExecutiveMember(item));
       }))
       .pipe(exhaustMap((members) => {
         return members.length === 1 ? of(members[0]) : this.openSelectMember(members);
@@ -153,8 +151,8 @@ export class ManageExecutiveManagementMembersPopupComponent extends UiCrudDialog
       });
   }
 
-  mapNpoEmployeeToOrgMember(npoEmployee: NpoEmployee) {
-    const member = new OrgMember();
+  mapNpoEmployeeToOrgExecutiveMember(npoEmployee: NpoEmployee) {
+    const member = new OrgExecutiveMember();
     member.id = npoEmployee.id;
     member.fullName = npoEmployee.arabicName;
     member.identificationNumber = npoEmployee.qId || npoEmployee.identificationNumber;
@@ -165,11 +163,11 @@ export class ManageExecutiveManagementMembersPopupComponent extends UiCrudDialog
     return member;
   }
 
-  private openSelectMember(members: OrgMember[]) {
+  private openSelectMember(members: OrgExecutiveMember[]) {
     return this.charityOrganizationUpdateService.openSelectMemberDialog(members, true, false, [
       'fullName',
       'identificationNumber',
       'jobTitle'
-    ]).onAfterClose$ as Observable<OrgMember>;
+    ]).onAfterClose$ as Observable<OrgExecutiveMember>;
   }
 }

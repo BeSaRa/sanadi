@@ -18,11 +18,11 @@ import { FollowupDateService } from './follow-up-date.service';
 import { UrlService } from './url.service';
 import { CharityOrganization } from '@app/models/charity-organization';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { OrgMember } from '@app/models/org-member';
 import { SelectMemberPopupComponent } from '@app/modules/services/shared-services/popups/select-member-popup-component/select-member-popup.component';
 import { NpoEmployee } from '@app/models/npo-employee';
 import { HasInterception } from '@app/decorators/decorators/intercept-model';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { OrgExecutiveMember } from '@app/models/org-executive-member';
 
 @CastResponseContainer({
   $default: {
@@ -100,7 +100,7 @@ export class CharityOrganizationUpdateService extends BaseGenericEService<Charit
     form.append('itemId', caseId.toString());
     return this.http.post(this._getURLSegment() + '/' + caseId + '/logo', form).pipe(map((e: any) => e.rs.id));
   }
-  openSelectMemberDialog(members: OrgMember[], select = true, isInternalMembers: boolean, displayedColumns: string[] = []): DialogRef {
+  openSelectMemberDialog(members: OrgExecutiveMember[], select = true, isInternalMembers: boolean, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectMemberPopupComponent, {
       members,
       select,
