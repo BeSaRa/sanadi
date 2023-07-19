@@ -34,6 +34,7 @@ import { MeetingAgendaListComponent } from './shared/meeting-agenda-list/meeting
 import { MeetingAgendaPopupComponent } from './popups/meeting-agenda-popup/meeting-agenda-popup.component';
 import { GeneralMeetingAttendanceNotesListComponent } from '@modules/services/general-association-meeting-attendance/shared/general-meeting-attendance-notes-list/general-meeting-attendance-notes-list.component';
 import { GeneralMeetingAttendanceNotesPopupComponent } from './popups/general-meeting-attendance-notes-popup/general-meeting-attendance-notes-popup.component';
+import { SharedServicesModule } from '../shared-services/shared-services.module';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { GeneralMeetingAttendanceNotesPopupComponent } from './popups/general-me
   imports: [
     CommonModule,
     EServicesMainModule,
+    SharedServicesModule,
     GeneralAssociationMeetingAttendanceRoutingModule
   ]
 })
