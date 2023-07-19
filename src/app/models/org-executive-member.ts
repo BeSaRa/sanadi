@@ -2,7 +2,6 @@ import {InterceptModel} from '@app/decorators/decorators/intercept-model';
 import {DateUtils} from '@app/helpers/date-utils';
 import {infoSearchFields} from '@app/helpers/info-search-fields';
 import {normalSearchFields} from '@app/helpers/normal-search-fields';
-import {OrgMemberInterceptor} from '@app/model-interceptors/org-member-interceptor';
 import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {IMyDateModel} from 'angular-mydatepicker';
@@ -11,43 +10,40 @@ import {SearchableCloneable} from './searchable-cloneable';
 import {AuditOperationTypes} from '@enums/audit-operation-types';
 import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
 import {CommonUtils} from '@app/helpers/common-utils';
+import { OrgExecutiveMemberInterceptor } from '@app/model-interceptors/org-executive-member-interceptor';
 import { ObjectUtils } from '@app/helpers/object-utils';
 
-const {send, receive} = new OrgMemberInterceptor();
+const {send, receive} = new OrgExecutiveMemberInterceptor();
 
 @InterceptModel({
   receive,
   send,
 })
-export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditModelProperties<OrgMember> {
+export class OrgExecutiveMember extends SearchableCloneable<OrgExecutiveMember> implements IAuditModelProperties<OrgExecutiveMember> {
   objectDBId!: number;
   qid?: string;
   identificationNumber!: string;
   fullName!: string;
   id!: number;
-  jobTitleId!: number;
+  jobTitle!: string;
   email: string | null = null;
   phone: string | null = null;
   joinDate: string | null | IMyDateModel = null;
   nationality!: number;
   extraPhone!: string;
-  jobTitleInfo!: AdminResult;
   nationalityInfo!: AdminResult;
 
-  searchFields: ISearchFieldsMap<OrgMember> = {
+  searchFields: ISearchFieldsMap<OrgExecutiveMember> = {
     ...normalSearchFields(['qid', 'fullName', 'identificationNumber', 'email', 'phone', 'extraPhone']),
-    ...infoSearchFields(['nationalityInfo', 'jobTitleInfo'])
+    ...infoSearchFields(['nationalityInfo'])
   }
   joinDateStamp!: number | null;
 
-  getAdminResultByProperty(property: keyof OrgMember): AdminResult {
+  getAdminResultByProperty(property: keyof OrgExecutiveMember): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
       case 'nationality':
         adminResultValue = this.nationalityInfo;
-        break;
-      case 'jobTitleId':
-        adminResultValue = this.jobTitleInfo;
         break;
       case 'joinDate':
         const joinDateValue = DateUtils.getDateStringFromDate(this.joinDate, 'DATEPICKER_FORMAT');
@@ -70,7 +66,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
     return {
       fullName: {langKey: 'full_name', value: this.fullName},
       identificationNumber: {langKey: 'identification_number', value: this.identificationNumber},
-      jobTitleId: {langKey: 'job_title', value: this.jobTitleId},
+      jobTitle: {langKey: 'job_title', value: this.jobTitle},
       email: {langKey: 'lbl_email', value: this.email},
       phone: {langKey: 'lbl_phone', value: this.phone},
       joinDate: {langKey: 'first_join_date', value: this.joinDate, comparisonValue: this.joinDateStamp},
@@ -81,14 +77,14 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   }
 
   buildForm(controls = true) {
-    const values = ObjectUtils.getControlValues<OrgMember>(this.getValuesWithLabels());
+    const values = ObjectUtils.getControlValues<OrgExecutiveMember>(this.getValuesWithLabels());
     return {
       fullName: controls ? [values.fullName, [CustomValidators.required,
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]
       ] : values.fullName,
       identificationNumber: controls ? [values.identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]] : values.identificationNumber,
-      jobTitleId: controls ? [values.jobTitleId, [CustomValidators.required, CustomValidators.maxLength(150)]] : values.jobTitleId,
+      jobTitle: controls ? [values.jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : values.jobTitle,
     };
   }
 
@@ -135,30 +131,28 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
     };
   }
 
-  toCharityOrganizationOrgMember(): OrgMember {
+  toCharityOrganizationOrgMember(): OrgExecutiveMember {
     const {
       id,
       qid,
       email,
       extraPhone,
       phone,
-      jobTitleId,
+      jobTitle,
       joinDate,
       nationality,
       fullName,
-      jobTitleInfo
     } = this;
-    return new OrgMember().clone({
+    return new OrgExecutiveMember().clone({
       objectDBId: id,
       identificationNumber: qid,
       fullName,
-      jobTitleId,
+      jobTitle,
       email,
       phone,
       joinDate: DateUtils.getDateStringFromDate(joinDate),
       nationality,
-      extraPhone,
-      jobTitleInfo: AdminResult.createInstance(jobTitleInfo)
+      extraPhone
     });
   }
 }

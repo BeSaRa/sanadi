@@ -1,4 +1,3 @@
-import { OrgMember } from '@app/models/org-member';
 import {Component, Input} from '@angular/core';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {UiCrudListGenericComponent} from "@app/generics/ui-crud-list-generic-component";
@@ -7,6 +6,7 @@ import {ActionIconsEnum} from "@enums/action-icons-enum";
 import {ComponentType} from "@angular/cdk/portal";
 import {IKeyValue} from "@contracts/i-key-value";
 import { ManageExecutiveManagementMembersPopupComponent } from '../../popups/manage-executive-management-members-popup/manage-executive-management-members-popup.component';
+import { OrgExecutiveMember } from '@app/models/org-executive-member';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { ManageExecutiveManagementMembersPopupComponent } from '../../popups/man
   templateUrl: './manage-executive-management-members.component.html',
   styleUrls: ['./manage-executive-management-members.component.scss']
 })
-export class ManageExecutiveManagementMembersComponent extends UiCrudListGenericComponent<OrgMember> {
+export class ManageExecutiveManagementMembersComponent extends UiCrudListGenericComponent<OrgExecutiveMember> {
   @Input() addLabel!: keyof ILanguageKeys;
 
   constructor() {
@@ -22,33 +22,33 @@ export class ManageExecutiveManagementMembersComponent extends UiCrudListGeneric
   }
 
   displayColumns: string[] = ['index', 'identificationNumber', 'fullName', 'workStartDate', 'jobTitle', 'actions'];
-  actions: IMenuItem<OrgMember>[] = [
+  actions: IMenuItem<OrgExecutiveMember>[] = [
     // delete
     {
       type: 'action',
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
-      onClick: (item: OrgMember) => this.confirmDelete$.next(item),
-      show: (item: OrgMember) => !this.readonly
+      onClick: (item: OrgExecutiveMember) => this.confirmDelete$.next(item),
+      show: (item: OrgExecutiveMember) => !this.readonly
     },
     // view
     {
       type: 'action',
       icon: ActionIconsEnum.VIEW,
       label: 'view',
-      onClick: (item: OrgMember) => this.view$.next(item),
+      onClick: (item: OrgExecutiveMember) => this.view$.next(item),
     }
   ];
 
-  _getNewInstance(override?: Partial<OrgMember> | undefined): OrgMember {
-    return new OrgMember().clone(override ?? {});
+  _getNewInstance(override?: Partial<OrgExecutiveMember> | undefined): OrgExecutiveMember {
+    return new OrgExecutiveMember().clone(override ?? {});
   };
 
   _getDialogComponent(): ComponentType<any> {
     return ManageExecutiveManagementMembersPopupComponent;
   };
 
-  _getDeleteConfirmMessage(record: OrgMember): string {
+  _getDeleteConfirmMessage(record: OrgExecutiveMember): string {
     return this.lang.map.msg_confirm_delete_x.change({x: record.fullName});
   };
 

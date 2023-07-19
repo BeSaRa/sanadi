@@ -1,57 +1,58 @@
-import {AfterViewInit, ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChildren,} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup,} from '@angular/forms';
-import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
-import {CharityDecisionType} from '@enums/charity-decision-type.enum';
-import {CharityReportType} from '@enums/charity-report-type.enum';
-import {CharityUpdateSection} from '@enums/charity-update-section.enum';
-import {CharityRole} from '@enums/charity-role.enum';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {FileExtensionsEnum} from '@enums/file-extension-mime-types-icons.enum';
-import {OpenFrom} from '@enums/open-from.enum';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {SaveTypes} from '@enums/save-types';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {CommonUtils} from '@helpers/common-utils';
-import {DateUtils} from '@helpers/date-utils';
-import {ControlWrapper} from '@contracts/i-control-wrapper';
-import {IKeyValue} from '@contracts/i-key-value';
-import {AdminLookup} from '@models/admin-lookup';
-import {BlobModel} from '@models/blob-model';
-import {CharityDecision} from '@models/charity-decision';
-import {CharityOrganization} from '@models/charity-organization';
-import {CharityOrganizationUpdate} from '@models/charity-organization-update';
-import {CharityReport} from '@models/charity-report';
-import {Country} from '@models/country';
-import {FinalExternalOfficeApprovalResult} from '@models/final-external-office-approval-result';
-import {GeneralAssociationMeetingAttendance} from '@models/general-association-meeting-attendance';
-import {NpoEmployee} from '@models/npo-employee';
-import {OrgMember} from '@models/org-member';
-import {RealBeneficiary} from '@models/real-beneficiary';
-import {AdminLookupService} from '@services/admin-lookup.service';
-import {CharityDecisionService} from '@services/charity-decision.service';
-import {CharityOrganizationUpdateService} from '@services/charity-organization-update.service';
-import {CharityOrganizationService} from '@services/charity-organization.service';
-import {CharityReportService} from '@services/charity-report.service';
-import {CountryService} from '@services/country.service';
-import {DialogService} from '@services/dialog.service';
-import {EmployeeService} from '@services/employee.service';
-import {FinalExternalOfficeApprovalService} from '@services/final-external-office-approval.service';
-import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
-import {GoveranceDocumentService} from '@services/governance-document.service';
-import {LangService} from '@services/lang.service';
-import {LookupService} from '@services/lookup.service';
-import {MemberRoleService} from '@services/member-role.service';
-import {NpoEmployeeService} from '@services/npo-employee.service';
-import {RealBeneficiaryService} from '@services/real-beneficiary.service';
-import {ToastService} from '@services/toast.service';
-import {DatepickerOptionsMap} from '@app/types/types';
-import {IMyDateModel} from 'angular-mydatepicker';
-import {Observable, of} from 'rxjs';
-import {map, switchMap, takeUntil} from 'rxjs/operators';
-import {ITabData} from "@contracts/i-tab-data";
-import {GlobalSettings} from '@app/models/global-settings';
-import {GlobalSettingsService} from '@app/services/global-settings.service';
+import { AfterViewInit, ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChildren, } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, } from '@angular/forms';
+import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
+import { CharityDecisionType } from '@enums/charity-decision-type.enum';
+import { CharityReportType } from '@enums/charity-report-type.enum';
+import { CharityUpdateSection } from '@enums/charity-update-section.enum';
+import { CharityRole } from '@enums/charity-role.enum';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { FileExtensionsEnum } from '@enums/file-extension-mime-types-icons.enum';
+import { OpenFrom } from '@enums/open-from.enum';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { SaveTypes } from '@enums/save-types';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { CommonUtils } from '@helpers/common-utils';
+import { DateUtils } from '@helpers/date-utils';
+import { ControlWrapper } from '@contracts/i-control-wrapper';
+import { IKeyValue } from '@contracts/i-key-value';
+import { AdminLookup } from '@models/admin-lookup';
+import { BlobModel } from '@models/blob-model';
+import { CharityDecision } from '@models/charity-decision';
+import { CharityOrganization } from '@models/charity-organization';
+import { CharityOrganizationUpdate } from '@models/charity-organization-update';
+import { CharityReport } from '@models/charity-report';
+import { Country } from '@models/country';
+import { FinalExternalOfficeApprovalResult } from '@models/final-external-office-approval-result';
+import { GeneralAssociationMeetingAttendance } from '@models/general-association-meeting-attendance';
+import { NpoEmployee } from '@models/npo-employee';
+import { OrgMember } from '@models/org-member';
+import { RealBeneficiary } from '@models/real-beneficiary';
+import { AdminLookupService } from '@services/admin-lookup.service';
+import { CharityDecisionService } from '@services/charity-decision.service';
+import { CharityOrganizationUpdateService } from '@services/charity-organization-update.service';
+import { CharityOrganizationService } from '@services/charity-organization.service';
+import { CharityReportService } from '@services/charity-report.service';
+import { CountryService } from '@services/country.service';
+import { DialogService } from '@services/dialog.service';
+import { EmployeeService } from '@services/employee.service';
+import { FinalExternalOfficeApprovalService } from '@services/final-external-office-approval.service';
+import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
+import { GoveranceDocumentService } from '@services/governance-document.service';
+import { LangService } from '@services/lang.service';
+import { LookupService } from '@services/lookup.service';
+import { MemberRoleService } from '@services/member-role.service';
+import { NpoEmployeeService } from '@services/npo-employee.service';
+import { RealBeneficiaryService } from '@services/real-beneficiary.service';
+import { ToastService } from '@services/toast.service';
+import { DatepickerOptionsMap } from '@app/types/types';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, takeUntil } from 'rxjs/operators';
+import { ITabData } from "@contracts/i-tab-data";
+import { GlobalSettings } from '@app/models/global-settings';
+import { GlobalSettingsService } from '@app/services/global-settings.service';
+import { OrgExecutiveMember } from '@app/models/org-executive-member';
 
 @Component({
   selector: 'charity-organization-update',
@@ -60,7 +61,7 @@ import {GlobalSettingsService} from '@app/services/global-settings.service';
 })
 export class CharityOrganizationUpdateComponent
   extends EServicesGenericComponent<CharityOrganizationUpdate,
-    CharityOrganizationUpdateService>
+  CharityOrganizationUpdateService>
   implements AfterViewInit {
   form!: UntypedFormGroup;
   tabs: ITabData[] = [];
@@ -70,7 +71,7 @@ export class CharityOrganizationUpdateComponent
   loadedLogo?: BlobModel;
   fileExtensionsEnum = FileExtensionsEnum;
   activityTypes: AdminLookup[] = [];
-  members?: { [key: string]: OrgMember[] };
+  members?: { [key: string]: OrgMember[] | OrgExecutiveMember[] };
   charityReports: CharityReport[] = [];
   charityDecisions: CharityDecision[] = [];
   realBenefeciaries?: RealBeneficiary[] = [];
@@ -84,7 +85,7 @@ export class CharityOrganizationUpdateComponent
     firstReleaseDate: DateUtils.getDatepickerOptions({
       disablePeriod: 'future',
     }),
-    lastUpdateDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
+    lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
   };
 
   internalBranches: IKeyValue[] = [
@@ -117,7 +118,7 @@ export class CharityOrganizationUpdateComponent
   externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
   organizationMeetings$?: Observable<GeneralAssociationMeetingAttendance[]>;
   buildingTabsDone = false;
-  @ViewChildren('tabContent', {read: TemplateRef})
+  @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
 
   @ViewChildren('metaList')
@@ -188,7 +189,14 @@ export class CharityOrganizationUpdateComponent
 
   listMembers(t: CharityRole): OrgMember[] {
     if (this.members && t in this.members) {
-      return this.members[t];
+      return this.members[t] as OrgMember[];
+    }
+    return [];
+  }
+
+  listExecutiveMembers(t: CharityRole): OrgExecutiveMember[] {
+    if (this.members && t in this.members) {
+      return this.members[t] as OrgExecutiveMember[];
     }
     return [];
   }
@@ -230,18 +238,18 @@ export class CharityOrganizationUpdateComponent
 
   private _buildContactInformationInputs() {
     this.contactInformationInputs = [
-      {type: 'text', controlName: 'phone', langKey: 'lbl_phone'},
-      {type: 'text', controlName: 'email', langKey: 'lbl_email'},
-      {type: 'text', controlName: 'website', langKey: 'website'},
-      {type: 'text', controlName: 'zoneNumber', langKey: 'lbl_zone'},
-      {type: 'text', controlName: 'streetNumber', langKey: 'lbl_street'},
-      {type: 'text', controlName: 'buildingNumber', langKey: 'building_number'},
-      {type: 'text', controlName: 'address', langKey: 'lbl_address'},
-      {type: 'text', controlName: 'facebook', langKey: 'facebook'},
-      {type: 'text', controlName: 'twitter', langKey: 'twitter'},
-      {type: 'text', controlName: 'instagram', langKey: 'instagram'},
-      {type: 'text', controlName: 'youTube', langKey: 'youtube'},
-      {type: 'text', controlName: 'snapChat', langKey: 'snapchat'},
+      { type: 'text', controlName: 'phone', langKey: 'lbl_phone' },
+      { type: 'text', controlName: 'email', langKey: 'lbl_email' },
+      { type: 'text', controlName: 'website', langKey: 'website' },
+      { type: 'text', controlName: 'zoneNumber', langKey: 'lbl_zone' },
+      { type: 'text', controlName: 'streetNumber', langKey: 'lbl_street' },
+      { type: 'text', controlName: 'buildingNumber', langKey: 'building_number' },
+      { type: 'text', controlName: 'address', langKey: 'lbl_address' },
+      { type: 'text', controlName: 'facebook', langKey: 'facebook' },
+      { type: 'text', controlName: 'twitter', langKey: 'twitter' },
+      { type: 'text', controlName: 'instagram', langKey: 'instagram' },
+      { type: 'text', controlName: 'youTube', langKey: 'youtube' },
+      { type: 'text', controlName: 'snapChat', langKey: 'snapchat' },
     ];
   }
 
@@ -595,37 +603,37 @@ export class CharityOrganizationUpdateComponent
         takeUntil(this.destroy$),
         switchMap(() => this.confirmChangeRequestType(userInteraction))
       ).subscribe((clickOn: UserClickOn) => {
-      if (clickOn === UserClickOn.YES) {
-        if (userInteraction) {
-          this.resetForm$.next();
-          this.updateSectionField.setValue(updateSection);
-        }
-        this.requestType$.next(updateSection);
-        this.tabs = this._tabs.filter(
-          (e) => !e?.category || e.category === updateSection
-        );
-        if (updateSection === CharityUpdateSection.META_DATA) {
-          this._buildMetaDataForm(updateSection);
-        } else if (updateSection === CharityUpdateSection.GOVERNANCE_DOCUMENTS) {
-          this._buildPrimaryLawForm(updateSection);
-          this.tabs = this.tabs.filter(e => ((!e?.order) || e.order <= 2));
-          this.tabs.sort((a, b) => a.order - b.order);
+        if (clickOn === UserClickOn.YES) {
+          if (userInteraction) {
+            this.resetForm$.next();
+            this.updateSectionField.setValue(updateSection);
+          }
+          this.requestType$.next(updateSection);
+          this.tabs = this._tabs.filter(
+            (e) => !e?.category || e.category === updateSection
+          );
+          if (updateSection === CharityUpdateSection.META_DATA) {
+            this._buildMetaDataForm(updateSection);
+          } else if (updateSection === CharityUpdateSection.GOVERNANCE_DOCUMENTS) {
+            this._buildPrimaryLawForm(updateSection);
+            this.tabs = this.tabs.filter(e => ((!e?.order) || e.order <= 2));
+            this.tabs.sort((a, b) => a.order - b.order);
+          } else {
+            this._buildForm(updateSection);
+          }
         } else {
-          this._buildForm(updateSection);
+          this.updateSectionField.setValue(this.requestType$.value);
         }
-      } else {
-        this.updateSectionField.setValue(this.requestType$.value);
-      }
 
-      if (this.employeeService.isExternalUser() && !this.readonly) {
-        const id = this.charityOrganizations[0]?.id;
-        this.form.get('charityId')?.patchValue(id);
-        this.handleSelectCharityOrganization(id);
-        this.form.get('charityId')?.disable();
+        if (this.employeeService.isExternalUser() && !this.readonly) {
+          const id = this.charityOrganizations[0]?.id;
+          this.form.get('charityId')?.patchValue(id);
+          this.handleSelectCharityOrganization(id);
+          this.form.get('charityId')?.disable();
 
-      }
-      CommonUtils.displayFormValidity(this.form, 'main-content');
-    });
+        }
+        CommonUtils.displayFormValidity(this.form, 'main-content');
+      });
 
 
   }
@@ -644,7 +652,7 @@ export class CharityOrganizationUpdateComponent
       const model = this.charityOrganizationService.getByIdComposite(id);
       model.subscribe((m) => {
         this._updateForm(m.toCharityOrganizationUpdate());
-        this.charityOrganizationService.getLogoBy({charityId: charity.profileId}).subscribe(logo => {
+        this.charityOrganizationService.getLogoBy({ charityId: charity.profileId }).subscribe(logo => {
           if (logo.blob.size === 0) {
             this.loadedLogo = undefined;
             return;
@@ -662,11 +670,19 @@ export class CharityOrganizationUpdateComponent
           if (!Array.isArray(value)) {
             return prev;
           }
-          return {
-            ...prev,
-            [key]: value.map((member) => new OrgMember().clone({...member}).toCharityOrganizationOrgMember()
-            ),
-          };
+          if (key == CharityRole.CURRENT_EXECUTIVE_MANAGEMENT.toString()) {
+            return {
+              ...prev,
+              [key]: value.map((member) => new OrgExecutiveMember().clone({ ...member as OrgExecutiveMember }).toCharityOrganizationOrgMember()
+              ),
+            };
+          } else {
+            return {
+              ...prev,
+              [key]: value.map((member) => new OrgMember().clone({ ...member as OrgMember }).toCharityOrganizationOrgMember()
+              ),
+            };
+          }
         }, {});
         this._loadEmployees(charity.profileId);
         this.realBeneficiaryService
@@ -679,7 +695,7 @@ export class CharityOrganizationUpdateComponent
               founderMemberList: this.listMembers(CharityRole.FOUNDER_MEMBERS),
               generalAssemblyMemberList: this.listMembers(CharityRole.GENERAL_ASSEMBLY_MEMBERS),
               authorizedSignatoryMemberList: this.listMembers(CharityRole.AUTHORIZED_MEMBERS),
-              currentExecutiveManagementList: this.listMembers(CharityRole.CURRENT_EXECUTIVE_MANAGEMENT),
+              currentExecutiveManagementList: this.listExecutiveMembers(CharityRole.CURRENT_EXECUTIVE_MANAGEMENT),
               realBeneficiaryList: this.realBenefeciaries,
             });
           });
@@ -699,7 +715,7 @@ export class CharityOrganizationUpdateComponent
       updateSection === CharityUpdateSection.COORDINATION_AND_CONTROL_REPORTS
     ) {
       this.charityReportService.getByCharityId(id).subscribe((charityReports) => {
-        this.charityReports = charityReports.map(charityReport => new CharityReport().clone({...charityReport}).toCharityOrganizationUpdate());
+        this.charityReports = charityReports.map(charityReport => new CharityReport().clone({ ...charityReport }).toCharityOrganizationUpdate());
         this.charityOrganizationService.getByIdComposite(id).subscribe((org) => {
           this.model = new CharityOrganizationUpdate().clone({
             ...this.model,
@@ -715,7 +731,7 @@ export class CharityOrganizationUpdateComponent
       updateSection === CharityUpdateSection.APPROVE_MEASURES_AND_PENALTIES
     ) {
       this.charityDecisionService.getByCharityId(id).subscribe((charityDecisions) => {
-        this.charityDecisions = charityDecisions.map(charityDecision => new CharityDecision().clone({...charityDecision}).toCharityOrganizationUpdate());
+        this.charityDecisions = charityDecisions.map(charityDecision => new CharityDecision().clone({ ...charityDecision }).toCharityOrganizationUpdate());
         this.model = new CharityOrganizationUpdate().clone({
           ...this.model,
           incomingDecisionList: this.incomingCharityDecisions,
@@ -858,7 +874,7 @@ export class CharityOrganizationUpdateComponent
       realBeneficiaryList = arr[5].list || [];
     } else if (this.updateSectionField.value === CharityUpdateSection.GOVERNANCE_DOCUMENTS) {
       const arr = this.goverRefs.toArray();
-      primaryLawValue = {...this.primaryLawForm.value};
+      primaryLawValue = { ...this.primaryLawForm.value };
       wFClassificationList = arr[0].list || [];
       workAreaObjectList = arr[1].list || [];
       byLawList = arr[2].list || [];
@@ -904,13 +920,13 @@ export class CharityOrganizationUpdateComponent
   }
 
   _afterSaveMessage(model: CharityOrganizationUpdate,
-                    saveType: SaveTypes,
-                    operation: OperationTypes) {
+    saveType: SaveTypes,
+    operation: OperationTypes) {
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -936,9 +952,9 @@ export class CharityOrganizationUpdateComponent
           switchMap(() => this.loadCaseById()),
           map((data) => this.model = data)
         ).subscribe(id => {
-        console.log(this.model);
-        this._afterSaveMessage(model, saveType, operation);
-      });
+          console.log(this.model);
+          this._afterSaveMessage(model, saveType, operation);
+        });
     } else {
       this._afterSaveMessage(model, saveType, operation);
     }

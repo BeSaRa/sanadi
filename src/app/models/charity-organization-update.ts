@@ -27,6 +27,7 @@ import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties'
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ControlValueLabelLangKey } from '@app/types/types';
+import { OrgExecutiveMember } from './org-executive-member';
 
 const interceptor = new CharityOrganizationUpdateInterceptor();
 
@@ -85,7 +86,7 @@ export class CharityOrganizationUpdate extends CaseModel<
   founderMemberList: OrgMember[] = [];
   generalAssemblyMemberList: OrgMember[] = [];
   boardMemberList: OrgMember[] = [];
-  currentExecutiveManagementList: OrgMember[] = [];
+  currentExecutiveManagementList: OrgExecutiveMember[] = [];
   authorizedSignatoryMemberList: OrgMember[] = [];
   realBeneficiaryList: RealBeneficiary[] = [];
   firstReleaseDate!: string | IMyDate;

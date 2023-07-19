@@ -69,6 +69,7 @@ export abstract class AuditListGenericComponent<M extends IAuditModelProperties<
   getDifferencesList(): void {
     this.list = [];
     // get the newly added records
+    debugger
     this.newVersionList.forEach((newVersionItem: M) => {
       if (!this.existsInList({
         itemToCompare: newVersionItem,
@@ -112,6 +113,7 @@ export abstract class AuditListGenericComponent<M extends IAuditModelProperties<
    * @param item
    */
   showRecordDifferences(item: M): void {
+    debugger
     if (item.auditOperation === AuditOperationTypes.NO_CHANGE) {
       return;
     }
