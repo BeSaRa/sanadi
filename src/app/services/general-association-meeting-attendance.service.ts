@@ -120,7 +120,8 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this.dialog.show(SelectMemberPopupComponent, {
       members,
       select,
-      isInternalMembers
+      isInternalMembers,
+      displayedColumns: []
     });
   }
 
