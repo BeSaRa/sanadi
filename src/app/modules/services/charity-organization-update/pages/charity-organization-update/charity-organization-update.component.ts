@@ -574,7 +574,7 @@ export class CharityOrganizationUpdateComponent
         this.readonly = false;
       } else if (this.employeeService.isCharityUser()) {
         this.readonly = !this.model.isReturned();
-      } else if (this.employeeService.getInternalDepartment()?.code === 'LCN') {
+      } else if (this.employeeService.getInternalDepartment()?.code === 'LCN' && this.employeeService.isLicensingUser()) {
         this.readonly = !this.model.isReturned();
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
