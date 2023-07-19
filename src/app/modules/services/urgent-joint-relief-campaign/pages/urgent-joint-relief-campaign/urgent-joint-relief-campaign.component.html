@@ -157,8 +157,14 @@
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
                       <button (click)="removeOrganization($event, row)" tooltip="{{lang.map.btn_remove}}"
-                              class="btn btn-link outline-none" [disabled]="(readonly)">
+                              class="btn btn-link outline-none" [disabled]="(readonly) || isInitialApproved()">
                         <i class="mdi mdi-close-box"></i>
+                      </button>
+                      <button (click)="terminate($event, row)"
+                      [hidden]="!participatingOrgsCanTerminate"
+                      [disabled]="isTerminated(row)" tooltip="{{lang.map.btn_terminate}}"
+                        class="btn btn-link outline-none">
+                        <i class="mdi mdi-delete-off"></i>
                       </button>
                     </div>
                   </td>

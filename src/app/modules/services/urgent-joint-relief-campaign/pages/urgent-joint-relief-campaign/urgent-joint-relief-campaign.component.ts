@@ -26,6 +26,9 @@ import { OpenFrom } from '@enums/open-from.enum';
 import { ProfileService } from '@services/profile.service';
 import { Profile } from '@models/profile';
 import { UrgentJoinOrganizationOfficerComponent } from '../../shared/urgent-join-organization-officer/urgent-join-organization-officer.component';
+import { take, takeUntil } from 'rxjs/operators';
+import { ApprovalDecisions } from '@app/enums/approval-decisions.enum';
+import { ITerminateOrganizationTask } from '@app/interfaces/iterminate-organization-task';
 
 @Component({
   selector: 'urgent-joint-relief-campaign',
@@ -230,6 +233,8 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     });
 
     this.selectedOrganizationUnits = this.model?.participatingOrganizaionList as ParticipantOrganization[];
+    this.loadLogs();
+
   }
 
   _resetForm(): void {
@@ -423,5 +428,48 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
         this.readonly = false;
       }
     }
+  }
+  loadLogs() {
+    this.service.actionLogService
+      .loadCaseLocation(this.model?.getCaseId())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((locations) => {
+        this.model!.locations = locations;
+      });
+  }
+  isTerminated(record: ParticipantOrganization){
+    return !this.model!.locations.find(location=>location.organizationId === record.organizationId);
+  }
+  isInitialApproved(){
+    return this.model!.getCaseStatus() === CommonCaseStatus.INITIAL_APPROVE;
+  }
+  get participatingOrgsCanTerminate(): boolean {
+    return this.employeeService.isInternalUser() && this.isInitialApproved()
+  }
+  terminate($event: MouseEvent, record: ParticipantOrganization) {
+    $event.preventDefault();
+    const {tkiid}= this.model!.locations.find(location=>location.organizationId === record.organizationId)!;
+    this.terminateOrganizationTask({
+      organizationId:record.organizationId,
+      taskId: tkiid!
+    })
+  }
+  terminateOrganizationTask(orgTask: ITerminateOrganizationTask) {
+    this.service
+      .terminateOrganizationTask(this.model!.id,orgTask.organizationId,orgTask.taskId)
+      .pipe(take(1))
+      .subscribe((success) => {
+        if (success) {
+          this.model!.locations = this.model!.locations.filter(
+            (location) => location.tkiid !== orgTask.taskId
+          );
+          this.dialog.success(this.lang.map.terminate_task_success);
+          const org= this.model?.participatingOrganizaionList.find(org=>org.organizationId === orgTask.organizationId);
+            if(org){
+              org.managerDecisionInfo = this.lookupService.listByCategory.ApprovalDecision
+              .find(x => x.lookupKey === ApprovalDecisions.TERMINATE)!.convertToAdminResult();
+            }
+        }
+      });
   }
 }

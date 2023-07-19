@@ -23,6 +23,7 @@ import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { DateUtils } from '@app/helpers/date-utils';
 import { ObjectUtils } from '@app/helpers/object-utils';
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
+import { TaskAdminResult } from './task-admin-result';
 
 const interceptor = new UrgentJointReliefCampaignInterceptor();
 
@@ -66,6 +67,7 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
   donation!: number;
   workStartDate!: string | IMyDateModel;
   employeeService!: EmployeeService;
+  locations: TaskAdminResult[] = [];
 
   searchFields: ISearchFieldsMap<UrgentJointReliefCampaign> = {
     ...dateSearchFields(['createdOn']),
