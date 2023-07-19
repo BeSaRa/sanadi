@@ -226,7 +226,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   };
 
   isValidProjectAddresses() {
-    return (this.model && this.model.projectAddressList && this.model.projectAddressList.length > 0) || !this.showProjectAddressesTab
+    return !this.projectAddressesRef || this.projectAddressesRef.list.length > 0
   }
 
   getTabInvalidStatus(tabName: string): boolean {
@@ -800,6 +800,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.isConstructional.valueChanges.subscribe(val => {
       if (val) {
         this.showProjectAddressesTab = true;
+
       } else {
         this.hideProjectAddressesTabAndClearProjectAddressesList();
       }
@@ -808,6 +809,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   hideProjectAddressesTabAndClearProjectAddressesList() {
     this.showProjectAddressesTab = false;
+    this.model!.projectAddressList =[];
     this.projectAddressesRef?.forceClearComponent()
   }
 
