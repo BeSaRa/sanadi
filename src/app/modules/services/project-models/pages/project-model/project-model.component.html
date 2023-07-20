@@ -351,6 +351,7 @@
                        [notFoundText]="lang.map.msg_not_found"
                        id="internalProjectClassification"
                        formControlName="internalProjectClassification">
+                       <ng-option [value]="option.id" *ngFor="let option of projectClassifications">{{option.getName()}}</ng-option>
                 </ng-select>
             <app-field-error-message controlName="internalProjectClassification"></app-field-error-message>
           </div>
