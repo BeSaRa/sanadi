@@ -9,6 +9,9 @@
   <button [tooltip]="lang.map.btn_reload" (click)="reload$.next()" class="btn icon-btn">
     <i class="mdi mdi-reload text-primary"></i>
   </button>
+  <button (click)="printLogs()"  [tooltip]="lang.map.print" class="btn btn-link"><i
+    class="mdi mdi-printer text-primary"></i>
+  </button>
 </ng-template>
 <ng-template #itemLocationTemplate>
   <service-log-item-location [locationsList]="locations" [caseType]="caseType"
