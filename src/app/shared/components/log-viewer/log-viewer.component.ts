@@ -3,10 +3,11 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {ActionLogService} from '@app/services/action-log.service';
 import {BehaviorSubject, iif, merge, of, Subject} from 'rxjs';
 import {ActionRegistry} from '@app/models/action-registry';
-import {concatMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {concatMap, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {LangService} from '@app/services/lang.service';
 import {TabComponent} from '../tab/tab.component';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import { BlobModel } from '@app/models/blob-model';
 
 @Component({
   selector: 'log-viewer',
@@ -118,5 +119,8 @@ export class LogViewerComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+  printLogs() {
+    this.service.exportActions(this.caseId).pipe(take(1)).subscribe((blob: BlobModel) => window.open(blob.url));
   }
 }
