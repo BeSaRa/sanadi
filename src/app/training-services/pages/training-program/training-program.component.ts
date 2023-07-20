@@ -181,7 +181,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
       },
       class: (item) => (item.surveyPublished ? 'text-info' : 'text-primary'),
       icon: ActionIconsEnum.POLL,
-      show: (item) => item.readyForSurvey(),
+      show: (item) => item.readyForSurvey() && this.employeeService.hasPermissionTo(PermissionsEnum.TRAINING_SURVEY_QUESTION),
       onClick: (item) => this.publishSurvey(item)
     },
 
