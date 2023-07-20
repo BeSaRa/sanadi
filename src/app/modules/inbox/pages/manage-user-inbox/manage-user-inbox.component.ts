@@ -253,7 +253,7 @@ export class ManageUserInboxComponent implements OnInit, OnDestroy {
         .pipe(
           takeUntil(this.destroy$),
           tap(userTeams => {
-            this.userTeams = userTeams
+            this.userTeams = userTeams.filter(x=>x.isInternal === true)
           })
         ).subscribe();
     }

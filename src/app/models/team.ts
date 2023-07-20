@@ -25,6 +25,7 @@ export class Team extends BaseModel<Team, TeamService> {
   status!: number;
   email!:string;
   statusDateModified: string | null = '';
+  isInternal!:boolean;
 
   createdByInfo!: AdminResult;
   updatedByInfo!: AdminResult;
