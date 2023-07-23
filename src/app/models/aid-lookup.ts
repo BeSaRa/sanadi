@@ -53,7 +53,6 @@ export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
       aidCode,
       aidType,
       parent,
-      status,
       statusDateModified
     } = this;
     return {
@@ -68,7 +67,6 @@ export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
       aidCode: controls ? [aidCode, [CustomValidators.required, CustomValidators.number, Validators.maxLength(50)]] : aidCode,
       aidType: controls ? [aidType, [CustomValidators.required]] : aidType,
       parent: controls ? [parent] : parent,
-      status: controls ? [status, [CustomValidators.required]] : status,
       statusDateModified: controls ? [statusDateModified] : statusDateModified
     }
   }
