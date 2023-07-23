@@ -113,7 +113,6 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     },
   };
   profileTypes = this.lookupService.listByCategory.ProfileType.sort((a, b) => a.lookupKey - b.lookupKey);
-  status = this.lookupService.listByCategory.CommonStatus.filter((e) => !e.isRetiredCommonStatus());
   permitTypes = this.lookupService.listByCategory.ProjectPermitType.sort((a, b) => a.lookupKey - b.lookupKey)
   submissionMechanisms = this.lookupService.listByCategory.SubmissionMechanism.sort((a, b) => a.lookupKey - b.lookupKey)
   profileServicesColumns = ['service', 'actions'];
