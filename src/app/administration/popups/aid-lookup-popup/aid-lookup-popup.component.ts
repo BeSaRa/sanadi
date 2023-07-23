@@ -9,12 +9,9 @@ import { ToastService } from '@app/services/toast.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { AidTypes } from '@app/enums/aid-types.enum';
 import { Observable } from 'rxjs';
-import { Lookup } from '@app/models/lookup';
-import { LookupService } from '@app/services/lookup.service';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
-import { AidLookupStatusEnum } from '@app/enums/status.enum';
 
 @Component({
   selector: 'app-aid-lookup-popup',
@@ -29,9 +26,7 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
   aidType: number;
   gridAidType!: number;
   isAidTabVisible!: boolean;
-  aidLookupStatusList!: Lookup[];
   saveVisible = true;
-  aidLookupStatusEnum = AidLookupStatusEnum;
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
@@ -42,7 +37,6 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AidLookup>,
     private toast: ToastService,
-    private lookupService: LookupService,
     public langService: LangService,
     public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
@@ -57,7 +51,6 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
   initPopup(): void {
     this.checkIfAidTabEnabled();
     this.setGridAidType();
-    this.aidLookupStatusList = this.lookupService.listByCategory.AidLookupStatus;
   }
 
   get readonly(): boolean {
@@ -128,7 +121,7 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
     } else {
       model.parent = (this.operation === OperationTypes.CREATE) ? this.parentId : this.model.parent;
     }
-    this.form = this.fb.group(model.buildForm(true), { validators: CustomValidators.validateFieldsStatus(['arName', 'enName', 'aidCode', 'aidType', 'status']) });
+    this.form = this.fb.group(model.buildForm(true), { validators: CustomValidators.validateFieldsStatus(['arName', 'enName', 'aidCode', 'aidType']) });
     if (this.readonly) {
       this.form.disable();
       this.saveVisible = false;

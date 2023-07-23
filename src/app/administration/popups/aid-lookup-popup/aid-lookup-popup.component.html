@@ -33,19 +33,6 @@
                    formControlName="aidCode" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message controlName="aidCode"></app-field-error-message>
           </div>
-          <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
-            <label asteriskIfRequired="status" for="status" class="form-label">{{langService.map.lbl_status}}</label>
-            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
-                       placeholder="{{langService.map.select}}" id="status"
-                       [notFoundText]="langService.map.msg_not_found"
-                       formControlName="status" validationClasses="status">
-              <ng-option *ngFor="let option of aidLookupStatusList" [value]="option.lookupKey"
-                         [disabled]="option.lookupKey === aidLookupStatusEnum.RETIRED">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="status"></app-field-error-message>
-          </div>
         </div>
       </ng-template>
       <ng-template #childAidsTabTemplate>
