@@ -7,6 +7,7 @@ import { AdminResult } from './admin-result';
 import { searchFunctionType } from '../types/types';
 import { TeamInterceptor } from "@app/model-interceptors/team-interceptor";
 import { InterceptModel } from "@decorators/intercept-model";
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
 
 const interceptor = new TeamInterceptor();
 
@@ -22,7 +23,7 @@ export class Team extends BaseModel<Team, TeamService> {
   parentDeptId!: number;
   createdOn!: string;
   createdBy!: number;
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   email!:string;
   statusDateModified: string | null = '';
   isInternal!:boolean;
