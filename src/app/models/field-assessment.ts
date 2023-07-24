@@ -19,7 +19,7 @@ const interceptor = new FieldAssessmentInterceptor();
   receive: interceptor.receive
 })
 export class FieldAssessment extends BaseModel<FieldAssessment, FieldAssessmentService> {
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusDateModified!: string;
   type!: number;
   statusInfo!: AdminResult;
@@ -62,7 +62,6 @@ export class FieldAssessment extends BaseModel<FieldAssessment, FieldAssessmentS
       arName,
       enName,
       type,
-      status
     } = this;
     return {
       arName: controls ? [arName, [
@@ -78,7 +77,6 @@ export class FieldAssessment extends BaseModel<FieldAssessment, FieldAssessmentS
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
       type: controls ? [type, [CustomValidators.required]] : type,
-      status: controls ? [status, [CustomValidators.required]] : status
     };
   }
 }

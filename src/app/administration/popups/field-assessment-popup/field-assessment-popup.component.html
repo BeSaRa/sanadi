@@ -33,17 +33,6 @@
         </ng-select>
         <app-field-error-message controlName="type"></app-field-error-message>
       </div>
-      <div class="col-sm-6 mb-4 ng-select-wrapper">
-        <label asteriskIfRequired="status" for="status" class="form-label">{{lang.map.lbl_status}}</label>
-        <ng-select [selectOnTab]="true" labelForId="status" [clearable]="true"
-                   placeholder="{{lang.map.select}}" id="status"
-                   [notFoundText]="lang.map.msg_not_found"
-                   appendTo="body" formControlName="status" validationClasses="status">
-          <ng-option [value]="option.lookupKey" [disabled]="option.isRetiredCommonStatus()"
-                     *ngFor="let option of statuses">{{option.getName()}}</ng-option>
-        </ng-select>
-        <app-field-error-message controlName="status"></app-field-error-message>
-      </div>
     </div>
     <div class="row" *ngIf="operation !== operationTypes.CREATE">
       <field-assessment-service-link [type]="type.value" [model]="model" [readonly]="operation === operationTypes.VIEW" [operation]="operation"></field-assessment-service-link>
