@@ -26,7 +26,6 @@ import {GlobalSettingsService} from '@app/services/global-settings.service';
   styleUrls: ['./deduction-ratio-popup.component.scss']
 })
 export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRatioItem> {
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   form!: UntypedFormGroup;
   model!: DeductionRatioItem;
   operation: OperationTypes;
