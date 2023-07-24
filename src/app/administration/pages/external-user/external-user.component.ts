@@ -4,12 +4,10 @@ import {ExternalUser} from '@app/models/external-user';
 import {ExternalUserService} from '@services/external-user.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {LangService} from '@app/services/lang.service';
-import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {ConfigurationService} from '@app/services/configuration.service';
 import {IGridAction} from '@app/interfaces/i-grid-action';
 import {EmployeeService} from '@app/services/employee.service';
-import {SharedService} from '@app/services/shared.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {TableComponent} from '@app/shared/components/table/table.component';
@@ -44,8 +42,6 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
               private toast: ToastService,
               public configService: ConfigurationService,
               public empService: EmployeeService,
-              private dialogService: DialogService,
-              private sharedService: SharedService,
               private profileService: ProfileService,
               public externalUserUpdateRequestService: ExternalUserUpdateRequestService,
               private userPreferencesService: UserPreferencesService,
@@ -149,9 +145,40 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
       icon: 'mdi-account-edit',
       label: 'user_preferences',
       onClick: (item) => this.openUserPreferences(item)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_activate',
+      onClick: (item: ExternalUser) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== this.commonStatusEnum.RETIRED && item.status === this.commonStatusEnum.DEACTIVATED;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_deactivate',
+      onClick: (item: ExternalUser) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== this.commonStatusEnum.RETIRED && item.status === this.commonStatusEnum.ACTIVATED;
+      }
     }
   ];
 
+  toggleStatus(item: ExternalUser) {
+    this.service.updateStatus(item.id, item.status!)
+      .subscribe(() => {
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: item.getName()}));
+        this.reload$.next(null);
+      }, () => {
+        this.reload$.next(null);
+      });
+  }
   get selectedRecords(): ExternalUser[] {
     return this.table.selection.selected;
   }

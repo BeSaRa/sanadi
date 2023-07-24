@@ -6,7 +6,6 @@ import {LangService} from '@services/lang.service';
 import {INames} from '@contracts/i-names';
 import {AdminResult} from './admin-result';
 import {ISearchFieldsMap} from '../types/types';
-import {DialogRef} from '../shared/models/dialog-ref';
 import {ExternalUserInterceptor} from '@app/model-interceptors/external-user-interceptor';
 import {InterceptModel} from '@decorators/intercept-model';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
@@ -193,7 +192,6 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
       email: controls ? [values.email, [
         CustomValidators.required, ...CustomValidators.commonValidations.email]] : values.email,
       jobTitleName: controls ? [values.jobTitleName, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.jobTitleName,
-      status: controls ? [values.status, CustomValidators.required] : values.status,
       profileId: controls ? [values.profileId, CustomValidators.required] : values.profileId,
       customRoleId: controls ? [values.customRoleId] : values.customRoleId // not required as it is dummy to be tracked from permissions tab
     };
@@ -202,7 +200,7 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
   setBasicFormCrossValidations(): any {
     return CustomValidators.validateFieldsStatus([
       'arName', 'enName', 'empNum', 'qid', 'phoneNumber', 'phoneExtension',
-      'officialPhoneNumber', 'email', 'jobTitleName', 'status', 'profileId', 'customRoleId']
+      'officialPhoneNumber', 'email', 'jobTitleName', 'profileId', 'customRoleId']
     );
   }
 }

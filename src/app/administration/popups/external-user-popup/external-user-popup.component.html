@@ -79,20 +79,6 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
-            <label for="status" asteriskIfRequired="status"
-                   class="form-label">{{langService.map.lbl_status}}</label>
-            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="true"
-                       placeholder="{{langService.map.select}}" id="status"
-                       [notFoundText]="langService.map.msg_not_found" appendTo="body"
-                       formControlName="status" validationClasses="status">
-              <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
-                         [disabled]="(option.lookupKey === commonStatusEnum.RETIRED)">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="status"></app-field-error-message>
-          </div>
           <div class="col-sm-12 col-md-6 mb-4 position-relative">
             <label for="jobTitleName" asteriskIfRequired="jobTitleName"
                    class="form-label">{{langService.map.lbl_job_title}}</label>
@@ -100,8 +86,6 @@
                    formControlName="jobTitleName" class="form-control" trimInput>
             <app-field-error-message controlName="jobTitleName"></app-field-error-message>
           </div>
-        </div>
-        <div class="row">
           <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
             <label for="profileId" asteriskIfRequired="profileId"
                    class="form-label">{{langService.map.profile}}</label>

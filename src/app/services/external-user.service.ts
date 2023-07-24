@@ -46,10 +46,7 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
               private urlService: UrlService,
               public dialog: DialogService,
               private customRoleService: ExternalUserCustomRoleService,
-              private profileService: ProfileService,
-              private permissionService: PermissionService,
-              private externalUserPermissionService: ExternalUserPermissionService,
-              private employeeService: EmployeeService) {
+              private externalUserPermissionService: ExternalUserPermissionService) {
     super();
     FactoryService.registerService('ExternalUserService', this);
   }
@@ -148,7 +145,7 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
   }
 
   updateStatus(id: number, newStatus: CommonStatusEnum) {
-    return newStatus === CommonStatusEnum.ACTIVATED ? this.activate(id) : this.deactivate(id);
+    return newStatus === CommonStatusEnum.ACTIVATED ? this.deactivate(id) : this.activate(id);
   }
 
   @CastResponse('')
