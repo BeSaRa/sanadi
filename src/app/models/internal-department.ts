@@ -30,7 +30,7 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
   email!: string;
   ldapPrefix!: string;
   parent!: number;
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusDateModified!: any;
   type!: number;
   statusInfo!: Lookup;
@@ -60,8 +60,7 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
       enName,
       teamId,
       managerId,
-      email,
-      status
+      email
     } = this;
     return {
       arName: controls ? [arName, [
@@ -84,8 +83,7 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
         CustomValidators.required,
         CustomValidators.maxLength(50),
         CustomValidators.pattern('EMAIL')
-      ]] : email,
-      status: controls ? [status, [CustomValidators.required]] : status
+      ]] : email
     }
   }
 
