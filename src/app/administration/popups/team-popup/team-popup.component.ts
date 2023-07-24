@@ -7,13 +7,10 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { ExceptionHandlerService } from '@app/services/exception-handler.service';
 import { Team } from '@app/models/team';
 import { LangService } from '@app/services/lang.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { catchError, exhaustMap, takeUntil } from 'rxjs/operators';
-import { Lookup } from '@app/models/lookup';
-import { LookupService } from '@app/services/lookup.service';
 import { InternalDepartment } from '@app/models/internal-department';
 
 @Component({
@@ -28,7 +25,6 @@ export class TeamPopupComponent implements OnInit {
   model: Team;
   operation: OperationTypes;
   fm!: FormManager;
-  statusList: Lookup[];
   parentDepartmentsList: InternalDepartment[];
   validateFieldsVisible: boolean = true;
   saveVisible: boolean = true;
@@ -37,13 +33,10 @@ export class TeamPopupComponent implements OnInit {
     private toast: ToastService,
     private dialogRef: DialogRef,
     private fb: UntypedFormBuilder,
-    public langService: LangService,
-    private lookupService: LookupService,
-    private _exceptionHandlerService: ExceptionHandlerService) {
+    public langService: LangService) {
     this.model = data.model;
     this.operation = data.operation;
     this.parentDepartmentsList = data.parentDepartmentsList;
-    this.statusList = lookupService.listByCategory.CommonStatus;
   }
 
   ngOnInit(): void {
@@ -74,7 +67,6 @@ export class TeamPopupComponent implements OnInit {
       }, [CustomValidators.required]],
       parentDeptId: [this.model.parentDeptId, [CustomValidators.required]],
       ldapGroupName: [this.model.ldapGroupName, [CustomValidators.required]],
-      status: [{ value: this.model.status, disabled: true }, [CustomValidators.required]],
       email: [this.model.email, [
         CustomValidators.pattern('EMAIL'),
         CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX),
@@ -83,7 +75,7 @@ export class TeamPopupComponent implements OnInit {
       isHidden: [this.model.isHidden]
     }, {
       validators: CustomValidators.validateFieldsStatus([
-        'arName', 'enName', 'authName', 'parentDeptId', 'ldapGroupName', 'status', 'autoClaim', 'isHidden'
+        'arName', 'enName', 'authName', 'parentDeptId', 'ldapGroupName', 'autoClaim', 'isHidden'
       ])
     });
     this.fm = new FormManager(this.form, this.langService);
