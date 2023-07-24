@@ -41,26 +41,6 @@
                    class="form-control">
             <app-field-error-message controlName="bawServiceCode"></app-field-error-message>
           </div>
-          <!--          <div class="col-sm-6 position-relative">-->
-          <!--            <label asteriskIfRequired="caseType" for="caseType" class="form-label">{{lang.map.case_type}}</label>-->
-          <!--            <input id="caseType" validationClasses="caseType" formControlName="caseType" class="form-control">-->
-          <!--            <app-field-error-message controlName="caseType"></app-field-error-message>-->
-          <!--          </div>-->
-          <div class="col-sm-6 mb-4 ng-select-wrapper">
-            <label for="status" asteriskIfRequired="status" class="form-label">{{lang.map.lbl_status}}</label>
-            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false" placeholder="{{lang.map.select}}"
-                       id="status" [notFoundText]="lang.map.msg_not_found" formControlName="status"
-                       validationClasses="status">
-              <ng-option value="">{{lang.map.lbl_none}}</ng-option>
-              <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
-                         [disabled]="option.isRetiredCommonStatus()">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="status"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="licenseSerialCode" for="licenseSerialCode"
                    class="form-label">{{lang.map.license_serial_code}}</label>
@@ -68,6 +48,8 @@
                    class="form-control">
             <app-field-error-message controlName="licenseSerialCode"></app-field-error-message>
           </div>
+        </div>
+        <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="requestSerialCode" for="requestSerialCode"
                    class="form-label">{{lang.map.request_serial_code}}</label>
@@ -75,8 +57,6 @@
                    class="form-control">
             <app-field-error-message controlName="requestSerialCode"></app-field-error-message>
           </div>
-        </div>
-        <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="serviceTimeLimit" for="serviceTimeLimit"
                    class="form-label">{{lang.map.service_time_limit}}</label>
@@ -84,6 +64,8 @@
                    class="form-control">
             <app-field-error-message controlName="serviceTimeLimit"></app-field-error-message>
           </div>
+        </div>
+        <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="fees" for="serviceReviewLimit"
                    class="form-label">{{lang.map.lbl_review_limit}}</label>
@@ -91,8 +73,6 @@
                    class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message controlName="serviceReviewLimit"></app-field-error-message>
           </div>
-        </div>
-        <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="licenseMinTime" for="licenseMinTime"
                    class="form-label">{{lang.map.license_min_time + ' (' + lang.map.months + ')'}}</label>
@@ -100,6 +80,8 @@
                    class="form-control">
             <app-field-error-message controlName="licenseMinTime"></app-field-error-message>
           </div>
+        </div>
+        <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="licenseMaxTime" for="licenseMaxTime"
                    class="form-label">{{lang.map.license_max_time + ' (' + lang.map.months + ')'}}</label>
@@ -107,13 +89,13 @@
                    class="form-control">
             <app-field-error-message controlName="licenseMaxTime"></app-field-error-message>
           </div>
-        </div>
-        <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="fees" for="fees" class="form-label">{{lang.map.fees}}</label>
             <input id="fees" validationClasses="fees" formControlName="fees" class="form-control">
             <app-field-error-message controlName="fees"></app-field-error-message>
           </div>
+        </div>
+        <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="fees" for="sLA" class="form-label">{{lang.map.lbl_sla}}</label>
             <input id="sLA" validationClasses="sLA" formControlName="sLA" class="form-control"
