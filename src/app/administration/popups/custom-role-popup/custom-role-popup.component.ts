@@ -21,7 +21,6 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { DialogService } from '@app/services/dialog.service';
 import { TabComponent } from "@app/shared/components/tab/tab.component";
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'app-custom-role-popup',
@@ -53,7 +52,6 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
   model: CustomRole;
   operation: OperationTypes;
   saveVisible = true;
-  status = this.lookupService.listByCategory.CommonStatus.filter((e) => !e.isRetiredCommonStatus());
 
   permissions!: Record<number, Permission[][]>;
   selectedPermissions: number[] = [];
@@ -100,10 +98,6 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
 
   get permissionsGroup(): AbstractControl {
     return this.form.get('permissions') as AbstractControl;
-  }
-
-  get statusField(): UntypedFormControl {
-    return this.basicInfoGroup.get('status') as UntypedFormControl;
   }
 
   setDialogButtonsVisibility(_tab: TabComponent): void {
