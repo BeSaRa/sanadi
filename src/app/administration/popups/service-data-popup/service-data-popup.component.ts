@@ -64,7 +64,6 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
   list: ServiceData[] = [];
   stepsList: ServiceDataStep[] = [];
   stepsColumns = ['arName', 'enName', 'stepName', 'actions'];
-  statusList: Lookup[] = [];
   showMaxTargetAmount = false;
   showMaxElementsCount = false;
   showActivateDevelopmentField = false;
@@ -185,7 +184,6 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
   }
 
   initPopup(): void {
-    this.statusList = this.lookupService.listByCategory.CommonStatus;
     this.validateCustomSettingsFields();
     this.listenToReloadSteps();
     this.listenToEditStep();
@@ -223,7 +221,6 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
         concernedDepartmentsIdsParsed: [{value: this.model.concernedDepartmentsIdsParsed, disabled: true}, []],
         requestSerialCode: [this.model.requestSerialCode, [CustomValidators.required, CustomValidators.maxLength(20)]],
         licenseSerialCode: [this.model.licenseSerialCode, [CustomValidators.required, CustomValidators.maxLength(20)]],
-        status: [this.model.status, [CustomValidators.required]],
         serviceTimeLimit: [this.model.serviceTimeLimit, [CustomValidators.number, CustomValidators.maxLength(10)]],
         sLA: [this.model.sLA, [CustomValidators.number, CustomValidators.maxLength(10)]],
         serviceReviewLimit: [this.model.serviceReviewLimit, [CustomValidators.number, CustomValidators.maxLength(10)]],
