@@ -19,7 +19,7 @@ const interceptor: JobTitleInterceptor = new JobTitleInterceptor()
 export class JobTitle extends BaseModel<JobTitle, JobTitleService> {
   jobType!: number;
   isSystem!: boolean;
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusInfo!: Lookup;
 
   // extra properties
@@ -61,7 +61,6 @@ export class JobTitle extends BaseModel<JobTitle, JobTitleService> {
     const {
       arName,
       enName,
-      status,
       jobType
     } = this;
     return {
@@ -77,7 +76,6 @@ export class JobTitle extends BaseModel<JobTitle, JobTitleService> {
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
-      status: controls ? [status, [CustomValidators.required]] : status,
       jobType: controls ? [jobType, [CustomValidators.required]] : jobType
     }
   }
