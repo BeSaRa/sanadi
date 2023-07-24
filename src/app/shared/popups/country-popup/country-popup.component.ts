@@ -22,7 +22,6 @@ export class CountryPopupComponent extends AdminGenericDialog<Country> implement
   model: Country;
   operation: OperationTypes;
   saveVisible = true;
-  statusList: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   riskLevelList: Lookup[] = this.lookupService.listByCategory.RiskLevel;
   dueDiligenceLevelList: Lookup[] = this.lookupService.listByCategory.LevelOfDueDiligence;
   @ViewChild('dialogContent') dialogContent!: ElementRef;
