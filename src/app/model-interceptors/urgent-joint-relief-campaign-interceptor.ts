@@ -17,27 +17,19 @@ export class UrgentJointReliefCampaignInterceptor implements IModelInterceptor<U
     model.licenseEndDate = DateUtils.getDateStringFromDate(model.licenseEndDate);
     model.approvalPeriod = +model.approvalPeriod!;
     model.targetAmount = +model.targetAmount!;
-    model.participatingOrganizaionList && (model.participatingOrganizaionList = model.participatingOrganizaionList.map(item => {
-      item = item.clone({...item});
-      return item;
-    }));
-    model.participatingOrganizaionList && model.participatingOrganizaionList.forEach(y => {
-      let x = y as unknown as Partial<ParticipantOrganization>;
-      x.workStartDate = DateUtils.getDateStringFromDate(x.workStartDate);
-      x.donation = +x.donation!;
-      delete x.managerDecisionInfo;
-      delete x.searchFields;
-      delete x.langService;
+    model.participatingOrganizaionList = (model.participatingOrganizaionList??[]).map(item => {
+     return participatingOrganizationInterceptor.send(new ParticipantOrganization().clone(item )) as ParticipantOrganization
     });
 
-    model.organizaionOfficerList?.forEach(x => {
-      delete x.langService;
-      delete (x as any).searchFields;
-    });
+    model.organizaionOfficerList = (model.organizaionOfficerList??[]).map(x=>{
+      return organizationOfficerInterceptor.send(x) as OrganizationOfficer;
+     })
+
 
     delete model.donation;
     delete model.workStartDate;
     delete model.requestTypeInfo;
+    delete model.locations;
     return model;
   }
 
