@@ -46,7 +46,10 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
               private urlService: UrlService,
               public dialog: DialogService,
               private customRoleService: ExternalUserCustomRoleService,
-              private externalUserPermissionService: ExternalUserPermissionService) {
+              private profileService: ProfileService,
+              private permissionService: PermissionService,
+              private externalUserPermissionService: ExternalUserPermissionService,
+              private employeeService: EmployeeService) {
     super();
     FactoryService.registerService('ExternalUserService', this);
   }

@@ -57,25 +57,12 @@
             <app-field-error-message controlName="qid"></app-field-error-message>
           </div>
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="status" for="status">{{lang.map.lbl_status}}</label>
-            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false" placeholder="{{lang.map.select}}"
-                       id="status" [notFoundText]="lang.map.msg_not_found" formControlName="status"
-                       validationClasses="status">
-              <ng-option value="">{{lang.map.lbl_none}}</ng-option>
-              <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
-                         [disabled]="option.isRetiredCommonStatus()">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="status"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
             <input validationClasses="email" formControlName="email" type="text" id="email" class="form-control">
             <app-field-error-message controlName="email"></app-field-error-message>
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="phoneNumber"
                    for="phoneNumber">{{lang.map.mobile_number}}</label>
@@ -83,8 +70,6 @@
                    class="form-control" trimInput>
             <app-field-error-message controlName="phoneNumber"></app-field-error-message>
           </div>
-        </div>
-        <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative" *ngIf="!readonly">
             <file-uploader labelKey="signature" [isRequired]="false" [loadedFile]="loadedSignature"
                            [showFilePreview]="true" (fileUploadEvent)="setSignatureFile($event)"

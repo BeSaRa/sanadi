@@ -52,7 +52,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   model: InternalUser;
   form!: UntypedFormGroup;
   departments: InternalDepartment[] = [];
-  statusList: Lookup[] = [];
   customRoles: CustomRole[] = [];
   @ViewChild(UserTeamComponent) userTeamComponent!: UserTeamComponent;
   @ViewChild('customMenuPermissionComponent') customMenuPermissionComponentRef!: CustomMenuPermissionComponent;
@@ -66,7 +65,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   selectedDepartment: UntypedFormControl = new UntypedFormControl();
   private userDepartmentsChanged$: Subject<InternalUserDepartment[]> = new Subject<InternalUserDepartment[]>();
   private userDepartmentsIds: number[] = [];
-  commonStatusEnum = CommonStatusEnum;
   fileExtensionsEnum = FileExtensionsEnum;
   signatureFile?: File;
   loadedSignature?: BlobModel;
@@ -146,8 +144,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
               private authService: AuthService,
               public fb: UntypedFormBuilder,
               private cd: ChangeDetectorRef,
-              private sharedService: SharedService,
-              private lookupService: LookupService,
               private customRoleService: ExternalUserCustomRoleService,
               private userPermissionService: UserPermissionService,
               private internalUserDepartmentService: InternalUserDepartmentService,
@@ -157,7 +153,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     super();
     this.model = this.data.model;
     this.operation = this.data.operation;
-    this.statusList = lookupService.listByCategory.CommonStatus;
   }
 
   initPopup(): void {
