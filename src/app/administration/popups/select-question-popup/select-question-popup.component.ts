@@ -32,7 +32,6 @@ export class SelectQuestionPopupComponent {
   }
 
   isQuestionSelectedBefore(q: SurveyQuestion) {
-    console.log(q.id, this.selected);
     return this.selected.includes(q.id);
   }
 }
