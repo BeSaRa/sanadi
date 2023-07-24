@@ -40,7 +40,6 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   fieldForm!: UntypedFormGroup;
   model!: GeneralProcess;
   operation: OperationTypes;
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   GeneralProcessTypeList: Lookup[] = this.lookupService.listByCategory.GeneralProcessType;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   processForm: ProcessFieldBuilder;

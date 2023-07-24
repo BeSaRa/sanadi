@@ -24,7 +24,7 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
 
   template!: string;
 
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusInfo!: Lookup;
   // extra properties
   langService: LangService;
@@ -56,8 +56,7 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
       departmentId,
       teamId,
       processType,
-      subTeamId,
-      status
+      subTeamId
     } = this;
     return {
       arName: controls ? [arName, [
@@ -78,7 +77,6 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
       departmentId: controls ? [departmentId, [CustomValidators.required]] : departmentId,
       teamId: controls ? [teamId, [CustomValidators.required]] : teamId,
       subTeamId: controls ? [subTeamId, [CustomValidators.required]] : subTeamId,
-      status: controls ? [status, [CustomValidators.required]] : status,
     }
   }
 }
