@@ -55,7 +55,6 @@ export class DacOchaNewPopupComponent extends AdminGenericDialog<AdminLookup> im
 
   actionIconsEnum = ActionIconsEnum;
   classification: Lookup;
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   form!: UntypedFormGroup;
   fm!: FormManager;
   operation!: OperationTypes;
@@ -191,7 +190,7 @@ export class DacOchaNewPopupComponent extends AdminGenericDialog<AdminLookup> im
   }
 
   buildForm(): void {
-    this.form = this.fb.group(this.model.buildDacOchaForm(true));
+    this.form = this.fb.group(this.model.buildForm(true));
     this.fm = new FormManager(this.form, this.lang);
     if (this.readonly) {
       this.form.disable();
