@@ -49,7 +49,6 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   profileList: Profile[] = [];
   customRoleList: CustomRole[];
   externalUserPermissions: ExternalUserPermission[];
-  statusList: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   userUpdateRequest: ExternalUserUpdateRequest;
 
   tabsData: TabMap = {
