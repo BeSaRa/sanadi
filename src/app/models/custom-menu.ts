@@ -25,7 +25,7 @@ const interceptor = new CustomMenuInterceptor();
   receive: interceptor.receive,
 })
 export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   menuOrder!: number;
   menuType!: number;
   menuView!: number;
@@ -98,7 +98,6 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
       arName,
       enName,
       menuOrder,
-      status,
       menuType,
       menuView,
       userType,
@@ -115,7 +114,6 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')]] : enName,
-      status: controls ? [status, []] : status,
       menuOrder: controls ? [menuOrder, [CustomValidators.required, CustomValidators.number, Validators.max(99)]] : menuOrder,
       menuType: controls ? [menuType, [CustomValidators.required]] : menuType,
       menuView: controls ? [menuView, []] : menuView,

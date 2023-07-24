@@ -32,7 +32,6 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   model!: CustomMenu;
   operation: OperationTypes;
   saveVisible = true;
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   menuTypes: Lookup[] = this.lookupService.listByCategory.MenuType;
   menuView: Lookup[] = this.lookupService.listByCategory.MenuView;
   userTypes: Lookup[] = this.lookupService.listByCategory.UserType.filter(x => x.lookupKey !== UserTypes.INTEGRATION_USER);
@@ -150,12 +149,6 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
 
   get childrenDependentFields(): UntypedFormControl[] {
     let fields: UntypedFormControl[] = [];
-    const isCustomMenu = this.parentMenu instanceof CustomMenu;
-    if(isCustomMenu){
-      if (this.parentMenu && !this.parentMenu.isActive()) {
-        fields = [this.statusControl];
-      }
-    }
     if(this.parentMenu?.isSystem){
       return fields;
     }
@@ -260,10 +253,6 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
     });
   }
 
-  get statusControl(): UntypedFormControl {
-    return this.form.get('status') as UntypedFormControl;
-  }
-
   get menuViewControl(): UntypedFormControl {
     return this.form.get('menuView') as UntypedFormControl;
   }
@@ -277,9 +266,6 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   }
   get systemMenuKeyControl(): UntypedFormControl {
     return this.form.get('systemMenuKey') as UntypedFormControl;
-  }
-  getTranslatedStatus() {
-    return !!this.statusControl.value ? this.lang.map.lbl_active : this.lang.map.lbl_inactive;
   }
 
   getTranslatedMenuView() {
