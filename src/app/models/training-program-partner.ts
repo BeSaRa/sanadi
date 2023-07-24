@@ -18,7 +18,7 @@ const interceptor: TrainingProgramPartnerInterceptor = new TrainingProgramPartne
 })
 export class TrainingProgramPartner extends BaseModel<TrainingProgramPartner, TrainingProgramPartnerService> {
   isSystem!: boolean;
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusInfo!: Lookup;
 
   // extra properties
@@ -59,8 +59,7 @@ export class TrainingProgramPartner extends BaseModel<TrainingProgramPartner, Tr
   buildForm(controls?: boolean): any {
     const {
       arName,
-      enName,
-      status
+      enName
     } = this;
     return {
       arName: controls ? [arName, [
@@ -74,8 +73,7 @@ export class TrainingProgramPartner extends BaseModel<TrainingProgramPartner, Tr
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
-      ]] : enName,
-      status: controls ? [status, [CustomValidators.required]] : status
+      ]] : enName
     }
   }
 }
