@@ -79,10 +79,8 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> implements 
   selectedTabIndex$: Subject<number> = new Subject<number>();
   defaultSelectedTab: string = 'basic';
   selectedTab: string = 'basic';
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
 
   validToAddSubGoals = false;
-  commonStatusEnum = CommonStatusEnum;
   saveVisible = true;
   @ViewChild('table') table!: TableComponent;
   @ViewChild('childListComponent') childListComponentRef!: SdGoalListComponent;
