@@ -39,7 +39,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   officialPhoneNumber!: string;
   phoneExtension!: string;
   phoneNumber!: string;
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusInfo!: AdminResult;
   userTypeInfo!: AdminResult;
   statusDateModified!: string;

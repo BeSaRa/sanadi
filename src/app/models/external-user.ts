@@ -31,7 +31,7 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
   domainPwd!: string;
   nationality!: number;
   gender!: number;
-  status: number | undefined;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusDateModified: number | undefined;
   userType: UserTypes = UserTypes.EXTERNAL;
   phoneNumber: string | undefined;
