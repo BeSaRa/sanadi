@@ -19,7 +19,6 @@ import { DialogService } from '@app/services/dialog.service';
   styleUrls: ['./training-program-partner-popup.component.scss']
 })
 export class TrainingProgramPartnerPopupComponent extends AdminGenericDialog<TrainingProgramPartner> {
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   form!: UntypedFormGroup;
   model!: TrainingProgramPartner;
   operation: OperationTypes;
