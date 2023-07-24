@@ -16,8 +16,7 @@ const {receive, send} = new DeductionRatioItemInterceptor()
 
 @InterceptModel({receive, send})
 export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionRatioItemService> {
-
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   profileTypes!: string;
   workArea!: number | null;
   permitType!: number;
@@ -68,7 +67,6 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
     const {
       arName,
       enName,
-      status,
       profileTypesList,
       workArea,
       permitType,
@@ -88,7 +86,6 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
-      status: controls ? [status, [CustomValidators.required]] : status,
       profileTypesList: controls ? [profileTypesList, [CustomValidators.required]] : profileTypesList,
       workArea: controls ? [workArea] : workArea,
       permitType: controls ? [permitType, [CustomValidators.required]] : permitType,
