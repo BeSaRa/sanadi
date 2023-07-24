@@ -233,7 +233,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
       .pipe(takeUntil(this.destroy$))
       .subscribe((linkedProject: LinkedProjectTypes) => {
 
-        if(!this.readonly){
+        if(linkedProject === LinkedProjectTypes.NO){
           this.projectNameField.reset();
         }
         this.projectNameField.disable();
