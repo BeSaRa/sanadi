@@ -112,6 +112,7 @@ export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
       type: 'action',
       icon: 'mdi-list-status',
       label: 'btn_activate',
+      displayInGrid: false,
       onClick: (item: Donor) => this.toggleStatus(item),
       show: (item) => {
         return item.status === CommonStatusEnum.DEACTIVATED;
@@ -122,6 +123,7 @@ export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
       type: 'action',
       icon: 'mdi-list-status',
       label: 'btn_deactivate',
+      displayInGrid: false,
       onClick: (item: Donor) => this.toggleStatus(item),
       show: (item) => {
         return item.status === CommonStatusEnum.ACTIVATED;
