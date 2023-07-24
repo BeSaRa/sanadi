@@ -226,7 +226,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   };
 
   isValidProjectAddresses() {
-    return !this.projectAddressesRef || this.projectAddressesRef.list.length > 0
+    return !this.showProjectAddressesTab||!this.projectAddressesRef || this.projectAddressesRef.list.length > 0
   }
 
   getTabInvalidStatus(tabName: string): boolean {

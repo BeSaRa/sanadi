@@ -62,6 +62,7 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.projectTypeInfo = AdminResult.createInstance(model.projectTypeInfo);
     model.beneficiaryCountryInfo = AdminResult.createInstance(model.beneficiaryCountryInfo);
     model.executionCountryInfo = AdminResult.createInstance(model.executionCountryInfo);
+    model.beneficiaryCountryInfo = AdminResult.createInstance(model.beneficiaryCountryInfo);
     model.domainInfo = AdminResult.createInstance(model.domainInfo);
     model.mainUNOCHACategoryInfo = AdminResult.createInstance(model.mainUNOCHACategoryInfo);
     model.subUNOCHACategoryInfo = AdminResult.createInstance(model.subUNOCHACategoryInfo);
