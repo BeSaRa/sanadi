@@ -20,7 +20,6 @@ import {UserTypes} from '@app/enums/user-types.enum';
   styleUrls: ['./job-title-popup.component.scss']
 })
 export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   form!: UntypedFormGroup;
   model!: JobTitle;
   operation: OperationTypes;
