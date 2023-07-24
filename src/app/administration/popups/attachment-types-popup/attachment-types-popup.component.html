@@ -35,13 +35,6 @@
         </div>
       </div>
       <div class="row mb-3">
-        <div class="col-sm-6 mt-4 form-check form-switch">
-          <div class="ms-3">
-            <input class="form-check-input" type="checkbox" id="status" formControlName="status">
-            <label class="form-check-label"
-                   for="status">{{lang.map.lbl_status}}</label>
-          </div>
-        </div>
         <div class="col-sm-6 mt-4 form-check form-switch"
              *ngIf="employeeService.checkPermissions('CONTROL_ATTACHMENTS_PUBLISH_STATUS')">
           <div class="ms-3">

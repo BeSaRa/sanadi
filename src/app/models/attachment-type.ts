@@ -20,7 +20,7 @@ const interceptor = new AttachmentTypeInterceptor();
 export class AttachmentType extends BaseModel<AttachmentType, AttachmentTypeService> {
   service!: AttachmentTypeService;
   langService: LangService;
-  status: boolean | number = false;
+  status: boolean | number = true;
   global: boolean = false;
   arDesc!: string;
   enDesc!: string;
