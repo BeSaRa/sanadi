@@ -15,7 +15,6 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { Subscription, Observable } from 'rxjs';
 import { v4 } from 'uuid';
 import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
-import { Lookup } from '@app/models/lookup';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { ProcessFieldBuilder } from '@app/administration/popups/general-process-popup/process-formly-components/process-fields-builder';
 import { LookupService } from '@app/services/lookup.service';
@@ -27,7 +26,6 @@ import { TemplateField } from '@app/models/template-field';
   styleUrls: ['./dynamic-model-popup.component.scss']
 })
 export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel> {
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   commonStatusEnum = CommonStatusEnum;
   form!: UntypedFormGroup;
   fieldForm!: UntypedFormGroup;
