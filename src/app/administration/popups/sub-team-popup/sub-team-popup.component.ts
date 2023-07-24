@@ -21,7 +21,6 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
   styleUrls: ['./sub-team-popup.component.scss']
 })
 export class SubTeamPopupComponent extends AdminGenericDialog<SubTeam> {
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   teams: Team[] = [];
   form!: UntypedFormGroup;
   model!: SubTeam;
