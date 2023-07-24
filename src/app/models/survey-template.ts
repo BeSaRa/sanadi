@@ -35,7 +35,7 @@ export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateServ
   }
 
   buildForm(controls: boolean = false) {
-    const {arName, enName, status} = this;
+    const {arName, enName} = this;
     return {
       arName: controls ? [{value: arName, disabled: this.usedBefore}, [
         CustomValidators.required,
@@ -47,7 +47,6 @@ export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateServ
         CustomValidators.pattern('ENG_NUM'),
         CustomValidators.maxLength(200)
       ]] : enName,
-      status: controls ? [status, [CustomValidators.required]] : status,
     };
   }
 
@@ -108,7 +107,6 @@ export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateServ
 
   getStatusValue(): string {
     return this.lookupService.listByCategory.CommonStatus.find(item => item.lookupKey === (this.status ? 1 : 0))?.getName() ?? '';
-    //return this.langService.map[(this.status ? 'lbl_active' : 'lbl_inactive') as keyof ILanguageKeys]
   }
 
   view(): DialogRef {

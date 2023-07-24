@@ -9,7 +9,6 @@ import {DialogService} from '@app/services/dialog.service';
 import {filter, switchMap} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {ToastService} from '@app/services/toast.service';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { LookupService } from '@app/services/lookup.service';
