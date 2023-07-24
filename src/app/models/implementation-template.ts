@@ -36,6 +36,8 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> im
   projectTotalCost!: number
   executionCountryInfo!: AdminResult
   targetAmount!: number;
+  beneficiaryCountry!: number;
+  beneficiaryCountryInfo!: AdminResult
   // not related to the model -- should be deleted before send to backend
   defaultLatLng: google.maps.LatLngLiteral = {
     lat: 25.3266204,

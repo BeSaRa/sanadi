@@ -455,7 +455,9 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       executionCountryInfo: this.executionCountryInfo,
       beneficiaryRegion: this.beneficiaryRegion,
       region: this.executionRegion,
-      targetAmount: this.targetAmount ? this.targetAmount : this.projectTotalCost
+      targetAmount: this.targetAmount ? this.targetAmount : this.projectTotalCost,
+      beneficiaryCountry:this.beneficiaryCountry,
+      beneficiaryCountryInfo:this.beneficiaryCountryInfo,
     })
   }
 }

@@ -40,9 +40,9 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.region}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.region}} </td>
       </ng-container>
-      <ng-container cdkColumnDef="beneficiaryRegion">
+      <ng-container cdkColumnDef="beneficiaryCountry">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.beneficiary_country}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.beneficiaryRegion}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.beneficiaryCountryInfo ? row.beneficiaryCountryInfo.getName() : ''}} </td>
       </ng-container>
       <ng-container cdkColumnDef="location">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.location}}</th>
