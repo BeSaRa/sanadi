@@ -22,7 +22,7 @@ export class Donor extends BaseModel<Donor, DonorService>{
   id!: number;
   arName!: string;
   enName!: string;
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusDateModified!: string;
 
   // extra properties
@@ -47,7 +47,6 @@ export class Donor extends BaseModel<Donor, DonorService>{
     const {
       arName,
       enName,
-      status
     } = this;
     return {
       arName: controls ? [arName, [
@@ -62,7 +61,6 @@ export class Donor extends BaseModel<Donor, DonorService>{
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
-      status: controls ? [status, [CustomValidators.required]] : status
     }
   }
 
