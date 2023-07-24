@@ -574,7 +574,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       mobileNo: selectedOfficer?.phoneExtension,
       jobTitle: this.jobTitleList
         .find((x) => x.id === selectedOfficer!.jobTitle)
-        ?.getName(),
+        ?.getName() || selectedOfficer!.jobTitleName,
     });
   }
 
