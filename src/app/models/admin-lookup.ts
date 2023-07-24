@@ -19,7 +19,7 @@ const interceptor = new AdminLookupInterceptor();
   send: interceptor.send
 })
 export class AdminLookup extends BaseModelAdminLookup<AdminLookup, AdminLookupService> {
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   type!: number;
   parentId?: number;
   statusDateModified!: string;
@@ -84,11 +84,10 @@ export class AdminLookup extends BaseModelAdminLookup<AdminLookup, AdminLookupSe
     return this.service.updateStatus(this.id, this.type, newStatus);
   }
 
-  buildDacOchaForm(controls?: boolean): any {
+  buildForm(controls?: boolean): any {
     const {
       arName,
       enName,
-      status,
       type
     } = this;
     return {
@@ -104,13 +103,12 @@ export class AdminLookup extends BaseModelAdminLookup<AdminLookup, AdminLookupSe
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM')
       ]] : enName,
-      status: controls ? [status, [CustomValidators.required]] : status,
       type: controls ? [type] : type
     }
   }
 
   buildActivityTypeForm(controls: boolean = false) {
-    const {type, ...form} = this.buildDacOchaForm(controls);
+    const {type, ...form} = this.buildForm(controls);
     return form;
   }
 }
