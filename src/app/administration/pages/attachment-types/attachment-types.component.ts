@@ -88,10 +88,10 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
       type: 'action',
       icon: ActionIconsEnum.STATUS,
       label: 'btn_activate',
-      onClick: (item: AttachmentType) => this.toggleStatus(item),
       displayInGrid: false,
+      onClick: (item: AttachmentType) => this.toggleStatus(item),
       show: (item) => {
-        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
+        return item.status === CommonStatusEnum.DEACTIVATED;
       }
     },
     // deactivate
@@ -99,12 +99,12 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
       type: 'action',
       icon: ActionIconsEnum.STATUS,
       label: 'btn_deactivate',
-      onClick: (item: AttachmentType) => this.toggleStatus(item),
       displayInGrid: false,
+      onClick: (item: AttachmentType) => this.toggleStatus(item),
       show: (item) => {
-        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
+        return item.status === CommonStatusEnum.ACTIVATED;
       }
-    }
+    },
   ];
 
   @ViewChild('table') table!: TableComponent;
@@ -186,18 +186,16 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
   }
 
   toggleStatus(model: AttachmentType) {
-    model.status == CommonStatusEnum.ACTIVATED ? model.status = CommonStatusEnum.DEACTIVATED : model.status = CommonStatusEnum.ACTIVATED;
-    model.update()
-      .pipe(takeUntil(this.destroy$))
+    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
+    updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: model.getName()}));
         this.reload$.next(null);
       }, () => {
-        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
+        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
   }
-
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
       arName: [''], enName: [''], status: [null]

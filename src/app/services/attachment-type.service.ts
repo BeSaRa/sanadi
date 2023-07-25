@@ -20,6 +20,7 @@ import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-gen
 import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 import { Pagination } from "@app/models/pagination";
 import { AttachmentsComponent } from "@app/shared/components/attachments/attachments.component";
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
 
 @CastResponseContainer({
   $default: {
@@ -45,6 +46,17 @@ export class AttachmentTypeService extends CrudWithDialogGenericService<Attachme
     FactoryService.registerService('AttachmentTypeService', this);
   }
 
+  updateStatus(donorId: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(donorId) : this._deactivate(donorId);
+  }
+
+  private _activate(donorId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + donorId + '/activate', {});
+  }
+
+  private _deactivate(donorId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + donorId + '/de-activate', {});
+  }
   _getDialogComponent(): ComponentType<any> {
     return AttachmentTypesPopupComponent;
   }

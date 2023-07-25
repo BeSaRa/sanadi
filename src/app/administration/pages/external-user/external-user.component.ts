@@ -1,29 +1,29 @@
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
-import {Component, ViewChild} from '@angular/core';
-import {ExternalUser} from '@app/models/external-user';
-import {ExternalUserService} from '@services/external-user.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
-import {ConfigurationService} from '@app/services/configuration.service';
-import {IGridAction} from '@app/interfaces/i-grid-action';
-import {EmployeeService} from '@app/services/employee.service';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {AdminGenericComponent} from '@app/generics/admin-generic-component';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {of, Subject} from 'rxjs';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {ExternalUserUpdateRequestService} from '@services/external-user-update-request.service';
-import {ProfileService} from '@services/profile.service';
-import {FormBuilder, UntypedFormControl} from '@angular/forms';
-import {PaginatorComponent} from '@app/shared/components/paginator/paginator.component';
-import {UserPreferencesService} from '@services/user-preferences.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {LookupService} from '@app/services/lookup.service';
-import {SearchColumnConfigMap} from '@app/interfaces/i-search-column-config';
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { Component, ViewChild } from '@angular/core';
+import { ExternalUser } from '@app/models/external-user';
+import { ExternalUserService } from '@services/external-user.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { LangService } from '@app/services/lang.service';
+import { ToastService } from '@app/services/toast.service';
+import { ConfigurationService } from '@app/services/configuration.service';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { EmployeeService } from '@app/services/employee.service';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { of, Subject } from 'rxjs';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { ExternalUserUpdateRequestService } from '@services/external-user-update-request.service';
+import { ProfileService } from '@services/profile.service';
+import { FormBuilder, UntypedFormControl } from '@angular/forms';
+import { PaginatorComponent } from '@app/shared/components/paginator/paginator.component';
+import { UserPreferencesService } from '@services/user-preferences.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { LookupService } from '@app/services/lookup.service';
+import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 
 @Component({
   selector: 'app-external-user',
@@ -38,15 +38,15 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
   @ViewChild('paginator') paginator!: PaginatorComponent;
 
   constructor(public service: ExternalUserService,
-              public langService: LangService,
-              private toast: ToastService,
-              public configService: ConfigurationService,
-              public empService: EmployeeService,
-              private profileService: ProfileService,
-              public externalUserUpdateRequestService: ExternalUserUpdateRequestService,
-              private userPreferencesService: UserPreferencesService,
-              private lookupService:LookupService,
-              private fb: FormBuilder) {
+    public langService: LangService,
+    private toast: ToastService,
+    public configService: ConfigurationService,
+    public empService: EmployeeService,
+    private profileService: ProfileService,
+    public externalUserUpdateRequestService: ExternalUserUpdateRequestService,
+    private userPreferencesService: UserPreferencesService,
+    private lookupService: LookupService,
+    private fb: FormBuilder) {
     super();
   }
 
@@ -58,7 +58,7 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
 
   @ViewChild('table') table!: TableComponent;
   displayedColumns: string[] = ['domainName', 'arName', 'enName', 'empNum', 'organization', 'status', 'statusDateModified', 'actions'];
-  searchColumns: string[] = ['search_domainName', 'search_arName', 'search_enName','search_empNum', 'search_organization', 'search_status','search_statusDateModified', 'search_actions'];
+  searchColumns: string[] = ['search_domainName', 'search_arName', 'search_enName', 'search_empNum', 'search_organization', 'search_status', 'search_statusDateModified', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_domainName: {
       key: 'domainName',
@@ -81,10 +81,10 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
       maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
     },
     search_empNum: {
-      key:'empNum',
-      controlType:'text',
-      property:'empNum',
-      label:'lbl_employee_number',
+      key: 'empNum',
+      controlType: 'text',
+      property: 'empNum',
+      label: 'lbl_employee_number',
       maxLength: CustomValidators.defaultLengths.NUMBERS_MAXLENGTH,
       mask: CustomValidators.inputMaskPatterns.NUMBER_ONLY
     },
@@ -170,12 +170,14 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
     }
   ];
 
-  toggleStatus(item: ExternalUser) {
-    this.service.updateStatus(item.id, item.status!)
+  toggleStatus(model: ExternalUser) {
+    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
+    updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: item.getName()}));
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({ x: model.getName() }));
         this.reload$.next(null);
       }, () => {
+        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({ x: model.getName() }));
         this.reload$.next(null);
       });
   }
