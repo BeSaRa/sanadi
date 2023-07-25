@@ -775,6 +775,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           if (item.caseType === CaseTypes.NPO_MANAGEMENT || item.caseType === CaseTypes.FOREIGN_COUNTRIES_PROJECTS) {
             return !this.internal || this.employeeService.getCurrentUser().generalUserId == this.model?.creatorInfo.id;
           }
+          if (item.caseType === CaseTypes.CHARITY_ORGANIZATION_UPDATE) {
+            return !this.internal || this.employeeService.isLicensingUser();
+          }
           // show if external user or service which are only for internal user
           return !this.internal || this.internalUserServices.includes(item.getCaseType());
         },
