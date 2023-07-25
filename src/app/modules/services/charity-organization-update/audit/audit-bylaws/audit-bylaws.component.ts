@@ -53,7 +53,7 @@ export class AuditBylawsComponent extends AuditListGenericComponent<Bylaw> {
   }
 
   existsInList(objComparison: IFindInList<Bylaw>): Bylaw | undefined {
-    return objComparison.listToCompareWith.find((item) => item.id === objComparison.itemToCompare.id);
+    return objComparison.listToCompareWith.find((item) => item.objectDBId === objComparison.itemToCompare.objectDBId);
   }
 }
 
