@@ -70,7 +70,7 @@ export class AdminPermissionComponent extends AdminGenericComponent<Permission, 
       type: 'action',
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
-      show:()=>false,
+      show:()=>true,
       onClick: (item: Permission) => this.showAuditLogs(item)
     },
 
