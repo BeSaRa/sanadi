@@ -47,7 +47,7 @@ export class CharityOrganizationUpdate extends CaseModel<
   lookupService: LookupService = FactoryService.getService('LookupService');
 
   caseType: number = CaseTypes.CHARITY_ORGANIZATION_UPDATE;
-
+  initialVersion!: string;
   followUpDate!: string | IMyDateModel;
   arabicName = '';
   englishName = '';

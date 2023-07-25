@@ -14,18 +14,12 @@ import { ForeignAidClassificationsPopupComponent } from '../../popups/foreign-ai
   styleUrls: ['./foreign-aid-classifications.component.scss'],
 })
 export class ForeignAidClassificationsComponent extends ListModelComponent<ForeignAidClassification> implements OnChanges {
-  _getPopupComponent(): ComponentType<any> {
-    return ForeignAidClassificationsPopupComponent;
-  }
+  form!: UntypedFormGroup;
+  columns = ['aidClassification', 'domain', 'mainUNOCHACategory', 'subUNOCHACategory', 'mainDACCategory', 'subDACCategory', 'actions'];
+  filterControl: UntypedFormControl = new UntypedFormControl('');
+
   get list() {
     return this._list;
-  }
-  filterControl: UntypedFormControl = new UntypedFormControl('');
-  constructor(
-    private fb: UntypedFormBuilder,
-    public lang: LangService,
-  ) {
-    super(ForeignAidClassification);
   }
 
   @Input() set list(_list: ForeignAidClassification[]) {
@@ -34,10 +28,17 @@ export class ForeignAidClassificationsComponent extends ListModelComponent<Forei
 
   @Input() readonly!: boolean;
   @Input() charityWorkArea!: number;
-  form!: UntypedFormGroup;
+  @Input() charityId!: number;
 
-  columns = ['aidClassification', 'domain', 'mainUNOCHACategory', 'subUNOCHACategory', 'mainDACCategory', 'subDACCategory', 'actions'];
-
+  constructor(
+    private fb: UntypedFormBuilder,
+    public lang: LangService,
+  ) {
+    super(ForeignAidClassification);
+  }
+_getPopupComponent(): ComponentType<any> {
+    return ForeignAidClassificationsPopupComponent;
+  }
   protected _initComponent(): void {
     this.model = new ForeignAidClassification().clone({
       ...this.model,
@@ -79,7 +80,7 @@ export class ForeignAidClassificationsComponent extends ListModelComponent<Forei
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.charityWorkArea?.firstChange) {
+    if (changes.charityWorkArea?.firstChange || changes.charityId) {
       return;
     }
     this.model = new ForeignAidClassification();
