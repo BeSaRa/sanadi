@@ -207,18 +207,16 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
   }
 
   toggleStatus(model: Country) {
-    model.status == CommonStatusEnum.ACTIVATED ? model.status = CommonStatusEnum.DEACTIVATED : model.status = CommonStatusEnum.ACTIVATED;
-    model.update()
-      .pipe(takeUntil(this.destroy$))
+    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
+    updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.toast.success(this.langService.map.msg_status_x_updated_success.change({ x: model.getName() }));
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
         this.reload$.next(null);
       }, () => {
-        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({ x: model.getName() }));
+        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
   }
-
   private buildActions() {
     // noinspection JSUnusedLocalSymbols
     this.actions = [

@@ -148,7 +148,7 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
   }
 
   updateStatus(id: number, newStatus: CommonStatusEnum) {
-    return newStatus === CommonStatusEnum.ACTIVATED ? this.deactivate(id) : this.activate(id);
+    return newStatus === CommonStatusEnum.ACTIVATED ? this.activate(id) : this.deactivate(id);
   }
 
   @CastResponse('')
