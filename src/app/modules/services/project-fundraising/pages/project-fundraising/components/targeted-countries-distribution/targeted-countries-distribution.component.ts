@@ -3,7 +3,7 @@ import {ProjectFundraising} from "@app/models/project-fundraising";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {Country} from "@app/models/country";
 import {BehaviorSubject, ReplaySubject, Subject} from "rxjs";
-import {debounceTime, filter, map, takeUntil, tap} from "rxjs/operators";
+import {debounceTime, filter, map, takeUntil} from "rxjs/operators";
 import {LangService} from "@services/lang.service";
 import {UntypedFormArray, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
 import {AmountOverCountry} from "@app/models/amount-over-country";
@@ -13,8 +13,7 @@ import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CustomValidators} from "@app/validators/custom-validators";
 import currency from "currency.js";
 import {MaskPipe} from "ngx-mask";
-import { Language } from '@app/models/language';
-import { AvailableLanguagesNames } from '@app/enums/available-languages-names-enum';
+import {AvailableLanguagesNames} from '@app/enums/available-languages-names-enum';
 
 @Component({
   selector: 'targeted-countries-distribution',

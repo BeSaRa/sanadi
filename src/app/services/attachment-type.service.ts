@@ -46,16 +46,16 @@ export class AttachmentTypeService extends CrudWithDialogGenericService<Attachme
     FactoryService.registerService('AttachmentTypeService', this);
   }
 
-  updateStatus(donorId: number, newStatus: CommonStatusEnum) {
-    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(donorId) : this._deactivate(donorId);
+  updateStatus(modelId: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(modelId) : this._deactivate(modelId);
   }
 
-  private _activate(donorId: number): Observable<any> {
-    return this.http.put<any>(this._getServiceURL() + '/' + donorId + '/activate', {});
+  private _activate(modelId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + modelId + '/activate', {});
   }
 
-  private _deactivate(donorId: number): Observable<any> {
-    return this.http.put<any>(this._getServiceURL() + '/' + donorId + '/de-activate', {});
+  private _deactivate(modelId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + modelId + '/de-activate', {});
   }
   _getDialogComponent(): ComponentType<any> {
     return AttachmentTypesPopupComponent;

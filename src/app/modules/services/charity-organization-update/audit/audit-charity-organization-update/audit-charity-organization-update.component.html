@@ -1,24 +1,46 @@
 <tabs-list>
   <tab name="basicInfo" [template]="basicInfoTemplate" [title]="lang.map.lbl_basic_info"></tab>
-  <tab  name="metaData" *ngIf="newVersion.updateSection == charityUpdateSection.META_DATA" [template]="metaDataTemplate" [title]="lang.map.meta_data"></tab>
-  <tab name="contactInformation" *ngIf="newVersion.updateSection == charityUpdateSection.META_DATA" [template]="contactInformationTemplate" [title]="lang.map.contact_information"></tab>
-  <tab name="complainceOfficer" *ngIf="newVersion.updateSection == charityUpdateSection.META_DATA" [template]="complainceOfficerTemplate" [title]="lang.map.complaince_office_data"></tab>
-  <tab name="liaisonOfficer" *ngIf="newVersion.updateSection == charityUpdateSection.META_DATA" [template]="liaisonOfficerTemplate" [title]="lang.map.liaison_office_data"></tab>
-  <tab name="branch" *ngIf="newVersion.updateSection == charityUpdateSection.META_DATA" [template]="branchTemplate" [title]="lang.map.internal_branches"></tab>
-  <tab name="foundingMembers" *ngIf="newVersion.updateSection == charityUpdateSection.ADMINISTRATIVE_DATA" [template]="foundingMembersTemplate" [title]="lang.map.founding_members"></tab>
-  <tab name="generalAssemblyMembers" *ngIf="newVersion.updateSection == charityUpdateSection.ADMINISTRATIVE_DATA" [template]="generalAssemblyMembersTemplate" [title]="lang.map.general_assembly_members"></tab>
-  <tab name="boardMembers" *ngIf="newVersion.updateSection == charityUpdateSection.ADMINISTRATIVE_DATA" [template]="boardMembersTemplate" [title]="lang.map.board_members"></tab>
-  <tab name="executiveManagment" *ngIf="newVersion.updateSection == charityUpdateSection.ADMINISTRATIVE_DATA" [template]="executiveManagmentTemplate" [title]="lang.map.executive_management"></tab>
-  <tab name="authorizedMembers" *ngIf="newVersion.updateSection == charityUpdateSection.ADMINISTRATIVE_DATA" [template]="authorizedMembersTemplate" [title]="lang.map.authrized_members"></tab>
-  <tab name="realBenefeciaries" *ngIf="newVersion.updateSection == charityUpdateSection.ADMINISTRATIVE_DATA" [template]="realBenefeciariesTemplate" [title]="lang.map.real_benefeciaries"></tab>
-  <tab name="primaryLaw" *ngIf="newVersion.updateSection == charityUpdateSection.GOVERNANCE_DOCUMENTS" [template]="primaryLawTemplate" [title]="lang.map.primary_law"></tab>
-  <tab name="byLaws" *ngIf="newVersion.updateSection == charityUpdateSection.GOVERNANCE_DOCUMENTS" [template]="byLawsTemplate" [title]="lang.map.bylaws"></tab>
-  <tab name="riskReports" *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS" [template]="riskReportsTemplate" [title]="lang.map.risk_reports"></tab>
-  <tab name="coordinationAndSupports" *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS" [template]="coordinationAndSupportsTemplate" [title]="lang.map.coordination_and_support_reports"></tab>
-  <tab name="organizationsReport" *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS" [template]="organizationsReportTemplate" [title]="lang.map.reports_received_from_organization"></tab>
-  <tab name="outgoingDecisions" *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS" [template]="outgoingDecisionsTemplate" [title]="lang.map.decisions_by_organizations"></tab>
-  <tab name="internalDecisions" *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS" [template]="internalDecisionsTemplate" [title]="lang.map.internal_decisions"></tab>
-  </tabs-list>
+  <tab name="metaData" *ngIf="newVersion.updateSection == charityUpdateSection.META_DATA" [template]="metaDataTemplate"
+       [title]="lang.map.meta_data"></tab>
+  <tab name="contactInformation" *ngIf="newVersion.updateSection == charityUpdateSection.META_DATA"
+       [template]="contactInformationTemplate" [title]="lang.map.contact_information"></tab>
+  <tab name="complainceOfficer" *ngIf="newVersion.updateSection == charityUpdateSection.META_DATA"
+       [template]="complainceOfficerTemplate" [title]="lang.map.complaince_office_data"></tab>
+  <tab name="liaisonOfficer" *ngIf="newVersion.updateSection == charityUpdateSection.META_DATA"
+       [template]="liaisonOfficerTemplate" [title]="lang.map.liaison_office_data"></tab>
+  <tab name="branch" *ngIf="newVersion.updateSection == charityUpdateSection.META_DATA" [template]="branchTemplate"
+       [title]="lang.map.internal_branches"></tab>
+  <tab name="foundingMembers" *ngIf="newVersion.updateSection == charityUpdateSection.ADMINISTRATIVE_DATA"
+       [template]="foundingMembersTemplate" [title]="lang.map.founding_members"></tab>
+  <tab name="generalAssemblyMembers" *ngIf="newVersion.updateSection == charityUpdateSection.ADMINISTRATIVE_DATA"
+       [template]="generalAssemblyMembersTemplate" [title]="lang.map.general_assembly_members"></tab>
+  <tab name="boardMembers" *ngIf="newVersion.updateSection == charityUpdateSection.ADMINISTRATIVE_DATA"
+       [template]="boardMembersTemplate" [title]="lang.map.board_members"></tab>
+  <tab name="executiveManagment" *ngIf="newVersion.updateSection == charityUpdateSection.ADMINISTRATIVE_DATA"
+       [template]="executiveManagmentTemplate" [title]="lang.map.executive_management"></tab>
+  <tab name="authorizedMembers" *ngIf="newVersion.updateSection == charityUpdateSection.ADMINISTRATIVE_DATA"
+       [template]="authorizedMembersTemplate" [title]="lang.map.authrized_members"></tab>
+  <tab name="realBenefeciaries" *ngIf="newVersion.updateSection == charityUpdateSection.ADMINISTRATIVE_DATA"
+       [template]="realBenefeciariesTemplate" [title]="lang.map.real_benefeciaries"></tab>
+  <tab name="primaryLaw" *ngIf="newVersion.updateSection == charityUpdateSection.GOVERNANCE_DOCUMENTS"
+       [template]="primaryLawTemplate" [title]="lang.map.primary_law"></tab>
+  <tab name="byLaws" *ngIf="newVersion.updateSection == charityUpdateSection.GOVERNANCE_DOCUMENTS"
+       [template]="byLawsTemplate" [title]="lang.map.bylaws"></tab>
+  <tab name="riskReports" *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS"
+       [template]="riskReportsTemplate" [title]="lang.map.risk_reports"></tab>
+  <tab name="coordinationAndSupports"
+       *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS"
+       [template]="coordinationAndSupportsTemplate" [title]="lang.map.coordination_and_support_reports"></tab>
+  <tab name="organizationsReport"
+       *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS"
+       [template]="organizationsReportTemplate" [title]="lang.map.reports_received_from_organization"></tab>
+  <tab name="outgoingDecisions"
+       *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS"
+       [template]="outgoingDecisionsTemplate" [title]="lang.map.decisions_by_organizations"></tab>
+  <tab name="internalDecisions"
+       *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS"
+       [template]="internalDecisionsTemplate" [title]="lang.map.internal_decisions"></tab>
+</tabs-list>
 <ng-template #basicInfoTemplate>
   <value-differences-list [differenceList]="basicInfoDifferences"></value-differences-list>
 </ng-template>
@@ -29,74 +51,74 @@
   <value-differences-list [differenceList]="contactInformationDifferences"></value-differences-list>
 </ng-template>
 <ng-template #complainceOfficerTemplate>
-  <audit-organization-officer  [newVersionList]="newVersion.complianceOfficerList"
-  [oldVersionList]="oldVersion.complianceOfficerList"
-  [caseType]="newVersion.caseType"
-  [uniqueComparisonProperty]="'identificationNumber'">
+  <audit-organization-officer [newVersionList]="newVersion.complianceOfficerList"
+                              [oldVersionList]="oldVersion.complianceOfficerList"
+                              [caseType]="newVersion.caseType"
+                              [uniqueComparisonProperty]="'identificationNumber'">
 
   </audit-organization-officer>
 </ng-template>
 <ng-template #liaisonOfficerTemplate>
-  <audit-organization-officer  [newVersionList]="newVersion.charityContactOfficerList"
-  [oldVersionList]="oldVersion.charityContactOfficerList"
-  [caseType]="newVersion.caseType"
-  [uniqueComparisonProperty]="'identificationNumber'">
+  <audit-organization-officer [newVersionList]="newVersion.charityContactOfficerList"
+                              [oldVersionList]="oldVersion.charityContactOfficerList"
+                              [caseType]="newVersion.caseType"
+                              [uniqueComparisonProperty]="'identificationNumber'">
 
   </audit-organization-officer>
 </ng-template>
 <ng-template #branchTemplate>
   <audit-organization-officer [newVersionList]="newVersion.charityContactOfficerList"
-  [oldVersionList]="oldVersion.charityContactOfficerList"
-  [caseType]="newVersion.caseType"
-  [uniqueComparisonProperty]="'identificationNumber'">
+                              [oldVersionList]="oldVersion.charityContactOfficerList"
+                              [caseType]="newVersion.caseType"
+                              [uniqueComparisonProperty]="'identificationNumber'">
 
   </audit-organization-officer>
-  <audit-charity-branch  [newVersionList]="newVersion.charityBranchList"
-  [oldVersionList]="oldVersion.charityBranchList"
-  [caseType]="newVersion.caseType">
+  <audit-charity-branch [newVersionList]="newVersion.charityBranchList"
+                        [oldVersionList]="oldVersion.charityBranchList"
+                        [caseType]="newVersion.caseType">
 
   </audit-charity-branch>
 </ng-template>
 <ng-template #foundingMembersTemplate>
-  <audit-org-member  [newVersionList]="newVersion.founderMemberList"
-  [oldVersionList]="oldVersion.founderMemberList"
-  [caseType]="newVersion.caseType">
+  <audit-org-member [newVersionList]="newVersion.founderMemberList"
+                    [oldVersionList]="oldVersion.founderMemberList"
+                    [caseType]="newVersion.caseType">
 
   </audit-org-member>
 </ng-template>
 <ng-template #generalAssemblyMembersTemplate>
-  <audit-org-member  [newVersionList]="newVersion.generalAssemblyMemberList"
-  [oldVersionList]="oldVersion.generalAssemblyMemberList"
-  [caseType]="newVersion.caseType">
+  <audit-org-member [newVersionList]="newVersion.generalAssemblyMemberList"
+                    [oldVersionList]="oldVersion.generalAssemblyMemberList"
+                    [caseType]="newVersion.caseType">
 
   </audit-org-member>
 </ng-template>
 <ng-template #boardMembersTemplate>
-  <audit-org-member  [newVersionList]="newVersion.boardMemberList"
-  [oldVersionList]="oldVersion.boardMemberList"
-  [caseType]="newVersion.caseType">
+  <audit-org-member [newVersionList]="newVersion.boardMemberList"
+                    [oldVersionList]="oldVersion.boardMemberList"
+                    [caseType]="newVersion.caseType">
 
   </audit-org-member>
 </ng-template>
 
 <ng-template #executiveManagmentTemplate>
-  <audit-org-executive-member  [newVersionList]="newVersion.currentExecutiveManagementList"
-  [oldVersionList]="oldVersion.currentExecutiveManagementList"
-  [caseType]="newVersion.caseType">
+  <audit-org-executive-member [newVersionList]="newVersion.currentExecutiveManagementList"
+                              [oldVersionList]="oldVersion.currentExecutiveManagementList"
+                              [caseType]="newVersion.caseType">
 
   </audit-org-executive-member>
 </ng-template>
 <ng-template #authorizedMembersTemplate>
-  <audit-org-member  [newVersionList]="newVersion.authorizedSignatoryMemberList"
-  [oldVersionList]="oldVersion.authorizedSignatoryMemberList"
-  [caseType]="newVersion.caseType">
+  <audit-org-member [newVersionList]="newVersion.authorizedSignatoryMemberList"
+                    [oldVersionList]="oldVersion.authorizedSignatoryMemberList"
+                    [caseType]="newVersion.caseType">
 
   </audit-org-member>
 </ng-template>
 <ng-template #realBenefeciariesTemplate>
-  <audit-real-beneficiary  [newVersionList]="newVersion.realBeneficiaryList"
-  [oldVersionList]="oldVersion.realBeneficiaryList"
-  [caseType]="newVersion.caseType">
+  <audit-real-beneficiary [newVersionList]="newVersion.realBeneficiaryList"
+                          [oldVersionList]="oldVersion.realBeneficiaryList"
+                          [caseType]="newVersion.caseType">
 
   </audit-real-beneficiary>
 </ng-template>
@@ -104,57 +126,57 @@
 <ng-template #primaryLawTemplate>
   <value-differences-list [differenceList]="primaryLawDifferences"></value-differences-list>
 
-  <audit-foreign-aid-classifications  [newVersionList]="newVersion.wFClassificationList"
-  [oldVersionList]="oldVersion.wFClassificationList"
-  [caseType]="newVersion.caseType">
+  <audit-foreign-aid-classifications [newVersionList]="newVersion.wFClassificationList"
+                                     [oldVersionList]="oldVersion.wFClassificationList"
+                                     [caseType]="newVersion.caseType">
 
   </audit-foreign-aid-classifications>
-  <audit-work-areas  [newVersionList]="newVersion.workAreaObjectList"
-  [oldVersionList]="oldVersion.workAreaObjectList"
-  [caseType]="newVersion.caseType">
+  <audit-work-areas [newVersionList]="newVersion.workAreaObjectList"
+                    [oldVersionList]="oldVersion.workAreaObjectList"
+                    [caseType]="newVersion.caseType">
 
   </audit-work-areas>
 </ng-template>
 
 <ng-template #byLawsTemplate>
-  <audit-bylaws  [newVersionList]="newVersion.byLawList"
-  [oldVersionList]="oldVersion.byLawList"
-  [caseType]="newVersion.caseType">
-
+  <audit-bylaws [newVersionList]="newVersion.byLawList"
+                [oldVersionList]="oldVersion.byLawList"
+                [caseType]="newVersion.caseType"
+                [uniqueComparisonProperty]="'objectDBId'">
   </audit-bylaws>
 </ng-template>
 <ng-template #riskReportsTemplate>
-  <audit-charity-reports  [newVersionList]="newVersion.riskReportList"
-  [oldVersionList]="oldVersion.riskReportList"
-  [caseType]="newVersion.caseType">
+  <audit-charity-reports [newVersionList]="newVersion.riskReportList"
+                         [oldVersionList]="oldVersion.riskReportList"
+                         [caseType]="newVersion.caseType">
 
   </audit-charity-reports>
 </ng-template>
 <ng-template #coordinationAndSupportsTemplate>
-  <audit-charity-reports  [newVersionList]="newVersion.coordinationSupportReport"
-  [oldVersionList]="oldVersion.coordinationSupportReport"
-  [caseType]="newVersion.caseType">
+  <audit-charity-reports [newVersionList]="newVersion.coordinationSupportReport"
+                         [oldVersionList]="oldVersion.coordinationSupportReport"
+                         [caseType]="newVersion.caseType">
 
   </audit-charity-reports>
 </ng-template>
 <ng-template #organizationsReportTemplate>
-  <audit-charity-reports  [newVersionList]="newVersion.incomingReportList"
-  [oldVersionList]="oldVersion.incomingReportList"
-  [caseType]="newVersion.caseType">
+  <audit-charity-reports [newVersionList]="newVersion.incomingReportList"
+                         [oldVersionList]="oldVersion.incomingReportList"
+                         [caseType]="newVersion.caseType">
 
   </audit-charity-reports>
 </ng-template>
 <ng-template #internalDecisionsTemplate>
-  <audit-charity-decisions  [newVersionList]="newVersion.incomingDecisionList"
-  [oldVersionList]="oldVersion.incomingDecisionList"
-  [caseType]="newVersion.caseType">
+  <audit-charity-decisions [newVersionList]="newVersion.incomingDecisionList"
+                           [oldVersionList]="oldVersion.incomingDecisionList"
+                           [caseType]="newVersion.caseType">
 
   </audit-charity-decisions>
 </ng-template>
 <ng-template #outgoingDecisionsTemplate>
-  <audit-charity-decisions  [newVersionList]="newVersion.outgoingDecisionList"
-  [oldVersionList]="oldVersion.outgoingDecisionList"
-  [caseType]="newVersion.caseType">
+  <audit-charity-decisions [newVersionList]="newVersion.outgoingDecisionList"
+                           [oldVersionList]="oldVersion.outgoingDecisionList"
+                           [caseType]="newVersion.caseType">
 
   </audit-charity-decisions>
 </ng-template>

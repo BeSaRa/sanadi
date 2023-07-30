@@ -1,19 +1,18 @@
-import { AvailableLanguagesNames } from './../../../../../../../enums/available-languages-names-enum';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ProjectFundraising } from "@app/models/project-fundraising";
-import { ProjectFundraisingService } from "@services/project-fundraising.service";
-import { LangService } from "@services/lang.service";
-import { DeductionRatioItem } from "@app/models/deduction-ratio-item";
-import { AbstractControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
-import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from "rxjs";
-import { debounceTime, distinctUntilChanged, filter, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { DeductedPercentage } from "@app/models/deducted-percentage";
-import { DialogService } from "@services/dialog.service";
-import { UserClickOn } from "@app/enums/user-click-on.enum";
+import {AvailableLanguagesNames} from './../../../../../../../enums/available-languages-names-enum';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ProjectFundraising} from "@app/models/project-fundraising";
+import {ProjectFundraisingService} from "@services/project-fundraising.service";
+import {LangService} from "@services/lang.service";
+import {DeductionRatioItem} from "@app/models/deduction-ratio-item";
+import {AbstractControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
+import {BehaviorSubject, combineLatest, ReplaySubject, Subject} from "rxjs";
+import {debounceTime, filter, startWith, switchMap, takeUntil} from "rxjs/operators";
+import {CustomValidators} from "@app/validators/custom-validators";
+import {DeductedPercentage} from "@app/models/deducted-percentage";
+import {DialogService} from "@services/dialog.service";
+import {UserClickOn} from "@app/enums/user-click-on.enum";
 import currency from "currency.js";
-import { EmployeeService } from "@services/employee.service";
-import { Language } from '@app/models/language';
+import {EmployeeService} from "@services/employee.service";
 
 @Component({
   selector: 'deduction-ratio-manager',
