@@ -1,26 +1,26 @@
-import {Component, ViewChild} from '@angular/core';
-import {LangService} from '@services/lang.service';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {UrgentInterventionLicenseFollowupService} from '@services/urgent-intervention-license-followup.service';
-import {UrgentInterventionLicenseFollowup} from '@models/urgent-intervention-license-followup';
-import {SaveTypes} from '@enums/save-types';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {Observable, of, Subject} from 'rxjs';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {OpenFrom} from '@enums/open-from.enum';
-import {EmployeeService} from '@services/employee.service';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {catchError, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
-import {DialogService} from '@services/dialog.service';
-import {LicenseService} from '@services/license.service';
-import {TabMap} from '@app/types/types';
-import {UrgentInterventionAnnouncementResult} from '@models/urgent-intervention-announcement-result';
+import { Component, ViewChild } from '@angular/core';
+import { LangService } from '@services/lang.service';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { UrgentInterventionLicenseFollowupService } from '@services/urgent-intervention-license-followup.service';
+import { UrgentInterventionLicenseFollowup } from '@models/urgent-intervention-license-followup';
+import { SaveTypes } from '@enums/save-types';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { Observable, of, Subject } from 'rxjs';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { OpenFrom } from '@enums/open-from.enum';
+import { EmployeeService } from '@services/employee.service';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { catchError, exhaustMap, filter, map, takeUntil, tap } from 'rxjs/operators';
+import { DialogService } from '@services/dialog.service';
+import { LicenseService } from '@services/license.service';
+import { TabMap } from '@app/types/types';
+import { UrgentInterventionAnnouncementResult } from '@models/urgent-intervention-announcement-result';
 import {
   UrgentInterventionReportListComponent
 } from '@modules/services/urgent-intervention-license-followup/shared/urgent-intervention-report-list/urgent-intervention-report-list.component';
-import {UrgentInterventionAnnouncement} from '@models/urgent-intervention-announcement';
+import { UrgentInterventionAnnouncement } from '@models/urgent-intervention-announcement';
 import {
   InterventionImplementingAgencyListComponent
 } from '@modules/services/shared-services/components/intervention-implementing-agency-list/intervention-implementing-agency-list.component';
@@ -39,11 +39,11 @@ import {
 export class UrgentInterventionLicenseFollowupComponent extends EServicesGenericComponent<UrgentInterventionLicenseFollowup, UrgentInterventionLicenseFollowupService> {
 
   constructor(public lang: LangService,
-              public fb: UntypedFormBuilder,
-              private dialogService: DialogService,
-              private licenseService: LicenseService,
-              public service: UrgentInterventionLicenseFollowupService,
-              private employeeService: EmployeeService) {
+    public fb: UntypedFormBuilder,
+    private dialogService: DialogService,
+    private licenseService: LicenseService,
+    public service: UrgentInterventionLicenseFollowupService,
+    private employeeService: EmployeeService) {
     super();
   }
 
@@ -269,7 +269,7 @@ export class UrgentInterventionLicenseFollowupComponent extends EServicesGeneric
   private listenToLicenseSearch() {
     this.licenseSearch$
       .pipe(exhaustMap(fullSerial => {
-        return this.service.licenseSearchUrgentInterventionAnnouncement({fullSerial: fullSerial})
+        return this.service.licenseSearchUrgentInterventionAnnouncement({ fullSerial: fullSerial })
           .pipe(catchError(() => of([])));
       }))
       .pipe(
@@ -278,10 +278,10 @@ export class UrgentInterventionLicenseFollowupComponent extends EServicesGeneric
         // allow only the result if it has value
         filter(result => !!result.length)
       ).pipe(
-      exhaustMap((licenses) => {
-        return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
-      })
-    ).pipe(filter((info): info is UrgentInterventionAnnouncement => !!info))
+        exhaustMap((licenses) => {
+          return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
+        })
+      ).pipe(filter((info): info is UrgentInterventionAnnouncement => !!info))
       .subscribe((selection) => {
         this.setSelectedLicense(selection, false);
       });
@@ -292,9 +292,16 @@ export class UrgentInterventionLicenseFollowupComponent extends EServicesGeneric
   }
 
   private openSelectLicense(licenses: UrgentInterventionAnnouncementResult[]): Observable<undefined | UrgentInterventionAnnouncement> {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: null}), true, this.service.selectLicenseDisplayColumnsReport)
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: null }), true, this.service.selectLicenseDisplayColumnsReport)
       .onAfterClose$
-      .pipe(map((result: ({ selected: UrgentInterventionAnnouncement, details: UrgentInterventionAnnouncement } | undefined)) => result ? result.details : result));
+      .pipe(
+        exhaustMap((result) => {
+          if (result) {
+            return this.validateSingleLicense(result.details)
+          } else {
+            return of(undefined)
+          }
+        }));
   }
 
   setSelectedLicense(licenseDetails: UrgentInterventionAnnouncement | undefined, ignoreUpdateForm: boolean) {
