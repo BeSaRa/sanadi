@@ -55,12 +55,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
     this.deductionAmountHasChanges$.next(value)
   }
 
-  @Input()
-  set appLanguage(value: Language) {
-    this._appLanguage = value
-    this.displayedColumns = this._getDisplayedColumns()
-  }
-  _appLanguage!:Language
+
   clearItems$: Subject<boolean> = new Subject()
 
   @Input()
@@ -123,6 +118,18 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
     this.listenToUpdates();
     this.listenToClearItems();
     this.listenToDeductionChanges();
+    this.listenToLanguageChanges();
+  }
+
+  private listenToLanguageChanges() {
+    this.lang.onLanguageChange$.pipe(
+      takeUntil(this.destroy$)
+
+    ).subscribe(
+      _ => {
+        this.displayedColumns = this._getDisplayedColumns();
+      }
+    );
   }
 
   private _getDisplayedColumns() {
@@ -300,7 +307,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
       })
   }
   _getNameLanguage() {
-    return this._appLanguage?.name === AvailableLanguagesNames.ENGLISH ?
+    return this.lang?.getCurrentLanguage().code === AvailableLanguagesNames.ENGLISH ?
       'english_name' : 'arabic_name'
   }
   isDeductionSelected(row: DeductedPercentage) {
