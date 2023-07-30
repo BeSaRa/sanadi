@@ -3,7 +3,7 @@ import {ProjectFundraising} from "@app/models/project-fundraising";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {Country} from "@app/models/country";
 import {BehaviorSubject, ReplaySubject, Subject} from "rxjs";
-import {debounceTime, filter, map, takeUntil} from "rxjs/operators";
+import {debounceTime, filter, map, takeUntil, tap} from "rxjs/operators";
 import {LangService} from "@services/lang.service";
 import {UntypedFormArray, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
 import {AmountOverCountry} from "@app/models/amount-over-country";
@@ -13,6 +13,8 @@ import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CustomValidators} from "@app/validators/custom-validators";
 import currency from "currency.js";
 import {MaskPipe} from "ngx-mask";
+import { Language } from '@app/models/language';
+import { AvailableLanguagesNames } from '@app/enums/available-languages-names-enum';
 
 @Component({
   selector: 'targeted-countries-distribution',
@@ -49,7 +51,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
   private countriesChange$: BehaviorSubject<number[] | undefined> = new BehaviorSubject<number[] | undefined>(undefined)
 
-  displayedColumns: string[] = ['arName', 'enName', 'amount', 'actions'];
+  displayedColumns: string[] = this._getDisplayedColumns();
 
   selectedIds: number[] = [];
 
@@ -80,7 +82,12 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   set deductionRatioChanged(value: boolean) {
     this.deductionRatioChanges$.next(value)
   }
-
+  @Input()
+  set appLanguage(value: Language) {
+    this._appLanguage = value
+    this.displayedColumns = this._getDisplayedColumns()
+  }
+  _appLanguage!:Language
 
   constructor(private service: ProjectFundraisingService,
               private dialog: DialogService,
@@ -326,5 +333,12 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
         this.updateSelectedIds()
         this.updateTotalValue()
       })
+  }
+  _getNameLanguage() {
+    return this._appLanguage?.name === AvailableLanguagesNames.ENGLISH ?
+      'enName' : 'arName'
+  }
+  private _getDisplayedColumns() {
+    return [this._getNameLanguage(), 'amount'];
   }
 }
