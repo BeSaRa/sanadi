@@ -23,7 +23,7 @@ export class AuditProjectComponentComponent extends AuditListGenericComponent<Pr
   }
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
-  displayColumns: string[] = ['componentName', 'details', 'totalCost', 'actions'];
+  displayColumns: string[] = ['componentName', 'details', 'expensesType', 'totalCost', 'actions'];
   actions: IMenuItem<ProjectComponent>[] = [
     // show difference
     {
@@ -44,10 +44,6 @@ export class AuditProjectComponentComponent extends AuditListGenericComponent<Pr
 
   getControlLabels(item: ProjectComponent): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
-  }
-
-  existsInList(objComparison: IFindInList<ProjectComponent>): ProjectComponent | undefined {
-    return objComparison.listToCompareWith.find((item) => item.componentName === objComparison.itemToCompare.componentName);
   }
 
 }

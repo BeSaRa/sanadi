@@ -558,6 +558,7 @@ export interface ILanguageKeys {
   kindly_check_required_attachments: string;
   model_type: string;
   details: string;
+  expenses_type: string;
   total_cost: string;
   quantity: string;
   component_name: string;
@@ -1999,6 +2000,7 @@ export interface ILanguageKeys {
   lbl_category: string;
   lbl_permission_key: string;
   lookup_permission_group: string;
+  lookup_expenses_type: string;
   permission: string;
   lbl_qatar_charity_related_data: string;
   msg_confirm_continue_oof:string;

@@ -10,6 +10,8 @@ import {CommonUtils} from "@helpers/common-utils";
 import {
   ComponentBudgetsPopupComponent
 } from "@modules/services/project-models/popups/component-budgets-popup/component-budgets-popup.component";
+import {SortEvent} from "@contracts/sort-event";
+import {AdminResult} from "@models/admin-result";
 
 @Component({
   selector: 'component-budgets',
@@ -21,7 +23,7 @@ export class ComponentBudgetsComponent extends UiCrudListGenericComponent<Projec
     super();
   }
 
-  displayColumns: string[] = ['componentName', 'details', 'totalCost', 'actions'];
+  displayColumns: string[] = ['componentName', 'details', 'expensesType', 'totalCost', 'actions'];
   footerColumns: string[] = ['totalComponentCostLabel', 'totalComponentCost'];
   actions: IMenuItem<ProjectComponent>[] = [
     // edit
@@ -50,6 +52,14 @@ export class ComponentBudgetsComponent extends UiCrudListGenericComponent<Projec
   ];
 
   projectTotalCostField: UntypedFormControl = new UntypedFormControl();
+
+  sortingCallbacks = {
+    expensesType: (a: AdminResult, b: AdminResult, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+  }
 
   protected _afterViewInit() {
     this._setProjectTotalCost();
