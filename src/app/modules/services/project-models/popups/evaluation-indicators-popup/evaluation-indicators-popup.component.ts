@@ -1,14 +1,10 @@
 import {Component, Inject} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {AdminLookup} from '@app/models/admin-lookup';
-import {AdminResult} from '@app/models/admin-result';
 import {EvaluationIndicator} from '@app/models/evaluation-indicator';
-import {AdminLookupService} from '@app/services/admin-lookup.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable} from 'rxjs';
@@ -20,21 +16,18 @@ import {Observable} from 'rxjs';
 })
 export class EvaluationIndicatorsPopupComponent extends UiCrudDialogGenericComponent<EvaluationIndicator> {
   popupTitleKey: keyof ILanguageKeys;
-
-  indicators: AdminLookup[] = [];
   hideFullScreen = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<EvaluationIndicator>,
               public dialogRef: DialogRef,
-              public fb: UntypedFormBuilder,
-              private adminLookupService: AdminLookupService) {
+              public fb: UntypedFormBuilder) {
     super();
     this.setInitDialogData(data);
     this.popupTitleKey = 'project_evaluation_indicators';
   }
 
   initPopup(): void {
-    this.loadIndicators();
+
   }
 
   getPopupHeadingText(): string {
@@ -74,11 +67,9 @@ export class EvaluationIndicatorsPopupComponent extends UiCrudDialogGenericCompo
 
   prepareModel(model: EvaluationIndicator, form: UntypedFormGroup): Observable<EvaluationIndicator> | EvaluationIndicator {
     let formValue = form.getRawValue();
-    let indicatorInfo = this.indicators.find(x => x.id === formValue.indicator)?.createAdminResult() ?? new AdminResult()
     return this._getNewInstance({
       ...this.model,
-      ...formValue,
-      indicatorInfo
+      ...formValue
     });
   }
 
@@ -86,12 +77,5 @@ export class EvaluationIndicatorsPopupComponent extends UiCrudDialogGenericCompo
   }
 
   destroyPopup(): void {
-  }
-
-  private loadIndicators(): void {
-    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.TEMPLATE_INDICATOR)
-      .subscribe(list => {
-        this.indicators = list;
-      });
   }
 }

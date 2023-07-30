@@ -15,7 +15,6 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     });
     model.evaluationIndicatorList = (model.evaluationIndicatorList ?? []).map(item => {
       item = new EvaluationIndicator().clone(item);
-      delete item.indicatorInfo;
       delete (item as Partial<EvaluationIndicator>).searchFields;
       return item;
     });
@@ -79,7 +78,6 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.sanadiMainClassificationInfo = AdminResult.createInstance(model.sanadiMainClassificationInfo);
     model.exitMechanismInfo = AdminResult.createInstance(model.exitMechanismInfo);
     model.evaluationIndicatorList = model.evaluationIndicatorList.map(item => {
-      item.indicatorInfo = item.indicatorInfo ? AdminResult.createInstance(item.indicatorInfo) : AdminResult.createInstance({});
       return new EvaluationIndicator().clone(item);
     });
     model.foreignCountriesProjectList = model.foreignCountriesProjectList.map(item => {

@@ -16,13 +16,8 @@
           <td *cdkCellDef="let row; let i = index;" cdk-cell> {{i + 1}} </td>
         </ng-container>
         <ng-container cdkColumnDef="indicator">
-          <th *cdkHeaderCellDef cdk-header-cell sortable-header [sortParamAsFullItem]="true"
-              [sortCallback]="sortingCallbacks.indicator"> {{lang.map.indicator}}</th>
-          <td *cdkCellDef="let row" cdk-cell> {{row.indicatorInfo?.getName() || ''}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="percentage">
-          <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.percentage}}</th>
-          <td *cdkCellDef="let row" cdk-cell> {{row.percentage}} </td>
+          <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.indicator}}</th>
+          <td *cdkCellDef="let row" cdk-cell> {{row.indicator}} </td>
         </ng-container>
         <ng-container cdkColumnDef="notes">
           <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.notes}}</th>

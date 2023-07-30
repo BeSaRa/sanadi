@@ -8,8 +8,6 @@ import {
   EvaluationIndicatorsPopupComponent
 } from '../../../popups/evaluation-indicators-popup/evaluation-indicators-popup.component';
 import {IKeyValue} from '@app/interfaces/i-key-value';
-import {SortEvent} from "@contracts/sort-event";
-import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'evaluation-indicators',
@@ -21,7 +19,7 @@ export class EvaluationIndicatorsComponent extends UiCrudListGenericComponent<Ev
     super();
   }
 
-  displayColumns: string[] = ['index', 'indicator', 'percentage', 'notes', 'actions'];
+  displayColumns: string[] = ['index', 'indicator', 'notes', 'actions'];
   actions: IMenuItem<EvaluationIndicator>[] = [
     // edit
     {
@@ -47,13 +45,6 @@ export class EvaluationIndicatorsComponent extends UiCrudListGenericComponent<Ev
       onClick: (item: EvaluationIndicator) => this.view$.next(item),
     }
   ];
-  sortingCallbacks = {
-    indicator: (a: EvaluationIndicator, b: EvaluationIndicator, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.indicatorInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.indicatorInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    }
-  }
 
   _getNewInstance(override?: Partial<EvaluationIndicator> | undefined): EvaluationIndicator {
     return new EvaluationIndicator().clone(override ? override : {});
@@ -64,7 +55,7 @@ export class EvaluationIndicatorsComponent extends UiCrudListGenericComponent<Ev
   }
 
   _getDeleteConfirmMessage(record: EvaluationIndicator): string {
-    return this.lang.map.msg_confirm_delete_x.change({x: record.indicatorInfo?.getName()});
+    return this.lang.map.msg_confirm_delete_x.change({x: record.indicator});
   }
 
   getExtraDataForPopup(): IKeyValue {

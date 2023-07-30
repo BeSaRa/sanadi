@@ -10,12 +10,7 @@
           </ng-container>
           <ng-container cdkColumnDef="indicator">
             <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.indicator}}</th>
-            <td *cdkCellDef="let row" cdk-cell> {{row.indicatorInfo?.getName() || ''}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="percentage">
-            <th *cdkHeaderCellDef cdk-header-cell
-              > {{lang.map.percentage}}</th>
-            <td *cdkCellDef="let row" cdk-cell> {{row.percentage}} </td>
+            <td *cdkCellDef="let row" cdk-cell> {{row.indicator}} </td>
           </ng-container>
           <ng-container cdkColumnDef="notes">
             <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.notes}}</th>
