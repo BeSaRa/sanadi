@@ -612,6 +612,7 @@ export interface ILanguageKeys {
   direct_beneficiary_count_by_gender: string;
   indirect_beneficiary_count_by_gender: string;
   project_goals: string;
+  beneficiary_percent_in_host_community: string;
   project_needs_assessment: string;
   first_sd_goal: string;
   first_sd_goal_percentage: string;
