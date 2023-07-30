@@ -59,6 +59,7 @@ import {
 } from '@modules/services/coordination-with-organization-request/shared/participant-organization/participant-organization.component';
 import { GlobalSettingsService } from '@app/services/global-settings.service';
 import { GlobalSettings } from '@app/models/global-settings';
+import { AvailableLanguagesNames } from '@app/enums/available-languages-names-enum';
 
 @Component({
   selector: 'app-coordination-with-organizations-request',
@@ -559,7 +560,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
 
       .subscribe((list) => {
         const propName =
-          this.lang.getCurrentLanguage().name === 'English'
+          this.lang.getCurrentLanguage().code === AvailableLanguagesNames.ENGLISH
             ? 'enName'
             : 'arName';
         this.organizationUnits = list.sort((a, b) =>

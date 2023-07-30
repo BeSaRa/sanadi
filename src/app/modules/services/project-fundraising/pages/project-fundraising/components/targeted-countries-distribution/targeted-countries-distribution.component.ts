@@ -82,12 +82,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   set deductionRatioChanged(value: boolean) {
     this.deductionRatioChanges$.next(value)
   }
-  @Input()
-  set appLanguage(value: Language) {
-    this._appLanguage = value
-    this.displayedColumns = this._getDisplayedColumns()
-  }
-  _appLanguage!:Language
+
 
   constructor(private service: ProjectFundraisingService,
               private dialog: DialogService,
@@ -112,8 +107,18 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     this.listenToCountriesChanges()
     this.listenToDeductionRatioChanges()
     this.listenToClearItems()
+    this.listenToLanguageChanges()
   }
+  private listenToLanguageChanges() {
+    this.lang.onLanguageChange$.pipe(
+      takeUntil(this.destroy$)
 
+    ).subscribe(
+      _ => {
+        this.displayedColumns = this._getDisplayedColumns();
+      }
+    );
+  }
   get list(): UntypedFormArray {
     return this.items.get('items')! as UntypedFormArray
   }
@@ -335,7 +340,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
       })
   }
   _getNameLanguage() {
-    return this._appLanguage?.name === AvailableLanguagesNames.ENGLISH ?
+    return this.lang.getCurrentLanguage().code === AvailableLanguagesNames.ENGLISH ?
       'enName' : 'arName'
   }
   private _getDisplayedColumns() {

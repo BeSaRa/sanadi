@@ -27,6 +27,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 import { ParticipantOrg } from '@models/participant-org';
 import { Profile } from '@models/profile';
 import { TaskAdminResult } from '@models/task-admin-result';
+import { AvailableLanguagesNames } from '@app/enums/available-languages-names-enum';
 
 @Component({
   selector: 'participant-organization',
@@ -251,7 +252,7 @@ export class ParticipantOrganizationComponent implements OnInit {
   }
   sortOrganizations() {
     const propName =
-      this.lang.getCurrentLanguage().name === 'English' ? 'enName' : 'arName';
+      this.lang.getCurrentLanguage().code === AvailableLanguagesNames.ENGLISH ? 'enName' : 'arName';
     this.organizationUnits.sort((a, b) => (a[propName] < b[propName] ? -1 : 1));
   }
 

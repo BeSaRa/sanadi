@@ -342,7 +342,6 @@
           [model]="model!"
           [projectCost]="projectTotalCost.value"
           [readonly]="(isExtendOrCancelRequestType() || readonly)"
-          [appLanguage]="lang.getCurrentLanguage()"
           [workArea]="projectWorkArea.value" [permitType]="permitType.value"></deduction-ratio-manager>
 
         </div>
@@ -357,7 +356,6 @@
           [clearItems]="clearDeductionItems"
           [countriesChange]="countriesField.value"
           [readonly]="(isExtendOrCancelRequestType() || readonly)"
-          [appLanguage]="lang.getCurrentLanguage()"
           [countries]="countries"></targeted-countries-distribution>
 
         </div>
