@@ -80,6 +80,7 @@ export class CharityOrganizationUpdate extends CaseModel<
   establishmentDate!: string;
   complianceOfficerList: OrganizationOfficer[] = [];
   charityContactOfficerList: OrganizationOfficer[] = [];
+  branchOfficerList: OrganizationOfficer[] = [];
   charityBranchList: CharityBranch[] = [];
   establishmentID!: string;
 

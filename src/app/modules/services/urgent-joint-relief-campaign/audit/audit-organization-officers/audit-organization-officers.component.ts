@@ -20,7 +20,11 @@ export class AuditOrganizationOfficersComponent extends AuditListGenericComponen
     super();
   }
 
-  displayColumns: string[] = ['actions'];
+  displayColumns: string[] = ['fullName',
+    'email',
+    'phone',
+    'extraPhone',
+    'actions'];
   actions: IMenuItem<OrganizationOfficer>[] = [
     // show difference
     {

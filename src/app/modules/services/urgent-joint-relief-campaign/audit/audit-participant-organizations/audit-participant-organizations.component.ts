@@ -20,7 +20,7 @@ export class AuditParticipantOrganizationsComponent extends AuditListGenericComp
     super();
   }
 
-  displayColumns: string[] = ['actions'];
+  displayColumns: string[] = ['arName', 'enName', 'managerDecisionInfo','value', 'notes' ,'actions'];
   actions: IMenuItem<ParticipantOrganization>[] = [
     // show difference
     {

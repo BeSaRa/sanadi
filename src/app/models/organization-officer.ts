@@ -23,6 +23,7 @@ export class OrganizationOfficer extends SearchableCloneable<OrganizationOfficer
   branchId!: number;
   fullName!: string;
   email!: string;
+  itemId!: string;
   phone!: string;
   identificationNumber!: string;
   extraPhone!: string;

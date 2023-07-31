@@ -45,9 +45,5 @@ export class AuditOrgExecutiveMemberComponent extends AuditListGenericComponent<
   getControlLabels(item: OrgExecutiveMember): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
   }
-
-  existsInList(objComparison: IFindInList<OrgExecutiveMember>): OrgExecutiveMember | undefined {
-    return objComparison.listToCompareWith.find((item) => item.id === objComparison.itemToCompare.id);
-  }
 }
 

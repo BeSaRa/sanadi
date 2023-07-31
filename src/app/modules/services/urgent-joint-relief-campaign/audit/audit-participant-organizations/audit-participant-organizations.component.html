@@ -9,6 +9,28 @@
             </th>
           </ng-container>
 
+          <ng-container cdkColumnDef="arName">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.arabicName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="enName">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="value">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.participating_value}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.value?? 0 }} </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="managerDecisionInfo">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.request_state}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.managerDecisionInfo?.getName() === '' || undefined ? lang.map.menu_under_process: row.managerDecisionInfo?.getName()}} </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="notes">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.comment}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.notes}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.view_changes}}</th>
             <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions audit-actions">

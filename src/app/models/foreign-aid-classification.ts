@@ -34,6 +34,7 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
   subUNOCHAInfo!: AdminResult;
   subUNOCHACategory!: number;
   subUNOCHACategoryInfo!: AdminResult;
+  itemId!: string;
 
   id!: number;
   objectDBId?: number;
