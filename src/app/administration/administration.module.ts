@@ -80,7 +80,7 @@ import {FieldAssessmentPopupComponent} from './popups/field-assessment-popup/fie
 import {FieldAssessmentComponent} from './pages/field-assessment/field-assessment.component';
 import {AdminLookupPopupComponent} from './popups/admin-lookup-popup/admin-lookup-popup.component';
 import {DacOchaNewPopupComponent} from './popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
-import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
+import {VacationDatesComponent} from '@app/administration/pages/vacation-dates/vacation-dates.component';
 import {VacationDatesPopupComponent} from './popups/vacation-dates-popup/vacation-dates-popup.component';
 import {AdminLookupListComponent} from './pages/admin-lookup-list/admin-lookup-list.component';
 import {AdminLookupComponent} from './pages/admin-lookup/admin-lookup.component';
@@ -202,7 +202,7 @@ import { AdminPermissionPopupComponent } from './popups/admin-permission-popup/a
     FieldAssessmentServiceLinkComponen,
     AdminLookupPopupComponent,
     DacOchaNewPopupComponent,
-    VactionDatesComponent,
+    VacationDatesComponent,
     VacationDatesPopupComponent,
     AdminLookupListComponent,
     AdminLookupComponent,

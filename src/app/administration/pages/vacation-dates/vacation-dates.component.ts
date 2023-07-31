@@ -16,11 +16,11 @@ import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, switchMap, takeUntil,} from 'rxjs/operators';
 
 @Component({
-  selector: 'vaction-dates',
-  templateUrl: './vaction-dates.component.html',
-  styleUrls: ['./vaction-dates.component.scss'],
+  selector: 'vacation-dates',
+  templateUrl: './vacation-dates.component.html',
+  styleUrls: ['./vacation-dates.component.scss'],
 })
-export class VactionDatesComponent extends AdminGenericComponent<VacationDates, VacationDatesService> {
+export class VacationDatesComponent extends AdminGenericComponent<VacationDates, VacationDatesService> {
   usePagination = true;
   actions: IMenuItem<VacationDates>[] = [
     // edit

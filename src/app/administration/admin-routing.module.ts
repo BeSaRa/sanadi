@@ -27,7 +27,7 @@ import {SdGoalComponent} from '@app/administration/pages/sd-goal/sd-goal.compone
 import {BankComponent} from '@app/administration/pages/bank/bank.component';
 import {DonorComponent} from '@app/administration/pages/donor/donor.component';
 import {FieldAssessmentComponent} from '@app/administration/pages/field-assessment/field-assessment.component';
-import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
+import {VacationDatesComponent} from '@app/administration/pages/vacation-dates/vacation-dates.component';
 import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
 import {ProfilesComponent} from './pages/profiles/profiles.component';
 import {DynamicModelsComponent} from './pages/dynamic-models/dynamic-models.component';
@@ -188,7 +188,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'vacation-dates', component: VactionDatesComponent,
+    path: 'vacation-dates', component: VacationDatesComponent,
     canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.MANAGE_VACATIONS_DATE, configPermissionGroup: null, checkAnyPermission: false
