@@ -6,27 +6,31 @@ import {TaskDetails} from '@app/models/task-details';
 import {EvaluationIndicator} from '@app/models/evaluation-indicator';
 import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
 import {ProjectAddress} from '@app/models/project-address';
+import {ProjectComponentInterceptor} from "@model-interceptors/project-component-interceptor";
+
+const projectComponentInterceptor = new ProjectComponentInterceptor();
 
 export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> {
   send(model: Partial<ProjectModel>): Partial<ProjectModel> {
     model.componentList = (model.componentList || []).map(item => {
-      delete (item as Partial<ProjectComponent>).searchFields;
-      return item;
+      return projectComponentInterceptor.send(new ProjectComponent().clone(item)) as ProjectComponent;
     });
     model.evaluationIndicatorList = (model.evaluationIndicatorList ?? []).map(item => {
       item = new EvaluationIndicator().clone(item);
-      delete item.indicatorInfo;
       delete (item as Partial<EvaluationIndicator>).searchFields;
+      delete (item as Partial<EvaluationIndicator>).auditOperation;
       return item;
     });
     model.foreignCountriesProjectList = (model.foreignCountriesProjectList ?? []).map(item => {
       delete (item as Partial<ProjectModelForeignCountriesProject>).searchFields;
+      delete (item as Partial<ProjectModelForeignCountriesProject>).auditOperation;
       return item;
     });
     model.projectAddressList = (model.projectAddressList ?? []).map(item => {
       delete item.mapService;
       delete item.defaultLatLng;
       delete (item as Partial<ProjectAddress>).searchFields;
+      delete (item as Partial<ProjectAddress>).auditOperation;
       return item;
     });
     delete model.requestTypeInfo;
@@ -79,7 +83,6 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.sanadiMainClassificationInfo = AdminResult.createInstance(model.sanadiMainClassificationInfo);
     model.exitMechanismInfo = AdminResult.createInstance(model.exitMechanismInfo);
     model.evaluationIndicatorList = model.evaluationIndicatorList.map(item => {
-      item.indicatorInfo = item.indicatorInfo ? AdminResult.createInstance(item.indicatorInfo) : AdminResult.createInstance({});
       return new EvaluationIndicator().clone(item);
     });
     model.foreignCountriesProjectList = model.foreignCountriesProjectList.map(item => {
@@ -89,7 +92,7 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
       return new ProjectAddress().clone(item);
     });
     model.componentList = (model.componentList || []).map(item => {
-      return new ProjectComponent().clone(item);
+      return projectComponentInterceptor.receive(new ProjectComponent().clone(item));
     });
     return model;
   }

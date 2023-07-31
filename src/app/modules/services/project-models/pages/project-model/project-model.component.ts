@@ -501,6 +501,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     if (model.domain === DomainTypes.DEVELOPMENT) {
       this.displayDevGoals = true;
     }
+    if(this.model.sanadiDomain){
+      this.loadSanadiMainClassification(this.model.sanadiDomain)
+    }
   }
 
   _resetForm(): void {
@@ -1044,6 +1047,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     } else {
       this.aidLookupService.loadByCriteria({parent: parentId}).subscribe(list => {
         this.sanadiMainClassifications = list;
+        if(this.model?.sanadiMainClassification){
+          this.sanadiMainClassification.setValue(this.model.sanadiMainClassification);
+        }
       });
     }
   }

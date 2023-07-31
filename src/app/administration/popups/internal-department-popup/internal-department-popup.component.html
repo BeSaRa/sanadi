@@ -56,11 +56,6 @@
           <input validationClasses="email" formControlName="email" type="text" id="email" class="form-control">
           <app-field-error-message controlName="email"></app-field-error-message>
         </div>
-        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
-          <label asteriskIfRequired="status" for="status"
-                 class="form-label">{{lang.map.lbl_status}}</label>
-          <span id="status" class="form-control input-disabled">{{model.statusInfo ? model.statusInfo?.getName() : '&nbsp;'}}</span>
-        </div>
       </div>
     </ng-template>
     <ng-template #stampTabTemplate>

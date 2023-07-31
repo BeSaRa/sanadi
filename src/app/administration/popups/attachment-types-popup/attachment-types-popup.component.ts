@@ -72,9 +72,6 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.listenToIsGlobalChange();
-    if (this.operation === OperationTypes.CREATE) {
-      this.model.status = true;
-    }
     this.buildForm();
     this._saveModel();
     if (this.model.id) {
@@ -132,7 +129,6 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
         CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
       ]],
-      status: [this.model.status, [CustomValidators.required]],
       arDesc: [this.model.arDesc, CustomValidators.required],
       global: [this.model.global]
     });

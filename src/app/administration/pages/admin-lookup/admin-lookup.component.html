@@ -32,6 +32,8 @@
     *ngIf="canShowTab(tabsData.functionGroup)" [title]="getTabLabel(adminLookupTypeEnum.FUNCTIONAL_GROUP)"></tab>
   <tab [name]="tabsData.permissionGroup.name" [template]="permissionGroupTemplate"
     *ngIf="canShowTab(tabsData.permissionGroup)" [title]="getTabLabel(adminLookupTypeEnum.PERMISSION_GROUP)"></tab>
+  <tab [name]="tabsData.expensesType.name" [template]="expensesTypeTemplate"
+    *ngIf="canShowTab(tabsData.expensesType)" [title]="getTabLabel(adminLookupTypeEnum.EXPENSES_TYPE)"></tab>
 </tabs-list>
 
 <ng-template #workFieldTemplate>
@@ -117,5 +119,11 @@
 <ng-template #serviceTypeTemplate>
   <admin-lookup-list #serviceTypeListComponent [adminLookupTypeId]="adminLookupTypeEnum.SERVICE_TYPE"
     (onReady)="setLookupComponentMap($event, serviceTypeListComponent)">
+  </admin-lookup-list>
+</ng-template>
+
+<ng-template #expensesTypeTemplate>
+  <admin-lookup-list #expensesTypeListComponent [adminLookupTypeId]="adminLookupTypeEnum.EXPENSES_TYPE"
+    (onReady)="setLookupComponentMap($event, expensesTypeListComponent)">
   </admin-lookup-list>
 </ng-template>

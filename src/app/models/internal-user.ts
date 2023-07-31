@@ -39,7 +39,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   officialPhoneNumber!: string;
   phoneExtension!: string;
   phoneNumber!: string;
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusInfo!: AdminResult;
   userTypeInfo!: AdminResult;
   statusDateModified!: string;
@@ -81,7 +81,6 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
       qid,
       empNum,
       phoneNumber,
-      status,
       customRoleId
     } = this;
     return {
@@ -113,7 +112,6 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
         CustomValidators.maxLength(10)
       ]] : empNum,
       phoneNumber: controls ? [phoneNumber, CustomValidators.commonValidations.phone] : phoneNumber,
-      status: controls ? [status, [CustomValidators.required]] : status,
       customRoleId: controls ? [customRoleId] : customRoleId
     }
   }

@@ -397,6 +397,10 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   setImpactEffort(effortVsImpact: { x: number, y: number }) {
     this.model!.impact = effortVsImpact.x;
     this.model!.effort = effortVsImpact.y;
+    this.evaluation.patchValue({
+      impact: effortVsImpact.x,
+      effort: effortVsImpact.y
+    })
   }
   selectProject(licenseDetails: ProjectImplementation | undefined): void {
     this.selectedLicense = licenseDetails;

@@ -1,8 +1,9 @@
 <div class="row mb-2">
-  <app-page-header [pageTitle]="'distribute_target_amount_over_countries'"></app-page-header>
+  <app-page-header [pageTitle]="'distribute_target_amount_over_countries'"
+  [removeContainerClasses]="true"></app-page-header>
 </div>
 <div class="row">
-  <div class="col-md-4 col-sm-12 mb-4 position-relative">
+  <div class="col-sm-12 mb-4 position-relative">
     <div class="d-flex align-items-end gap-2">
       <div class="flex-grow-1">
         <ng-select [formControl]="item" appendTo="body" [clearable]="true" id="selectedCountry"
@@ -34,7 +35,7 @@
         <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo.enName}} </td>
       </ng-container>
       <ng-container cdkColumnDef="amount">
-        <th cdk-header-cell style="width:300px" *cdkHeaderCellDef> {{lang.map.target_amount}}</th>
+        <th cdk-header-cell style="width:200px" *cdkHeaderCellDef> {{lang.map.target_amount}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index">
           <ng-container [formGroupName]="i">
             <div class="d-flex">
@@ -64,34 +65,34 @@
         </td>
       </ng-container>
       <ng-container cdkColumnDef="total">
-        <th cdk-header-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-header-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center justify-content-end h6 mb-0">{{lang.map.total}}</div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="totalValue">
-        <th cdk-header-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-header-cell colspan="1" *cdkFooterCellDef>
           <div
             class="d-flex align-items-center h6 mb-0">{{totalValue| mask:maskPattern.SEPARATOR:maskPattern.THOUSAND_SEPARATOR}}</div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="targetAmount">
-        <th cdk-header-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-header-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center justify-content-end h6 mb-0">{{lang.map.target_amount}}</div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="targetValue">
-        <th cdk-header-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-header-cell colspan="1" *cdkFooterCellDef>
           <div
             class="d-flex align-items-center h6 mb-0">{{_model.targetAmount| mask:maskPattern.SEPARATOR:maskPattern.THOUSAND_SEPARATOR}}</div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="remain">
-        <th cdk-header-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-header-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center justify-content-end h6 mb-0">{{lang.map.remain}}</div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="remainValue">
-        <th cdk-header-cell colspan="2" [ngClass]="{remain:remain!==0}" *cdkFooterCellDef>
+        <th cdk-header-cell colspan="1" [ngClass]="{remain:remain!==0}" *cdkFooterCellDef>
           <div class="d-flex align-items-center">
             <span class="h6 mb-0">{{remain| mask:maskPattern.SEPARATOR:maskPattern.THOUSAND_SEPARATOR}}</span>
             <div [tooltip]="lang.map.distribute_evenly">

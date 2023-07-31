@@ -8,6 +8,11 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {Observable} from 'rxjs';
 import {UiCrudDialogComponentDataContract} from "@contracts/ui-crud-dialog-component-data-contract";
+import {AdminLookupService} from "@services/admin-lookup.service";
+import {AdminLookup} from "@models/admin-lookup";
+import {AdminLookupTypeEnum} from "@enums/admin-lookup-type-enum";
+import {takeUntil, tap} from "rxjs/operators";
+import {AdminResult} from "@models/admin-result";
 
 @Component({
   selector: 'component-budgets-popup',
@@ -17,16 +22,19 @@ import {UiCrudDialogComponentDataContract} from "@contracts/ui-crud-dialog-compo
 export class ComponentBudgetsPopupComponent extends UiCrudDialogGenericComponent<ProjectComponent> {
   popupTitleKey: keyof ILanguageKeys;
   hideFullScreen = true;
+  expensesTypeList: AdminLookup[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<ProjectComponent>,
               public dialogRef: DialogRef,
-              public fb: UntypedFormBuilder) {
+              public fb: UntypedFormBuilder,
+              private adminLookupService: AdminLookupService) {
     super();
     this.setInitDialogData(data);
     this.popupTitleKey = 'project_components_budgets';
   }
 
   initPopup(): void {
+    this.loadExpensesTypeList();
   }
 
   getPopupHeadingText(): string {
@@ -67,9 +75,11 @@ export class ComponentBudgetsPopupComponent extends UiCrudDialogGenericComponent
 
   prepareModel(model: ProjectComponent, form: UntypedFormGroup): ProjectComponent | Observable<ProjectComponent> {
     let formValue = form.getRawValue();
+    let expensesTypeInfo = this.expensesTypeList.find(x => x.id === formValue.expensesType)?.createAdminResult() ?? new AdminResult();
     return this._getNewInstance({
       ...this.model,
-      ...formValue
+      ...formValue,
+      expensesTypeInfo: expensesTypeInfo
     });
   }
 
@@ -78,5 +88,14 @@ export class ComponentBudgetsPopupComponent extends UiCrudDialogGenericComponent
 
   destroyPopup(): void {
 
+  }
+
+  private loadExpensesTypeList(): void {
+    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.EXPENSES_TYPE)
+      .pipe(
+        tap((result) => this.expensesTypeList = result),
+        takeUntil(this.destroy$)
+      )
+      .subscribe()
   }
 }

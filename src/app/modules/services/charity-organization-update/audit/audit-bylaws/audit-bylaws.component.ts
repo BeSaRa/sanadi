@@ -51,9 +51,5 @@ export class AuditBylawsComponent extends AuditListGenericComponent<Bylaw> {
   getControlLabels(item: Bylaw): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
   }
-
-  existsInList(objComparison: IFindInList<Bylaw>): Bylaw | undefined {
-    return objComparison.listToCompareWith.find((item) => item.id === objComparison.itemToCompare.id);
-  }
 }
 

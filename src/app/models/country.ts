@@ -22,7 +22,7 @@ export class Country extends BaseModel<Country, CountryService> {
   parentId?: number;
   riskLevel!: number;
   statusDateModified!: string;
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   levelOfDueDiligence!: number;
 
   parentInfo!: AdminResult;
@@ -85,7 +85,6 @@ export class Country extends BaseModel<Country, CountryService> {
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
-      status: controls ? [status, [CustomValidators.required]] : status,
       riskLevel: controls ? [riskLevel] : riskLevel,
       levelOfDueDiligence: controls ? [levelOfDueDiligence] : levelOfDueDiligence
     }

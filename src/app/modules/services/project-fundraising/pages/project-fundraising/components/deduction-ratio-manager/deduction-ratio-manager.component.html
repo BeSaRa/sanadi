@@ -1,27 +1,26 @@
 <div class="row mb-2">
-  <app-page-header [pageTitle]="'deduction_ratio_items'"></app-page-header>
+  <app-page-header [pageTitle]="'deduction_ratio_items'"
+  [removeContainerClasses]="true"></app-page-header>
 </div>
 <div class="row">
-  <div class="col-md-4 col-sm-12 mb-4 position-relative">
+  <div class="col-sm-12 mb-4 position-relative">
     <div class="d-flex align-items-end gap-2">
       <div class="flex-grow-1">
         <ng-select [formControl]="item" appendTo="body" [clearable]="true" id="selectedDeductionItem"
-                   placeholder="{{lang.map.select}}"
-                   [notFoundText]="lang.map.msg_not_found"
-                   [readonly]="readonly">
+          placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly">
           <ng-option [disabled]="itemExists(option.id)" [value]="option"
-                     *ngFor="let option of deductionRatioItems">{{option.getName(lang.map.lang)}}</ng-option>
+            *ngFor="let option of deductionRatioItems">{{option.getName(lang.map.lang)}}</ng-option>
         </ng-select>
       </div>
-      <button (click)="!readonly && addItem()" [disabled]="readonly || !item.value" class="btn btn-primary">{{lang.map.btn_add}}</button>
+      <button (click)="!readonly && addItem()" [disabled]="readonly || !item.value"
+        class="btn btn-primary">{{lang.map.btn_add}}</button>
     </div>
   </div>
 </div>
 <div class="row mb-2">
-  <app-table [formGroup]="form" #table [data]="_model.deductedPercentagesItemList"
-             [columns]="displayedColumns">
+  <app-table [formGroup]="form" #table [data]="deductionList" [columns]="displayedColumns">
     <table formArrayName="list" cdk-table [dataSource]="table.dataSource"
-           class="table table-striped table-bordered caption-top">
+      class="table table-striped table-bordered caption-top">
       <ng-container cdkColumnDef="arabic_name">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.deductionTypeInfo.arName}} </td>
@@ -33,97 +32,99 @@
       </ng-container>
 
       <ng-container cdkColumnDef="percentage">
-        <th cdk-header-cell style="width:300px" *cdkHeaderCellDef> {{lang.map.percentage}}</th>
+        <th cdk-header-cell *cdkHeaderCellDef style="width:200px"> {{lang.map.percentage}}</th>
         <td cdk-cell *cdkCellDef="let row ; let i = index">
           <ng-container [formGroupName]="i">
-            <input [mask]="maskPattern.PERCENT" suffix="%" [dropSpecialCharacters]="false" style="width:120px"
-                   id="field_name_{{i}}" [readonly]="readonly"
-                   formControlName="value"
-                   class="form-control form-control-sm">
+            <div class="d-flex align-items-center" style="gap: .5rem;">
+              <input [mask]="maskPattern.PERCENT" suffix="%" [dropSpecialCharacters]="false" id="field_name_{{i}}"
+                [readonly]="readonly || !isDeductionSelected(row)" formControlName="value"
+                style="width:120px"
+                class="form-control form-control-sm">
+              <input type="checkbox" [checked]=" isDeductionSelected(row)" (change)="toggleDeduct(row,i) "
+                class="form-check-input">
+            </div>
           </ng-container>
+
         </td>
       </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell style="width:120px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index">
-          <button [disabled]="readonly" (click)="!readonly && removeItem(row , i)" [tooltip]="lang.map.btn_remove" class="btn icon-btn">
+          <button [disabled]="readonly" (click)="!readonly && removeItem(row , i)" [tooltip]="lang.map.btn_remove"
+            class="btn icon-btn">
             <i class="mdi text-primary mdi-trash-can"></i>
           </button>
         </td>
       </ng-container>
       <ng-container cdkColumnDef="deductionTotalCell">
-        <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-footer-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center justify-content-end">
             <span class="h6 mb-0">{{lang.map.total_deduction_ratio}}</span>
           </div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="adminDeductionTotalCell">
-        <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-footer-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center justify-content-end">
             <span class="h6 mb-0">{{lang.map.total_value_of_admin_deduction}}</span>
           </div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="deductionTotalCellValue">
-        <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-footer-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center"><span class="h6 mb-0">{{totalDeductionRatio}}%</span></div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="adminDeductionTotalCellValue">
-        <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-footer-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center">
-            <span
-              class="h6 mb-0">{{totalAdminRatio | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}</span>
+            <span class="h6 mb-0">{{totalAdminRatio | mask : maskPattern.SEPARATOR:
+              maskPattern.THOUSAND_SEPARATOR}}</span>
           </div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="projectTotalCost">
-        <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-footer-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center justify-content-end">
-            <span
-              class="h6 mb-0">{{lang.map.project_total_cost  }}</span>
+            <span class="h6 mb-0">{{lang.map.project_total_cost }}</span>
           </div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="projectTotalCostValue">
-        <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-footer-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center">
-            <span
-              class="h6 mb-0">{{_model.projectTotalCost | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}</span>
+            <span class="h6 mb-0">{{_model.projectTotalCost | mask : maskPattern.SEPARATOR:
+              maskPattern.THOUSAND_SEPARATOR}}</span>
           </div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="targetAmountCell">
-        <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-footer-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center justify-content-end">
-            <span
-              class="h6 mb-0">{{lang.map.target_amount  }}</span>
+            <span class="h6 mb-0">{{lang.map.target_amount }}</span>
           </div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="targetAmountCellValue">
-        <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
+        <th cdk-footer-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center">
             <!-- <span
               class="h6 mb-0">{{_model.targetAmount | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}
             </span> -->
-            <span
-              class="h6 mb-0">{{deductionTargetAmount() | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}
+            <span class="h6 mb-0">{{deductionTargetAmount() | mask : maskPattern.SEPARATOR:
+              maskPattern.THOUSAND_SEPARATOR}}
             </span>
           </div>
         </th>
       </ng-container>
       <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+      <tr cdk-footer-row class="table-row-header" *cdkFooterRowDef="['deductionTotalCell','deductionTotalCellValue'];">
+      </tr>
+      <tr cdk-footer-row class="table-row-header" *cdkFooterRowDef="['projectTotalCost','projectTotalCostValue'];"></tr>
       <tr cdk-footer-row class="table-row-header"
-          *cdkFooterRowDef="['deductionTotalCell','deductionTotalCellValue'];"></tr>
-      <tr cdk-footer-row class="table-row-header"
-          *cdkFooterRowDef="['projectTotalCost','projectTotalCostValue'];"></tr>
-      <tr cdk-footer-row class="table-row-header"
-          *cdkFooterRowDef="['adminDeductionTotalCell','adminDeductionTotalCellValue'];"></tr>
-      <tr cdk-footer-row class="table-row-header"
-          *cdkFooterRowDef="['targetAmountCell','targetAmountCellValue'];"></tr>
+        *cdkFooterRowDef="['adminDeductionTotalCell','adminDeductionTotalCellValue'];"></tr>
+      <tr cdk-footer-row class="table-row-header" *cdkFooterRowDef="['targetAmountCell','targetAmountCellValue'];"></tr>
       <tr *cdkNoDataRow>
         <td colspan="20">{{lang.map.no_records_to_display}}</td>
       </tr>

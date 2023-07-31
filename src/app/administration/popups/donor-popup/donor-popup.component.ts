@@ -20,7 +20,6 @@ import { Observable } from 'rxjs';
 })
 export class DonorPopupComponent extends AdminGenericDialog<Donor> {
 
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   form!: UntypedFormGroup;
   model!: Donor;
   operation: OperationTypes;

@@ -104,7 +104,7 @@
                      placeholder="{{lang.map.select}}"
                      [notFoundText]="lang.map.msg_not_found"
                      id="mainUNOCHACategory" validationClasses="mainUNOCHACategory">
-            <ng-option *ngFor="let option of mainOchas"
+            <ng-option [disabled]="!option.isActive()" *ngFor="let option of mainOchas"
                        [value]="option.id">{{option.getName()}}</ng-option>
           </ng-select>
           <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
@@ -117,7 +117,7 @@
                      placeholder="{{lang.map.select}}"
                      [notFoundText]="lang.map.msg_not_found"
                      id="mainDACCategory" validationClasses="mainDACCategory">
-            <ng-option *ngFor="let option of mainDacs"
+            <ng-option [disabled]="!option.isActive()" *ngFor="let option of mainDacs"
                        [value]="option.id">{{option.getName()}}</ng-option>
           </ng-select>
           <app-field-error-message controlName="mainDACCategory"></app-field-error-message>

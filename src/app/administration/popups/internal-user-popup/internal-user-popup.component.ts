@@ -11,19 +11,15 @@ import {Observable, of, Subject} from 'rxjs';
 import {InternalDepartmentService} from '@app/services/internal-department.service';
 import {InternalDepartment} from '@app/models/internal-department';
 import {catchError, filter, map, switchMap, takeUntil} from 'rxjs/operators';
-import {Lookup} from '@app/models/lookup';
-import {LookupService} from '@app/services/lookup.service';
 import {CustomRole} from '@app/models/custom-role';
 import {ExternalUserCustomRoleService} from '@services/external-user-custom-role.service';
 import {UserPermissionService} from '@app/services/user-permission.service';
 import {ToastService} from '@app/services/toast.service';
-import {SharedService} from '@app/services/shared.service';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {UserTeamComponent} from '@app/administration/shared/user-team/user-team.component';
 import {InternalUserDepartmentService} from '@app/services/internal-user-department.service';
 import {InternalUserDepartment} from '@app/models/internal-user-department';
 import {AdminResult} from '@app/models/admin-result';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {InternalUserService} from '@app/services/internal-user.service';
 import {BlobModel} from '@app/models/blob-model';
@@ -52,7 +48,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   model: InternalUser;
   form!: UntypedFormGroup;
   departments: InternalDepartment[] = [];
-  statusList: Lookup[] = [];
   customRoles: CustomRole[] = [];
   @ViewChild(UserTeamComponent) userTeamComponent!: UserTeamComponent;
   @ViewChild('customMenuPermissionComponent') customMenuPermissionComponentRef!: CustomMenuPermissionComponent;
@@ -66,7 +61,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   selectedDepartment: UntypedFormControl = new UntypedFormControl();
   private userDepartmentsChanged$: Subject<InternalUserDepartment[]> = new Subject<InternalUserDepartment[]>();
   private userDepartmentsIds: number[] = [];
-  commonStatusEnum = CommonStatusEnum;
   fileExtensionsEnum = FileExtensionsEnum;
   signatureFile?: File;
   loadedSignature?: BlobModel;
@@ -146,8 +140,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
               private authService: AuthService,
               public fb: UntypedFormBuilder,
               private cd: ChangeDetectorRef,
-              private sharedService: SharedService,
-              private lookupService: LookupService,
               private customRoleService: ExternalUserCustomRoleService,
               private userPermissionService: UserPermissionService,
               private internalUserDepartmentService: InternalUserDepartmentService,
@@ -157,7 +149,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     super();
     this.model = this.data.model;
     this.operation = this.data.operation;
-    this.statusList = lookupService.listByCategory.CommonStatus;
   }
 
   initPopup(): void {

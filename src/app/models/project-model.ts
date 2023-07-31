@@ -100,6 +100,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
   interventionTypeInfo!: AdminResult;
   service!: ProjectModelService;
   targetAmount?: number
+  beneficiaryPercentageInHostCommunity?: number
 
   searchFields: ISearchFieldsMap<ProjectModel> = {
     ...dateSearchFields(['createdOn']),
@@ -339,7 +340,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       expectedImpact: { langKey: 'project_expected_impacts', value: this.expectedImpact },
       expectedResults: { langKey: 'project_expected_results', value: this.expectedResults },
       sustainabilityItems: { langKey: 'project_sustainability_items', value: this.sustainabilityItems },
-      exitMechanism: { langKey: 'exit_mechanism', value: this.exitMechanism }
+      exitMechanism: { langKey: 'exit_mechanism', value: this.exitMechanism },
+      beneficiaryPercentageInHostCommunity: { langKey: 'beneficiary_percent_in_host_community', value: this.beneficiaryPercentageInHostCommunity }
     };
   }
   buildSummaryTab(controls: boolean = false): any {
@@ -349,58 +351,41 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       isInstitutionProfile: employeeService.isInstitutionProfile()
     }
 
-    const {
-      needsAssessment,
-      goals,
-      directBeneficiaryNumber,
-      indirectBeneficiaryNumber,
-      beneficiaryFamiliesNumber,
-      successItems,
-      outputs,
-      expectedImpact,
-      expectedResults,
-      sustainabilityItems,
-      exitMechanism
-    } = this;
+    const values = ObjectUtils.getControlValues<ProjectModel>(this.getSummaryValuesWithLabels());
 
     if (profile.isCharityProfile || profile.isInstitutionProfile) {
       return {
-        needsAssessment: controls ? [needsAssessment, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : needsAssessment,
-        goals: controls ? [goals, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : goals,
-        directBeneficiaryNumber: controls ? [directBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : directBeneficiaryNumber,
-        indirectBeneficiaryNumber: controls ? [indirectBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : indirectBeneficiaryNumber,
-        beneficiaryFamiliesNumber: controls ? [beneficiaryFamiliesNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : beneficiaryFamiliesNumber,
-        successItems: controls ? [successItems, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : successItems,
-        outputs: controls ? [outputs, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : outputs,
-        expectedImpact: controls ? [expectedImpact, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedImpact,
-        expectedResults: controls ? [expectedResults, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedResults,
-        sustainabilityItems: controls ? [sustainabilityItems, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : sustainabilityItems,
-        exitMechanism: controls ? [exitMechanism, [CustomValidators.required]] : exitMechanism
+        needsAssessment: controls ? [values.needsAssessment, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.needsAssessment,
+        goals: controls ? [values.goals, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.goals,
+        directBeneficiaryNumber: controls ? [values.directBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : values.directBeneficiaryNumber,
+        indirectBeneficiaryNumber: controls ? [values.indirectBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : values.indirectBeneficiaryNumber,
+        beneficiaryFamiliesNumber: controls ? [values.beneficiaryFamiliesNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : values.beneficiaryFamiliesNumber,
+        successItems: controls ? [values.successItems, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.successItems,
+        outputs: controls ? [values.outputs, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.outputs,
+        expectedImpact: controls ? [values.expectedImpact, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.expectedImpact,
+        expectedResults: controls ? [values.expectedResults, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.expectedResults,
+        sustainabilityItems: controls ? [values.sustainabilityItems, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.sustainabilityItems,
+        exitMechanism: controls ? [values.exitMechanism, [CustomValidators.required]] : values.exitMechanism,
+        beneficiaryPercentageInHostCommunity: controls ? [values.beneficiaryPercentageInHostCommunity, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : values.beneficiaryPercentageInHostCommunity,
       };
     } else {
       return {
-        needsAssessment: controls ? [needsAssessment, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : needsAssessment,
-        goals: controls ? [goals, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : goals,
-        directBeneficiaryNumber: controls ? [directBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : directBeneficiaryNumber,
-        indirectBeneficiaryNumber: controls ? [indirectBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : indirectBeneficiaryNumber,
-        beneficiaryFamiliesNumber: controls ? [beneficiaryFamiliesNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : beneficiaryFamiliesNumber,
-        successItems: controls ? [successItems, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : successItems,
-        outputs: controls ? [outputs, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : outputs,
-        expectedImpact: controls ? [expectedImpact, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedImpact,
-        expectedResults: controls ? [expectedResults, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedResults,
-        sustainabilityItems: controls ? [sustainabilityItems, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : sustainabilityItems,
-        exitMechanism: controls ? [exitMechanism] : exitMechanism
+        needsAssessment: controls ? [values.needsAssessment, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.needsAssessment,
+        goals: controls ? [values.goals, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.goals,
+        directBeneficiaryNumber: controls ? [values.directBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : values.directBeneficiaryNumber,
+        indirectBeneficiaryNumber: controls ? [values.indirectBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : values.indirectBeneficiaryNumber,
+        beneficiaryFamiliesNumber: controls ? [values.beneficiaryFamiliesNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : values.beneficiaryFamiliesNumber,
+        successItems: controls ? [values.successItems, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.successItems,
+        outputs: controls ? [values.outputs, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.outputs,
+        expectedImpact: controls ? [values.expectedImpact, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.expectedImpact,
+        expectedResults: controls ? [values.expectedResults, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.expectedResults,
+        sustainabilityItems: controls ? [values.sustainabilityItems, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.sustainabilityItems,
+        exitMechanism: controls ? [values.exitMechanism] : values.exitMechanism,
+        beneficiaryPercentageInHostCommunity: controls ? [values.beneficiaryPercentageInHostCommunity, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : values.beneficiaryPercentageInHostCommunity,
       };
     }
   }
 
-  buildEvaluationIndicatorForm(): any {
-    return {
-      indicator: [null, [CustomValidators.required]],
-      percentage: [null, [CustomValidators.required]],
-      notes: [null]
-    };
-  }
   getSummaryPercentValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       beneficiaries0to5: { langKey: 'number_of_0_to_5', value: this.beneficiaries0to5 },

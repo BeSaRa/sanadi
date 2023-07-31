@@ -23,7 +23,7 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   bawServiceCode!: string;
   requestSerialCode!: string;
   licenseSerialCode!: string;
-  status: number = 1;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusDateModified: string | null = '';
   statusInfo!: AdminResult;
   statusDateModifiedString!: string;

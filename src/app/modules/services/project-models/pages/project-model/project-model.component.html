@@ -613,6 +613,17 @@
             <group-error-message></group-error-message>
           </div>
         </div>
+        <hr class="mt-0">
+        <div class="row">
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="beneficiaryPercentageInHostCommunity"
+                   for="beneficiaryPercentageInHostCommunity">{{lang.map.beneficiary_percent_in_host_community}}</label>
+            <input id="beneficiaryPercentageInHostCommunity" validationClasses="beneficiaryPercentageInHostCommunity"
+                   [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false"
+                   formControlName="beneficiaryPercentageInHostCommunity" class="form-control">
+            <app-field-error-message controlName="beneficiaryPercentageInHostCommunity"></app-field-error-message>
+          </div>
+        </div>
         <ng-container *ngIf="isCharityProfile || isInstitutionProfile">
           <div class="row">
             <div class="col-sm-12 mb-4 position-relative">

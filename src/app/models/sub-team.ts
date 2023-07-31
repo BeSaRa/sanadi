@@ -21,7 +21,7 @@ export class SubTeam extends BaseModel<SubTeam, SubTeamService> {
   arName!: string;
   enName!: string;
   parent!: number;
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusInfo!: Lookup;
   parentInfo!: AdminResult;
   // extra properties
@@ -50,7 +50,6 @@ export class SubTeam extends BaseModel<SubTeam, SubTeamService> {
     const {
       arName,
       enName,
-      status,
       parent
     } = this;
     return {
@@ -66,7 +65,6 @@ export class SubTeam extends BaseModel<SubTeam, SubTeamService> {
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
-      status: controls ? [status, [CustomValidators.required]] : status,
       parent: controls ? [parent, [CustomValidators.required]] : parent,
     }
   }

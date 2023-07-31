@@ -12,7 +12,7 @@ import { BaseModel } from "./base-model";
 export class DynamicModel extends BaseModel<DynamicModel, DynamicModelService>{
   arName!: string;
   enName!: string;
-  status!: number;
+  status: number = CommonStatusEnum.ACTIVATED;
   statusInfo!: Lookup;
 
   template!: string;
@@ -40,8 +40,7 @@ export class DynamicModel extends BaseModel<DynamicModel, DynamicModelService>{
   buildForm(controls?: boolean): any {
     const {
       arName,
-      enName,
-      status
+      enName
     } = this;
     return {
       arName: controls ? [arName, [
@@ -56,7 +55,6 @@ export class DynamicModel extends BaseModel<DynamicModel, DynamicModelService>{
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
-      status: controls ? [status, [CustomValidators.required]] : status,
     }
   }
 }

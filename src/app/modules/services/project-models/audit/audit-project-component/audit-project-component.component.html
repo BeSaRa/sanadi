@@ -16,6 +16,10 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.details}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.details}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="expensesType">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.expenses_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.expensesTypeInfo?.getName() || ''}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="totalCost">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
             <td cdk-cell *cdkCellDef="let row" class="text-end"> {{row.totalCost}} </td>

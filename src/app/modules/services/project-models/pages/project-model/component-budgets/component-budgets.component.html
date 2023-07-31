@@ -20,13 +20,18 @@
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.details}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.details}} </td>
         </ng-container>
+        <ng-container cdkColumnDef="expensesType">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.expensesType"> {{lang.map.expenses_type}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.expensesTypeInfo?.getName() || ''}} </td>
+        </ng-container>
         <ng-container cdkColumnDef="totalCost">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.total_cost}}</th>
           <td cdk-cell *cdkCellDef="let row"
               class="text-end"> {{(row.totalCost ?? 0) | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
         </ng-container>
         <ng-container cdkColumnDef="totalComponentCostLabel">
-          <td cdk-footer-cell colspan="2" class="text-end" *cdkFooterCellDef="let row">
+          <td cdk-footer-cell colspan="3" class="text-end" *cdkFooterCellDef="let row">
             <span><b> {{lang.map.total_cost}}: </b></span>
           </td>
         </ng-container>

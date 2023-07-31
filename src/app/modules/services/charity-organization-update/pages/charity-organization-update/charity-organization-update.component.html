@@ -522,6 +522,7 @@
       <foreign-aid-classifications
         #goverList
         *ngIf="!!charityWorkAreaField.value"
+        [charityId]="model!.charityId"
         [charityWorkArea]="charityWorkAreaField.value"
         [readonly]="readonly"
         [list]="model?.wFClassificationList || []"

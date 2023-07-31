@@ -329,42 +329,53 @@
           </table>
         </app-table>
       </div>
-      <deduction-ratio-manager
-        (onAddItem)="checkTemplateTabValidity()"
-        (onItemChange)="checkTemplateTabValidity()"
-        (onItemRemoved)="checkTemplateTabValidity()"
-        (deductionChange)="onDeductionRatioChanges()"
-        [clearItems]="clearDeductionItems"
-        (afterClearItems)="onClearDeductionItems()"
-        [checkForTemplate]="templateRequired"
-        [model]="model!"
-        [projectCost]="projectTotalCost.value"
-        [readonly]="(isExtendOrCancelRequestType() || readonly)"
-        [workArea]="projectWorkArea.value" [permitType]="permitType.value"></deduction-ratio-manager>
+      <div class="row">
+        <div class="col-md-4 col-sm-12">
+          <deduction-ratio-manager
+          (onAddItem)="checkTemplateTabValidity()"
+          (onItemChange)="checkTemplateTabValidity()"
+          (onItemRemoved)="checkTemplateTabValidity()"
+          (deductionChange)="onDeductionRatioChanges()"
+          [clearItems]="clearDeductionItems"
+          (afterClearItems)="onClearDeductionItems()"
+          [checkForTemplate]="templateRequired"
+          [model]="model!"
+          [projectCost]="projectTotalCost.value"
+          [readonly]="(isExtendOrCancelRequestType() || readonly)"
+          [workArea]="projectWorkArea.value" [permitType]="permitType.value"></deduction-ratio-manager>
 
-      <targeted-countries-distribution
-        *ngIf="displayAllFields"
-        (onAddItem)="checkTemplateTabValidity()"
-        (onItemChange)="checkTemplateTabValidity()"
-        (onItemRemoved)="checkTemplateTabValidity()"
-        [deductionRatioChanged]="deductionRatioChanged"
-        [model]="model!"
-        [clearItems]="clearDeductionItems"
-        [countriesChange]="countriesField.value"
-        [readonly]="(isExtendOrCancelRequestType() || readonly)"
-        [countries]="countries"></targeted-countries-distribution>
+        </div>
+        <div class="col-md-4 col-sm-12">
+          <targeted-countries-distribution
+          *ngIf="displayAllFields"
+          (onAddItem)="checkTemplateTabValidity()"
+          (onItemChange)="checkTemplateTabValidity()"
+          (onItemRemoved)="checkTemplateTabValidity()"
+          [deductionRatioChanged]="deductionRatioChanged"
+          [model]="model!"
+          [clearItems]="clearDeductionItems"
+          [countriesChange]="countriesField.value"
+          [readonly]="(isExtendOrCancelRequestType() || readonly)"
+          [countries]="countries"></targeted-countries-distribution>
 
-      <targeted-years-distribution
-        (onAddItem)="checkTemplateTabValidity()"
-        (onItemChange)="checkTemplateTabValidity()"
-        (onItemRemoved)="checkTemplateTabValidity()"
-        [clearItems]="clearDeductionItems"
-        [deductionRatioChanged]="deductionRatioChanged"
-        [model]="model!"
-        [oldDuration]="selectedLicense?.totalLicenseDuration"
-        [requestType]="requestType.value"
-        [readonly]="isTargetedYearsDisabled()"
-        [numberOfMonths]="licenseDuration.value"></targeted-years-distribution>
+        </div>
+        <div class="col-md-4 col-sm-12">
+          <targeted-years-distribution
+          (onAddItem)="checkTemplateTabValidity()"
+          (onItemChange)="checkTemplateTabValidity()"
+          (onItemRemoved)="checkTemplateTabValidity()"
+          [clearItems]="clearDeductionItems"
+          [deductionRatioChanged]="deductionRatioChanged"
+          [model]="model!"
+          [oldDuration]="selectedLicense?.totalLicenseDuration"
+          [requestType]="requestType.value"
+          [readonly]="isTargetedYearsDisabled()"
+          [numberOfMonths]="licenseDuration.value"></targeted-years-distribution>
+
+        </div>
+      </div>
+
+
 
     </ng-template>
     <ng-container formGroupName="explanation">

@@ -21,7 +21,6 @@ import { Observable } from 'rxjs';
 })
 export class FieldAssessmentPopupComponent extends AdminGenericDialog<FieldAssessment>  {
   typeList: Lookup[] = this.lookupService.listByCategory.FieldAssessment;
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   form!: UntypedFormGroup;
   model!: FieldAssessment;
   operation: OperationTypes;

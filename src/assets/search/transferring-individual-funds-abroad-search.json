@@ -72,5 +72,20 @@
         }
       }
     ]
+  },
+  {
+    "fields": [
+      {
+        "key": "transferCountry",
+        "type": "selectField",
+        "label": "transfer_to_country",
+        "selectOptions": {
+          "options": [],
+          "loader": "country.loadAsLookups",
+          "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
+        }
+      }
+    ]
   }
 ]

@@ -66,7 +66,7 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
     list: new UntypedFormArray([])
   })
 
-  displayedColumns = ['year', 'amount', 'actions'];
+  displayedColumns = ['year', 'amount'];
 
   deductionRatioChanges$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
@@ -325,4 +325,5 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
         this.updateSelectedList()
       })
   }
+
 }

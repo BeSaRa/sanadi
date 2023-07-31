@@ -20,7 +20,7 @@ const interceptor = new SdGoalInterceptor()
 export class SDGoal extends BaseModel<SDGoal, SDGoalService> {
   service!: SDGoalService;
   langService!: LangService;
-  status: number = 1;
+  status: number = CommonStatusEnum.ACTIVATED;
   parentId!: number | null;
   statusInfo!: Lookup;
 
@@ -44,7 +44,6 @@ export class SDGoal extends BaseModel<SDGoal, SDGoalService> {
     const {
       arName,
       enName,
-      status,
       parentId
     } = this;
 
@@ -61,7 +60,6 @@ export class SDGoal extends BaseModel<SDGoal, SDGoalService> {
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM')
       ]] : enName,
-      status: controls ? [status, [CustomValidators.required]] : status,
       parentId: controls ? [parentId] : parentId,
     }
   }

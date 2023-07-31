@@ -20,7 +20,7 @@ const interceptor = new AttachmentTypeInterceptor();
 export class AttachmentType extends BaseModel<AttachmentType, AttachmentTypeService> {
   service!: AttachmentTypeService;
   langService: LangService;
-  status: boolean | number = false;
+  status: number = CommonStatusEnum.ACTIVATED;
   global: boolean = false;
   arDesc!: string;
   enDesc!: string;
@@ -56,10 +56,10 @@ export class AttachmentType extends BaseModel<AttachmentType, AttachmentTypeServ
     });
   }
 
+  updateStatus(newStatus: CommonStatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
+  }
   isActive(): boolean {
-    if (typeof this.status === 'number') {
-      return this.status === CommonStatusEnum.ACTIVATED;
-    }
-    return this.status;
+    return Number(this.status) === CommonStatusEnum.ACTIVATED;
   }
 }

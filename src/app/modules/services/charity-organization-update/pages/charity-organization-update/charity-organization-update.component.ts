@@ -1,3 +1,4 @@
+import { CharityOrganizationUpdateInterceptor } from '@app/model-interceptors/charity-organization-update-interceptor';
 import { AfterViewInit, ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChildren, } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, } from '@angular/forms';
 import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
@@ -983,6 +984,10 @@ export class CharityOrganizationUpdateComponent
       return;
     }
     this.model = model;
+    if(this.operation == this.operationTypes.CREATE) {
+      const interceptor = new CharityOrganizationUpdateInterceptor();
+      this.model.initialVersion = JSON.stringify(interceptor.send(this.model));
+    }
     if (!this.buildingTabsDone) {
       return;
     }

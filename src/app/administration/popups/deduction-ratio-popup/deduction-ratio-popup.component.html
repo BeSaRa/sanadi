@@ -23,16 +23,6 @@
         <app-field-error-message controlName="enName"></app-field-error-message>
       </div>
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="status"
-               for="status">{{lang.map.status}}</label>
-        <ng-select validationClasses="status" appendTo="body" [clearable]="true" id="status"
-                   formControlName="status">
-          <ng-option [value]="status.lookupKey"
-                     *ngFor="let status of statuses | filterRetiredStatus">{{status.getName()}}</ng-option>
-        </ng-select>
-        <app-field-error-message controlName="status"></app-field-error-message>
-      </div>
-      <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="profileTypesList"
                for="profileTypesList">{{lang.map.lbl_profile_type}}</label>
         <ng-select [multiple]="true" validationClasses="profileTypesList" appendTo="body" [clearable]="true"

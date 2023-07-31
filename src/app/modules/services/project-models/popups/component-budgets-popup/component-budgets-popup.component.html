@@ -2,9 +2,9 @@
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
     <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1"
-      aria-label="Fullscreen" fullscreenBtn></button>
+            aria-label="Fullscreen" fullscreenBtn></button>
     <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="null"
-      aria-label="Close"></button>
+            aria-label="Close"></button>
   </div>
 </div>
 <div class="dialog-content w800px no-fixed-height" #dialogContent>
@@ -12,26 +12,41 @@
     <div class="row">
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="componentName"
-          for="componentName">{{lang.map.component_name}}</label>
+               for="componentName">{{lang.map.component_name}}</label>
         <input id="componentName" validationClasses="componentName" formControlName="componentName" class="form-control"
-          maxlength="100" trimInput>
+               maxlength="100" trimInput>
         <app-field-error-message controlName="componentName"></app-field-error-message>
       </div>
 
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="totalCost" for="totalCost">{{lang.map.total_cost}}</label>
         <input id="totalCost" validationClasses="totalCost" formControlName="totalCost" class="form-control"
-          maxlength="20" [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
-          [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+               maxlength="20" [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+               [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
         <app-field-error-message controlName="totalCost"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+        <label class="form-label" asteriskIfRequired="expensesType"
+               for="expensesType">{{lang.map.expenses_type}}</label>
+        <ng-select [selectOnTab]="true" labelForId="expensesType" [clearable]="true"
+                   [readonly]="readonly" placeholder="{{ lang.map.select }}" id="expensesType"
+                   [notFoundText]="lang.map.msg_not_found" appendTo="body"
+                   validationClasses="expensesType" formControlName="expensesType">
+          <ng-option *ngFor="let option of expensesTypeList" [value]="option.id"
+                     [disabled]="!option.isActive()">{{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="expensesType"></app-field-error-message>
       </div>
     </div>
     <div class="row">
       <div class="col-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="details" for="details">{{lang.map.details}}</label>
-        <textarea rows="5" id="details" validationClasses="details" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-          formControlName="details" class="form-control" trimInput></textarea>
-
+        <textarea rows="5" id="details" validationClasses="details"
+                  [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                  formControlName="details" class="form-control" trimInput></textarea>
         <app-field-error-message controlName="details"></app-field-error-message>
       </div>
     </div>
@@ -40,11 +55,11 @@
 
 <div class="dialog-actions">
   <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
-    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
   <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
-    class="btn btn-primary">{{lang.map.btn_save}}</button>
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

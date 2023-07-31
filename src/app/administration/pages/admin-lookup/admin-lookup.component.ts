@@ -151,6 +151,14 @@ export class AdminLookupComponent {
       lookupType: AdminLookupTypeEnum.PERMISSION_GROUP,
       validStatus: () => true,
       isTouchedOrDirty: () => true
+    },
+    expensesType: {
+      name: 'expensesType',
+      index: 14,
+      langKey: 'lookup_expenses_type',
+      lookupType: AdminLookupTypeEnum.EXPENSES_TYPE,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     }
   };
   selectedWorkFieldTabIndex$: Subject<number> = new Subject<number>();
@@ -163,10 +171,12 @@ export class AdminLookupComponent {
     if (lookupType === AdminLookupTypeEnum.WORK_FIELD) {
       return this.lang.map.work_field;
     }
-    if (lookupType === AdminLookupTypeEnum.PERMISSION_GROUP) {
-      return this.lang.map.lookup_permission_group;
+    let tabLabel = this.lookupService.listByCategory.AdminLookupType.find(lookup => lookup.lookupKey === lookupType)?.getName();
+    if (!tabLabel) {
+      let tab = this._findTabByLookupType(lookupType);
+      tabLabel = !!tab ? this.lang.map[tab.langKey] : '';
     }
-    return this.lookupService.listByCategory.AdminLookupType.find(lookup => lookup.lookupKey === lookupType)?.getName() || '';
+    return tabLabel;
   }
 
   canShowTab(tab: ITabData): boolean {
@@ -225,6 +235,9 @@ export class AdminLookupComponent {
 
   private _findTabByTabName(tab: TabComponent): ITabData | undefined {
     return Object.values(this.tabsData).find(tabData => tabData.name === tab.name);
+  }
+  private _findTabByLookupType(lookupType: AdminLookupTypeEnum): ITabData | undefined {
+    return Object.values(this.tabsData).find(tabData => tabData.lookupType === lookupType);
   }
 
 }

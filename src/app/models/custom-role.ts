@@ -42,7 +42,7 @@ export class CustomRole extends BaseModel<CustomRole, ExternalUserCustomRoleServ
   }
 
   buildForm(controls?: boolean): any {
-    const { arName, enName, description, status } = this;
+    const { arName, enName, description } = this;
     return {
       arName: controls ? [arName, [
         CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
@@ -53,7 +53,6 @@ export class CustomRole extends BaseModel<CustomRole, ExternalUserCustomRoleServ
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
       ]] : enName,
       description: controls ? [description, Validators.maxLength(200)] : description,
-      status: controls ? [status] : status
     }
   }
 

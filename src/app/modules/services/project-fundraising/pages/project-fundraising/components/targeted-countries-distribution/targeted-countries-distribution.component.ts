@@ -13,6 +13,7 @@ import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CustomValidators} from "@app/validators/custom-validators";
 import currency from "currency.js";
 import {MaskPipe} from "ngx-mask";
+import {AvailableLanguagesNames} from '@app/enums/available-languages-names-enum';
 
 @Component({
   selector: 'targeted-countries-distribution',
@@ -49,7 +50,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
   private countriesChange$: BehaviorSubject<number[] | undefined> = new BehaviorSubject<number[] | undefined>(undefined)
 
-  displayedColumns: string[] = ['arName', 'enName', 'amount', 'actions'];
+  displayedColumns: string[] = this._getDisplayedColumns();
 
   selectedIds: number[] = [];
 
@@ -105,8 +106,18 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     this.listenToCountriesChanges()
     this.listenToDeductionRatioChanges()
     this.listenToClearItems()
+    this.listenToLanguageChanges()
   }
+  private listenToLanguageChanges() {
+    this.lang.onLanguageChange$.pipe(
+      takeUntil(this.destroy$)
 
+    ).subscribe(
+      _ => {
+        this.displayedColumns = this._getDisplayedColumns();
+      }
+    );
+  }
   get list(): UntypedFormArray {
     return this.items.get('items')! as UntypedFormArray
   }
@@ -326,5 +337,12 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
         this.updateSelectedIds()
         this.updateTotalValue()
       })
+  }
+  _getNameLanguage() {
+    return this.lang.getCurrentLanguage().code === AvailableLanguagesNames.ENGLISH ?
+      'enName' : 'arName'
+  }
+  private _getDisplayedColumns() {
+    return [this._getNameLanguage(), 'amount'];
   }
 }
