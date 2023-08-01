@@ -10,6 +10,7 @@ export class AmountOverCountry extends Cloneable<AmountOverCountry> implements I
   targetAmount!: number;
   country!: number;
   countryInfo!: AdminResult;
+  itemId!:string;
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
