@@ -21,7 +21,6 @@ import {catchError, exhaustMap, filter, switchMap, takeUntil,} from 'rxjs/operat
   styleUrls: ['./vacation-dates.component.scss'],
 })
 export class VacationDatesComponent extends AdminGenericComponent<VacationDates, VacationDatesService> {
-  usePagination = true;
   actions: IMenuItem<VacationDates>[] = [
     // edit
     {
