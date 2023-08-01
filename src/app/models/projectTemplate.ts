@@ -21,6 +21,7 @@ export class ProjectTemplate extends SearchableCloneable<ProjectTemplate> implem
   templateStatus!: number
   templateStatusInfo!: AdminResult
   publicStatusInfo!: AdminResult
+  itemId!:string;
 
   searchFields = {
     ...normalSearchFields(['projectName', 'templateFullSerial', 'templateCost']),

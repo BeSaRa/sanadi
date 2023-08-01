@@ -9,6 +9,7 @@ export class AmountOverYear extends Cloneable<AmountOverYear> implements IAuditM
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   year!: string;
   targetAmount!: number;
+  itemId!:string;
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {

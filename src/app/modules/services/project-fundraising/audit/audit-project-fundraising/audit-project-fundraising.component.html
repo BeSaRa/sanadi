@@ -12,19 +12,23 @@
 
 <ng-template #template_deduction_ratio_info>
   <audit-template-list [newVersionList]="newVersion.templateList"
-    [oldVersionList]="oldVersion.templateList" [caseType]="newVersion.caseType">
+    [oldVersionList]="oldVersion.templateList" [caseType]="newVersion.caseType"
+    [uniqueComparisonProperty]="'itemId'">
   </audit-template-list>
 
   <audit-deduction-ratio-manager [newVersionList]="newVersion.deductedPercentagesItemList"
-    [oldVersionList]="oldVersion.deductedPercentagesItemList" [caseType]="newVersion.caseType">
+    [oldVersionList]="oldVersion.deductedPercentagesItemList" [caseType]="newVersion.caseType"
+    [uniqueComparisonProperty]="'itemId'">
   </audit-deduction-ratio-manager>
 
   <audit-targeted-countries-distribution [newVersionList]="newVersion.amountOverCountriesList"
-    [oldVersionList]="oldVersion.amountOverCountriesList" [caseType]="newVersion.caseType">
+    [oldVersionList]="oldVersion.amountOverCountriesList" [caseType]="newVersion.caseType"
+    [uniqueComparisonProperty]="'itemId'">
   </audit-targeted-countries-distribution>
 
   <audit-targeted-years-distribution [newVersionList]="newVersion.amountOverYearsList"
-    [oldVersionList]="oldVersion.amountOverYearsList" [caseType]="newVersion.caseType">
+    [oldVersionList]="oldVersion.amountOverYearsList" [caseType]="newVersion.caseType"
+    [uniqueComparisonProperty]="'itemId'">
   </audit-targeted-years-distribution>
 </ng-template>
 
