@@ -18,7 +18,7 @@
           </ng-container>
           <ng-container cdkColumnDef="value">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.participating_value}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.value?? 0 }} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.value?? 0 | mask: inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR }} </td>
           </ng-container>
 
           <ng-container cdkColumnDef="managerDecisionInfo">

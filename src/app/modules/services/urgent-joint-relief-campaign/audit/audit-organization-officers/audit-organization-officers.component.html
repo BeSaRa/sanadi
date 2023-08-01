@@ -10,11 +10,11 @@
           </ng-container>
           <ng-container cdkColumnDef="fullName">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.full_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.fullName}}</span></td>
+            <td cdk-cell *cdkCellDef="let row">{{row.fullName}}</td>
           </ng-container>
           <ng-container cdkColumnDef="email">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_email}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.email}}</span></td>
+            <td cdk-cell *cdkCellDef="let row">{{row.email}}</td>
           </ng-container>
           <ng-container cdkColumnDef="phone">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_phone}}</th>
