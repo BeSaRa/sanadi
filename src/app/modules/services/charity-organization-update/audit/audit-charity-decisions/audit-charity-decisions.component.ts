@@ -46,7 +46,4 @@ export class AuditCharityDecisionsComponent extends AuditListGenericComponent<Ch
     return item.getValuesWithLabels();
   }
 
-  existsInList(objComparison: IFindInList<CharityDecision>): CharityDecision | undefined {
-    return objComparison.listToCompareWith.find((item) => item.id === objComparison.itemToCompare.id);
-  }
 }

@@ -25,6 +25,7 @@ export class OrgExecutiveMember extends SearchableCloneable<OrgExecutiveMember> 
   identificationNumber!: string;
   fullName!: string;
   id!: number;
+  itemId!: string;
   jobTitle!: string;
   email: string | null = null;
   phone: string | null = null;

@@ -8,7 +8,22 @@
               <ng-container [ngTemplateOutlet]="legendHeaderTemplate"></ng-container>
             </th>
           </ng-container>
-
+          <ng-container cdkColumnDef="fullName">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.full_name}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.fullName}}</td>
+          </ng-container>
+          <ng-container cdkColumnDef="email">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_email}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.email}}</td>
+          </ng-container>
+          <ng-container cdkColumnDef="phone">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_phone}}</th>
+            <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.phone}}</span></td>
+          </ng-container>
+          <ng-container cdkColumnDef="extraPhone">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_extra_phone_number}}</th>
+            <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.extraPhone}}</span></td>
+          </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.view_changes}}</th>
             <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions audit-actions">

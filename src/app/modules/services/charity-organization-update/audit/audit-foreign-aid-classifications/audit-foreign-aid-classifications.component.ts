@@ -45,8 +45,4 @@ export class AuditForeignAidClassificationsComponent extends AuditListGenericCom
   getControlLabels(item: ForeignAidClassification): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
   }
-
-  existsInList(objComparison: IFindInList<ForeignAidClassification>): ForeignAidClassification | undefined {
-    return objComparison.listToCompareWith.find((item) => item.id === objComparison.itemToCompare.id);
-  }
 }

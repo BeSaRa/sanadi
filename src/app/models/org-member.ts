@@ -23,6 +23,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   objectDBId!: number;
   qid?: string;
   identificationNumber!: string;
+  itemId!: string;
   fullName!: string;
   id!: number;
   jobTitleId!: number;

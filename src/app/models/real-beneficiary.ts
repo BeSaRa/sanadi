@@ -30,6 +30,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> implem
   enName!: string;
   birthDate!: string | IMyDateModel;
   birthLocation!: string;
+  itemId!: string;
   nationality!: number;
   zoneNumber!: string;
   streetNumber!: string;

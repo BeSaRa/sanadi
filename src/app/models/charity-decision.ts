@@ -32,6 +32,7 @@ export class CharityDecision extends BaseModel<
   referenceNumber!: string;
   generalDate!: string | IMyDateModel;
   decisionType!: number;
+  itemId!: string;
   subject!: string;
   organization!: string;
   id!: number;
