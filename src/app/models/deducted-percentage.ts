@@ -10,6 +10,7 @@ export class DeductedPercentage extends Cloneable<DeductedPercentage> implements
   deductionType!: number;
   deductionTypeInfo!: AdminResult;
   deductionPercent!: number;
+  itemId!:string;
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
