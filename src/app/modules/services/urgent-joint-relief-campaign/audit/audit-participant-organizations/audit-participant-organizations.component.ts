@@ -1,3 +1,4 @@
+import { CustomValidators } from './../../../../../validators/custom-validators';
 import { ControlValueLabelLangKey } from './../../../../../types/types';
 import { Component, OnInit } from '@angular/core';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
@@ -15,12 +16,13 @@ import { ParticipantOrganization } from '@app/models/participant-organization';
   styleUrls: ['./audit-participant-organizations.component.scss']
 })
 export class AuditParticipantOrganizationsComponent extends AuditListGenericComponent<ParticipantOrganization> {
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
   constructor(public lang: LangService,
     public caseAuditService: CaseAuditService) {
     super();
   }
 
-  displayColumns: string[] = ['actions'];
+  displayColumns: string[] = ['arName', 'enName', 'managerDecisionInfo','value', 'notes' ,'actions'];
   actions: IMenuItem<ParticipantOrganization>[] = [
     // show difference
     {

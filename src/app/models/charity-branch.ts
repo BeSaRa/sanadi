@@ -22,6 +22,7 @@ export class CharityBranch extends SearchableCloneable<CharityBranch> implements
   branchId!: number;
   fullName!: string;
   category!: number;
+  itemId!: string;
   branchAdjective!: number;
   usageAdjective!: number;
   zoneNumber!: string;

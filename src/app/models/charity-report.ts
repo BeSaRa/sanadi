@@ -34,6 +34,7 @@ export class CharityReport extends BaseModel<
   reportType!: number;
   fullName!: string;
   subject!: string;
+  itemId!: string;
   generalDate!: string | IMyDateModel;
   category!: number;
   feedback!: string;

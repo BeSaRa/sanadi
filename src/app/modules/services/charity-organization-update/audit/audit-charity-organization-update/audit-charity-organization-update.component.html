@@ -51,74 +51,70 @@
   <value-differences-list [differenceList]="contactInformationDifferences"></value-differences-list>
 </ng-template>
 <ng-template #complainceOfficerTemplate>
-  <audit-organization-officer [newVersionList]="newVersion.complianceOfficerList"
-                              [oldVersionList]="oldVersion.complianceOfficerList"
-                              [caseType]="newVersion.caseType"
-                              [uniqueComparisonProperty]="'identificationNumber'">
-
+  <audit-organization-officer  [newVersionList]="newVersion.complianceOfficerList"
+  [oldVersionList]="oldVersion.complianceOfficerList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
   </audit-organization-officer>
 </ng-template>
 <ng-template #liaisonOfficerTemplate>
-  <audit-organization-officer [newVersionList]="newVersion.charityContactOfficerList"
-                              [oldVersionList]="oldVersion.charityContactOfficerList"
-                              [caseType]="newVersion.caseType"
-                              [uniqueComparisonProperty]="'identificationNumber'">
+  <audit-organization-officer  [newVersionList]="newVersion.charityContactOfficerList"
+  [oldVersionList]="oldVersion.charityContactOfficerList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-organization-officer>
 </ng-template>
 <ng-template #branchTemplate>
   <audit-organization-officer [newVersionList]="newVersion.charityContactOfficerList"
-                              [oldVersionList]="oldVersion.charityContactOfficerList"
-                              [caseType]="newVersion.caseType"
-                              [uniqueComparisonProperty]="'identificationNumber'">
+  [oldVersionList]="oldVersion.charityContactOfficerList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-organization-officer>
-  <audit-charity-branch [newVersionList]="newVersion.charityBranchList"
-                        [oldVersionList]="oldVersion.charityBranchList"
-                        [caseType]="newVersion.caseType">
+  <audit-charity-branch  [newVersionList]="newVersion.charityBranchList"
+  [oldVersionList]="oldVersion.charityBranchList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-charity-branch>
 </ng-template>
 <ng-template #foundingMembersTemplate>
-  <audit-org-member [newVersionList]="newVersion.founderMemberList"
-                    [oldVersionList]="oldVersion.founderMemberList"
-                    [caseType]="newVersion.caseType">
+  <audit-org-member  [newVersionList]="newVersion.founderMemberList"
+  [oldVersionList]="oldVersion.founderMemberList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-org-member>
 </ng-template>
 <ng-template #generalAssemblyMembersTemplate>
-  <audit-org-member [newVersionList]="newVersion.generalAssemblyMemberList"
-                    [oldVersionList]="oldVersion.generalAssemblyMemberList"
-                    [caseType]="newVersion.caseType">
+  <audit-org-member  [newVersionList]="newVersion.generalAssemblyMemberList"
+  [oldVersionList]="oldVersion.generalAssemblyMemberList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-org-member>
 </ng-template>
 <ng-template #boardMembersTemplate>
-  <audit-org-member [newVersionList]="newVersion.boardMemberList"
-                    [oldVersionList]="oldVersion.boardMemberList"
-                    [caseType]="newVersion.caseType">
+  <audit-org-member  [newVersionList]="newVersion.boardMemberList"
+  [oldVersionList]="oldVersion.boardMemberList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-org-member>
 </ng-template>
 
 <ng-template #executiveManagmentTemplate>
-  <audit-org-executive-member [newVersionList]="newVersion.currentExecutiveManagementList"
-                              [oldVersionList]="oldVersion.currentExecutiveManagementList"
-                              [caseType]="newVersion.caseType">
+  <audit-org-executive-member  [newVersionList]="newVersion.currentExecutiveManagementList"
+  [oldVersionList]="oldVersion.currentExecutiveManagementList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-org-executive-member>
 </ng-template>
 <ng-template #authorizedMembersTemplate>
-  <audit-org-member [newVersionList]="newVersion.authorizedSignatoryMemberList"
-                    [oldVersionList]="oldVersion.authorizedSignatoryMemberList"
-                    [caseType]="newVersion.caseType">
+  <audit-org-member  [newVersionList]="newVersion.authorizedSignatoryMemberList"
+  [oldVersionList]="oldVersion.authorizedSignatoryMemberList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-org-member>
 </ng-template>
 <ng-template #realBenefeciariesTemplate>
-  <audit-real-beneficiary [newVersionList]="newVersion.realBeneficiaryList"
-                          [oldVersionList]="oldVersion.realBeneficiaryList"
-                          [caseType]="newVersion.caseType">
+  <audit-real-beneficiary  [newVersionList]="newVersion.realBeneficiaryList"
+  [oldVersionList]="oldVersion.realBeneficiaryList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-real-beneficiary>
 </ng-template>
@@ -126,9 +122,9 @@
 <ng-template #primaryLawTemplate>
   <value-differences-list [differenceList]="primaryLawDifferences"></value-differences-list>
 
-  <audit-foreign-aid-classifications [newVersionList]="newVersion.wFClassificationList"
-                                     [oldVersionList]="oldVersion.wFClassificationList"
-                                     [caseType]="newVersion.caseType">
+  <audit-foreign-aid-classifications  [newVersionList]="newVersion.wFClassificationList"
+  [oldVersionList]="oldVersion.wFClassificationList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-foreign-aid-classifications>
   <audit-work-areas [newVersionList]="newVersion.workAreaObjectList"
@@ -147,37 +143,37 @@
   </audit-bylaws>
 </ng-template>
 <ng-template #riskReportsTemplate>
-  <audit-charity-reports [newVersionList]="newVersion.riskReportList"
-                         [oldVersionList]="oldVersion.riskReportList"
-                         [caseType]="newVersion.caseType">
+  <audit-charity-reports  [newVersionList]="newVersion.riskReportList"
+  [oldVersionList]="oldVersion.riskReportList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-charity-reports>
 </ng-template>
 <ng-template #coordinationAndSupportsTemplate>
-  <audit-charity-reports [newVersionList]="newVersion.coordinationSupportReport"
-                         [oldVersionList]="oldVersion.coordinationSupportReport"
-                         [caseType]="newVersion.caseType">
+  <audit-charity-reports  [newVersionList]="newVersion.coordinationSupportReport"
+  [oldVersionList]="oldVersion.coordinationSupportReport"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-charity-reports>
 </ng-template>
 <ng-template #organizationsReportTemplate>
-  <audit-charity-reports [newVersionList]="newVersion.incomingReportList"
-                         [oldVersionList]="oldVersion.incomingReportList"
-                         [caseType]="newVersion.caseType">
+  <audit-charity-reports  [newVersionList]="newVersion.incomingReportList"
+  [oldVersionList]="oldVersion.incomingReportList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-charity-reports>
 </ng-template>
 <ng-template #internalDecisionsTemplate>
-  <audit-charity-decisions [newVersionList]="newVersion.incomingDecisionList"
-                           [oldVersionList]="oldVersion.incomingDecisionList"
-                           [caseType]="newVersion.caseType">
+  <audit-charity-decisions  [newVersionList]="newVersion.incomingDecisionList"
+  [oldVersionList]="oldVersion.incomingDecisionList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-charity-decisions>
 </ng-template>
 <ng-template #outgoingDecisionsTemplate>
-  <audit-charity-decisions [newVersionList]="newVersion.outgoingDecisionList"
-                           [oldVersionList]="oldVersion.outgoingDecisionList"
-                           [caseType]="newVersion.caseType">
+  <audit-charity-decisions  [newVersionList]="newVersion.outgoingDecisionList"
+  [oldVersionList]="oldVersion.outgoingDecisionList"
+  [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-charity-decisions>
 </ng-template>

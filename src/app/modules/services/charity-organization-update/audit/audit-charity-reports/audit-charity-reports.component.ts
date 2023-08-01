@@ -51,9 +51,5 @@ export class AuditCharityReportsComponent extends AuditListGenericComponent<Char
   getControlLabels(item: CharityReport): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
   }
-
-  existsInList(objComparison: IFindInList<CharityReport>): CharityReport | undefined {
-    return objComparison.listToCompareWith.find((item) => item.id === objComparison.itemToCompare.id);
-  }
 }
 
