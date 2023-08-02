@@ -2005,4 +2005,7 @@ export interface ILanguageKeys {
   lbl_qatar_charity_related_data: string;
   msg_confirm_continue_oof:string;
   reassigned_task:string;
+  coordination_request:string;
+  starting_date:string;
+  ending_date:string;
 }

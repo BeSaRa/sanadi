@@ -67,7 +67,7 @@
         <div class="row">
           <!-- Campaign Name -->
           <div class="col-sm-12 col-md-4 mb-6 position-relative">
-            <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.campaign_name}}</label>
+            <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.coordination_request}}</label>
             <input id="fullName" validationClasses="fullName" [value]="model?.fullName" formControlName="fullName"
                    trimInput class="form-control">
             <app-field-error-message controlName="fullName"></app-field-error-message>
@@ -76,7 +76,7 @@
           <!-- License Start Date -->
           <div class="col-12 col-md-4 mb-6 position-relative">
             <label for="licenseStartDate" asteriskIfRequired="licenseStartDate"
-                   class="form-label">{{lang.map.license_start_date}}</label>
+                   class="form-label">{{lang.map.starting_date}}</label>
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" formControlName="licenseStartDate" id="licenseStartDate"
@@ -91,7 +91,7 @@
           <!-- License End Date -->
           <div class="col-12 col-md-4 mb-6 position-relative">
             <label for="licenseEndDate" asteriskIfRequired="licenseEndDate"
-                   class="form-label">{{lang.map.license_end_date}}</label>
+                   class="form-label">{{lang.map.ending_date}}</label>
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" formControlName="licenseEndDate" id="licenseEndDate"

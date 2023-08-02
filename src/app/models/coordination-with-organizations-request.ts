@@ -142,10 +142,10 @@ export class CoordinationWithOrganizationsRequest
     return {
       requestType: { langKey: 'request_type', value: this.requestType },
       processId: { langKey: 'lbl_template', value: this.processId },
-      fullName: { langKey: 'campaign_name', value: this.fullName },
+      fullName: { langKey: 'coordination_request', value: this.fullName },
       domain: { langKey: 'domain', value: this.domain },
-      licenseStartDate: { langKey: 'license_start_date', value: this.licenseStartDate,comparisonValue : this.licenseStartDateStamp },
-      licenseEndDate: { langKey: 'license_end_date', value: this.licenseEndDate, comparisonValue: this.licenseEndDateStamp },
+      licenseStartDate: { langKey: 'starting_date', value: this.licenseStartDate,comparisonValue : this.licenseStartDateStamp },
+      licenseEndDate: { langKey: 'ending_date', value: this.licenseEndDate, comparisonValue: this.licenseEndDateStamp },
       }
   }
   getExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
