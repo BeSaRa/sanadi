@@ -208,11 +208,6 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       beneficiaryRegion: { langKey: 'region', value: this.beneficiaryRegion },
       executionCountry: { langKey: 'country', value: this.executionCountry },
       executionRegion: { langKey: 'region', value: this.executionRegion },
-      subInternalProjectClassification: {
-        langKey: 'sub_classification',
-        value: this.subInternalProjectClassification,
-        comparisonValue: this.subInternalProjectClassification.join(', ')
-      },
       interventionType: { langKey: 'intervention_type', value: this.interventionType },
 
     };
@@ -273,8 +268,12 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       thirdSDGoal: { langKey: 'third_sd_goal', value: this.thirdSDGoal },
       internalProjectClassification: { langKey: 'internal_project_classification', value: this.internalProjectClassification },
       sanadiDomain: { langKey: 'sanadi_classification', value: this.sanadiDomain },
-      sanadiMainClassification: { langKey: 'sanadi_main_classification', value: this.sanadiMainClassification }
-
+      sanadiMainClassification: { langKey: 'sanadi_main_classification', value: this.sanadiMainClassification },
+      subInternalProjectClassification: {
+        langKey: 'sub_classification',
+        value: this.subInternalProjectClassification,
+        comparisonValue: this.subInternalProjectClassification.join(', ')
+      },
     };
   }
   buildCategoryTab(controls: boolean = false): any {
