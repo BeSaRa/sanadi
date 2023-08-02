@@ -56,9 +56,9 @@ export class FieldAssessmentServiceLinkService extends CrudGenericService<FieldA
   }
 
   @HasInterception
+  @CastResponse(undefined)
   createFieldAssessmentServiceLink(model: {fieldAssessmentId: number, serviceId: number}): Observable<FieldAssessmentServiceLink> {
-    return this.http.post<IDefaultResponse<FieldAssessmentServiceLink>>(this.urlService.URLS.FIELD_ASSESSMENT_SERVICE, model)
-      .pipe(map((res) => res.rs))
+    return this.http.post<FieldAssessmentServiceLink>(this.urlService.URLS.FIELD_ASSESSMENT_SERVICE + '/full', model);
   }
 
   deleteBulk(FieldAssessmentServiceLinkIds: number[]): Observable<Record<number, boolean>> {

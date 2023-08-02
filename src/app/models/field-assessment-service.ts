@@ -17,7 +17,7 @@ const interceptor = new FieldAssessmentServiceLinkInterceptor()
 export class FieldAssessmentServiceLink extends Cloneable<FieldAssessmentServiceLink> {
   id!: number;
   serviceId!: number;
-  serviceInfo!: AdminResult;
+  serviceDataInfo!: AdminResult;
   status!: number;
   // not related to the model
   arName?: string;
@@ -30,8 +30,8 @@ export class FieldAssessmentServiceLink extends Cloneable<FieldAssessmentService
   }
 
   denormalize(): FieldAssessmentServiceLink {
-    this.arName = this.serviceInfo.arName;
-    this.enName = this.serviceInfo.enName;
+    this.arName = this.serviceDataInfo.arName;
+    this.enName = this.serviceDataInfo.enName;
     return this;
   }
 
