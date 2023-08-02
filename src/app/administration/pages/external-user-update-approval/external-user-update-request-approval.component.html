@@ -44,7 +44,7 @@
           </ng-container>
           <ng-container cdkColumnDef="domainName">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.login_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.domainName}}</span></td>
+            <td cdk-cell *cdkCellDef="let row">{{row.domainName}}</td>
           </ng-container>
           <ng-container cdkColumnDef="arName">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_arabic_name}}</th>
@@ -52,7 +52,7 @@
           </ng-container>
           <ng-container cdkColumnDef="enName">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_english_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span class="dir-ltr d-inline-block">{{row.enName}}</span></td>
+            <td cdk-cell *cdkCellDef="let row">{{row.enName}}</td>
           </ng-container>
           <ng-container cdkColumnDef="empNum">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_employee_number}}</th>

@@ -83,14 +83,14 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       key: 'arName',
       controlType: 'text',
       property: 'arName',
-      label: 'arabic_name',
+      label: 'lbl_arabic_name',
       maxLength: CustomValidators.defaultLengths.ARABIC_NAME_MAX
     },
     search_enName: {
       key: 'enName',
       controlType: 'text',
       property: 'enName',
-      label: 'english_name',
+      label: 'lbl_english_name',
       maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
     },
     search_requestType:{
