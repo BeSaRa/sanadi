@@ -39,7 +39,7 @@ const Empinterceptor = new EmployeeInterceptor();
   providedIn: 'root',
 })
 export class EmploymentService extends BaseGenericEService<Employment> {
-  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'caseStatus', 'subject', 'creatorInfo', 'createdOn'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'caseStatus', 'subject', 'creatorInfo', 'ouInfo', 'createdOn'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>([]);
   jsonSearchFile: string = 'employment_search-form.json';
   serviceKey: keyof ILanguageKeys = 'menu_employment';
