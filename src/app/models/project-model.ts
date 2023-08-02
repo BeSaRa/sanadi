@@ -100,7 +100,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
   interventionTypeInfo!: AdminResult;
   service!: ProjectModelService;
   targetAmount?: number
-  beneficiaryPercentageInHostCommunity?: number
+  beneficiaryPercentageInHostCommunity: number = 0;
 
   searchFields: ISearchFieldsMap<ProjectModel> = {
     ...dateSearchFields(['createdOn']),

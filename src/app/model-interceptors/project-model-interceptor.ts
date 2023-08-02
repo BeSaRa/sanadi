@@ -12,6 +12,7 @@ const projectComponentInterceptor = new ProjectComponentInterceptor();
 
 export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> {
   send(model: Partial<ProjectModel>): Partial<ProjectModel> {
+    model.beneficiaryPercentageInHostCommunity = model.beneficiaryPercentageInHostCommunity ?? 0;
     model.componentList = (model.componentList || []).map(item => {
       return projectComponentInterceptor.send(new ProjectComponent().clone(item)) as ProjectComponent;
     });
@@ -82,6 +83,7 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.sanadiDomainInfo = AdminResult.createInstance(model.sanadiDomainInfo);
     model.sanadiMainClassificationInfo = AdminResult.createInstance(model.sanadiMainClassificationInfo);
     model.exitMechanismInfo = AdminResult.createInstance(model.exitMechanismInfo);
+    model.beneficiaryPercentageInHostCommunity = model.beneficiaryPercentageInHostCommunity ?? 0;
     model.evaluationIndicatorList = model.evaluationIndicatorList.map(item => {
       return new EvaluationIndicator().clone(item);
     });
