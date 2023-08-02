@@ -45,6 +45,10 @@ export class VacationDatesPopupComponent extends AdminGenericDialog<VacationDate
 
   initPopup(): void { }
 
+  get readonly(): boolean {
+    return this.operation === OperationTypes.VIEW;
+  }
+
   listenToSave(): void {
     this.save$
       // call before Save callback
@@ -81,6 +85,7 @@ export class VacationDatesPopupComponent extends AdminGenericDialog<VacationDate
         this.afterSave(model, this.dialogRef);
       });
   }
+
   buildForm(): void {
     this.model.vacationDateFrom &&
       (this.model.vacationDateFrom = DateUtils.changeDateToDatepicker(
@@ -92,7 +97,7 @@ export class VacationDatesPopupComponent extends AdminGenericDialog<VacationDate
       ));
 
     this.form = this.fb.group(this.model.buildForm(true));
-    if (this.operation === OperationTypes.VIEW) {
+    if (this.readonly) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
