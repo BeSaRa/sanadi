@@ -12,5 +12,5 @@
   "LOGIN_INSTANCE": "BOTH",
   "REPORTS_URL": "http://racabi/Reports/",
   "RESET_PASSWORD": "https://stgnas.gov.qa/self-service/reset/personal",
-  "NOTIFICATIONS_URL": "http://eblaepm.no-ip.org:9026/notify/api/notifications"
+  "NOTIFICATIONS_URL": "http://eblaepm.no-ip.org:9096/notify/api/notifications"
 }
