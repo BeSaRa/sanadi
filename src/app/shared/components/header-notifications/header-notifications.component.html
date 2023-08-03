@@ -20,13 +20,13 @@
       <ng-container *ngFor="let notification of notificationService.notificationsList; let last = last">
         <li>
           <ng-container *ngIf="!notification.isInformationTypeNotification(); else infoNotificationTemplate">
-            <button class="dropdown-item p-2 text-primary" type="button" (click)="notification.open()">
+            <button class="dropdown-item p-2 text-primary" type="button" >
               <ng-container [ngTemplateOutlet]="notificationTemplate"
                             [ngTemplateOutletContext]="{data: notification}"></ng-container>
             </button>
           </ng-container>
           <ng-template #infoNotificationTemplate>
-            <div class="p-2 text-decoration-none text-secondary" (click)="notification.openInfoNotification()">
+            <div class="p-2 text-decoration-none text-secondary" >
               <ng-container [ngTemplateOutlet]="notificationTemplate"
                             [ngTemplateOutletContext]="{data: notification}"></ng-container>
             </div>
