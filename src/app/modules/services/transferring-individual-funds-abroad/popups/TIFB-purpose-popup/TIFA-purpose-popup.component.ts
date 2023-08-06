@@ -147,7 +147,7 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
 
   private loadOchas() {
     this.dacOchaService.loadByType(AdminLookupTypeEnum.OCHA).subscribe(list => {
-      this.mainOchas = list;
+      this.mainOchas = list.filter(x=>x.isActive());
     });
   }
 
@@ -166,7 +166,7 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
 
   private loadDacs() {
     this.dacOchaService.loadByType(AdminLookupTypeEnum.DAC).subscribe(list => {
-      this.mainDacs = list;
+      this.mainDacs = list.filter(x=>x.isActive());
     });
   }
 
