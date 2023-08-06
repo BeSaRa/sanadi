@@ -4,7 +4,7 @@ import {GeneralAssociationInternalMember} from '@app/models/general-association-
 
 export interface IGeneralAssociationMeetingAttendanceComponent {
   form: UntypedFormGroup;
-  meetingPointsForm: UntypedFormGroup;
+  isValidPointsToSave: () => boolean;
   selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[];
   selectedGeneralAssociationMembers: GeneralAssociationExternalMember[];
   selectedInternalUsers: GeneralAssociationInternalMember[];
