@@ -51,6 +51,9 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
     delete model.workEndDateStamp
     delete model.updatedOnStamp
     delete model.expIdPassStamp
+    delete model.functionalGroupInfo
+    delete model.officeInfo
+
     return model;
   }
   receive(model: Employee): Employee {
@@ -76,6 +79,8 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
     model.statusInfo = AdminResult.createInstance(model.statusInfo  ?? {});
     model.countryInfo = AdminResult.createInstance(model.countryInfo  ?? {});
     model.contractLocationTypeInfo = AdminResult.createInstance(model.contractLocationTypeInfo  ?? {});
+    model.functionalGroupInfo = AdminResult.createInstance(model.functionalGroupInfo  ?? {});
+    model.officeInfo = AdminResult.createInstance(model.officeInfo  ?? {});
     model.qInfo = AdminResult.createInstance(model.qInfo  ?? {});
     return model;
   }
