@@ -43,7 +43,7 @@ export class SendToSingleComponent implements OnInit, OnDestroy {
   form!: UntypedFormGroup;
   done$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
-  title: keyof ILanguageKeys = {} as keyof ILanguageKeys;
+  title: keyof ILanguageKeys = 'send_to_department';
 
 
   ngOnInit(): void {
@@ -66,7 +66,7 @@ export class SendToSingleComponent implements OnInit, OnDestroy {
 
     this.form = this.fb.group({
       taskName: [taskName, CustomValidators.required],
-      comment: [[]]
+      comment: ['']
     });
   }
 
