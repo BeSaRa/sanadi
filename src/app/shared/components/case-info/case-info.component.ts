@@ -195,10 +195,19 @@ export class CaseInfoComponent implements OnInit {
   isGeneralAssociationMeetingAttendanceInitApproveCase() {
     return this.model.getCaseType() == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.model.getCaseStatus() === CommonCaseStatus.INITIAL_APPROVE;
   }
+  isGeneralAssociationMeetingAttendanceFinalReport() {
+    return this.model.getCaseType() == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
+  }
 
   viewGeneralAssociationMeetingAttendanceInitApproveDocument(): void {
     (this.generalAssociationMeetingAttendanceService)
       .generateInitDocument(this.model.getCaseId())
+      .subscribe((blob) => window.open(blob.url));
+  }
+
+  viewGeneralAssociationMeetingAttendanceFinalReport(): void {
+    (this.generalAssociationMeetingAttendanceService)
+      .downloadFinalReport((this.model as GeneralAssociationMeetingAttendance).meetingReportID)
       .subscribe((blob) => window.open(blob.url));
   }
 

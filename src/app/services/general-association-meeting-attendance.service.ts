@@ -346,20 +346,6 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     );
   }
 
-  @CastResponse(() => BlobModel, {
-    unwrap: '',
-    fallback: '$default'
-  })
-  _getFinalReport(documentId: string): Observable<BlobModel> {
-    return this.http.post(this._getURLSegment() + '/' + documentId + '/document', undefined,
-      {responseType: 'blob', observe: 'body'})
-      .pipe(map(result => new BlobModel(result, this.domSanitizer)));
-  }
-
-  getFinalReport(documentId: string): Observable<BlobModel> {
-    return this.documentService.downloadDocument(documentId);
-  }
-
   downloadFinalReport(documentId: string): Observable<BlobModel> {
     return this.documentService.downloadDocument(documentId);
   }
