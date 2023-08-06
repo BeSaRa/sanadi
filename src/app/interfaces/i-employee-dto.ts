@@ -38,5 +38,7 @@ export interface IEmployeeDto {
   statusInfo: AdminResult;
   countryInfo: AdminResult;
   contractLocationTypeInfo: AdminResult;
+  functionalGroupInfo: AdminResult;
+  officeInfo: AdminResult;
   qInfo: AdminResult;
 }

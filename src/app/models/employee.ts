@@ -41,6 +41,8 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
   expIdPass!: string | IMyDateModel;
   jobNumber!: string;
   functionalGroup!: number;
+  officeInfo!: AdminResult;
+  functionalGroupInfo!: AdminResult;
   contractStatusInfo!: AdminResult;
   contractTypeInfo!: AdminResult;
   genderInfo!: AdminResult;
@@ -55,8 +57,8 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
   contractExpiryDateStamp!: number | null;
   workStartDateStamp!: number | null;
   workEndDateStamp!: number | null;
-  updatedOnStamp!:number | null;
-  expIdPassStamp!:number | null;
+  updatedOnStamp!: number | null;
+  expIdPassStamp!: number | null;
   constructor() {
     super();
   }
@@ -82,9 +84,9 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
       contractExpiryDate: { langKey: 'contract_expiry_date', value: this.contractExpiryDate, comparisonValue: this.contractExpiryDateStamp },
       workStartDate: { langKey: 'work_start_date', value: this.workStartDate, comparisonValue: this.workStartDateStamp },
       workEndDate: { langKey: 'work_end_date', value: this.workEndDate, comparisonValue: this.workEndDateStamp },
-      updatedOn: { langKey: {} as keyof ILanguageKeys, value: this.updatedOn, comparisonValue: this.updatedOnStamp, skipAuditComparison:true },
+      updatedOn: { langKey: {} as keyof ILanguageKeys, value: this.updatedOn, comparisonValue: this.updatedOnStamp, skipAuditComparison: true },
       jobNumber: { langKey: 'job_number', value: this.jobNumber },
-      expIdPass: { langKey: this.identificationType === IdentificationType.Identification ? 'identification_number_exp_date' : 'passport_expiry_date', value: this.expIdPass,comparisonValue:this.expIdPassStamp },
+      expIdPass: { langKey: this.identificationType === IdentificationType.Identification ? 'identification_number_exp_date' : 'passport_expiry_date', value: this.expIdPass, comparisonValue: this.expIdPassStamp },
       functionalGroup: { langKey: 'functional_group', value: this.functionalGroup },
     };
   }
@@ -112,6 +114,12 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
         break;
       case 'contractStatus':
         adminResultValue = this.contractStatusInfo;
+        break;
+      case 'functionalGroup':
+        adminResultValue = this.functionalGroupInfo;
+        break;
+      case 'officeId':
+        adminResultValue = this.officeInfo;
         break;
       case 'contractExpiryDate':
         const contractExpiryDateValue = DateUtils.getDateStringFromDate(this.contractExpiryDate, 'DATEPICKER_FORMAT');
