@@ -1,0 +1,45 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1"
+      aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="null"
+      aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content no-fixed-height" #dialogContent>
+  <div [formGroup]="form">
+    <div class="row">
+      <!-- en Name -->
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.english_name}}</label>
+        <input id="enName" [readonly]="!canEditMeetingPoints()" validationClasses="enName" formControlName="enName" trimInput class="form-control">
+        <app-field-error-message controlName="enName"></app-field-error-message>
+      </div>
+      <ng-container
+        *ngIf="generalMeetingsModel?.isMemberReviewStep() || ((generalMeetingsModel?.isDecisionMakerReviewStep() || generalMeetingsModel?.isDecisionMakerReworkStep()) && generalMeetingsModel?.isSendToMember)">
+        <div class="col-md-6 col-sm-12 position-relative">
+          <label asteriskIfRequired="comment" class="form-label" for="comment">{{lang.map.notes}}</label>
+          <input class="form-control" formControlName="comment" id="comment" validationClasses="comment">
+          <app-field-error-message controlName="comment"></app-field-error-message>
+        </div>
+        <div class="col-md-6 form-check form-switch" style="margin-top: 2.25rem !important;">
+          <div class="ms-3">
+            <input class="form-check-input" type="checkbox" id="respectTerms" formControlName="respectTerms">
+            <label class="form-check-label" for="respectTerms">{{lang.map.respect_terms}}</label>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+    class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

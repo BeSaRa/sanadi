@@ -80,5 +80,6 @@ export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInt
     delete model.meetingClassificationInfo;
     delete model.managerDecisionInfo;
     delete model.requestTypeInfo;
+    delete model.agendaList
   }
 }
