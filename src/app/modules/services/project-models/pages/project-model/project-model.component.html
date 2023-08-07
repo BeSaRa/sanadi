@@ -392,7 +392,8 @@
         <div class="row" *ngIf="isInsideQatarProject() && isSoftwareProjectType()">
           <div class="col-md-12 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="subInternalProjectClassification"
-                   for="subInternalProjectClassification">{{lang.map.sub_classification}}</label>
+                   for="subInternalProjectClassification">
+                   {{lang.map.sub_classification}} ({{lang.map.must_press_enter}})</label>
             <ng-select [readonly]="readonly"
                       #subClassification
                        validationClasses="subInternalProjectClassification"
