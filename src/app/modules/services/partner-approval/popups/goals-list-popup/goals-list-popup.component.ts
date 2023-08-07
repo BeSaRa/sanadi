@@ -132,6 +132,7 @@ export class GoalsListPopupComponent extends UiCrudDialogGenericComponent<GoalLi
         map((list) => {
           return list.filter((model) => !model.parentId);
         }),
+        map(list=>list.filter(x=>x.isActive() || x.id ===  this.model.mainDACCategory || x.id === this.model.mainUNOCHACategory)),
         map((result) => {
           return result.filter((record) => {
             if (record.type === DomainTypes.HUMANITARIAN) {

@@ -19,6 +19,7 @@ import { Observable } from "rxjs";
 import { Country } from "@models/country";
 import { LookupService } from "@services/lookup.service";
 import { CommonUtils } from '@app/helpers/common-utils';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-TIFA-purpose-popup',
@@ -147,9 +148,13 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
   }
 
   private loadOchas() {
-    this.dacOchaService.loadByType(AdminLookupTypeEnum.OCHA).subscribe(list => {
+    this.dacOchaService.loadByType(AdminLookupTypeEnum.OCHA)
+    .pipe(
+      map(list => list.filter(x=>x.isActive() || x.id === this.model.mainUNOCHACategory) )
+    )
+    .subscribe(list => {
 
-      this.mainOchas = this._prepareSubDomainList(this.model.mainUNOCHACategory,list);
+      this.mainOchas = list;
 
     });
   }
@@ -168,8 +173,12 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
   }
 
   private loadDacs() {
-    this.dacOchaService.loadByType(AdminLookupTypeEnum.DAC).subscribe(list => {
-      this.mainDacs = this._prepareSubDomainList(this.model.mainDACCategory,list)
+    this.dacOchaService.loadByType(AdminLookupTypeEnum.DAC)
+    .pipe(
+      map(list => list.filter(x=>x.isActive() || x.id === this.model.mainDACCategory) )
+    )
+    .subscribe(list => {
+      this.mainDacs = list;
     });
   }
 
@@ -209,18 +218,5 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
 
   getPopupHeadingText(): string {
     return '';
-  }
-
-  private _prepareSubDomainList(lookupId: number, list: AdminLookup[]) {
-    let result: AdminLookup[] = [];
-    let selectedRecord: AdminLookup | undefined = undefined;
-    if (CommonUtils.isValidValue(lookupId)) {
-      selectedRecord = list.find(x => x.id == lookupId);
-      if (selectedRecord && !selectedRecord.isActive()) {
-        result.push(selectedRecord);
-      }
-    }
-    result = [...result ,...list.filter(x => x.isActive())];
-    return result;
   }
 }
