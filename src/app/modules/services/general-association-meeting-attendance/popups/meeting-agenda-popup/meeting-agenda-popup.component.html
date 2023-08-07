@@ -11,11 +11,11 @@
   <form novalidate autocomplete="off" [formGroup]="form">
     <div class="row">
       <div class="col-sm-12 mb-4 position-relative">
-        <label asteriskIfRequired="description" class="form-label"
-               for="description">{{lang.map.lbl_description}}</label>
-        <input [readonly]="(readonly)" class="form-control" formControlName="description"
-               id="description" validationClasses="description" trimInput>
-        <app-field-error-message controlName="description"></app-field-error-message>
+        <label asteriskIfRequired="agenda" class="form-label"
+               for="agenda">{{lang.map.lbl_description}}</label>
+        <input [readonly]="(readonly)" class="form-control" formControlName="agenda"
+               id="agenda" validationClasses="agenda" trimInput>
+        <app-field-error-message controlName="agenda"></app-field-error-message>
       </div>
     </div>
   </form>

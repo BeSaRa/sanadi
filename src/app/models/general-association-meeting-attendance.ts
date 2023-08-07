@@ -50,7 +50,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   service!: GeneralAssociationMeetingAttendanceService;
   caseType = CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE;
   licenseApprovedDate!: string | IMyDateModel;
-  agenda!: string;
+  agenda: GeneralAssociationAgenda[] = [];
   description!: string;
   followUpDate!: string | IMyDateModel;
   meetingType!: number;
@@ -79,7 +79,6 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   meetingTypeInfo!: AdminResult;
   meetingClassificationInfo!: AdminResult;
   managerDecisionInfo!: AdminResult;
-  agendaList: GeneralAssociationAgenda[] = [];
   isFinal!: boolean;
   meetingDateTimestamp!: number | null;
 
@@ -198,7 +197,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
     };
   }
 
-  completeWithSave(form: UntypedFormGroup, selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[], selectedGeneralAssociationMembers: GeneralAssociationExternalMember[], agendaItems: string[]): DialogRef {
+  completeWithSave(form: UntypedFormGroup, selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[], selectedGeneralAssociationMembers: GeneralAssociationExternalMember[], agendaItems: GeneralAssociationAgenda[]): DialogRef {
     return this.service!.completeTask(this, WFResponseType.COMPLETE, form, selectedAdministrativeBoardMembers, selectedGeneralAssociationMembers, agendaItems);
   }
 

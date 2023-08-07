@@ -212,7 +212,7 @@
     </ng-template>
     <ng-template #meetingAgendaTemplate>
       <meeting-agenda-list #meetingAgendaListComponent
-                           [list]="model?.agendaList ?? []"
+                           [list]="model?.agenda ?? []"
                            [readonly]="readonly || isCancel">
       </meeting-agenda-list>
     </ng-template>

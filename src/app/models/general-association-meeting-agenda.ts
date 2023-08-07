@@ -9,13 +9,14 @@ import {ObjectUtils} from "@helpers/object-utils";
 import {CustomValidators} from "@app/validators/custom-validators";
 
 export class GeneralAssociationAgenda extends SearchableCloneable<GeneralAssociationAgenda> implements IAuditModelProperties<GeneralAssociationAgenda> {
-  description!: string;
+  agenda!: string;
+  itemId!: string;
 
   // extra properties
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
 
   searchFields: ISearchFieldsMap<GeneralAssociationAgenda> = {
-    ...normalSearchFields(['description'])
+    ...normalSearchFields(['agenda'])
   }
 
   constructor() {
@@ -39,22 +40,21 @@ export class GeneralAssociationAgenda extends SearchableCloneable<GeneralAssocia
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      description: {langKey: 'lbl_description', value: this.description},
+      agenda: {langKey: 'meeting_agenda', value: this.agenda},
     };
   }
 
   buildForm(control: boolean = false): any {
     const values = ObjectUtils.getControlValues<GeneralAssociationAgenda>(this.getValuesWithLabels());
     return {
-      description: control ? [values.description, [CustomValidators.required,
+      agenda: control ? [values.agenda, [CustomValidators.required,
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]
-      ] : values.description
+      ] : values.agenda
     }
   }
 
   isEqual(record: GeneralAssociationAgenda): boolean {
-    return this.description === record.description;
+    return this.agenda === record.agenda;
   }
-
 }

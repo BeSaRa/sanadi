@@ -21,7 +21,7 @@ export class AuditMeetingAgendaComponent extends AuditListGenericComponent<Gener
     super();
   }
 
-  displayColumns: string[] = ['description', 'actions'];
+  displayColumns: string[] = ['agenda', 'actions'];
   actions: IMenuItem<GeneralAssociationAgenda>[] = [
     // show difference
     {
