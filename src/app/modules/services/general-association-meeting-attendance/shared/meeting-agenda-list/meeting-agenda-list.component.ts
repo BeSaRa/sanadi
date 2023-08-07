@@ -23,7 +23,7 @@ export class MeetingAgendaListComponent extends UiCrudListGenericComponent<Gener
   }
 
   isExternalUser: boolean = this.employeeService.isExternalUser();
-  displayColumns: string[] = ['index', 'description', 'actions'];
+  displayColumns: string[] = ['index', 'agenda', 'actions'];
   actions: IMenuItem<GeneralAssociationAgenda>[] = [
     // edit
     {

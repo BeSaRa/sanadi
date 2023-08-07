@@ -1,3 +1,4 @@
+import { GeneralAssociationAgenda } from '@models/general-association-meeting-agenda';
 import { MeetingPointsComponent } from './../../shared/meeting-points/meeting-points.component';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import {
@@ -44,7 +45,6 @@ import {
 import {
   GeneralMeetingAttendanceNotesListComponent
 } from "@modules/services/general-association-meeting-attendance/shared/general-meeting-attendance-notes-list/general-meeting-attendance-notes-list.component";
-import { GeneralAssociationAgenda } from '@app/models/general-association-meeting-agenda';
 
 @Component({
   selector: 'general-association-meeting-attendance',
@@ -372,7 +372,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       administrativeBoardMembers: this.administrativeBoardMembersRef?.list ?? [],
       generalAssociationMembers: this.generalAssociationMembersRef?.list ?? [],
       internalMembersDTO: this.selectedInternalUsers,
-      agendaList: this.meetingAgendaListComponentRef?.list ?? []
+      agenda: this.meetingAgendaListComponentRef?.list ?? []
     });
   }
   _getNewInstance(): GeneralAssociationMeetingAttendance {
@@ -546,7 +546,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       result.followUpDate = licenseDetails.followUpDate;
 
       result.agenda = licenseDetails.agenda;
-      result.agendaList = this.parseAgendasToAgendaList(licenseDetails);
       result.description = licenseDetails.description;
       result.location = licenseDetails.location;
       result.meetingClassification = licenseDetails.meetingClassification;
@@ -723,17 +722,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   private _clearReportUploader(): void {
     this.finalReportFile = null;
     this.finalReportUploader.nativeElement.value = '';
-  }
-
-  // Agendas
-  parseAgendasToAgendaList(model: GeneralAssociationMeetingAttendance): GeneralAssociationAgenda[] {
-    let agendas: string[] = [];
-    try {
-      agendas = <string[]>JSON.parse(model.agenda);
-    } catch (_) {
-      agendas = [];
-    }
-    return agendas.map(x => new GeneralAssociationAgenda().clone({ description: x }));
   }
 
   // internal users

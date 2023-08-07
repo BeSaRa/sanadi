@@ -27,9 +27,9 @@
   </audit-general-association-external-member>
 </ng-template>
 <ng-template #meetingAgendaTemplate>
-  <audit-meeting-agenda [newVersionList]="newVersion.agendaList"
-                        [oldVersionList]="oldVersion.agendaList"
-                        [uniqueComparisonProperty]="'description'"
+  <audit-meeting-agenda [newVersionList]="newVersion.agenda"
+                        [oldVersionList]="oldVersion.agenda"
+                        [uniqueComparisonProperty]="'itemId'"
                         [caseType]="newVersion.caseType">
   </audit-meeting-agenda>
 </ng-template>

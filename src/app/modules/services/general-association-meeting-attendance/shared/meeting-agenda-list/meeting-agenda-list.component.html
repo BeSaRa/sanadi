@@ -15,9 +15,9 @@
           <th *cdkHeaderCellDef cdk-header-cell> #</th>
           <td *cdkCellDef="let row; let i = index;" cdk-cell> {{i + 1}} </td>
         </ng-container>
-        <ng-container cdkColumnDef="description">
-          <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.lbl_description}}</th>
-          <td *cdkCellDef="let row" cdk-cell> {{row.description}} </td>
+        <ng-container cdkColumnDef="agenda">
+          <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.meeting_agenda}}</th>
+          <td *cdkCellDef="let row" cdk-cell> {{row.agenda}} </td>
         </ng-container>
         <ng-container cdkColumnDef="actions">
           <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
