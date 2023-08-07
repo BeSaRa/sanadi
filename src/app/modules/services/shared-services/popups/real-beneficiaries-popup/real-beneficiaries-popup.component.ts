@@ -217,23 +217,8 @@ export class RealBeneficiariesPopupComponent implements OnInit, AfterViewInit {
     row.passportDate = DateUtils.changeDateToDatepicker(row.passportDate);
     row.lastUpdateDate = DateUtils.changeDateToDatepicker(row.lastUpdateDate);
     this._handleChangeNationality(row.nationality);
-    this.enablePastSelectedDates();
+    DateUtils.enablePastSelectedDates(this.datepickerOptionsMap, this.model);
     this.form.patchValue(row);
-  }
-
-  private enablePastSelectedDates(): void {
-    if (this.operation !== OperationTypes.UPDATE) {
-      return;
-    }
-    for (const [key, value] of Object.entries(this.datepickerOptionsMap)) {
-      if (CommonUtils.isValidValue(value.disableUntil)) {
-        // @ts-ignore
-        const dateValue = DateUtils.getYearMonthDayFromDate(this.model[key] ?? undefined);
-        if (CommonUtils.isValidValue(dateValue)) {
-          this.datepickerOptionsMap[key].enableDates = [dateValue!];
-        }
-      }
-    }
   }
 
   ngAfterViewInit() {

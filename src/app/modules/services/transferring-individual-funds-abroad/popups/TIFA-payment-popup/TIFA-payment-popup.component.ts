@@ -40,7 +40,7 @@ export class TIFAPaymentPopupComponent extends UiCrudDialogGenericComponent<Paym
   initPopup() {
     this._buildDatepickerControlsMap();
     if (this.operation === OperationTypes.UPDATE) {
-      this.enablePastSelectedDates(this.datepickerOptionsMap);
+      DateUtils.enablePastSelectedDates(this.datepickerOptionsMap, this.model);
     }
   }
 

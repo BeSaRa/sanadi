@@ -218,18 +218,6 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
     this.readonly = readonly;
   }
 
-  enablePastSelectedDates(datepickerOptionsMap: DatepickerOptionsMap): void {
-    for (const [key, options] of Object.entries(datepickerOptionsMap)) {
-      if (CommonUtils.isValidValue(options.disableUntil)) {
-        // @ts-ignore
-        const dateValue = DateUtils.getYearMonthDayFromDate(this.model[key] ?? undefined);
-        if (CommonUtils.isValidValue(dateValue)) {
-          datepickerOptionsMap[key].enableDates = [dateValue!];
-        }
-      }
-    }
-  }
-
   isDuplicateInList(formValue: any): boolean {
     if (this.operation === OperationTypes.CREATE) {
       return this.list.some((item) => this._isDuplicate(item, formValue));

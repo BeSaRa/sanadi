@@ -1,3 +1,4 @@
+import { CommonUtils } from '@app/helpers/common-utils';
 import {IAngularMyDpOptions, IMyDate, IMyDateModel} from 'angular-mydatepicker';
 import {IAppConfig} from '@contracts/i-app-config';
 import {FactoryService} from '@services/factory.service';
@@ -229,6 +230,17 @@ export class DateUtils {
     return (dayjs(DateUtils.getDateStringFromDate(endDate)).diff(DateUtils.getDateStringFromDate(startDate), unit));
   }
 
+  static enablePastSelectedDates(datepickerOptionsMap: DatepickerOptionsMap, model: any): void {
+    for (const [key, options] of Object.entries(datepickerOptionsMap)) {
+      if (CommonUtils.isValidValue(options.disableUntil)) {
+        // @ts-ignore
+        const dateValue = DateUtils.getYearMonthDayFromDate(model[key] ?? undefined);
+        if (CommonUtils.isValidValue(dateValue)) {
+          datepickerOptionsMap[key].enableDates = [dateValue!];
+        }
+      }
+    }
+  }
   static getHoursList(): { val: number, key: string }[] {
     return [
       {
