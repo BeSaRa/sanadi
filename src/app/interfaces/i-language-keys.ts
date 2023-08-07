@@ -2008,4 +2008,5 @@ export interface ILanguageKeys {
   coordination_request:string;
   starting_date:string;
   ending_date:string;
+  must_press_enter:string;
 }
