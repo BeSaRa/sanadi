@@ -49,9 +49,7 @@ export class AuditCollectionItemComponent extends AuditListGenericComponent<Coll
     return item.getValuesWithLabels();
   }
 
-  existsInList(objComparison: IFindInList<CollectionItem>): CollectionItem | undefined {
-    return objComparison.listToCompareWith.find((item) => item.identificationNumber === objComparison.itemToCompare.identificationNumber);
-  }
+
   openLocationMap(item: CollectionItem) {
     item.openMap(true);
   }
