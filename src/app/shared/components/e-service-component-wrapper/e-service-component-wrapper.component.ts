@@ -1769,8 +1769,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       }
     } else if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.cantCompleteFromMemberReviewStep(item)) {
       const model = item as unknown as IGeneralAssociationMeetingAttendanceComplete;
-
-      model.memberCanNotComplete();
+      this.toast.error(this.lang.map.meeting_points_is_invalid);
+      return;
     } else {
       item.complete().onAfterClose$.subscribe(actionTaken => {
         actionTaken && this.navigateToSamePageThatUserCameFrom();
@@ -1782,7 +1782,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     const model = item as unknown as IGeneralAssociationMeetingAttendanceComplete;
     const component = this.component as unknown as IGeneralAssociationMeetingAttendanceComponent;
 
-    return model.isMemberReviewStep() && component.meetingPointsForm.invalid;
+    return model.isMemberReviewStep() && component.isValidPointsToSave();
   }
 
   isApproveWithSave(item: CaseModel<any, any>): boolean {

@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable, of, Subject} from 'rxjs';
 import {WFResponseType} from '@enums/wfresponse-type.enum';
@@ -8,14 +8,12 @@ import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ToastService} from '@services/toast.service';
 import {LangService} from '@services/lang.service';
-import {EmployeeService} from '@services/employee.service';
-import {ServiceDataService} from '@services/service-data.service';
-import {DialogService} from '@services/dialog.service';
 import {InboxService} from '@services/inbox.service';
 import {IWFResponse} from '@contracts/i-w-f-response';
 import {filter, map, switchMap} from 'rxjs/operators';
 import {GeneralAssociationMeetingAttendance} from '@models/general-association-meeting-attendance';
 import {GeneralAssociationExternalMember} from '@models/general-association-external-member';
+import { GeneralAssociationAgenda } from '@app/models/general-association-meeting-agenda';
 
 @Component({
   selector: 'general-association-meeting-complete-task-popup',
@@ -39,15 +37,11 @@ export class GeneralAssociationMeetingCompleteTaskPopupComponent implements OnIn
       form: UntypedFormGroup,
       selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[],
       selectedGeneralAssociationMembers: GeneralAssociationExternalMember[],
-      agendaItems: string[]
+      agendaItems: GeneralAssociationAgenda[]
     },
     private dialogRef: DialogRef,
     private toast: ToastService,
     public lang: LangService,
-    private fb: UntypedFormBuilder,
-    private employeeService: EmployeeService,
-    private serviceDataService: ServiceDataService,
-    private dialog: DialogService,
     private inboxService: InboxService) {
     this.action = this.data.actionType;
   }
@@ -98,14 +92,10 @@ export class GeneralAssociationMeetingCompleteTaskPopupComponent implements OnIn
       ...this.data.form.get('specialExplanation')?.getRawValue(),
       generalAssociationMembers: this.data.selectedGeneralAssociationMembers,
       administrativeBoardMembers: this.data.selectedAdministrativeBoardMembers,
-      agenda: this.getAgendaItemsAsString(this.data.agendaItems)
+      agenda: this.data.agendaItems
     });
     return model.update().pipe(map(returned => {
       return returned ? of(true) : of(false);
     }));
-  }
-
-  getAgendaItemsAsString(agendaItems: string[]): string {
-    return JSON.stringify(agendaItems);
   }
 }

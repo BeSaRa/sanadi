@@ -30,7 +30,7 @@ const realBeneficiaryInterceptor = new RealBeneficiaryInterceptor();
 const membersInterceptor = new OrgMemberInterceptor();
 const executiveMemberInterceptor = new OrgExecutiveMemberInterceptor();
 
-const organizationOfficer = new OrganizationOfficerInterceptor();
+const organizationOfficerInterceptor = new OrganizationOfficerInterceptor();
 const foreignAidClassificationInterceptor = new ForeignAidClassificationInterceptor();
 const charityBranchInterceptor = new CharityBranchInterceptor();
 const workAreaInterceptor = new WorkAreaInterceptor();
@@ -40,21 +40,66 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
   send(model: Partial<CharityOrganizationUpdate>): Partial<CharityOrganizationUpdate> {
     model.registrationAuthority = model.registrationAuthorityInfo?.id;
     model.workAreaObjectList = model.workAreaObjectList?.map(e => workAreaInterceptor.send(e) as WorkArea);
-    model.charityBranchList = model.charityBranchList?.map(e => charityBranchInterceptor.send(e) as CharityBranch);
-    model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.send(e) as RealBeneficiary);
-    model.boardMemberList = model.boardMemberList?.map(e => membersInterceptor.send(e) as OrgMember);
-    model.authorizedSignatoryMemberList = model.authorizedSignatoryMemberList?.map(e => membersInterceptor.send(e) as OrgMember);
-    model.founderMemberList = model.founderMemberList?.map(e => membersInterceptor.send(e) as OrgMember);
-    model.generalAssemblyMemberList = model.generalAssemblyMemberList?.map(e => membersInterceptor.send(e) as OrgMember);
-    model.currentExecutiveManagementList = model.currentExecutiveManagementList?.map(e => executiveMemberInterceptor.send(e) as OrgExecutiveMember);
-    model.riskReportList = model.riskReportList?.map(e => charityReportInterceptor.send(e) as CharityReport);
-    model.coordinationSupportReport = model.coordinationSupportReport?.map(e => charityReportInterceptor.send(e) as CharityReport);
-    model.incomingReportList = model.incomingReportList?.map(e => charityReportInterceptor.send(e) as CharityReport);
-    model.incomingDecisionList = model.incomingDecisionList?.map(e => charityDecisionInterceptor.send(e) as CharityDecision);
-    model.outgoingDecisionList = model.outgoingDecisionList?.map(e => charityDecisionInterceptor.send(e) as CharityDecision);
-    model.complianceOfficerList = model.complianceOfficerList?.map(e => organizationOfficer.send(e) as OrganizationOfficer);
-    model.wFClassificationList = model.wFClassificationList?.map(e => foreignAidClassificationInterceptor.send(e) as ForeignAidClassification);
-    model.charityContactOfficerList = model.charityContactOfficerList?.map(e => organizationOfficer.send(e) as OrganizationOfficer);
+    model.charityBranchList = model.charityBranchList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return charityBranchInterceptor.send(e) as CharityBranch
+    });
+    model.realBeneficiaryList = model.realBeneficiaryList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return realBeneficiaryInterceptor.send(e) as RealBeneficiary
+    });
+    model.boardMemberList = model.boardMemberList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return membersInterceptor.send(e) as OrgMember
+    });
+    model.authorizedSignatoryMemberList = model.authorizedSignatoryMemberList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return membersInterceptor.send(e) as OrgMember
+    });
+    model.founderMemberList = model.founderMemberList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return membersInterceptor.send(e) as OrgMember
+    });
+    model.generalAssemblyMemberList = model.generalAssemblyMemberList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return membersInterceptor.send(e) as OrgMember
+    });
+    model.currentExecutiveManagementList = model.currentExecutiveManagementList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return executiveMemberInterceptor.send(e) as OrgExecutiveMember
+    });
+    model.riskReportList = model.riskReportList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return charityReportInterceptor.send(e) as CharityReport
+    });
+    model.coordinationSupportReport = model.coordinationSupportReport?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return charityReportInterceptor.send(e) as CharityReport
+    });
+    model.incomingReportList = model.incomingReportList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return charityReportInterceptor.send(e) as CharityReport
+    });
+    model.incomingDecisionList = model.incomingDecisionList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return charityDecisionInterceptor.send(e) as CharityDecision
+    });
+    model.outgoingDecisionList = model.outgoingDecisionList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return charityDecisionInterceptor.send(e) as CharityDecision
+    });
+    model.complianceOfficerList = model.complianceOfficerList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return organizationOfficerInterceptor.send(e) as OrganizationOfficer
+    });
+    model.wFClassificationList = model.wFClassificationList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return foreignAidClassificationInterceptor.send(e) as ForeignAidClassification
+    });
+    model.charityContactOfficerList = model.charityContactOfficerList?.map(e => {
+      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      return organizationOfficerInterceptor.send(e) as OrganizationOfficer
+    });
     model.byLawList = model.byLawList?.map(e => bylawInterceptor.send(e) as Bylaw);
     (model.lastUpdateDate && (model.lastUpdateDate = DateUtils.getDateStringFromDate(model.lastUpdateDate)));
     (model.firstReleaseDate && (model.firstReleaseDate = DateUtils.getDateStringFromDate(model.firstReleaseDate)));
@@ -90,8 +135,8 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     model.incomingReportList = model.incomingReportList?.map(e => charityReportInterceptor.receive(new CharityReport().clone(e)));
     model.incomingDecisionList = model.incomingDecisionList?.map(e => charityDecisionInterceptor.receive(new CharityDecision().clone(e)));
     model.outgoingDecisionList = model.outgoingDecisionList?.map(e => charityDecisionInterceptor.receive(new CharityDecision().clone(e)));
-    model.complianceOfficerList = model.complianceOfficerList?.map(e => organizationOfficer.receive(new OrganizationOfficer().clone(e)));
-    model.charityContactOfficerList = model.charityContactOfficerList?.map(e => organizationOfficer.receive(new OrganizationOfficer().clone(e)));
+    model.complianceOfficerList = model.complianceOfficerList?.map(e => organizationOfficerInterceptor.receive(new OrganizationOfficer().clone(e)));
+    model.charityContactOfficerList = model.charityContactOfficerList?.map(e => organizationOfficerInterceptor.receive(new OrganizationOfficer().clone(e)));
     model.publishDateStamp = !model.publishDate ? null : DateUtils.getTimeStampFromDate(model.publishDate);
     model.registrationDateStamp = !model.registrationDate ? null : DateUtils.getTimeStampFromDate(model.registrationDate);
     model.establishmentDateStamp = !model.establishmentDate ? null : DateUtils.getTimeStampFromDate(model.establishmentDate);

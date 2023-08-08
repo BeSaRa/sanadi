@@ -1,13 +1,9 @@
-import { Subject } from 'rxjs';
+import { ComponentType } from '@angular/cdk/portal';
+import { IKeyValue } from '@contracts/i-key-value';
+import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-component';
 import { ILanguageKeys } from '@contracts/i-language-keys';
-import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Component, Input } from '@angular/core';
 import { OrganizationOfficer } from '@models/organization-officer';
-import { EmployeeService } from '@services/employee.service';
-import { LangService } from '@services/lang.service';
-import { ToastService } from '@services/toast.service';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { DialogService } from '@app/services/dialog.service';
 import { OrganizationOfficerPopupComponent } from '../../popups/organization-officer-popup/organization-officer-popup.component';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
@@ -17,17 +13,16 @@ import { ActionIconsEnum } from '@app/enums/action-icons-enum';
   templateUrl: './organization-officers.component.html',
   styleUrls: ['./organization-officers.component.scss']
 })
-export class OrganizationOfficersComponent implements OnInit {
-  selectedOfficer?: OrganizationOfficer;
-  selectedOrganizationOfficers: OrganizationOfficer[] = [];
-  laisonOfficers: OrganizationOfficer[] = [];
-  add$: Subject<null> = new Subject();
+export class OrganizationOfficersComponent extends UiCrudListGenericComponent<OrganizationOfficer> {
   @Input() label!: string;
   get _label() {
     return this.label as keyof ILanguageKeys
   }
-  filterControl: UntypedFormControl = new UntypedFormControl('');
-  organizationOfficerDisplayedColumns: string[] = [
+  constructor() {
+    super();
+  }
+
+  displayColumns: string[] = [
     'fullName',
     'identificationNumber',
     'email',
@@ -35,150 +30,44 @@ export class OrganizationOfficersComponent implements OnInit {
     'extraPhoneNumber',
     'actions',
   ];
-  officerForm!: UntypedFormGroup;
-  @Input() readonly = false;
-  @Input() set list(list: OrganizationOfficer[]) {
-    this.selectedOrganizationOfficers = list || [];
-  }
-  get list(): OrganizationOfficer[] {
-    return this.selectedOrganizationOfficers;
-  }
   actions: IMenuItem<OrganizationOfficer>[] = [
-    // delete
-    {
-      type: 'action',
-      icon: ActionIconsEnum.DELETE,
-      label: 'btn_remove',
-      onClick: (item: OrganizationOfficer) => this.removeOfficer(item),
-      show: (_item: OrganizationOfficer) => !this.readonly
-    },
-    // select
     {
       type: 'action',
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
-      onClick: (item: OrganizationOfficer) => this.selectOfficer(item)
+      onClick: (item: OrganizationOfficer) => this.edit$.next(item),
+      show: (_item: OrganizationOfficer) => !this.readonly
+    },
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: OrganizationOfficer) => this.confirmDelete$.next(item),
+      show: (_item: OrganizationOfficer) => !this.readonly
+    },
+    {
+      type: 'action',
+      icon: ActionIconsEnum.VIEW,
+      label: 'view',
+      onClick: (item: OrganizationOfficer) => this.view$.next(item),
     }
   ];
-  constructor(
-    private fb: UntypedFormBuilder,
-    public lang: LangService,
-    private employeeService: EmployeeService,
-    private toast: ToastService,
-    public dialog: DialogService,
-  ) { }
 
-  ngOnInit(): void {
-    this.buildOfficerForm();
-    this.listenToAdd();
-  }
-  buildOfficerForm(): void {
-    this.officerForm = this.fb.group({
-      identificationNumber: [
-        null,
-        [CustomValidators.required].concat(
-          CustomValidators.commonValidations.qId
-        ),
-      ],
-      officerFullName: [
-        null,
-        [
-          CustomValidators.required,
-          CustomValidators.maxLength(
-            CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-          ),
-        ],
-      ],
-      email: [
-        null,
-        [
-          CustomValidators.required,
-          CustomValidators.maxLength(50),
-          CustomValidators.pattern('EMAIL'),
-        ],
-      ],
-      officerPhone: [
-        null,
-        [CustomValidators.required].concat(
-          CustomValidators.commonValidations.phone
-        ),
-      ],
-      officerExtraPhone: [null, CustomValidators.commonValidations.phone],
-    });
-  }
-  openFormDialog() {
-    this.dialog.show(
-      OrganizationOfficerPopupComponent,
-      {
-        form: this.officerForm,
-        readonly: this.readonly,
-        selectedOfficer: this.selectedOfficer,
-        label: this.label
-      }
-    ).onAfterClose$.subscribe((data) => {
-      if(data) this.saveOfficer(data)
-    })
-  }
-  listenToAdd() {
-    this.add$.subscribe(() => {
-      this.openFormDialog();
-    })
-  }
-  saveOfficer(officer: OrganizationOfficer) {
-    officer.organizationId = this.employeeService.getProfile()?.id!;
-    if (!this.selectedOfficer) {
-      if (
-        this.selectedOrganizationOfficers.findIndex(
-          (e) => e.identificationNumber === officer.identificationNumber
-        ) === -1
-      ) {
-        this.selectedOrganizationOfficers =
-        this.selectedOrganizationOfficers.concat(officer);
-        this.resetOfficerForm();
-        return;
-      }
-      this.toast.error(this.lang.map.selected_item_already_exists);
+  _getNewInstance(override?: Partial<OrganizationOfficer> | undefined): OrganizationOfficer {
+    return new OrganizationOfficer().clone(override ?? {});
+  };
 
-    }
-    else {
-      let index = !this.selectOfficer ? -1 : this.selectedOrganizationOfficers.findIndex(x => x == this.selectedOfficer)
+  _getDialogComponent(): ComponentType<any> {
+    return OrganizationOfficerPopupComponent;
+  };
 
-      this.selectedOrganizationOfficers.splice(index, 1);
-      this.selectedOrganizationOfficers =
-        this.selectedOrganizationOfficers.concat(officer);
-      this.selectedOfficer = undefined;
-      this.resetOfficerForm();
-    }
-  }
-  removeOfficer(model: OrganizationOfficer, event?: MouseEvent) {
-    event?.preventDefault();
-    this.selectedOrganizationOfficers =
-      this.selectedOrganizationOfficers.filter(
-        (x) => x.identificationNumber !== model.identificationNumber
-      );
-    this.resetOfficerForm();
-  }
-  resetOfficerForm() {
-    this.selectedOfficer = undefined;
-    this.officerForm.reset();
-  }
-  selectOfficer(model: OrganizationOfficer, event?: MouseEvent) {
-    event?.preventDefault();
-    this.selectedOfficer = this.mapOrganizationOfficerToForm(model);
-    this.officerForm.patchValue(this.selectedOfficer!);
-    this.openFormDialog();
-  }
-  mapOrganizationOfficerToForm(officer: OrganizationOfficer): any {
+  _getDeleteConfirmMessage(record: OrganizationOfficer): string {
+    return this.lang.map.msg_confirm_delete_x.change({ x: record.fullName });
+  };
+
+  getExtraDataForPopup(): IKeyValue {
     return {
-      identificationNumber: officer.identificationNumber,
-      officerFullName: officer.fullName,
-      email: officer.email,
-      officerPhone: officer.phone,
-      officerExtraPhone: officer.extraPhone,
-    };
-  }
-  cancel() {
-    this.resetOfficerForm();
-    this.selectedOfficer = undefined;
+      label: this.label,
+    }
   }
 }

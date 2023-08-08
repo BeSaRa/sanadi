@@ -650,9 +650,8 @@ export class CharityOrganizationUpdateComponent
     const charity = this.charityOrganizations.find(e => e.id === id)!;
     const updateSection = this.updateSectionField.value;
     if (updateSection === CharityUpdateSection.META_DATA) {
-      const model = this.charityOrganizationService.getByIdComposite(id);
-      model.subscribe((m) => {
-        this._updateForm(m.toCharityOrganizationUpdate());
+      this.charityOrganizationService.getByIdComposite(id).subscribe((model) => {
+        this._updateForm(model.toCharityOrganizationUpdate());
         this.charityOrganizationService.getLogoBy({ charityId: charity.profileId }).subscribe(logo => {
           if (logo.blob.size === 0) {
             this.loadedLogo = undefined;
@@ -953,7 +952,6 @@ export class CharityOrganizationUpdateComponent
           switchMap(() => this.loadCaseById()),
           map((data) => this.model = data)
         ).subscribe(id => {
-          console.log(this.model);
           this._afterSaveMessage(model, saveType, operation);
         });
     } else {

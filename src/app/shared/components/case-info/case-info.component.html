@@ -81,5 +81,17 @@
           class="mdi mdi-eye text-primary"></i></a>
       </div>
     </div>
+    <!-- General Association Meeting Attendance Final Report -->
+    <div class="col-sm-12 col-md-4 mb-4" *ngIf="isGeneralAssociationMeetingAttendanceFinalReport()">
+      <label class="form-label">{{lang.map.view_final_report}}</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="mdi mdi-counter text-primary"></i></span>
+        <span class="form-control input-disabled">{{generatedDocumentNumber || '&nbsp;'}}</span>
+        <a type="button" [tooltip]="lang.map.view"
+           (click)="viewGeneralAssociationMeetingAttendanceFinalReport()"
+           class="input-group-text"><i
+          class="mdi mdi-eye text-primary"></i></a>
+      </div>
+    </div>
   </div>
 </div>

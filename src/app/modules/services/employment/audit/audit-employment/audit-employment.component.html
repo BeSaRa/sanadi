@@ -8,6 +8,6 @@
 </ng-template>
 <ng-template #employeeDataTemplate>
   <audit-employee [newVersionList]="newVersion.getEmployees() " [oldVersionList]="oldVersion.getEmployees()"
-    [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'id'">
+    [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
   </audit-employee>
 </ng-template>

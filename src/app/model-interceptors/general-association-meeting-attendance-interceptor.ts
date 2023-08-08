@@ -1,10 +1,10 @@
+import { GeneralAssociationAgenda } from '@models/general-association-meeting-agenda';
 import {IModelInterceptor} from '@contracts/i-model-interceptor';
 import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
 import {DateUtils} from '@helpers/date-utils';
 import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
 import {AdminResult} from '@app/models/admin-result';
 import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
-import {GeneralAssociationAgenda} from '@app/models/general-association-meeting-agenda';
 import {
   GeneralAssociationExternalMemberInterceptor
 } from "@model-interceptors/general-association-external-member-interceptor";
@@ -30,8 +30,6 @@ export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInt
     }
     model.meetingDate = DateUtils.getDateStringFromDate(model.meetingDate);
 
-    GeneralAssociationMeetingAttendanceInterceptor.stringifyAgendaListToAgendas(model);
-
     GeneralAssociationMeetingAttendanceInterceptor._deleteBeforeSend(model);
     return model;
   }
@@ -54,24 +52,8 @@ export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInt
     model.meetingTypeInfo = AdminResult.createInstance(model.meetingTypeInfo || {});
     model.meetingClassificationInfo = AdminResult.createInstance(model.meetingClassificationInfo || {});
     model.meetingDateTimestamp = !model.meetingDate ? null : DateUtils.getTimeStampFromDate(model.meetingDate);
-
-    GeneralAssociationMeetingAttendanceInterceptor.parseAgendasToAgendaList(model);
-
+    model.agenda = model.agenda.map((a) => new GeneralAssociationAgenda().clone(a))
     return model;
-  }
-
-  private static stringifyAgendaListToAgendas(model: Partial<GeneralAssociationMeetingAttendance>): void {
-    model.agenda = JSON.stringify((model.agendaList ?? []).map(x => x.description));
-  }
-
-  private static parseAgendasToAgendaList(model: GeneralAssociationMeetingAttendance): void {
-    let agendas: string[] = [];
-    try {
-      agendas = <string[]>JSON.parse(model.agenda);
-    } catch (_) {
-      agendas = [];
-    }
-    model.agendaList = agendas.map(x => new GeneralAssociationAgenda().clone({description: x}));
   }
 
   private static _deleteBeforeSend(model: Partial<GeneralAssociationMeetingAttendance>): void {

@@ -1,20 +1,22 @@
-import {NotificationResponseInterceptor} from '@model-interceptors/notification-response-interceptor';
-import {InterceptModel} from '@decorators/intercept-model';
-import {Cloneable} from '@models/cloneable';
-import {NotificationTypesEnum} from '@app/enums/notification-types-enum';
-import {NotificationParametersResponse} from '@models/notification-parameters-response';
-import {CommonUtils} from '@helpers/common-utils';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {INavigatedItem} from '@contracts/inavigated-item';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {NotificationService} from '@services/notification.service';
-import {FactoryService} from '@services/factory.service';
-import {InboxService} from '@services/inbox.service';
-import {EncryptionService} from '@services/encryption.service';
+import { NotificationResponseInterceptor } from '@model-interceptors/notification-response-interceptor';
+import { InterceptModel } from '@decorators/intercept-model';
+import { Cloneable } from '@models/cloneable';
+import { NotificationTypesEnum } from '@app/enums/notification-types-enum';
+import { NotificationParametersResponse } from '@models/notification-parameters-response';
+import { CommonUtils } from '@helpers/common-utils';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { INavigatedItem } from '@contracts/inavigated-item';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { NotificationService } from '@services/notification.service';
+import { FactoryService } from '@services/factory.service';
+import { InboxService } from '@services/inbox.service';
+import { EncryptionService } from '@services/encryption.service';
+import { IParsableNotification } from '@app/interfaces/i-parsable-notification';
+import { LangService } from '@app/services/lang.service';
 
-const {send, receive} = new NotificationResponseInterceptor();
+const { send, receive } = new NotificationResponseInterceptor();
 
-@InterceptModel({send, receive})
+@InterceptModel({ send, receive })
 export class NotificationResponse extends Cloneable<NotificationResponse> {
   id!: number;
   title!: string;
@@ -25,16 +27,19 @@ export class NotificationResponse extends Cloneable<NotificationResponse> {
   parameters!: string;
   notificationType!: NotificationTypesEnum;
   read!: boolean;
+  information?: IParsableNotification
 
   // extra properties
   service: NotificationService;
   parametersParsed?: NotificationParametersResponse;
   itemRoute!: string;
   itemDetails!: string;
+  lang!: LangService
 
   constructor() {
     super();
     this.service = FactoryService.getService('NotificationService');
+    this.lang = FactoryService.getService('LangService');
   }
 
   getName(): string {
@@ -112,4 +117,25 @@ export class NotificationResponse extends Cloneable<NotificationResponse> {
       caseType: caseType
     });
   }
+
+  isParsable() {
+    try {
+      this.information = JSON.parse(this.title)
+
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  getSubject() {
+    if (!this.information) return '';
+    return this.information[this.lang.map.lang + 'Subject' as keyof IParsableNotification]
+  }
+
+  getServiceName() {
+    if (!this.information) return '';
+    return this.information[this.lang.map.lang + 'ServiceName' as keyof IParsableNotification]
+  }
 }
+
