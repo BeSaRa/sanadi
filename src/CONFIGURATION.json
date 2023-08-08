@@ -10,7 +10,10 @@
   },
   "BASE_ENVIRONMENT": "BAW_QA",
   "LOGIN_INSTANCE": "BOTH",
-  "REPORTS_URL": "http://racabi/Reports/",
   "RESET_PASSWORD": "https://stgnas.gov.qa/self-service/reset/personal",
-  "NOTIFICATIONS_URL": "http://eblaepm.no-ip.org:9096/notify/api/notifications"
+  "NOTIFICATIONS_URL": "http://eblaepm.no-ip.org:9096/notify/api/notifications",
+  "NAS":{
+    "REPORTS_URL": "http://racabi/Reports/",
+    "NEW_USER" : "https://stgnas.gov.qa/self-service/register/select-user-type"
+  }
 }
