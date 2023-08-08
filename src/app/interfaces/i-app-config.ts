@@ -23,13 +23,10 @@ export interface IAppConfig {
   BENEFICIARY_AUDIT_LIMIT: number;
   E_SERVICE_ITEM_KEY: string;
   REPORTS_URL: string;
+  RESET_PASSWORD: string;
   LOGIN_BACKGROUND_FALLBACK: string;
   LOGIN_BACKGROUND_INTERNAL: string;
   LOGIN_BACKGROUND_EXTERNAL: string;
   NOTIFICATIONS_URL: string;
-  NAS: {
-    RESET_PASSWORD: string;
-    NEW_USER:string;
-  };
   LOGIN_INSTANCE: LoginInstances
 }

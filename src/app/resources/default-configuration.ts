@@ -30,7 +30,7 @@ export const defaultConfiguration: Partial<IAppConfig> = {
 };
 
 export const limitedConfigurableProperties: Array<keyof IAppConfig> = [
-  'ENVIRONMENTS_URLS', 'BASE_ENVIRONMENT', 'REPORTS_URL', 'NAS', 'NOTIFICATIONS_URL', 'LOGIN_INSTANCE'
+  'ENVIRONMENTS_URLS', 'BASE_ENVIRONMENT', 'REPORTS_URL', 'RESET_PASSWORD', 'NOTIFICATIONS_URL', 'LOGIN_INSTANCE'
 ];
 
 export const extendedConfigurableProperties: Array<keyof IAppConfig> = [

@@ -1,7 +1,7 @@
 <div id="login-wrapper" [style.background-image]="background" class="container-fluid h-100 p-0 position-relative">
   <div class="d-flex justify-content-start h-100">
     <div id="login-card"
-      class="card shadow-lg border-0 p-2 d-flex flex-grow-1 flex-md-grow-0 align-items-center justify-content-center">
+         class="card shadow-lg border-0 p-2 d-flex flex-grow-1 flex-md-grow-0 align-items-center justify-content-center">
       <div class="d-flex flex-column align-items-center justify-content-center">
         <div class="row">
           <img alt="Logo" id="logo-image" class="mx-auto d-block img-fluid" src="assets/images/raca-logo.png">
@@ -19,8 +19,9 @@
               <div class="input-group shadow-sm">
                 <i class="input-group-text mdi mdi-account"></i>
                 <input formControlName="username" cdkTrapFocus tabindex="1" id="username"
-                  [placeholder]="lang.map.qatari_id_number" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY"
-                  type="text" autocomplete="off">
+                       [placeholder]="lang.map.qatari_id_number" class="form-control"
+                       [mask]="inputMaskPatterns.NUMBER_ONLY"
+                       type="text" autocomplete="off">
               </div>
             </div>
             <div class="mb-3 position-relative">
@@ -28,29 +29,25 @@
               <div class="input-group shadow-sm">
                 <i class="input-group-text mdi mdi-lock"></i>
                 <input type="password" formControlName="userPassword" tabindex="2" class="form-control p-right"
-                  [placeholder]="lang.map.lbl_enter_your_password_here" id="userPassword"
-                  [attr.type]="passwordFieldType" autocomplete="off">
+                       [placeholder]="lang.map.lbl_enter_your_password_here"
+                       id="userPassword" [attr.type]="passwordFieldType" autocomplete="off">
               </div>
               <button type="button" class="view-password-btn"
-                tooltip="{{passwordFieldType === 'password' ? lang.map.btn_show_password : lang.map.btn_hide_password}}"
-                tabindex="-1" (click)="togglePasswordView($event)">
+                      tooltip="{{passwordFieldType === 'password' ? lang.map.btn_show_password : lang.map.btn_hide_password}}"
+                      tabindex="-1" (click)="togglePasswordView($event)">
                 <i class="mdi {{icon}}"></i>
               </button>
             </div>
             <div class="d-flex justify-content-start mb-1">
-              <a target="_blank" [href]="configService.CONFIG.NAS.RESET_PASSWORD">{{lang.map.forget_password}}</a>
-            </div>
-            <div class="d-flex justify-content-start mb-1">
-              <a target="_blank" rel="noopener noreferrer"
-                [href]="configService.CONFIG.NAS.NEW_USER">{{lang.map.external_user_register}}</a>
+              <a target="_blank" [href]="configService.CONFIG.RESET_PASSWORD">{{lang.map.forget_password}}</a>
             </div>
             <div class="d-flex justify-content-start mb-3"
-              style="max-width: 220px; font-size: 13px; text-align: justify;">
+                 style="max-width: 220px; font-size: 13px; text-align: justify;">
               <small class="text-gray">{{lang.map.first_login_tip}}</small>
             </div>
             <div class="d-flex flex-row mt-3 mb-3">
               <button tabindex="3" (click)="processLogin()" [disabled]="loginFromExternal.invalid"
-                class="shadow-sm btn d-block btn-primary flex-fill">{{lang.map.btn_login}}</button>
+                      class="shadow-sm btn d-block btn-primary flex-fill">{{lang.map.btn_login}}</button>
             </div>
             <div class="d-flex align-items-center justify-content-center">
               <a href="#" (click)="toggleLang($event)" class="text-decoration-none">
@@ -70,7 +67,7 @@
     </div>
     <div class="position-relative w-100 h-100">
       <div [style.background-image]="loginBackground"
-        class="position-absolute top-0 start-0 end-0 bottom-0 login-background">
+           class="position-absolute top-0 start-0 end-0 bottom-0 login-background">
       </div>
     </div>
   </div>
