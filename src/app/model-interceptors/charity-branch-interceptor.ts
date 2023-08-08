@@ -20,6 +20,7 @@ export class CharityBranchInterceptor implements IModelInterceptor<CharityBranch
     const organizationOfficerInterceptor = new OrganizationOfficerInterceptor();
     model.branchContactOfficer = (model.branchContactOfficer || model.branchContactOfficerList || []).map(e => {
       e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
+      model.branchId && (e.branchId = model.branchId);
       return organizationOfficerInterceptor.send(e) as OrganizationOfficer;
     });
     return model;

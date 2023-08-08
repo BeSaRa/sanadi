@@ -1,12 +1,12 @@
+import { GeneralAssociationAgenda } from '@models/general-association-meeting-agenda';
+import { MeetingPointsComponent } from './../../shared/meeting-points/meeting-points.component';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
-  UntypedFormArray,
   UntypedFormControl,
-  UntypedFormGroup
 } from '@angular/forms';
 import { OperationTypes } from '@enums/operation-types.enum';
 import { SaveTypes } from '@enums/save-types';
@@ -33,13 +33,9 @@ import { OpenFrom } from '@enums/open-from.enum';
 import { GeneralAssociationInternalMember } from '@models/general-association-internal-member';
 import { MeetingAttendanceReport } from '@models/meeting-attendance-report';
 import { GeneralAssociationMeetingRequestTypeEnum } from '@enums/service-request-types';
-import { MeetingAttendanceSubItem } from '@models/meeting-attendance-sub-item';
-import { MeetingAttendanceMainItem } from '@models/meeting-attendance-main-item';
 import { GeneralMeetingAttendanceNote } from '@models/general-meeting-attendance-note';
 import { MeetingMemberTaskStatus } from '@models/meeting-member-task-status';
-import { MeetingPointMemberComment } from '@models/meeting-point-member-comment';
 import { UserClickOn } from '@enums/user-click-on.enum';
-import { CommonUtils } from '@helpers/common-utils';
 import {
   ManageMembersComponent
 } from "@modules/services/general-association-meeting-attendance/shared/manage-members/manage-members.component";
@@ -49,7 +45,6 @@ import {
 import {
   GeneralMeetingAttendanceNotesListComponent
 } from "@modules/services/general-association-meeting-attendance/shared/general-meeting-attendance-notes-list/general-meeting-attendance-notes-list.component";
-import { GeneralAssociationAgenda } from '@app/models/general-association-meeting-agenda';
 
 @Component({
   selector: 'general-association-meeting-attendance',
@@ -62,7 +57,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   internalMembersForm!: FormGroup;
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
   importFinalReport$: Subject<void> = new Subject<void>();
-
   selectedLicenses: GeneralAssociationMeetingAttendance[] = [];
   selectedLicenseDisplayedColumns: string[] = ['serial', 'requestType', 'licenseStatus'];
   hasSearchedForLicense = false;
@@ -100,7 +94,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   generalAssociationMeetingRequestTypeEnum = GeneralAssociationMeetingRequestTypeEnum;
 
   // meeting points form
-  meetingPointsForm!: UntypedFormGroup;
   finalReportFile: any;
   finalReportExtensions: string[] = ['.pdf', '.doc', '.docx'];
   viewFinalReport$: Subject<void> = new Subject<void>();
@@ -113,6 +106,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   @ViewChild('manageMembersGeneralAssociation') generalAssociationMembersRef!: ManageMembersComponent;
   @ViewChild('meetingAgendaListComponent') meetingAgendaListComponentRef!: MeetingAgendaListComponent;
   @ViewChild('generalNotesListComponent') generalNotesListComponentRef!: GeneralMeetingAttendanceNotesListComponent;
+  @ViewChild('meetingPointsListComponent') meetingPointsListComponent!: MeetingPointsComponent;
 
   tabsData: TabMap = {
     basicInfo: {
@@ -177,7 +171,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       langKey: 'meeting_points',
       index: 5,
       validStatus: () => {
-        return true;
+        return this.isValidPointsToSave();
       },
       isTouchedOrDirty: () => true
     },
@@ -225,62 +219,12 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return !this.tabsData[tabName].validStatus();
   }
 
-  get basicInfo(): FormGroup {
-    return this.form?.get('basicInfo')! as FormGroup;
-  }
-
-  get requestTypeField(): UntypedFormControl {
-    return this.form?.get('basicInfo.requestType')! as UntypedFormControl;
-  }
-
-  get oldFullSerialField(): AbstractControl {
-    return this.form?.get('basicInfo.oldFullSerial')!;
-  }
-
-  get meetingDate(): FormControl {
-    return this.form?.get('basicInfo.meetingDate')! as FormControl;
-  }
-
-  get meetingType(): FormControl {
-    return this.form?.get('basicInfo.meetingType')! as FormControl;
-  }
-
-  get location(): FormControl {
-    return this.form?.get('basicInfo.location')! as FormControl;
-  }
-
-  get year(): FormControl {
-    return this.form?.get('basicInfo.year')! as FormControl;
-  }
-
-  get meetingTime(): FormControl {
-    return this.form?.get('basicInfo.meetingTime')! as FormControl;
-  }
-
-  get meetingInitiator(): FormControl {
-    return this.form?.get('basicInfo.meetingInitiator')! as FormControl;
-  }
-
-  get meetingClassification(): FormControl {
-    return this.form?.get('basicInfo.meetingClassification')! as FormControl;
-  }
-
-  get periodical(): FormControl {
-    return this.form?.get('basicInfo.periodical')! as FormControl;
-  }
-
-  get specialExplanation(): FormGroup {
-    return this.form?.get('explanation')! as FormGroup;
-  }
-
   _initComponent(): void {
     // load initials here
     this.isExternalUser = this.employeeService.isExternalUser();
     this.memberId = this.employeeService.getCurrentUser()?.generalUserId!;
 
     this.listenToImportFinalReport();
-    // this.listenToDownloadFinalReport();
-    // this.initMeetingPointsForm();
   }
 
   _buildForm(): void {
@@ -316,7 +260,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.handleRequestTypeChange(model.requestType, false);
 
     // update meeting form
-    this.setMeetingPointsForm();
+    this.loadMeetingPoints();
 
     this.isMemberReview = this.model?.isMemberReviewStep()!;
     this.isDecisionMakerRework = this.model?.isDecisionMakerReworkStep()!;
@@ -345,7 +289,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   }
 
-  setMeetingPointsForm() {
+  loadMeetingPoints() {
     if ((this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep()) && this.model?.isSendToMember && this.model?.isFinal) {
       let without: MeetingAttendanceReport;
       this.service.getFinalMeetingPointsForDecisionMaker(this.model?.id)
@@ -360,26 +304,14 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
             });
             return mainItem;
           });
-          if (without && without.meetingMainItem.length > 0) {
-            // update meeting points form
-            this.meetingReport = without;
-            this.updateMeetingPointsForm(without);
-          } else {
-            this.buildMeetingPointsForm();
-          }
+          this.meetingReport = without;
         });
     }
 
     if (((this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep()) && !this.model?.isSendToMember) ||
       ((this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep()) && this.model?.isSendToMember && !this.model?.isFinal)) {
       this.service.getMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
-        if (meetingReport && meetingReport.meetingMainItem.length > 0) {
-          // update meeting points form
-          this.meetingReport = meetingReport;
-          this.updateMeetingPointsForm(meetingReport);
-        } else {
-          this.buildMeetingPointsForm();
-        }
+        this.meetingReport = meetingReport;
       });
     }
 
@@ -391,14 +323,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
           mainItem.meetingSubItem = mainItem.meetingSubItem.filter(subItem => subItem.finalItem !== 1);
           return mainItem;
         });
-
-        if (this.isMemberReview || (this.isDecisionMakerReview && meetingReport && meetingReport.meetingMainItem.length > 0)) {
-          // get meeting attendance report
-          this.updateMeetingPointsForm(meetingReport);
-          // update meeting points form
-        } else {
-          this.buildMeetingPointsForm();
-        }
+        this.meetingReport = meetingReport;
       });
     }
     if (this.model?.isDecisionMakerReviewStep() || this.model?.isDecisionMakerReworkStep()) {
@@ -439,35 +364,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   isUpdateRequest() {
     return this.requestTypeField.value == GeneralAssociationMeetingRequestTypeEnum.UPDATE;
   }
-
-  private setDatePeriodValidation() {
-    if (this.operation === OperationTypes.CREATE ||
-      this.model?.caseStatus === this.commonCaseStatus.DRAFT ||
-      this.model?.caseStatus === this.commonCaseStatus.NEW ||
-      this.model?.isCharityManagerReviewStep() ||
-      this.model?.isSupervisionAndControlReviewStep() ||
-      this.model?.isSupervisionManagerReviewStep() ||
-      this.model?.isSupervisionAndControlReworkStep() ||
-      this.model?.isSupervisionAndControlTeamReworkStep() ||
-      this.model?.isSupervisionAndControlTeamReviewStep()) {
-      this.datepickerOptionsMap = {
-        meetingDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' })
-      };
-    } else {
-      this.datepickerOptionsMap = {
-        meetingDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' })
-      };
-    }
-  }
-
-  _resetForm(): void {
-    this.form.reset();
-    this.administrativeBoardMembersRef?.forceClearComponent();
-    this.generalAssociationMembersRef?.forceClearComponent();
-    this.meetingAgendaListComponentRef?.forceClearComponent();
-    this.hasSearchedForLicense = false;
-  }
-
   _prepareModel(): GeneralAssociationMeetingAttendance | Observable<GeneralAssociationMeetingAttendance> {
     return new GeneralAssociationMeetingAttendance().clone({
       ...this.model,
@@ -475,14 +371,13 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       ...this.specialExplanation.getRawValue(),
       administrativeBoardMembers: this.administrativeBoardMembersRef?.list ?? [],
       generalAssociationMembers: this.generalAssociationMembersRef?.list ?? [],
-      internalMembersDTO: this.selectedInternalUsers
+      internalMembersDTO: this.selectedInternalUsers,
+      agenda: this.meetingAgendaListComponentRef?.list ?? []
     });
   }
-
   _getNewInstance(): GeneralAssociationMeetingAttendance {
     return new GeneralAssociationMeetingAttendance();
   }
-
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (saveType === SaveTypes.DRAFT) {
       if (this.requestTypeField.value) {
@@ -512,7 +407,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
     return this.form.valid;
   }
-
   _afterSave(model: GeneralAssociationMeetingAttendance, saveType: SaveTypes, operation: OperationTypes): void {
     this.model = model;
     if (
@@ -524,31 +418,14 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
   }
-
-  _saveFail(error: any): void {
-
-  }
-
   _beforeLaunch(): boolean | Observable<boolean> {
     return this.form.valid;
   }
-
   _afterLaunch(): void {
     this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
-  _launchFail(error: any): void {
-
-  }
-
-  _destroyComponent(): void {
-
-  }
-
-  ngAfterViewInit(): void {
-    this.cd.detectChanges();
-  }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(
@@ -580,7 +457,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       }
     });
   }
-
   enableAllFormsInCaseOfNotCancelRequest() {
     this.meetingType.enable();
     this.location.enable();
@@ -593,7 +469,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
     this.form.updateValueAndValidity();
   }
-
   disableAllFormsInCaseOfCancelRequest() {
     this.meetingType.disable();
     this.location.disable();
@@ -609,30 +484,20 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
     this.form.updateValueAndValidity();
   }
-
   enableSearchField() {
     this.oldFullSerialField.enable();
     this.setOldLicenseFullSerialRequired();
   }
-
   disableSearchField() {
     this.oldFullSerialField.patchValue(null);
     this.oldFullSerialField.disable();
     this.oldFullSerialField.setValidators([]);
     this.oldFullSerialField.updateValueAndValidity();
   }
-
   setOldLicenseFullSerialRequired() {
     this.oldFullSerialField.setValidators([CustomValidators.required, CustomValidators.maxLength(50)]);
     this.oldFullSerialField.updateValueAndValidity();
   }
-
-  private _buildDatepickerControlsMap() {
-    this.datepickerControlsMap = {
-      meetingDate: this.meetingDate
-    };
-  }
-
   private validateSingleLicense(license: GeneralAssociationMeetingAttendance): Observable<null | SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>> {
     return this.service.validateLicenseByRequestType(this.model!.requestType, license.fullSerial)
       .pipe(map(validated => {
@@ -642,14 +507,12 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         } : null) as (null | SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>);
       }));
   }
-
   private openSelectLicense(licenses: GeneralAssociationMeetingAttendance[]) {
     return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns, this.oldFullSerialField.value, true).onAfterClose$ as Observable<{
       selected: GeneralAssociationMeetingAttendance,
       details: GeneralAssociationMeetingAttendance
     }>;
   }
-
   searchForLicense() {
     this.licenseService
       .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({ fullSerial: this.oldFullSerialField.value })
@@ -668,7 +531,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         this.setSelectedLicense(_info.details)
       });
   }
-
   private setSelectedLicense(licenseDetails: GeneralAssociationMeetingAttendance) {
     this.selectedLicenses = [licenseDetails];
     if (licenseDetails) {
@@ -684,7 +546,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       result.followUpDate = licenseDetails.followUpDate;
 
       result.agenda = licenseDetails.agenda;
-      result.agendaList = this.parseAgendasToAgendaList(licenseDetails);
       result.description = licenseDetails.description;
       result.location = licenseDetails.location;
       result.meetingClassification = licenseDetails.meetingClassification;
@@ -718,17 +579,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       this._updateForm((new GeneralAssociationMeetingAttendance()).clone(result));
     }
   }
-
-  parseAgendasToAgendaList(model: GeneralAssociationMeetingAttendance): GeneralAssociationAgenda[] {
-    let agendas: string[] = [];
-    try {
-      agendas = <string[]>JSON.parse(model.agenda);
-    } catch (_) {
-      agendas = [];
-    }
-    return agendas.map(x => new GeneralAssociationAgenda().clone({description: x}));
-  }
-
   viewSelectedLicense(): void {
     let license = {
       documentTitle: this.selectedLicenses[0].fullSerial,
@@ -738,10 +588,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       .subscribe((file) => {
         this.sharedService.openViewContentDialog(file, license);
       });
-  }
-
-  onInternalMembersChanged(memberList: GeneralAssociationInternalMember[]) {
-    this.selectedInternalUsers = memberList;
   }
 
   handleReadonly(): void {
@@ -779,203 +625,33 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     }
   }
 
-  canUpdateMeetingDate() {
-    return this.model?.caseStatus != CommonCaseStatus.CANCELLED && this.model?.taskDetails?.isClaimed() && (
-      this.isSupervisionAndControlReviewStep ||
-      this.isSupervisionManagerReviewStep ||
-      this.isSupervisionAndControlRework ||
-      this.isSupervisionAndControlTeamReview ||
-      this.isSupervisionAndControlTeamRework
-    );
+  isValidPointsToSave() {
+    return this.meetingReport && !!this.meetingReport.meetingMainItem.length && !this.meetingReport.meetingMainItem.filter(
+      mmi => !mmi.meetingSubItem.length || mmi.meetingSubItem.filter(msi => !msi.comment).length
+    ).length;
   }
-
-  getMeetingDateClass() {
-    if (this.readonly && this.canUpdateMeetingDate()) {
-      return { 'input-disabled': false };
-    } else if (this.readonly || this.isCancel) {
-      return { 'input-disabled': true };
-    } else {
-      return { 'input-disabled': false };
-    }
-  }
-
-  get isSupervisionAndControlReviewStep(): boolean {
-    return this.model?.isSupervisionAndControlReviewStep()!;
-  }
-
-  get isSupervisionManagerReviewStep(): boolean {
-    return this.model?.isSupervisionManagerReviewStep()!;
-  }
-
-  get isSupervisionAndControlRework(): boolean {
-    return this.model?.isSupervisionAndControlReworkStep()!;
-  }
-
-  get isSupervisionAndControlTeamRework(): boolean {
-    return this.model?.isSupervisionAndControlTeamReworkStep()!;
-  }
-
-  get isSupervisionAndControlTeamReview(): boolean {
-    return this.model?.isSupervisionAndControlTeamReviewStep()!;
-  }
-
-  // meeting points functionality
-  initMeetingPointsForm(): void {
-    this.meetingPointsForm = this.fb.group({
-      meetingMainItem: this.fb.array([])
-    });
-  }
-
-  buildMeetingPointsForm(): void {
-    this.meetingPointsForm = this.fb.group({
-      meetingMainItem: this.fb.array([])
-    });
-  }
-
-  updateMeetingPointsForm(meetingReport: MeetingAttendanceReport): void {
-    this.meetingPointsForm = this.fb.group({
-      meetingMainItem: this.fb.array(meetingReport.meetingMainItem ? [...meetingReport.meetingMainItem.map(x => this.newMainItem(x))] : [this.newMainItem()])
-    });
-  }
-
-  get mainItems(): UntypedFormArray {
-    return this.meetingPointsForm?.get('meetingMainItem') as UntypedFormArray;
-  }
-
-  newMainItem(mainItem: MeetingAttendanceMainItem = new MeetingAttendanceMainItem()): FormGroup {
-    return this.fb.group({
-      id: [mainItem.id],
-      enName: [mainItem.enName, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]],
-      meetingSubItem: this.fb.array(mainItem.meetingSubItem ? [...mainItem.meetingSubItem.map(x => this.newSubItem(x))] : [this.newSubItem()]),
-      caseID: [mainItem.caseID],
-      memberID: [mainItem.memberID],
-      addedByDecisionMaker: [mainItem.addedByDecisionMaker],
-      status: [mainItem.status],
-    });
-  }
-
-  addMainItem() {
-    this.mainItems.push(this.newMainItem());
-  }
-
-  removeMainItem(i: number) {
-    if (this.mainItems.length === 1) {
-      this.dialog.error(this.lang.map.last_main_meeting_point_can_not_be_deleted);
-      return;
-    }
-    this.mainItems.removeAt(i);
-  }
-
-  getSubItems(index: number): UntypedFormArray {
-    return this.mainItems.at(index)?.get('meetingSubItem') as UntypedFormArray;
-  }
-
-  getMembersComments(mainItemIndex: number, index: number): MeetingPointMemberComment[] {
-    let mainItem = this.mainItems.at(mainItemIndex);
-    let subItem = (mainItem.get('meetingSubItem') as UntypedFormArray).at(index) as FormGroup;
-    return subItem.get('userComments')?.value.map((x: MeetingPointMemberComment) => {
-      return new MeetingPointMemberComment().clone(x);
-    });
-  }
-
-  newSubItem(subItem: MeetingAttendanceSubItem = new MeetingAttendanceSubItem()): FormGroup {
-    return this.fb.group({
-      id: [subItem.id],
-      enName: [subItem.enName, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]],
-      comment: [subItem.comment, this.isMemberReview || (this.isDecisionMakerReview && this.model?.isSendToMember) ? [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)] : []],
-      respectTerms: [((this.isDecisionMakerReview || this.isDecisionMakerRework) && this.model?.isSendToMember && !CommonUtils.isValidValue(subItem?.comment)) ? this.autoCheckRespectTerms(subItem.userComments!) : subItem.respectTerms, []],
-      mainItemID: [subItem.mainItemID],
-      memberID: [subItem.memberID],
-      addedByDecisionMaker: [subItem.addedByDecisionMaker],
-      status: [subItem.status],
-      userComments: [subItem.userComments],
-      selected: []
-    });
-  }
-
-  autoCheckRespectTerms(userComments: MeetingPointMemberComment[]) {
-    let respectTerms;
-    if (userComments.length === 0) {
-      respectTerms = 0;
-      return respectTerms;
-    }
-
-    let respectTermsSum = userComments.reduce((accumulator, comment) => {
-      return accumulator + comment.respectTerms;
-    }, 0);
-
-    if (respectTermsSum >= (userComments.length / 2)) {
-      respectTerms = 1;
-    } else {
-      respectTerms = 0;
-    }
-
-    return respectTerms;
-  }
-
-  addSubItem(index: number) {
-    (this.mainItems.at(index)?.get('meetingSubItem') as UntypedFormArray).push(this.newSubItem());
-  }
-
-  removeSubItem(mainItemIndex: number, index: number) {
-    if (this.getSubItems(mainItemIndex).length === 1) {
-      this.dialog.error(this.lang.map.last_sub_meeting_point_can_not_be_deleted);
-      return;
-    }
-    this.getSubItems(mainItemIndex).removeAt(index);
-  }
-
-  viewMeetingPointMembersComments(mainItemIndex: number, subItemIndex: number) {
-    const membersComments = this.getMembersComments(mainItemIndex, subItemIndex);
-    this.service.openViewPointMembersCommentsDialog(membersComments);
-  }
-
-  getRemoveMainItemClass() {
-    if (this.lang.map.lang === 'en') {
-      return { 'remove-main-item-right': true, 'remove-main-item-left': false };
-    } else {
-      return { 'remove-main-item-right': false, 'remove-main-item-left': true };
-    }
-  }
-
-  getRemoveSubItemClass() {
-    if (this.lang.map.lang === 'en') {
-      return { 'remove-sub-item-right': true, 'remove-sub-item-left': false };
-    } else {
-      return { 'remove-sub-item-right': false, 'remove-sub-item-left': true };
-    }
-  }
-
-  getViewSubItemClass() {
-    if (this.lang.map.lang === 'en') {
-      return { 'view-sub-item-right': true, 'view-sub-item-left': false };
-    } else {
-      return { 'view-sub-item-right': false, 'view-sub-item-left': true };
-    }
-  }
-
   saveMeetingPoints() {
-    const model = new MeetingAttendanceReport().clone(this.meetingPointsForm.value);
+    this.meetingReport.meetingMainItem = this.meetingPointsListComponent.list;
+    const model = new MeetingAttendanceReport().clone(this.meetingReport);
     this.service.addMeetingPoints(model, this.model?.id).subscribe(ret => {
       if (ret) {
-        this.updateMeetingPointsForm(ret);
         this.dialog.success(this.lang.map.meeting_points_saved_successfully);
       }
     });
   }
 
   saveFinalMeetingPoints() {
-    const model = new MeetingAttendanceReport().clone(this.meetingPointsForm.value);
+    this.meetingReport.meetingMainItem = this.meetingPointsListComponent.list;
+    const model = new MeetingAttendanceReport().clone(this.meetingReport);
     this.service.addFinalMeetingPoints(model, this.model?.id).subscribe(ret => {
       if (ret) {
-        this.updateMeetingPointsForm(ret);
         this.dialog.success(this.lang.map.final_comments_saved_successfully);
       }
     });
   }
 
   generateFinalReport() {
-    let report = this.getSelectedMeetingPoints(new MeetingAttendanceReport().clone(this.meetingPointsForm.value));
+    let report = this.getSelectedMeetingPoints(new MeetingAttendanceReport().clone(this.meetingReport));
 
     if (report.meetingMainItem.length === 0) {
       this.dialog.error(this.lang.map.you_have_to_add_at_least_one_meeting_point);
@@ -987,7 +663,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         window.open(blob.url);
       });
   }
-
   getSelectedMeetingPoints(report: MeetingAttendanceReport): MeetingAttendanceReport {
     report.meetingMainItem = report.meetingMainItem.map(mainItem => {
       mainItem.meetingSubItem = mainItem.meetingSubItem.filter(subItem => subItem.selected);
@@ -996,25 +671,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return report;
   }
 
-  terminateUserTask(item: MeetingMemberTaskStatus) {
-    this.service.terminateMemberTask(item.tkiid).subscribe(_ => {
-      this.dialog.success(this.lang.map.member_task_terminated_successfully);
-      this.loadMembersTaskStatus();
-    });
-  }
 
-  loadMembersTaskStatus() {
-    this.service.getMemberTaskStatus(this.model?.id).subscribe(membersStatus => {
-      this.meetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
-      this.selectedInternalUsers = this.selectedInternalUsers.map(user => {
-        user.pId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
-        user.name = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
-        user.tkiid = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
-        user.userId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
-        return user;
-      });
-    });
-  }
 
   // import report summary functionality
   listenToImportFinalReport() {
@@ -1032,17 +689,14 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       }
     });
   }
-
   openFileBrowser($event: MouseEvent): void {
     $event?.stopPropagation();
     $event?.preventDefault();
     this.finalReportUploader?.nativeElement.click();
   }
-
   onReportSelected($event: Event): void {
     this.saveReportAfterSelect($event);
   }
-
   saveReportAfterSelect($event: Event) {
     let files = ($event.target as HTMLInputElement).files;
     if (files && files[0]) {
@@ -1065,34 +719,148 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       };
     }
   }
-
   private _clearReportUploader(): void {
     this.finalReportFile = null;
     this.finalReportUploader.nativeElement.value = '';
   }
 
-  // listenToDownloadFinalReport() {
-  //   this.viewFinalReport$.pipe(
-  //     takeUntil(this.destroy$),
-  //     switchMap(() => {
-  //       return this.model?.downloadFinalReport()!;
-  //     })
-  //   ).subscribe(blob => {
-  //     window.open(blob.url);
-  //   });
-  // }
+  // internal users
+  onInternalMembersChanged(memberList: GeneralAssociationInternalMember[]) {
+    this.selectedInternalUsers = memberList;
+  }
+  loadMembersTaskStatus() {
+    this.service.getMemberTaskStatus(this.model?.id).subscribe(membersStatus => {
+      this.meetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
+      this.selectedInternalUsers = this.selectedInternalUsers.map(user => {
+        user.pId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
+        user.name = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
+        user.tkiid = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
+        user.userId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
+        return user;
+      });
+    });
+  }
+  terminateUserTask(item: MeetingMemberTaskStatus) {
+    this.service.terminateMemberTask(item.tkiid).subscribe(_ => {
+      this.dialog.success(this.lang.map.member_task_terminated_successfully);
+      this.loadMembersTaskStatus();
+    });
+  }
 
+  // meeting Date
+  private _buildDatepickerControlsMap() {
+    this.datepickerControlsMap = {
+      meetingDate: this.meetingDate
+    };
+  }
   meetingDateChanged(event: any) {
     this.year.patchValue((new Date(DateUtils.getDateStringFromDate(event))).getFullYear());
   }
-
-  canRemoveMeetingPoint(point: any) {
-    let isSelfMadePoint = +point.get('addedByDecisionMaker').value !== 1;
-    return this.model?.canRemoveMeetingPoints(isSelfMadePoint);
+  canUpdateMeetingDate() {
+    return this.model?.caseStatus != CommonCaseStatus.CANCELLED && this.model?.taskDetails?.isClaimed() && (
+      this.isSupervisionAndControlReviewStep ||
+      this.isSupervisionManagerReviewStep ||
+      this.isSupervisionAndControlRework ||
+      this.isSupervisionAndControlTeamReview ||
+      this.isSupervisionAndControlTeamRework
+    );
+  }
+  getMeetingDateClass() {
+    if (this.readonly && this.canUpdateMeetingDate()) {
+      return { 'input-disabled': false };
+    } else if (this.readonly || this.isCancel) {
+      return { 'input-disabled': true };
+    } else {
+      return { 'input-disabled': false };
+    }
+  }
+  private setDatePeriodValidation() {
+    if (this.operation === OperationTypes.CREATE ||
+      this.model?.caseStatus === this.commonCaseStatus.DRAFT ||
+      this.model?.caseStatus === this.commonCaseStatus.NEW ||
+      this.model?.isCharityManagerReviewStep() ||
+      this.model?.isSupervisionAndControlReviewStep() ||
+      this.model?.isSupervisionManagerReviewStep() ||
+      this.model?.isSupervisionAndControlReworkStep() ||
+      this.model?.isSupervisionAndControlTeamReworkStep() ||
+      this.model?.isSupervisionAndControlTeamReviewStep()) {
+      this.datepickerOptionsMap = {
+        meetingDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' })
+      };
+    } else {
+      this.datepickerOptionsMap = {
+        meetingDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' })
+      };
+    }
   }
 
-  canEditMeetingPoints(point: any) {
-    let isSelfMadePoint = +point.get('addedByDecisionMaker').value !== 1;
-    return this.model?.canEditSelfMadeMeetingPoints(isSelfMadePoint);
+  get isSupervisionAndControlReviewStep(): boolean {
+    return this.model?.isSupervisionAndControlReviewStep()!;
+  }
+  get isSupervisionManagerReviewStep(): boolean {
+    return this.model?.isSupervisionManagerReviewStep()!;
+  }
+  get isSupervisionAndControlRework(): boolean {
+    return this.model?.isSupervisionAndControlReworkStep()!;
+  }
+  get isSupervisionAndControlTeamRework(): boolean {
+    return this.model?.isSupervisionAndControlTeamReworkStep()!;
+  }
+  get isSupervisionAndControlTeamReview(): boolean {
+    return this.model?.isSupervisionAndControlTeamReviewStep()!;
+  }
+
+  get basicInfo(): FormGroup {
+    return this.form?.get('basicInfo')! as FormGroup;
+  }
+  get requestTypeField(): UntypedFormControl {
+    return this.form?.get('basicInfo.requestType')! as UntypedFormControl;
+  }
+  get oldFullSerialField(): AbstractControl {
+    return this.form?.get('basicInfo.oldFullSerial')!;
+  }
+  get meetingDate(): FormControl {
+    return this.form?.get('basicInfo.meetingDate')! as FormControl;
+  }
+  get meetingType(): FormControl {
+    return this.form?.get('basicInfo.meetingType')! as FormControl;
+  }
+  get location(): FormControl {
+    return this.form?.get('basicInfo.location')! as FormControl;
+  }
+  get year(): FormControl {
+    return this.form?.get('basicInfo.year')! as FormControl;
+  }
+  get meetingTime(): FormControl {
+    return this.form?.get('basicInfo.meetingTime')! as FormControl;
+  }
+  get meetingInitiator(): FormControl {
+    return this.form?.get('basicInfo.meetingInitiator')! as FormControl;
+  }
+  get meetingClassification(): FormControl {
+    return this.form?.get('basicInfo.meetingClassification')! as FormControl;
+  }
+  get periodical(): FormControl {
+    return this.form?.get('basicInfo.periodical')! as FormControl;
+  }
+  get specialExplanation(): FormGroup {
+    return this.form?.get('explanation')! as FormGroup;
+  }
+
+  _resetForm(): void {
+    this.form.reset();
+    this.administrativeBoardMembersRef?.forceClearComponent();
+    this.generalAssociationMembersRef?.forceClearComponent();
+    this.meetingAgendaListComponentRef?.forceClearComponent();
+    this.hasSearchedForLicense = false;
+  }
+  _saveFail(error: any): void {
+  }
+  _launchFail(error: any): void {
+  }
+  _destroyComponent(): void {
+  }
+  ngAfterViewInit(): void {
+    this.cd.detectChanges();
   }
 }

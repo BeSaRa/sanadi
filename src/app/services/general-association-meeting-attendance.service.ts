@@ -42,6 +42,7 @@ import {
   SpecificMemberCommentsAndNotesComponent
 } from '@app/modules/services/general-association-meeting-attendance/popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
 import { SelectMemberPopupComponent } from '@app/modules/services/shared-services/popups/select-member-popup-component/select-member-popup.component';
+import { GeneralAssociationAgenda } from '@app/models/general-association-meeting-agenda';
 
 @CastResponseContainer({
   $default: {
@@ -149,7 +150,7 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this.urlService;
   }
 
-  completeTask(model: GeneralAssociationMeetingAttendance, action: WFResponseType, form: UntypedFormGroup, selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[], selectedGeneralAssociationMembers: GeneralAssociationExternalMember[], agendaItems: string[]): DialogRef {
+  completeTask(model: GeneralAssociationMeetingAttendance, action: WFResponseType, form: UntypedFormGroup, selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[], selectedGeneralAssociationMembers: GeneralAssociationExternalMember[], agendaItems: GeneralAssociationAgenda[]): DialogRef {
     return this.dialog.show(GeneralAssociationMeetingCompleteTaskPopupComponent, {
       model,
       actionType: action,
@@ -344,20 +345,6 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
         return response.rs;
       })
     );
-  }
-
-  @CastResponse(() => BlobModel, {
-    unwrap: '',
-    fallback: '$default'
-  })
-  _getFinalReport(documentId: string): Observable<BlobModel> {
-    return this.http.post(this._getURLSegment() + '/' + documentId + '/document', undefined,
-      {responseType: 'blob', observe: 'body'})
-      .pipe(map(result => new BlobModel(result, this.domSanitizer)));
-  }
-
-  getFinalReport(documentId: string): Observable<BlobModel> {
-    return this.documentService.downloadDocument(documentId);
   }
 
   downloadFinalReport(documentId: string): Observable<BlobModel> {

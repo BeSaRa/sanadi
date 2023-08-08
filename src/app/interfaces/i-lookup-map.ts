@@ -168,4 +168,5 @@ export interface ILookupMap {
   FieldAssessmentServices: Lookup[];
   ApprovalTemplateType: Lookup[];
   InterventionType: Lookup[];
+  PageType: Lookup[];
 }

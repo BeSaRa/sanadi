@@ -208,6 +208,10 @@ export class EmployeeFormPopupComponent implements OnInit {
       this.form.patchValue({
         ...this.data.employees[0],
       });
+      this.handlePreviewOfficeName();
+      this.handleContractExpireDateValidationsByContractType();
+      this.handleEndDateValidationsByContractStatus();
+      this.handleIdentityNumberValidationsByIdentificationType();
     }
   }
 

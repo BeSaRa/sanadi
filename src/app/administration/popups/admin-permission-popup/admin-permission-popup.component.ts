@@ -22,7 +22,7 @@ import {Observable} from 'rxjs';
 })
 export class AdminPermissionPopupComponent extends AdminGenericDialog<Permission> {
 
-  categoryList: Lookup[] = this.lookupService.listByCategory.PermissionCategory;
+  categoryList: Lookup[] = this.lookupService.listByCategory.PageType;
   groupList: AdminLookup[] = [];
   form!: UntypedFormGroup;
   model!: Permission;

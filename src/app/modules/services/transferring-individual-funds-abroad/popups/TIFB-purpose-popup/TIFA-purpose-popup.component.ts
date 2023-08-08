@@ -1,23 +1,25 @@
-import {Component, Inject} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
-import {DomainTypes} from '@app/enums/domain-types';
-import {AdminLookup} from '@app/models/admin-lookup';
-import {AdminResult} from '@app/models/admin-result';
-import {Lookup} from '@app/models/lookup';
-import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
-import {DacOchaService} from '@app/services/dac-ocha.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {UiCrudDialogGenericComponent} from "@app/generics/ui-crud-dialog-generic-component.directive";
-import {UiCrudDialogComponentDataContract} from "@contracts/ui-crud-dialog-component-data-contract";
-import {CountryService} from "@services/country.service";
-import {ILanguageKeys} from "@contracts/i-language-keys";
-import {OperationTypes} from "@enums/operation-types.enum";
-import {Observable} from "rxjs";
-import {Country} from "@models/country";
-import {LookupService} from "@services/lookup.service";
+import { Component, Inject } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { DomainTypes } from '@app/enums/domain-types';
+import { AdminLookup } from '@app/models/admin-lookup';
+import { AdminResult } from '@app/models/admin-result';
+import { Lookup } from '@app/models/lookup';
+import { TransferFundsCharityPurpose } from '@app/models/transfer-funds-charity-purpose';
+import { DacOchaService } from '@app/services/dac-ocha.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { UiCrudDialogGenericComponent } from "@app/generics/ui-crud-dialog-generic-component.directive";
+import { UiCrudDialogComponentDataContract } from "@contracts/ui-crud-dialog-component-data-contract";
+import { CountryService } from "@services/country.service";
+import { ILanguageKeys } from "@contracts/i-language-keys";
+import { OperationTypes } from "@enums/operation-types.enum";
+import { Observable } from "rxjs";
+import { Country } from "@models/country";
+import { LookupService } from "@services/lookup.service";
+import { CommonUtils } from '@app/helpers/common-utils';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-TIFA-purpose-popup',
@@ -30,11 +32,11 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
   countries: Country[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<TransferFundsCharityPurpose>,
-              public dialogRef: DialogRef,
-              public fb: UntypedFormBuilder,
-              private dacOchaService: DacOchaService,
-              private lookupService: LookupService,
-              private countryService: CountryService) {
+    public dialogRef: DialogRef,
+    public fb: UntypedFormBuilder,
+    private dacOchaService: DacOchaService,
+    private lookupService: LookupService,
+    private countryService: CountryService) {
     super();
     this.setInitDialogData(data);
     this.isCancel = (data.extras && data.extras.isCancel) ?? false;
@@ -146,8 +148,14 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
   }
 
   private loadOchas() {
-    this.dacOchaService.loadByType(AdminLookupTypeEnum.OCHA).subscribe(list => {
+    this.dacOchaService.loadByType(AdminLookupTypeEnum.OCHA)
+    .pipe(
+      map(list => list.filter(x=>x.isActive() || x.id === this.model.mainUNOCHACategory) )
+    )
+    .subscribe(list => {
+
       this.mainOchas = list;
+
     });
   }
 
@@ -165,7 +173,11 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
   }
 
   private loadDacs() {
-    this.dacOchaService.loadByType(AdminLookupTypeEnum.DAC).subscribe(list => {
+    this.dacOchaService.loadByType(AdminLookupTypeEnum.DAC)
+    .pipe(
+      map(list => list.filter(x=>x.isActive() || x.id === this.model.mainDACCategory) )
+    )
+    .subscribe(list => {
       this.mainDacs = list;
     });
   }
@@ -207,5 +219,4 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
   getPopupHeadingText(): string {
     return '';
   }
-
 }

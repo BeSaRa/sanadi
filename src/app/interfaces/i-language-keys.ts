@@ -178,6 +178,7 @@ export interface ILanguageKeys {
   meeting_point_number_x: string;
   add_main_meeting_point: string;
   meeting_points: string;
+  meeting_points_is_invalid: string;
   you_should_add_at_least_one_member_to_internal_users: string;
   can_not_delete_the_decision_maker: string;
   the_decision_maker: string;
@@ -2008,4 +2009,6 @@ export interface ILanguageKeys {
   coordination_request:string;
   starting_date:string;
   ending_date:string;
+  must_press_enter:string;
+  external_user_register:string;
 }

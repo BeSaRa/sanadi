@@ -8,9 +8,9 @@
               <ng-container [ngTemplateOutlet]="legendHeaderTemplate"></ng-container>
             </th>
           </ng-container>
-          <ng-container cdkColumnDef="description">
+          <ng-container cdkColumnDef="agenda">
             <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_description}}</th>
-            <td *cdkCellDef="let row" cdk-cell> {{row.description}} </td>
+            <td *cdkCellDef="let row" cdk-cell> {{row.agenda}} </td>
           </ng-container>
 
           <ng-container cdkColumnDef="actions">
