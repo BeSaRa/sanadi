@@ -296,7 +296,7 @@
         </small>
       </div>
       <div class="row justify-content-center pt-4">
-        <select-by-color [XLabel]="lang.map.impact"  [YLabel]="lang.map.effort" (change)="setImpactEffort($event)"></select-by-color>
+        <select-by-color [XLabel]="lang.map.impact"  [YLabel]="lang.map.effort" (change)="!readonly && setImpactEffort($event)"></select-by-color>
       </div>
       <div class="row">
         <div class="col-md-6 col-sm-12 mb-4 ng-select-wrapper">
