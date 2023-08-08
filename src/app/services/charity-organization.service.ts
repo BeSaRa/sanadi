@@ -2,7 +2,7 @@ import { ComponentType } from '@angular/cdk/portal';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 import { BlobModel } from '@app/models/blob-model';
 import { CharityOrganization } from '@app/models/charity-organization';

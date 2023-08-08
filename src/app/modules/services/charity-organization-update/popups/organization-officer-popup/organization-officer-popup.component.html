@@ -1,56 +1,56 @@
-<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-  <h1 class="h6 text-white">{{ !!selectedOfficer ? lang.map.btn_update : lang.map.btn_add }} {{ lang.map[label] }}</h1>
-  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose
-    aria-label="Close"></button>
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1"
+      aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="null"
+      aria-label="Close"></button>
+  </div>
 </div>
-<div class="dialog-content no-fixed-height">
-  <form [formGroup]="officerForm">
+<div class="dialog-content w800px no-fixed-height" #dialogContent>
+  <div [formGroup]="form">
     <div class="row">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="identificationNumber" for="identificationNumber">{{
           lang.map.identification_number }}</label>
         <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber"
-          class="form-control" [readonly]="readonly" />
+          class="form-control" />
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="officerFullName" for="officerFullName">{{ lang.map.full_name
+        <label class="form-label" asteriskIfRequired="fullName" for="fullName">{{ lang.map.full_name
           }}</label>
-        <input id="officerFullName" validationClasses="officerFullName" formControlName="officerFullName"
-          class="form-control" [readonly]="readonly" />
-        <app-field-error-message controlName="officerFullName"></app-field-error-message>
+        <input id="fullName" validationClasses="fullName" formControlName="fullName" class="form-control" />
+        <app-field-error-message controlName="fullName"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="email" for="email">{{
           lang.map.lbl_email
           }}</label>
-        <input id="email" validationClasses="email" formControlName="email" class="form-control"
-          [readonly]="readonly" />
+        <input id="email" validationClasses="email" formControlName="email" class="form-control" />
         <app-field-error-message controlName="email"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="officerPhone" for="officerPhone">{{ lang.map.lbl_phone }}</label>
-        <input id="officerPhone" validationClasses="officerPhone" formControlName="officerPhone" class="form-control"
-          trimInput [readonly]="readonly" />
-        <app-field-error-message controlName="officerPhone"></app-field-error-message>
+        <label class="form-label" asteriskIfRequired="phone" for="phone">{{ lang.map.lbl_phone }}</label>
+        <input id="phone" validationClasses="phone" formControlName="phone" class="form-control" trimInput />
+        <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="officerExtraPhone" for="officerExtraPhone">{{
+        <label class="form-label" asteriskIfRequired="extraPhone" for="extraPhone">{{
           lang.map.lbl_extra_phone_number }}</label>
-        <input id="officerExtraPhone" validationClasses="officerExtraPhone" formControlName="officerExtraPhone"
-          class="form-control" [readonly]="readonly" />
-        <app-field-error-message controlName="officerExtraPhone"></app-field-error-message>
+        <input id="extraPhone" validationClasses="extraPhone" formControlName="extraPhone" class="form-control" />
+        <app-field-error-message controlName="extraPhone"></app-field-error-message>
       </div>
     </div>
-  </form>
+  </div>
 </div>
 <div class="dialog-actions">
-  <button (click)="saveOfficer()" [disabled]="!officerForm.valid" *ngIf="!readonly" class="btn btn-primary m-2">
-    {{ !!selectedOfficer ? lang.map.btn_update : lang.map.add_officer }}
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
   </button>
-  <button (click)="cancel()" class="btn btn-secondary m-2">
-    {{ lang.map.btn_close }}
-  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+    class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>
