@@ -36,5 +36,7 @@ export class NotificationResponseInterceptor implements IModelInterceptor<Notifi
     delete model.itemRoute;
     delete model.itemDetails;
     delete model.parametersParsed;
+    delete model.lang;
+
   }
 }

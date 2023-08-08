@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {UrlService} from '@services/url.service';
 import {NotificationService} from '@services/notification.service';
@@ -7,7 +7,8 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 @Component({
   selector: 'header-notifications',
   templateUrl: './header-notifications.component.html',
-  styleUrls: ['./header-notifications.component.scss']
+  styleUrls: ['./header-notifications.component.scss'],
+  changeDetection:ChangeDetectionStrategy.OnPush
 })
 export class HeaderNotificationsComponent implements OnInit, OnDestroy {
   actionIconsEnum = ActionIconsEnum;
