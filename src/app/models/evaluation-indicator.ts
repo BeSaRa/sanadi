@@ -9,13 +9,13 @@ import {ObjectUtils} from '@app/helpers/object-utils';
 import {normalSearchFields} from "@helpers/normal-search-fields";
 
 export class EvaluationIndicator extends SearchableCloneable<EvaluationIndicator> implements IAuditModelProperties<EvaluationIndicator> {
-  indicator!: string;
+  indicatorEvaluation!: string;
   notes!: string;
 
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
 
   searchFields: ISearchFieldsMap<EvaluationIndicator> = {
-    ...normalSearchFields(['indicator', 'notes'])
+    ...normalSearchFields(['indicatorEvaluation', 'notes'])
   };
 
   getAdminResultByProperty(property: keyof EvaluationIndicator): AdminResult {
@@ -33,7 +33,7 @@ export class EvaluationIndicator extends SearchableCloneable<EvaluationIndicator
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      indicator: {langKey: 'indicator', value: this.indicator},
+      indicatorEvaluation: {langKey: 'indicator', value: this.indicatorEvaluation},
       notes: {langKey: 'notes', value: this.notes},
     };
   }
@@ -41,12 +41,12 @@ export class EvaluationIndicator extends SearchableCloneable<EvaluationIndicator
   buildForm(controls?: boolean): any {
     const values = ObjectUtils.getControlValues<EvaluationIndicator>(this.getValuesWithLabels());
     return {
-      indicator: controls ? [values.indicator, [CustomValidators.required, CustomValidators.maxLength(250)]] : values.indicator,
+      indicatorEvaluation: controls ? [values.indicatorEvaluation, [CustomValidators.required, CustomValidators.maxLength(250)]] : values.indicatorEvaluation,
       notes: controls ? [values.notes, [CustomValidators.maxLength(250)]] : values.notes
     }
   }
 
   isEqual(record: EvaluationIndicator): boolean {
-    return this.indicator === record.indicator;
+    return this.indicatorEvaluation === record.indicatorEvaluation;
   }
 }

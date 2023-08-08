@@ -20,7 +20,7 @@ export class AuditEvaluationIndicatorComponent extends AuditListGenericComponent
     super();
   }
 
-  displayColumns: string[] = ['indicator', 'notes', 'actions'];
+  displayColumns: string[] = ['indicatorEvaluation', 'notes', 'actions'];
   actions: IMenuItem<EvaluationIndicator>[] = [
     // show difference
     {
