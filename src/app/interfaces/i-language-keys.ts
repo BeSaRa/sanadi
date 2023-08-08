@@ -2010,4 +2010,5 @@ export interface ILanguageKeys {
   starting_date:string;
   ending_date:string;
   must_press_enter:string;
+  external_user_register:string;
 }
