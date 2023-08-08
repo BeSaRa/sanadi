@@ -18,7 +18,7 @@ export class CharityBranchInterceptor implements IModelInterceptor<CharityBranch
     delete model.status;
     delete model.statusInfo;
     const organizationOfficerInterceptor = new OrganizationOfficerInterceptor();
-    model.branchContactOfficer = (model.branchContactOfficer || model.branchContactOfficerList || []).map(e => organizationOfficerInterceptor.send({ ...e, branchId: model.branchId }) as OrganizationOfficer);
+    model.branchContactOfficer = (model.branchContactOfficer || model.branchContactOfficerList || []).map(e => organizationOfficerInterceptor.send({ ...e, branchId: model.branchId, itemId: !e.itemId ? e.id.toString() : e.itemId }) as OrganizationOfficer);
     return model;
   }
   receive(model: CharityBranch): CharityBranch {
