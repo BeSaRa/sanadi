@@ -96,6 +96,7 @@ export class BuildingAbilityPopupComponent implements OnInit {
       if (this.readonly || this.viewOnly) {
         this.formArray.disable();
       }
+      DateUtils.enablePastSelectedDates(this.datepickerOptionsMap, this.model);
     }
   }
 

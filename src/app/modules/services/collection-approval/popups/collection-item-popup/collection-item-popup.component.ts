@@ -110,6 +110,7 @@ export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<C
 
   initPopup(): void {
     this.listenToLicenseSearch();
+    DateUtils.enablePastSelectedDates(this.datepickerOptionsMap, this.model);
   }
 
   searchForLicense() {

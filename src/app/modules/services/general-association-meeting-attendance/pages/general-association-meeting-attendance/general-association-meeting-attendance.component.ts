@@ -453,6 +453,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       this.datepickerOptionsMap = {
         meetingDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' })
       };
+      DateUtils.enablePastSelectedDates(this.datepickerOptionsMap, this.model);
     } else {
       this.datepickerOptionsMap = {
         meetingDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' })
