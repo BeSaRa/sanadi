@@ -64,6 +64,7 @@ export class EffectiveCoordinationCapabilitiesPopupComponent implements OnInit {
       if (this.readonly || this.viewOnly) {
         this.formArray.disable();
       }
+      DateUtils.enablePastSelectedDates(this.datepickerOptionsMap, this.model);
     }
   }
   onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
