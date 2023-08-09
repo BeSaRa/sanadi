@@ -19,7 +19,7 @@ export class EvaluationIndicatorsComponent extends UiCrudListGenericComponent<Ev
     super();
   }
 
-  displayColumns: string[] = ['index', 'indicator', 'notes', 'actions'];
+  displayColumns: string[] = ['index', 'indicatorEvaluation', 'notes', 'actions'];
   actions: IMenuItem<EvaluationIndicator>[] = [
     // edit
     {
@@ -55,7 +55,7 @@ export class EvaluationIndicatorsComponent extends UiCrudListGenericComponent<Ev
   }
 
   _getDeleteConfirmMessage(record: EvaluationIndicator): string {
-    return this.lang.map.msg_confirm_delete_x.change({x: record.indicator});
+    return this.lang.map.msg_confirm_delete_x.change({x: record.indicatorEvaluation});
   }
 
   getExtraDataForPopup(): IKeyValue {

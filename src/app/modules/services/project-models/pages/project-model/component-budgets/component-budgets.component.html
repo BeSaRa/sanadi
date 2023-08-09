@@ -6,7 +6,7 @@
              cdk-table [dataSource]="table.dataSource">
         <ng-container cdkColumnDef="extra-header">
           <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-            <table-header tableTitle="project_components" [add$]="add$"
+            <table-header tableTitle="project_components" [add$]="add$" [allowAdd]="!readonly"
                           (textChange)="filterControl.setValue($event)"
                           [sort]="table.dataSource.sort">
             </table-header>
