@@ -9,7 +9,7 @@ import { Observable, of } from 'rxjs';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { ForeignAidClassification } from '@app/models/foreign-aid-classification';
-import { shareReplay, tap } from 'rxjs/operators';
+import { shareReplay, tap, map } from 'rxjs/operators';
 import { Lookup } from '@app/models/lookup';
 import { DomainTypes } from '@app/enums/domain-types';
 import { CustomValidators } from '@app/validators/custom-validators';
@@ -82,6 +82,7 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
     }
   };
   mainDacCategories$ = this.dacOchaService.loadByType(AdminLookupTypeEnum.DAC).pipe(shareReplay()).pipe(
+    map(e=>e.filter(x=>x.isActive() || x.id === this.model.mainDACCategory)),
     tap(e => {
       this.mainDacCategories = e;
     })
@@ -94,6 +95,7 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
   );
   mainOchaCategories: AdminLookup[] = [];
   mainOchaCategories$ = this.dacOchaService.loadByType(AdminLookupTypeEnum.OCHA).pipe(shareReplay()).pipe(
+    map(e=>e.filter(x=>x.isActive() || x.id === this.model.mainUNOCHACategory)),
     tap(e => {
       this.mainOchaCategories = e;
     })
