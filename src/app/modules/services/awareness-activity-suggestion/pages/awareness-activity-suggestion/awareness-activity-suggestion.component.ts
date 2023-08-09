@@ -11,8 +11,6 @@ import { LangService } from '@services/lang.service';
 import { Observable, of, Subject } from 'rxjs';
 import { AwarenessActivitySuggestion } from '@models/awareness-activity-suggestion';
 import { IKeyValue } from '@contracts/i-key-value';
-import { DatepickerOptionsMap } from '@app/types/types';
-import { DateUtils } from '@helpers/date-utils';
 import { AwarenessActivitySuggestionService } from '@services/awareness-activity-suggestion.service';
 import { LookupService } from '@services/lookup.service';
 import { ToastService } from '@services/toast.service';
@@ -25,8 +23,6 @@ import { CommonUtils } from '@helpers/common-utils';
 import { UserClickOn } from '@enums/user-click-on.enum';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { SearchAwarenessActivitySuggestionCriteria } from '@models/search-awareness-activity-suggestion-criteria';
-import { JobTitle } from '@app/models/job-title';
-import { JobTitleService } from '@app/services/job-title.service';
 import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import {
   SelectCustomServiceTemplatePopupComponent
@@ -46,15 +42,12 @@ import { CustomValidators } from '@app/validators/custom-validators';
 })
 export class AwarenessActivitySuggestionComponent extends EServicesGenericComponent<AwarenessActivitySuggestion, AwarenessActivitySuggestionService> implements AfterViewInit {
   collectionRequestType: Lookup[] = this.lookupService.listByCategory.CollectionRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
-  linkedProject: Lookup[] = this.lookupService.listByCategory.LinkedProject.sort((a, b) => a.lookupKey - b.lookupKey);
-  jobTitleList: JobTitle[] = [];
   fileExtensionsEnum = FileExtensionsEnum;
   licenseSearch$: Subject<string> = new Subject<string>();
   form!: UntypedFormGroup;
   selectedTemplate!: CustomServiceTemplate;
   selectedTemplateControl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
   selectedLicense?: AwarenessActivitySuggestion;
-  isSameAsApplican = false;
   activitiesTypes: AdminLookup[] = [];
   showOther: boolean = false;
   openFromEnum = OpenFrom;
@@ -89,11 +82,6 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   };
   uploadedTemplate?: File;
   loadAttachments: boolean = false;
-  datepickerOptionsMap: DatepickerOptionsMap = {
-    expectedDate: DateUtils.getDatepickerOptions({
-      disablePeriod: 'past'
-    })
-  };
   formProperties = {
     requestType: () => {
       return this.getObservableField('requestTypeField', 'requestType');
@@ -106,7 +94,6 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     public service: AwarenessActivitySuggestionService,
     private lookupService: LookupService,
     private toast: ToastService,
-    private jobTitleService: JobTitleService,
     private cd: ChangeDetectorRef,
     private dialog: DialogService,
     public employeeService: EmployeeService,
@@ -221,7 +208,6 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
 
   _initComponent(): void {
     this.listenToLicenseSearch();
-    this._loadJobTitles();
     this._loadActivityTypes();
 
   }
@@ -268,17 +254,6 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       }
     }
     return failedList;
-  }
-
-  private _loadJobTitles(): void {
-    this.jobTitleService.loadAsLookups()
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError(() => {
-          return of([]);
-        })
-      )
-      .subscribe((result) => this.jobTitleList = result);
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {

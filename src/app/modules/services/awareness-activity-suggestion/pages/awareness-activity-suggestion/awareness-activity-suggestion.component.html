@@ -123,7 +123,7 @@
           <label asteriskIfRequired="contactQID" for="contactQID" class="form-label">{{
             lang.map.identification_number
             }}</label>
-          <input id="contactQID" formControlName="contactQID" [readonly]="isCancel() || readonly || isSameAsApplican"
+          <input id="contactQID" formControlName="contactQID" [readonly]="isCancel() || readonly"
             validationClasses="contactQID" class="form-control" />
           <app-field-error-message controlName="contactQID"></app-field-error-message>
         </div>
@@ -132,14 +132,14 @@
           <label asteriskIfRequired="contactName" for="contactName" class="form-label">{{
             lang.map.full_name
             }}</label>
-          <input id="contactName" formControlName="contactName" [readonly]="isCancel() || readonly || isSameAsApplican"
+          <input id="contactName" formControlName="contactName" [readonly]="isCancel() || readonly"
             validationClasses="contactName" class="form-control" />
           <app-field-error-message controlName="contactName"></app-field-error-message>
         </div>
         <!-- contactEmail -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="contactEmail" for="contactEmail">{{lang.map.lbl_email}}</label>
-          <input validationClasses="contactEmail" [readonly]="isCancel() || readonly || isSameAsApplican"
+          <input validationClasses="contactEmail" [readonly]="isCancel() || readonly"
             formControlName="contactEmail" type="text" id="contactEmail" class="form-control">
           <app-field-error-message controlName="contactEmail"></app-field-error-message>
         </div>
@@ -149,7 +149,7 @@
             lang.map.lbl_phone
             }}</label>
           <input type="text" validationClasses="contactPhone" formControlName="contactPhone"
-            [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control" id="contactPhone" />
+            [readonly]="isCancel() || readonly" trimInput class="form-control" id="contactPhone" />
           <app-field-error-message controlName="contactPhone"></app-field-error-message>
         </div>
         <!-- contact Extra Phone -->
@@ -157,7 +157,7 @@
           <label asteriskIfRequired="contactExtraPhone" for="contactExtraPhone" class="form-label">{{
             lang.map.lbl_mobile_number }}</label>
           <input type="text" validationClasses="contactExtraPhone" formControlName="contactExtraPhone"
-            [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control"
+            [readonly]="isCancel() || readonly" trimInput class="form-control"
             id="contactExtraPhone" />
           <app-field-error-message controlName="contactExtraPhone"></app-field-error-message>
         </div>
