@@ -99,6 +99,7 @@ export class CollectionItemPopupComponent extends UiCrudDialogGenericComponent<C
     this.form = this.fb.group(this.model.buildForm(true));
     this.oldLicenseFullSerial.disable();
     this.licenseEndDate.setValidators(this.collectionModel.licenseDurationType === LicenseDurationType.TEMPORARY ? [CustomValidators.required] : null);
+    DateUtils.enablePastSelectedDates(this.datepickerOptionsMap, this.model)
   }
 
   destroyPopup(): void {

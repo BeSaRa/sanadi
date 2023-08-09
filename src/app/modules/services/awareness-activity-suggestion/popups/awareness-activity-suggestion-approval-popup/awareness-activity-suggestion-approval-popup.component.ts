@@ -27,7 +27,7 @@ export class AwarenessActivitySuggestionApprovalPopupComponent implements OnInit
   action$: Subject<any> = new Subject<any>();
   approvalForm!: UntypedFormGroup;
   datepickerOptionsMap: DatepickerOptionsMap = {
-    followUpDate: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
+    followUpDate: DateUtils.getDatepickerOptions({ disablePeriod: "past" }),
   };
   private destroy$: Subject<any> = new Subject();
   constructor(
@@ -44,6 +44,7 @@ export class AwarenessActivitySuggestionApprovalPopupComponent implements OnInit
   ) {
     this.response = this.data.action;
     this.approvalForm = this.fb.group(this.data.model.buildApprovalForm(true))
+    DateUtils.enablePastSelectedDates(this.datepickerOptionsMap, this.data.model)
   }
 
   ngOnInit() {

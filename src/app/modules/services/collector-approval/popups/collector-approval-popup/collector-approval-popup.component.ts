@@ -41,7 +41,7 @@ export class CollectorApprovalPopupComponent extends UiCrudDialogGenericComponen
   caseType: CaseTypes;
   collectorModel: CollectorApproval;
   datepickerOptionsMap: IKeyValue = {
-    licenseEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' })
+    licenseEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' })
   };
   isPermanent!: boolean;
   licenseSearch$: Subject<string> = new Subject<string>();
@@ -110,6 +110,7 @@ export class CollectorApprovalPopupComponent extends UiCrudDialogGenericComponen
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
     this.toggleLicenseEndDate();
+    DateUtils.enablePastSelectedDates(this.datepickerOptionsMap, this.model)
   }
 
   searchForLicense() {

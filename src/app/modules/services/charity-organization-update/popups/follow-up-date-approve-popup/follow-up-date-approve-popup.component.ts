@@ -65,6 +65,7 @@ export class FollowupDateApprovePopupComponent implements OnInit {
   ngOnInit(): void {
     this.selectedLicense = this.model;
     this.followUpDate.patchValue(DateUtils.changeDateToDatepicker(this.model.followUpDate));
+    DateUtils.enablePastSelectedDates(this.datepickerOptionsMap, this.data.model)
 
     this.listenToAction();
   }
