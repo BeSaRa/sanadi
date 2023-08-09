@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {UrlService} from '@services/url.service';
 import {NotificationService} from '@services/notification.service';
@@ -17,7 +17,10 @@ export class HeaderNotificationsComponent implements OnInit, OnDestroy {
 
   constructor(public langService: LangService,
               public urlService: UrlService,
-              public notificationService: NotificationService) {
+              public notificationService: NotificationService,
+              private cd:ChangeDetectorRef) {
+
+           this.notificationService.setChangeDetection(this.cd);
   }
 
   ngOnInit(): void {

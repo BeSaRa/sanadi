@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {ChangeDetectorRef, Injectable, OnDestroy} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {catchError, map, share, takeUntil} from 'rxjs/operators';
 import {EmployeeService} from '@services/employee.service';
@@ -28,6 +28,7 @@ export class NotificationService implements OnDestroy {
   private destroy$: Subject<any> = new Subject();
   private notificationStream: Subject<any> = new Subject();
   private notifications$ = this.notificationStream.asObservable().pipe(share());
+  private cd?:ChangeDetectorRef
 
   constructor(private configService: ConfigurationService,
               private http: HttpClient,
@@ -85,7 +86,7 @@ export class NotificationService implements OnDestroy {
     })
       .pipe(
         map((response: any) => {
-          return response.rs;
+          return response;
         })
       )
       .subscribe((response) => {
@@ -117,6 +118,7 @@ export class NotificationService implements OnDestroy {
 
   private updateUnreadCount() {
     this.unreadCount = this.getUnreadNotifications().length;
+    this.cd?.detectChanges();
   }
 
   private setEventListeners() {
@@ -149,5 +151,8 @@ export class NotificationService implements OnDestroy {
     this.notificationsSource = undefined;
     this.notificationsList = [];
     this.unreadCount = 0;
+  }
+  setChangeDetection(cd:ChangeDetectorRef){
+    this.cd =  cd
   }
 }
