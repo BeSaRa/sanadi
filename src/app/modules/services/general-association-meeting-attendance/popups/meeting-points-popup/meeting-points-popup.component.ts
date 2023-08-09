@@ -74,7 +74,7 @@ export class MeetingPointsPopupComponent extends UiCrudDialogGenericComponent<Me
     let formValue = form.getRawValue();
     return this._getNewInstance({
       ...this.model,
-      meetingSubItem: model.meetingSubItem ? [...this.meetingSubPointsListComponent.list.map(x => new MeetingAttendanceSubItem().clone(x))] : [new MeetingAttendanceSubItem()],
+      meetingSubItem: model.meetingSubItem ? [...this.meetingSubPointsListComponent.list.map(x => new MeetingAttendanceSubItem().clone(x))] : [],
       ...formValue,
     });
   }
