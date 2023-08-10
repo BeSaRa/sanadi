@@ -80,7 +80,7 @@ _getPopupComponent(): ComponentType<any> {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.charityWorkArea?.firstChange || changes.charityId) {
+    if (!changes.charityWorkArea || changes.charityWorkArea?.firstChange || changes.charityId) {
       return;
     }
     this.model = new ForeignAidClassification();
