@@ -43,7 +43,7 @@ export class CharityReport extends BaseModel<
   riskMitigationMeasures!: string;
   riskType!: number;
   id!: number;
-  objectDBId?: number;
+  objectDBId!: number;
   categoryInfo!: AdminResult;
   reportStatusInfo!: AdminResult;
   riskTypeInfo!: AdminResult;
