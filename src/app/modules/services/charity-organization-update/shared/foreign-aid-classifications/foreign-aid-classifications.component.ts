@@ -40,6 +40,7 @@ _getPopupComponent(): ComponentType<any> {
     return ForeignAidClassificationsPopupComponent;
   }
   protected _initComponent(): void {
+    console.log(this._list)
     this.model = new ForeignAidClassification().clone({
       ...this.model,
       charityWorkArea: this.charityWorkArea,

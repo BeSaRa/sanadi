@@ -37,7 +37,7 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
   itemId!: string;
 
   id!: number;
-  objectDBId?: number;
+  objectDBId!: number;
   domain?: number;
   domainInfo!: AdminResult;
 

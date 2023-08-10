@@ -984,7 +984,7 @@ export class CharityOrganizationUpdateComponent
     this.model = model;
     if(this.operation == this.operationTypes.CREATE) {
       const interceptor = new CharityOrganizationUpdateInterceptor();
-      this.model.initialVersion = JSON.stringify(interceptor.send(this.model));
+      this.model.initialVersion = JSON.stringify(interceptor.send({...this.model}));
     }
     if (!this.buildingTabsDone) {
       return;

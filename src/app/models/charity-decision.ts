@@ -36,7 +36,7 @@ export class CharityDecision extends BaseModel<
   subject!: string;
   organization!: string;
   id!: number;
-  objectDBId?: number;
+  objectDBId!: number;
   category?: number;
 
   searchFields: ISearchFieldsMap<CharityDecision> = {

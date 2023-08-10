@@ -39,68 +39,68 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
   caseInterceptor?: IModelInterceptor<CharityOrganizationUpdate> | undefined;
   send(model: Partial<CharityOrganizationUpdate>): Partial<CharityOrganizationUpdate> {
     model.registrationAuthority = model.registrationAuthorityInfo?.id;
-    model.workAreaObjectList = model.workAreaObjectList?.map(e => workAreaInterceptor.send(e) as WorkArea);
+    model.workAreaObjectList = model.workAreaObjectList?.map(e => workAreaInterceptor.send({...e}) as WorkArea);
     model.charityBranchList = model.charityBranchList?.map(e => {
       e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return charityBranchInterceptor.send(e) as CharityBranch
+      return charityBranchInterceptor.send({...e}) as CharityBranch
     });
     model.realBeneficiaryList = model.realBeneficiaryList?.map(e => {
-      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return realBeneficiaryInterceptor.send(e) as RealBeneficiary
+      e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
+      return realBeneficiaryInterceptor.send({...e}) as RealBeneficiary
     });
     model.boardMemberList = model.boardMemberList?.map(e => {
-      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return membersInterceptor.send(e) as OrgMember
+      e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
+      return membersInterceptor.send({...e}) as OrgMember
     });
     model.authorizedSignatoryMemberList = model.authorizedSignatoryMemberList?.map(e => {
-      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return membersInterceptor.send(e) as OrgMember
+      e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
+      return membersInterceptor.send({...e}) as OrgMember
     });
     model.founderMemberList = model.founderMemberList?.map(e => {
-      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return membersInterceptor.send(e) as OrgMember
+      e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
+      return membersInterceptor.send({...e}) as OrgMember
     });
     model.generalAssemblyMemberList = model.generalAssemblyMemberList?.map(e => {
-      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return membersInterceptor.send(e) as OrgMember
+      e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
+      return membersInterceptor.send({...e}) as OrgMember
     });
     model.currentExecutiveManagementList = model.currentExecutiveManagementList?.map(e => {
-      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return executiveMemberInterceptor.send(e) as OrgExecutiveMember
+      e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
+      return executiveMemberInterceptor.send({...e}) as OrgExecutiveMember
     });
     model.riskReportList = model.riskReportList?.map(e => {
-      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return charityReportInterceptor.send(e) as CharityReport
+      e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
+      return charityReportInterceptor.send({...e}) as CharityReport
     });
     model.coordinationSupportReport = model.coordinationSupportReport?.map(e => {
-      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return charityReportInterceptor.send(e) as CharityReport
+      e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
+      return charityReportInterceptor.send({...e}) as CharityReport
     });
     model.incomingReportList = model.incomingReportList?.map(e => {
-      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return charityReportInterceptor.send(e) as CharityReport
+      e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
+      return charityReportInterceptor.send({...e}) as CharityReport
     });
     model.incomingDecisionList = model.incomingDecisionList?.map(e => {
-      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return charityDecisionInterceptor.send(e) as CharityDecision
+      e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
+      return charityDecisionInterceptor.send({...e}) as CharityDecision
     });
     model.outgoingDecisionList = model.outgoingDecisionList?.map(e => {
-      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return charityDecisionInterceptor.send(e) as CharityDecision
+      e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
+      return charityDecisionInterceptor.send({...e}) as CharityDecision
     });
     model.complianceOfficerList = model.complianceOfficerList?.map(e => {
       e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return organizationOfficerInterceptor.send(e) as OrganizationOfficer
+      return organizationOfficerInterceptor.send({...e}) as OrganizationOfficer
     });
     model.wFClassificationList = model.wFClassificationList?.map(e => {
-      e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return foreignAidClassificationInterceptor.send(e) as ForeignAidClassification
+      e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
+      return foreignAidClassificationInterceptor.send({...e}) as ForeignAidClassification
     });
     model.charityContactOfficerList = model.charityContactOfficerList?.map(e => {
       e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
-      return organizationOfficerInterceptor.send(e) as OrganizationOfficer
+      return organizationOfficerInterceptor.send({...e}) as OrganizationOfficer
     });
-    model.byLawList = model.byLawList?.map(e => bylawInterceptor.send(e) as Bylaw);
+    model.byLawList = model.byLawList?.map(e => bylawInterceptor.send({...e}) as Bylaw);
     (model.lastUpdateDate && (model.lastUpdateDate = DateUtils.getDateStringFromDate(model.lastUpdateDate)));
     (model.firstReleaseDate && (model.firstReleaseDate = DateUtils.getDateStringFromDate(model.firstReleaseDate)));
 
