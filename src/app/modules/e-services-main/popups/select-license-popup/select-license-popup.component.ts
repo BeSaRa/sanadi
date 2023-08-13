@@ -116,7 +116,7 @@ export class SelectLicensePopupComponent {
         if (!requestDetails) {
           return;
         }
-        this.dialogRef.close({ selected: license, details: license });
+        this.dialogRef.close({ selected: license, details: requestDetails });
       });
     }
      else {
