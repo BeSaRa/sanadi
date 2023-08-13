@@ -698,6 +698,10 @@ export class CharityOrganizationUpdateComponent
               currentExecutiveManagementList: this.listExecutiveMembers(CharityRole.CURRENT_EXECUTIVE_MANAGEMENT),
               realBeneficiaryList: this.realBenefeciaries,
             });
+            if(this.operation == this.operationTypes.CREATE) {
+              const interceptor = new CharityOrganizationUpdateInterceptor();
+              this.model.initialVersion = JSON.stringify(interceptor.send({...this.model}));
+            }
           });
       });
 
@@ -724,6 +728,10 @@ export class CharityOrganizationUpdateComponent
             coordinationSupportReport: this.supportCharityReport,
             registrationAuthority: org.profileInfo.registrationAuthority
           });
+          if(this.operation == this.operationTypes.CREATE) {
+            const interceptor = new CharityOrganizationUpdateInterceptor();
+            this.model.initialVersion = JSON.stringify(interceptor.send({...this.model}));
+          }
           this.form.get('registrationAuthority')?.setValue(org.profileInfo.registrationAuthorityInfo.getName())
         });
       });
@@ -737,6 +745,10 @@ export class CharityOrganizationUpdateComponent
           incomingDecisionList: this.incomingCharityDecisions,
           outgoingDecisionList: this.outgoingCharityDecisions,
         });
+        if(this.operation == this.operationTypes.CREATE) {
+          const interceptor = new CharityOrganizationUpdateInterceptor();
+          this.model.initialVersion = JSON.stringify(interceptor.send({...this.model}));
+        }
       });
     }
     charity && this._setModelNames(charity);

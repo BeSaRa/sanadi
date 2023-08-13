@@ -123,7 +123,7 @@ export class MembersPopupComponent implements OnInit {
     const member: OrgMember = new OrgMember().clone(form);
     (member.joinDate && (member.joinDate = DateUtils.getDateStringFromDate(form.joinDate)));
     member.jobTitleInfo = AdminResult.createInstance(({
-      ...this.jobTitleList.find(e => e.id === form.category)
+      ...this.jobTitleList.find(e => e.id === form.jobTitleId)
     }));
     return member;
   }
