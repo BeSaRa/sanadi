@@ -9,11 +9,11 @@ import {ServiceItemResolver} from '@app/resolvers/service-item.resolver';
 import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 
 const routes: Routes = [
-  { path: '', component: GeneralServicesComponent },
+  {path: '', component: GeneralServicesComponent},
   {
     path: 'inquiries', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: { info: ServiceItemResolver },
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.INQUIRY,
       configPermissionGroup: null,
@@ -24,7 +24,7 @@ const routes: Routes = [
   {
     path: 'consultations', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: { info: ServiceItemResolver },
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.CONSULTATION,
       configPermissionGroup: null,
@@ -35,7 +35,7 @@ const routes: Routes = [
   {
     path: 'external-org-affiliation', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: { info: ServiceItemResolver },
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST,
       configPermissionGroup: null,
@@ -46,7 +46,7 @@ const routes: Routes = [
   {
     path: 'international-coop', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: { info: ServiceItemResolver },
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.INTERNATIONAL_COOPERATION,
       configPermissionGroup: null,
@@ -57,7 +57,7 @@ const routes: Routes = [
   {
     path: 'employment', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: { info: ServiceItemResolver },
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.EMPLOYMENT,
       configPermissionGroup: null,
@@ -68,7 +68,7 @@ const routes: Routes = [
   {
     path: 'foreign-countries-projects', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: { info: ServiceItemResolver },
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.FOREIGN_COUNTRIES_PROJECTS,
       configPermissionGroup: null,
@@ -79,7 +79,7 @@ const routes: Routes = [
   {
     path: 'coordination-with-organizations-request', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: { info: ServiceItemResolver },
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST,
       configPermissionGroup: null,
@@ -91,7 +91,7 @@ const routes: Routes = [
   {
     path: 'npo-management', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: { info: ServiceItemResolver },
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.NPO_MANAGEMENT,
       configPermissionGroup: null,
@@ -102,7 +102,7 @@ const routes: Routes = [
   {
     path: 'charity-organization-update', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: { info: ServiceItemResolver },
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.CHARITY_ORGANIZATION_UPDATE,
       configPermissionGroup: null,
@@ -113,7 +113,7 @@ const routes: Routes = [
   {
     path: 'awareness-activity-suggestion', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: { info: ServiceItemResolver },
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.AWARENESS_ACTIVITY_SUGGESTION,
       configPermissionGroup: null,
@@ -124,7 +124,7 @@ const routes: Routes = [
   {
     path: 'general-process-notification', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: { info: ServiceItemResolver },
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
       configPermissionGroup: null,
@@ -135,7 +135,7 @@ const routes: Routes = [
   {
     path: 'organizations-entities-support', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: { info: ServiceItemResolver },
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT,
       configPermissionGroup: null,

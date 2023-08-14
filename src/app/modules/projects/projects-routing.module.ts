@@ -15,7 +15,7 @@ const routes: Routes = [
   {
     path: 'projects-models', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.EXTERNAL_PROJECT_MODELS,
       configPermissionGroup: null,
@@ -26,7 +26,7 @@ const routes: Routes = [
   /*{
     path: 'internal-project-license', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.INTERNAL_PROJECT_LICENSE,
       configPermissionGroup: null,
@@ -37,7 +37,7 @@ const routes: Routes = [
   {
     path: 'internal-bank-account', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL,
       configPermissionGroup: null,
@@ -48,7 +48,7 @@ const routes: Routes = [
   {
     path: 'urgent-joint-relief-campaign', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_JOINT_RELIEF_CAMPAIGN,
       configPermissionGroup: null,
@@ -59,7 +59,7 @@ const routes: Routes = [
   {
     path: 'transferring-individual-funds-abroad', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
       configPermissionGroup: null,
@@ -70,7 +70,7 @@ const routes: Routes = [
   {
     path: 'general-association-meeting-attendance', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
       configPermissionGroup: null,
@@ -81,7 +81,7 @@ const routes: Routes = [
   {
     path: 'projects-fundraising', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver, countries: CountryResolver},
+    resolve: {info: ServiceItemResolver.resolve, countries: CountryResolver.resolve},
     data: {
       permissionKey: null,
       configPermissionGroup: null,
@@ -92,7 +92,7 @@ const routes: Routes = [
   {
     path: 'project-implementation', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver, countries: CountryResolver},
+    resolve: {info: ServiceItemResolver.resolve, countries: CountryResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.PROJECT_IMPLEMENTATION,
       configPermissionGroup: null,
