@@ -308,21 +308,6 @@ export class UrgentInterventionLicenseFollowupComponent extends EServicesGeneric
     if (licenseDetails && !ignoreUpdateForm) {
       this.fullSerialField.setValue(licenseDetails?.fullSerial);
 
-      let implementingAgencyInterceptor = new ImplementingAgencyInterceptor();
-      let interventionRegionInterceptor = new InterventionRegionInterceptor();
-      let interventionFieldInterceptor = new InterventionFieldInterceptor();
-      licenseDetails.beneficiaryCountryInfo && (licenseDetails.beneficiaryCountryInfo = AdminResult.createInstance(licenseDetails.beneficiaryCountryInfo));
-      licenseDetails.executionCountryInfo && (licenseDetails.executionCountryInfo = AdminResult.createInstance(licenseDetails.executionCountryInfo));
-      licenseDetails.implementingAgencyList = licenseDetails.implementingAgencyList.map((x: any) => {
-        return implementingAgencyInterceptor.receive(x);
-      });
-      licenseDetails.interventionRegionList = licenseDetails.interventionRegionList.map((x: any) => {
-        return interventionRegionInterceptor.receive(x);
-      });
-      licenseDetails.interventionFieldList = licenseDetails.interventionFieldList.map((x: any) => {
-        return interventionFieldInterceptor.receive(x);
-      });
-
       this.selectedLicense = licenseDetails;
     }
   }
