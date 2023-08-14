@@ -1,4 +1,4 @@
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Consultation} from '../models/consultation';
 import {IModelInterceptor} from '@contracts/i-model-interceptor';
 import {ActionLogService} from './action-log.service';
@@ -52,7 +52,6 @@ export class ConsultationService extends BaseGenericEService<Consultation> {
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,
-              public cfr: ComponentFactoryResolver,
               public dialog: DialogService,
               public dynamicService: DynamicOptionsService,
               public http: HttpClient) {

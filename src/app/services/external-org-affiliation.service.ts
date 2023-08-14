@@ -7,7 +7,7 @@ import {ExternalOrgAffiliationSearchCriteria} from './../models/external-org-aff
 import {LangService} from './lang.service';
 import {FactoryService} from './factory.service';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ExternalOrgAffiliation} from '@app/models/external-org-affiliation';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -42,7 +42,6 @@ export class ExternalOrgAffiliationService extends BaseGenericEService<ExternalO
     public lang: LangService,
     public http: HttpClient,
     public dynamicService: DynamicOptionsService,
-    public cfr: ComponentFactoryResolver,
     private urlService: UrlService,
     public dialog: DialogService,
     private licenseService: LicenseService,

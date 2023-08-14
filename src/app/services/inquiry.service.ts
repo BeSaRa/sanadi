@@ -1,4 +1,4 @@
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {UrlService} from './url.service';
 import {Inquiry} from '../models/inquiry';
 import {HttpClient} from '@angular/common/http';
@@ -50,7 +50,6 @@ export class InquiryService extends BaseGenericEService<Inquiry> {
 
   constructor(private urlService: UrlService,
               public dialog: DialogService,
-              public cfr: ComponentFactoryResolver,
               public domSanitizer: DomSanitizer,
               public dynamicService: DynamicOptionsService,
               public http: HttpClient) {

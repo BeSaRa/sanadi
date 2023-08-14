@@ -10,7 +10,7 @@ import {FactoryService} from './factory.service';
 import {Employment} from '@models/employment';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 import {HasInterception} from '@decorators/intercept-model';
-import {ComponentFactoryResolver, EventEmitter, Injectable,} from '@angular/core';
+import {EventEmitter, Injectable,} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
@@ -49,7 +49,6 @@ export class EmploymentService extends BaseGenericEService<Employment> {
     private urlService: UrlService,
     public http: HttpClient,
     public dialog: DialogService,
-    public cfr: ComponentFactoryResolver,
     public domSanitizer: DomSanitizer,
     public dynamicService: DynamicOptionsService
   ) {
