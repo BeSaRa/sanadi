@@ -128,6 +128,10 @@ export class NotificationResponse extends Cloneable<NotificationResponse> {
     return true;
   }
 
+  getFullSerial(){
+    if (!this.information) return '';
+    return this.information.FullSerial
+  }
   getSubject() {
     if (!this.information) return '';
     return this.information[this.lang.map.lang + 'Subject' as keyof IParsableNotification]

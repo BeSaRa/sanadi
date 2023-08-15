@@ -132,6 +132,10 @@ export class NotificationService implements OnDestroy {
         this.notificationsSource.addEventListener('message', (result) => {
             let finalData = notificationResponseInterceptor.receive(new NotificationResponse().clone(JSON.parse(result.data)));
             this.notificationsList.push(finalData);
+            if(finalData.isParsable()){
+              this.displayDesktopNotification(finalData.getFullSerial(),
+               finalData.getServiceName()+'\n'+ finalData.getSubject())
+            }
             this.updateUnreadCount();
             return this.notificationStream.next(finalData);
         }, false);
