@@ -574,7 +574,7 @@ export class LicenseService {
       oldLicenseId
     });
   }
-  @CastResponse(() => UrgentInterventionAnnouncementResult)
+  @CastResponse(() => UrgentInterventionAnnouncement)
   _validateUrgentInterventionLicenseFollowupByVsId<T>(vsId:string): Observable<T> {
     return this.http.get<T>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP) + '/validate/closure/'+vsId, );
   }

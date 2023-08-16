@@ -1,3 +1,4 @@
+import { SelectedLicenseInfo } from './../../../../../interfaces/selected-license-info';
 import {Component, ViewChild} from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
@@ -288,7 +289,10 @@ export class UrgentInterventionLicenseFollowupComponent extends EServicesGeneric
   }
 
   private validateSingleLicense(license: UrgentInterventionAnnouncementResult): Observable<undefined | UrgentInterventionAnnouncement> {
-    return this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(license.id);
+    return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.model!.requestType, license.vsId)
+    .pipe(map(validated => {
+      return (validated ? validated : undefined) as (undefined | UrgentInterventionAnnouncement);
+    }))
   }
 
   private openSelectLicense(licenses: UrgentInterventionAnnouncementResult[]): Observable<undefined | UrgentInterventionAnnouncement> {
