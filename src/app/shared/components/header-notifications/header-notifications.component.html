@@ -45,10 +45,6 @@
 <ng-template #notificationTemplate let-notification="data">
   <div [ngClass]="{'fw-bold': !notification.read}">
     <div class="d-flex justify-content-between">
-      <ng-container *ngIf="!notification.isParsable()">
-        <span class="text-truncate" [tooltip]="notification.title">{{notification.title}}</span>
-
-      </ng-container>
       <ng-container *ngIf="notification.isParsable()" [ngTemplateOutlet]="informationTemplate"
         [ngTemplateOutletContext]="{data: notification}">
 
