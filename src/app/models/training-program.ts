@@ -48,6 +48,8 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   endDateString!: string;
   sessionStartTime!: number;
   sessionEndTime!: number;
+  sessionEndTimeMinutes!: number;
+  sessionStartTimeMinutes!: number;
   trainingLocation!: string;
   trainerList!: string;
   trainerListIds: number[] = [];
@@ -103,6 +105,8 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       endDate,
       sessionStartTime,
       sessionEndTime,
+      sessionEndTimeMinutes,
+      sessionStartTimeMinutes,
       trainingLocation,
       contactPerson,
       attendenceMethod,
@@ -164,6 +168,12 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       sessionEndTime: controls ? [sessionEndTime, [
         CustomValidators.required
       ]] : sessionEndTime,
+      sessionEndTimeMinutes: controls ? [sessionEndTimeMinutes, [
+        CustomValidators.required
+      ]] : sessionEndTimeMinutes,
+      sessionStartTimeMinutes: controls ? [sessionStartTimeMinutes, [
+        CustomValidators.required
+      ]] : sessionStartTimeMinutes,
       trainingLocation: controls ? [trainingLocation, [
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)

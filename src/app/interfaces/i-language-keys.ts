@@ -581,6 +581,8 @@ export interface ILanguageKeys {
   contact_person: string;
   session_start_time: string;
   session_end_time: string;
+  session_start_time_minutes: string;
+  session_end_time_minutes: string;
   registration_start_date: string;
   registration_end_date: string;
   training_start_date: string;
