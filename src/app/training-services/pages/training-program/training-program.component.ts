@@ -49,8 +49,8 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   }
 
   view$: Subject<TrainingProgram> = new Subject<TrainingProgram>();
-  displayedColumns: string[] = ['rowSelection', 'activityName', 'trainingType', 'trainingStatus', 'trainingDate', 'registrationDate', 'actions'];
-  searchColumns: string[] = ['_', 'search_activityName', 'search_trainingType', 'search_trainingStatus', 'search_trainingDate', 'search_registrationDate', 'search_actions'];
+  displayedColumns: string[] = ['rowSelection', 'activityName', 'trainingType', 'acceptedTraineeNumber', 'trainingStatus', 'trainingDate', 'registrationDate', 'actions'];
+  searchColumns: string[] = ['_', 'search_activityName', 'search_trainingType', 'search_acceptedTraineeNumber', 'search_trainingStatus', 'search_trainingDate', 'search_registrationDate', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_activityName: {
       key: 'activityName',
