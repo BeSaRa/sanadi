@@ -426,27 +426,6 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     this.sessionStartTimeControl.updateValueAndValidity();
     this.sessionEndTimeControl.updateValueAndValidity();
   }
-  trainingStartTimeMinutesChange(): void {
-    let sessionEndTimeMinutes = this.sessionEndTimeMinutesControl.value;
-    let validators = sessionEndTimeMinutes ? [CustomValidators.timeEarlierThanOther(sessionEndTimeMinutes)] : [];
-
-    this.sessionStartTimeMinutesTimeControl.setValidators([CustomValidators.required].concat(validators));
-    this.sessionEndTimeMinutesControl.setValidators([CustomValidators.required].concat(validators));
-
-    this.sessionStartTimeMinutesTimeControl.updateValueAndValidity();
-    this.sessionEndTimeMinutesControl.updateValueAndValidity();
-  }
-
-  trainingEndTimeMinutesChange(): void {
-    let sessionStartTimeMinutesTime = this.sessionStartTimeMinutesTimeControl.value;
-    let validators = sessionStartTimeMinutesTime ? [CustomValidators.timeLaterThanOther(sessionStartTimeMinutesTime)] : [];
-
-    this.sessionStartTimeMinutesTimeControl.setValidators([CustomValidators.required].concat(validators));
-    this.sessionEndTimeMinutesControl.setValidators([CustomValidators.required].concat(validators));
-
-    this.sessionStartTimeMinutesTimeControl.updateValueAndValidity();
-    this.sessionEndTimeMinutesControl.updateValueAndValidity();
-  }
 
   setRelatedDates(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
     DateUtils.setRelatedMinDate({
