@@ -1,3 +1,5 @@
+import { TrainingProgramAudiencePopupComponent } from '@app/administration/popups/training-program-audience-popup/training-program-audience-popup.component';
+import { TrainingProgramAudienceComponent } from './pages/training-program-audience/training-program-audience.component';
 import { CustomMenuDefaultsPopupComponent } from './popups/custom-menu-defaults-popup/custom-menu-defaults-popup.component';
 import {
   TrainingProgramPartnerPopupComponent
@@ -170,6 +172,8 @@ import { AdminPermissionPopupComponent } from './popups/admin-permission-popup/a
     JobTitlePopupComponent,
     TrainingProgramPartnerComponent,
     TrainingProgramPartnerPopupComponent,
+    TrainingProgramAudienceComponent,
+    TrainingProgramAudiencePopupComponent,
     GeneralProcessComponent,
     GeneralProcessPopupComponent,
     SubTeamComponent,

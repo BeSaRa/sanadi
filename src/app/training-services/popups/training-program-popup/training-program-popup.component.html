@@ -271,7 +271,7 @@
                      placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
                      formControlName="targetAudienceListIds" id="targetAudienceListIds" [multiple]="true"
                      appendTo="body">
-            <ng-option [value]="targetAudience.lookupKey" *ngFor="let targetAudience of targetAudienceList"
+            <ng-option [value]="targetAudience.id" *ngFor="let targetAudience of targetAudienceList"
                        [disabled]="!targetAudience.status">{{targetAudience.getName()}}</ng-option>
           </ng-select>
           <app-field-error-message controlName="targetAudienceListIds"></app-field-error-message>
