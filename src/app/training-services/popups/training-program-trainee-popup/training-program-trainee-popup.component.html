@@ -230,8 +230,8 @@
 
   <button *ngIf="this.operation != operationTypes.VIEW && isInternalUser" [disabled]="form.invalid" (click)="saveCandidateAndClose(false)" class="btn btn-primary">{{lang.map.btn_save}}</button>
 
-  <button *ngIf="this.operation == operationTypes.VIEW" [disabled]="form.invalid" (click)="acceptCandidate$.next()" class="btn btn-primary">{{lang.map.lbl_accept}}</button>
-  <button *ngIf="this.operation == operationTypes.VIEW" [disabled]="form.invalid" (click)="rejectCandidate()" class="btn btn-primary">{{lang.map.lbl_reject}}</button>
+  <button *ngIf="this.operation == operationTypes.VIEW && isInternalUser" [disabled]="form.invalid" (click)="acceptCandidate$.next()" class="btn btn-primary">{{lang.map.lbl_accept}}</button>
+  <button *ngIf="this.operation == operationTypes.VIEW && isInternalUser" [disabled]="form.invalid" (click)="rejectCandidate()" class="btn btn-primary">{{lang.map.lbl_reject}}</button>
 
   <button [dialogClose]="trainingProgramId" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>
