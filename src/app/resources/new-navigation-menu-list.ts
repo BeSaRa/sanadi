@@ -2830,6 +2830,19 @@ export const newNavigationMenuList = [
     svg: null
   },
   {
+    id: 88,
+    langKey: 'menu_training_program_audience',
+    path: '/home/administration/training-program-audience',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.TRAINING_PROGRAM_AUDIENCE,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 23,
+    svg: null
+  },
+  {
     id: 89,
     langKey: 'menu_manage_user_inbox',
     path: '/home/manage-user-inbox',

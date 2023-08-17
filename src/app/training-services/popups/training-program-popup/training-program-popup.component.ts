@@ -29,6 +29,8 @@ import {Profile} from '@app/models/profile';
 import {TrainingProgramPartner} from '@app/models/training-program-partner';
 import {TrainingProgramPartnerService} from '@app/services/training-program-partner.service';
 import {CommonUtils} from '@helpers/common-utils';
+import { TrainingProgramAudienceService } from '@app/services/training-program-audience.service';
+import { TrainingProgramAudience } from '@app/models/training-program-audience';
 
 @Component({
   selector: 'training-program-popup',
@@ -88,10 +90,10 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   trainingDomains: Lookup[] = this.lookupService.listByCategory.TRAINING_DOMAIN;
   trainingTypes: Lookup[] = this.lookupService.listByCategory.TRAINING_TYPE;
   organizationTypes: Lookup[] = this.lookupService.listByCategory.ProfileType;
-  targetAudienceList: Lookup[] = this.lookupService.listByCategory.TRAINING_AUDIENCE;
   attendanceMethods: Lookup[] = this.lookupService.listByCategory.TRAINING_ATTENDENCE_METHOD;
   trainingLanguages: Lookup[] = this.lookupService.listByCategory.TRAINING_LANG;
   trainingPartnersList: TrainingProgramPartner[] = [];
+  targetAudienceList: TrainingProgramAudience[] = [];
   // organizations properties
   selectedOrganizationType!: number;
   selectedOrganizations: Profile[] = [];
@@ -127,6 +129,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
               private profileService: ProfileService,
               private trainerService: TrainerService,
               private trainingProgramPartnerService: TrainingProgramPartnerService,
+              private trainingProgramAudienceService: TrainingProgramAudienceService,
               private employeeService: EmployeeService) {
     super();
     this.operation = data.operation;
@@ -163,6 +166,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
 
     this.loadTrainers();
     this.loadTrainingProgramPartners();
+    this.loadTrainingProgramAudiences();
     this.loadSelectedTrainers();
     this.listenToApprove();
     // this.listenToSaveAndApprove();
@@ -679,6 +683,12 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     this.trainingProgramPartnerService.loadActive()
       .subscribe(partners => {
         this.trainingPartnersList = partners;
+      });
+  }
+  loadTrainingProgramAudiences(): void {
+    this.trainingProgramAudienceService.loadActive()
+      .subscribe(audiences => {
+        this.targetAudienceList = audiences;
       });
   }
 

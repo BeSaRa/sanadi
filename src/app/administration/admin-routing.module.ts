@@ -38,6 +38,7 @@ import {
 import {GlobalSettingsComponent} from '@app/administration/pages/global-settings/global-settings.component';
 import {ErrorPageComponent} from '@app/shared/components/error-page/error-page.component';
 import { AdminPermissionComponent } from './pages/admin-permission/admin-permission.component';
+import { TrainingProgramAudienceComponent } from './pages/training-program-audience/training-program-audience.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -122,6 +123,15 @@ const routes: Routes = [
     canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.TRAINING_PROGRAM_PARTNER,
+      configPermissionGroup: null,
+      checkAnyPermission: false
+    }
+  },
+  {
+    path: 'training-program-audience', component: TrainingProgramAudienceComponent,
+    canActivate: [PermissionGuard.canActivate],
+    data: {
+      permissionKey: PermissionsEnum.TRAINING_PROGRAM_AUDIENCE,
       configPermissionGroup: null,
       checkAnyPermission: false
     }
