@@ -20,19 +20,19 @@ export class GoveranceDocument extends SearchableCloneable<GoveranceDocument> {
   goals!: string;
   firstReleaseDate!: string;
   lastUpdateDate!: string;
-  wfClassificationList!: ForeignAidClassification[];
+  workFieldClassificationList!: ForeignAidClassification[];
   byLawList!: Bylaw[];
   workAreaList!: WorkArea[];
   id!: number;
   toCharityOrgnizationUpdate() {
-    const { charityId, charityWorkArea, firstReleaseDate, lastUpdateDate, goals, wfClassificationList, workAreaList, byLawList } = this;
+    const { charityId, charityWorkArea, firstReleaseDate, lastUpdateDate, goals, workFieldClassificationList, workAreaList, byLawList } = this;
     return new CharityOrganizationUpdate().clone({
       charityId,
       charityWorkArea,
       firstReleaseDate,
       lastUpdateDate,
       goals,
-      wFClassificationList: wfClassificationList.map(e => new ForeignAidClassification().clone({ ...e }).toCharityOrgnizationUpdate()),
+      workFieldClassificationList: workFieldClassificationList.map(e => new ForeignAidClassification().clone({ ...e }).toCharityOrgnizationUpdate()),
       workAreaObjectList: workAreaList.map(e => new WorkArea().clone({ ...e }).toCharityOrgnizationUpdate()),
       byLawList: byLawList.map(e => new Bylaw().clone(byLawInterceptor.receive(e)).toCharityOrgnizationUpdate())
     })
