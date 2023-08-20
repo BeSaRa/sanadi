@@ -1,3 +1,5 @@
+import { SharedService } from '@app/services/shared.service';
+import { BlobModel } from '@app/models/blob-model';
 import {Component, Inject, OnInit} from '@angular/core';
 import {TrainingProgram} from '@app/models/training-program';
 import {OperationTypes} from '@app/enums/operation-types.enum';
@@ -7,7 +9,6 @@ import {LangService} from '@app/services/lang.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DialogService} from '@app/services/dialog.service';
-import {UntypedFormBuilder} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {TrainingProgramService} from '@app/services/training-program.service';
@@ -23,14 +24,14 @@ export class TrainingProgramAttendancePopupComponent implements OnInit {
   saveAttendance$: Subject<null> = new Subject();
   model!: TrainingProgram;
   operation!: OperationTypes;
-  displayedColumns: string[] = ['arName', 'enName', 'department', 'status', 'nationality', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'department', 'phoneNumber', 'currentJob', 'status', 'nationality', 'actions'];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
               public lang: LangService,
               public toast: ToastService,
               public dialogRef: DialogRef,
               public dialogService: DialogService,
-              private formBuilder: UntypedFormBuilder,
+              private sharedService: SharedService,
               private trainingProgramService: TrainingProgramService) {
     this.operation = data.operation;
     this.model = data.model;
@@ -63,5 +64,10 @@ export class TrainingProgramAttendancePopupComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     row.isAttended = input.checked;
 
+  }
+  print() {
+    this.trainingProgramService.loadProgramExport(this.model.id).subscribe((file: BlobModel) => {
+      this.sharedService.openViewContentDialog(file, { documentTitle: this.model.id });
+    })
   }
 }

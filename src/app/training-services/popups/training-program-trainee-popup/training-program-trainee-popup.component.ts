@@ -1,3 +1,4 @@
+import { map } from 'rxjs/operators';
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {of, Subject} from 'rxjs';
@@ -169,7 +170,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap(() => {
         return this.profileService.loadAsLookups();
-      }))
+      })).pipe(map(list => list.filter(item=> item.isActive() || item.id == this.selectedOrganizationId)))
       .subscribe((organizations) => {
         this.organizations = organizations;
       });

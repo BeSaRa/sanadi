@@ -1,3 +1,6 @@
+import { DomSanitizer } from '@angular/platform-browser';
+import { catchError } from 'rxjs/operators';
+import { BlobModel } from '@app/models/blob-model';
 import { Injectable } from '@angular/core';
 import { TrainingProgram } from '@app/models/training-program';
 import { ComponentType } from '@angular/cdk/portal';
@@ -61,12 +64,13 @@ export class TrainingProgramService extends CrudWithDialogGenericService<Trainin
   interceptor: TrainingProgramInterceptor = new TrainingProgramInterceptor();
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              public dialog: DialogService,
-              private certificateService: CertificateService,
-              private surveyTemplateService: SurveyTemplateService,
-              private _traineeService: TraineeService,
-              private _trainingProgramBriefcaseService: TrainingProgramBriefcaseService) {
+    private urlService: UrlService,
+    public dialog: DialogService,
+    public domSanitizer: DomSanitizer,
+    private certificateService: CertificateService,
+    private surveyTemplateService: SurveyTemplateService,
+    private _traineeService: TraineeService,
+    private _trainingProgramBriefcaseService: TrainingProgramBriefcaseService) {
     super();
     FactoryService.registerService('TrainingProgramService', this);
   }
@@ -147,6 +151,17 @@ export class TrainingProgramService extends CrudWithDialogGenericService<Trainin
   @CastResponse(undefined)
   loadCharityPrograms(): Observable<TrainingProgram[]> {
     return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/charity');
+  }
+
+  @CastResponse(undefined)
+  loadProgramExport(id: number): Observable<BlobModel> {
+    return this.http.get(this._getServiceURL() + '/' + id + '/export', {
+      responseType: 'blob'
+    }).pipe(
+      map(blob => new BlobModel(blob, this.domSanitizer),
+        catchError(_ => {
+          return of(new BlobModel(new Blob([], { type: 'error' }), this.domSanitizer));
+        })));
   }
 
   openFilterDialog(filterCriteria: Partial<ITrainingProgramCriteria>): Observable<DialogRef> {

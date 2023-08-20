@@ -67,7 +67,7 @@
                 id="organizationId"
                 placeholder="{{lang.map.select}}">
                 <ng-option *ngFor="let organization of organizations"
-                           [value]="organization.id">{{organization.getName()}}</ng-option>
+                           [value]="organization.id" [disabled]="!organization.isActive()">{{organization.getName()}}</ng-option>
               </ng-select>
             </div>
           </div>

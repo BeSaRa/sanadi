@@ -7,10 +7,15 @@
 </div>
 <div class="dialog-content" style="width: 1000px">
   <div class="row pb-3">
-    <app-page-header *ngIf="candidatesListType == candidatesListTypeEnum.ADD" [pageTitle]="'training_program_candidate'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
+    <app-page-header [customTemplate]="headerTemplate" *ngIf="candidatesListType == candidatesListTypeEnum.ADD" [pageTitle]="'training_program_candidate'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
     </app-page-header>
-    <app-page-header *ngIf="candidatesListType != candidatesListTypeEnum.ADD" [pageTitle]="candidatesListType == candidatesListTypeEnum.CERTIFY ? 'training_program_trainees' : 'training_program_candidate'" [clickOnReload$]="reload$">
+    <app-page-header [customTemplate]="headerTemplate" *ngIf="candidatesListType != candidatesListTypeEnum.ADD" [pageTitle]="candidatesListType == candidatesListTypeEnum.CERTIFY ? 'training_program_trainees' : 'training_program_candidate'" [clickOnReload$]="reload$">
     </app-page-header>
+    <ng-template #headerTemplate>
+      <button class="btn icon-button" (click)="print()">
+        <i class="mdi mdi-printer text-primary" tooltip="{{lang.map.print}}"></i>
+      </button>
+    </ng-template>
     <app-grid-search (searchTextEvent)="searchText = $event"></app-grid-search>
   </div>
   <div class="row">
@@ -38,6 +43,14 @@
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.candidate_status}}</th>
               <td cdk-cell *cdkCellDef="let row">{{row.trainee.statusInfo.getName()}}</td>
             </ng-container>
+            <ng-container cdkColumnDef="phoneNumber">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.home_phone_number}}</th>
+              <td cdk-cell *cdkCellDef="let row">{{row.trainee.phoneNumber}}</td>
+            </ng-container>
+            <ng-container cdkColumnDef="currentJob">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_program_trainee_current_job}}</th>
+              <td cdk-cell *cdkCellDef="let row">{{row.trainee.currentJob}}</td>
+            </ng-container>
             <ng-container cdkColumnDef="nationality">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_nationality}}</th>
               <td cdk-cell *cdkCellDef="let row">{{row.trainee.nationalityInfo.getName()}}</td>
@@ -46,18 +59,18 @@
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row" class="table-actions">
                 <div class="d-flex flex-row">
-                  <a *ngIf="showDeleteButton(row)" href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
-                    <i class="mdi mdi-close-box"></i>
-                  </a>
-                  <a *ngIf="showEditButton(row)" href="#" (click)="edit(row , $event)" tooltip="{{lang.map.btn_edit}}" class="icon-btn">
-                    <i class="mdi mdi-pen"></i>
-                  </a>
-                  <a *ngIf="candidatesListType == candidatesListTypeEnum.EVALUATE && !row.addedByRACA" href="#" (click)="reviewCandidate($event, row)" tooltip="{{lang.map.training_program_accept_or_reject}}" class="icon-btn">
-                    <i class="mdi mdi-eye"></i>
-                  </a>
-                  <a *ngIf="candidatesListType == candidatesListTypeEnum.CERTIFY && row.isAttended && row.isCertificateReady" href="#" (click)="downloadCertificate($event, row)" tooltip="{{lang.map.btn_download}}" class="icon-btn">
-                    <i class="mdi mdi-download"></i>
-                  </a>
+                  <button *ngIf="showDeleteButton(row)" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="btn icon-btn">
+                    <i class="mdi mdi-close-box text-primary"></i>
+                  </button>
+                  <button *ngIf="showEditButton(row)" (click)="edit(row , $event)" tooltip="{{lang.map.btn_edit}}" class="btn icon-btn">
+                    <i class="mdi mdi-pen text-primary"></i>
+                  </button>
+                  <button *ngIf="candidatesListType == candidatesListTypeEnum.EVALUATE && !row.addedByRACA" (click)="reviewCandidate($event, row)" tooltip="{{lang.map.training_program_accept_or_reject}}" class="btn icon-btn">
+                    <i class="mdi mdi-eye text-primary"></i>
+                  </button>
+                  <button *ngIf="candidatesListType == candidatesListTypeEnum.CERTIFY && row.isAttended && row.isCertificateReady" (click)="downloadCertificate($event, row)" tooltip="{{lang.map.btn_download}}" class="btn icon-btn">
+                    <i class="mdi mdi-download text-primary"></i>
+                  </button>
                   <a *ngIf="candidatesListType == candidatesListTypeEnum.VIEW_STATUS && row.status == traineeStatusEnum.REJECTED_TRAINEE" href="#" (click)="showRejectionReason($event, row)" class="icon-btn">
                     {{lang.map.trainee_rejection_reason}}
                   </a>
