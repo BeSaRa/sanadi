@@ -92,7 +92,7 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
       e.itemId = !e.itemId ? e.id?.toString() : e.itemId;
       return organizationOfficerInterceptor.send({...e}) as OrganizationOfficer
     });
-    model.wFClassificationList = model.wFClassificationList?.map(e => {
+    model.workFieldClassificationList = model.workFieldClassificationList?.map(e => {
       e.itemId = !e.itemId ? e.objectDBId?.toString() : e.itemId;
       return foreignAidClassificationInterceptor.send({...e}) as ForeignAidClassification
     });
@@ -122,7 +122,7 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     (model.establishmentDate && (model.establishmentDate = DateUtils.getDateStringFromDate(model.establishmentDate)));
     model.workAreaObjectList = model.workAreaObjectList?.map(e => workAreaInterceptor.receive(new WorkArea().clone(e)));
     model.charityBranchList = model.charityBranchList?.map(e => new CharityBranch().clone(charityBranchInterceptor.receive(new CharityBranch().clone(e))));
-    model.wFClassificationList = model.wFClassificationList?.map(e => foreignAidClassificationInterceptor.receive(new ForeignAidClassification().clone(e)));
+    model.workFieldClassificationList = model.workFieldClassificationList?.map(e => foreignAidClassificationInterceptor.receive(new ForeignAidClassification().clone(e)));
     model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.receive(new RealBeneficiary().clone(new RealBeneficiary().clone(e))));
     model.boardMemberList = model.boardMemberList?.map(e => membersInterceptor.receive(new OrgMember().clone(e)));
     model.authorizedSignatoryMemberList = model.authorizedSignatoryMemberList?.map(e => membersInterceptor.receive(new OrgMember().clone(e)));

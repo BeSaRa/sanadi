@@ -102,7 +102,7 @@ export class CharityOrganizationUpdate extends CaseModel<
   requestTypeInfo!: AdminResult;
 
   workAreaObjectList: WorkArea[] = [];
-  wFClassificationList!: ForeignAidClassification[];
+  workFieldClassificationList!: ForeignAidClassification[];
   byLawList!: Bylaw[];
 
   riskReportList: CharityReport[] = [];

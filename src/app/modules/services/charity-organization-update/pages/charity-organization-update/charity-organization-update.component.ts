@@ -857,7 +857,7 @@ export class CharityOrganizationUpdateComponent
     let realBeneficiaryList = [];
     let metaDataValue = {};
     let primaryLawValue = {};
-    let wFClassificationList = [];
+    let workFieldClassificationList = [];
     let workAreaObjectList = [];
     let byLawList = [];
     let riskReportList = [];
@@ -887,7 +887,7 @@ export class CharityOrganizationUpdateComponent
     } else if (this.updateSectionField.value === CharityUpdateSection.GOVERNANCE_DOCUMENTS) {
       const arr = this.goverRefs.toArray();
       primaryLawValue = { ...this.primaryLawForm.value };
-      wFClassificationList = arr[0].list || [];
+      workFieldClassificationList = arr[0].list || [];
       workAreaObjectList = arr[1].list || [];
       byLawList = arr[2].list || [];
     } else if (this.updateSectionField.value === CharityUpdateSection.COORDINATION_AND_CONTROL_REPORTS) {
@@ -916,7 +916,7 @@ export class CharityOrganizationUpdateComponent
       authorizedSignatoryMemberList,
       realBeneficiaryList,
       ...primaryLawValue,
-      wFClassificationList,
+      workFieldClassificationList,
       workAreaObjectList,
       byLawList,
       riskReportList,

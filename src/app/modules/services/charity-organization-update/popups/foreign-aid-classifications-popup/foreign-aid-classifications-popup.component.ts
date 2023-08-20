@@ -115,6 +115,10 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
   ];
   controls = this.baseControls;
   private handleOCHAOrDAC = (id: string | number) => {
+    this.form.patchValue({
+      subDACCategory: null,
+      subUNOCHACategory: null
+    })
     this.latestWorkingSubForParent$ = this.dacOchaService.loadByParentId(
       id as number
     ).pipe(shareReplay()).pipe(
@@ -232,7 +236,11 @@ export class ForeignAidClassificationsPopupComponent implements OnInit {
   }
 
   mapFormTo(form: any): ForeignAidClassification {
-    const model: ForeignAidClassification = new ForeignAidClassification().clone(form);
+    const model: ForeignAidClassification = new ForeignAidClassification().clone({
+      itemId: this.model.itemId,
+      objectDBId: this.model.objectDBId,
+      ...form
+    });
     (model.aidClassification && (model.aidClassificationInfo = AdminResult.createInstance({ ...this.aidClassifications!.find(e => e.id === form.aidClassification) })));
     (model.domain && (model.domainInfo = AdminResult.createInstance({ ...this.domains.find(e => e.lookupKey === form.domain) })));
     (model.mainDACCategory && (model.mainDACCategoryInfo = AdminResult.createInstance({
