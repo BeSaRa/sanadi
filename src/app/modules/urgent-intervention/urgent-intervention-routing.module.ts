@@ -14,7 +14,7 @@ const routes: Routes = [
   {
     path: 'urgent-intervention-license', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_LICENSING,
       configPermissionGroup: null,
@@ -25,7 +25,7 @@ const routes: Routes = [
   {
     path: 'urgent-intervention-announcement', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate, PreValidateDataGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     runGuardsAndResolvers: 'always',
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_ANNOUNCEMENT,
@@ -39,7 +39,7 @@ const routes: Routes = [
   {
     path: 'urgent-intervention-closure', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_CLOSURE,
       configPermissionGroup: null,
@@ -50,7 +50,7 @@ const routes: Routes = [
   {
     path: 'urgent-intervention-financial-notification', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
       configPermissionGroup: null,
@@ -61,7 +61,7 @@ const routes: Routes = [
   {
     path: 'urgent-intervention-license-followup', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
       configPermissionGroup: null,

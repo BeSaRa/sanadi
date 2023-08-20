@@ -1,5 +1,5 @@
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
@@ -57,7 +57,6 @@ implements IReturnToOrganizationService {
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,
-              public cfr: ComponentFactoryResolver,
               public dialog: DialogService,
               public dynamicService: DynamicOptionsService,
               public http: HttpClient) {

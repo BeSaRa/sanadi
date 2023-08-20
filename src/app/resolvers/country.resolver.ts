@@ -1,17 +1,12 @@
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
-import {Observable} from 'rxjs';
+import {ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot} from "@angular/router";
+import {Observable} from "rxjs";
+import {Country} from "@models/country";
 import {CountryService} from "@services/country.service";
-import {Country} from "@app/models/country";
+import {inject} from "@angular/core";
 
-@Injectable({
-  providedIn: 'root'
-})
-export class CountryResolver implements Resolve<Country[]> {
-  constructor(private countryService: CountryService) {
-  }
+export class CountryResolver {
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Country[]> {
-    return this.countryService.loadAsLookups()
+  static resolve:  ResolveFn<Country[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Country[]> => {
+    return inject(CountryService).loadAsLookups();
   }
 }

@@ -1,35 +1,37 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
-import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { IReturnToOrganizationService } from '@app/interfaces/i-return-to-organization-service-interface';
-import { IDefaultResponse } from '@app/interfaces/idefault-response';
-import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
-import { OrganizationOfficer } from '@app/models/organization-officer';
-import { Profile } from '@app/models/profile';
-import { ValidOrgUnit } from '@app/models/valid-org-unit';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {UntypedFormGroup} from '@angular/forms';
+import {DomSanitizer} from '@angular/platform-browser';
+import {CastResponse, CastResponseContainer} from '@app/decorators/decorators/cast-response';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {IReturnToOrganizationService} from '@app/interfaces/i-return-to-organization-service-interface';
+import {IDefaultResponse} from '@app/interfaces/idefault-response';
+import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
+import {OrganizationOfficer} from '@app/models/organization-officer';
+import {Profile} from '@app/models/profile';
+import {ValidOrgUnit} from '@app/models/valid-org-unit';
 import {
   ParticipantOrganizationsPopupComponent
 } from '@app/modules/services/coordination-with-organization-request/popups/participant-organizations-popup/participant-organizations-popup.component';
 import {
   CoordinationWithOrgPopupComponent
 } from '@app/modules/services/coordination-with-organization-request/popups/coordination-with-org-popup/coordination-with-org-popup.component';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { CoordinationWithOrganizationsRequestSearchCriteria } from './../models/coordination-with-organizations-request-search-criteria';
-import { DialogService } from './dialog.service';
-import { DynamicOptionsService } from './dynamic-options.service';
-import { FactoryService } from './factory.service';
-import { InboxService } from './inbox.service';
-import { LangService } from './lang.service';
-import { SearchService } from './search.service';
-import { UrlService } from './url.service';
-import { DynamicModel } from '@app/models/dynamic-model';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {
+  CoordinationWithOrganizationsRequestSearchCriteria
+} from './../models/coordination-with-organizations-request-search-criteria';
+import {DialogService} from './dialog.service';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {FactoryService} from './factory.service';
+import {InboxService} from './inbox.service';
+import {LangService} from './lang.service';
+import {SearchService} from './search.service';
+import {UrlService} from './url.service';
+import {DynamicModel} from '@app/models/dynamic-model';
 
 @CastResponseContainer({
   $default: {
@@ -60,7 +62,6 @@ export class CoordinationWithOrganizationsRequestService
     public lang: LangService,
     public http: HttpClient,
     public dynamicService: DynamicOptionsService,
-    public cfr: ComponentFactoryResolver,
     private urlService: UrlService,
     public dialog: DialogService) {
     super();

@@ -14,7 +14,7 @@ const routes: Routes = [
     path: 'collection-services-approval',
     component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.COLLECTION_APPROVAL,
       configPermissionGroup: null, checkAnyPermission: false,
@@ -25,7 +25,7 @@ const routes: Routes = [
     path: 'fundraising',
     component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.FUNDRAISING_LICENSING,
       configPermissionGroup: null, checkAnyPermission: false,
@@ -36,7 +36,7 @@ const routes: Routes = [
     path: 'collector-approval',
     component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.COLLECTOR_LICENSING,
       configPermissionGroup: null, checkAnyPermission: false,

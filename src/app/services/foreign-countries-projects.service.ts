@@ -1,23 +1,25 @@
-import { ForeignCountriesProjectsApprovalPopupComponent } from '../modules/services/foreign-countries-projects/popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
-import { DialogRef } from './../shared/models/dialog-ref';
-import { WFResponseType } from '@enums/wfresponse-type.enum';
-import { HttpClient } from '@angular/common/http';
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
-import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
-import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
-import { Observable } from 'rxjs';
-import { DialogService } from './dialog.service';
-import { DynamicOptionsService } from './dynamic-options.service';
-import { FactoryService } from './factory.service';
-import { FollowupDateService } from './follow-up-date.service';
-import { LicenseService } from './license.service';
-import { UrlService } from './url.service';
-import { ForeignCountriesProjectsNeed } from '@app/models/foreign-countries-projects-need';
+import {
+  ForeignCountriesProjectsApprovalPopupComponent
+} from '../modules/services/foreign-countries-projects/popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
+import {DialogRef} from './../shared/models/dialog-ref';
+import {WFResponseType} from '@enums/wfresponse-type.enum';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {CastResponse, CastResponseContainer} from '@app/decorators/decorators/cast-response';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ForeignCountriesProjects} from '@app/models/foreign-countries-projects';
+import {ForeignCountriesProjectsResult} from '@app/models/foreign-countries-projects-results';
+import {ForeignCountriesProjectsSearchCriteria} from '@app/models/foreign-countries-projects-seach-criteria';
+import {Observable} from 'rxjs';
+import {DialogService} from './dialog.service';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {FactoryService} from './factory.service';
+import {FollowupDateService} from './follow-up-date.service';
+import {LicenseService} from './license.service';
+import {UrlService} from './url.service';
+import {ForeignCountriesProjectsNeed} from '@app/models/foreign-countries-projects-need';
 
 @CastResponseContainer({
   $default: {
@@ -40,7 +42,6 @@ export class ForeignCountriesProjectsService extends BaseGenericEService<Foreign
     public http: HttpClient,
     public dialog: DialogService,
     public domSanitizer: DomSanitizer,
-    public cfr: ComponentFactoryResolver,
     public dynamicService: DynamicOptionsService,
     private urlService: UrlService,
     private license: LicenseService

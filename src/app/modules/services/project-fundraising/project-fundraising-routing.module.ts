@@ -17,7 +17,7 @@ const routes: Routes = [
   {
     path: 'service', component: EServiceComponentWrapperComponent,
     canActivate: [NewServicePermissionGuard.canActivate],
-    resolve: {info: ServiceItemResolver, countries: CountryResolver},
+    resolve: {info: ServiceItemResolver.resolve, countries: CountryResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.PROJECT_FUNDRAISING,
       permissionGroup: null,

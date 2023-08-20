@@ -1,4 +1,4 @@
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
@@ -9,13 +9,17 @@ import {DialogService} from './dialog.service';
 import {DynamicOptionsService} from './dynamic-options.service';
 import {UrlService} from './url.service';
 import {FactoryService} from '@services/factory.service';
-import {GeneralAssociationMeetingAttendanceSearchCriteria} from '@app/models/general-association-meeting-attendance-search-criteria';
+import {
+  GeneralAssociationMeetingAttendanceSearchCriteria
+} from '@app/models/general-association-meeting-attendance-search-criteria';
 import {HasInterception, InterceptParam} from '@decorators/intercept-model';
 import {Observable} from 'rxjs';
 import {NpoEmployee} from '@app/models/npo-employee';
 import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {GeneralAssociationExternalMemberInterceptor} from '@app/model-interceptors/general-association-external-member-interceptor';
+import {
+  GeneralAssociationExternalMemberInterceptor
+} from '@app/model-interceptors/general-association-external-member-interceptor';
 import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {UntypedFormGroup} from '@angular/forms';
@@ -25,9 +29,13 @@ import {
 import {
   GeneralAssociationMeetingApproveTaskPopupComponent
 } from '@app/modules/services/general-association-meeting-attendance/popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
-import {GeneralAssociationInternalMemberInterceptor} from '@app/model-interceptors/general-association-internal-member-interceptor';
+import {
+  GeneralAssociationInternalMemberInterceptor
+} from '@app/model-interceptors/general-association-internal-member-interceptor';
 import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
-import {IGeneralAssociationMeetingProceedSendToMembers} from '@contracts/i-general-association-meeting-proceed-send-to-members';
+import {
+  IGeneralAssociationMeetingProceedSendToMembers
+} from '@contracts/i-general-association-meeting-proceed-send-to-members';
 import {GeneralMeetingAttendanceNote} from '@app/models/general-meeting-attendance-note';
 import {MeetingMemberTaskStatus} from '@app/models/meeting-member-task-status';
 import {MeetingPointMemberComment} from '@app/models/meeting-point-member-comment';
@@ -41,8 +49,10 @@ import {IMyDateModel} from 'angular-mydatepicker';
 import {
   SpecificMemberCommentsAndNotesComponent
 } from '@app/modules/services/general-association-meeting-attendance/popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
-import { SelectMemberPopupComponent } from '@app/modules/services/shared-services/popups/select-member-popup-component/select-member-popup.component';
-import { GeneralAssociationAgenda } from '@app/models/general-association-meeting-agenda';
+import {
+  SelectMemberPopupComponent
+} from '@app/modules/services/shared-services/popups/select-member-popup-component/select-member-popup.component';
+import {GeneralAssociationAgenda} from '@app/models/general-association-meeting-agenda';
 
 @CastResponseContainer({
   $default: {
@@ -63,7 +73,6 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,
-              public cfr: ComponentFactoryResolver,
               public dialog: DialogService,
               public dynamicService: DynamicOptionsService,
               public http: HttpClient) {

@@ -18,7 +18,7 @@ const routes: Routes = [
   {
     path: 'service', component: EServiceComponentWrapperComponent,
     canActivate: [NewServicePermissionGuard.canActivate, PreValidateDataGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_ANNOUNCEMENT,
       permissionGroup: null,

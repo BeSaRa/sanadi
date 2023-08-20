@@ -12,7 +12,7 @@ const routes: Routes = [
     path: 'partner-approval',
     component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.PARTNER_APPROVAL,
       configPermissionGroup: null,
@@ -24,7 +24,7 @@ const routes: Routes = [
     path: 'initial-external-office-approval',
     component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL,
       configPermissionGroup: null,
@@ -36,7 +36,7 @@ const routes: Routes = [
     path: 'final-external-office-approval',
     component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard.canActivate],
-    resolve: {info: ServiceItemResolver},
+    resolve: {info: ServiceItemResolver.resolve},
     data: {
       permissionKey: EServicePermissionsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL,
       configPermissionGroup: null,
