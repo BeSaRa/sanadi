@@ -1,17 +1,17 @@
-import {AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {Nationalities} from '@app/enums/nationalities.enum';
-import {DateUtils} from '@app/helpers/date-utils';
-import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
-import {Lookup} from '@app/models/lookup';
-import {RealBeneficiary} from '@app/models/real-beneficiary';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {DatepickerOptionsMap} from '@app/types/types';
-import {CommonUtils} from "@helpers/common-utils";
-import {OperationTypes} from "@enums/operation-types.enum";
+import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Nationalities } from '@app/enums/nationalities.enum';
+import { DateUtils } from '@app/helpers/date-utils';
+import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
+import { Lookup } from '@app/models/lookup';
+import { RealBeneficiary } from '@app/models/real-beneficiary';
+import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { DatepickerOptionsMap } from '@app/types/types';
+import { CommonUtils } from "@helpers/common-utils";
+import { OperationTypes } from "@enums/operation-types.enum";
 
 @Component({
   selector: 'app-real-beneficiaries-popup',
@@ -69,13 +69,13 @@ export class RealBeneficiariesPopupComponent implements OnInit, AfterViewInit {
   };
 
   datepickerOptionsMap: DatepickerOptionsMap = {
-    birthDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
-    idDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
-    passportExpiryDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
-    idExpiryDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
-    passportDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
-    startDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
-    lastUpdateDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    birthDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
+    idDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
+    passportExpiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
+    idExpiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
+    passportDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
+    startDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
+    lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
   };
 
   controls: ControlWrapper[] = [
@@ -187,17 +187,17 @@ export class RealBeneficiariesPopupComponent implements OnInit, AfterViewInit {
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
   constructor(@Inject(DIALOG_DATA_TOKEN)
-              public data: {
-                form: UntypedFormGroup,
-                readonly: boolean,
-                hideSave: boolean,
-                editRecordIndex: number,
-                model: RealBeneficiary,
-                operation: OperationTypes
-              },
-              public lang: LangService,
-              private dialogRef: DialogRef,
-              private lookupService: LookupService) {
+  public data: {
+    form: UntypedFormGroup,
+    readonly: boolean,
+    hideSave: boolean,
+    editRecordIndex: number,
+    model: RealBeneficiary,
+    operation: OperationTypes
+  },
+    public lang: LangService,
+    private dialogRef: DialogRef,
+    private lookupService: LookupService) {
     this.form = data.form;
     this.hideSave = data.hideSave;
     this.readonly = data.readonly;
@@ -249,7 +249,7 @@ export class RealBeneficiariesPopupComponent implements OnInit, AfterViewInit {
   }
 
   mapForm(form: any): RealBeneficiary {
-    const beneficiary: RealBeneficiary = new RealBeneficiary().clone(form);
+    const beneficiary: RealBeneficiary = new RealBeneficiary().clone({ ...this.model, ...form });
 
     beneficiary.birthDate = DateUtils.getDateStringFromDate(form.birthDate);
     beneficiary.birthDateString = form.birthDate ? DateUtils.getDateStringFromDate(form.birthDate, 'DEFAULT_DATE_FORMAT') : '';
