@@ -23,7 +23,7 @@ export class AuditOrgMemberComponent extends AuditListGenericComponent<OrgMember
   }
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
-  displayColumns: string[] = ['fullName', 'identificationNumber','joinDate', 'email', 'phone', 'jobTitle'];
+  displayColumns: string[] = ['fullName', 'identificationNumber','joinDate', 'email', 'phone', 'jobTitle', 'actions'];
   actions: IMenuItem<OrgMember>[] = [
     // show difference
     {
