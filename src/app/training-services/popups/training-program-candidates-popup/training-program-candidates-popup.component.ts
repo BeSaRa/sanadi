@@ -1,3 +1,5 @@
+import { BlobModel } from '@app/models/blob-model';
+import { SharedService } from '@app/services/shared.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { TrainingProgram } from '@app/models/training-program';
@@ -18,6 +20,7 @@ import { CandidatesListTypeEnum } from '@app/enums/candidates-list-type.enum';
 import { CertificateService } from '@app/services/certificate.service';
 import { TraineeStatus } from '@app/enums/trainee-status';
 import { EmployeeService } from '@app/services/employee.service';
+import { TrainingProgramService } from '@app/services/training-program.service';
 
 @Component({
   selector: 'training-program-candidates',
@@ -38,7 +41,7 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
       onClick: _ => this.reload$.next(null),
     }
   ];
-  displayedColumns: string[] = ['arName', 'enName', 'department', 'status', 'nationality', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'department', 'phoneNumber', 'currentJob', 'status', 'nationality', 'actions'];
   edit$: Subject<Trainee> = new Subject<Trainee>();
   models: Trainee[] = [];
   trainingProgramId: number;
@@ -52,6 +55,8 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
     public service: TraineeService,
     private dialogService: DialogService,
     private toast: ToastService,
+    private sharedService: SharedService,
+    private trainingProgramService: TrainingProgramService,
     private certificateService: CertificateService,
     private employeeService: EmployeeService) {
     this.operation = data.operation;
@@ -171,5 +176,10 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
       !this.isInternalUser && row.status != this.traineeStatusEnum.ACCEPTED_TRAINEE &&
       !row.addedByRACA &&
       row.trainee.isDraft)
+  }
+  print() {
+    this.trainingProgramService.loadProgramExport(this.trainingProgramId).subscribe((file: BlobModel) => {
+      this.sharedService.openViewContentDialog(file, { documentTitle: this.trainingProgramId });
+    })
   }
 }

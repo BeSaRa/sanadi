@@ -1,3 +1,4 @@
+import { map } from 'rxjs/operators';
 import {AfterViewInit, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {TrainingProgram} from '@app/models/training-program';
@@ -659,13 +660,15 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   loadTrainingProgramPartners(): void {
-    this.trainingProgramPartnerService.loadActive()
+    this.trainingProgramPartnerService.loadAsLookups()
+    .pipe(map(list => list.filter(item => item.isActive() || item.id == this.model?.trainingPartner)))
       .subscribe(partners => {
         this.trainingPartnersList = partners;
       });
   }
   loadTrainingProgramAudiences(): void {
-    this.trainingProgramAudienceService.loadActive()
+    this.trainingProgramAudienceService.loadAsLookups()
+    .pipe(map(list => list.filter(item => item.isActive() || this.model?.targetAudienceListIds.includes(item.id))))
       .subscribe(audiences => {
         this.targetAudienceList = audiences;
       });

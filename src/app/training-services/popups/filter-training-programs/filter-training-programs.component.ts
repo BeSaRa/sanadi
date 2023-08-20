@@ -11,7 +11,7 @@ import {isEmptyObject, objectHasValue} from '@app/helpers/utils';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {Trainer} from '@app/models/trainer';
-import {takeUntil} from 'rxjs/operators';
+import { takeUntil, map } from 'rxjs/operators';
 import {TrainerService} from '@app/services/trainer.service';
 import {Subject} from 'rxjs';
 import {ITrainingProgramCriteria} from '@app/interfaces/i-training-program-criteria';
@@ -107,7 +107,7 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
 
   private loadOrganizations(): void {
     this.profileService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroy$)).pipe(map(list => list.filter(item => item.isActive())))
       .subscribe(organizations => {
         this.organizations = organizations;
       });
