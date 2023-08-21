@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  msg_right_click_on_map_to_set_location: string;
   msg_duplicate_record_in_list: string;
   bank_operation_account: string; // don't update or delete as its mapped to lookup
   bank_operation_new_account: string; // don't update or delete as its mapped to lookup

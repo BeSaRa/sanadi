@@ -16,6 +16,7 @@ export class RacaMapsPopupComponent {
   center: google.maps.LatLngLiteral;
   marker?: google.maps.LatLngLiteral;
   zoom: number = 18;
+  hideInputs: boolean = false;
 
   markerPosition: google.maps.LatLngLiteral | undefined;
   loaded: boolean = false;
@@ -27,13 +28,15 @@ export class RacaMapsPopupComponent {
                 viewOnly: boolean,
                 center: google.maps.LatLngLiteral,
                 marker: google.maps.LatLngLiteral
-                zoom: number
+                zoom: number,
+                hideInputs: boolean
               }
   ) {
     this.marker = data.marker;
     this.center = data.center;
     this.zoom = data.zoom;
-    this.viewOnly = this.data.viewOnly;
+    this.viewOnly = data.viewOnly;
+    this.hideInputs = data.hideInputs;
   }
 
   markerUpdate($event: google.maps.LatLngLiteral | null): void {
