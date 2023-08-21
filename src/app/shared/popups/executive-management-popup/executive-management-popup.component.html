@@ -17,15 +17,15 @@
           class="form-control">
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <!-- Arabic Name -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="arabicName" for="arabicName" class="form-label">{{lang.map.arabic_name}}</label>
         <input id="arabicName" validationClasses="arabicName" formControlName="arabicName" trimInput
-          class="form-control">
+               class="form-control">
         <app-field-error-message controlName="arabicName"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
       <!-- English Name -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="englishName" for="englishName" class="form-label">{{lang.map.english_name}}</label>
@@ -33,14 +33,14 @@
           class="form-control">
         <app-field-error-message controlName="englishName"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <!-- Phone -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="phone" for="phone" class="form-label">{{lang.map.lbl_phone}}</label>
         <input id="phone" validationClasses="phone" formControlName="phone" trimInput class="form-control">
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
       <!-- Email -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
@@ -58,13 +58,15 @@
         </ng-select>
         <app-field-error-message controlName="country"></app-field-error-message>
       </div> -->
+    </div>
+    <div class="row">
       <!-- nationalities -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="nationalities.length">
         <label asteriskIfRequired="nationality" for="nationality"
-          class="form-label">{{lang.map.lbl_nationality}}</label>
+               class="form-label">{{lang.map.lbl_nationality}}</label>
         <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false" placeholder="{{lang.map.select}}"
-          id="nationality" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="nationality"
-          validationClasses="nationality">
+                   id="nationality" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="nationality"
+                   validationClasses="nationality">
           <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey" [disabled]="!option.isActive()">
             {{option.getName()}}</ng-option>
         </ng-select>
@@ -76,6 +78,8 @@
         <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" trimInput class="form-control">
         <app-field-error-message controlName="jobTitle"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <!-- Passport -->
       <div *ngIf="!hidePassport" class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="passportNumber" for="passportNumber"
