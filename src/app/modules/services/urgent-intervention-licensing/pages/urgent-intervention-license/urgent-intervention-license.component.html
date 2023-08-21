@@ -82,7 +82,7 @@
             [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="mainUNOCHACategory"
             [readonly]="(isExtendOrCancelRequestType() || readonly)" validationClasses="mainUNOCHACategory">
             <ng-option *ngFor="let option of mainUNOCHACategoriesList" [value]="option.id"
-              [disabled]="option.isActive()">
+              [disabled]="!option.isActive()">
               {{option.getName()}}
             </ng-option>
           </ng-select>
