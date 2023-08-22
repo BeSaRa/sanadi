@@ -1,10 +1,10 @@
 import { DialogService } from '@app/services/dialog.service';
 import { ProjectImplementation } from '@models/project-implementation';
-import { Validator, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { EmployeeService } from '@app/services/employee.service';
 import { DacOchaService } from '@app/services/dac-ocha.service';
 import { AbstractControl, UntypedFormControl } from '@angular/forms';
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
@@ -21,7 +21,7 @@ import { LookupService } from '@app/services/lookup.service';
 import { AdminLookup } from '@app/models/admin-lookup';
 import { ProjectWorkArea } from "@app/enums/project-work-area";
 import { DomainTypes } from '@app/enums/domain-types';
-import { filter, switchMap, switchMapTo, takeUntil, tap } from 'rxjs/operators';
+import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { OpenFrom } from '@app/enums/open-from.enum';
@@ -139,17 +139,17 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       })
   }
   listenToChangeExternalFields() {
-    merge(this.domain.valueChanges, this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges, this.countryField.valueChanges)
+    merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges, this.countryField.valueChanges)
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
-        this._lestenToExternalProjectImplementation()
+        this._lestenToExternalProjectImplementation();
       })
   }
   listenToChangeInternalFields() {
     merge(this.countryField.valueChanges, this.internalProjectClassification.valueChanges)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this._lestenToInternalProjectImplementation()
+        this._lestenToInternalProjectImplementation();
       })
   }
   _getNewInstance(): ProjectCompletion {
@@ -349,7 +349,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       this.domain.updateValueAndValidity({ emitEvent: false })
 
       // handle country
-      this.getQatarCountry().id === this.countryField.value && this.emptyFields([this.countryField], true)
+      this.getQatarCountry().id === this.countryField.value && this.emptyFields([this.countryField], false)
       this.countryField.enable({ emitEvent: false })
     })()
 
@@ -359,11 +359,16 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       this.internalProjectClassification.updateValueAndValidity({ emitEvent: false })
 
       // handle country
-      this.countryField.setValue(this.getQatarCountry().id)
+      this.countryField.setValue(this.getQatarCountry().id, { emitEvent: false })
       this.countryField.disable({ emitEvent: false })
     })()
-    this.emptyFields(insideFields.concat(outsideFields), true)
+    this.emptyFields(insideFields.concat(outsideFields), false)
     !value && this.emptyFields([this.countryField], true)
+    if(this.isDisplayInsideQatar) {
+      this._lestenToInternalProjectImplementation();
+    } else if (this.isDisplayOutsideQatar) {
+      this._lestenToExternalProjectImplementation();
+    }
   }
   handleDomainChange(value: number) {
     const dacFields = [this.mainDACCategory, this.subDACCategory];
@@ -371,19 +376,20 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     this.resetFieldsValidation(dacFields.concat([this.mainUNOCHACategory]))
     value === DomainTypes.DEVELOPMENT && (() => {
       this.mainDACCategory.setValidators([Validators.required]);
-      this.mainDACCategory.updateValueAndValidity()
+      this.mainDACCategory.updateValueAndValidity({ emitEvent: false })
       this.subDACCategory.setValidators([Validators.required]);
-      this.subDACCategory.updateValueAndValidity();
-      this.emptyFields(ochaFields, true)
+      this.subDACCategory.updateValueAndValidity({ emitEvent: false });
+      this.emptyFields(ochaFields, false);
     })()
     value === DomainTypes.HUMANITARIAN && (() => {
       this.mainUNOCHACategory.setValidators([Validators.required]);
-      this.mainUNOCHACategory.updateValueAndValidity();
-      this.emptyFields(dacFields, true)
+      this.mainUNOCHACategory.updateValueAndValidity({ emitEvent: false });
+      this.emptyFields(dacFields, false);
     })()
     this.loadDacOuchMain(value);
 
-    !value && this.emptyFields(ochaFields.concat(dacFields), true)
+    !value && this.emptyFields(ochaFields.concat(dacFields), false);
+    this._lestenToExternalProjectImplementation();
   }
   private listenToMainDacOchaChanges() {
     merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
