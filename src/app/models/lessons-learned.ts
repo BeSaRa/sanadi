@@ -16,6 +16,7 @@ export class LessonsLearned extends SearchableCloneable<LessonsLearned> implemen
   lessonsLearned: number[] = [];
   statement!: string;
   lessonsLearnedInfo: AdminResult[] = [];
+  itemId!:string;
 
   // extra properties
   langService: LangService;
