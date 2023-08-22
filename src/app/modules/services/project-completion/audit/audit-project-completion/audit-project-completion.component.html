@@ -23,11 +23,13 @@
 <ng-template #bestPracticesLessonsLearntTabTemplate>
   <heading-row labelKey="best_practices"></heading-row>
   <audit-best-practices-list [newVersionList]="newVersion.bestPracticesList"
-    [oldVersionList]="oldVersion.bestPracticesList" [caseType]="newVersion.caseType">
+    [oldVersionList]="oldVersion.bestPracticesList" [caseType]="newVersion.caseType"
+    [uniqueComparisonProperty]="'itemId'">
   </audit-best-practices-list>
   <heading-row labelKey="lessons_learnt"></heading-row>
   <audit-lessons-learnt-list [newVersionList]="newVersion.lessonsLearnedList"
-    [oldVersionList]="oldVersion.lessonsLearnedList" [caseType]="newVersion.caseType">
+    [oldVersionList]="oldVersion.lessonsLearnedList" [caseType]="newVersion.caseType"
+    [uniqueComparisonProperty]="'itemId'">
   </audit-lessons-learnt-list>
 </ng-template>
 <ng-template #evaluation_differences>

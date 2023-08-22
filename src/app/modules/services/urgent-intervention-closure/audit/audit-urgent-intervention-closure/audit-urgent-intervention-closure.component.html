@@ -57,6 +57,7 @@
 </ng-template>
 <ng-template #lessonsLearntTabTemplate>
   <audit-lessons-learnt-list [newVersionList]="newVersion.lessonsLearnedList"
-    [oldVersionList]="oldVersion.lessonsLearnedList" [caseType]="newVersion.caseType">
+    [oldVersionList]="oldVersion.lessonsLearnedList" [caseType]="newVersion.caseType"
+    [uniqueComparisonProperty]="'itemId'">
   </audit-lessons-learnt-list>
 </ng-template>
