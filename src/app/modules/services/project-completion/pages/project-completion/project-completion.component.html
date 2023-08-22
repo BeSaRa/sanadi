@@ -130,7 +130,7 @@
     </ng-template>
     <ng-template #project_basic_info>
       <ng-container formGroupName="projectBasicInfo">
-        <ng-container *ngIf="operation === operationTypes.CREATE">
+        <ng-container *ngIf="!readonly">
           <heading-row labelKey="menu_project_implementation"></heading-row>
           <selected-license-table [caseType]="caseTypes.PROJECT_IMPLEMENTATION" [ignoreDelete]="true"
             [caseTypeViewLicense]="caseTypes.PROJECT_IMPLEMENTATION" [licenseList]="projectImplementationLicenses"
