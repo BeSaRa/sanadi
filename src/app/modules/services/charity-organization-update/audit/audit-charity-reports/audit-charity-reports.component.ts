@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { CharityReportType } from './../../../../../enums/charity-report-type.enum';
+import { Component, Input } from '@angular/core';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { AuditListGenericComponent } from '@app/generics/audit-list-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
-import { IFindInList } from '@app/interfaces/i-find-in-list';
 import { CharityReport } from '@app/models/charity-report';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { CaseAuditService } from '@app/services/case-audit.service';
@@ -17,6 +17,7 @@ import { CustomValidators } from '@app/validators/custom-validators';
     styleUrls: ['audit-charity-reports.component.scss']
 })
 export class AuditCharityReportsComponent extends AuditListGenericComponent<CharityReport> {
+  @Input() reportType!: CharityReportType;
   constructor(public lang: LangService,
     public caseAuditService: CaseAuditService) {
     super();
@@ -49,7 +50,13 @@ export class AuditCharityReportsComponent extends AuditListGenericComponent<Char
   }
 
   getControlLabels(item: CharityReport): { [p: string]: ControlValueLabelLangKey } {
-    return item.getValuesWithLabels();
+    if(this.reportType == CharityReportType.RISK) {
+      return item.getRistValuesWithLabels();
+    } else if(this.reportType == CharityReportType.SUPPORT) {
+      return item.getSupportValuesWithLabels();
+    } else {
+      return item.getIncomingValuesWithLabels();
+    }
   }
 }
 

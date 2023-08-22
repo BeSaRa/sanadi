@@ -1,3 +1,4 @@
+import { CharityReportType } from './../../../../../enums/charity-report-type.enum';
 import { Component, OnInit } from '@angular/core';
 import { CharityUpdateSection } from '@app/enums/charity-update-section.enum';
 import { ObjectUtils } from '@app/helpers/object-utils';
@@ -15,7 +16,7 @@ export class AuditCharityOrganizationUpdateComponent implements IAuditCaseProper
   charityUpdateSection = CharityUpdateSection;
   newVersion!: CharityOrganizationUpdate; // don't delete or rename the property
   oldVersion!: CharityOrganizationUpdate; // don't delete or rename the property
-
+  charityReportType = CharityReportType;
   basicInfoDifferences: IValueDifference[] = [];
   metaDataDifferences: IValueDifference[] = [];
   contactInformationDifferences: IValueDifference[] = [];

@@ -35,10 +35,10 @@
        *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS"
        [template]="organizationsReportTemplate" [title]="lang.map.reports_received_from_organization"></tab>
   <tab name="outgoingDecisions"
-       *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS"
+       *ngIf="newVersion.updateSection == charityUpdateSection.APPROVE_MEASURES_AND_PENALTIES"
        [template]="outgoingDecisionsTemplate" [title]="lang.map.decisions_by_organizations"></tab>
   <tab name="internalDecisions"
-       *ngIf="newVersion.updateSection == charityUpdateSection.COORDINATION_AND_CONTROL_REPORTS"
+       *ngIf="newVersion.updateSection == charityUpdateSection.APPROVE_MEASURES_AND_PENALTIES"
        [template]="internalDecisionsTemplate" [title]="lang.map.internal_decisions"></tab>
 </tabs-list>
 <ng-template #basicInfoTemplate>
@@ -144,7 +144,7 @@
 </ng-template>
 <ng-template #riskReportsTemplate>
   <audit-charity-reports  [newVersionList]="newVersion.riskReportList"
-  [oldVersionList]="oldVersion.riskReportList"
+  [oldVersionList]="oldVersion.riskReportList" [reportType]="charityReportType.RISK"
   [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-charity-reports>
@@ -152,12 +152,14 @@
 <ng-template #coordinationAndSupportsTemplate>
   <audit-charity-reports  [newVersionList]="newVersion.coordinationSupportReport"
   [oldVersionList]="oldVersion.coordinationSupportReport"
+  [reportType]="charityReportType.SUPPORT"
   [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 
   </audit-charity-reports>
 </ng-template>
 <ng-template #organizationsReportTemplate>
   <audit-charity-reports  [newVersionList]="newVersion.incomingReportList"
+  [reportType]="charityReportType.INCOMING"
   [oldVersionList]="oldVersion.incomingReportList"
   [caseType]="newVersion.caseType" [uniqueComparisonProperty]="'itemId'">
 

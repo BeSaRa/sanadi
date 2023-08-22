@@ -163,7 +163,7 @@ export class CharityReportsPopupComponent implements OnInit, AfterViewInit {
   }
 
   mapFormTo(form: any): CharityReport {
-    const model: CharityReport = new CharityReport().clone(form);
+    const model: CharityReport = new CharityReport().clone({ itemId: this.model.itemId, ...form });
     model.reportStatusInfo = AdminResult.createInstance({ ...this.lookupService.listByCategory.CharityReportStatus.find(e => e.lookupKey === model.reportStatus) });
     model.generalDate = DateUtils.getDateStringFromDate(model.generalDate!)!;
 
