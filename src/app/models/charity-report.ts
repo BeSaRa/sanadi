@@ -77,15 +77,36 @@ export class CharityReport extends BaseModel<
   }
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
 
-  getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+  getRistValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       fullName: { langKey: 'report_title', value: this.fullName },
-      reportType:{ langKey: 'report_subject', value: this.reportType },
-      subject:{ langKey: 'report_subject', value: this.subject },
       generalDate:{ langKey: 'date', value: this.generalDate, comparisonValue : this.generalDateStamp },
-      category:{ langKey: 'main_category', value: this.category },
       feedback:{ langKey: 'feedback', value: this.feedback },
       reportStatus:{ langKey: 'status', value: this.reportStatus },
+      category:{ langKey: 'main_category', value: this.category },
+      riskMitigationMeasures:{ langKey: 'risk_mitigation_measures', value: this.riskMitigationMeasures },
+      riskType:{ langKey: 'risk_type', value: this.riskType },
+     };
+  }
+  getSupportValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      fullName: { langKey: 'report_title', value: this.fullName },
+      generalDate:{ langKey: 'date', value: this.generalDate, comparisonValue : this.generalDateStamp },
+      feedback:{ langKey: 'feedback', value: this.feedback },
+      reportStatus:{ langKey: 'status', value: this.reportStatus },
+      category:{ langKey: 'main_category', value: this.category },
+      subject:{ langKey: 'report_subject', value: this.subject },
+      procedures:{ langKey: 'procedures', value: this.procedures },
+     };
+  }
+  getIncomingValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      fullName: { langKey: 'report_title', value: this.fullName },
+      generalDate:{ langKey: 'date', value: this.generalDate, comparisonValue : this.generalDateStamp },
+      feedback:{ langKey: 'feedback', value: this.feedback },
+      reportStatus:{ langKey: 'status', value: this.reportStatus },
+      subject:{ langKey: 'report_subject', value: this.subject },
+      procedures:{ langKey: 'procedures', value: this.procedures },
      };
   }
 

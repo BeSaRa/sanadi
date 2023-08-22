@@ -100,7 +100,7 @@ export class CharityDecisionsPopupComponent implements OnInit {
   }
 
   mapFormTo(form: any): CharityDecision {
-    const model: CharityDecision = new CharityDecision().clone(form);
+    const model: CharityDecision = new CharityDecision().clone({...this.model, ...form});
     model.generalDate = DateUtils.getDateStringFromDate(model.generalDate!)!;
 
     return model;
