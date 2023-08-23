@@ -103,7 +103,6 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   }
 
   getAdminResultByProperty(property: keyof GeneralAssociationMeetingAttendance): AdminResult {
-    debugger
     let adminResultValue: AdminResult;
     switch (property) {
       case 'requestType':
