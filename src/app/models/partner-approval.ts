@@ -258,9 +258,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
       requestClassification ===
       RequestClassifications.Private_Sector_Profit_Outside_Qatar ||
       requestClassification ===
-      RequestClassifications.Private_Sector_None_Profit_Qatar ||
-      requestClassification ===
-      RequestClassifications.Private_Sector_None_Profit_Outside_Qatar
+      RequestClassifications.Qatari_For_Profit_Private_Sector
     );
   }
 
