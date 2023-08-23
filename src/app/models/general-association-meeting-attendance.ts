@@ -103,6 +103,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   }
 
   getAdminResultByProperty(property: keyof GeneralAssociationMeetingAttendance): AdminResult {
+    debugger
     let adminResultValue: AdminResult;
     switch (property) {
       case 'requestType':
@@ -122,7 +123,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
         adminResultValue = AdminResult.createInstance({arName: dateValue, enName: dateValue});
         break;
       case 'meetingTime':
-        const timeValue = DateUtils.getHoursList().find(x => x.val === this.meetingTime)!.key;
+        const timeValue = DateUtils.getHoursList().find(x => x.val === this.meetingTime)?.key;
         adminResultValue = AdminResult.createInstance({arName: timeValue, enName: timeValue});
         break;
       default:
