@@ -5,6 +5,7 @@ import {CustomValidators} from "@app/validators/custom-validators";
 import {DateUtils} from '@app/helpers/date-utils';
 import { ControlValueLabelLangKey } from "@app/types/types";
 import { ObjectUtils } from "@app/helpers/object-utils";
+import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 
 type CanBuildForm = Constructor<HasCollectionItemBuildForm> & AbstractConstructor<HasCollectionItemBuildForm>
 
@@ -21,9 +22,12 @@ export function mixinCollectionItemBuildForm<T extends Constructor<{}>>(baseClas
     longitude!: string;
     licenseEndDate!: string;
     oldLicenseFullSerial!: string;
+    itemId!: string
 
     getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+      console.log("itemId",this.itemId);
       return {
+        itemId:{langKey: {} as keyof ILanguageKeys, value: this.itemId},
         identificationNumber:{langKey: 'identification_number', value: this.identificationNumber},
         locationDetails:{langKey: 'location_details', value: this.locationDetails},
         latitude:{langKey: 'latitude', value: this.latitude},
@@ -35,6 +39,7 @@ export function mixinCollectionItemBuildForm<T extends Constructor<{}>>(baseClas
         zoneNumber:{langKey: 'lbl_zone', value: this.zoneNumber},
         unitNumber:{langKey: 'unit', value: this.unitNumber},
       };
+
     }
     buildForm(controls: boolean = false): any {
       const values = ObjectUtils.getControlValues<HasCollectionItemBuildForm>(this.getValuesWithLabels());

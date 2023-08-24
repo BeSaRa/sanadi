@@ -51,8 +51,4 @@ export class AuditProjectNeedComponent extends AuditListGenericComponent<Project
   getControlLabels(item: ProjectNeed): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
   }
-
-  existsInList(objComparison: IFindInList<ProjectNeed>): ProjectNeed | undefined {
-    return objComparison.listToCompareWith.find((item) => item.projectName === objComparison.itemToCompare.projectName);
-  }
 }

@@ -50,13 +50,5 @@ export class AuditCollectionItemComponent extends AuditListGenericComponent<Coll
   }
 
 
-  openLocationMap(item: CollectionItem) {
-    item.openMap(true);
-  }
-  getDifferencesPopupTitle(item: CollectionItem): AdminResult | undefined {
-    return AdminResult.createInstance({
-      arName: item.identificationNumber,
-      enName: item.identificationNumber
-    })
-  }
+
 }
