@@ -149,7 +149,7 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
       oldLicenseId: control ? [values.oldLicenseId] : values.oldLicenseId,
       oldLicenseSerial: control ? [values.oldLicenseSerial] : values.oldLicenseSerial,
       domain: control ? [values.domain, CustomValidators.required] : values.domain,
-      mainUNOCHACategory: control ? [values.mainUNOCHACategory, [CustomValidators.required]] : values.mainUNOCHACategory
+      mainUNOCHACategory: control ? [values.mainUNOCHACategory] : values.mainUNOCHACategory
     }
   }
 
