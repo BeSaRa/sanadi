@@ -28,9 +28,6 @@ import {FileIconsEnum} from '@enums/file-extension-mime-types-icons.enum';
 import {ServiceDataService} from '@services/service-data.service';
 import {CommonCaseStatus} from '@enums/common-case-status.enum';
 import {UserClickOn} from '@enums/user-click-on.enum';
-import { DacOchaService } from '@app/services/dac-ocha.service';
-import { AdminLookup } from '@app/models/admin-lookup';
-import { DomainTypes } from '@app/enums/domain-types';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -49,15 +46,14 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
               private lookupService: LookupService,
               public employeeService: EmployeeService,
               private licenseService: LicenseService,
-              private dacOchaService: DacOchaService,
               private serviceDataService: ServiceDataService) {
     super();
   }
 
   form!: UntypedFormGroup;
   requestTypesList: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
-  mainUNOCHACategoriesList: AdminLookup[] = [];
   loadAttachments: boolean = false;
+
   fileIconsEnum = FileIconsEnum;
   tabsData: IKeyValue = {
     basicInfo: {
@@ -128,7 +124,6 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
 
   _initComponent(): void {
     this.listenToLicenseSearch();
-    this.loadMainUnocha();
   }
 
   _afterBuildForm(): void {
@@ -159,18 +154,7 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
       return true;
     }
   }
-  loadMainUnocha() {
-    this.dacOchaService
-      .loadAsLookups()
-      .pipe(
-        map((list) => {
-          return list.filter((model) => !model.parentId && model.type == DomainTypes.HUMANITARIAN);
-        })
-      )
-      .subscribe((values) => {
-        this.mainUNOCHACategoriesList = values;
-      });
-  }
+
   private _updateModelAfterSave(model: UrgentInterventionLicense): void {
     if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
       this.service.getTask(this.model.taskDetails.tkiid)
