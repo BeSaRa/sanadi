@@ -46,7 +46,7 @@ export class AuditBestPracticesListComponent extends AuditListGenericComponent<B
 
   existsInList(objComparison: IFindInList<BestPractices>): BestPractices | undefined {
     return objComparison.listToCompareWith.find((item: BestPractices) => {
-      return item.statement === objComparison.itemToCompare.statement && CommonUtils.isEqualList(item.bestPractices, objComparison.itemToCompare.bestPractices)
+      return item.itemId === objComparison.itemToCompare.itemId && CommonUtils.isEqualList(item.bestPractices, objComparison.itemToCompare.bestPractices)
     });
   }
 }
