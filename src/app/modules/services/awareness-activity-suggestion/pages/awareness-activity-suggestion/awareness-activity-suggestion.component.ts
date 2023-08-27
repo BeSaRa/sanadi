@@ -38,6 +38,7 @@ import { AdminLookup } from '@app/models/admin-lookup';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { ApprovalTemplateTypeEnum } from '@app/enums/approvalTemplateType.enum';
 
 @Component({
   selector: 'app-awareness-activity-suggestion',
@@ -171,16 +172,27 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       })
     }
   }
-  validateTimplate() {
+  validateApproveTimplate() {
     return of(null).pipe(
       switchMap(() => {
         return this.customServiceTemplate.loadTemplatesByCaseId(this.model!.getCaseType(), this.model?.getCaseId())
       }),
       map(temps => {
-        return !!temps.length
+        return !!temps.length && temps[0].approvalTemplateType == ApprovalTemplateTypeEnum.approve
       })
     )
   }
+  validateRejectTimplate() {
+    return of(null).pipe(
+      switchMap(() => {
+        return this.customServiceTemplate.loadTemplatesByCaseId(this.model!.getCaseType(), this.model?.getCaseId())
+      }),
+      map(temps => {
+        return !!temps.length && temps[0].approvalTemplateType == ApprovalTemplateTypeEnum.reject
+      })
+    )
+  }
+
   handleReadonly(): void {
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {

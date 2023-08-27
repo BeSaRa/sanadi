@@ -1,3 +1,4 @@
+import { ApprovalTemplateTypeEnum } from './../../../../../enums/approvalTemplateType.enum';
 import {CustomServiceTemplateService} from './../../../../../services/custom-service-template.service';
 import {JobTitleService} from '@services/job-title.service';
 import {ExternalUser} from '@models/external-user';
@@ -365,13 +366,23 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       });
   }
 
-  validateTimplate() {
+  validateApproveTimplate() {
     return of(null).pipe(
       switchMap(() => {
         return this.customServiceTemplate.loadTemplatesByCaseId(this.model!.getCaseType(), this.model?.getCaseId())
       }),
       map(temps => {
-        return !!temps.length
+        return !!temps.length && temps[0].approvalTemplateType == ApprovalTemplateTypeEnum.approve
+      })
+    )
+  }
+  validateRejectTimplate() {
+    return of(null).pipe(
+      switchMap(() => {
+        return this.customServiceTemplate.loadTemplatesByCaseId(this.model!.getCaseType(), this.model?.getCaseId())
+      }),
+      map(temps => {
+        return !!temps.length && temps[0].approvalTemplateType == ApprovalTemplateTypeEnum.reject
       })
     )
   }
