@@ -1825,9 +1825,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       } else if (item.getCaseType() === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
         const model = item as unknown as AwarenessActivitySuggestion;
         const component = this.component as unknown as AwarenessActivitySuggestionComponent;
-        component.validateTimplate()
+        component.validateApproveTimplate()
           .pipe(
-            tap(valid => !valid && this.service.dialog.error(this.lang.map.err_required_field + ' ' + this.lang.map.lbl_template)),
+            tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
             filter(valid => valid)
           ).subscribe(() => {
             model.approve().onAfterClose$.subscribe(actionTaken => {
@@ -1837,9 +1837,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       } else if (item.getCaseType() === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
         const model = item as unknown as OrganizationsEntitiesSupport;
         const component = this.component as unknown as OrganizationsEntitiesSupportComponent;
-        component.validateTimplate()
+        component.validateApproveTimplate()
           .pipe(
-            tap(valid => !valid && this.service.dialog.error(this.lang.map.err_required_field + ' ' + this.lang.map.lbl_template)),
+            tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
             filter(valid => valid)
           ).subscribe(() => {
             model.approve().onAfterClose$.subscribe(actionTaken => {
@@ -1978,9 +1978,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private rejectAction(item: CaseModel<any, any>) {
     if (item.getCaseType() === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
       const component = this.component as unknown as AwarenessActivitySuggestionComponent;
-      component.validateTimplate()
+      component.validateRejectTimplate()
         .pipe(
-          tap(valid => !valid && this.service.dialog.error(this.lang.map.err_required_field + ' ' + this.lang.map.lbl_template)),
+          tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
           filter(valid => valid)
         ).subscribe(() => {
           item.reject().onAfterClose$.subscribe(actionTaken => {
@@ -1989,9 +1989,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         })
     } else if (item.getCaseType() === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
       const component = this.component as unknown as OrganizationsEntitiesSupportComponent;
-      component.validateTimplate()
+      component.validateRejectTimplate()
         .pipe(
-          tap(valid => !valid && this.service.dialog.error(this.lang.map.err_required_field + ' ' + this.lang.map.lbl_template)),
+          tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
           filter(valid => valid)
         ).subscribe(() => {
           item.reject().onAfterClose$.subscribe(actionTaken => {

@@ -2017,4 +2017,5 @@ export interface ILanguageKeys {
   ending_date:string;
   must_press_enter:string;
   external_user_register:string;
+  invalid_template:string;
 }
