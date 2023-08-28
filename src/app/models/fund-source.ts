@@ -31,7 +31,7 @@ export class FundSource extends Cloneable<FundSource> implements IAuditModelProp
       fullName: { langKey: 'name', value: this.fullName },
       totalCost: { langKey: 'total_cost', value: this.totalCost },
       notes: { langKey: 'notes', value: this.notes },
-      itemId : { langKey: {} as keyof ILanguageKeys, value: this.itemId  },
+      itemId : { langKey: {} as keyof ILanguageKeys, value: this.itemId,skipAuditComparison :true  },
     };
   }
 
