@@ -45,7 +45,7 @@ export class Payment extends SearchableCloneable<Payment> implements IAuditModel
       dueDate: {langKey: 'due_date', value: this.dueDate},
       totalCost: {langKey: 'amount', value: this.totalCost},
       notes: {langKey: 'notes', value: this.notes},
-      itemId : {langKey: {} as keyof ILanguageKeys, value: this.itemId },
+      itemId : {langKey: {} as keyof ILanguageKeys, value: this.itemId ,skipAuditComparison :true},
     };
   }
 

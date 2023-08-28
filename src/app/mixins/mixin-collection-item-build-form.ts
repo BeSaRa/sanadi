@@ -25,9 +25,8 @@ export function mixinCollectionItemBuildForm<T extends Constructor<{}>>(baseClas
     itemId!: string
 
     getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
-      console.log("itemId",this.itemId);
       return {
-        itemId:{langKey: {} as keyof ILanguageKeys, value: this.itemId},
+        itemId:{langKey: {} as keyof ILanguageKeys, value: this.itemId,skipAuditComparison :true},
         identificationNumber:{langKey: 'identification_number', value: this.identificationNumber},
         locationDetails:{langKey: 'location_details', value: this.locationDetails},
         latitude:{langKey: 'latitude', value: this.latitude},
