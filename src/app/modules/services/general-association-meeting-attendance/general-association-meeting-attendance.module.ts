@@ -1,6 +1,3 @@
-import { MeetingSubPointsComponent } from './shared/meeting-sub-points/meeting-sub-points.component';
-import { MeetingSubPointsPopupComponent } from './popups/meeting-sub-points-popup/meeting-sub-points-popup.component';
-import { MeetingPointsComponent } from './shared/meeting-points/meeting-points.component';
 import { AuditGeneralAssociationMeetingAttendanceComponent } from './audit/audit-general-association-meeting-attendance/audit-general-association-meeting-attendance.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -38,7 +35,6 @@ import { MeetingAgendaPopupComponent } from './popups/meeting-agenda-popup/meeti
 import { GeneralMeetingAttendanceNotesListComponent } from '@modules/services/general-association-meeting-attendance/shared/general-meeting-attendance-notes-list/general-meeting-attendance-notes-list.component';
 import { GeneralMeetingAttendanceNotesPopupComponent } from './popups/general-meeting-attendance-notes-popup/general-meeting-attendance-notes-popup.component';
 import { SharedServicesModule } from '../shared-services/shared-services.module';
-import { MeetingPointsPopupComponent } from './popups/meeting-points-popup/meeting-points-popup.component';
 
 
 @NgModule({
@@ -58,10 +54,6 @@ import { MeetingPointsPopupComponent } from './popups/meeting-points-popup/meeti
     ManageMembersPopupComponent,
     MeetingAgendaListComponent,
     MeetingAgendaPopupComponent,
-    MeetingPointsComponent,
-    MeetingPointsPopupComponent,
-    MeetingSubPointsComponent,
-    MeetingSubPointsPopupComponent,
     GeneralMeetingAttendanceNotesListComponent,
     GeneralMeetingAttendanceNotesPopupComponent
   ],
