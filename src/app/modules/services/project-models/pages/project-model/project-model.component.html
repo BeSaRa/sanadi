@@ -428,7 +428,7 @@
                        id="firstSDGoal"
                        formControlName="firstSDGoal">
               <ng-option *ngFor="let option of goals" [value]="option.id"
-                         [disabled]="option.id === secondSDGoal.value || option.id === thirdSDGoal.value">{{option.getName()}}</ng-option>
+                         [disabled]="option.id === secondSDGoal.value || option.id === thirdSDGoal.value || !option.isActive()">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="firstSDGoal"></app-field-error-message>
           </div>
@@ -445,7 +445,7 @@
                        formControlName="secondSDGoal">
 
               <ng-option *ngFor="let option of goals" [value]="option.id"
-                         [disabled]="option.id === firstSDGoal.value || option.id === thirdSDGoal.value">{{option.getName()}}</ng-option>
+                         [disabled]="option.id === firstSDGoal.value || option.id === thirdSDGoal.value || !option.isActive()">{{option.getName()}}</ng-option>
 
             </ng-select>
             <app-field-error-message controlName="secondSDGoal"></app-field-error-message>
@@ -463,7 +463,7 @@
                        formControlName="thirdSDGoal">
 
               <ng-option *ngFor="let option of goals" [value]="option.id"
-                         [disabled]="option.id === firstSDGoal.value || option.id === secondSDGoal.value">{{option.getName()}}</ng-option>
+                         [disabled]="option.id === firstSDGoal.value || option.id === secondSDGoal.value || !option.isActive()">{{option.getName()}}</ng-option>
 
             </ng-select>
             <app-field-error-message controlName="thirdSDGoal"></app-field-error-message>
