@@ -81,6 +81,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
     return {
       requestType: {langKey: 'request_type', value: this.requestType},
       category:{langKey: 'main_category', value: this.category},
+      oldLicenseFullSerial:{langKey: 'license_number', value: this.oldLicenseFullSerial},
       arName:{langKey: 'arabic_name', value: this.arName},
       enName:{langKey: 'english_name', value: this.enName},
       country:{langKey: 'country', value: this.country},
@@ -90,8 +91,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
       website:{langKey: 'website', value: this.website},
       email:{langKey: 'lbl_email', value: this.email},
       mailBox:{langKey: 'lbl_po_box_num', value: this.mailBox},
-      introduction:{langKey: 'lbl_introduction', value: this.introduction},
-      oldLicenseFullSerial:{langKey: 'request_type', value: this.oldLicenseFullSerial}
+      introduction:{langKey: 'lbl_introduction', value: this.introduction}
     };
   }
 
