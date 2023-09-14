@@ -38,7 +38,8 @@
             {{ lang.map.job_title }}
           </th>
           <td cdk-cell *cdkCellDef="let row">
-            {{ row?.jobTitleInfo && row?.jobTitleInfo.getName() }}
+            <!-- {{ row?.jobTitleInfo && row?.jobTitleInfo.getName() }} -->
+            {{row.jobTitle}}
           </td>
         </ng-container>
         <ng-container

@@ -33,7 +33,7 @@ export class MembersPopupComponent implements OnInit {
   datepickerOptionsMap: DatepickerOptionsMap = {
     joinDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
   };
-  jobTitleList: JobTitle[] = [];
+  // jobTitleList: JobTitle[] = [];
 
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
@@ -65,66 +65,67 @@ export class MembersPopupComponent implements OnInit {
   }
 
   buildFormControls(): void {
-    this.jobTitleService.loadAsLookups().subscribe((jobTitles) => {
-      this.jobTitleList = jobTitles;
-      this.controls = [
+    // this.jobTitleService.loadAsLookups().subscribe((jobTitles) => {
+    //   // this.jobTitleList = jobTitles;
+
+    // })
+    this.controls = [
+      {
+        controlName: 'fullName',
+        langKey: 'full_name',
+        type: 'text',
+      },
+      {
+        controlName: 'identificationNumber',
+        langKey: 'personal_number',
+        type: 'text',
+      },
+      {
+        controlName: 'jobTitle',
+        langKey: 'job_title',
+        type: 'text',
+        // load: jobTitles,
+        // dropdownValue: 'id',
+        // dropdownOptionDisabled: (optionItem: JobTitle) => {
+        //   return !optionItem.isActive();
+        // }
+      },
+    ];
+    if (this.extended) {
+      this.controls.push(
         {
-          controlName: 'fullName',
-          langKey: 'full_name',
+          controlName: 'email',
+          langKey: 'email_for_working_authority',
           type: 'text',
         },
         {
-          controlName: 'identificationNumber',
-          langKey: 'personal_number',
+          controlName: 'phone',
+          langKey: 'phone_for_working_authority',
           type: 'text',
         },
         {
-          controlName: 'jobTitleId',
-          langKey: 'job_title',
-          type: 'dropdown',
-          load: jobTitles,
-          dropdownValue: 'id',
-          dropdownOptionDisabled: (optionItem: JobTitle) => {
-            return !optionItem.isActive();
-          }
-        },
-      ];
-      if (this.extended) {
-        this.controls.push(
-          {
-            controlName: 'email',
-            langKey: 'email_for_working_authority',
-            type: 'text',
-          },
-          {
-            controlName: 'phone',
-            langKey: 'phone_for_working_authority',
-            type: 'text',
-          },
-          {
-            controlName: 'joinDate',
-            langKey: 'job_title_occupied_date',
-            type: 'date',
-          }
-        );
-      } else if (this.pageTitle === 'board_members') {
-        this.controls.push(
-          {
-            controlName: 'joinDate',
-            langKey: 'first_join_date',
-            type: 'date',
-          }
-        );
-      }
-    })
+          controlName: 'joinDate',
+          langKey: 'job_title_occupied_date',
+          type: 'date',
+        }
+      );
+    } else if (this.pageTitle === 'board_members') {
+      this.controls.push(
+        {
+          controlName: 'joinDate',
+          langKey: 'first_join_date',
+          type: 'date',
+        }
+      );
+    }
   }
 
   mapFormToMember(form: any): OrgMember {
     const member: OrgMember = new OrgMember().clone({ ...this.model, ...form });
     (member.joinDate && (member.joinDate = DateUtils.getDateStringFromDate(form.joinDate)));
-    member.jobTitleInfo = AdminResult.createInstance(({
-      ...this.jobTitleList.find(e => e.id === form.jobTitleId)
-    }));
+    // member.jobTitleInfo = AdminResult.createInstance(({
+    //   ...this.jobTitleList.find(e => e.id === form.jobTitleId)
+    // }));
     return member;
   }
 
