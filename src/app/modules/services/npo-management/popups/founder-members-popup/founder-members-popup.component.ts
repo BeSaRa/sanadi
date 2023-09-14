@@ -22,7 +22,7 @@ import {Observable} from 'rxjs';
 export class FounderMembersPopupComponent extends UiCrudDialogGenericComponent<FounderMembers> {
   popupTitleKey: keyof ILanguageKeys;
   nationalityList: Lookup[] = this.lookupService.listByCategory.Nationality;
-  jobTitleAdminLookup: JobTitle[] = [];
+  // jobTitleAdminLookup: JobTitle[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<FounderMembers>,
               public dialogRef: DialogRef,
@@ -39,7 +39,7 @@ export class FounderMembersPopupComponent extends UiCrudDialogGenericComponent<F
   }
 
   initPopup(): void {
-    this.loadJobTitles();
+    // this.loadJobTitles();
   }
 
   getPopupHeadingText(): string {
@@ -92,9 +92,9 @@ export class FounderMembersPopupComponent extends UiCrudDialogGenericComponent<F
   searchNgSelect(term: string, item: any): boolean {
     return item.ngSelectSearch(term);
   }
-  private loadJobTitles(): void {
-    this.JobTitleService.loadActive().subscribe((data) => {
-      this.jobTitleAdminLookup = data;
-    })
-  }
+  // private loadJobTitles(): void {
+  //   this.JobTitleService.loadActive().subscribe((data) => {
+  //     this.jobTitleAdminLookup = data;
+  //   })
+  // }
 }
