@@ -260,6 +260,8 @@ export class IntegrationInquiriesComponent {
     [GdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS]: [],
     [GdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT]: [],
     [GdxServiceRelatedTypesEnum.QATAR_CHARITY]: [],
+    [GdxServiceRelatedTypesEnum.QATAR_RED_CRESCENT]: [],
+    [GdxServiceRelatedTypesEnum.EID_CHARITABLE_FOUNDATION]: [],
   };
 
   onMainTabChange(tab: TabComponent): void {
@@ -330,6 +332,12 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.QATAR_CHARITY:
         this.relatedData[this.gdxServiceRelatedTypesEnum.QATAR_CHARITY] = log.gdxServiceResponseList;
+        break;
+      case GdxServicesEnum.EID_CHARITABLE_FOUNDATION:
+        this.relatedData[this.gdxServiceRelatedTypesEnum.EID_CHARITABLE_FOUNDATION] = log.gdxServiceResponseList;
+        break;
+      case GdxServicesEnum.QATAR_RED_CRESCENT:
+        this.relatedData[this.gdxServiceRelatedTypesEnum.QATAR_RED_CRESCENT] = log.gdxServiceResponseList;
         break;
       default:
         break;
@@ -414,6 +422,12 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.QATAR_CHARITY:
         this.relatedData[GdxServiceRelatedTypesEnum.QATAR_CHARITY] = [];
+        break;
+      case GdxServicesEnum.EID_CHARITABLE_FOUNDATION:
+        this.relatedData[GdxServiceRelatedTypesEnum.EID_CHARITABLE_FOUNDATION] = [];
+        break;
+      case GdxServicesEnum.QATAR_RED_CRESCENT:
+        this.relatedData[GdxServiceRelatedTypesEnum.QATAR_RED_CRESCENT] = [];
         break;
       default:
         break;

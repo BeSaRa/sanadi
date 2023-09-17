@@ -2010,6 +2010,8 @@ export interface ILanguageKeys {
   lookup_expenses_type: string;
   permission: string;
   lbl_qatar_charity_related_data: string;
+  lbl_qatar_red_crescent_related_data: string;
+  lbl_eid_charitable_foundation_related_data: string;
   msg_confirm_continue_oof:string;
   reassigned_task:string;
   coordination_request:string;
