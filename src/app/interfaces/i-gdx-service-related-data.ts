@@ -1,3 +1,5 @@
+import { GdxEidCharitableFoundationResponse } from './../models/gdx-eid-charitable-foundation-response';
+import { GdxQatarRedCrescentResponse } from '../models/gdx-qatar-red-crescent-response';
 import {GdxMociResponse} from '@app/models/gdx-moci-response';
 import {GdxMawaredResponse} from '@app/models/gdx-mawared-response';
 import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response';
@@ -29,4 +31,6 @@ export interface IGdxServiceRelatedData {
   [GdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS]: GdxMoePrivateSchoolPendingPayment[],
   [GdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT]: GdxMmeResponse[],
   [GdxServiceRelatedTypesEnum.QATAR_CHARITY]: GdxQatarCharityResponse[],
+  [GdxServiceRelatedTypesEnum.QATAR_RED_CRESCENT]: GdxQatarRedCrescentResponse[],
+  [GdxServiceRelatedTypesEnum.EID_CHARITABLE_FOUNDATION]: GdxEidCharitableFoundationResponse[],
 }

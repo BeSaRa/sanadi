@@ -1,3 +1,5 @@
+import { EidCharitableFoundationRelatedDataComponent } from './related-data/eid-charitable-foundation-related-data/eid-charitable-foundation-related-data.component';
+import { QatarRedCrescentRelatedDataComponent } from './related-data/qatar-red-crescent-related-data/qatar-red-crescent-related-data.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '@app/shared/shared.module';
@@ -47,7 +49,9 @@ import { QatarCharityRelatedDataComponent } from './related-data/qatar-charity-r
     MoePendingPaymentComponent,
     MoeStudentInfoComponent,
     MmeLeasedContractComponent,
-    QatarCharityRelatedDataComponent
+    QatarCharityRelatedDataComponent,
+    QatarRedCrescentRelatedDataComponent,
+    EidCharitableFoundationRelatedDataComponent
   ],
   exports: [
     IntegrationInquiriesComponent

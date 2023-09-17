@@ -1,0 +1,88 @@
+<div class="row">
+  <div class="col-12">
+    <app-table #table sortableTable [paginator]="paginator" [data]="list" [columns]="displayedColumns"
+      [filter]="filterControl.value" [useSearchToFilter]="true">
+      <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="lbl_qatar_red_crescent_related_data" [headerClass]="'bg-secondary'" [sort]="table.dataSource.sort"
+              (textChange)="filterControl.setValue($event)">
+            </table-header>
+          </th>
+        </ng-container>
+
+        <ng-container cdkColumnDef="installmentsCount">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.number_of_installments}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.installmentsCount}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="periodicType">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            [sortCallback]="sortingCallbacks.periodicTypeInfo"> {{lang.map.payment_periodicity}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.periodicTypeInfo ? row.periodicTypeInfo.getName() : ''}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="approvalDate">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.approval_date}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.approvalDate|date}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="aidAmount">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.given_amount}}</th>
+          <td cdk-cell *cdkCellDef="let row" class="text-end">
+            <span>{{(row.aidAmount ? row.aidAmount + '' :  '0') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="aidSuggestedAmount">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.estimated_amount}}</th>
+          <td cdk-cell *cdkCellDef="let row" class="text-end">
+            <span>{{(row.aidSuggestedAmount ? row.aidSuggestedAmount + '' : '0') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="aidTotalPayedAmount">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.total_approved_amount}}</th>
+          <td cdk-cell *cdkCellDef="let row" class="text-end">
+            <span>{{(row.aidTotalPayedAmount ? row.aidTotalPayedAmount + '' : '0') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="aidRemainingAmount">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.remaining_amount}}</th>
+          <td cdk-cell *cdkCellDef="let row" class="text-end">
+            <span>{{(row.aidRemainingAmount ? row.aidRemainingAmount + '' : '0')  | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="aidDescription">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_description}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.aidDescription}}</span></td>
+        </ng-container>
+
+        <ng-container cdkColumnDef="aidStartPayDate">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            [sortCallback]="sortingCallbacks.aidStartPayDate"> {{lang.map.payment_date}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.aidStartPayDateString}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="aidLookupCategoryId">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            [sortCallback]="sortingCallbacks.aidLookupCategoryInfo"> {{lang.map.lbl_category}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.aidLookupCategoryInfo ? row.aidLookupCategoryInfo.getName() : ''}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="aidLookupParentId">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+          [sortCallback]="sortingCallbacks.aidLookupParentInfo"> {{lang.map.requested_aid_category}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.aidLookupParentInfo ? row.aidLookupParentInfo.getName(): ''}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="aidLookupId">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            [sortCallback]="sortingCallbacks.aidLookupInfo"> {{lang.map.requested_aid}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.aidLookupInfo ? row.aidLookupInfo.getName(): ''}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="donorId">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            [sortCallback]="sortingCallbacks.donorInfo"> {{lang.map.donor}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.donorInfo ? row.donorInfo.getName() : ''}}</span></td>
+        </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+        <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
+        <tr *cdkNoDataRow>
+          <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+        </tr>
+      </table>
+      <app-paginator #paginator></app-paginator>
+    </app-table>
+    <context-menu-item #menu [actions]="actions"></context-menu-item>
+  </div>
+</div>
