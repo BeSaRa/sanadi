@@ -13,13 +13,14 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
   objectDBId!: number;
   identificationNumber!: string;
   fullName!: string;
-  jobTitleId!: number;
+  jobTitleId: number = 0;
   email!: string;
   phone!: string;
   extraPhone!: string;
   nationality!: number;
   jobTitleInfo!: AdminResult;
   nationalityInfo!: AdminResult;
+  jobTitle!: string;
 
   getFounderMembersFields(control: boolean): any {
     const values = ObjectUtils.getControlValues<FounderMembers>(this.getValuesWithLabels())
@@ -31,8 +32,11 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
       email: control ? [values.email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(50)]] : values.email,
       phone: control ? [values.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phone,
       extraPhone: control ? [values.extraPhone, CustomValidators.commonValidations.phone] : values.extraPhone,
-      jobTitleId: control ? [values.jobTitleId, [CustomValidators.required]] : values.jobTitleId,
+      jobTitle: control ? [values.jobTitle, [CustomValidators.required, CustomValidators
+        .maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+      CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : values.jobTitle,
       nationality: control ? [values.nationality, [CustomValidators.required]] : values.nationality,
+      jobTitleId: control ? [values.jobTitleId, []] : values.jobTitleId,
     };
   }
 
@@ -40,6 +44,7 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
     return {
       identificationNumber: { langKey: 'identification_number', value: this.identificationNumber },
       fullName: { langKey: 'full_name', value: this.fullName },
+      jobTitle: { langKey: 'job_title', value: this.jobTitle },
       jobTitleId: { langKey: 'job_title', value: this.jobTitleId },
       email: { langKey: 'email_address_of_the_employer', value: this.email },
       phone: { langKey: 'phone_of_the_employer', value: this.phone },

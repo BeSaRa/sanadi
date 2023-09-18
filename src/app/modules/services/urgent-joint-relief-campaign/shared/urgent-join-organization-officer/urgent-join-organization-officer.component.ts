@@ -22,11 +22,14 @@ export class UrgentJoinOrganizationOfficerComponent extends UiCrudListGenericCom
     this.isExternalUser = employeeService.isExternalUser();
   }
 
+  get currentEmployeeOrganization(){
+    return this.employeeService.getProfile()?.createAdminResult()
+  }
   get offcersList(): OrganizationOfficer[] {
     const orgId = this.employeeService.getProfile()?.id;
     return !this.isExternalUser ? this.list : this.list.filter(co => !co.organizationId || co.organizationId == orgId);
   }
-  displayColumns: string[] = ['fullName', 'identificationNumber', 'email', 'phone', 'extraPhone', 'actions'];
+  displayColumns: string[] = ['fullName', 'identificationNumber', 'email', 'phone', 'extraPhone','organizationInfo', 'actions'];
   actions: IMenuItem<OrganizationOfficer>[] = [
     // edit
     {
