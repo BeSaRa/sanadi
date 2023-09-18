@@ -1,6 +1,8 @@
+import { GdxMsdfSecurityResponseInterceptor } from './gdx-msdf-security-response-interceptor';
+import { GdxMsdfHousingResponseInterceptor } from './gdx-msdf-housing-response-interceptor';
 import { GdxEidCharitableFoundationResponse } from '@app/models/gdx-eid-charitable-foundation-response';
 import { GdxEidCharitableFoundationResponseInterceptor } from '@app/model-interceptors/gdx-eid-charitable-foundation-response-interceptor';
-import { GdxQatarRedCrescentResponse } from './../models/gdx-qatar-red-crescent-response';
+import { GdxQatarRedCrescentResponse } from '@app/models/gdx-qatar-red-crescent-response';
 import {IModelInterceptor} from '@contracts/i-model-interceptor';
 import {GdxServiceLog} from '@app/models/gdx-service-log';
 import {AdminResult} from '@app/models/admin-result';
@@ -31,6 +33,8 @@ const gdxGarsiaPensionResponseInterceptor = new GdxGarsiaPensionResponseIntercep
 const gdxKahramaaResponseInterceptor = new GdxKahramaaResponseInterceptor();
 const gdxMolPayrollResponseInterceptor = new GdxMolPayrollResponseInterceptor();
 const gdxSjcResponseInterceptor = new GdxSjcResponseInterceptor();
+const gdxMsdfHousingResponseInterceptor = new GdxMsdfHousingResponseInterceptor();
+const gdxMsdfSecurityResponseInterceptor = new GdxMsdfSecurityResponseInterceptor();
 const gdxMoeResponseInterceptor = new GdxMoeResponseInterceptor();
 const gdxMmeResponseInterceptor = new GdxMmeResponseInterceptor();
 const gdxQatarCharityResponseInterceptor = new GdxQatarCharityResponseInterceptor();
@@ -125,6 +129,12 @@ export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog
         model.gdxServiceResponseList = model.gdxServiceResponseList.map((x) => {
           return gdxEidCharitableFoundationResponseInterceptor.receive(new GdxEidCharitableFoundationResponse().clone(x));
         });
+        break;
+      case GdxServicesEnum.HOUSING_BENEFICIARY_STATUS:
+        model.gdxServiceResponseParsed = gdxMsdfHousingResponseInterceptor.receive(model.gdxServiceResponseParsed);
+        break;
+      case GdxServicesEnum.SECURITY_BENEFICIARY_STATUS:
+        model.gdxServiceResponseParsed = gdxMsdfSecurityResponseInterceptor.receive(model.gdxServiceResponseParsed);
         break;
       default:
         break;
