@@ -27,8 +27,7 @@ export class FounderMembersPopupComponent extends UiCrudDialogGenericComponent<F
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<FounderMembers>,
               public dialogRef: DialogRef,
               public fb: UntypedFormBuilder,
-              private lookupService: LookupService,
-              private JobTitleService: JobTitleService) {
+              private lookupService: LookupService) {
     super();
     this.setInitDialogData(data);
     this.popupTitleKey = 'lbl_founder_members';

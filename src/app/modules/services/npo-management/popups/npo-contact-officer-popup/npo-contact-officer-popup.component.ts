@@ -23,8 +23,7 @@ export class NpoContactOfficerPopupComponent extends UiCrudDialogGenericComponen
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<NpoContactOfficer>,
               public dialogRef: DialogRef,
-              public fb: UntypedFormBuilder,
-              private JobTitleService: JobTitleService) {
+              public fb: UntypedFormBuilder) {
     super();
     this.setInitDialogData(data);
     this.popupTitleKey = 'contact_officers';
