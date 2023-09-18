@@ -47,7 +47,6 @@ export class MembersPopupComponent implements OnInit {
       operation: OperationTypes
     },
     public lang: LangService,
-    private jobTitleService: JobTitleService,
     private dialogRef: DialogRef,
   ) {
     this.form = data.form;
