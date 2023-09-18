@@ -43,6 +43,7 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
     delete model.orgUnitInfo
     delete model.statusInfo
     delete model.countryInfo
+    delete model.contractLocationInfo
     delete model.contractLocationTypeInfo
     delete model.qId
     delete model.qInfo
@@ -78,6 +79,7 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
     model.orgUnitInfo = AdminResult.createInstance(model.orgUnitInfo  ?? {});
     model.statusInfo = AdminResult.createInstance(model.statusInfo  ?? {});
     model.countryInfo = AdminResult.createInstance(model.countryInfo  ?? {});
+    model.contractLocationInfo = AdminResult.createInstance(model.contractLocationInfo  ?? {});
     model.contractLocationTypeInfo = AdminResult.createInstance(model.contractLocationTypeInfo  ?? {});
     model.functionalGroupInfo = AdminResult.createInstance(model.functionalGroupInfo  ?? {});
     model.officeInfo = AdminResult.createInstance(model.officeInfo  ?? {});

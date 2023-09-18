@@ -14,13 +14,14 @@ const {receive, send} = new NpoEmployeeInterceptor();
 })
 export class NpoEmployee extends SearchableCloneable<NpoEmployee> {
   orgId!: number;
-  contractLocation!: string;
+  contractLocation!: number;
   arabicName!: string;
   englishName!: string;
   email!: string;
   phone!: string;
   country!: number;
   status!: number;
+  contractLocationInfo!: AdminResult;
   statusInfo!: AdminResult;
   jobTitleName!: string;
 
