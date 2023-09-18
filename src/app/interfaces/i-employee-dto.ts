@@ -13,7 +13,7 @@ export interface IEmployeeDto {
   nationality: number;
   phone: string;
   department: string;
-  contractLocation: string;
+  contractLocation: number;
   contractLocationType: number;
   officeId: number;
   contractType: number;
@@ -29,6 +29,7 @@ export interface IEmployeeDto {
   qId: string;
   updatedBy: number;
   contractStatusInfo: AdminResult;
+  contractLocationInfo: AdminResult;
   contractTypeInfo: AdminResult;
   genderInfo: AdminResult;
   identificationTypeInfo: AdminResult;

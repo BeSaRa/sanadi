@@ -26,7 +26,7 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
   phone!: string;
   email!: string;
   department!: string;
-  contractLocation!: string;
+  contractLocation!: number;
   contractLocationType!: number;
   officeId!: number;
   contractType!: number;
@@ -41,6 +41,7 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
   expIdPass!: string | IMyDateModel;
   jobNumber!: string;
   functionalGroup!: number;
+  contractLocationInfo!: AdminResult;
   officeInfo!: AdminResult;
   functionalGroupInfo!: AdminResult;
   contractStatusInfo!: AdminResult;
@@ -105,6 +106,9 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
         break;
       case 'contractType':
         adminResultValue = this.contractTypeInfo;
+        break;
+      case 'contractLocation':
+        adminResultValue = this.contractLocationInfo;
         break;
       case 'contractLocationType':
         adminResultValue = this.contractLocationTypeInfo;
