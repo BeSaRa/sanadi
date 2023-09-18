@@ -149,7 +149,7 @@ export class IntegrationInquiryLogListComponent {
         request = this.beneficiaryService.addHousingBenStatusInquiry(this._getGDXCriteria());
         break;
       case GdxServicesEnum.SECURITY_BENEFICIARY_STATUS:
-        request = this.beneficiaryService.addSecurityBneStatusInquiry(this._getGDXCriteria());
+        request = this.beneficiaryService.addSecurityBenStatusInquiry(this._getGDXCriteria());
         break;
       default:
         request = null;
