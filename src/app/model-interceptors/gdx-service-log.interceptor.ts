@@ -1,3 +1,6 @@
+import { GdxEidCharitableFoundationResponse } from '@app/models/gdx-eid-charitable-foundation-response';
+import { GdxEidCharitableFoundationResponseInterceptor } from '@app/model-interceptors/gdx-eid-charitable-foundation-response-interceptor';
+import { GdxQatarRedCrescentResponse } from './../models/gdx-qatar-red-crescent-response';
 import {IModelInterceptor} from '@contracts/i-model-interceptor';
 import {GdxServiceLog} from '@app/models/gdx-service-log';
 import {AdminResult} from '@app/models/admin-result';
@@ -19,6 +22,7 @@ import { GdxMmeResponseInterceptor } from './gdx-mme-response-interceptor';
 import { GdxMmeResponse } from '@app/models/gdx-mme-leased-contract';
 import { GdxQatarCharityResponseInterceptor } from './gdx-qatar-charity-response-interceptor';
 import { GdxQatarCharityResponse } from '@app/models/gdx-qatar-charity-response';
+import { GdxQatarRedCrescentResponseInterceptor } from './gdx-qatar-red-crescent-response-interceptor';
 
 const gdxMojResponseInterceptor = new GdxMojResponseInterceptor();
 const gdxMociResponseInterceptor = new GdxMociResponseInterceptor();
@@ -30,6 +34,8 @@ const gdxSjcResponseInterceptor = new GdxSjcResponseInterceptor();
 const gdxMoeResponseInterceptor = new GdxMoeResponseInterceptor();
 const gdxMmeResponseInterceptor = new GdxMmeResponseInterceptor();
 const gdxQatarCharityResponseInterceptor = new GdxQatarCharityResponseInterceptor();
+const gdxQatarRedCrescentResponseInterceptor = new GdxQatarRedCrescentResponseInterceptor();
+const gdxEidCharitableFoundationResponseInterceptor = new GdxEidCharitableFoundationResponseInterceptor();
 
 export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog> {
   receive(model: GdxServiceLog): GdxServiceLog {
@@ -107,6 +113,17 @@ export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog
       case GdxServicesEnum.QATAR_CHARITY:
         model.gdxServiceResponseList = model.gdxServiceResponseList.map((x) => {
           return gdxQatarCharityResponseInterceptor.receive(new GdxQatarCharityResponse().clone(x));
+        });
+        break;
+
+      case GdxServicesEnum.QATAR_RED_CRESCENT:
+        model.gdxServiceResponseList = model.gdxServiceResponseList.map((x) => {
+          return gdxQatarRedCrescentResponseInterceptor.receive(new GdxQatarRedCrescentResponse().clone(x));
+        });
+        break;
+      case GdxServicesEnum.EID_CHARITABLE_FOUNDATION:
+        model.gdxServiceResponseList = model.gdxServiceResponseList.map((x) => {
+          return gdxEidCharitableFoundationResponseInterceptor.receive(new GdxEidCharitableFoundationResponse().clone(x));
         });
         break;
       default:
