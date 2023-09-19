@@ -12,6 +12,5 @@ export class NpoContactOfficerInterceptor implements IModelInterceptor<NpoContac
   }
   private static _deleteBeforeSend(model: Partial<NpoContactOfficer>) {
     delete model.searchFields;
-    delete model.jobInfo;
   }
 }

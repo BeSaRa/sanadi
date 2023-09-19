@@ -6,7 +6,6 @@ import { AdminResult } from '@app/models/admin-result';
 export class OrgMemberInterceptor implements IModelInterceptor<OrgMember> {
   receive(model: OrgMember): OrgMember {
     model.joinDate = DateUtils.getDateStringFromDate(model.joinDate);
-    model.jobTitleInfo && (model.jobTitleInfo = AdminResult.createInstance(model.jobTitleInfo));
     model.nationalityInfo && (model.nationalityInfo = AdminResult.createInstance(model.nationalityInfo));
     model.joinDateStamp = !model.joinDate? null :DateUtils.getTimeStampFromDate(model.joinDate);
 
@@ -15,7 +14,6 @@ export class OrgMemberInterceptor implements IModelInterceptor<OrgMember> {
 
   send(model: Partial<OrgMember>): Partial<OrgMember> {
     delete model.searchFields;
-    delete model.jobTitleInfo;
     delete model.nationalityInfo;
     delete model.auditOperation;
     delete model.joinDateStamp;

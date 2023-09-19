@@ -26,14 +26,12 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
   itemId!: string;
   fullName!: string;
   id!: number;
-  jobTitleId: number=0;
   email: string | null = null;
   phone: string | null = null;
   joinDate: string | null | IMyDateModel = null;
   nationality!: number;
   extraPhone!: string;
   jobTitle!:string;
-  jobTitleInfo!: AdminResult;
   nationalityInfo!: AdminResult;
 
   searchFields: ISearchFieldsMap<OrgMember> = {
@@ -47,9 +45,6 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
     switch (property) {
       case 'nationality':
         adminResultValue = this.nationalityInfo;
-        break;
-      case 'jobTitleId':
-        adminResultValue = this.jobTitleInfo;
         break;
       case 'joinDate':
         const joinDateValue = DateUtils.getDateStringFromDate(this.joinDate, 'DATEPICKER_FORMAT');
@@ -73,7 +68,6 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
       fullName: {langKey: 'full_name', value: this.fullName},
       identificationNumber: {langKey: 'identification_number', value: this.identificationNumber},
       jobTitle: {langKey: 'job_title', value: this.jobTitle},
-      jobTitleId: {langKey: 'job_title', value: this.jobTitleId},
       email: {langKey: 'lbl_email', value: this.email},
       phone: {langKey: 'lbl_phone', value: this.phone},
       joinDate: {langKey: 'first_join_date', value: this.joinDate, comparisonValue: this.joinDateStamp},
@@ -91,7 +85,6 @@ export class OrgMember extends SearchableCloneable<OrgMember> implements IAuditM
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]
       ] : values.fullName,
       identificationNumber: controls ? [values.identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]] : values.identificationNumber,
-      jobTitleId: controls ? [values.jobTitleId, []] : values.jobTitleId,
       jobTitle: controls ? [values.jobTitle, [CustomValidators.required, CustomValidators
         .maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
       CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : values.jobTitle,

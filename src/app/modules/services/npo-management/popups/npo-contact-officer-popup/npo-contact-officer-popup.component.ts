@@ -3,14 +3,11 @@ import {Component, Inject} from '@angular/core';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {NpoContactOfficer} from '@app/models/npo-contact-officer';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {JobTitle} from '@app/models/job-title';
 import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic-component.directive';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {Observable} from 'rxjs';
-import {AdminResult} from '@app/models/admin-result';
 import {UiCrudDialogComponentDataContract} from '@app/contracts/ui-crud-dialog-component-data-contract';
-import {JobTitleService} from '@app/services/job-title.service';
 
 @Component({
   selector: 'app-npo-contact-officer-popup',
@@ -19,7 +16,6 @@ import {JobTitleService} from '@app/services/job-title.service';
 })
 export class NpoContactOfficerPopupComponent extends UiCrudDialogGenericComponent<NpoContactOfficer> {
   popupTitleKey: keyof ILanguageKeys;
-  // jobTitleAdminLookup: JobTitle[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<NpoContactOfficer>,
               public dialogRef: DialogRef,
@@ -34,7 +30,6 @@ export class NpoContactOfficerPopupComponent extends UiCrudDialogGenericComponen
   }
 
   initPopup(): void {
-  //  this.loadJobTitles();
   }
 
   getPopupHeadingText(): string {
@@ -72,7 +67,6 @@ export class NpoContactOfficerPopupComponent extends UiCrudDialogGenericComponen
     return this._getNewInstance({
       ...this.model,
       ...formValue,
-      // jobInfo: this.jobTitleAdminLookup.find(x => x.id === formValue.JobTitle)?.createAdminResult() ?? new AdminResult()
     });
   }
 
@@ -84,9 +78,4 @@ export class NpoContactOfficerPopupComponent extends UiCrudDialogGenericComponen
     this.form = this.fb.group(this.model.getContactOfficerFields(true));
   }
 
-  // private loadJobTitles(): void {
-  //   this.JobTitleService.loadActive().subscribe((data) => {
-  //     this.jobTitleAdminLookup = data;
-  //   })
-  // }
 }
