@@ -16,8 +16,6 @@ export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer> im
   email!: string;
   phone!: string;
   extraPhone!: string;
-  jobTitleId: number = 0;
-  jobInfo!: AdminResult;
   jobTitle!: string;
 
   getContactOfficerFields(control: boolean): any {
@@ -30,7 +28,6 @@ export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer> im
       email: control ? [values.email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : values.email,
       phone: control ? [values.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phone,
       extraPhone: control ? [values.extraPhone, CustomValidators.commonValidations.phone] : values.extraPhone,
-      jobTitleId: control ? [values.jobTitleId, []] : values.jobTitleId,
       jobTitle: control ? [values.jobTitle, [CustomValidators.required, CustomValidators
         .maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
       CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : values.jobTitle,
@@ -45,16 +42,12 @@ export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer> im
       phone: { langKey: 'phone_of_the_employer', value: this.phone },
       extraPhone: { langKey: 'mobile_number', value: this.extraPhone },
       jobTitle: { langKey: 'job_title', value: this.jobTitle },
-      jobTitleId: { langKey: 'job_title', value: this.jobTitleId },
     };
   }
 
   getAdminResultByProperty(property: keyof NpoContactOfficer): AdminResult {
     let adminResultValue: AdminResult;
     switch (property) {
-      case 'jobTitleId':
-        adminResultValue = this.jobInfo;
-        break;
       default:
         let value: any = this[property];
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {

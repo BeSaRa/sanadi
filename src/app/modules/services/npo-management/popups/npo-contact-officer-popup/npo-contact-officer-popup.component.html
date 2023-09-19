@@ -56,14 +56,6 @@
       <!-- job title -->
       <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
         <label asteriskIfRequired="jobTitle" for="jobTitle" class="form-label">{{lang.map.job_title}}</label>
-        <!-- <ng-select [selectOnTab]="true" labelForId="jobTitleId" [clearable]="false" placeholder="{{lang.map.select}}"
-                   id="jobTitleId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
-                   formControlName="jobTitleId" validationClasses="jobTitleId">
-          <ng-option *ngFor="let option of jobTitleAdminLookup" [value]="option.id">
-            {{option.getName()}}
-          </ng-option>
-
-        </ng-select> -->
         <input formControlName="jobTitle" type="text" validationClasses="jobTitle" trimInput
         class="form-control" id="jobTitle">
         <app-field-error-message controlName="jobTitle"></app-field-error-message>

@@ -4,10 +4,7 @@ import { OperationTypes } from '@app/enums/operation-types.enum';
 import { DateUtils } from '@app/helpers/date-utils';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { AdminResult } from '@app/models/admin-result';
-import { JobTitle } from '@app/models/job-title';
 import { OrgMember } from '@app/models/org-member';
-import { JobTitleService } from '@app/services/job-title.service';
 import { LangService } from '@app/services/lang.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
@@ -33,7 +30,6 @@ export class MembersPopupComponent implements OnInit {
   datepickerOptionsMap: DatepickerOptionsMap = {
     joinDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
   };
-  // jobTitleList: JobTitle[] = [];
 
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
@@ -64,10 +60,6 @@ export class MembersPopupComponent implements OnInit {
   }
 
   buildFormControls(): void {
-    // this.jobTitleService.loadAsLookups().subscribe((jobTitles) => {
-    //   // this.jobTitleList = jobTitles;
-
-    // })
     this.controls = [
       {
         controlName: 'fullName',
@@ -83,11 +75,6 @@ export class MembersPopupComponent implements OnInit {
         controlName: 'jobTitle',
         langKey: 'job_title',
         type: 'text',
-        // load: jobTitles,
-        // dropdownValue: 'id',
-        // dropdownOptionDisabled: (optionItem: JobTitle) => {
-        //   return !optionItem.isActive();
-        // }
       },
     ];
     if (this.extended) {
@@ -122,9 +109,6 @@ export class MembersPopupComponent implements OnInit {
   mapFormToMember(form: any): OrgMember {
     const member: OrgMember = new OrgMember().clone({ ...this.model, ...form });
     (member.joinDate && (member.joinDate = DateUtils.getDateStringFromDate(form.joinDate)));
-    // member.jobTitleInfo = AdminResult.createInstance(({
-    //   ...this.jobTitleList.find(e => e.id === form.jobTitleId)
-    // }));
     return member;
   }
 

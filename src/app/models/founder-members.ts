@@ -13,12 +13,10 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
   objectDBId!: number;
   identificationNumber!: string;
   fullName!: string;
-  jobTitleId: number = 0;
   email!: string;
   phone!: string;
   extraPhone!: string;
   nationality!: number;
-  jobTitleInfo!: AdminResult;
   nationalityInfo!: AdminResult;
   jobTitle!: string;
 
@@ -36,7 +34,6 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
         .maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
       CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : values.jobTitle,
       nationality: control ? [values.nationality, [CustomValidators.required]] : values.nationality,
-      jobTitleId: control ? [values.jobTitleId, []] : values.jobTitleId,
     };
   }
 
@@ -45,7 +42,6 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
       identificationNumber: { langKey: 'identification_number', value: this.identificationNumber },
       fullName: { langKey: 'full_name', value: this.fullName },
       jobTitle: { langKey: 'job_title', value: this.jobTitle },
-      jobTitleId: { langKey: 'job_title', value: this.jobTitleId },
       email: { langKey: 'email_address_of_the_employer', value: this.email },
       phone: { langKey: 'phone_of_the_employer', value: this.phone },
       extraPhone: { langKey: 'mobile_number', value: this.extraPhone },
@@ -58,9 +54,6 @@ export class FounderMembers extends SearchableCloneable<FounderMembers> implemen
     switch (property) {
       case 'nationality':
         adminResultValue = this.nationalityInfo;
-        break;
-      case 'jobTitleId':
-        adminResultValue = this.jobTitleInfo;
         break;
       default:
         let value: any = this[property];

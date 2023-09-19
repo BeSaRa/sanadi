@@ -5,7 +5,6 @@ import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
 export class FounderMemberInterceptor implements IModelInterceptor<FounderMembers> {
   send(model: Partial<FounderMembers>): Partial<FounderMembers> {
 
-    delete model.jobTitleInfo;
     delete model.nationalityInfo;
     delete model.searchFields
     return model;
@@ -13,7 +12,6 @@ export class FounderMemberInterceptor implements IModelInterceptor<FounderMember
 
   receive(model: FounderMembers): FounderMembers {
     model.nationalityInfo && (model.nationalityInfo = AdminResult.createInstance(model.nationalityInfo));
-    model.jobTitleInfo && (model.jobTitleInfo = AdminResult.createInstance(model.jobTitleInfo));
     return model;
   }
 }
