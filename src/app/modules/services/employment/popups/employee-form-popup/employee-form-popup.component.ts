@@ -1,5 +1,5 @@
-import { CountryService } from './../../../../../services/country.service';
-import { Country } from './../../../../../models/country';
+import { CountryService } from '@services/country.service';
+import { Country } from '@models/country';
 import { UserClickOn } from '@enums/user-click-on.enum';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { AdminLookupService } from '@services/admin-lookup.service';
@@ -34,6 +34,8 @@ import { ImplementingAgencyTypes } from '@enums/implementing-agency-types.enum';
 import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
 import { NpoEmployeeService } from '@app/services/npo-employee.service';
 import { CharityBranch } from '@app/models/charity-branch';
+import { map } from 'rxjs/operators';
+import { CommonStatusEnum } from '@enums/common-status.enum';
 
 @Component({
   selector: "app-employee-form-popup",
@@ -92,10 +94,15 @@ export class EmployeeFormPopupComponent implements OnInit {
       langKey: "btn_edit",
       icon: "pen",
       show: () => this.isEditRequestTypeAllowed,
-      callback: (e, r) => {
+      callback: (e, r: Employee) => {
         this.form.patchValue({
           ...r,
         });
+        // this.countriesList.filter(c => c.isActive());
+        // const country = this.countriesList.find(c => c.id == r.contractLocation);
+        // if (!country) {
+        //   this.countriesList.push(new Country().clone({ id: r.contractLocation, arName: r.contractLocationInfo.arName, enName: r.contractLocationInfo.enName, status: CommonStatusEnum.DEACTIVATED }))
+        // }
         this.handlePreviewOfficeName();
         this.handleContractExpireDateValidationsByContractType();
         this.handleEndDateValidationsByContractStatus();
@@ -110,6 +117,11 @@ export class EmployeeFormPopupComponent implements OnInit {
         this.form.patchValue({
           ...r,
         });
+        // this.countriesList.filter(c => c.isActive());
+        // const country = this.countriesList.find(c => c.id == r.contractLocation);
+        // if (!country) {
+        //   this.countriesList.push(new Country().clone({ id: r.contractLocation, arName: r.contractLocationInfo.arName, enName: r.contractLocationInfo.enName, status: CommonStatusEnum.DEACTIVATED }))
+        // }
         this.handlePreviewOfficeName();
         this.handleContractExpireDateValidationsByContractType();
         this.handleEndDateValidationsByContractStatus();
@@ -160,6 +172,7 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   private loadCountries(): void {
     this.countryService.loadAsLookups()
+    // .pipe(map(list => list.filter(c => c.isActive() || c.id == this.form.value.contractLocation)))
       .subscribe((countries) => {
         this.countriesList = countries;
       });
