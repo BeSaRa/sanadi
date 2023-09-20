@@ -2028,4 +2028,5 @@ export interface ILanguageKeys {
   must_press_enter:string;
   external_user_register:string;
   invalid_template:string;
+  lookup_service_type_work_type:string;
 }
