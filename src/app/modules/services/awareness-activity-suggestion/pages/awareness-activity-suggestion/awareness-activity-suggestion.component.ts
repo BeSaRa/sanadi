@@ -30,15 +30,15 @@ import { JobTitleService } from '@services/job-title.service';
 import { FileExtensionsEnum } from '@enums/file-extension-mime-types-icons.enum';
 import {
   SelectCustomServiceTemplatePopupComponent
-} from '@app/modules/services/shared-services/popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
+} from '@modules/services/shared-services/popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
 import { FileUploaderComponent } from '@app/shared/components/file-uploader/file-uploader.component';
-import { CustomServiceTemplate } from '@app/models/custom-service-template';
-import { CustomServiceTemplateService } from '@app/services/custom-service-template.service';
-import { AdminLookup } from '@app/models/admin-lookup';
-import { AdminLookupService } from '@app/services/admin-lookup.service';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { CustomServiceTemplate } from '@models/custom-service-template';
+import { CustomServiceTemplateService } from '@services/custom-service-template.service';
+import { AdminLookup } from '@models/admin-lookup';
+import { AdminLookupService } from '@services/admin-lookup.service';
+import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { ApprovalTemplateTypeEnum } from '@app/enums/approvalTemplateType.enum';
+import { ApprovalTemplateTypeEnum } from '@enums/approvalTemplateType.enum';
 
 @Component({
   selector: 'app-awareness-activity-suggestion',
