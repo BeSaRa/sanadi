@@ -1,5 +1,5 @@
-import { ApprovalTemplateTypeEnum } from './../../../../../enums/approvalTemplateType.enum';
-import {CustomServiceTemplateService} from './../../../../../services/custom-service-template.service';
+import { ApprovalTemplateTypeEnum } from '@enums/approvalTemplateType.enum';
+import {CustomServiceTemplateService} from '@services/custom-service-template.service';
 import {JobTitleService} from '@services/job-title.service';
 import {ExternalUser} from '@models/external-user';
 import {ExternalUserService} from '@services/external-user.service';
