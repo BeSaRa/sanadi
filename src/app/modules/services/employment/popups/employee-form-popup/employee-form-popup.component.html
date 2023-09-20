@@ -208,7 +208,7 @@
         >
           <ng-option
             [value]="option.id"
-            *ngFor="let option of countriesList"
+            *ngFor="let option of countriesList" disabled="!option.isActive()"
             >{{ option.getName() }}</ng-option
           >
         </ng-select>
