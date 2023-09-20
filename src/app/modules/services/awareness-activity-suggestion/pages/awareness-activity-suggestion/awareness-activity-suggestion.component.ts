@@ -25,9 +25,9 @@ import { CommonUtils } from '@helpers/common-utils';
 import { UserClickOn } from '@enums/user-click-on.enum';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { SearchAwarenessActivitySuggestionCriteria } from '@models/search-awareness-activity-suggestion-criteria';
-import { JobTitle } from '@app/models/job-title';
-import { JobTitleService } from '@app/services/job-title.service';
-import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { JobTitle } from '@models/job-title';
+import { JobTitleService } from '@services/job-title.service';
+import { FileExtensionsEnum } from '@enums/file-extension-mime-types-icons.enum';
 import {
   SelectCustomServiceTemplatePopupComponent
 } from '@app/modules/services/shared-services/popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
@@ -579,7 +579,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   }
   private _loadActivityTypes() {
     this.adminLookupService
-      .loadAsLookups(AdminLookupTypeEnum.SERVICE_TYPE)
+      .loadAsLookups(AdminLookupTypeEnum.SERVICE_TYPE_WORK_TYPE)
       .subscribe((list) => {
         this.activitiesTypes = list;
         const id = this.activityType.value;
