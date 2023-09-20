@@ -1370,6 +1370,8 @@ export interface ILanguageKeys {
   integration_kahramaa: string;
   integration_mol: string;
   integration_sjc: string;
+  integration_hbs: string;
+  integration_sbs: string;
   integration_qatar_charity: string;
   integration_qatar_zakat_fund: string;
   integration_qrcs: string;
@@ -1904,6 +1906,12 @@ export interface ILanguageKeys {
   no_atarization_no_lbl: string;
   certificate_code_lbl: string;
   leased_contract_lbl: string;
+  lbl_beneficiary_type: string;
+  lbl_beneficiary_date: string;
+  lbl_housing_status: string;
+  lbl_social_security_status: string;
+  lbl_status_code: string;
+  lbl_beneficiary_status: string;
   please_select_service_to_link: string;
   template_type: string;
   template_file: string;

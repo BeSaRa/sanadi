@@ -1,3 +1,5 @@
+import { GdxMsdfSecurityResponse } from '@app/models/gdx-msdf-security';
+import { GdxMsdfHousingResponse } from '@app/models/gdx-msdf-housing';
 import { GdxEidCharitableFoundationResponse } from './../models/gdx-eid-charitable-foundation-response';
 import { GdxQatarRedCrescentResponse } from './../models/gdx-qatar-red-crescent-response';
 import { Injectable } from '@angular/core';
@@ -263,10 +265,32 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   addQatarCharityInquiry(criteria: IGdxCriteria) {
     return this.http.post<GdxQatarCharityResponse[]>(this._getGDXServiceURL() + '/qc-historical-data', criteria);
   }
+  @CastResponse(() => GdxEidCharitableFoundationResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
   addEidCharitableFoundationInquiry(criteria: IGdxCriteria) {
     return this.http.post<GdxEidCharitableFoundationResponse[]>(this._getGDXServiceURL() + '/eid-historical-data', criteria);
   }
+  @CastResponse(() => GdxQatarRedCrescentResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
   addQatarRedCrescentInquiry(criteria: IGdxCriteria) {
     return this.http.post<GdxQatarRedCrescentResponse[]>(this._getGDXServiceURL() + '/qrcs-historical-data', criteria);
+  }
+  @CastResponse(() => GdxMsdfHousingResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addHousingBenStatusInquiry(criteria: IGdxCriteria) {
+    return this.http.post<GdxMsdfHousingResponse[]>(this._getGDXServiceURL() + '/msdf/housing-beneficiary-status', criteria);
+  }
+  @CastResponse(() => GdxMsdfSecurityResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addSecurityBenStatusInquiry(criteria: IGdxCriteria) {
+    return this.http.post<GdxMsdfSecurityResponse[]>(this._getGDXServiceURL() + '/msdf/security-beneficiary-status', criteria);
   }
 }

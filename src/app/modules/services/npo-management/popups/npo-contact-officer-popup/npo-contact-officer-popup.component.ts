@@ -19,12 +19,11 @@ import {JobTitleService} from '@app/services/job-title.service';
 })
 export class NpoContactOfficerPopupComponent extends UiCrudDialogGenericComponent<NpoContactOfficer> {
   popupTitleKey: keyof ILanguageKeys;
-  jobTitleAdminLookup: JobTitle[] = [];
+  // jobTitleAdminLookup: JobTitle[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<NpoContactOfficer>,
               public dialogRef: DialogRef,
-              public fb: UntypedFormBuilder,
-              private JobTitleService: JobTitleService) {
+              public fb: UntypedFormBuilder) {
     super();
     this.setInitDialogData(data);
     this.popupTitleKey = 'contact_officers';
@@ -35,7 +34,7 @@ export class NpoContactOfficerPopupComponent extends UiCrudDialogGenericComponen
   }
 
   initPopup(): void {
-   this.loadJobTitles();
+  //  this.loadJobTitles();
   }
 
   getPopupHeadingText(): string {
@@ -73,7 +72,7 @@ export class NpoContactOfficerPopupComponent extends UiCrudDialogGenericComponen
     return this._getNewInstance({
       ...this.model,
       ...formValue,
-      jobInfo: this.jobTitleAdminLookup.find(x => x.id === formValue.JobTitle)?.createAdminResult() ?? new AdminResult()
+      // jobInfo: this.jobTitleAdminLookup.find(x => x.id === formValue.JobTitle)?.createAdminResult() ?? new AdminResult()
     });
   }
 
@@ -85,9 +84,9 @@ export class NpoContactOfficerPopupComponent extends UiCrudDialogGenericComponen
     this.form = this.fb.group(this.model.getContactOfficerFields(true));
   }
 
-  private loadJobTitles(): void {
-    this.JobTitleService.loadActive().subscribe((data) => {
-      this.jobTitleAdminLookup = data;
-    })
-  }
+  // private loadJobTitles(): void {
+  //   this.JobTitleService.loadActive().subscribe((data) => {
+  //     this.jobTitleAdminLookup = data;
+  //   })
+  // }
 }

@@ -145,6 +145,12 @@ export class IntegrationInquiryLogListComponent {
       case GdxServicesEnum.QATAR_RED_CRESCENT:
         request = this.beneficiaryService.addQatarRedCrescentInquiry(this._getGDXCriteria());
         break;
+      case GdxServicesEnum.HOUSING_BENEFICIARY_STATUS:
+        request = this.beneficiaryService.addHousingBenStatusInquiry(this._getGDXCriteria());
+        break;
+      case GdxServicesEnum.SECURITY_BENEFICIARY_STATUS:
+        request = this.beneficiaryService.addSecurityBenStatusInquiry(this._getGDXCriteria());
+        break;
       default:
         request = null;
         break;

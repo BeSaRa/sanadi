@@ -31,6 +31,10 @@
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_extra_phone_number}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.extraPhone}} </td>
         </ng-container>
+        <ng-container cdkColumnDef="organizationInfo">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.organizationInfo?.getName()?? currentEmployeeOrganization?.getName()}} </td>
+        </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
