@@ -133,7 +133,9 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
       .pipe(takeUntil(this.destroy$))
       .pipe(filter((val): val is number[] => !!val))
       .subscribe(() => {
+        this.clearItems$.next(true);
         this.generateCountryList()
+        this.addAllItems();
       })
   }
 
@@ -149,10 +151,10 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     if (!this.item.value)
       return
 
-    if (!this._model.deductedPercentagesItemList.length) {
-      this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
-      return;
-    }
+    // if (!this._model.deductedPercentagesItemList.length) {
+    //   this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
+    //   return;
+    // }
 
     const country = new AmountOverCountry().clone({
       country: this.item.value.id,
@@ -230,10 +232,10 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   }
 
   addAllItems(): void {
-    if (!this._model.deductedPercentagesItemList.length) {
-      this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
-      return;
-    }
+    // if (!this._model.deductedPercentagesItemList.length) {
+    //   this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
+    //   return;
+    // }
 
     if (this.countriesList.length === 1 && this._model.amountOverCountriesList.length === 0) {
       this.addOrphanItem()

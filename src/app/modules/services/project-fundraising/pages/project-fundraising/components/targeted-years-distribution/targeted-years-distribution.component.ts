@@ -3,7 +3,7 @@ import {ProjectFundraising} from "@app/models/project-fundraising";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {BehaviorSubject, ReplaySubject, Subject} from "rxjs";
 import {debounceTime, filter, map, startWith, takeUntil} from "rxjs/operators";
-import {AbstractControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
+import {AbstractControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {LangService} from "@services/lang.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {DialogService} from "@services/dialog.service";
@@ -12,6 +12,7 @@ import {AmountOverYear} from "@app/models/amount-over-year";
 import currency from "currency.js";
 import {MaskPipe} from "ngx-mask";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import { ServiceData } from '@app/models/service-data';
 
 @Component({
   selector: 'targeted-years-distribution',
@@ -37,7 +38,7 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
 
   @Input()
   requestType!: number
-
+  @Input() configs!: ServiceData;
   private destroy$: Subject<any> = new Subject<any>();
   private destroyListener$: Subject<any> = new Subject<any>();
   private numberOfMonths$: BehaviorSubject<number | undefined> = new BehaviorSubject<number | undefined>(undefined);
@@ -109,9 +110,11 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
     this.numberOfMonths$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter((val): val is number => !!val))
+      .pipe(filter((val)=> (val <= this.configs.licenseMaxTime?? 12) && (val >= this.configs.licenseMinTime?? 1)))
       .subscribe(() => {
         this.years = this.calculateYears();
         this.generateYearList(this.years);
+        this.addAllItems()
       })
   }
 
@@ -134,10 +137,10 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
     if (!this.item.value)
       return;
 
-    if (!this._model.deductedPercentagesItemList.length) {
-      this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
-      return;
-    }
+    // if (!this._model.deductedPercentagesItemList.length) {
+    //   this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
+    //   return;
+    // }
     const year = new AmountOverYear().clone({year: this.item.value, targetAmount: overrideAmount ? overrideAmount : 0});
     const control = this.createControl(year.year, year.targetAmount)
 
@@ -275,10 +278,10 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
 
 
   addAllItems(): void {
-    if (!this._model.deductedPercentagesItemList.length) {
-      this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
-      return;
-    }
+    // if (!this._model.deductedPercentagesItemList.length) {
+    //   this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
+    //   return;
+    // }
 
     if (this.yearsList.length === 1 && this._model.amountOverYearsList.length === 0) {
       this.addOrphanItem()

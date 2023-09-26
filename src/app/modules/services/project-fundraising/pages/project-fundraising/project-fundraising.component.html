@@ -341,6 +341,7 @@
           [checkForTemplate]="templateRequired"
           [model]="model!"
           [projectCost]="projectTotalCost.value"
+          [hasTemplate] ="model!.hasTemplate()"
           [readonly]="(isExtendOrCancelRequestType() || readonly)"
           [workArea]="projectWorkArea.value" [permitType]="permitType.value"></deduction-ratio-manager>
 
@@ -370,6 +371,7 @@
           [oldDuration]="selectedLicense?.totalLicenseDuration"
           [requestType]="requestType.value"
           [readonly]="isTargetedYearsDisabled()"
+          [configs]="configs"
           [numberOfMonths]="licenseDuration.value"></targeted-years-distribution>
 
         </div>
