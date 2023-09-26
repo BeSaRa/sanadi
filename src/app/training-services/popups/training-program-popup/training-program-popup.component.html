@@ -191,9 +191,10 @@
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <div class="row">
-            <label asteriskIfRequired="sessionStartTime" for="sessionStartTime"
-                  class="form-label">{{lang.map.session_start_time}}</label>
+            <label class="form-label">{{lang.map.session_start_time}}</label>
             <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+              <label asteriskIfRequired="sessionStartTime" for="sessionStartTime"
+                class="form-label">{{lang.map.lbl_hours}}</label>
               <ng-select validationClasses="sessionStartTime" labelForId="sessionStartTime"
                         placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
                         formControlName="sessionStartTime" id="sessionStartTime" appendTo="body"
@@ -203,6 +204,8 @@
               <app-field-error-message controlName="sessionStartTime"></app-field-error-message>
             </div>
             <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+              <label asteriskIfRequired="sessionStartTimeMinutes" for="sessionStartTimeMinutes"
+                class="form-label">{{lang.map.lbl_minutes}}</label>
               <ng-select validationClasses="sessionStartTimeMinutes" labelForId="sessionStartTimeMinutes"
                 placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
                 formControlName="sessionStartTimeMinutes" id="sessionStartTimeMinutes" appendTo="body"
@@ -215,9 +218,10 @@
         </div>
         <div class="col-sm-12 col-md-6">
           <div class="row">
-            <label asteriskIfRequired="sessionEndTime" for="sessionEndTime"
-                  class="form-label">{{lang.map.session_end_time}}</label>
+            <label class="form-label">{{lang.map.session_end_time}}</label>
             <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+              <label asteriskIfRequired="sessionEndTime" for="sessionEndTime"
+                class="form-label">{{lang.map.lbl_hours}}</label>
               <ng-select validationClasses="sessionEndTime" labelForId="sessionEndTime"
                         placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
                         formControlName="sessionEndTime" id="sessionEndTime" appendTo="body"
@@ -227,6 +231,8 @@
               <app-field-error-message controlName="sessionEndTime"></app-field-error-message>
             </div>
             <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+              <label asteriskIfRequired="sessionEndTimeMinutes" for="sessionEndTimeMinutes"
+                class="form-label">{{lang.map.lbl_minutes}}</label>
               <ng-select validationClasses="sessionEndTimeMinutes" labelForId="sessionEndTimeMinutes"
                 placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
                 formControlName="sessionEndTimeMinutes" id="sessionEndTimeMinutes" appendTo="body"

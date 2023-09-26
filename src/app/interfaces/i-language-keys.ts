@@ -2029,4 +2029,6 @@ export interface ILanguageKeys {
   external_user_register:string;
   invalid_template:string;
   lookup_service_type_work_type:string;
+  lbl_hours:string;
+  lbl_minutes:string;
 }
