@@ -103,7 +103,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     }
   }
 
-  private configs!: ServiceData;
+   configs!: ServiceData;
 
   private controlsToWatchOldValues = [
     'permitType',

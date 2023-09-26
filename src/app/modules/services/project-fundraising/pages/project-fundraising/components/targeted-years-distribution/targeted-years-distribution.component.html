@@ -2,7 +2,7 @@
   <app-page-header [pageTitle]="'distribute_target_amount_over_years'"
   [removeContainerClasses]="true"></app-page-header>
 </div>
-<div class="row">
+<!-- <div class="row">
   <div class="col-sm-12 mb-4 position-relative">
     <div class="d-flex align-items-end gap-2">
       <div class="flex-grow-1">
@@ -20,7 +20,7 @@
               class="btn btn-primary">{{lang.map.btn_add_all}}</button>
     </div>
   </div>
-</div>
+</div> -->
 <div class="row mb-2">
   <app-table [formGroup]="form" #table [data]="_model.amountOverYearsList"
              [columns]="displayedColumns">
