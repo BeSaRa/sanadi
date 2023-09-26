@@ -265,7 +265,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   }
 
   canShowEvaluateCandidates(status: number): boolean {
-    return (status == this.trainingStatus.REGISTRATION_OPEN || status == this.trainingStatus.REGISTRATION_CLOSED) && this.employeeService.hasPermissionTo(PermissionsEnum.TRAINING_MANAGE_TRAINEE);
+    return (status == this.trainingStatus.REGISTRATION_OPEN || status == this.trainingStatus.REGISTRATION_CLOSED) && this.employeeService.hasPermissionTo(PermissionsEnum.APPROVE_TRAINING_PROGRAM_CANDIDATES);
   }
 
   canShowBriefcases(status: number): boolean {
