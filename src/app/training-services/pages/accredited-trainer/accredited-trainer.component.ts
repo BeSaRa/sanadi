@@ -10,7 +10,6 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {SharedService} from '@app/services/shared.service';
 import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {TableComponent} from '@app/shared/components/table/table.component';
-import {JobTitle} from '@models/job-title';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { FormBuilder } from '@angular/forms';

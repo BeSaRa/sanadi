@@ -3,9 +3,8 @@ import { TrainerService } from '@app/services/trainer.service';
 import { FactoryService } from '@app/services/factory.service';
 import { INames } from '@app/interfaces/i-names';
 import { LangService } from '@app/services/lang.service';
-import {ISearchFieldsMap, searchFunctionType} from '@app/types/types';
+import {ISearchFieldsMap} from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { BlobModel } from '@app/models/blob-model';
 import { DialogRef } from '@app/shared/models/dialog-ref';
@@ -13,7 +12,6 @@ import { Lookup } from '@app/models/lookup';
 import { InterceptModel } from "@decorators/intercept-model";
 import { TrainerInterceptor } from "@app/model-interceptors/trainer-interceptor";
 import {normalSearchFields} from '@helpers/normal-search-fields';
-import {infoSearchFields} from '@helpers/info-search-fields';
 
 const { receive, send } = new TrainerInterceptor()
 

@@ -41,7 +41,7 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
       onClick: _ => this.reload$.next(null),
     }
   ];
-  displayedColumns: string[] = ['arName', 'enName', 'department', 'phoneNumber', 'currentJob', 'status', 'nationality', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'department', 'phoneNumber', 'employementPosition', 'status', 'nationality', 'actions'];
   edit$: Subject<Trainee> = new Subject<Trainee>();
   models: Trainee[] = [];
   trainingProgramId: number;
