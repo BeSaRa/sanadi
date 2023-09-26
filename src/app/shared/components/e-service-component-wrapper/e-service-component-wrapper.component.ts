@@ -139,7 +139,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
     CaseTypes.NPO_MANAGEMENT,
     CaseTypes.CHARITY_ORGANIZATION_UPDATE,
-    CaseTypes.FOREIGN_COUNTRIES_PROJECTS
+    CaseTypes.PARTNER_APPROVAL
   ];
   servicesWithNoSaveDraftLaunch: number[] = [
     CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP
@@ -1769,8 +1769,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       }
     } else if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.cantCompleteFromMemberReviewStep(item)) {
       const model = item as unknown as IGeneralAssociationMeetingAttendanceComplete;
-      this.toast.error(this.lang.map.meeting_points_is_invalid);
-      return;
+
+      model.memberCanNotComplete();
     } else {
       item.complete().onAfterClose$.subscribe(actionTaken => {
         actionTaken && this.navigateToSamePageThatUserCameFrom();
@@ -1782,7 +1782,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     const model = item as unknown as IGeneralAssociationMeetingAttendanceComplete;
     const component = this.component as unknown as IGeneralAssociationMeetingAttendanceComponent;
 
-    return model.isMemberReviewStep() && component.isValidPointsToSave();
+    return model.isMemberReviewStep() && component.meetingPointsForm.invalid;
   }
 
   isApproveWithSave(item: CaseModel<any, any>): boolean {
@@ -1825,9 +1825,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       } else if (item.getCaseType() === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
         const model = item as unknown as AwarenessActivitySuggestion;
         const component = this.component as unknown as AwarenessActivitySuggestionComponent;
-        component.validateTimplate()
+        component.validateApproveTimplate()
           .pipe(
-            tap(valid => !valid && this.service.dialog.error(this.lang.map.err_required_field + ' ' + this.lang.map.lbl_template)),
+            tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
             filter(valid => valid)
           ).subscribe(() => {
             model.approve().onAfterClose$.subscribe(actionTaken => {
@@ -1837,9 +1837,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       } else if (item.getCaseType() === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
         const model = item as unknown as OrganizationsEntitiesSupport;
         const component = this.component as unknown as OrganizationsEntitiesSupportComponent;
-        component.validateTimplate()
+        component.validateApproveTimplate()
           .pipe(
-            tap(valid => !valid && this.service.dialog.error(this.lang.map.err_required_field + ' ' + this.lang.map.lbl_template)),
+            tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
             filter(valid => valid)
           ).subscribe(() => {
             model.approve().onAfterClose$.subscribe(actionTaken => {
@@ -1978,9 +1978,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private rejectAction(item: CaseModel<any, any>) {
     if (item.getCaseType() === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
       const component = this.component as unknown as AwarenessActivitySuggestionComponent;
-      component.validateTimplate()
+      component.validateRejectTimplate()
         .pipe(
-          tap(valid => !valid && this.service.dialog.error(this.lang.map.err_required_field + ' ' + this.lang.map.lbl_template)),
+          tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
           filter(valid => valid)
         ).subscribe(() => {
           item.reject().onAfterClose$.subscribe(actionTaken => {
@@ -1989,9 +1989,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         })
     } else if (item.getCaseType() === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
       const component = this.component as unknown as OrganizationsEntitiesSupportComponent;
-      component.validateTimplate()
+      component.validateRejectTimplate()
         .pipe(
-          tap(valid => !valid && this.service.dialog.error(this.lang.map.err_required_field + ' ' + this.lang.map.lbl_template)),
+          tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
           filter(valid => valid)
         ).subscribe(() => {
           item.reject().onAfterClose$.subscribe(actionTaken => {

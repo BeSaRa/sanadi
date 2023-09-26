@@ -54,6 +54,13 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
     this.deductionAmountHasChanges$.next(value)
   }
 
+  @Input()
+  set hasTemplate(value:boolean){
+    this.deductionRatioItems.forEach(x=>{
+      this.item.setValue(x);
+      this.addItem()
+    })
+  }
 
   clearItems$: Subject<boolean> = new Subject()
 

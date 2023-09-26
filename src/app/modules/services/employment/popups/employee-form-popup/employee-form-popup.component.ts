@@ -1,3 +1,5 @@
+import { CountryService } from '@services/country.service';
+import { Country } from '@models/country';
 import { UserClickOn } from '@enums/user-click-on.enum';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { AdminLookupService } from '@services/admin-lookup.service';
@@ -32,6 +34,8 @@ import { ImplementingAgencyTypes } from '@enums/implementing-agency-types.enum';
 import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
 import { NpoEmployeeService } from '@app/services/npo-employee.service';
 import { CharityBranch } from '@app/models/charity-branch';
+import { map } from 'rxjs/operators';
+import { CommonStatusEnum } from '@enums/common-status.enum';
 
 @Component({
   selector: "app-employee-form-popup",
@@ -45,6 +49,7 @@ export class EmployeeFormPopupComponent implements OnInit {
   employeesList: Partial<Employee>[] = [];
   implementingAgencyList: AdminResult[] = [];
   charityBranch: CharityBranch[] = [];
+  countriesList: Country[] = [];
   isLoadedImplementingAgencyList: boolean = false;
   isLoadedCharityBranch: boolean = false;
   functionalGroupsList: AdminLookup[] = [];
@@ -89,10 +94,15 @@ export class EmployeeFormPopupComponent implements OnInit {
       langKey: "btn_edit",
       icon: "pen",
       show: () => this.isEditRequestTypeAllowed,
-      callback: (e, r) => {
+      callback: (e, r: Employee) => {
         this.form.patchValue({
           ...r,
         });
+        // this.countriesList.filter(c => c.isActive());
+        // const country = this.countriesList.find(c => c.id == r.contractLocation);
+        // if (!country) {
+        //   this.countriesList.push(new Country().clone({ id: r.contractLocation, arName: r.contractLocationInfo.arName, enName: r.contractLocationInfo.enName, status: CommonStatusEnum.DEACTIVATED }))
+        // }
         this.handlePreviewOfficeName();
         this.handleContractExpireDateValidationsByContractType();
         this.handleEndDateValidationsByContractStatus();
@@ -107,6 +117,11 @@ export class EmployeeFormPopupComponent implements OnInit {
         this.form.patchValue({
           ...r,
         });
+        // this.countriesList.filter(c => c.isActive());
+        // const country = this.countriesList.find(c => c.id == r.contractLocation);
+        // if (!country) {
+        //   this.countriesList.push(new Country().clone({ id: r.contractLocation, arName: r.contractLocationInfo.arName, enName: r.contractLocationInfo.enName, status: CommonStatusEnum.DEACTIVATED }))
+        // }
         this.handlePreviewOfficeName();
         this.handleContractExpireDateValidationsByContractType();
         this.handleEndDateValidationsByContractStatus();
@@ -135,6 +150,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     private adminLookupService: AdminLookupService,
     private commonService: CommonService,
     private npoEmployeeService: NpoEmployeeService,
+    private countryService: CountryService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
       service: EmploymentService;
@@ -147,12 +163,20 @@ export class EmployeeFormPopupComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadCountries();
     this._buildForm();
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.FUNCTIONAL_GROUP).subscribe((data) => {
       this.functionalGroupsList = data;
     })
   }
 
+  private loadCountries(): void {
+    this.countryService.loadAsLookups()
+    // .pipe(map(list => list.filter(c => c.isActive() || c.id == this.form.value.contractLocation)))
+      .subscribe((countries) => {
+        this.countriesList = countries;
+      });
+  }
   handlePreviewOfficeName() {
     if (this.isExternal()) {
       this.loadImplementingAgenciesByAgencyType();
@@ -183,7 +207,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       phone: ["", [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
       email: ["", [CustomValidators.required].concat(CustomValidators.commonValidations.email)],
       department: ["", [CustomValidators.required, CustomValidators.maxLength(300)]],
-      contractLocation: ["", CustomValidators.required],
+      contractLocation: [null, CustomValidators.required],
       contractLocationType: [null, CustomValidators.required],
       officeId: [null, CustomValidators.maxLength(300)],
       contractStatus: [null, CustomValidators.required],

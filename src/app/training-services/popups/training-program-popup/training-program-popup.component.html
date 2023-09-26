@@ -189,51 +189,59 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
-          <label asteriskIfRequired="sessionStartTime" for="sessionStartTime"
-                 class="form-label">{{lang.map.session_start_time}}</label>
-          <ng-select validationClasses="sessionStartTime" labelForId="sessionStartTime"
-                     placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
-                     formControlName="sessionStartTime" id="sessionStartTime" appendTo="body"
-                     (change)="trainingStartTimeChange()">
-            <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
-          </ng-select>
-          <app-field-error-message controlName="sessionStartTime"></app-field-error-message>
+        <div class="col-sm-12 col-md-6">
+          <div class="row">
+            <label class="form-label">{{lang.map.session_start_time}}</label>
+            <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+              <label asteriskIfRequired="sessionStartTime" for="sessionStartTime"
+                class="form-label">{{lang.map.lbl_hours}}</label>
+              <ng-select validationClasses="sessionStartTime" labelForId="sessionStartTime"
+                        placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
+                        formControlName="sessionStartTime" id="sessionStartTime" appendTo="body"
+                        (change)="trainingStartTimeChange()">
+                <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="sessionStartTime"></app-field-error-message>
+            </div>
+            <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+              <label asteriskIfRequired="sessionStartTimeMinutes" for="sessionStartTimeMinutes"
+                class="form-label">{{lang.map.lbl_minutes}}</label>
+              <ng-select validationClasses="sessionStartTimeMinutes" labelForId="sessionStartTimeMinutes"
+                placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
+                formControlName="sessionStartTimeMinutes" id="sessionStartTimeMinutes" appendTo="body"
+                (change)="trainingStartTimeChange()">
+                <ng-option [value]="min.val" *ngFor="let min of minutesList">{{min.key}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="sessionStartTimeMinutes"></app-field-error-message>
+            </div>
+          </div>
         </div>
-        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
-          <label asteriskIfRequired="sessionEndTime" for="sessionEndTime"
-                 class="form-label">{{lang.map.session_end_time}}</label>
-          <ng-select validationClasses="sessionEndTime" labelForId="sessionEndTime"
-                     placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
-                     formControlName="sessionEndTime" id="sessionEndTime" appendTo="body"
-                     (change)="trainingEndTimeChange()">
-            <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
-          </ng-select>
-          <app-field-error-message controlName="sessionEndTime"></app-field-error-message>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
-          <label asteriskIfRequired="sessionStartTimeMinutes" for="sessionStartTimeMinutes"
-            class="form-label">{{lang.map.session_start_time_minutes}}</label>
-          <ng-select validationClasses="sessionStartTimeMinutes" labelForId="sessionStartTimeMinutes"
-            placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
-            formControlName="sessionStartTimeMinutes" id="sessionStartTimeMinutes" appendTo="body"
-            (change)="trainingStartTimeChange()">
-            <ng-option [value]="min.val" *ngFor="let min of minutesList">{{min.key}}</ng-option>
-          </ng-select>
-          <app-field-error-message controlName="sessionStartTimeMinutes"></app-field-error-message>
-        </div>
-        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
-          <label asteriskIfRequired="sessionEndTimeMinutes" for="sessionEndTimeMinutes"
-            class="form-label">{{lang.map.session_end_time_minutes}}</label>
-          <ng-select validationClasses="sessionEndTimeMinutes" labelForId="sessionEndTimeMinutes"
-            placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
-            formControlName="sessionEndTimeMinutes" id="sessionEndTimeMinutes" appendTo="body"
-            (change)="trainingEndTimeChange()">
-            <ng-option [value]="min.val" *ngFor="let min of minutesList">{{min.key}}</ng-option>
-          </ng-select>
-          <app-field-error-message controlName="sessionEndTimeMinutes"></app-field-error-message>
+        <div class="col-sm-12 col-md-6">
+          <div class="row">
+            <label class="form-label">{{lang.map.session_end_time}}</label>
+            <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+              <label asteriskIfRequired="sessionEndTime" for="sessionEndTime"
+                class="form-label">{{lang.map.lbl_hours}}</label>
+              <ng-select validationClasses="sessionEndTime" labelForId="sessionEndTime"
+                        placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
+                        formControlName="sessionEndTime" id="sessionEndTime" appendTo="body"
+                        (change)="trainingEndTimeChange()">
+                <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="sessionEndTime"></app-field-error-message>
+            </div>
+            <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+              <label asteriskIfRequired="sessionEndTimeMinutes" for="sessionEndTimeMinutes"
+                class="form-label">{{lang.map.lbl_minutes}}</label>
+              <ng-select validationClasses="sessionEndTimeMinutes" labelForId="sessionEndTimeMinutes"
+                placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
+                formControlName="sessionEndTimeMinutes" id="sessionEndTimeMinutes" appendTo="body"
+                (change)="trainingEndTimeChange()">
+                <ng-option [value]="min.val" *ngFor="let min of minutesList">{{min.key}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="sessionEndTimeMinutes"></app-field-error-message>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row">

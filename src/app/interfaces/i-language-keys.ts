@@ -1370,6 +1370,8 @@ export interface ILanguageKeys {
   integration_kahramaa: string;
   integration_mol: string;
   integration_sjc: string;
+  integration_hbs: string;
+  integration_sbs: string;
   integration_qatar_charity: string;
   integration_qatar_zakat_fund: string;
   integration_qrcs: string;
@@ -1904,6 +1906,12 @@ export interface ILanguageKeys {
   no_atarization_no_lbl: string;
   certificate_code_lbl: string;
   leased_contract_lbl: string;
+  lbl_beneficiary_type: string;
+  lbl_beneficiary_date: string;
+  lbl_housing_status: string;
+  lbl_social_security_status: string;
+  lbl_status_code: string;
+  lbl_beneficiary_status: string;
   please_select_service_to_link: string;
   template_type: string;
   template_file: string;
@@ -2010,6 +2018,8 @@ export interface ILanguageKeys {
   lookup_expenses_type: string;
   permission: string;
   lbl_qatar_charity_related_data: string;
+  lbl_qatar_red_crescent_related_data: string;
+  lbl_eid_charitable_foundation_related_data: string;
   msg_confirm_continue_oof:string;
   reassigned_task:string;
   coordination_request:string;
@@ -2017,4 +2027,8 @@ export interface ILanguageKeys {
   ending_date:string;
   must_press_enter:string;
   external_user_register:string;
+  invalid_template:string;
+  lookup_service_type_work_type:string;
+  lbl_hours:string;
+  lbl_minutes:string;
 }

@@ -16,7 +16,7 @@
   <audit-npo-contact-officer [newVersionList]="newVersion.contactOfficerList"
                              [oldVersionList]="oldVersion.contactOfficerList"
                              [caseType]="newVersion.caseType"
-                             [uniqueComparisonProperty]="'identificationNumber'">
+                             [uniqueComparisonProperty]="'officerId'">
   </audit-npo-contact-officer>
 </ng-template>
 
@@ -31,12 +31,13 @@
   <audit-npo-bank-account [newVersionList]="newVersion.bankAccountList"
                           [oldVersionList]="oldVersion.bankAccountList"
                           [caseType]="newVersion.caseType"
-                          [uniqueComparisonProperty]="'bankId'">
+                          [uniqueComparisonProperty]="'iban'">
   </audit-npo-bank-account>
 </ng-template>
 
 <ng-template #realBeneficiaryTabTemplate>
   <audit-real-beneficiary [newVersionList]="newVersion.realBeneficiaryList"
-                          [oldVersionList]="oldVersion.realBeneficiaryList" [caseType]="newVersion.caseType">
+                          [oldVersionList]="oldVersion.realBeneficiaryList" [caseType]="newVersion.caseType"
+                          [uniqueComparisonProperty]="'itemId'">
   </audit-real-beneficiary>
 </ng-template>

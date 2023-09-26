@@ -43,6 +43,7 @@ export class ExternalOrgAffiliationInterceptor implements IModelInterceptor<Exte
     model.bankAccountDTOs = model.bankAccountDTOs?.map(ba => bankAccountInterceptor.receive(new BankAccount().clone(ba)))
     model.executiveManagementDTOs = model.executiveManagementDTOs?.map(em => executiveManagementInterceptor.receive(new ExecutiveManagement().clone(em)))
     model.contactOfficerDTOs = model.contactOfficerDTOs?.map(co => contactOfficerInterceptor.receive(new ContactOfficer().clone(co)))
+    model.countryInfo && (model.countryInfo = AdminResult.createInstance(model.countryInfo??{}))
     return model;
   }
 

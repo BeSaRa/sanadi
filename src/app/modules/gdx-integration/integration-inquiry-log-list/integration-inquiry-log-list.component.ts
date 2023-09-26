@@ -1,20 +1,20 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {BehaviorSubject, of, Subject} from 'rxjs';
-import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
-import {LangService} from '@services/lang.service';
-import {BeneficiaryService} from '@services/beneficiary.service';
-import {EmployeeService} from '@services/employee.service';
-import {ToastService} from '@services/toast.service';
-import {Beneficiary} from '@app/models/beneficiary';
-import {GdxServiceLog} from '@app/models/gdx-service-log';
-import {UntypedFormControl} from '@angular/forms';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {SortEvent} from '@contracts/sort-event';
-import {CommonUtils} from '@helpers/common-utils';
-import {DateUtils} from '@helpers/date-utils';
-import {exhaustMap, filter, takeUntil} from 'rxjs/operators';
-import {IGdxCriteria} from '@contracts/i-gdx-criteria';
-import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { BehaviorSubject, of, Subject } from 'rxjs';
+import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
+import { LangService } from '@services/lang.service';
+import { BeneficiaryService } from '@services/beneficiary.service';
+import { EmployeeService } from '@services/employee.service';
+import { ToastService } from '@services/toast.service';
+import { Beneficiary } from '@app/models/beneficiary';
+import { GdxServiceLog } from '@app/models/gdx-service-log';
+import { UntypedFormControl } from '@angular/forms';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { SortEvent } from '@contracts/sort-event';
+import { CommonUtils } from '@helpers/common-utils';
+import { DateUtils } from '@helpers/date-utils';
+import { exhaustMap, filter, takeUntil } from 'rxjs/operators';
+import { IGdxCriteria } from '@contracts/i-gdx-criteria';
+import { BeneficiaryIdTypes } from '@app/enums/beneficiary-id-types.enum';
 
 @Component({
   selector: 'integration-inquiry-log-list',
@@ -25,9 +25,9 @@ export class IntegrationInquiryLogListComponent {
   private destroy$: Subject<any> = new Subject<any>();
 
   constructor(public lang: LangService,
-              private beneficiaryService: BeneficiaryService,
-              private employeeService: EmployeeService,
-              private toast: ToastService) {
+    private beneficiaryService: BeneficiaryService,
+    private employeeService: EmployeeService,
+    private toast: ToastService) {
   }
 
   ngOnInit(): void {
@@ -138,6 +138,18 @@ export class IntegrationInquiryLogListComponent {
         break;
       case GdxServicesEnum.QATAR_CHARITY:
         request = this.beneficiaryService.addQatarCharityInquiry(this._getGDXCriteria());
+        break;
+      case GdxServicesEnum.EID_CHARITABLE_FOUNDATION:
+        request = this.beneficiaryService.addEidCharitableFoundationInquiry(this._getGDXCriteria());
+        break;
+      case GdxServicesEnum.QATAR_RED_CRESCENT:
+        request = this.beneficiaryService.addQatarRedCrescentInquiry(this._getGDXCriteria());
+        break;
+      case GdxServicesEnum.HOUSING_BENEFICIARY_STATUS:
+        request = this.beneficiaryService.addHousingBenStatusInquiry(this._getGDXCriteria());
+        break;
+      case GdxServicesEnum.SECURITY_BENEFICIARY_STATUS:
+        request = this.beneficiaryService.addSecurityBenStatusInquiry(this._getGDXCriteria());
         break;
       default:
         request = null;

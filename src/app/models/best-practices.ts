@@ -16,6 +16,8 @@ export class BestPractices extends SearchableCloneable<BestPractices> implements
   bestPractices: number[] = [];
   statement!: string;
   bestPracticesInfo: AdminResult[] = [];
+  itemId!:string;
+
 
   // extra properties
   langService: LangService;

@@ -166,6 +166,26 @@ export class IntegrationInquiriesComponent {
       serviceId: GdxServicesEnum.SJC,
       isLoaded: false
     },
+    hbs: {
+      name: 'hbs',
+      index: 9,
+      langKey: 'integration_hbs',
+      show: () => true,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.HOUSING_BENEFICIARY_STATUS,
+      isLoaded: false
+    },
+    sbs: {
+      name: 'sbs',
+      index: 9,
+      langKey: 'integration_sbs',
+      show: () => true,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.SECURITY_BENEFICIARY_STATUS,
+      isLoaded: false
+    },
   };
   charityTabsData: TabMap = {
     qatarZakatFund: {
@@ -260,6 +280,10 @@ export class IntegrationInquiriesComponent {
     [GdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS]: [],
     [GdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT]: [],
     [GdxServiceRelatedTypesEnum.QATAR_CHARITY]: [],
+    [GdxServiceRelatedTypesEnum.QATAR_RED_CRESCENT]: [],
+    [GdxServiceRelatedTypesEnum.EID_CHARITABLE_FOUNDATION]: [],
+    [GdxServiceRelatedTypesEnum.HOUSING_BENEFICIARY_STATUS]: [],
+    [GdxServiceRelatedTypesEnum.SECURITY_BENEFICIARY_STATUS]: [],
   };
 
   onMainTabChange(tab: TabComponent): void {
@@ -330,6 +354,18 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.QATAR_CHARITY:
         this.relatedData[this.gdxServiceRelatedTypesEnum.QATAR_CHARITY] = log.gdxServiceResponseList;
+        break;
+      case GdxServicesEnum.EID_CHARITABLE_FOUNDATION:
+        this.relatedData[this.gdxServiceRelatedTypesEnum.EID_CHARITABLE_FOUNDATION] = log.gdxServiceResponseList;
+        break;
+      case GdxServicesEnum.QATAR_RED_CRESCENT:
+        this.relatedData[this.gdxServiceRelatedTypesEnum.QATAR_RED_CRESCENT] = log.gdxServiceResponseList;
+        break;
+      case GdxServicesEnum.HOUSING_BENEFICIARY_STATUS:
+        this.relatedData[this.gdxServiceRelatedTypesEnum.HOUSING_BENEFICIARY_STATUS] = [log.gdxServiceResponseParsed];
+        break;
+      case GdxServicesEnum.SECURITY_BENEFICIARY_STATUS:
+        this.relatedData[this.gdxServiceRelatedTypesEnum.SECURITY_BENEFICIARY_STATUS] = [log.gdxServiceResponseParsed];
         break;
       default:
         break;
@@ -414,6 +450,18 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.QATAR_CHARITY:
         this.relatedData[GdxServiceRelatedTypesEnum.QATAR_CHARITY] = [];
+        break;
+      case GdxServicesEnum.EID_CHARITABLE_FOUNDATION:
+        this.relatedData[GdxServiceRelatedTypesEnum.EID_CHARITABLE_FOUNDATION] = [];
+        break;
+      case GdxServicesEnum.QATAR_RED_CRESCENT:
+        this.relatedData[GdxServiceRelatedTypesEnum.QATAR_RED_CRESCENT] = [];
+        break;
+      case GdxServicesEnum.HOUSING_BENEFICIARY_STATUS:
+        this.relatedData[GdxServiceRelatedTypesEnum.HOUSING_BENEFICIARY_STATUS] = [];
+        break;
+      case GdxServicesEnum.SECURITY_BENEFICIARY_STATUS:
+        this.relatedData[GdxServiceRelatedTypesEnum.SECURITY_BENEFICIARY_STATUS] = [];
         break;
       default:
         break;

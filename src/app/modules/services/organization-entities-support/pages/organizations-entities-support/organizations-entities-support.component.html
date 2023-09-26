@@ -55,7 +55,7 @@
         </div>
         <div class="col-md-4 mb-4 position-relative">
           <div class="input-group">
-            <file-uploader #fileUploader *ngIf="isLicensingUser && selectedTemplate" labelKey="template_file"
+            <file-uploader #fileUploader *ngIf="isLicensingUser && selectedTemplate && model.taskDetails.isClaimed()" labelKey="template_file"
                            [isRequired]="true" (fileUploadEvent)="uploadTemplate($event)"
                            [allowedExtensions]="[fileExtensionsEnum.DOCX]">
             </file-uploader>

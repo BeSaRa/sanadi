@@ -1,10 +1,10 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
-    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
-            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
-    <button type="button" class="btn-close btn-close-white"
-            tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1"
+      aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="null"
+      aria-label="Close"></button>
   </div>
 </div>
 
@@ -14,16 +14,16 @@
       <!-- identification number -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="identificationNumber" for="identificationNumber"
-               class="form-label">{{lang.map.identification_number}}</label>
-        <input formControlName="identificationNumber" type="text"
-               validationClasses="identificationNumber" trimInput class="form-control" id="identificationNumber">
+          class="form-label">{{lang.map.identification_number}}</label>
+        <input formControlName="identificationNumber" type="text" validationClasses="identificationNumber" trimInput
+          class="form-control" id="identificationNumber">
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
       <!-- Full Name -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.full_name}}</label>
-        <input formControlName="fullName" type="text"
-               validationClasses="fullName" trimInput class="form-control" id="fullName">
+        <input formControlName="fullName" type="text" validationClasses="fullName" trimInput class="form-control"
+          id="fullName">
         <app-field-error-message controlName="fullName"></app-field-error-message>
       </div>
     </div>
@@ -31,16 +31,14 @@
       <!-- Email -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="email" for="email"
-               class="form-label">{{lang.map.email_address_of_the_employer}}</label>
-        <input formControlName="email" type="text"
-               validationClasses="email" trimInput class="form-control" id="email">
+          class="form-label">{{lang.map.email_address_of_the_employer}}</label>
+        <input formControlName="email" type="text" validationClasses="email" trimInput class="form-control" id="email">
         <app-field-error-message controlName="email"></app-field-error-message>
       </div>
       <!-- Phone -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="phone" for="phone" class="form-label">{{lang.map.phone_of_the_employer}}</label>
-        <input formControlName="phone" type="text"
-               validationClasses="phone" trimInput class="form-control" id="phone">
+        <input formControlName="phone" type="text" validationClasses="phone" trimInput class="form-control" id="phone">
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
     </div>
@@ -48,18 +46,17 @@
       <!-- extraPhone -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="extraPhone" for="extraPhone" class="form-label">{{lang.map.mobile_number}}</label>
-        <input formControlName="extraPhone" type="text"
-               validationClasses="extraPhone" trimInput class="form-control" id="extraPhone">
+        <input formControlName="extraPhone" type="text" validationClasses="extraPhone" trimInput class="form-control"
+          id="extraPhone">
         <app-field-error-message controlName="extraPhone"></app-field-error-message>
       </div>
       <!-- nationality -->
       <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
         <label for="nationality" asteriskIfRequired="nationality"
-               class="form-label">{{lang.map.lbl_nationality}}</label>
-        <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="true"
-                   placeholder="{{ lang.map.select }}" id="nationality"
-                   [notFoundText]="lang.map.msg_not_found" appendTo="body"
-                   validationClasses="nationality" formControlName="nationality">
+          class="form-label">{{lang.map.lbl_nationality}}</label>
+        <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="true" placeholder="{{ lang.map.select }}"
+          id="nationality" [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="nationality"
+          formControlName="nationality">
           <ng-option *ngFor="let option of nationalityList" [value]="option.lookupKey">{{ option.getName() }}
           </ng-option>
         </ng-select>
@@ -69,26 +66,28 @@
     <div class="row">
       <!-- job title -->
       <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
-        <label asteriskIfRequired="jobTitleId" for="jobTitleId" class="form-label">{{lang.map.job_title}}</label>
-        <ng-select [selectOnTab]="true" labelForId="jobTitleId" [clearable]="false" placeholder="{{lang.map.select}}"
+        <label asteriskIfRequired="jobTitle" for="jobTitle" class="form-label">{{lang.map.job_title}}</label>
+        <!-- <ng-select [selectOnTab]="true" labelForId="jobTitleId" [clearable]="false" placeholder="{{lang.map.select}}"
                    id="jobTitleId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
                    formControlName="jobTitleId" validationClasses="jobTitleId">
           <ng-option *ngFor="let option of jobTitleAdminLookup" [value]="option.id">
             {{option.getName()}}
           </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="jobTitleId"></app-field-error-message>
+        </ng-select> -->
+        <input formControlName="jobTitle" type="text" validationClasses="jobTitle" trimInput class="form-control"
+          id="jobTitle">
+        <app-field-error-message controlName="jobTitle"></app-field-error-message>
       </div>
     </div>
   </div>
 </div>
 <div class="dialog-actions">
   <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
-          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
   <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
-          class="btn btn-primary">{{lang.map.btn_save}}</button>
+    class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

@@ -15,20 +15,24 @@ import {
 import {
   MociCompanyListComponent
 } from '@app/modules/gdx-integration/related-data/moci-company-list/moci-company-list.component';
-import {GarsiaPensionListComponent} from './related-data/garsia-pension-list/garsia-pension-list.component';
+import {GarsiaPensionListComponent} from '@app/modules/gdx-integration/related-data/garsia-pension-list/garsia-pension-list.component';
 import {
   GarsiaPensionPaymentListComponent
-} from './related-data/garsia-pension-payment-list/garsia-pension-payment-list.component';
+} from '@app/modules/gdx-integration/related-data/garsia-pension-payment-list/garsia-pension-payment-list.component';
 import {
   KahramaaOutstandingPaymentListComponent
-} from './related-data/kahramaa-outstanding-payment-list/kahramaa-outstanding-payment-list.component';
-import {MolRelatedDataListComponent} from './related-data/mol-related-data-list/mol-related-data-list.component';
-import { SjcRelatedDataListComponent } from './related-data/sjc-related-data-list/sjc-related-data-list.component';
-import { MoeInstallmentsComponent } from './related-data/moe-installments/moe-installments.component';
-import { MoePendingPaymentComponent } from './related-data/moe-pending-payment/moe-pending-payment.component';
-import { MoeStudentInfoComponent } from './related-data/moe-student-info/moe-student-info.component';
-import { MmeLeasedContractComponent } from './related-data/mme-leased-contract/mme-leased-contract.component';
-import { QatarCharityRelatedDataComponent } from './related-data/qatar-charity-related-data/qatar-charity-related-data.component';
+} from '@app/modules/gdx-integration/related-data/kahramaa-outstanding-payment-list/kahramaa-outstanding-payment-list.component';
+import {MolRelatedDataListComponent} from '@app/modules/gdx-integration/related-data/mol-related-data-list/mol-related-data-list.component';
+import { SjcRelatedDataListComponent } from '@app/modules/gdx-integration/related-data/sjc-related-data-list/sjc-related-data-list.component';
+import { MoeInstallmentsComponent } from '@app/modules/gdx-integration/related-data/moe-installments/moe-installments.component';
+import { MoePendingPaymentComponent } from '@app/modules/gdx-integration/related-data/moe-pending-payment/moe-pending-payment.component';
+import { MoeStudentInfoComponent } from '@app/modules/gdx-integration/related-data/moe-student-info/moe-student-info.component';
+import { MmeLeasedContractComponent } from '@app/modules/gdx-integration/related-data/mme-leased-contract/mme-leased-contract.component';
+import { QatarCharityRelatedDataComponent } from '@app/modules/gdx-integration/related-data/qatar-charity-related-data/qatar-charity-related-data.component';
+import { EidCharitableFoundationRelatedDataComponent } from '@app/modules/gdx-integration/related-data/eid-charitable-foundation-related-data/eid-charitable-foundation-related-data.component';
+import { QatarRedCrescentRelatedDataComponent } from '@app/modules/gdx-integration/related-data/qatar-red-crescent-related-data/qatar-red-crescent-related-data.component';
+import { SecurityBSRelatedDataListComponent } from '@app/modules/gdx-integration/related-data/security-bs-related-data-list/security-bs-related-data-list.component';
+import { HousingBSRelatedDataListComponent } from '@app/modules/gdx-integration/related-data/housing-bs-related-data-list copy/housing-bs-related-data-list.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +51,11 @@ import { QatarCharityRelatedDataComponent } from './related-data/qatar-charity-r
     MoePendingPaymentComponent,
     MoeStudentInfoComponent,
     MmeLeasedContractComponent,
-    QatarCharityRelatedDataComponent
+    QatarCharityRelatedDataComponent,
+    QatarRedCrescentRelatedDataComponent,
+    EidCharitableFoundationRelatedDataComponent,
+    SecurityBSRelatedDataListComponent,
+    HousingBSRelatedDataListComponent
   ],
   exports: [
     IntegrationInquiriesComponent

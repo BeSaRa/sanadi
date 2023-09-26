@@ -20,6 +20,8 @@ export class ProjectNeed extends SearchableCloneable<ProjectNeed> implements IAu
   totalCost!: number;
   beneficiaries!: string;
   goals!: string;
+  itemId!:string;
+
 
 
   // don't delete (used in case audit history)

@@ -7,7 +7,7 @@
            [hasError]="getTabInvalidStatus('bankAccounts')"></tab>
       <tab [name]="tabsData.tradeLicenseData.name" *ngIf="showLicenseTrade" [template]="tradeLicenseData"
            [title]="lang.map.trade_license" [hasError]="getTabInvalidStatus('tradeLicenseData')"></tab>
-      <tab [name]="tabsData.goals.name" *ngIf="showLicenseTrade === false" [template]="goalsTemplate"
+      <tab [name]="tabsData.goals.name" [template]="goalsTemplate"
            [title]="lang.map.goals" [hasError]="getTabInvalidStatus('goals')"></tab>
       <tab [name]="tabsData.managementCouncils.name" [template]="managementCouncilsTemplate"
            [title]="lang.map.management_council" [hasError]="getTabInvalidStatus('managementCouncils')"></tab>
@@ -26,18 +26,6 @@
     <!-- basic -->
     <ng-template formGroupName="basic" #basicTemplate>
       <div class="row">
-        <!-- Organization -->
-        <!-- <div *ngIf="employeeService.isInternalUser()" class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="organizationId" for="organizationId"
-            class="form-label">{{lang.map.lbl_organization}}</label>
-          <ng-select [selectOnTab]="true" labelForId="organizationId" [clearable]="true"
-            placeholder="{{lang.map.select}}" id="organizationId" [notFoundText]="lang.map.msg_not_found"
-            [readonly]="(readonly || !!(this.model?.id))" appendTo="body" formControlName="organizationId"
-            validationClasses="organizationId">
-            <ng-option [value]="org.id" *ngFor="let org of organizations">{{org.getName()}}</ng-option>
-          </ng-select>
-          <app-field-error-message controlName="organizationId"></app-field-error-message>
-        </div> -->
         <!-- Request Type -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{lang.map.request_type}}</label>
@@ -337,6 +325,7 @@
       ></goal>
 
       <goals-list
+        *ngIf="!showLicenseTrade"
         #goalsListTab
         [list]="model?.goalsList || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"

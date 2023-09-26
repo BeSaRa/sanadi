@@ -1,3 +1,8 @@
+import { GdxMsdfSecurityResponseInterceptor } from './gdx-msdf-security-response-interceptor';
+import { GdxMsdfHousingResponseInterceptor } from './gdx-msdf-housing-response-interceptor';
+import { GdxEidCharitableFoundationResponse } from '@app/models/gdx-eid-charitable-foundation-response';
+import { GdxEidCharitableFoundationResponseInterceptor } from '@app/model-interceptors/gdx-eid-charitable-foundation-response-interceptor';
+import { GdxQatarRedCrescentResponse } from '@app/models/gdx-qatar-red-crescent-response';
 import {IModelInterceptor} from '@contracts/i-model-interceptor';
 import {GdxServiceLog} from '@app/models/gdx-service-log';
 import {AdminResult} from '@app/models/admin-result';
@@ -19,6 +24,7 @@ import { GdxMmeResponseInterceptor } from './gdx-mme-response-interceptor';
 import { GdxMmeResponse } from '@app/models/gdx-mme-leased-contract';
 import { GdxQatarCharityResponseInterceptor } from './gdx-qatar-charity-response-interceptor';
 import { GdxQatarCharityResponse } from '@app/models/gdx-qatar-charity-response';
+import { GdxQatarRedCrescentResponseInterceptor } from './gdx-qatar-red-crescent-response-interceptor';
 
 const gdxMojResponseInterceptor = new GdxMojResponseInterceptor();
 const gdxMociResponseInterceptor = new GdxMociResponseInterceptor();
@@ -27,9 +33,13 @@ const gdxGarsiaPensionResponseInterceptor = new GdxGarsiaPensionResponseIntercep
 const gdxKahramaaResponseInterceptor = new GdxKahramaaResponseInterceptor();
 const gdxMolPayrollResponseInterceptor = new GdxMolPayrollResponseInterceptor();
 const gdxSjcResponseInterceptor = new GdxSjcResponseInterceptor();
+const gdxMsdfHousingResponseInterceptor = new GdxMsdfHousingResponseInterceptor();
+const gdxMsdfSecurityResponseInterceptor = new GdxMsdfSecurityResponseInterceptor();
 const gdxMoeResponseInterceptor = new GdxMoeResponseInterceptor();
 const gdxMmeResponseInterceptor = new GdxMmeResponseInterceptor();
 const gdxQatarCharityResponseInterceptor = new GdxQatarCharityResponseInterceptor();
+const gdxQatarRedCrescentResponseInterceptor = new GdxQatarRedCrescentResponseInterceptor();
+const gdxEidCharitableFoundationResponseInterceptor = new GdxEidCharitableFoundationResponseInterceptor();
 
 export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog> {
   receive(model: GdxServiceLog): GdxServiceLog {
@@ -108,6 +118,23 @@ export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog
         model.gdxServiceResponseList = model.gdxServiceResponseList.map((x) => {
           return gdxQatarCharityResponseInterceptor.receive(new GdxQatarCharityResponse().clone(x));
         });
+        break;
+
+      case GdxServicesEnum.QATAR_RED_CRESCENT:
+        model.gdxServiceResponseList = model.gdxServiceResponseList.map((x) => {
+          return gdxQatarRedCrescentResponseInterceptor.receive(new GdxQatarRedCrescentResponse().clone(x));
+        });
+        break;
+      case GdxServicesEnum.EID_CHARITABLE_FOUNDATION:
+        model.gdxServiceResponseList = model.gdxServiceResponseList.map((x) => {
+          return gdxEidCharitableFoundationResponseInterceptor.receive(new GdxEidCharitableFoundationResponse().clone(x));
+        });
+        break;
+      case GdxServicesEnum.HOUSING_BENEFICIARY_STATUS:
+        model.gdxServiceResponseParsed = gdxMsdfHousingResponseInterceptor.receive(model.gdxServiceResponseParsed);
+        break;
+      case GdxServicesEnum.SECURITY_BENEFICIARY_STATUS:
+        model.gdxServiceResponseParsed = gdxMsdfSecurityResponseInterceptor.receive(model.gdxServiceResponseParsed);
         break;
       default:
         break;

@@ -224,8 +224,8 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       benNotes: controls ? [benNotes, [Validators.maxLength(3000)]] : benNotes,
       familyCount: controls ? [familyCount, [CustomValidators.required, CustomValidators.number, Validators.min(1)]] : familyCount,
       occuptionStatus: controls ? [occuptionStatus, CustomValidators.required] : occuptionStatus, //Employment Status
-      occuption: controls ? [occuption, [CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)]] : occuption, //Occupation
-      employeerAddress: controls ? [employeerAddress, CustomValidators.maxLength(512)] : employeerAddress, //Work Place
+      occuption: controls ? [occuption, [CustomValidators.maxLength(200)]] : occuption, //Occupation
+      employeerAddress: controls ? [employeerAddress, CustomValidators.maxLength(200)] : employeerAddress, //Work Place
       isHandicapped: controls ? [isHandicapped] : isHandicapped,
       benRequestorRelationType: controls ? [benRequestorRelationType, [CustomValidators.required]] : benRequestorRelationType,
       requestorName: controls ? [requestorName, [CustomValidators.required, CustomValidators.maxLength(100)]] : requestorName,

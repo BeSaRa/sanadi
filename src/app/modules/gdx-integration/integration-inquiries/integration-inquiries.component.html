@@ -23,6 +23,10 @@
          [title]="lang.map[govTabsData.kahramaa.langKey]"></tab>
     <tab [name]="govTabsData.sjc.name" *ngIf="govTabsData.sjc.show?.()" [template]="SJCTemplate"
          [title]="lang.map[govTabsData.sjc.langKey]"></tab>
+    <tab [name]="govTabsData.hbs.name" *ngIf="govTabsData.hbs.show?.()" [template]="HBSTemplate"
+        [title]="lang.map[govTabsData.hbs.langKey]"></tab>
+    <tab [name]="govTabsData.sbs.name" *ngIf="govTabsData.sbs.show?.()" [template]="SBSTemplate"
+        [title]="lang.map[govTabsData.sbs.langKey]"></tab>
   </tabs-list>
   <ng-template #MOJTemplate>
     <integration-inquiry-log-list #mojLogsComponent [gdxServiceId]="gdxServicesEnum.MOJ" [beneficiary]="beneficiary"
@@ -106,6 +110,24 @@
       <sjc-related-data-list [list]="relatedData[gdxServiceRelatedTypesEnum.SJC_RELATED_DATA]"></sjc-related-data-list>
     </div>
   </ng-template>
+  <ng-template #HBSTemplate>
+    <integration-inquiry-log-list #hbsLogsComponent [gdxServiceId]="gdxServicesEnum.HOUSING_BENEFICIARY_STATUS" [beneficiary]="beneficiary"
+                                  (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
+                                  (onReady)="setLookupComponentMap($event, hbsLogsComponent)"></integration-inquiry-log-list>
+    <div id="hbsRelatedDataContainer">
+      <hr class="mt-0">
+      <housing-bs-related-data-list [list]="relatedData[gdxServiceRelatedTypesEnum.HOUSING_BENEFICIARY_STATUS]"></housing-bs-related-data-list>
+    </div>
+  </ng-template>
+  <ng-template #SBSTemplate>
+    <integration-inquiry-log-list #sbsLogsComponent [gdxServiceId]="gdxServicesEnum.SECURITY_BENEFICIARY_STATUS" [beneficiary]="beneficiary"
+                                  (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
+                                  (onReady)="setLookupComponentMap($event, sbsLogsComponent)"></integration-inquiry-log-list>
+    <div id="sbsRelatedDataContainer">
+      <hr class="mt-0">
+      <security-bs-related-data-list [list]="relatedData[gdxServiceRelatedTypesEnum.SECURITY_BENEFICIARY_STATUS]"></security-bs-related-data-list>
+    </div>
+  </ng-template>
   <ng-template #MOETemplate>
     <integration-inquiry-log-list #moeLogsComponent [gdxServiceId]="gdxServicesEnum.MOE"
                                   [beneficiary]="beneficiary" (onSelect)="selectLog($event)"
@@ -174,13 +196,25 @@
 
   </ng-template>
   <ng-template #QRCSTemplate>
-    Qatar Red Crescent Society
+    <integration-inquiry-log-list #qatarRedCrescentLogsComponent [gdxServiceId]="gdxServicesEnum.QATAR_RED_CRESCENT" [beneficiary]="beneficiary"
+                                  (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, charityTabsData)"
+                                  (onReady)="setLookupComponentMap($event, qatarRedCrescentLogsComponent)"></integration-inquiry-log-list>
+    <div>
+      <hr class="mt-0">
+      <qatar-red-crescent-related-data [list]="relatedData[gdxServiceRelatedTypesEnum.QATAR_RED_CRESCENT]"></qatar-red-crescent-related-data>
+    </div>
   </ng-template>
   <ng-template #QatarCancerSocietyTemplate>
     Qatar Cancer Society
   </ng-template>
   <ng-template #AlSheikhEidCharitableFoundationTemplate>
-    Al Sheikh Eid Charitable Foundation
+    <integration-inquiry-log-list #eidCharitableLogsComponent [gdxServiceId]="gdxServicesEnum.EID_CHARITABLE_FOUNDATION" [beneficiary]="beneficiary"
+                                  (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, charityTabsData)"
+                                  (onReady)="setLookupComponentMap($event, eidCharitableLogsComponent)"></integration-inquiry-log-list>
+    <div>
+      <hr class="mt-0">
+      <eid-charitable-foundation-related-data [list]="relatedData[gdxServiceRelatedTypesEnum.EID_CHARITABLE_FOUNDATION]"></eid-charitable-foundation-related-data>
+    </div>
   </ng-template>
   <ng-template #AlAsmakhCharitableFoundationTemplate>
     Al Asmakh Charitable Foundation

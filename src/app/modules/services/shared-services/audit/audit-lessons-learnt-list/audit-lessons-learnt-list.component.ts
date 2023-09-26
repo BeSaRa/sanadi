@@ -47,7 +47,7 @@ export class AuditLessonsLearntListComponent extends AuditListGenericComponent<L
 
   existsInList(objComparison: IFindInList<LessonsLearned>): LessonsLearned | undefined {
     return objComparison.listToCompareWith.find((item: LessonsLearned) => {
-      return item.statement === objComparison.itemToCompare.statement && CommonUtils.isEqualList(item.lessonsLearned, objComparison.itemToCompare.lessonsLearned)
+      return item.itemId === objComparison.itemToCompare.itemId && CommonUtils.isEqualList(item.lessonsLearned, objComparison.itemToCompare.lessonsLearned)
     });
   }
 

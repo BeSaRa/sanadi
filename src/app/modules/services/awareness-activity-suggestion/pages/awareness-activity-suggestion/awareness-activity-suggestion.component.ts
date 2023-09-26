@@ -25,19 +25,20 @@ import { CommonUtils } from '@helpers/common-utils';
 import { UserClickOn } from '@enums/user-click-on.enum';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { SearchAwarenessActivitySuggestionCriteria } from '@models/search-awareness-activity-suggestion-criteria';
-import { JobTitle } from '@app/models/job-title';
-import { JobTitleService } from '@app/services/job-title.service';
-import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { JobTitle } from '@models/job-title';
+import { JobTitleService } from '@services/job-title.service';
+import { FileExtensionsEnum } from '@enums/file-extension-mime-types-icons.enum';
 import {
   SelectCustomServiceTemplatePopupComponent
-} from '@app/modules/services/shared-services/popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
+} from '@modules/services/shared-services/popups/select-custom-service-template-popup/select-custom-service-template-popup.component';
 import { FileUploaderComponent } from '@app/shared/components/file-uploader/file-uploader.component';
-import { CustomServiceTemplate } from '@app/models/custom-service-template';
-import { CustomServiceTemplateService } from '@app/services/custom-service-template.service';
-import { AdminLookup } from '@app/models/admin-lookup';
-import { AdminLookupService } from '@app/services/admin-lookup.service';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { CustomServiceTemplate } from '@models/custom-service-template';
+import { CustomServiceTemplateService } from '@services/custom-service-template.service';
+import { AdminLookup } from '@models/admin-lookup';
+import { AdminLookupService } from '@services/admin-lookup.service';
+import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { ApprovalTemplateTypeEnum } from '@enums/approvalTemplateType.enum';
 
 @Component({
   selector: 'app-awareness-activity-suggestion',
@@ -171,16 +172,27 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       })
     }
   }
-  validateTimplate() {
+  validateApproveTimplate() {
     return of(null).pipe(
       switchMap(() => {
         return this.customServiceTemplate.loadTemplatesByCaseId(this.model!.getCaseType(), this.model?.getCaseId())
       }),
       map(temps => {
-        return !!temps.length
+        return !!temps.length && temps[0].approvalTemplateType == ApprovalTemplateTypeEnum.approve
       })
     )
   }
+  validateRejectTimplate() {
+    return of(null).pipe(
+      switchMap(() => {
+        return this.customServiceTemplate.loadTemplatesByCaseId(this.model!.getCaseType(), this.model?.getCaseId())
+      }),
+      map(temps => {
+        return !!temps.length && temps[0].approvalTemplateType == ApprovalTemplateTypeEnum.reject
+      })
+    )
+  }
+
   handleReadonly(): void {
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
@@ -567,7 +579,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   }
   private _loadActivityTypes() {
     this.adminLookupService
-      .loadAsLookups(AdminLookupTypeEnum.SERVICE_TYPE)
+      .loadAsLookups(AdminLookupTypeEnum.SERVICE_TYPE_WORK_TYPE)
       .subscribe((list) => {
         this.activitiesTypes = list;
         const id = this.activityType.value;

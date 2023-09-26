@@ -232,7 +232,7 @@ export class DateUtils {
   static getHoursList(): { val: number, key: string }[] {
     return [
       {
-        val: 2,
+        val: 1,
         key: '01:00 AM'
       },
       {
@@ -333,51 +333,51 @@ export class DateUtils {
     return [
       {
         val: 1,
-        key: '5 min'
+        key: '00 min'
       },
       {
         val: 2,
-        key: '10 min'
+        key: '5 min'
       },
       {
         val: 3,
-        key: '15 min'
+        key: '10 min'
       },
       {
         val: 4,
-        key: '20 min'
+        key: '15 min'
       },
       {
         val: 5,
-        key: '25 min'
+        key: '20 min'
       },
       {
         val: 6,
-        key: '30 min'
+        key: '25 min'
       },
       {
         val: 7,
-        key: '35 min'
+        key: '30 min'
       },
       {
         val: 8,
-        key: '40 min'
+        key: '35 min'
       },
       {
         val: 9,
-        key: '45 min'
+        key: '40 min'
       },
       {
         val: 10,
-        key: '50 min'
+        key: '45 min'
       },
       {
         val: 11,
-        key: '55 min'
+        key: '50 min'
       },
       {
         val: 12,
-        key: '60 min'
+        key: '55 min'
       },
     ];
   }

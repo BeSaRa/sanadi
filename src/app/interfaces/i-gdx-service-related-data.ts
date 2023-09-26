@@ -1,3 +1,5 @@
+import { GdxEidCharitableFoundationResponse } from './../models/gdx-eid-charitable-foundation-response';
+import { GdxQatarRedCrescentResponse } from '../models/gdx-qatar-red-crescent-response';
 import {GdxMociResponse} from '@app/models/gdx-moci-response';
 import {GdxMawaredResponse} from '@app/models/gdx-mawared-response';
 import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response';
@@ -13,6 +15,8 @@ import { GdxMoePrivateSchoolPendingPayment } from '@app/models/gdx-moe-private-s
 import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
 import { GdxMmeResponse } from '@app/models/gdx-mme-leased-contract';
 import { GdxQatarCharityResponse } from '@app/models/gdx-qatar-charity-response';
+import { GdxMsdfSecurityResponse } from '@app/models/gdx-msdf-security';
+import { GdxMsdfHousingResponse } from '@app/models/gdx-msdf-housing';
 
 export interface IGdxServiceRelatedData {
   [GdxServiceRelatedTypesEnum.MOJ_FLATS]: GdxFlatInfo[],
@@ -29,4 +33,8 @@ export interface IGdxServiceRelatedData {
   [GdxServiceRelatedTypesEnum.MOE_PENDING_PAYMENTS]: GdxMoePrivateSchoolPendingPayment[],
   [GdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT]: GdxMmeResponse[],
   [GdxServiceRelatedTypesEnum.QATAR_CHARITY]: GdxQatarCharityResponse[],
+  [GdxServiceRelatedTypesEnum.QATAR_RED_CRESCENT]: GdxQatarRedCrescentResponse[],
+  [GdxServiceRelatedTypesEnum.EID_CHARITABLE_FOUNDATION]: GdxEidCharitableFoundationResponse[],
+  [GdxServiceRelatedTypesEnum.HOUSING_BENEFICIARY_STATUS]: GdxMsdfHousingResponse[],
+  [GdxServiceRelatedTypesEnum.SECURITY_BENEFICIARY_STATUS]: GdxMsdfSecurityResponse[],
 }

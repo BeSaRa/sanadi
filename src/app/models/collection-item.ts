@@ -19,7 +19,6 @@ export class CollectionItem extends _LicenseApproval implements HasLicenseApprov
 
   buildingNumber!: string
   identificationNumber!: string
-  itemId!: string
   locationDetails!: string
   latitude!: string
   longitude!: string
@@ -41,6 +40,7 @@ export class CollectionItem extends _LicenseApproval implements HasLicenseApprov
   constructor() {
     super();
     this.mapService = FactoryService.getService('MapService');
+
   }
 
   hasMarker(): boolean {
