@@ -2868,4 +2868,17 @@ export const newNavigationMenuList = [
     itemOrder: 23,
     svg: null
   },
+  {
+    id: 88,
+    langKey: 'menu_training_program_classification',
+    path: '/home/administration/training-program-classification',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.TRAINING_PROGRAM_CLASSIFICATION,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 24,
+    svg: null
+  },
 ];

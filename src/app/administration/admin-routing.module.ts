@@ -1,21 +1,21 @@
-import {TrainingProgramPartnerComponent} from './pages/training-program-partner/training-program-partner.component';
-import {AdminLicenseComponent} from './pages/admin-license/admin-license.component';
-import {CustomMenuComponent} from './pages/custom-menu/custom-menu.component';
-import {GeneralProcessComponent} from './pages/general-process/general-process.component';
-import {SubTeamComponent} from './pages/sub-team/sub-team.component';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
-import {LocalizationComponent} from './pages/localization/localization.component';
-import {CustomRoleComponent} from './pages/custom-role/custom-role.component';
-import {AidLookupContainerComponent} from './pages/aid-lookup-container/aid-lookup-container.component';
-import {ExternalUserComponent} from './pages/external-user/external-user.component';
 import {PermissionGuard} from '@app/guards/permission.guard';
-import {AttachmentTypesComponent} from './pages/attachment-types/attachment-types.component';
-import {ServiceDataComponent} from './pages/service-data/service-data.component';
-import {TeamComponent} from './pages/team/team.component';
-import {CountryComponent} from './pages/country/country.component';
-import {InternalUserComponent} from './pages/internal-user/internal-user.component';
+import {TrainingProgramPartnerComponent} from '@app/administration/pages/training-program-partner/training-program-partner.component';
+import {AdminLicenseComponent} from '@app/administration/pages/admin-license/admin-license.component';
+import {CustomMenuComponent} from '@app/administration/pages/custom-menu/custom-menu.component';
+import {GeneralProcessComponent} from '@app/administration/pages/general-process/general-process.component';
+import {SubTeamComponent} from '@app/administration/pages/sub-team/sub-team.component';
+import {AdminHomeComponent} from '@app/administration/pages/admin-home/admin-home.component';
+import {LocalizationComponent} from '@app/administration/pages/localization/localization.component';
+import {CustomRoleComponent} from '@app/administration/pages/custom-role/custom-role.component';
+import {AidLookupContainerComponent} from '@app/administration/pages/aid-lookup-container/aid-lookup-container.component';
+import {ExternalUserComponent} from '@app/administration/pages/external-user/external-user.component';
+import {AttachmentTypesComponent} from '@app/administration/pages/attachment-types/attachment-types.component';
+import {ServiceDataComponent} from '@app/administration/pages/service-data/service-data.component';
+import {TeamComponent} from '@app/administration/pages/team/team.component';
+import {CountryComponent} from '@app/administration/pages/country/country.component';
+import {InternalUserComponent} from '@app/administration/pages/internal-user/internal-user.component';
 import {
   InternalDepartmentComponent,
 } from '@app/administration/pages/internal-department/internal-department.component';
@@ -29,16 +29,17 @@ import {DonorComponent} from '@app/administration/pages/donor/donor.component';
 import {FieldAssessmentComponent} from '@app/administration/pages/field-assessment/field-assessment.component';
 import {VacationDatesComponent} from '@app/administration/pages/vacation-dates/vacation-dates.component';
 import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
-import {ProfilesComponent} from './pages/profiles/profiles.component';
-import {DynamicModelsComponent} from './pages/dynamic-models/dynamic-models.component';
-import {DeductionRatioComponent} from './pages/deduction-ratio/deduction-ratio.component';
+import {ProfilesComponent} from '@app/administration/pages/profiles/profiles.component';
+import {DynamicModelsComponent} from '@app/administration/pages/dynamic-models/dynamic-models.component';
+import {DeductionRatioComponent} from '@app/administration/pages/deduction-ratio/deduction-ratio.component';
 import {
   ExternalUserUpdateRequestApprovalComponent
 } from '@app/administration/pages/external-user-update-approval/external-user-update-request-approval.component';
 import {GlobalSettingsComponent} from '@app/administration/pages/global-settings/global-settings.component';
 import {ErrorPageComponent} from '@app/shared/components/error-page/error-page.component';
-import { AdminPermissionComponent } from './pages/admin-permission/admin-permission.component';
-import { TrainingProgramAudienceComponent } from './pages/training-program-audience/training-program-audience.component';
+import { AdminPermissionComponent } from '@app/administration/pages/admin-permission/admin-permission.component';
+import { TrainingProgramAudienceComponent } from '@app/administration/pages/training-program-audience/training-program-audience.component';
+import { TrainingProgramClassificationComponent } from '@app/administration/pages/training-program-classification/training-program-classification.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -132,6 +133,15 @@ const routes: Routes = [
     canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.TRAINING_PROGRAM_AUDIENCE,
+      configPermissionGroup: null,
+      checkAnyPermission: false
+    }
+  },
+  {
+    path: 'training-program-classification', component: TrainingProgramClassificationComponent,
+    canActivate: [PermissionGuard.canActivate],
+    data: {
+      permissionKey: PermissionsEnum.TRAINING_PROGRAM_CLASSIFICATION,
       configPermissionGroup: null,
       checkAnyPermission: false
     }
