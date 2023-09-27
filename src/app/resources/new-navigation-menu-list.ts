@@ -2869,7 +2869,7 @@ export const newNavigationMenuList = [
     svg: null
   },
   {
-    id: 88,
+    id: 91,
     langKey: 'menu_training_program_classification',
     path: '/home/administration/training-program-classification',
     icon: 'mdi-badge-account-horizontal-outline',

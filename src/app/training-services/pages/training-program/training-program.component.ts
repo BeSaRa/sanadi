@@ -363,7 +363,11 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     if (criteria.targetOrganizationListIds && criteria.targetOrganizationListIds.length > 0) {
       criteria.targetOrganizationList = JSON.stringify(criteria.targetOrganizationListIds);
     }
+    if (criteria.optionalTargetOrganizationListIds && criteria.optionalTargetOrganizationListIds.length > 0) {
+      criteria.optionalTargetOrganizationList = JSON.stringify(criteria.optionalTargetOrganizationListIds);
+    }
     delete criteria.targetOrganizationListIds;
+    delete criteria.optionalTargetOrganizationListIds;
     criteria = this.deleteEmptyProperties(criteria);
 
     return criteria;
@@ -372,6 +376,9 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   prepareFilterCriteriaForReceive(criteria: Partial<ITrainingProgramCriteria>) {
     if (criteria.targetOrganizationList) {
       criteria.targetOrganizationListIds = JSON.parse(this.filterCriteria.targetOrganizationList!);
+    }
+    if (criteria.optionalTargetOrganizationList) {
+      criteria.optionalTargetOrganizationListIds = JSON.parse(this.filterCriteria.optionalTargetOrganizationList!);
     }
     if (criteria.startFromDate) {
       criteria.startFromDate = DateUtils.changeDateToDatepicker(this.filterCriteria.startFromDate);

@@ -28,6 +28,9 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   trainingProgramFullSerial!: string;
   trainingType!: number;
   trainingTypeInfo!: AdminResult;
+  optionalTargetOrganizationList!: string;
+  optionalTargetOrganizationListIds: number[] = [];
+  classificationId!: number;
   statusInfo!: AdminResult;
   trainingDate!: string;
   registrationDate!: string;
@@ -116,6 +119,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       registerationStartDate,
       registerationClosureDate,
       totalTrainingCost,
+      classificationId
     } = this;
     return {
       activityName: controls ? [activityName, [
@@ -126,6 +130,9 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       trainingType: controls ? [trainingType, [
         CustomValidators.required
       ]] : trainingType,
+      classificationId: controls ? [classificationId, [
+        CustomValidators.required
+      ]] : classificationId,
       trainingObjective: controls ? [trainingObjective, [
         CustomValidators.required,
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),

@@ -5,6 +5,9 @@ export interface ITrainingProgramCriteria {
   trainingProgramFullSerial?: string;
   trainingType?: number;
   targetAudience?: number;
+  optionalTargetOrganizationList?: string;
+  optionalTargetOrganizationListIds?: number[];
+  classificationId?: number;
   targetOrganizationList?: string;
   targetOrganizationListIds?: number[];
   startFromDate?: string | IMyDateModel;

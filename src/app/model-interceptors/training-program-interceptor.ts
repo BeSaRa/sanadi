@@ -34,6 +34,7 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     model.registerationClosureDate = DateUtils.changeDateToDatepicker(model.registerationClosureDate);
 
     model.targetOrganizationListIds = convertIdsStringToArray(model.targetOrganizationList);
+    model.optionalTargetOrganizationListIds = convertIdsStringToArray(model.optionalTargetOrganizationList);
 
     model.targetAudienceListIds = convertIdsStringToArray(model.targetAudienceList);
 
@@ -47,6 +48,7 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
 
   send(model: Partial<TrainingProgram>): Partial<TrainingProgram> {
     model.targetOrganizationList = JSON.stringify(model.targetOrganizationListIds);
+    model.optionalTargetOrganizationList = JSON.stringify(model.optionalTargetOrganizationListIds);
     model.targetAudienceList = JSON.stringify(model.targetAudienceListIds);
     model.trainerList = JSON.stringify(model.trainerListIds);
 
