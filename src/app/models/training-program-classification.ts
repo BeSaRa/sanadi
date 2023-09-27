@@ -1,4 +1,3 @@
-import { TrainingProgramAudienceInterceptor } from '../model-interceptors/training-program-audience';
 import { BaseModel } from '@app/models/base-model';
 import { FactoryService } from '@app/services/factory.service';
 import { LangService } from '@app/services/lang.service';
@@ -8,20 +7,21 @@ import { searchFunctionType } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { InterceptModel } from "@decorators/intercept-model";
-import { TrainingProgramAudienceService } from '@app/services/training-program-audience.service';
+import { TrainingProgramClassificationService } from '@app/services/training-program-classification.service';
+import { TrainingProgramClassificationInterceptor } from '@app/model-interceptors/training-program-classification';
 
-const interceptor: TrainingProgramAudienceInterceptor = new TrainingProgramAudienceInterceptor()
+const interceptor: TrainingProgramClassificationInterceptor = new TrainingProgramClassificationInterceptor()
 
 @InterceptModel({
   receive: interceptor.receive,
   send: interceptor.send
 })
-export class TrainingProgramAudience extends BaseModel<TrainingProgramAudience, TrainingProgramAudienceService> {
+export class TrainingProgramClassification extends BaseModel<TrainingProgramClassification, TrainingProgramClassificationService> {
   status: number = CommonStatusEnum.ACTIVATED;
   statusInfo!: Lookup;
 
   // extra properties
-  service!: TrainingProgramAudienceService;
+  service!: TrainingProgramClassificationService;
   langService: LangService;
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
@@ -32,7 +32,7 @@ export class TrainingProgramAudience extends BaseModel<TrainingProgramAudience, 
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');
-    this.service = FactoryService.getService('TrainingProgramAudienceService')
+    this.service = FactoryService.getService('TrainingProgramClassificationService')
   }
 
   getName(): string {

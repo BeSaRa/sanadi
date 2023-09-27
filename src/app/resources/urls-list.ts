@@ -144,5 +144,6 @@ export const urlsList: Partial<IAppUrls> = {
   CASE_AUDIT: '/admin/case-audit',
   REASSIGN_BULK: '/inbox/task/reassign/bulk',
   PROJECT_COMPLETION: '/project-completion',
-  TRAINING_PROGRAM_AUDIENCE: '/admin/training-program-audience'
+  TRAINING_PROGRAM_AUDIENCE: '/admin/training-program-audience',
+  TRAINING_PROGRAM_CLASSIFICATION: 'admin/training-program-classification'
 };
