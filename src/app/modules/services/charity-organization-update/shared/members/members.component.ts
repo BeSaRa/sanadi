@@ -7,8 +7,8 @@ import {OrgMember} from '@models/org-member';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {ComponentType} from '@angular/cdk/portal';
-import { ManageMembersPopupComponent } from '@app/modules/services/general-association-meeting-attendance/popups/manage-members-popup/manage-members-popup.component';
 import {OperationTypes} from "@enums/operation-types.enum";
+import { MembersPopupComponent } from '../../popups/members-popup/members-popup.component';
 
 @Component({
   selector: 'members',
@@ -17,7 +17,7 @@ import {OperationTypes} from "@enums/operation-types.enum";
 })
 export class MembersComponent extends ListModelComponent<OrgMember> {
   protected _getPopupComponent(): ComponentType<any> {
-    return ManageMembersPopupComponent;
+    return MembersPopupComponent;
   }
 
   @Input() readonly!: boolean;
