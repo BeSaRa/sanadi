@@ -13,6 +13,8 @@
       <tab [name]="tabsData.organizations.name" [template]="organizationsTabTemplate"
            [title]="lang.map.training_program_organizations" [hasError]="model.targetOrganizationListIds.length < 1"
            *ngIf="!isCertification"></tab>
+      <tab [name]="tabsData.departments.name" [template]="departmentsTabTemplate"
+           [title]="lang.map.training_program_departments" *ngIf="!isCertification"></tab>
       <tab [name]="tabsData.trainers.name" [template]="trainersTabTemplate" [title]="lang.map.training_program_trainers"
            [hasError]="model.trainerListIds.length < 1" *ngIf="!isCertification"></tab>
       <tab [name]="tabsData.attendingTrainees.name" [template]="attendingTraineesTabTemplate"
@@ -50,6 +52,17 @@
         </div>
       </div>
       <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
+          <label asteriskIfRequired="classificationId" for="classificationId"
+                 class="form-label">{{lang.map.training_classification}}</label>
+          <ng-select validationClasses="classificationId" labelForId="classificationId" placeholder="{{lang.map.select}}"
+                     [notFoundText]="lang.map.msg_not_found" formControlName="classificationId" id="classificationId"
+                     appendTo="body">
+            <ng-option [value]="classification.id" *ngFor="let classification of classifications"
+                       [disabled]="!classification.status">{{classification.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="trainingType"></app-field-error-message>
+        </div>
         <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
           <label asteriskIfRequired="trainingDomain" for="trainingDomain"
                  class="form-label">{{lang.map.training_domain_name}}</label>
@@ -399,6 +412,70 @@
 
                 <tr cdk-header-row *cdkHeaderRowDef="organizationColumns" class="table-row-header"></tr>
                 <tr cdk-row *cdkRowDef="let row; columns: organizationColumns;"></tr>
+                <tr *cdkNoDataRow>
+                  <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+                </tr>
+              </table>
+            </app-table>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #departmentsTabTemplate>
+      <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
+        <div>
+          <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.departments}}</h1>
+          <button *ngIf="operation != operationTypes.VIEW" (click)="openAddDepartments()"
+                  class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i class="mdi mdi-plus-box"></i>
+          </button>
+        </div>
+      </div>
+      <div class="row mb-3 add-to-list-container" *ngIf="showAddDepartmentsForm">
+        <h1 class="h6 text-primary">{{lang.map.training_program_add_department}}</h1>
+        <div class="col-sm-12">
+          <label for="departmentId" class="form-label">{{lang.map.training_program_departments}}</label>
+          <div class="mb-3 d-flex position-relative ng-select-wrapper">
+            <ng-select class="flex-grow-1" labelForId="departmentId" placeholder="{{lang.map.select}}"
+                        [notFoundText]="lang.map.msg_not_found" [(ngModel)]="selectedDepartment"
+                        [ngModelOptions]="{standalone: true}" id="departmentId" appendTo="body">
+              <ng-option [value]="-1">{{lang.map.select_all}}</ng-option>
+              <ng-option [value]="department.id"
+                          *ngFor="let department of departments">{{department.getName()}}</ng-option>
+                        </ng-select>
+            <button [disabled]="!selectedDepartment" *ngIf="saveVisible" (click)="onAddDepartment()"
+              class="btn btn-primary right ms-2 mb-3">{{lang.map.btn_add}}</button>
+          </div>
+        </div>
+      </div>
+      <div class="row add-to-list-container">
+        <h1 class="h6 text-primary">{{lang.map.training_program_selected_departments}}</h1>
+        <div class="col-12">
+          <div class="table-responsive">
+            <app-table #table sortableTable style="margin-bottom: 0" [columns]="departmentColumns"
+                       [data]="selectedDepartments">
+              <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
+                <ng-container cdkColumnDef="arName">
+                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.arName}}</td>
+                </ng-container>
+                <ng-container cdkColumnDef="enName">
+                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.english_name}}</th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.enName}}</td>
+                </ng-container>
+                <ng-container cdkColumnDef="actions">
+                  <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+                  <td cdk-cell *cdkCellDef="let row" class="table-actions">
+                    <div class="d-flex flex-row">
+                      <a *ngIf="operation != operationTypes.VIEW" href="#" (click)="removeDepartment($event, row)"
+                         tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                        <i class="mdi mdi-close-box"></i>
+                      </a>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr cdk-header-row *cdkHeaderRowDef="departmentColumns" class="table-row-header"></tr>
+                <tr cdk-row *cdkRowDef="let row; columns: departmentColumns;"></tr>
                 <tr *cdkNoDataRow>
                   <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
                 </tr>

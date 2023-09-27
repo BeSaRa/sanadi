@@ -1,3 +1,5 @@
+import { TrainingProgramClassificationService } from '@app/services/training-program-classification.service';
+import { TrainingProgramClassification } from '@app/models/training-program-classification';
 import { map } from 'rxjs/operators';
 import {AfterViewInit, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
@@ -32,6 +34,8 @@ import {TrainingProgramPartnerService} from '@app/services/training-program-part
 import {CommonUtils} from '@helpers/common-utils';
 import { TrainingProgramAudienceService } from '@app/services/training-program-audience.service';
 import { TrainingProgramAudience } from '@app/models/training-program-audience';
+import { Team } from '@app/models/team';
+import { TeamService } from '@app/services/team.service';
 
 @Component({
   selector: 'training-program-popup',
@@ -60,6 +64,10 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     organizations: {
       name: 'organizations',
       validStatus: () => this.model && this.model.targetOrganizationListIds.length < 1
+    },
+    departments: {
+      name: 'departments',
+      validStatus: () => this.model
     },
     trainers: {
       name: 'trainers',
@@ -99,10 +107,15 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   selectedOrganizationType!: number;
   selectedOrganizations: Profile[] = [];
   organizations: Profile[] = [];
+  selectedDepartments: Team[] = [];
+  departments: Team[] = [];
+  classifications: TrainingProgramClassification[] = [];
   selectedOrganization?: number;
+  selectedDepartment?: number;
   organizationColumns = ['arName', 'enName', 'actions'];
+  departmentColumns = ['arName', 'enName', 'actions'];
   showAddOrganizationForm = false;
-
+  showAddDepartmentsForm = false;
   // trainers properties
   selectedTrainers: Trainer[] = [];
   trainers: Trainer[] = [];
@@ -128,7 +141,9 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
               public dialogRef: DialogRef,
               public dialogService: DialogService,
               private profileService: ProfileService,
+              private teamService: TeamService,
               private trainerService: TrainerService,
+              private trainingProgramClassificationService: TrainingProgramClassificationService,
               private trainingProgramPartnerService: TrainingProgramPartnerService,
               private trainingProgramAudienceService: TrainingProgramAudienceService,
               private employeeService: EmployeeService) {
@@ -173,6 +188,8 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     // this.listenToSaveAndApprove();
     this.listenToPublish();
     this.listenToValidateStartTrainingAndEndRegistrationDates();
+    this.loadSelectedDepartments();
+    this.loadTrainingProgramClassifications();
 
     if (this.isCertification || this.operation == OperationTypes.VIEW) {
       this.form.disable();
@@ -635,6 +652,51 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     });
   }
 
+  // departments functionality
+  openAddDepartments() {
+    this.showAddDepartmentsForm = true;
+  }
+
+  onAddDepartment() {
+    if (this.selectedDepartment == -1) {
+      this.departments.forEach(dep => {
+        if (!this.hasDuplicatedId(dep.id, this.selectedDepartments)) {
+          let currentDep: Team = this.departments.find(e => e.id == dep.id)!;
+          this.selectedDepartments = [...this.selectedDepartments, currentDep];
+          this.model.optionalTargetOrganizationListIds = this.selectedDepartments.map(selctedDep => selctedDep.id);
+          this.selectedDepartment = undefined;
+        }
+      });
+      this.toast.success(this.lang.map.msg_added_successfully);
+    } else {
+      if (!this.hasDuplicatedId(this.selectedDepartment!, this.selectedDepartments)) {
+        let dep = this.departments.find(e => e.id == this.selectedDepartment)!;
+        this.selectedDepartments = [...this.selectedDepartments, dep];
+        this.model.optionalTargetOrganizationListIds = this.selectedDepartments.map(dep => dep.id);
+        this.selectedDepartment = undefined;
+        this.toast.success(this.lang.map.msg_added_x_success.change({x: dep.getName()}));
+        return;
+      }
+
+      this.toast.alert(this.lang.map.msg_duplicated_item);
+    }
+  }
+
+  removeDepartment(event: MouseEvent, org: Profile) {
+    event.preventDefault();
+    this.selectedDepartments = this.selectedDepartments.filter(element => element.id != org.id);
+    this.model.optionalTargetOrganizationListIds = this.selectedDepartments.map(org => org.id);
+  }
+
+  private loadSelectedDepartments(): void {
+    this.teamService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(departments => {
+        this.departments = departments;
+        this.selectedDepartments = departments.filter(element => this.model.optionalTargetOrganizationListIds.includes(element.id));
+      });
+  }
+
   // trainers functionality
   openAddTrainers() {
     this.showAddTrainerForm = true;
@@ -689,6 +751,11 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     this.loadSelectedTrainers$.subscribe(() => {
       this.selectedTrainers = this.trainers.filter(element => this.model.trainerListIds.includes(element.id));
     });
+  }
+  private loadTrainingProgramClassifications(): void {
+    this.trainingProgramClassificationService.loadAsLookups().subscribe((classifications) => {
+      this.classifications = classifications;
+    })
   }
 
   hasDuplicatedId(id: number, arr: any[]): boolean {

@@ -18,6 +18,8 @@ import {ITrainingProgramCriteria} from '@app/interfaces/i-training-program-crite
 import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 import {ProfileService} from '@services/profile.service';
 import {Profile} from '@app/models/profile';
+import { Team } from '@app/models/team';
+import { TeamService } from '@app/services/team.service';
 
 @Component({
   selector: 'filter-training-programs',
@@ -45,6 +47,7 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
   statuses: Lookup[] = this.lookupService.listByCategory.TRAINING_STATUS;
   trainers: Trainer[] = [];
   organizations: Profile[] = [];
+  departments: Team[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) public data: any,
               private fb: UntypedFormBuilder,
@@ -53,6 +56,7 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
               private dialogService: DialogService,
               public lookupService: LookupService,
               private profileService: ProfileService,
+              private teamService: TeamService,
               private trainerService: TrainerService) {
     this.criteria = data.criteria;
   }
@@ -60,6 +64,7 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._buildForm();
     this.loadOrganizations();
+    this.loadDepartmens();
     this.loadTrainers();
   }
 
@@ -73,6 +78,7 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
       registerationToDate: [this.criteria.registerationToDate],
       trainingType: [this.criteria.trainingType],
       targetOrganizationListIds: [this.criteria.targetOrganizationListIds],
+      optionalTargetOrganizationListIds: [this.criteria.optionalTargetOrganizationListIds],
       targetAudience: [this.criteria.targetAudience],
       attendenceMethod: [this.criteria.attendenceMethod],
       status: [this.criteria.status],
@@ -112,7 +118,13 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
         this.organizations = organizations;
       });
   }
-
+  private loadDepartmens(): void {
+    this.teamService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(departments => {
+        this.departments = departments;
+      });
+  }
   private loadTrainers(): void {
     this.trainerService.load()
       .pipe(takeUntil(this.destroy$))

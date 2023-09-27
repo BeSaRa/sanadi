@@ -2034,4 +2034,8 @@ export interface ILanguageKeys {
   lookup_service_type_work_type:string;
   lbl_hours:string;
   lbl_minutes:string;
+  training_program_selected_departments:string;
+  training_program_departments:string;
+  training_program_add_department:string;
+  training_classification:string;
 }

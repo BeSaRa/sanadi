@@ -130,6 +130,20 @@
       </div>
       <div class="col-sm-6 position-relative">
         <div class="row">
+          <label asteriskIfRequired="optionalTargetOrganizationListIds" for="optionalTargetOrganizationListIds"
+                 class="form-label">{{lang.map.training_program_departments}}</label>
+          <div class="position-relative ng-select-wrapper">
+            <ng-select validationClasses="optionalTargetOrganizationListIds"
+                       formControlName="optionalTargetOrganizationListIds"
+                       id="optionalTargetOrganizationListIds"
+                       [multiple]="true">
+              <ng-option [value]="department.id" *ngFor="let department of departments">{{department.getName()}}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 position-relative">
+        <div class="row">
           <label asteriskIfRequired="trainer" for="trainer"
                  class="form-label">{{lang.map.training_program_trainers}}</label>
           <div class="position-relative ng-select-wrapper">
