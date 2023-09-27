@@ -1,3 +1,4 @@
+import { TrainingProgramClassificationComponent } from '@app/administration/pages/training-program-classification/training-program-classification.component';
 import { TrainingProgramAudiencePopupComponent } from '@app/administration/popups/training-program-audience-popup/training-program-audience-popup.component';
 import { TrainingProgramAudienceComponent } from './pages/training-program-audience/training-program-audience.component';
 import { CustomMenuDefaultsPopupComponent } from './popups/custom-menu-defaults-popup/custom-menu-defaults-popup.component';
@@ -140,6 +141,7 @@ import { ServiceDataCustomTemplatesComponent } from './shared/service-data-custo
 import { ServiceDataCustomTemplatePopupComponent } from './popups/service-data-custom-template-popup/service-data-custom-template-popup.component';
 import { AdminPermissionComponent } from './pages/admin-permission/admin-permission.component';
 import { AdminPermissionPopupComponent } from './popups/admin-permission-popup/admin-permission-popup.component';
+import { TrainingProgramClassificationPopupComponent } from './popups/training-program-classification-popup/training-program-classification-popup.component';
 
 @NgModule({
   declarations: [
@@ -240,7 +242,8 @@ import { AdminPermissionPopupComponent } from './popups/admin-permission-popup/a
     ServiceDataCustomTemplatePopupComponent,
     AdminPermissionComponent,
     AdminPermissionPopupComponent,
-    AdminPermissionPopupComponent
+    TrainingProgramClassificationComponent,
+    TrainingProgramClassificationPopupComponent
   ],
   imports: [
     SharedModule,
