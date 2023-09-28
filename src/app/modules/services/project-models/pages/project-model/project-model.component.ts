@@ -497,6 +497,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       summaryPercentGroup: model.buildSummaryPercentGroup(false),
       description: model.description
     });
+    this.componentBudgetsRef.list = model.componentList;
+    this.componentBudgetsRef.afterReload();
     this.handleRequestTypeChange(model.requestType, false);
     if (model.domain === DomainTypes.DEVELOPMENT) {
       this.displayDevGoals = true;
