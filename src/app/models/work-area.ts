@@ -43,10 +43,11 @@ export class WorkArea extends SearchableCloneable<WorkArea> implements IAuditMod
   }
 
   toCharityOrgnizationUpdate() {
-    const {id, country} = this;
+    const {id, country, region} = this;
     return new WorkArea().clone({
       objectDBId: id,
       country,
+      region,
       countryInfo: AdminResult.createInstance({arName: this.arabicName, enName: this.englishName})
     })
   }
