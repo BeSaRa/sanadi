@@ -1,3 +1,4 @@
+import { ProfileService } from './../../../../../services/profile.service';
 import { RequestTypeFollowupService } from '@services/request-type-followup.service';
 import { WorkAreasComponent } from '../../../shared-services/components/work-areas/work-areas.component';
 import { NgSelectComponent } from '@ng-select/ng-select';
@@ -18,7 +19,7 @@ import { DateUtils } from '@helpers/date-utils';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { ToastService } from '@services/toast.service';
 import { DialogService } from '@services/dialog.service';
-import { DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
+import { DatepickerOptionsMap } from '@app/types/types';
 import { SaveTypes } from '@enums/save-types';
 import { OperationTypes } from '@enums/operation-types.enum';
 import { GoalComponent } from '@modules/services/partner-approval/shared/goal/goal.component';
@@ -42,6 +43,7 @@ import { ICoordinates } from '@contracts/ICoordinates';
 import { GoalsListComponent } from '../../shared/goals-list/goals-list.component';
 import { Profile } from '@models/profile';
 import { CaseTypes } from '@app/enums/case-types.enum';
+import { ProfileTypes } from '@app/enums/profile-types.enum';
 
 @Component({
   selector: 'partner-approval',
@@ -216,6 +218,7 @@ export class PartnerApprovalComponent
     private licenseService: LicenseService,
     private cd: ChangeDetectorRef,
     public employeeService: EmployeeService,
+    private profileService: ProfileService,
     private requestTypeFollowupService: RequestTypeFollowupService) {
     super();
   }
@@ -231,14 +234,25 @@ export class PartnerApprovalComponent
   _initComponent(): void {
     this.loadCountries();
     this.listenToLicenseSearch();
+    this.loadOrgs();
   }
 
+  loadOrgs() {
+    // TODO: need to add filter deactive Curriculum
+    this.profileService.getProfilesByProfileType([ProfileTypes.CHARITY, ProfileTypes.INSTITUTION])
+      .subscribe((data) => {
+        this.organizations = data;
+      })
+  }
   _buildForm(): void {
     const partnerApproval = new PartnerApproval();
     this.form = this.fb.group({
       basic: this.fb.group(partnerApproval.getBasicFields(true)),
       trade: this.fb.group(partnerApproval.buildCommercialLicenseData()),
     });
+    if (this.employeeService.isInternalUser()) {
+      this.orgField.setValidators([CustomValidators.required]);
+    }
   }
 
   _afterBuildForm(): void {
@@ -248,8 +262,6 @@ export class PartnerApprovalComponent
         this.oldLicenseFullSerialField.updateValueAndValidity();
       });
     }
-
-    // this.listenToRequestTypeChange();
   }
 
   private _updateModelAfterSave(model: PartnerApproval): void {
@@ -441,8 +453,6 @@ export class PartnerApprovalComponent
 
     }
     this.showLicenseTrade = false;
-
-
   }
 
   handleRequestTypeChange(
@@ -497,27 +507,6 @@ export class PartnerApprovalComponent
         }
       });
   }
-
-  // noinspection JSUnusedLocalSymbols
-  // private loadSelectedLicense(licenseNumber: string): void {
-  //   if (!this.model || !licenseNumber) {
-  //     return;
-  //   }
-
-  //   this.service
-  //     .licenseSearch({ licenseNumber })
-  //     .pipe(
-  //       filter((list) => {
-  //         return list.length > 0;
-  //       }),
-  //       map((list) => list[0]),
-  //       takeUntil(this.destroy$)
-  //     )
-  //     .subscribe((license) => {
-  //       this.setSelectedLicense(license, false);
-  //     });
-  // }
-
   private setSelectedLicense(
     licenseDetails: PartnerApproval | undefined,
     ignoreUpdateForm: boolean
@@ -590,66 +579,6 @@ export class PartnerApprovalComponent
       .subscribe((selection) => {
         this.setSelectedLicense(selection, false);
       });
-    // this.licenseSearch$
-    //   .pipe(
-    //     exhaustMap((oldLicenseFullSerial) => {
-    //       return this.loadLicencesByCriteria({
-    //         fullSerial: oldLicenseFullSerial,
-    //       }).pipe(catchError(() => of([])));
-    //     })
-    //   )
-    //   .pipe(
-    //     // display message in case there is no returned license
-    //     tap((list) =>
-    //       !list.length
-    //         ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
-    //         : null
-    //     ),
-    //     // allow only the collection if it has value
-    //     filter((result) => !!result.length),
-    //     // switch to the dialog ref to use it later and catch the user response
-    //     switchMap((licenses) => {
-    //       if (licenses.length === 1) {
-    //         return this.licenseService
-    //           .validateLicenseByRequestType(
-    //             this.model!.getCaseType(),
-    //             this.requestType.value,
-    //             licenses[0].id
-    //           )
-    //           .pipe(
-    //             map((data) => {
-    //               if (!data) {
-    //                 return of(null);
-    //               }
-    //               return { selected: licenses[0], details: data };
-    //             }),
-    //             catchError(() => {
-    //               return of(null);
-    //             })
-    //           );
-    //       } else {
-    //         return this.licenseService.openSelectLicenseDialog(
-    //           licenses,
-    //           this.model?.clone({ requestType: this.requestType.value || null })
-    //         ).onAfterClose$;
-    //       }
-    //     }),
-    //     // allow only if the user select license
-    //     filter<{ selected: PartnerApproval; details: PartnerApproval }, any>(
-    //       (
-    //         selection
-    //       ): selection is {
-    //         selected: PartnerApproval;
-    //         details: PartnerApproval;
-    //       } => {
-    //         return !!selection;
-    //       }
-    //     ),
-    //     takeUntil(this.destroy$)
-    //   )
-    //   .subscribe((selection) => {
-    //     this.setSelectedLicense(selection.details, false);
-    //   });
   }
 
   private loadSelectedLicenseById(id: string, callback?: any): void {
@@ -711,6 +640,10 @@ export class PartnerApprovalComponent
     return this.form.get('basic')?.get('region') as UntypedFormControl;
   }
 
+  get orgField(): UntypedFormControl {
+    return this.form.get('basic')?.get('organizationId') as UntypedFormControl;
+  }
+
   get trade(): UntypedFormGroup {
     return this.form.get('trade') as UntypedFormGroup;
   }
@@ -722,7 +655,6 @@ export class PartnerApprovalComponent
   get commercialLicenseEndDate(): UntypedFormControl {
     return this.form.get('trade')?.get('commercialLicenseEndDate') as UntypedFormControl;
   }
-
 
   isAttachmentReadonly(): boolean {
     if (!this.model?.id) {

@@ -38,6 +38,17 @@
           </ng-select>
           <app-field-error-message controlName="requestType"></app-field-error-message>
         </div>
+        <!-- organization Id -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative" *ngIf="employeeService.isInternalUser()">
+          <label asteriskIfRequired="organizationId" for="organizationId" class="form-label">{{lang.map.lbl_organization}}</label>
+          <ng-select [selectOnTab]="true" labelForId="organizationId" [clearable]="true" placeholder="{{lang.map.select}}"
+            id="organizationId" [notFoundText]="lang.map.msg_not_found"
+            [readonly]="!isEditRequestTypeAllowed()" appendTo="body" formControlName="organizationId"
+            validationClasses="organizationId">
+            <ng-option [value]="org.id" [disabled]="!org.isActive()" *ngFor="let org of organizations">{{org.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="organizationId"></app-field-error-message>
+        </div>
         <!-- License Number -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="oldLicenseFullSerial" for="oldLicenseFullSerial"
