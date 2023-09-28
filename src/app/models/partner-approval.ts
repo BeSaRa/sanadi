@@ -158,6 +158,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
       secondSocialMedia: {langKey: 'social_media_2', value: this.secondSocialMedia},
       thirdSocialMedia: {langKey: 'social_media_3', value: this.thirdSocialMedia},
       description: {langKey: 'special_explanations', value: this.description},
+      organizationId: {langKey: 'lbl_organization', value: this.organizationId},
     };
   }
 
@@ -233,6 +234,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
         ),
       ],
       ] : values.description,
+      organizationId: control ? [values.organizationId] : values.organizationId,
     };
   }
 
