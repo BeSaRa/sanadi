@@ -11,6 +11,7 @@ import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties'
 export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer> implements IAuditModelProperties<NpoContactOfficer> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   officerId!: number;
+  itemId!:string;
   identificationNumber!: string;
   fullName!: string;
   email!: string;

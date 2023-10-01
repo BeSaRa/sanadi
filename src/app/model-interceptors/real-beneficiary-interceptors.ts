@@ -1,6 +1,8 @@
 import { IModelInterceptor } from '@contracts/i-model-interceptor';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
 import { DateUtils } from '@app/helpers/date-utils';
+import { AdminResult } from '@app/models/admin-result';
+import { isValidAdminResult } from '@app/helpers/utils';
 
 export class RealBeneficiaryInterceptor implements IModelInterceptor<RealBeneficiary> {
   receive(model: RealBeneficiary): RealBeneficiary {
@@ -18,6 +20,7 @@ export class RealBeneficiaryInterceptor implements IModelInterceptor<RealBenefic
     model.startDateStamp = !model.startDate ? null : DateUtils.getTimeStampFromDate(model.startDate);
     model.lastUpdateDateStamp = !model.lastUpdateDate ? null : DateUtils.getTimeStampFromDate(model.lastUpdateDate);
     model.passportExpiryDateStamp = !model.passportExpiryDate ? null : DateUtils.getTimeStampFromDate(model.passportExpiryDate);
+    model.nationalityInfo = isValidAdminResult(model.nationalityInfo) ? AdminResult.createInstance(model.nationalityInfo) : AdminResult.createInstance({});
 
     return model;
   }

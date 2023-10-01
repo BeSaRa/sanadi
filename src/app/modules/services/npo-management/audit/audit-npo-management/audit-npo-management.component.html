@@ -16,14 +16,14 @@
   <audit-npo-contact-officer [newVersionList]="newVersion.contactOfficerList"
                              [oldVersionList]="oldVersion.contactOfficerList"
                              [caseType]="newVersion.caseType"
-                             [uniqueComparisonProperty]="'officerId'">
+                             [uniqueComparisonProperty]="'itemId'">
   </audit-npo-contact-officer>
 </ng-template>
 
 <ng-template #founderMemberTabTemplate>
   <audit-founder-members [newVersionList]="newVersion.founderMemberList" [oldVersionList]="oldVersion.founderMemberList"
                          [caseType]="newVersion.caseType"
-                         [uniqueComparisonProperty]="'objectDBId'">
+                         [uniqueComparisonProperty]="'itemId'">
   </audit-founder-members>
 </ng-template>
 
@@ -31,7 +31,7 @@
   <audit-npo-bank-account [newVersionList]="newVersion.bankAccountList"
                           [oldVersionList]="oldVersion.bankAccountList"
                           [caseType]="newVersion.caseType"
-                          [uniqueComparisonProperty]="'iban'">
+                          [uniqueComparisonProperty]="'itemId'">
   </audit-npo-bank-account>
 </ng-template>
 
