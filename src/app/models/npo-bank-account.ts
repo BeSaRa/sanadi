@@ -13,6 +13,7 @@ import {CurrencyEnum} from "@enums/currency-enum";
 export class NpoBankAccount extends SearchableCloneable<NpoBankAccount> implements IAuditModelProperties<NpoBankAccount> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   objectDBId!: number;
+  itemId!:string;
   currency: number = CurrencyEnum.UNITED_STATE_DOLLAR;
   accountNumber!: string;
   bankId!: number;

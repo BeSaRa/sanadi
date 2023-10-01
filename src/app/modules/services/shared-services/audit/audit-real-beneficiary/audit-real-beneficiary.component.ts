@@ -51,8 +51,4 @@ export class AuditRealBeneficiaryComponent extends AuditListGenericComponent<Rea
   getControlLabels(item: RealBeneficiary): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
   }
-
-  existsInList(objComparison: IFindInList<RealBeneficiary>): RealBeneficiary | undefined {
-    return objComparison.listToCompareWith.find((item) => item.id === objComparison.itemToCompare.id);
-  }
 }

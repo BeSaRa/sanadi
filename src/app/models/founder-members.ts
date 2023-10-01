@@ -11,6 +11,7 @@ import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties'
 export class FounderMembers extends SearchableCloneable<FounderMembers> implements IAuditModelProperties<FounderMembers> {
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   objectDBId!: number;
+  itemId!:string;
   identificationNumber!: string;
   fullName!: string;
   email!: string;
