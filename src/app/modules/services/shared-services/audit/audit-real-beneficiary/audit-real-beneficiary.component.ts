@@ -53,6 +53,6 @@ export class AuditRealBeneficiaryComponent extends AuditListGenericComponent<Rea
   }
 
   existsInList(objComparison: IFindInList<RealBeneficiary>): RealBeneficiary | undefined {
-    return objComparison.listToCompareWith.find((item) => item.id === objComparison.itemToCompare.id);
+    return objComparison.listToCompareWith.find((item) => item.identificationNumber === objComparison.itemToCompare.identificationNumber && item.id === objComparison.itemToCompare.id);
   }
 }
