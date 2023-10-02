@@ -1,3 +1,4 @@
+import { IFindInList } from '@app/interfaces/i-find-in-list';
 import { Component } from '@angular/core';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
@@ -43,6 +44,9 @@ export class AuditOrgExecutiveMemberComponent extends AuditListGenericComponent<
 
   getControlLabels(item: OrgExecutiveMember): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
+  }
+  existsInList(objComparison: IFindInList<OrgExecutiveMember>): OrgExecutiveMember | undefined {
+    return objComparison.listToCompareWith.find((item) => item.identificationNumber === objComparison.itemToCompare.identificationNumber && item.itemId === objComparison.itemToCompare.itemId);
   }
 }
 

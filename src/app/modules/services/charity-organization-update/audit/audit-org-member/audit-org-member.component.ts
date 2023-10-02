@@ -1,9 +1,9 @@
+import { IFindInList } from '@app/interfaces/i-find-in-list';
 import { Component } from '@angular/core';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { AuditListGenericComponent } from '@app/generics/audit-list-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
-import { IFindInList } from '@app/interfaces/i-find-in-list';
 import { OrgMember } from '@app/models/org-member';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { CaseAuditService } from '@app/services/case-audit.service';
@@ -12,9 +12,9 @@ import { ControlValueLabelLangKey } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
-    selector: 'audit-org-member',
-    templateUrl: 'audit-org-member.component.html',
-    styleUrls: ['audit-org-member.component.scss']
+  selector: 'audit-org-member',
+  templateUrl: 'audit-org-member.component.html',
+  styleUrls: ['audit-org-member.component.scss']
 })
 export class AuditOrgMemberComponent extends AuditListGenericComponent<OrgMember> {
   constructor(public lang: LangService,
@@ -23,7 +23,7 @@ export class AuditOrgMemberComponent extends AuditListGenericComponent<OrgMember
   }
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
-  displayColumns: string[] = ['fullName', 'identificationNumber','joinDate', 'email', 'phone', 'jobTitle', 'actions'];
+  displayColumns: string[] = ['fullName', 'identificationNumber', 'joinDate', 'email', 'phone', 'jobTitle', 'actions'];
   actions: IMenuItem<OrgMember>[] = [
     // show difference
     {
@@ -44,6 +44,9 @@ export class AuditOrgMemberComponent extends AuditListGenericComponent<OrgMember
 
   getControlLabels(item: OrgMember): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
+  }
+  existsInList(objComparison: IFindInList<OrgMember>): OrgMember | undefined {
+    return objComparison.listToCompareWith.find((item) => item.identificationNumber === objComparison.itemToCompare.identificationNumber && item.itemId === objComparison.itemToCompare.itemId);
   }
 }
 
