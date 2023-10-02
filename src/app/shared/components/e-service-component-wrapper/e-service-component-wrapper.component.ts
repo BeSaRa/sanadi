@@ -158,6 +158,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   approveWithSaveServices: number[] = [
     CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
     CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
+    CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
   ];
 
   initialApproveWithSaveServices: number[] = [

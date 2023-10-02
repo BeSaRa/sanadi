@@ -57,7 +57,7 @@
         </div>
       </div>
       <div class="row" *ngIf="!!model && !!model.getCaseId()">
-        <ng-container *ngIf="isLicensingUser && openFrom === openFromEnum.USER_INBOX && model.taskDetails.isClaimed()">
+        <ng-container *ngIf="isLicensingUser && openFrom === openFromEnum.USER_INBOX">
           <div class="col-md-4 mb-4 position-relative">
             <label asteriskIfRequired [control]="selectedTemplateControl" class="form-label">{{lang.map.select + ' ' +
               lang.map.lbl_template}}</label>
@@ -72,7 +72,7 @@
         <ng-container *ngIf="(isLicensingUser && selectedTemplate) || isInternalUser">
           <div class="col-md-4 mb-4 position-relative">
             <div class="input-group">
-              <file-uploader #fileUploader *ngIf="isLicensingUser && selectedTemplate && model.taskDetails.isClaimed()" labelKey="template_file"
+              <file-uploader #fileUploader *ngIf="isLicensingUser && selectedTemplate && openFrom === openFromEnum.USER_INBOX" labelKey="template_file"
                 [isRequired]="true" (fileUploadEvent)="uploadTemplate($event)"
                 [allowedExtensions]="[fileExtensionsEnum.DOCX]">
               </file-uploader>
