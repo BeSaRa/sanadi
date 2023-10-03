@@ -48,6 +48,7 @@ import { LicenseService } from "@services/license.service";
 import { TemplateStatus } from "@app/enums/template-status";
 import { ServiceDataService } from "@services/service-data.service";
 import { ServiceData } from "@app/models/service-data";
+import { ExecutionFields } from '@app/enums/execution-fields';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -1002,12 +1003,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private listenToDataWillEffectSelectedTemplate(): void {
     const fields = [
-      { ctrl: this.permitType, key: 'permitType' },
-      { ctrl: this.projectWorkArea, key: 'projectWorkArea' },
+      // { ctrl: this.permitType, key: 'permitType' },
+      // { ctrl: this.projectWorkArea, key: 'projectWorkArea' },
       { ctrl: this.domain, key: 'domain' },
       { ctrl: this.mainDACCategory, key: 'mainDACCategory' },
       { ctrl: this.mainUNOCHACategory, key: 'mainUNOCHACategory' },
-      { ctrl: this.countriesField, key: 'countriesField' },
+      // { ctrl: this.countriesField, key: 'countriesField' },
       { ctrl: this.projectType, key: 'projectType' },
       { ctrl: this.internalProjectClassification, key: 'internalProjectClassification' },
       { ctrl: this.sanadiDomain, key: 'sanadiDomain' },
@@ -1080,7 +1081,11 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .subscribe((type: ProjectPermitTypes) => {
         [ProjectPermitTypes.CHARITY, ProjectPermitTypes.UNCONDITIONAL_RECEIVE].includes(type) ? (() => {
           this.projectWorkArea.setValue(null, { emitEvent: false })
-        })() : this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR, { emitEvent: false })
+        })() :
+        this.projectWorkArea.value === ExecutionFields.OutsideQatar ?
+        this.countriesField.reset() :
+        this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR, { emitEvent: false });
+
       })
-  }
+    }
 }
