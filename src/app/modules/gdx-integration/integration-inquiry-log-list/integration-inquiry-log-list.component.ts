@@ -17,6 +17,7 @@ import { exhaustMap, filter, takeUntil } from 'rxjs/operators';
 import { IGdxCriteria } from '@contracts/i-gdx-criteria';
 import { BeneficiaryIdTypes } from '@app/enums/beneficiary-id-types.enum';
 import { UploadFilePopupComponent } from '@app/shared/popups/upload-file-popup/upload-file-popup.component';
+import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'integration-inquiry-log-list',
@@ -243,7 +244,11 @@ export class IntegrationInquiryLogListComponent {
     return this.gdxServiceId === GdxServicesEnum.IZZAB && record.gdxServiceResponseParsed.hasIzzab;
   }
   openAddQCBDocDialog() {
-    this.dialogService.show(UploadFilePopupComponent).onAfterClose$.subscribe((data: File) => {
+    this.dialogService.show(UploadFilePopupComponent, {
+      title: 'qcb_document',
+      isRequired: true,
+      extensions: [FileExtensionsEnum.PDF, FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG]
+    }).onAfterClose$.subscribe((data: File) => {
       if (data) {
         this.beneficiaryService.addQCBInquiry(this._getGDXCriteria(), data).subscribe((result) => {
           if (!result) {
