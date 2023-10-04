@@ -5,8 +5,8 @@
 </div>
 <div class="dialog-content no-fixed-height">
   <div class="col-12">
-    <file-uploader labelKey="qcb_document" fileInputKey="upload_file" [allowedExtensions]="extensions"
-      [allowRemoveLoadedFile]="false" [isRequired]="true" [allowedFileSize]="allowedFileMaxSize"
+    <file-uploader [labelKey]="title" fileInputKey="upload_file" [allowedExtensions]="extensions"
+      [allowRemoveLoadedFile]="false" [isRequired]="isRequired" [allowedFileSize]="allowedFileMaxSize"
       (fileUploadEvent)="setFile($event)">
     </file-uploader>
   </div>
