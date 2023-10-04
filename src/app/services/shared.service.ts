@@ -10,6 +10,8 @@ import {BlobModel} from '@app/models/blob-model';
 import {ViewDocumentPopupComponent} from '@app/shared/popups/view-document-popup/view-document-popup.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {FileExtensionsEnum, FileMimeTypesEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {UploadFilePopupComponent} from "@app/shared/popups/upload-file-popup/upload-file-popup.component";
+import {ILanguageKeys} from "@contracts/i-language-keys";
 
 @Injectable({
   providedIn: 'root'
@@ -106,5 +108,9 @@ export class SharedService {
     // @ts-ignore
     const extensionName: string = Object.keys(FileMimeTypesEnum)[Object.values(FileMimeTypesEnum).indexOf(mimeType)];
     return FileExtensionsEnum[extensionName as keyof typeof FileExtensionsEnum] || undefined;
+  }
+
+  openFileUploaderDialog(data: {title: keyof ILanguageKeys, label: keyof ILanguageKeys, required: boolean, extensions: FileExtensionsEnum[]}): DialogRef {
+    return this.dialogService.show(UploadFilePopupComponent, data);
   }
 }

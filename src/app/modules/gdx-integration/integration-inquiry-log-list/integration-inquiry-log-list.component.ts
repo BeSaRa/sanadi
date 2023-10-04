@@ -1,23 +1,20 @@
-import { DialogService } from '@services/dialog.service';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BehaviorSubject, of, Subject } from 'rxjs';
-import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
-import { LangService } from '@services/lang.service';
-import { BeneficiaryService } from '@services/beneficiary.service';
-import { EmployeeService } from '@services/employee.service';
-import { ToastService } from '@services/toast.service';
-import { Beneficiary } from '@app/models/beneficiary';
-import { GdxServiceLog } from '@app/models/gdx-service-log';
-import { UntypedFormControl } from '@angular/forms';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { SortEvent } from '@contracts/sort-event';
-import { CommonUtils } from '@helpers/common-utils';
-import { DateUtils } from '@helpers/date-utils';
-import { exhaustMap, filter, takeUntil } from 'rxjs/operators';
-import { IGdxCriteria } from '@contracts/i-gdx-criteria';
-import { BeneficiaryIdTypes } from '@app/enums/beneficiary-id-types.enum';
-import { UploadFilePopupComponent } from '@app/shared/popups/upload-file-popup/upload-file-popup.component';
-import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {BehaviorSubject, of, Subject} from 'rxjs';
+import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
+import {LangService} from '@services/lang.service';
+import {BeneficiaryService} from '@services/beneficiary.service';
+import {EmployeeService} from '@services/employee.service';
+import {ToastService} from '@services/toast.service';
+import {Beneficiary} from '@app/models/beneficiary';
+import {GdxServiceLog} from '@app/models/gdx-service-log';
+import {UntypedFormControl} from '@angular/forms';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {SortEvent} from '@contracts/sort-event';
+import {CommonUtils} from '@helpers/common-utils';
+import {DateUtils} from '@helpers/date-utils';
+import {exhaustMap, filter, takeUntil} from 'rxjs/operators';
+import {IGdxCriteria} from '@contracts/i-gdx-criteria';
+import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
 
 @Component({
   selector: 'integration-inquiry-log-list',
@@ -28,10 +25,9 @@ export class IntegrationInquiryLogListComponent {
   private destroy$: Subject<any> = new Subject<any>();
 
   constructor(public lang: LangService,
-    private beneficiaryService: BeneficiaryService,
-    private employeeService: EmployeeService,
-    private dialogService: DialogService,
-    private toast: ToastService) {
+              private beneficiaryService: BeneficiaryService,
+              private employeeService: EmployeeService,
+              private toast: ToastService) {
   }
 
   ngOnInit(): void {
@@ -111,12 +107,12 @@ export class IntegrationInquiryLogListComponent {
     }
   };
 
-  selectLog(record: GdxServiceLog): void {
+  private selectLog(record: GdxServiceLog): void {
     this.selectedRecord = record;
     this.onSelect.emit(record);
   }
 
-  downloadDoc(record: GdxServiceLog): void {
+  private downloadDoc(record: GdxServiceLog): void {
     this.onDownload.emit(record);
   }
 
@@ -169,7 +165,7 @@ export class IntegrationInquiryLogListComponent {
         request = this.beneficiaryService.addSecurityBenStatusInquiry(this._getGDXCriteria());
         break;
       case GdxServicesEnum.QCB:
-        this.openAddQCBDocDialog();
+        request = this.beneficiaryService.addQCBInquiryReport(this._getGDXCriteria());
         break;
       default:
         request = null;
@@ -242,22 +238,5 @@ export class IntegrationInquiryLogListComponent {
 
   izzabHasEstate(record: GdxServiceLog): boolean {
     return this.gdxServiceId === GdxServicesEnum.IZZAB && record.gdxServiceResponseParsed.hasIzzab;
-  }
-  openAddQCBDocDialog() {
-    this.dialogService.show(UploadFilePopupComponent, {
-      title: 'qcb_document',
-      isRequired: true,
-      extensions: [FileExtensionsEnum.PDF, FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG]
-    }).onAfterClose$.subscribe((data: File) => {
-      if (data) {
-        this.beneficiaryService.addQCBInquiry(this._getGDXCriteria(), data).subscribe((result) => {
-          if (!result) {
-            return;
-          }
-          this.toast.success(this.lang.map.msg_added_successfully);
-          this._loadGDXIntegrationData();
-        })
-      }
-    })
   }
 }

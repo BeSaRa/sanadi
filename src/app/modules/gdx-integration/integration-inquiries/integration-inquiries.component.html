@@ -162,7 +162,7 @@
   </ng-template>
   <ng-template #QCBTemplate>
     <integration-inquiry-log-list #qcbLogsComponent [gdxServiceId]="gdxServicesEnum.QCB" [beneficiary]="beneficiary"
-                                  (onDownload)="onPreviewFile($event)" (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
+                                  (onDownload)="onDownloadQCBReport($event)" (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
                                   (onReady)="setLookupComponentMap($event, qcbLogsComponent)"></integration-inquiry-log-list>
   </ng-template>
 

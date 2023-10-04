@@ -1,17 +1,17 @@
-import { SharedService } from '@app/services/shared.service';
-import { Component, Input, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
-import { Beneficiary } from '@app/models/beneficiary';
-import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
-import { GdxServiceRelatedTypesEnum } from '@app/enums/gdx-service-related-types.enum';
-import { GdxServiceLog } from '@app/models/gdx-service-log';
-import { LangService } from '@services/lang.service';
-import { TabMap } from '@app/types/types';
-import { GdxGarsiaPensionResponse } from '@app/models/gdx-garsia-pension-response';
-import { IGdxServiceRelatedData } from '@contracts/i-gdx-service-related-data';
-import { CommonUtils } from '@helpers/common-utils';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { ITabData } from '@contracts/i-tab-data';
+import {SharedService} from '@app/services/shared.service';
+import {Component, Input, ViewChild} from '@angular/core';
+import {Subject} from 'rxjs';
+import {Beneficiary} from '@app/models/beneficiary';
+import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
+import {GdxServiceRelatedTypesEnum} from '@app/enums/gdx-service-related-types.enum';
+import {GdxServiceLog} from '@app/models/gdx-service-log';
+import {LangService} from '@services/lang.service';
+import {TabMap} from '@app/types/types';
+import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response';
+import {IGdxServiceRelatedData} from '@contracts/i-gdx-service-related-data';
+import {CommonUtils} from '@helpers/common-utils';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {ITabData} from '@contracts/i-tab-data';
 import {
   IntegrationInquiryLogListComponent
 } from '@app/modules/gdx-integration/integration-inquiry-log-list/integration-inquiry-log-list.component';
@@ -21,14 +21,14 @@ import {
 import {
   GarsiaPensionListComponent
 } from '@app/modules/gdx-integration/related-data/garsia-pension-list/garsia-pension-list.component';
-import { GdxMolPayrollResponse } from '@app/models/gdx-mol-payroll-response';
-import { GdxMojResponse } from '@app/models/gdx-moj-response';
-import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
-import { MoeStudentInfoComponent } from '../related-data/moe-student-info/moe-student-info.component';
-import { MoeInstallmentsComponent } from '../related-data/moe-installments/moe-installments.component';
-import { MoePendingPaymentComponent } from '../related-data/moe-pending-payment/moe-pending-payment.component';
-import { TabsListComponent } from "@app/shared/components/tabs/tabs-list.component";
-import { BeneficiaryService } from '@app/services/beneficiary.service';
+import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
+import {GdxMojResponse} from '@app/models/gdx-moj-response';
+import {GdxMoeResponse} from '@app/models/gdx-moe-pending-installments';
+import {MoeStudentInfoComponent} from '../related-data/moe-student-info/moe-student-info.component';
+import {MoeInstallmentsComponent} from '../related-data/moe-installments/moe-installments.component';
+import {MoePendingPaymentComponent} from '../related-data/moe-pending-payment/moe-pending-payment.component';
+import {TabsListComponent} from "@app/shared/components/tabs/tabs-list.component";
+import {BeneficiaryService} from '@app/services/beneficiary.service';
 
 @Component({
   selector: 'integration-inquiries',
@@ -38,7 +38,8 @@ import { BeneficiaryService } from '@app/services/beneficiary.service';
 export class IntegrationInquiriesComponent {
   @Input('beneficiary') beneficiary!: Beneficiary;
 
-  constructor(public lang: LangService,  private sharedService: SharedService, private beneficiaryService: BeneficiaryService) {}
+  constructor(public lang: LangService, private sharedService: SharedService, private beneficiaryService: BeneficiaryService) {
+  }
 
   private logListComponentsMap: Map<GdxServicesEnum, any> = new Map<GdxServicesEnum, any>();
 
@@ -380,11 +381,14 @@ export class IntegrationInquiriesComponent {
         break;
     }
   }
-  onPreviewFile(log: GdxServiceLog): void {
-    this.beneficiaryService.QCBDownloadReport(log.id).subscribe((file) => {
+
+  onDownloadQCBReport(log: GdxServiceLog): void {
+    this.beneficiaryService.downloadQCBReport(log.id)
+      .subscribe((file) => {
         this.sharedService.openViewContentDialog(file, {});
       });
   }
+
   setLookupComponentMap(serviceId: GdxServicesEnum, componentRef: IntegrationInquiryLogListComponent) {
     if (!CommonUtils.isValidValue(serviceId)) {
       return;

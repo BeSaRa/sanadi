@@ -1,11 +1,11 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
-  <h1 class="h6 text-white">{{lang.map.file_uploader}}</h1>
+  <h1 class="h6 text-white">{{lang.map[titleKey]}}</h1>
   <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="false"
     aria-label="Close"></button>
 </div>
 <div class="dialog-content no-fixed-height">
   <div class="col-12">
-    <file-uploader [labelKey]="title" fileInputKey="upload_file" [allowedExtensions]="extensions"
+    <file-uploader [labelKey]="labelKey" fileInputKey="upload_file" [allowedExtensions]="extensions"
       [allowRemoveLoadedFile]="false" [isRequired]="isRequired" [allowedFileSize]="allowedFileMaxSize"
       (fileUploadEvent)="setFile($event)">
     </file-uploader>
