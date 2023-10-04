@@ -15,4 +15,5 @@ export enum GdxServicesEnum {
   QATAR_RED_CRESCENT = '14',
   HOUSING_BENEFICIARY_STATUS = '15',
   SECURITY_BENEFICIARY_STATUS = '16',
+  QCB = '17',
 }

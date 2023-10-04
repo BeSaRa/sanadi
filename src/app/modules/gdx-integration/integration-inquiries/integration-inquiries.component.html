@@ -27,6 +27,8 @@
         [title]="lang.map[govTabsData.hbs.langKey]"></tab>
     <tab [name]="govTabsData.sbs.name" *ngIf="govTabsData.sbs.show?.()" [template]="SBSTemplate"
         [title]="lang.map[govTabsData.sbs.langKey]"></tab>
+    <tab [name]="govTabsData.qcb.name" *ngIf="govTabsData.qcb.show?.()" [template]="QCBTemplate"
+      [title]="lang.map[govTabsData.qcb.langKey]"></tab>
   </tabs-list>
   <ng-template #MOJTemplate>
     <integration-inquiry-log-list #mojLogsComponent [gdxServiceId]="gdxServicesEnum.MOJ" [beneficiary]="beneficiary"
@@ -158,6 +160,13 @@
       <mme-leased-contract [list]="relatedData[gdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT]"></mme-leased-contract>
     </div>
   </ng-template>
+  <ng-template #QCBTemplate>
+    <integration-inquiry-log-list #qcbLogsComponent [gdxServiceId]="gdxServicesEnum.QCB" [beneficiary]="beneficiary"
+                                  (onDownload)="onPreviewFile($event)" (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
+                                  (onReady)="setLookupComponentMap($event, qcbLogsComponent)"></integration-inquiry-log-list>
+  </ng-template>
+
+
 </ng-template>
 
 <ng-template #CharitableEntitiesTemplate>

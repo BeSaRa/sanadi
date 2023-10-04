@@ -1,3 +1,4 @@
+import { DialogService } from '@services/dialog.service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
@@ -15,6 +16,7 @@ import { DateUtils } from '@helpers/date-utils';
 import { exhaustMap, filter, takeUntil } from 'rxjs/operators';
 import { IGdxCriteria } from '@contracts/i-gdx-criteria';
 import { BeneficiaryIdTypes } from '@app/enums/beneficiary-id-types.enum';
+import { UploadFilePopupComponent } from '@app/shared/popups/upload-file-popup/upload-file-popup.component';
 
 @Component({
   selector: 'integration-inquiry-log-list',
@@ -27,6 +29,7 @@ export class IntegrationInquiryLogListComponent {
   constructor(public lang: LangService,
     private beneficiaryService: BeneficiaryService,
     private employeeService: EmployeeService,
+    private dialogService: DialogService,
     private toast: ToastService) {
   }
 
@@ -50,6 +53,7 @@ export class IntegrationInquiryLogListComponent {
   @Input() gdxServiceId!: GdxServicesEnum;
   @Input() beneficiary!: Beneficiary;
   @Output() onSelect: EventEmitter<GdxServiceLog> = new EventEmitter<GdxServiceLog>();
+  @Output() onDownload: EventEmitter<GdxServiceLog> = new EventEmitter<GdxServiceLog>();
   @Output() onLoadDone: EventEmitter<GdxServicesEnum> = new EventEmitter<GdxServicesEnum>();
   @Output() onReady: EventEmitter<GdxServicesEnum> = new EventEmitter<GdxServicesEnum>();
 
@@ -62,7 +66,7 @@ export class IntegrationInquiryLogListComponent {
     }
     return this._displayedColumns;
   }
-
+  hasDownloadGdx: GdxServicesEnum[] = [GdxServicesEnum.QCB];
   logsList: GdxServiceLog[] = [];
   filterControl = new UntypedFormControl('');
   selectedRecord?: GdxServiceLog;
@@ -74,9 +78,17 @@ export class IntegrationInquiryLogListComponent {
     {
       type: 'action',
       label: 'select',
-      show: () => true,
+      show: () => GdxServicesEnum.QCB !== this.gdxServiceId,
       disabled: (item) => !item.viewable,
       onClick: (item: GdxServiceLog) => this.selectLog(item)
+    },
+    // download
+    {
+      type: 'action',
+      label: 'view_report',
+      show: () => this.hasDownloadGdx.includes(this.gdxServiceId),
+      // disabled: (item) => !item.viewable,
+      onClick: (item: GdxServiceLog) => this.downloadDoc(item)
     }
   ];
 
@@ -101,6 +113,10 @@ export class IntegrationInquiryLogListComponent {
   selectLog(record: GdxServiceLog): void {
     this.selectedRecord = record;
     this.onSelect.emit(record);
+  }
+
+  downloadDoc(record: GdxServiceLog): void {
+    this.onDownload.emit(record);
   }
 
   private _addInquiry() {
@@ -150,6 +166,9 @@ export class IntegrationInquiryLogListComponent {
         break;
       case GdxServicesEnum.SECURITY_BENEFICIARY_STATUS:
         request = this.beneficiaryService.addSecurityBenStatusInquiry(this._getGDXCriteria());
+        break;
+      case GdxServicesEnum.QCB:
+        this.openAddQCBDocDialog();
         break;
       default:
         request = null;
@@ -222,5 +241,18 @@ export class IntegrationInquiryLogListComponent {
 
   izzabHasEstate(record: GdxServiceLog): boolean {
     return this.gdxServiceId === GdxServicesEnum.IZZAB && record.gdxServiceResponseParsed.hasIzzab;
+  }
+  openAddQCBDocDialog() {
+    this.dialogService.show(UploadFilePopupComponent).onAfterClose$.subscribe((data: File) => {
+      if (data) {
+        this.beneficiaryService.addQCBInquiry(this._getGDXCriteria(), data).subscribe((result) => {
+          if (!result) {
+            return;
+          }
+          this.toast.success(this.lang.map.msg_added_successfully);
+          this._loadGDXIntegrationData();
+        })
+      }
+    })
   }
 }
