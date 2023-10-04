@@ -352,14 +352,20 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       this.service.deleteDocument(file.id)
         .subscribe(() => {
           this.toast.success(this.lang.map.msg_delete_x_success.change({x: file.documentTitle}));
-          this.attachments.splice(this.attachments.indexOf(file), 1, (new FileNetDocument()).clone({
-            documentTitle: file.documentTitle,
-            description: file.description,
-            attachmentTypeId: file.attachmentTypeId,
-            attachmentTypeInfo: file.attachmentTypeInfo,
-            required: file.required,
-            attachmentTypeStatus: file.attachmentTypeStatus
-          }));
+          let deletedFileIndex = this.attachments.indexOf(file);
+          if (file.attachmentTypeId === -1) {
+            this.attachments.splice(deletedFileIndex, 1);
+          } else {
+            this.attachments.splice(deletedFileIndex, 1, (new FileNetDocument()).clone({
+              documentTitle: file.documentTitle,
+              description: file.description,
+              attachmentTypeId: file.attachmentTypeId,
+              attachmentTypeInfo: file.attachmentTypeInfo,
+              attachmentTypeServiceData: file.attachmentTypeServiceData,
+              required: file.required,
+              attachmentTypeStatus: file.attachmentTypeStatus
+            }));
+          }
           this.attachments = this.attachments.slice();
           this.separateConditionalAttachments();
         });
