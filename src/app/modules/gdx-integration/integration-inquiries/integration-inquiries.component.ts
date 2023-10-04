@@ -169,7 +169,7 @@ export class IntegrationInquiriesComponent {
     },
     hbs: {
       name: 'hbs',
-      index: 9,
+      index: 10,
       langKey: 'integration_hbs',
       show: () => true,
       validStatus: () => true,
@@ -179,7 +179,7 @@ export class IntegrationInquiriesComponent {
     },
     sbs: {
       name: 'sbs',
-      index: 9,
+      index: 11,
       langKey: 'integration_sbs',
       show: () => true,
       validStatus: () => true,
@@ -189,7 +189,7 @@ export class IntegrationInquiriesComponent {
     },
     qcb: {
       name: 'qcb',
-      index: 9,
+      index: 12,
       langKey: 'integration_qcb',
       show: () => true,
       validStatus: () => true,
