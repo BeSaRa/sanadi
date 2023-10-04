@@ -1,3 +1,4 @@
+import { SharedService } from '@app/services/shared.service';
 import { Component, Input, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Beneficiary } from '@app/models/beneficiary';
@@ -27,6 +28,7 @@ import { MoeStudentInfoComponent } from '../related-data/moe-student-info/moe-st
 import { MoeInstallmentsComponent } from '../related-data/moe-installments/moe-installments.component';
 import { MoePendingPaymentComponent } from '../related-data/moe-pending-payment/moe-pending-payment.component';
 import { TabsListComponent } from "@app/shared/components/tabs/tabs-list.component";
+import { BeneficiaryService } from '@app/services/beneficiary.service';
 
 @Component({
   selector: 'integration-inquiries',
@@ -36,8 +38,7 @@ import { TabsListComponent } from "@app/shared/components/tabs/tabs-list.compone
 export class IntegrationInquiriesComponent {
   @Input('beneficiary') beneficiary!: Beneficiary;
 
-  constructor(public lang: LangService) {
-  }
+  constructor(public lang: LangService,  private sharedService: SharedService, private beneficiaryService: BeneficiaryService) {}
 
   private logListComponentsMap: Map<GdxServicesEnum, any> = new Map<GdxServicesEnum, any>();
 
@@ -184,6 +185,16 @@ export class IntegrationInquiriesComponent {
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       serviceId: GdxServicesEnum.SECURITY_BENEFICIARY_STATUS,
+      isLoaded: false
+    },
+    qcb: {
+      name: 'qcb',
+      index: 9,
+      langKey: 'integration_qcb',
+      show: () => true,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.QCB,
       isLoaded: false
     },
   };
@@ -348,9 +359,7 @@ export class IntegrationInquiriesComponent {
         this.moeStudentInfoComponentRef.setSelectedStudentInfo(undefined);
         break;
       case GdxServicesEnum.MME:
-        // console.log(log)
         this.relatedData[this.gdxServiceRelatedTypesEnum.MME_LEASED_CONTRACT] = log.gdxServiceResponseList;
-        // console.log(this.relatedData)
         break;
       case GdxServicesEnum.QATAR_CHARITY:
         this.relatedData[this.gdxServiceRelatedTypesEnum.QATAR_CHARITY] = log.gdxServiceResponseList;
@@ -371,7 +380,11 @@ export class IntegrationInquiriesComponent {
         break;
     }
   }
-
+  onPreviewFile(log: GdxServiceLog): void {
+    this.beneficiaryService.QCBDownloadReport(log.id).subscribe((file) => {
+        this.sharedService.openViewContentDialog(file, {});
+      });
+  }
   setLookupComponentMap(serviceId: GdxServicesEnum, componentRef: IntegrationInquiryLogListComponent) {
     if (!CommonUtils.isValidValue(serviceId)) {
       return;

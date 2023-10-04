@@ -1372,6 +1372,8 @@ export interface ILanguageKeys {
   integration_sjc: string;
   integration_hbs: string;
   integration_sbs: string;
+  integration_qcb: string;
+  qcb_document: string;
   integration_qatar_charity: string;
   integration_qatar_zakat_fund: string;
   integration_qrcs: string;
@@ -2038,4 +2040,5 @@ export interface ILanguageKeys {
   training_program_departments:string;
   training_program_add_department:string;
   training_classification:string;
+  view_report:string;
 }

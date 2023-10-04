@@ -1,3 +1,5 @@
+import { catchError } from 'rxjs/operators';
+import { BlobModel } from '@app/models/blob-model';
 import { GdxMsdfSecurityResponse } from '@app/models/gdx-msdf-security';
 import { GdxMsdfHousingResponse } from '@app/models/gdx-msdf-housing';
 import { GdxEidCharitableFoundationResponse } from './../models/gdx-eid-charitable-foundation-response';
@@ -7,7 +9,7 @@ import { Beneficiary } from '../models/beneficiary';
 import { FactoryService } from './factory.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { UrlService } from './url.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { BeneficiaryInterceptor } from '../model-interceptors/beneficiary-interceptor';
 import { IBeneficiaryCriteria } from '@contracts/i-beneficiary-criteria';
 import { DialogRef } from '../shared/models/dialog-ref';
@@ -47,6 +49,8 @@ import { GdxSjcMaritalStatusResponse } from '@models/gdx-sjc-marital-status-resp
 import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
 import { GdxMmeResponse } from '@app/models/gdx-mme-leased-contract';
 import { GdxQatarCharityResponse } from '@app/models/gdx-qatar-charity-response';
+import { GdxQCBResponse } from '@app/models/gdx-qcb-response';
+import { DomSanitizer } from '@angular/platform-browser';
 
 const beneficiarySearchLogCriteriaInterceptor = new BeneficiarySearchLogCriteriaInterceptor();
 
@@ -69,6 +73,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
 
   constructor(public http: HttpClient,
     private urlService: UrlService,
+    public domSanitizer: DomSanitizer,
     private configurationService: ConfigurationService,
     private dialogService: DialogService) {
     super();
@@ -292,5 +297,28 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   })
   addSecurityBenStatusInquiry(criteria: IGdxCriteria) {
     return this.http.post<GdxMsdfSecurityResponse[]>(this._getGDXServiceURL() + '/msdf/security-beneficiary-status', criteria);
+  }
+  @CastResponse(() => GdxQCBResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addQCBInquiry(criteria: IGdxCriteria, file: File) {
+    const formData = new FormData();
+    file ? formData.append('content', file) : null;
+    formData.append('entity', JSON.stringify({
+      benId: criteria.benId,
+      gdxServiceId: criteria.gdxServiceId,
+      qId: criteria.qId
+    }))
+    return this.http.post<GdxQCBResponse[]>(this._getGDXServiceURL() + '/qcb/create-report', formData);
+  }
+  QCBDownloadReport(gdxServiceLogId: number) {
+    return this.http.get(this._getGDXServiceURL() + '/qcb/download-report/' + gdxServiceLogId, {
+      responseType: 'blob'
+    }).pipe(
+      map(blob => new BlobModel(blob, this.domSanitizer),
+        catchError(_ => {
+          return of(new BlobModel(new Blob([], { type: 'error' }), this.domSanitizer));
+        })));
   }
 }
