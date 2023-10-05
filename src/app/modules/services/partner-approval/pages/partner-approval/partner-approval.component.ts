@@ -419,7 +419,7 @@ export class PartnerApprovalComponent
   }
 
   openMapMarker() {
-    this.model!.openMap(this.readonly).onAfterClose$.subscribe(
+    this.model!.openMap(this.isExtendOrCancelRequestType() || this.readonly).onAfterClose$.subscribe(
       ({ click, value }: { click: UserClickOn; value: ICoordinates }) => {
         if (click === UserClickOn.YES) {
           this.model!.latitude = value.latitude;
