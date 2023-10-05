@@ -1,19 +1,19 @@
-<div class="d-flex flex-column flex-fill" *ngIf="loaded">
-  <div *ngIf="!hideInputs" class="row" [formGroup]="form">
-    <div class="col-sm-12 col-md-6 mb-4 position-relative">
-      <label class="form-label" asteriskIfRequired="lat" for="lat">{{lang.map.latitude}}</label>
-      <input id="lat" validationClasses="lat" formControlName="lat"
-             class="form-control" [readonly]="viewOnly" (change)="updateMarkerPositionByInput($event)">
-      <app-field-error-message controlName="lat"></app-field-error-message>
-    </div>
-    <div class="col-sm-12 col-md-6 mb-4 position-relative">
-      <label class="form-label" asteriskIfRequired="lng" for="lng">{{lang.map.longitude}}</label>
-      <input id="lng" validationClasses="lng" formControlName="lng"
-             class="form-control" [readonly]="viewOnly" (change)="updateMarkerPositionByInput($event)">
-      <app-field-error-message controlName="lng"></app-field-error-message>
-    </div>
-    <hr>
+<div *ngIf="!hideInputs" class="row" [formGroup]="form">
+  <div class="col-sm-12 col-md-6 mb-4 position-relative">
+    <label class="form-label" asteriskIfRequired="lat" for="lat">{{lang.map.latitude}}</label>
+    <input id="lat" validationClasses="lat" formControlName="lat"
+           class="form-control" [readonly]="viewOnly" (change)="updateMarkerPositionByInput($event)">
+    <app-field-error-message controlName="lat"></app-field-error-message>
   </div>
+  <div class="col-sm-12 col-md-6 mb-4 position-relative">
+    <label class="form-label" asteriskIfRequired="lng" for="lng">{{lang.map.longitude}}</label>
+    <input id="lng" validationClasses="lng" formControlName="lng"
+           class="form-control" [readonly]="viewOnly" (change)="updateMarkerPositionByInput($event)">
+    <app-field-error-message controlName="lng"></app-field-error-message>
+  </div>
+  <hr>
+</div>
+<div class="d-flex flex-column flex-fill" *ngIf="loaded">
   <span *ngIf="!viewOnly" class="text-primary fw-bold pb-1 text-center">{{lang.map.msg_right_click_on_map_to_set_location}}</span>
   <google-map [width]="600" [height]="550" class="flex-fill" [options]="mapOptions"
               (mapRightclick)="rightClicked(menu , $event , viewOnlyMenu)" [center]="center"
