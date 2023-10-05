@@ -123,7 +123,7 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     model.workAreaObjectList = model.workAreaObjectList?.map(e => workAreaInterceptor.receive(new WorkArea().clone(e)));
     model.charityBranchList = model.charityBranchList?.map(e => new CharityBranch().clone(charityBranchInterceptor.receive(new CharityBranch().clone(e))));
     model.workFieldClassificationList = model.workFieldClassificationList?.map(e => foreignAidClassificationInterceptor.receive(new ForeignAidClassification().clone(e)));
-    model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.receive(new RealBeneficiary().clone(new RealBeneficiary().clone(e))));
+    model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.receive(new RealBeneficiary().clone(e)));
     model.boardMemberList = model.boardMemberList?.map(e => membersInterceptor.receive(new OrgMember().clone(e)));
     model.authorizedSignatoryMemberList = model.authorizedSignatoryMemberList?.map(e => membersInterceptor.receive(new OrgMember().clone(e)));
     model.founderMemberList = model.founderMemberList?.map(e => membersInterceptor.receive(new OrgMember().clone(e)));
