@@ -293,7 +293,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     }
 
     signSub.subscribe(() => {
-      this.userPermissionInternalComponentRef.saveUserPermissions()
+      this.userPermissionInternalComponentRef.saveUserPermissions(model.id)
         .pipe(
           catchError(() => of(null)),
           filter((response) => response !== null)

@@ -109,8 +109,8 @@ export class UserPermissionInternalComponent implements OnInit, OnDestroy {
     return [...new Set(this.groupHandler.getSelection())];
   }
 
-  saveUserPermissions(): Observable<any> {
-    return this.userPermissionService.saveUserPermissions(this.user.id, this._getFinalPermissions());
+  saveUserPermissions(id: number): Observable<any> {
+    return this.userPermissionService.saveUserPermissions(id, this._getFinalPermissions());
   }
 
   ngOnDestroy(): void {
