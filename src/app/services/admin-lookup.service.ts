@@ -498,4 +498,12 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
       })
     );
   }
+  @CastResponse(() => AdminLookup, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  LoadMainWorkField() {
+    return this.http.get<AdminLookup[]>(this.getServiceURLByType(AdminLookupTypeEnum.WORK_FIELD) +  '/main')
+      .pipe((catchError((_) => of([]))));
+  }
 }
