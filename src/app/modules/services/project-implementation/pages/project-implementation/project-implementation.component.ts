@@ -431,7 +431,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     // this method will work only if you opened the case for the first time
     // Usually used to load the lookups related to select controllers
     this.displayDomain ? (() => {
-      this.loadDacOuchMain(model.domain)
+      this.loadDacOuchMain()
       this.loadSubDacOchaByParentId(this.displayDac ? model.mainDACCategory : model.mainUNOCHACategory)
     })() : null
   }
@@ -535,13 +535,13 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.countries.find(item => item.enName.toLowerCase() === 'qatar')!
   }
 
-  private loadDacOuchMain(domain: DomainTypes | null, callback?: () => void): void {
-    if (!domain || this.loadedDacOchaBefore) {
+  private loadDacOuchMain(callback?: () => void): void {
+    if (this.loadedDacOchaBefore) {
       callback && callback()
       return
     }
 
-    this.dacOchaService.loadAsLookups()
+    this.dacOchaService.loadMainDacOcha()
       .pipe(takeUntil(this.destroy$))
       .subscribe((list) => {
         this.loadedDacOchaBefore = true;
@@ -632,7 +632,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         this.mainDACCategory.setValue(null, {emitEvent: false})
         this.displayDac = value === DomainTypes.DEVELOPMENT;
         this.displayOcha = value === DomainTypes.HUMANITARIAN;
-        this.loadDacOuchMain(value)
+        this.loadDacOuchMain()
         this.model && (this.model.domain = value)
         this.handleMandatoryFields()
       })

@@ -724,13 +724,13 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     })
   }
 
-  private loadDacOuchMain(domain: DomainTypes | null, callback?: () => void): void {
-    if (!domain || this.loadedDacOchaBefore) {
+  private loadDacOuchMain( callback?: () => void): void {
+    if (this.loadedDacOchaBefore) {
       callback && callback()
       return
     }
 
-    this.dacOchaService.loadAsLookups()
+    this.dacOchaService.loadMainDacOcha()
       .pipe(takeUntil(this.destroy$))
       .subscribe((list) => {
         this.loadedDacOchaBefore = true;
@@ -864,7 +864,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         value === ProjectWorkArea.OUTSIDE_QATAR && (() => {
           !this.domain.value && this.domain.setValue(DomainTypes.HUMANITARIAN, { emitEvent: false })
           this.domain.updateValueAndValidity({ emitEvent: false })
-          this.loadDacOuchMain(this.domain.value)
+          this.loadDacOuchMain()
           this.emptyFields(aidFields)
           this.countriesField.setValue(((this.countriesField.value ?? []) as number[]).filter(id => id !== this.qatarCountry.id), { emitEvent: false })
           this.countriesField.enable({ emitEvent: false })
@@ -916,7 +916,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   _afterOpenCase(model: ProjectFundraising) {
     model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR && (() => {
-      this.loadDacOuchMain(model.domain)
+      this.loadDacOuchMain()
       this.loadSubDacOchaByParentId(model.getDacOchaId())
     })()
     model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR && model.projectType === FundraisingProjectTypes.AIDS && this.loadSanadyMainClassification(model.sanadiDomain)
@@ -959,13 +959,13 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       // outside and domain development
       model.domain === DomainTypes.DEVELOPMENT ?
         (() => {
-          this.loadDacOuchMain(model.domain)
+          this.loadDacOuchMain()
           this.loadSubDacOchaByParentId(model.mainDACCategory)
         })() :
         // outside and domain humanitarian
         (() => {
           model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT ? (() => {
-            this.loadDacOuchMain(model.domain)
+            this.loadDacOuchMain()
             this.loadSubDacOchaByParentId(model.mainUNOCHACategory)
           })() : null
         })()

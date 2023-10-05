@@ -55,6 +55,9 @@ export class DacOchaService extends CrudWithDialogGenericService<AdminLookup> {
   loadAsLookups(): Observable<AdminLookup[]> {
     return this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.WORK_FIELD);
   }
+  loadMainDacOcha(): Observable<AdminLookup[]> {
+    return this.adminLookupService.LoadMainWorkField();
+  }
 
   loadByType(dacOchaTypeId: AdminLookupTypeEnum) {
     return this.adminLookupService.loadWorkFieldsByType(dacOchaTypeId);
