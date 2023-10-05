@@ -504,7 +504,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.model && this.model.clearTemplate() && this.model.setProjectTotalCost(0) && this.projectTotalCost.setValue(0, { emitEvent: false })
-        this.clearDeductionItems = true;
+        // this.clearDeductionItems = true;
       })
   }
 
@@ -1020,12 +1020,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private listenToDataWillEffectSelectedTemplate(): void {
     const fields = [
       { ctrl: this.permitType, key: 'permitType' },
-      // { ctrl: this.projectWorkArea, key: 'projectWorkArea' },
-      // { ctrl: this.domain, key: 'domain' },
+      { ctrl: this.projectWorkArea, key: 'projectWorkArea' },
+      { ctrl: this.domain, key: 'domain' },
       // { ctrl: this.mainDACCategory, key: 'mainDACCategory' },
       // { ctrl: this.mainUNOCHACategory, key: 'mainUNOCHACategory' },
-      // { ctrl: this.countriesField, key: 'countriesField' },
-      // { ctrl: this.projectType, key: 'projectType' },
+      { ctrl: this.countriesField, key: 'countriesField' },
+      { ctrl: this.projectType, key: 'projectType' },
       // { ctrl: this.internalProjectClassification, key: 'internalProjectClassification' },
       // { ctrl: this.sanadiDomain, key: 'sanadiDomain' },
       // { ctrl: this.sanadiMainClassification, key: 'sanadiMainClassification' },
@@ -1094,16 +1094,17 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private listenToPermitTypeChanges() {
     this.permitType.valueChanges
-      .pipe(this.holdTillGetUserResponse())
+      // .pipe(this.holdTillGetUserResponse())
       .pipe(takeUntil(this.destroy$))
       .subscribe((type: ProjectPermitTypes) => {
         [ProjectPermitTypes.CHARITY, ProjectPermitTypes.UNCONDITIONAL_RECEIVE].includes(type) ? (() => {
           this.projectWorkArea.setValue(null, { emitEvent: false })
         })() :
-          this.projectWorkArea.value === ExecutionFields.OutsideQatar ?
-            this.countriesField.reset() :
-            this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR);
-        this.projectWorkArea.updateValueAndValidity();
+         (()=>{
+          if(this.projectWorkArea.value === ExecutionFields.OutsideQatar )
+              this.countriesField.setValue(null,{ emitEvent: false })
+         })()
+            // this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR,{ emitEvent: false });
 
       })
   }

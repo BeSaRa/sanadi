@@ -60,6 +60,7 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
 
   @Input()
   set numberOfMonths(value: number) {
+    this.clearItems$.next(true)
     this.numberOfMonths$.next(value);
   }
 
@@ -283,10 +284,10 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
     //   return;
     // }
 
-    if (this.yearsList.length === 1 && this._model.amountOverYearsList.length === 0) {
-      this.addOrphanItem()
-      return
-    }
+    // if (this.yearsList.length === 1 && this._model.amountOverYearsList.length === 0) {
+    //   this.addOrphanItem()
+    //   return
+    // }
 
     this.yearsList.forEach(item => {
       if (!this.selectedItems.includes(item)) {
