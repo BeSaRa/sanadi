@@ -49,6 +49,7 @@ import { TemplateStatus } from "@app/enums/template-status";
 import { ServiceDataService } from "@services/service-data.service";
 import { ServiceData } from "@app/models/service-data";
 import { ExecutionFields } from '@app/enums/execution-fields';
+import { ProjectTypes } from '@app/enums/project-types';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -89,6 +90,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   displaySanadySection: boolean = true;
   displayInternalSection: boolean = true;
   displayDacSection: boolean = true;
+  displaySubDacSection: boolean = true;
   displayOchaSection: boolean = true;
   // will create it later
   userAnswer: ReplaySubject<UserClickOn> = new ReplaySubject<UserClickOn>(1)
@@ -104,7 +106,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     }
   }
 
-   configs!: ServiceData;
+  configs!: ServiceData;
 
   private controlsToWatchOldValues = [
     'permitType',
@@ -464,8 +466,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
     if (workArea === ProjectWorkArea.OUTSIDE_QATAR) {
       domain === DomainTypes.DEVELOPMENT ?
-       external['mainDAC'] = 'mainDACCategory' :
-       external['mainUNOCHA'] = 'mainUNOCHACategory';
+        external['mainDAC'] = 'mainDACCategory' :
+        external['mainUNOCHA'] = 'mainUNOCHACategory';
     }
 
     if (workArea === ProjectWorkArea.INSIDE_QATAR) {
@@ -481,7 +483,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     return Object.entries(this.projectWorkArea.value === ProjectWorkArea.INSIDE_QATAR ? internal : external)
       .reduce((acc, [key, controlName]: [string, string]) => {
         const control = this[(controlName as keyof this)] as AbstractControl
-        if(control.getRawValue()) {
+        if (control.getRawValue()) {
           return { ...acc, [key]: control.getRawValue() };
         } else {
           return acc;
@@ -724,7 +726,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     })
   }
 
-  private loadDacOuchMain( callback?: () => void): void {
+  private loadDacOuchMain(callback?: () => void): void {
     if (this.loadedDacOchaBefore) {
       callback && callback()
       return
@@ -784,9 +786,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.displayInsideQatar = !!(model.projectWorkArea && model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR)
     this.displayOutsideQatar = !!(model.projectWorkArea && model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR)
     this.templateRequired = this.displayAllFields && model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
-    this.displaySanadySection = !!(this.displayInsideQatar && model.projectType && model.projectType === FundraisingProjectTypes.AIDS)
-    this.displayInternalSection = !!(this.displayInsideQatar && model.projectType && model.projectType === FundraisingProjectTypes.SOFTWARE)
+    this.displaySanadySection = !!(this.displayInsideQatar && model.projectType && model.projectType === FundraisingProjectTypes.AIDS && this.permitType.value !== ProjectPermitTypes.SECTIONAL_BASKET)
+    this.displayInternalSection = !!(this.displayInsideQatar && model.projectType && model.projectType === FundraisingProjectTypes.SOFTWARE && this.permitType.value !== ProjectPermitTypes.SECTIONAL_BASKET)
     this.displayDacSection = this.displayOutsideQatar && model.domain === DomainTypes.DEVELOPMENT
+    this.displaySubDacSection = this.displayDacSection && this.permitType.value !== ProjectPermitTypes.SECTIONAL_BASKET;
     this.displayOchaSection = this.displayOutsideQatar && model.domain === DomainTypes.HUMANITARIAN && model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
   }
 
@@ -820,6 +823,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.displayOutsideQatar && this.markNotRequired(insideFields) && (() => {
       this.markRequired([this.domain])
       this.displayDacSection ? this.markRequired(dacFields) : this.markNotRequired(dacFields)
+      this.displaySubDacSection ? this.markRequired([this.subDACCategory]) : this.markNotRequired([this.subDACCategory])
       this.displayOchaSection ? this.markRequired(ochaFields) : this.markNotRequired(ochaFields)
       this.countriesField.enable({ emitEvent: false })
     })()
@@ -848,7 +852,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private holdTillGetUserResponse() {
     return switchMap((value: number) => {
-      return iif(() => !!(this.model && (this.model.hasTemplate() || this.model.hasCountries() || this.model.hasYears())), this.userAnswer.pipe(filter(v => v === UserClickOn.YES), map(_ => value)), of(value))
+      return iif(() => !!(this.model && (this.model.hasTemplate() || this.model.hasCountries() || this.model.hasYears())),
+        this.userAnswer.pipe(filter(v => v === UserClickOn.YES), map(_ => value)), of(value))
     })
   }
 
@@ -885,6 +890,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private listenToMainDacOchaChanges() {
     merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
       .pipe(this.holdTillGetUserResponse())
+      .pipe(filter(_ => this.permitType.value !== ProjectPermitTypes.SECTIONAL_BASKET))
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
         this.subDACCategory.setValue(null, { emitEvent: false })
@@ -893,6 +899,16 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       })
   }
 
+  showMainDacOnly(): boolean {
+    return this.permitType.value === ProjectPermitTypes.SECTIONAL_BASKET &&
+      this.projectWorkArea.value === ProjectWorkArea.OUTSIDE_QATAR &&
+      this.domain.value === DomainTypes.DEVELOPMENT
+  }
+  hideSanadyDomain(): boolean {
+    return this.permitType.value === ProjectPermitTypes.SECTIONAL_BASKET &&
+      this.projectWorkArea.value === ProjectWorkArea.INSIDE_QATAR &&
+      this.projectType.value === ProjectTypes.STRUCTURAL
+  }
   private listenToDomainChanges() {
     const dacFields = [this.mainDACCategory, this.subDACCategory]
     const ochaFields = [this.mainUNOCHACategory, this.subUNOCHACategory]
@@ -1003,16 +1019,16 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private listenToDataWillEffectSelectedTemplate(): void {
     const fields = [
-      // { ctrl: this.permitType, key: 'permitType' },
+      { ctrl: this.permitType, key: 'permitType' },
       // { ctrl: this.projectWorkArea, key: 'projectWorkArea' },
-      { ctrl: this.domain, key: 'domain' },
-      { ctrl: this.mainDACCategory, key: 'mainDACCategory' },
-      { ctrl: this.mainUNOCHACategory, key: 'mainUNOCHACategory' },
+      // { ctrl: this.domain, key: 'domain' },
+      // { ctrl: this.mainDACCategory, key: 'mainDACCategory' },
+      // { ctrl: this.mainUNOCHACategory, key: 'mainUNOCHACategory' },
       // { ctrl: this.countriesField, key: 'countriesField' },
-      { ctrl: this.projectType, key: 'projectType' },
-      { ctrl: this.internalProjectClassification, key: 'internalProjectClassification' },
-      { ctrl: this.sanadiDomain, key: 'sanadiDomain' },
-      { ctrl: this.sanadiMainClassification, key: 'sanadiMainClassification' },
+      // { ctrl: this.projectType, key: 'projectType' },
+      // { ctrl: this.internalProjectClassification, key: 'internalProjectClassification' },
+      // { ctrl: this.sanadiDomain, key: 'sanadiDomain' },
+      // { ctrl: this.sanadiMainClassification, key: 'sanadiMainClassification' },
     ]
     const fieldsObservables = fields.map((item) => this.createFieldObservable(item))
     merge(...fieldsObservables)
@@ -1031,7 +1047,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       )
       .subscribe(({ answer, oldValue, field, key }) => {
         answer === UserClickOn.YES ? (() => {
-          this.model && this.model.hasTemplate() ? this.deleteTemplate(true) : this.clearDeductionItems = true
+          if (this.model && this.model.hasTemplate()) {
+            this.deleteTemplate(true)
+          }
         })() : (() => {
           let value = this.storedOldValues[key] || oldValue;
           field.setValue(value, { emitEvent: false })
@@ -1082,11 +1100,11 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         [ProjectPermitTypes.CHARITY, ProjectPermitTypes.UNCONDITIONAL_RECEIVE].includes(type) ? (() => {
           this.projectWorkArea.setValue(null, { emitEvent: false })
         })() :
-        this.projectWorkArea.value === ExecutionFields.OutsideQatar ?
-        this.countriesField.reset() :
-        this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR);
+          this.projectWorkArea.value === ExecutionFields.OutsideQatar ?
+            this.countriesField.reset() :
+            this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR);
         this.projectWorkArea.updateValueAndValidity();
 
       })
-    }
+  }
 }
