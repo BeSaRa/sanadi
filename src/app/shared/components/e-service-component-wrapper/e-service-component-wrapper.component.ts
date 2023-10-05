@@ -1407,7 +1407,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.RETURN_TO_ORG);
+          return item.getResponses().includes(WFResponseType.RETURN_TO_ORG) && item.organizationId == item.ouInfo.id;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.returnToOrganizationAction(item);
