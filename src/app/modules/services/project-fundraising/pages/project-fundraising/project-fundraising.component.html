@@ -127,7 +127,7 @@
                   </ng-select>
                   <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
                 </div>
-                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                <div class="col-md-4 col-sm-12 mb-4 position-relative"  *ngIf="displaySubDacSection">
                   <label class="form-label" asteriskIfRequired="subDACCategory"
                          for="subDACCategory">{{lang.map.sub_dac_category}}</label>
                   <ng-select validationClasses="subDACCategory" appendTo="body" [clearable]="true" id="subDACCategory"
