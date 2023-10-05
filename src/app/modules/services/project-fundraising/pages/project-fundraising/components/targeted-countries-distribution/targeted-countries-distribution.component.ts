@@ -74,6 +74,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
   @Input()
   set countriesChange(value: number[]) {
+    this.clearItems$.next(true)
     this.countriesChange$.next(value)
   }
 
@@ -237,10 +238,10 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     //   return;
     // }
 
-    if (this.countriesList.length === 1 && this._model.amountOverCountriesList.length === 0) {
-      this.addOrphanItem()
-      return
-    }
+    // if (this.countriesList.length === 1 && this._model.amountOverCountriesList.length === 0) {
+    //   this.addOrphanItem()
+    //   return
+    // }
 
     this.countriesList.forEach(item => {
       if (!this.selectedIds.includes(item.id)) {
