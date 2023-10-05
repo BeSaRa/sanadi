@@ -1084,7 +1084,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         })() :
         this.projectWorkArea.value === ExecutionFields.OutsideQatar ?
         this.countriesField.reset() :
-        this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR, { emitEvent: false });
+        this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR);
+        this.projectWorkArea.updateValueAndValidity();
 
       })
     }
