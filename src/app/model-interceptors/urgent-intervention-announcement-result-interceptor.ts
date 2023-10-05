@@ -33,22 +33,28 @@ export class UrgentInterventionAnnouncementResultInterceptor implements IModelIn
     model.executionCountryInfo && (model.executionCountryInfo = AdminResult.createInstance(model.executionCountryInfo));
     model.ouInfo && (model.ouInfo = AdminResult.createInstance(model.ouInfo));
     model.implementingAgencyList = model.implementingAgencyList.map((x: any) => {
-      return implementingAgencyInterceptor.receive(x);
+      return implementingAgencyInterceptor.receive(new ImplementingAgency().clone(x));
     });
     model.interventionRegionList = model.interventionRegionList.map((x: any) => {
-      return interventionRegionInterceptor.receive(x);
+      return interventionRegionInterceptor.receive(new InterventionRegion().clone(x));
     });
     model.interventionFieldList = model.interventionFieldList.map((x: any) => {
-      return interventionFieldInterceptor.receive(x);
+      return interventionFieldInterceptor.receive(new InterventionField().clone(x));
     });
     model.officeEvaluationList = model.officeEvaluationList.map((x: any) => {
-      return officeEvaluationInterceptor.receive(x);
+      return officeEvaluationInterceptor.receive(new OfficeEvaluation().clone(x));
+    });
+    model.bestPracticesList = model.bestPracticesList.map((x: any) => {
+      return bestPracticesInterceptor.receive(new BestPractices().clone(x));
+    });
+    model.lessonsLearnedList = model.lessonsLearnedList.map((x: any) => {
+      return lessonsLearnedInterceptor.receive(new LessonsLearned().clone(x));
     });
     model.resultList = model.resultList.map((x: any) => {
-      return resultInterceptor.receive(x);
+      return resultInterceptor.receive(new Result().clone(x));
     });
     model.stageList = model.stageList.map((x: any) => {
-      return stageInterceptor.receive(x);
+      return stageInterceptor.receive(new Stage().clone(x));
     });
     return model;
   }
