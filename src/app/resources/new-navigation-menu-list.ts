@@ -2881,4 +2881,17 @@ export const newNavigationMenuList = [
     itemOrder: 24,
     svg: null
   },
+  {
+    id: 92,
+    langKey: 'menu_npo_employee',
+    path: '/home/administration/npo-employee',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_NPO_EMPLOYEE,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 24,
+    svg: null
+  },
 ];

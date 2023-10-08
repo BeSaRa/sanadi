@@ -98,11 +98,6 @@ export class EmployeeFormPopupComponent implements OnInit {
         this.form.patchValue({
           ...r,
         });
-        // this.countriesList.filter(c => c.isActive());
-        // const country = this.countriesList.find(c => c.id == r.contractLocation);
-        // if (!country) {
-        //   this.countriesList.push(new Country().clone({ id: r.contractLocation, arName: r.contractLocationInfo.arName, enName: r.contractLocationInfo.enName, status: CommonStatusEnum.DEACTIVATED }))
-        // }
         this.handlePreviewOfficeName();
         this.handleContractExpireDateValidationsByContractType();
         this.handleEndDateValidationsByContractStatus();
@@ -117,11 +112,6 @@ export class EmployeeFormPopupComponent implements OnInit {
         this.form.patchValue({
           ...r,
         });
-        // this.countriesList.filter(c => c.isActive());
-        // const country = this.countriesList.find(c => c.id == r.contractLocation);
-        // if (!country) {
-        //   this.countriesList.push(new Country().clone({ id: r.contractLocation, arName: r.contractLocationInfo.arName, enName: r.contractLocationInfo.enName, status: CommonStatusEnum.DEACTIVATED }))
-        // }
         this.handlePreviewOfficeName();
         this.handleContractExpireDateValidationsByContractType();
         this.handleEndDateValidationsByContractStatus();

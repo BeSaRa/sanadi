@@ -40,6 +40,7 @@ import {ErrorPageComponent} from '@app/shared/components/error-page/error-page.c
 import { AdminPermissionComponent } from '@app/administration/pages/admin-permission/admin-permission.component';
 import { TrainingProgramAudienceComponent } from '@app/administration/pages/training-program-audience/training-program-audience.component';
 import { TrainingProgramClassificationComponent } from '@app/administration/pages/training-program-classification/training-program-classification.component';
+import { NpoEmployeeComponent } from '@app/administration/pages/npo-employee/npo-employee.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -142,6 +143,15 @@ const routes: Routes = [
     canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.TRAINING_PROGRAM_CLASSIFICATION,
+      configPermissionGroup: null,
+      checkAnyPermission: false
+    }
+  },
+  {
+    path: 'npo-employee', component: NpoEmployeeComponent,
+    canActivate: [PermissionGuard.canActivate],
+    data: {
+      permissionKey: PermissionsEnum.MANAGE_NPO_EMPLOYEE,
       configPermissionGroup: null,
       checkAnyPermission: false
     }

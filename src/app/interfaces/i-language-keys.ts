@@ -1868,6 +1868,8 @@ export interface ILanguageKeys {
   menu_training_program_classification: string;
   lbl_edit_training_program_classification: string;
   lbl_add_training_program_classification: string;
+  menu_npo_employee: string;
+  lbl_edit_npo_employee: string;
   lbl_transfer_operation_date: string;
   msg_record_is_linked: string;
   previews_replays: string;

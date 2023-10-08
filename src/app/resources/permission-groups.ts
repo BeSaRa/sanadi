@@ -45,7 +45,8 @@ const adminPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.MANAGE_EXTERNAL_USER_DYNAMIC,
   PermissionsEnum.MANAGE_LICENSES_AND_PERMITS,
   PermissionsEnum.MANAGE_SYSTEM_PREFERENCES,
-  PermissionsEnum.TRAINING_PROGRAM_CLASSIFICATION
+  PermissionsEnum.TRAINING_PROGRAM_CLASSIFICATION,
+  PermissionsEnum.MANAGE_NPO_EMPLOYEE,
 ];
 
 const externalUserPermissionsGroup: PermissionsEnum[] = [
