@@ -3,6 +3,7 @@ import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { AuditListGenericComponent } from '@app/generics/audit-list-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { IFindInList } from '@app/interfaces/i-find-in-list';
 import { NpoContactOfficer } from '@app/models/npo-contact-officer';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { CaseAuditService } from '@app/services/case-audit.service';
@@ -42,6 +43,9 @@ export class AuditNpoContactOfficerComponent extends AuditListGenericComponent<N
 
   getControlLabels(item: NpoContactOfficer): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
+  }
+  existsInList(objComparison: IFindInList<NpoContactOfficer>): NpoContactOfficer | undefined {
+    return objComparison.listToCompareWith.find((item) => item.identificationNumber === objComparison.itemToCompare.identificationNumber && item.itemId === objComparison.itemToCompare.itemId);
   }
 
 }
