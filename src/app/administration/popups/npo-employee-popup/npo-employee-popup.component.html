@@ -1,0 +1,283 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
+      fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+      aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content" #dialogContent>
+  <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+    <div class="row">
+      <!-- identificationType -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="identificationType" for="identificationType" labelForId="identificationType"
+          class="form-label">{{ lang.map.identification_type }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="false" placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" id="identificationType"
+          formControlName="identificationType" validationClasses="identificationType"
+          (change)="handleIdentityNumberValidationsByIdentificationType()">
+          <ng-option *ngFor="let option of IdentificationTypeList" [value]="option.lookupKey">{{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="identificationType"></app-field-error-message>
+      </div>
+      <!-- passportNumber -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative" *ngIf="isPassportNumberType()">
+        <label asteriskIfRequired="passportNumber" for="passportNumber" class="form-label">{{ lang.map.passport_number
+          }}</label>
+        <input id="passportNumber" validationClasses="passportNumber" formControlName="passportNumber"
+          class="form-control" />
+        <app-field-error-message controlName="passportNumber"></app-field-error-message>
+      </div>
+      <!-- identificationNumber -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative" *ngIf="isIdentificationNumberType()">
+        <label asteriskIfRequired="qId" for="qId" class="form-label">{{
+          lang.map.identification_number }}</label>
+        <input id="qId" validationClasses="qId" formControlName="qId"
+          class="form-control" />
+        <app-field-error-message controlName="qId"></app-field-error-message>
+      </div>
+      <!-- expIdPass -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative"
+        *ngIf="isIdentificationNumberType() || isPassportNumberType()">
+        <label for="expIdPass" asteriskIfRequired="expIdPass" class="form-label">{{
+          isIdentificationNumberType() ? lang.map.identification_number_exp_date : lang.map.passport_number_exp_date
+          }}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="expIdPass" id="expIdPass"
+            [options]="datepickerOptionsMap.expIdPass" (click)="openDateMenu(dpexpIdPass)"
+            [ngClass]="{ 'input-disabled': !saveVisible }" #dpexpIdPass="angular-mydatepicker" angular-mydatepicker
+            validationClasses="expIdPass"></div>
+          <app-field-error-message controlName="expIdPass"></app-field-error-message>
+        </div>
+      </div>
+      <!-- arabicName -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="arabicName" for="arabicName" class="form-label">{{ lang.map.lbl_arabic_name
+          }}</label>
+        <input id="arabicName" validationClasses="arabicName" formControlName="arabicName" class="form-control" />
+        <app-field-error-message controlName="arabicName"></app-field-error-message>
+      </div>
+      <!-- englishName -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="englishName" for="englishName" class="form-label">{{ lang.map.lbl_english_name
+          }}</label>
+        <input id="englishName" validationClasses="englishName" formControlName="englishName" class="form-control" />
+        <app-field-error-message controlName="englishName"></app-field-error-message>
+      </div>
+      <!-- nationality -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="nationality" for="nationality" labelForId="nationality" class="form-label">{{
+          lang.map.lbl_nationality }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.msg_select_nationality }}"
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" id="nationality" validationClasses="nationality"
+          formControlName="nationality">
+          <ng-option *ngFor="let option of NationalityList" [value]="option.lookupKey">{{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="nationality"></app-field-error-message>
+      </div>
+      <!-- gender -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="gender" for="gender" labelForId="gender" class="form-label">{{ lang.map.gender
+          }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" id="gender" formControlName="gender"
+          validationClasses="gender">
+          <ng-option *ngFor="let option of GenderList" [value]="option.lookupKey">{{ option.getName() }}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="gender"></app-field-error-message>
+      </div>
+      <!-- phone -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="phone" for="phone" class="form-label">{{
+          lang.map.lbl_phone
+          }}</label>
+        <input id="phone" validationClasses="phone" formControlName="phone" class="form-control" />
+        <app-field-error-message controlName="phone"></app-field-error-message>
+      </div>
+      <!-- email -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
+        <input id="email" validationClasses="email" formControlName="email" class="form-control" />
+        <app-field-error-message controlName="email"></app-field-error-message>
+      </div>
+      <!-- jobNumber -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="jobNumber" for="jobNumber" class="form-label">{{
+          lang.map.job_number }}</label>
+        <input id="jobNumber" validationClasses="jobNumber" formControlName="jobNumber" class="form-control" />
+        <app-field-error-message controlName="jobNumber"></app-field-error-message>
+      </div>
+      <!-- contractLocationType -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="contractLocationType" for="contractLocationType" labelForId="contractLocationType"
+          class="form-label">{{ lang.map.contract_location_type }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found" appendTo="body"
+          (change)="handleOfficeNameValidationsByContractLocationType()" id="contractLocationType"
+          validationClasses="contractLocationType" formControlName="contractLocationType">
+          <ng-option *ngFor="let option of ContractLocationTypeList" [value]="option.lookupKey">{{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="contractLocationType"></app-field-error-message>
+      </div>
+      <!-- external office Id -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper" *ngIf="isExternal()">
+        <label asteriskIfRequired="officeId" for="officeId" labelForId="officeId" class="form-label">{{
+          lang.map.office_name }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" id="officeId" validationClasses="officeId"
+          formControlName="officeId">
+          <ng-option *ngFor="let option of implementingAgencyList" [value]="option.id">
+            {{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="officeId"></app-field-error-message>
+      </div>
+      <!-- internal office Id -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper" *ngIf="isInternal()">
+        <label asteriskIfRequired="officeId" for="officeId" labelForId="officeId" class="form-label">{{
+          lang.map.office_name }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="false" placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" id="officeId" validationClasses="officeId"
+          formControlName="officeId">
+          <ng-option *ngFor="let option of charityBranch" [value]="option.id">
+            {{option.fullName}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="officeId"></app-field-error-message>
+      </div>
+      <!-- department -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="department" for="department" class="form-label">{{ lang.map.department }}</label>
+        <input id="department" validationClasses="department" formControlName="department" class="form-control" />
+        <app-field-error-message controlName="department"></app-field-error-message>
+      </div>
+      <!-- functionalGroup -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper">
+        <label asteriskIfRequired="functionalGroup" for="functionalGroup" labelForId="functionalGroup"
+          class="form-label">{{
+          lang.map.functional_group }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" id="functionalGroup"
+          validationClasses="functionalGroup" formControlName="functionalGroup">
+          <ng-option *ngFor="let option of functionalGroupsList" [value]="option.id" [disabled]="!option.isActive()">
+            {{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="functionalGroup"></app-field-error-message>
+      </div>
+      <!-- jobTitleName -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="jobTitleName" for="jobTitleName" class="form-label">{{lang.map.job_title}}</label>
+        <input id="jobTitleName" validationClasses="jobTitleName" formControlName="jobTitleName" class="form-control"
+          trimInput>
+        <app-field-error-message controlName="jobTitleName"></app-field-error-message>
+      </div>
+      <!-- contractLocation -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="contractLocation" for="contractLocation" class="form-label">{{
+          lang.map.contract_location }}</label>
+        <ng-select [selectOnTab]="true" labelForId="contractLocation" [clearable]="true"
+          placeholder="{{ lang.map.select }}" id="contractLocation" [notFoundText]="lang.map.msg_not_found"
+          appendTo="body" validationClasses="contractLocation" formControlName="contractLocation">
+          <ng-option [value]="option.id" *ngFor="let option of countriesList" [disabled]="!option.isActive()">{{
+            option.getName() }}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="contractLocation"></app-field-error-message>
+      </div>
+      <!-- contractType -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="contractType" for="contractType" labelForId="contractType" class="form-label">{{
+          lang.map.contract_type }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" id="contractType" validationClasses="contractType"
+          formControlName="contractType" (change)="handleContractExpireDateValidationsByContractType()">
+          <ng-option *ngFor="let option of ContractTypeList" [value]="option.lookupKey">{{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="contractType"></app-field-error-message>
+      </div>
+      <!-- jobContractType -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="jobContractType" for="jobContractType" labelForId="jobContractType"
+          class="form-label">{{ lang.map.job_contract_type }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" id="jobContractType"
+          validationClasses="jobContractType" formControlName="jobContractType">
+          <ng-option *ngFor="let option of JobContractTypeList" [value]="option.lookupKey">{{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="jobContractType"></app-field-error-message>
+      </div>
+      <!-- contractStatus -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="contractStatus" for="contractStatus" labelForId="contractStatus"
+          class="form-label">{{ lang.map.contract_status }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="contractStatus" id="contractStatus"
+          (change)="handleEndDateValidationsByContractStatus()" formControlName="contractStatus">
+          <ng-option *ngFor="let option of ContractStatusList" [value]="option.lookupKey">{{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="contractStatus"></app-field-error-message>
+      </div>
+      <!-- workStartDate -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label for="workStartDate" asteriskIfRequired="workStartDate" class="form-label">{{ lang.map.work_start_date
+          }}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="workStartDate" id="workStartDate"
+            [options]="datepickerOptionsMap.workStartDate" (click)="openDateMenu(dpworkStartDate)"
+            [ngClass]="{ 'input-disabled': !saveVisible }" #dpworkStartDate="angular-mydatepicker" angular-mydatepicker
+            validationClasses="workStartDate" (inputFieldChanged)="
+              onDateChange($event, 'workStartDate', 'workEndDate')
+            "></div>
+          <app-field-error-message controlName="workStartDate"></app-field-error-message>
+        </div>
+      </div>
+      <!-- workEndDate -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label for="workEndDate" asteriskIfRequired="workEndDate" class="form-label">{{ lang.map.work_end_date
+          }}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="workEndDate" id="workEndDate"
+            [options]="datepickerOptionsMap.workEndDate"
+            [ngClass]="{ 'input-disabled': !saveVisible || isFinishedContract() }"
+            (click)="!isFinishedContract() && openDateMenu(dpworkEndDate)" #dpworkEndDate="angular-mydatepicker"
+            angular-mydatepicker validationClasses="workEndDate" (inputFieldChanged)="
+              onDateChange($event, 'workStartDate', 'workEndDate')
+            "></div>
+          <app-field-error-message controlName="workEndDate"></app-field-error-message>
+        </div>
+      </div>
+      <!-- contractExpiryDate -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label for="contractExpiryDate" asteriskIfRequired="contractExpiryDate" class="form-label">{{
+          lang.map.contract_expiry_date }}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="contractExpiryDate" id="contractExpiryDate"
+            [ngClass]="{ 'input-disabled': !saveVisible }" [options]="datepickerOptionsMap.contractExpiryDate"
+            (click)="openDateMenu(dpcontractExpiryDate)" #dpcontractExpiryDate="angular-mydatepicker"
+            angular-mydatepicker validationClasses="contractExpiryDate">
+          </div>
+          <app-field-error-message controlName="contractExpiryDate"></app-field-error-message>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+    class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

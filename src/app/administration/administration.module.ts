@@ -137,11 +137,13 @@ import { UserPermissionInternalComponent } from '@app/administration/shared/user
 import {
   UserPermissionExternalComponent
 } from "@app/administration/shared/user-permission-external/user-permission-external.component";
-import { ServiceDataCustomTemplatesComponent } from './shared/service-data-custom-templates/service-data-custom-templates.component';
-import { ServiceDataCustomTemplatePopupComponent } from './popups/service-data-custom-template-popup/service-data-custom-template-popup.component';
-import { AdminPermissionComponent } from './pages/admin-permission/admin-permission.component';
-import { AdminPermissionPopupComponent } from './popups/admin-permission-popup/admin-permission-popup.component';
-import { TrainingProgramClassificationPopupComponent } from './popups/training-program-classification-popup/training-program-classification-popup.component';
+import { ServiceDataCustomTemplatesComponent } from '@app/administration/shared/service-data-custom-templates/service-data-custom-templates.component';
+import { ServiceDataCustomTemplatePopupComponent } from '@app/administration/popups/service-data-custom-template-popup/service-data-custom-template-popup.component';
+import { AdminPermissionComponent } from '@app/administration/pages/admin-permission/admin-permission.component';
+import { AdminPermissionPopupComponent } from '@app/administration/popups/admin-permission-popup/admin-permission-popup.component';
+import { TrainingProgramClassificationPopupComponent } from '@app/administration/popups/training-program-classification-popup/training-program-classification-popup.component';
+import { NpoEmployeeComponent } from '@app/administration/pages/npo-employee/npo-employee.component';
+import { NpoEmployeePopupComponent } from './popups/npo-employee-popup/npo-employee-popup.component';
 
 @NgModule({
   declarations: [
@@ -243,7 +245,9 @@ import { TrainingProgramClassificationPopupComponent } from './popups/training-p
     AdminPermissionComponent,
     AdminPermissionPopupComponent,
     TrainingProgramClassificationComponent,
-    TrainingProgramClassificationPopupComponent
+    TrainingProgramClassificationPopupComponent,
+    NpoEmployeeComponent,
+    NpoEmployeePopupComponent
   ],
   imports: [
     SharedModule,
