@@ -55,7 +55,7 @@
         <td cdk-cell *cdkCellDef="let row; let i = index;">
           <ng-container formArrayName="inputs">
             <div class="d-flex">
-              <input [readonly]="disabled" [id]="'fundraising-'+i" class="form-control form-control-sm" [formControlName]="i"
+              <input [readonly]="disabled || isItemDisabled(i)" [id]="'fundraising-'+i" class="form-control form-control-sm" [formControlName]="i"
                      [mask]="inputMaskPatterns.SEPARATOR"
                      [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
                      [dropSpecialCharacters]="[',']">

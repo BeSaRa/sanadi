@@ -1023,4 +1023,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   isLicenseStartDateDisabled(){
    return this.isExtendRequestType() || this.isCancelRequestType()
   }
+  isOtherFundraisingSourcingHaveElements(){
+    return this.selfFinancing.value.length > 0 || this.financialGrant.value.length > 0
+  }
 }
