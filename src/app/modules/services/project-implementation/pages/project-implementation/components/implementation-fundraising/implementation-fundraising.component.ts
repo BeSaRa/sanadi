@@ -21,6 +21,7 @@ import { UserClickOn } from "@enums/user-click-on.enum";
 import { ImplementationTemplate } from "@models/implementation-template";
 import { ReasonPopupComponent } from "@app/shared/popups/reason-popup/reason-popup.component";
 import { ReasonContract } from "@contracts/reason-contract";
+import { ProjectPermitTypes } from '@app/enums/project-permit-types';
 
 @Component({
   selector: 'implementation-fundraising',
@@ -50,6 +51,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   caseId!: string
   @Input()
   requestType!: number
+  @Input()
+  isOtherFundraisingSourcingHaveElements!: boolean
 
   @Output()
   amountConsumed: EventEmitter<boolean> = new EventEmitter<boolean>()
@@ -164,9 +167,20 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       .pipe(filter(_ => this.value && !!this.value[index]))
       .pipe(map(value => {
         const model = this.value[index];
-        if (value > model.projectTotalCost) {
-          value = model.remainingAmount
+        //mean this is single project permit type
+        if (model.isMain) {
+          if (value > model.projectTotalCost) {
+            value = model.remainingAmount
+          }
+        } else {
+          if (model.remainingAmount < this.remainingAmount) {
+            value = value > model.remainingAmount ? model.remainingAmount : value;
+          }
+          else {
+            value =  value >  model.totalCost + this.remainingAmount ? model.totalCost + this.remainingAmount : value
+          }
         }
+
         return value
       }))
       .subscribe((value) => {
@@ -253,6 +267,13 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       this.dialog.info(this.lang.map.cannot_add_funding_resources_full_amount_have_been_used)
       return;
     }
+    const index = this.value.findIndex(x => x.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT);
+    if (index !== -1) {
+      if (this.inputs.controls[index].value < this.value[index].remainingAmount) {
+        this.dialog.alert(this.lang.map.cannot_take_this_action_before_consume_full_permit_amount)
+        return;
+      }
+    }
 
     const criteria = this.service.getCriteria(this.criteria())
     delete criteria.mainDAC;
@@ -323,5 +344,10 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         this.value[index].notes = comment;
         this.onChange(this.value)
       })
+  }
+  isItemDisabled(index :number){
+    if(!this.value[index].isMain) return false;
+    return this.value.length > 1 ||
+    this.isOtherFundraisingSourcingHaveElements
   }
 }
