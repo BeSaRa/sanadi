@@ -10,7 +10,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of, Subject} from 'rxjs';
 import {InternalDepartmentService} from '@app/services/internal-department.service';
 import {InternalDepartment} from '@app/models/internal-department';
-import {catchError, filter, map, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, delay, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {CustomRole} from '@app/models/custom-role';
 import {ExternalUserCustomRoleService} from '@services/external-user-custom-role.service';
 import {UserPermissionService} from '@app/services/user-permission.service';
@@ -292,7 +292,9 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       signSub = of(true);
     }
 
-    signSub.subscribe(() => {
+    signSub
+      .pipe(delay(0))
+      .subscribe(() => {
       this.userPermissionInternalComponentRef.saveUserPermissions()
         .pipe(
           catchError(() => of(null)),
