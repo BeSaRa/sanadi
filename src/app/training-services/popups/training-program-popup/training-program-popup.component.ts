@@ -200,7 +200,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   getRegistrationStartDateClasses() {
     let classes
     classes = this.fm.getStatusClass('registerationStartDate');
-    if (this.model.status && this.model.status != this.trainingStatus.DATA_ENTERED) {
+    if (this.model.status && this.model.status != this.trainingStatus.DATA_ENTERED && this.model.status != this.trainingStatus.TRAINING_PUBLISHED) {
       classes = {...classes, 'input-disabled': true};
     }
     return classes;
