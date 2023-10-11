@@ -1,6 +1,6 @@
-import { TrainingProgramClassificationService } from '@app/services/training-program-classification.service';
-import { TrainingProgramClassification } from '@app/models/training-program-classification';
-import { map } from 'rxjs/operators';
+import {TrainingProgramClassificationService} from '@app/services/training-program-classification.service';
+import {TrainingProgramClassification} from '@app/models/training-program-classification';
+import {exhaustMap, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {AfterViewInit, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {TrainingProgram} from '@app/models/training-program';
@@ -20,7 +20,6 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DateUtils} from '@app/helpers/date-utils';
 import {IMyDateModel, IMyInputFieldChanged} from 'angular-mydatepicker';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {exhaustMap, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {Trainer} from '@app/models/trainer';
 import {TrainerService} from '@app/services/trainer.service';
 import {TrainingStatus} from '@app/enums/training-status';
@@ -32,10 +31,10 @@ import {Profile} from '@app/models/profile';
 import {TrainingProgramPartner} from '@app/models/training-program-partner';
 import {TrainingProgramPartnerService} from '@app/services/training-program-partner.service';
 import {CommonUtils} from '@helpers/common-utils';
-import { TrainingProgramAudienceService } from '@app/services/training-program-audience.service';
-import { TrainingProgramAudience } from '@app/models/training-program-audience';
-import { Team } from '@app/models/team';
-import { TeamService } from '@app/services/team.service';
+import {TrainingProgramAudienceService} from '@app/services/training-program-audience.service';
+import {TrainingProgramAudience} from '@app/models/training-program-audience';
+import {Team} from '@app/models/team';
+import {TeamService} from '@app/services/team.service';
 
 @Component({
   selector: 'training-program-popup',
@@ -131,6 +130,14 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   isValidPastTrainingStartDate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isValidPastRegistrationEndDate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   internalUserControls: UntypedFormControl[] = [];
+
+  private trainingDisabledStatus: TrainingStatus[] = [
+    this.trainingStatus.REGISTRATION_OPEN,
+    this.trainingStatus.REGISTRATION_CLOSED,
+    this.trainingStatus.TRAINING_FINISHED,
+    this.trainingStatus.TRAINING_CANCELED
+  ];
+
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
@@ -158,10 +165,14 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       if (this.operation === OperationTypes.UPDATE) {
         CommonUtils.displayFormValidity(this.form, this.dialogContent.nativeElement);
       }
-      if(this.operation === OperationTypes.VIEW) {
+      if (this.operation === OperationTypes.VIEW) {
         this.validateFieldsVisible = false;
       }
     })
+  }
+
+  isTrainingStatusDisabled(status: number): boolean {
+    return this.trainingDisabledStatus.includes(status);
   }
 
   initPopup(): void {
@@ -175,7 +186,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       this.originalRegisterationEndDate = this.model.registerationClosureDate;
     }
 
-    if (this.model.status && this.model.status != this.trainingStatus.DATA_ENTERED) {
+    if (this.model.status && this.isTrainingStatusDisabled(this.model.status)) {
       this.registrationStartDateControl.disable();
       this.registrationStartDateControl.updateValueAndValidity();
     }
@@ -198,9 +209,10 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   getRegistrationStartDateClasses() {
-    let classes
-    classes = this.fm.getStatusClass('registerationStartDate');
-    if (this.model.status && this.model.status != this.trainingStatus.DATA_ENTERED && this.model.status != this.trainingStatus.TRAINING_PUBLISHED) {
+    let classes = this.fm.getStatusClass('registerationStartDate');
+    //if (this.model.status && this.model.status != this.trainingStatus.DATA_ENTERED) {
+    if (this.model.status && this.isTrainingStatusDisabled(this.model.status)) {
+      // @ts-ignore
       classes = {...classes, 'input-disabled': true};
     }
     return classes;
@@ -524,6 +536,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   get sessionEndTimeControl(): UntypedFormControl {
     return this.form.get('sessionEndTime') as UntypedFormControl;
   }
+
   get sessionStartTimeMinutesTimeControl(): UntypedFormControl {
     return this.form.get('sessionStartTimeMinutes') as UntypedFormControl;
   }
@@ -723,14 +736,15 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
 
   loadTrainingProgramPartners(): void {
     this.trainingProgramPartnerService.loadAsLookups()
-    .pipe(map(list => list.filter(item => item.isActive() || item.id == this.model?.trainingPartner)))
+      .pipe(map(list => list.filter(item => item.isActive() || item.id == this.model?.trainingPartner)))
       .subscribe(partners => {
         this.trainingPartnersList = partners;
       });
   }
+
   loadTrainingProgramAudiences(): void {
     this.trainingProgramAudienceService.loadAsLookups()
-    .pipe(map(list => list.filter(item => item.isActive() || this.model?.targetAudienceListIds.includes(item.id))))
+      .pipe(map(list => list.filter(item => item.isActive() || this.model?.targetAudienceListIds.includes(item.id))))
       .subscribe(audiences => {
         this.targetAudienceList = audiences;
       });
@@ -752,6 +766,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       this.selectedTrainers = this.trainers.filter(element => this.model.trainerListIds.includes(element.id));
     });
   }
+
   private loadTrainingProgramClassifications(): void {
     this.trainingProgramClassificationService.loadAsLookups().subscribe((classifications) => {
       this.classifications = classifications;

@@ -155,7 +155,7 @@
                    [options]="datepickerOptionsMap.registerationStartDate"
                    (inputFieldChanged)="registrationStartDateChange($event, 'registerationStartDate', 'registerationClosureDate')"
                    angular-mydatepicker [ngClass]="getRegistrationStartDateClasses()"></div>
-              <app-field-error-message [control]="fm.getFormField('registerationStartDate')"></app-field-error-message>
+              <app-field-error-message [control]="registrationStartDateControl"></app-field-error-message>
             </div>
             <div></div>
           </div>
@@ -172,7 +172,7 @@
                  (inputFieldChanged)="registrationEndDateChange($event, 'registerationStartDate', 'registerationClosureDate')"
                  angular-mydatepicker
                  [ngClass]="getRegistrationEndTrainingStartTrainingEndDatesClasses('registerationClosureDate')"></div>
-            <app-field-error-message [control]="fm.getFormField('registerationClosureDate')"></app-field-error-message>
+            <app-field-error-message [control]="registrationClosureDateControl"></app-field-error-message>
           </div>
         </div>
       </div>
@@ -186,7 +186,7 @@
                  #dpStartDate="angular-mydatepicker" [options]="datepickerOptionsMap.startDate"
                  (inputFieldChanged)="trainingStartDateChange($event, 'startDate', 'endDate')" angular-mydatepicker
                  [ngClass]="getRegistrationEndTrainingStartTrainingEndDatesClasses('startDate')"></div>
-            <app-field-error-message [control]="fm.getFormField('startDate')"></app-field-error-message>
+            <app-field-error-message [control]="trainingStartDateControl"></app-field-error-message>
           </div>
         </div>
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
@@ -197,7 +197,7 @@
                  #dpendDate="angular-mydatepicker" [options]="datepickerOptionsMap.endDate"
                  (inputFieldChanged)="trainingEndDateChange($event, 'startDate', 'endDate')" angular-mydatepicker
                  [ngClass]="getRegistrationEndTrainingStartTrainingEndDatesClasses('endDate')"></div>
-            <app-field-error-message [control]="fm.getFormField('endDate')"></app-field-error-message>
+            <app-field-error-message [control]="trainingEndDateControl"></app-field-error-message>
           </div>
         </div>
       </div>
