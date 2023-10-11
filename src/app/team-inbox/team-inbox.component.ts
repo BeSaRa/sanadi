@@ -1,7 +1,8 @@
+import { UserPreferencesService } from '@services/user-preferences.service';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { QueryResultSet } from '@models/query-result-set';
 import { LangService } from '@services/lang.service';
-import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { Team } from '@models/team';
 import { EmployeeService } from '@services/employee.service';
 import { BehaviorSubject, interval, Observable, of, Subject } from 'rxjs';
@@ -32,6 +33,7 @@ import { CommonService } from '@services/common.service';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { DateUtils } from '@app/helpers/date-utils';
 import { GlobalSettingsService } from '@app/services/global-settings.service';
+import { DialogService } from '@app/services/dialog.service';
 
 @Component({
   selector: 'team-inbox',
@@ -61,7 +63,9 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     private inboxService: InboxService,
     private commonService: CommonService,
     public employeeService: EmployeeService,
-    private globalSettingsService: GlobalSettingsService
+    private globalSettingsService: GlobalSettingsService,
+    private userPreferencesService:UserPreferencesService,
+    private dialog:DialogService
     ) {
     if (this.employeeService.isExternalUser()) {
       this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'orgInfo');
@@ -150,6 +154,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.listenToSelectControl();
     this.buildGridActions();
     this.setRefreshInterval();
+    this.validateOutOfOffice();
   }
 
   setRefreshInterval() {
@@ -855,5 +860,17 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.queryResultSet!.items = this.oldQueryResultSet!.items
     }
+  }
+  validateOutOfOffice(){
+    this.userPreferencesService.validateOutOfOffice()
+    .pipe(
+      take(1),
+      tap(result=>{
+        if(result){
+          this.dialog.alert(this.lang.map.msg_user_oof_mode)
+        }
+      })
+    )
+    .subscribe()
   }
 }

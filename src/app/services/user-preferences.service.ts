@@ -179,4 +179,15 @@ export class UserPreferencesService extends CrudGenericService<UserPreferences> 
     }));
 
   }
+  @HasInterception
+  @CastResponse(() => UserPreferences, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _validateOutOfOffice() {
+    return this.http.get<boolean>(this._getServiceURL() + '/out-office/validate/' );
+  }
+  validateOutOfOffice(){
+    return this._validateOutOfOffice();
+  }
 }

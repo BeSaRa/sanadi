@@ -2043,4 +2043,5 @@ export interface ILanguageKeys {
   training_program_add_department:string;
   training_classification:string;
   view_report:string;
+  msg_user_oof_mode:string;
 }
