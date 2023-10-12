@@ -7,7 +7,7 @@ import { FactoryService } from '@services/factory.service';
 import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
 import { Observable, of } from 'rxjs';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { IDialogData } from '@contracts/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { DialogService } from '@services/dialog.service';
@@ -179,15 +179,10 @@ export class UserPreferencesService extends CrudGenericService<UserPreferences> 
     }));
 
   }
-  @HasInterception
-  @CastResponse(() => UserPreferences, {
-    unwrap: 'rs',
-    fallback: '$default'
-  })
-  private _validateOutOfOffice() {
-    return this.http.get<boolean>(this._getServiceURL() + '/out-office/validate/' );
-  }
-  validateOutOfOffice(){
-    return this._validateOutOfOffice();
+  validateOutOfOffice():Observable<boolean>{
+    return this.http.get<any>(this._getServiceURL() + '/out-office/validate/' )
+    .pipe(
+      map(result=>result.rs as boolean)
+    );
   }
 }

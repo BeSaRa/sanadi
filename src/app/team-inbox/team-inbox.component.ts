@@ -866,6 +866,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     .pipe(
       take(1),
       tap(result=>{
+        debugger;
         if(result){
           this.dialog.alert(this.lang.map.msg_user_oof_mode)
         }
