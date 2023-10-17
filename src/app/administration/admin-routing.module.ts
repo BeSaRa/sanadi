@@ -266,7 +266,7 @@ const routes: Routes = [
   {
     path: 'admin-permissions', component: AdminPermissionComponent,
     canActivate: [PermissionGuard.canActivate],
-    data: {permissionKey: '', configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: PermissionsEnum.MANAGE_PERMISSIONS, configPermissionGroup: null, checkAnyPermission: false}
   },
   {path: '**', component: ErrorPageComponent}
 ];
