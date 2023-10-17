@@ -49,28 +49,28 @@ export class NpoEmployeeComponent extends AdminGenericComponent<NpoEmployee, Npo
       icon: ActionIconsEnum.VIEW,
       onClick: (item: NpoEmployee) => this.view$.next(item)
     },
-    // activate
-    {
-      type: 'action',
-      icon: ActionIconsEnum.STATUS,
-      label: 'btn_activate',
-      onClick: (item: NpoEmployee) => this.toggleStatus(item),
-      displayInGrid: false,
-      show: (item) => {
-        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
-      }
-    },
-    // deactivate
-    {
-      type: 'action',
-      icon: ActionIconsEnum.STATUS,
-      label: 'btn_deactivate',
-      onClick: (item: NpoEmployee) => this.toggleStatus(item),
-      displayInGrid: false,
-      show: (item) => {
-        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
-      }
-    }
+    // // activate
+    // {
+    //   type: 'action',
+    //   icon: ActionIconsEnum.STATUS,
+    //   label: 'btn_activate',
+    //   onClick: (item: NpoEmployee) => this.toggleStatus(item),
+    //   displayInGrid: false,
+    //   show: (item) => {
+    //     return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
+    //   }
+    // },
+    // // deactivate
+    // {
+    //   type: 'action',
+    //   icon: ActionIconsEnum.STATUS,
+    //   label: 'btn_deactivate',
+    //   onClick: (item: NpoEmployee) => this.toggleStatus(item),
+    //   displayInGrid: false,
+    //   show: (item) => {
+    //     return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
+    //   }
+    // }
   ];
 
   displayedColumns: string[] = ['rowSelection', 'identificationType', 'qId', 'passportNumber', 'arName', 'enName', 'department', 'jobTitleName', 'status', 'actions'];
