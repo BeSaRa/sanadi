@@ -12,7 +12,7 @@
   "BASE_ENVIRONMENT": "NEW",
   "LOGIN_INSTANCE": "BOTH",
   "REPORTS_URL": "http://racabi/Reports/",
-  "NOTIFICATIONS_URL": "http://eblaepm.no-ip.org:9096/notify/api/notifications",
+  "NOTIFICATIONS_URL": "http://192.168.51.4:9080/notify/api/notifications",
   "NAS": {
     "RESET_PASSWORD": "https://stgnas.gov.qa/self-service/reset/personal",
     "NEW_USER": "https://stgnas.gov.qa/self-service/register/select-user-type"
