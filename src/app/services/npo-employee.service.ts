@@ -1,6 +1,6 @@
 import { CharityBranch } from './../models/charity-branch';
 import { ComponentType } from '@angular/cdk/portal';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
@@ -92,7 +92,13 @@ export class NpoEmployeeService extends CrudWithDialogGenericService<NpoEmployee
   getCharityHeadQuarterBranch() {
     return this.http.get<CharityBranch[]>(this._getServiceURL() + '/charity/branch/headquarters');
   }
-
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$charityBranch'
+  })
+  getCharityHeadQuarterBranchByOrgId(orgId: number) {
+    return this.http.get<CharityBranch[]>(this._getServiceURL() + '/charity/branch/headquarters/' + orgId);
+  }
   openViewDialog(modelId: number): Observable<DialogRef> {
     return this.getByIdComposite(modelId).pipe(
       switchMap((emp: NpoEmployee) => {

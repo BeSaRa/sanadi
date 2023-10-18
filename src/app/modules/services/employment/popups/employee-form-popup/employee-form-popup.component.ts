@@ -405,10 +405,17 @@ export class EmployeeFormPopupComponent implements OnInit {
       });
   }
   private loadCharityMainBranch() {
-    this.npoEmployeeService.getCharityHeadQuarterBranch().subscribe((data: CharityBranch[]) => {
-      this.charityBranch = data;
-      this.officeId.setValue(data[0].id);
-    })
+    if(this.employeeService.isExternalUser()) {
+      this.npoEmployeeService.getCharityHeadQuarterBranch().subscribe((data: CharityBranch[]) => {
+        this.charityBranch = data;
+        this.officeId.setValue(data[0].id);
+      })
+    } else {
+      this.data?.model && this.npoEmployeeService.getCharityHeadQuarterBranchByOrgId(this.data?.model.organizationId).subscribe((data: CharityBranch[]) => {
+        this.charityBranch = data;
+        this.officeId.setValue(data[0].id);
+      })
+    }
   }
   isIdentificationNumberType() {
     return this.identificationType.value == IdentificationType.Identification
