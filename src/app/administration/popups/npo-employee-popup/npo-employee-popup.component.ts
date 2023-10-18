@@ -259,7 +259,7 @@ export class NpoEmployeePopupComponent extends AdminGenericDialog<NpoEmployee> {
       });
   }
   private loadCharityMainBranch() {
-    this.npoEmployeeService.getCharityHeadQuarterBranch().subscribe((data: CharityBranch[]) => {
+    this.npoEmployeeService.getCharityHeadQuarterBranchByOrgId(this.model.orgId).subscribe((data: CharityBranch[]) => {
       this.charityBranch = data;
       this.officeId.setValue(data[0].id);
     })

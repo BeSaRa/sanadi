@@ -76,7 +76,7 @@ export class IntegrationInquiryLogListComponent {
       type: 'action',
       label: 'select',
       show: () => GdxServicesEnum.QCB !== this.gdxServiceId,
-      disabled: (item) => !item.viewable,
+      // disabled: (item) => !item.viewable,
       onClick: (item: GdxServiceLog) => this.selectLog(item)
     },
     // download
