@@ -1,9 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { LangService } from '@app/services/lang.service';
-import {CustomValidators} from "@app/validators/custom-validators";
-import { GdxMsdfSecurityResponse } from '@app/models/gdx-msdf-security';
+import {Component, Input} from '@angular/core';
+import {UntypedFormControl} from '@angular/forms';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {LangService} from '@app/services/lang.service';
+import {GdxMsdfSecurityResponse} from '@app/models/gdx-msdf-security';
 
 @Component({
   selector: 'security-bs-related-data-list',
@@ -15,11 +14,10 @@ export class SecurityBSRelatedDataListComponent {
 
   constructor(public lang: LangService) {
   }
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
   headerColumn: string[] = ['extra-header'];
 
   displayedColumns: string[] = [
-    'statusCode',
+    // 'statusCode',
     'beneficiaryStatus',
   ];
   filterControl: UntypedFormControl = new UntypedFormControl('');

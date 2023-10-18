@@ -10,11 +10,10 @@ const gdxMsdfSecurityResponseInterceptor = new GdxMsdfSecurityResponseIntercepto
   receive: gdxMsdfSecurityResponseInterceptor.receive
 })
 export class GdxMsdfSecurityResponse extends SearchableCloneable<GdxMsdfSecurityResponse>{
-  statusCode!: string;
+  statusCode!: number;
   beneficiaryStatus!: string;
 
-
   searchFields: ISearchFieldsMap<GdxMsdfSecurityResponse> = {
-    ...normalSearchFields(['statusCode', 'beneficiaryStatus']),
-  }
+    ...normalSearchFields(['beneficiaryStatus']),
+  };
 }
