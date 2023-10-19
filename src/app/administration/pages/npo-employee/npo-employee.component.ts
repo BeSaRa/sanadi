@@ -73,8 +73,8 @@ export class NpoEmployeeComponent extends AdminGenericComponent<NpoEmployee, Npo
     // }
   ];
 
-  displayedColumns: string[] = ['rowSelection', 'identificationType', 'qId', 'passportNumber', 'arName', 'enName', 'department', 'jobTitleName', 'status', 'actions'];
-  searchColumns: string[] = ['_', 'search_identificationType', 'search_qId', 'search_passportNumber', 'search_arName', 'search_enName', 'search_department', 'search_jobTitleName', 'search_status', 'search_actions'];
+  displayedColumns: string[] = ['rowSelection', 'identificationType', 'qId', 'orgId', 'passportNumber', 'arName', 'enName', 'department', 'jobTitleName', 'status', 'actions'];
+  searchColumns: string[] = ['_', 'search_identificationType', 'search_qId', 'search_orgId', 'search_passportNumber', 'search_arName', 'search_enName', 'search_department', 'search_jobTitleName', 'search_status', 'search_actions'];
 
   searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {

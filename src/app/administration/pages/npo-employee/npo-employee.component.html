@@ -41,7 +41,7 @@
         <ng-container cdkColumnDef="identificationType">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
             [sortCallback]="sortingCallbacks.identificationTypeInfo"> {{lang.map.identification_type}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.identificationTypeInfo.getName()}} </td>
+          <td cdk-cell *cdkCellDef="let row"> {{row.identificationTypeInfo && row.identificationTypeInfo.getName()}} </td>
         </ng-container>
         <ng-container cdkColumnDef="passportNumber">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.passport_number}}</th>
@@ -50,6 +50,10 @@
         <ng-container cdkColumnDef="qId">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_qid}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.qId}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="orgId">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.orgUnitInfo && row.orgUnitInfo.getName()}} </td>
         </ng-container>
         <ng-container cdkColumnDef="arName">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
@@ -71,13 +75,13 @@
         <ng-container cdkColumnDef="nationality">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
             [sortCallback]="sortingCallbacks.nationalityInfo"> {{lang.map.lbl_nationality}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.nationalityInfo.getName()}} </td>
+          <td cdk-cell *cdkCellDef="let row"> {{row.nationalityInfo && row.nationalityInfo.getName()}} </td>
         </ng-container>
 
         <ng-container cdkColumnDef="status">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
             [sortCallback]="sortingCallbacks.statusInfo"> {{lang.map.lbl_status}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo.getName()}} </td>
+          <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo && row.statusInfo.getName()}} </td>
         </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
