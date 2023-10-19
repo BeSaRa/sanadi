@@ -74,7 +74,8 @@ export class FundSourcePopupComponent implements OnDestroy, OnInit {
 
   saveFundSource() {
     this.model = new FundSource().clone({
-      ...this.form.getRawValue()
+      ...this.form.getRawValue(),
+      itemId : this.model.itemId
     })
     this.dialogRef.close(this.model)
   }

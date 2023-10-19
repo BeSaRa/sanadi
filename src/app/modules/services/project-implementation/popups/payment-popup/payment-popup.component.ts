@@ -71,7 +71,8 @@ export class PaymentPopupComponent implements OnInit, OnDestroy {
 
   savePayment() {
     const payment = new Payment().clone({
-      ...this.form.getRawValue()
+      ...this.form.getRawValue(),
+      itemId : this.model.itemId
     })
     this.dialogRef.close(payment)
   }

@@ -1,4 +1,4 @@
-import { GdxMsdfHousingResponseInterceptor } from './../model-interceptors/gdx-msdf-housing-response-interceptor';
+import { GdxMsdfHousingResponseInterceptor } from '@model-interceptors/gdx-msdf-housing-response-interceptor';
 import { ISearchFieldsMap } from "@app/types/types";
 import { SearchableCloneable } from "./searchable-cloneable";
 import { normalSearchFields } from "@app/helpers/normal-search-fields";
@@ -12,12 +12,12 @@ const gdxMsdfHousingResponseInterceptor = new GdxMsdfHousingResponseInterceptor(
 export class GdxMsdfHousingResponse extends SearchableCloneable<GdxMsdfHousingResponse>{
   beneficiaryType!: string;
   beneficiaryDate!: string;
-  status!: string;
+  status!: number;
 
   //extra
-  beneficiaryDateString!: string;
+  statusString!: string;
 
   searchFields: ISearchFieldsMap<GdxMsdfHousingResponse> = {
-    ...normalSearchFields(['beneficiaryType', 'beneficiaryDateString', 'status']),
-  }
+    ...normalSearchFields(['beneficiaryType', 'beneficiaryDate', 'statusString']),
+  };
 }
