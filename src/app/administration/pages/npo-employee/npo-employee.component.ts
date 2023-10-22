@@ -49,6 +49,13 @@ export class NpoEmployeeComponent extends AdminGenericComponent<NpoEmployee, Npo
       icon: ActionIconsEnum.VIEW,
       onClick: (item: NpoEmployee) => this.view$.next(item)
     },
+    // logs
+    {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: NpoEmployee) => this.showAuditLogs(item)
+    },
     // // activate
     // {
     //   type: 'action',
