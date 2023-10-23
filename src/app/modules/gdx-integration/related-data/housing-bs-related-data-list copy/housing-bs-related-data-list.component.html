@@ -23,9 +23,10 @@
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_beneficiary_date}}</th>
           <td cdk-cell *cdkCellDef="let row"><span>{{row.beneficiaryDate}}</span></td>
         </ng-container>
-        <ng-container cdkColumnDef="statusString">
-          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_status}}</th>
-          <td cdk-cell *cdkCellDef="let row"><span>{{row.statusString}}</span></td>
+        <ng-container cdkColumnDef="status">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.status"> {{lang.map.lbl_status}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.statusInfo ? row.statusInfo.getName() : ''}}</span></td>
         </ng-container>
 
         <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>

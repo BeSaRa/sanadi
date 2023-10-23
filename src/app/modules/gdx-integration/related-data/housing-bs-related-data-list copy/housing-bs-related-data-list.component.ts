@@ -3,6 +3,8 @@ import {Component, Input} from '@angular/core';
 import {UntypedFormControl} from '@angular/forms';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {LangService} from '@app/services/lang.service';
+import {SortEvent} from "@contracts/sort-event";
+import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'housing-bs-related-data-list',
@@ -20,9 +22,17 @@ export class HousingBSRelatedDataListComponent {
   displayedColumns: string[] = [
     'beneficiaryType',
     'beneficiaryDate',
-    'statusString',
+    'status',
   ];
   filterControl: UntypedFormControl = new UntypedFormControl('');
+
+  sortingCallbacks = {
+    status: (a: GdxMsdfHousingResponse, b: GdxMsdfHousingResponse, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  };
 
   actions: IMenuItem<GdxMsdfHousingResponse>[] = [];
 }

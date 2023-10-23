@@ -1,21 +1,15 @@
 import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
 import {GdxMsdfHousingResponse} from "@app/models/gdx-msdf-housing";
+import {AdminResult} from "@models/admin-result";
 
 export class GdxMsdfHousingResponseInterceptor implements IModelInterceptor<GdxMsdfHousingResponse> {
   receive(model: GdxMsdfHousingResponse): GdxMsdfHousingResponse {
-    // manually mapping values of status until BE changes to string
-    if (model.status === 0) {
-      model.statusString = 'غير منتفع';
-    } else if (model.status === 1) {
-      model.statusString = 'منتفع';
-    } else {
-      model.statusString = '' + model.status;
-    }
+    model.statusInfo && (model.statusInfo = AdminResult.createInstance(model.statusInfo));
     return model;
   }
 
   send(model: Partial<GdxMsdfHousingResponse>): Partial<GdxMsdfHousingResponse> {
-    delete model.statusString;
+    delete model.statusInfo;
 
     return model;
   }

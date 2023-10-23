@@ -15,15 +15,11 @@
           </th>
         </ng-container>
 
-        <ng-container cdkColumnDef="statusCode">
-          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_status_code}}</th>
-          <td cdk-cell *cdkCellDef="let row"><span>{{row.statusCode}}</span></td>
+        <ng-container cdkColumnDef="status">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.status"> {{lang.map.lbl_status}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.statusInfo ? row.statusInfo.getName() : ''}}</span></td>
         </ng-container>
-        <ng-container cdkColumnDef="beneficiaryStatus">
-          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_beneficiary_status}}</th>
-          <td cdk-cell *cdkCellDef="let row"><span>{{row.beneficiaryStatus}}</span></td>
-        </ng-container>
-
 
         <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
         <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
