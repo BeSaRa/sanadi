@@ -192,7 +192,7 @@ export class IntegrationInquiriesComponent {
       name: 'qcb',
       index: 12,
       langKey: 'integration_qcb',
-      show: () => false,
+      show: () => true,
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       serviceId: GdxServicesEnum.QCB,
