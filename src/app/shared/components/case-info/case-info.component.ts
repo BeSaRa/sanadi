@@ -189,14 +189,15 @@ export class CaseInfoComponent implements OnInit {
   }
 
   isDocumentCase(): boolean {
-    return this.documentCaseList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
+    return this.documentCaseList.includes(this.model.getCaseType()) &&
+    this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE && (this.model.getCaseType() !== CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE || this.employeeService.isInternalUser());
   }
 
   isGeneralAssociationMeetingAttendanceInitApproveCase() {
     return this.model.getCaseType() == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.model.getCaseStatus() === CommonCaseStatus.INITIAL_APPROVE;
   }
   isGeneralAssociationMeetingAttendanceFinalReport() {
-    return this.model.getCaseType() == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
+    return this.model.getCaseType() == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE && this.employeeService.isInternalUser();
   }
 
   viewGeneralAssociationMeetingAttendanceInitApproveDocument(): void {
