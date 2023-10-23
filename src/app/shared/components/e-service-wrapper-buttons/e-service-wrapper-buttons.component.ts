@@ -54,7 +54,7 @@ export class EServiceWrapperButtonsComponent implements OnInit, OnDestroy {
    */
   buttonGroupCount: { [key in WrapperButtonsGroupEnum]: number } = {
     [WrapperButtonsGroupEnum.ONE]: 0,
-    [WrapperButtonsGroupEnum.TWO]: 2,
+    [WrapperButtonsGroupEnum.TWO]: 0,
     [WrapperButtonsGroupEnum.THREE]: 2,
     [WrapperButtonsGroupEnum.FOUR]: 0,
   }
