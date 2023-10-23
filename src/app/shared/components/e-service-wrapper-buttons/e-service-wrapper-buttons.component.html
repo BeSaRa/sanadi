@@ -1,6 +1,11 @@
-<div class="d-flex gap-2 flex-wrap">
+<div class="d-flex gap-2">
   <ng-container *ngFor="let group of groupedActions | keyvalue; let first = first; let last = last;">
-    <div *ngIf="group.value.length > 0" class="d-flex" [ngClass]="{'flex-grow-1 flex-shrink-1': !first && !last }">
+    <div *ngIf="group.value.length > 0" class="d-flex align-items-center"
+         [ngClass]="{
+          'flex-grow-1': !first && !last,
+          'flex-shrink-1': buttonGroupShrink[group.key],
+          'flex-shrink-0': !buttonGroupShrink[group.key]
+        }">
       <ng-container [ngTemplateOutlet]="buttonsGroupTemplate"
                     [ngTemplateOutletContext]="{group: group, first: first, last: last, maxCount: buttonGroupCount[group.key]}">
       </ng-container>
@@ -29,7 +34,7 @@
     class="mdi mdi-information-outline text-info"></i></button>
 </ng-template>
 <ng-template #buttonsGroupTemplate let-group="group" let-maxCount="maxCount">
-  <div class="btn-group flex-fill {{getButtonGroupClass(group.key)}}" role="group" aria-label="Buttons group">
+  <div class="btn-group flex-fill flex-wrap {{getButtonGroupClass(group.key)}}" role="group" aria-label="Buttons group">
     <ng-container *ngFor="let action of group.value; let index = index">
       <!-- If max count is not available, all buttons will be rendered.
       Otherwise, render buttons upto index < maxCount, remaining actions will be in button group -->

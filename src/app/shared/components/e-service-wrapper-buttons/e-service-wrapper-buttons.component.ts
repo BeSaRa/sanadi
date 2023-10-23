@@ -57,7 +57,14 @@ export class EServiceWrapperButtonsComponent implements OnInit, OnDestroy {
     [WrapperButtonsGroupEnum.TWO]: 0,
     [WrapperButtonsGroupEnum.THREE]: 2,
     [WrapperButtonsGroupEnum.FOUR]: 0,
-  }
+  };
+
+  buttonGroupShrink: { [key in WrapperButtonsGroupEnum]: boolean } = {
+    [WrapperButtonsGroupEnum.ONE]: false,
+    [WrapperButtonsGroupEnum.TWO]: true,
+    [WrapperButtonsGroupEnum.THREE]: false,
+    [WrapperButtonsGroupEnum.FOUR]: false,
+  };
 
   groupedActions: Map<WrapperButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]> =
     new Map<WrapperButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]>([
