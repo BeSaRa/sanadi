@@ -40,7 +40,9 @@
                 [readonly]="readonly || !isDeductionSelected(row)" formControlName="value"
                 style="width:120px"
                 class="form-control form-control-sm">
-              <input type="checkbox" [checked]=" isDeductionSelected(row)" (change)="toggleDeduct(row,i) "
+              <input type="checkbox" [checked]=" isDeductionSelected(row)"
+                [disabled]="readonly"
+                (change)="toggleDeduct(row,i) "
                 class="form-check-input">
             </div>
           </ng-container>
