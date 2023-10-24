@@ -1038,6 +1038,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .pipe(filter(_ => this.model!.hasTemplate() || this.model!.hasYears() || this.model!.hasCountries()))
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap((value) => {
+        if(!this.model?.id){
+          return of({
+            ...value,
+             answer: UserClickOn.YES
+          })
+        }
         return this.dialog.confirm(this.lang.map.this_change_will_effect_the_selected_template)
           .onAfterClose$
           .pipe(map((answer: UserClickOn) => ({
