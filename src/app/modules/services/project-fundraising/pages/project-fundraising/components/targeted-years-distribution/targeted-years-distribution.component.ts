@@ -111,7 +111,7 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
     this.numberOfMonths$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter((val): val is number => !!val))
-      .pipe(filter((val)=> (val <= this.configs.licenseMaxTime?? 12) && (val >= this.configs.licenseMinTime?? 1)))
+      .pipe(filter((val)=> (val <= this.configs?.licenseMaxTime?? 12) && (val >= this.configs.licenseMinTime?? 1)))
       .subscribe(() => {
         this.years = this.calculateYears();
         this.generateYearList(this.years);
