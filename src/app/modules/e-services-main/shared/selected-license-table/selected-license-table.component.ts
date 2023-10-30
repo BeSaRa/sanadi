@@ -65,7 +65,9 @@ export class SelectedLicenseTableComponent implements OnInit {
       onClick: (item: any) => this.viewLicenseAsPDF(item),
       show: (_item: any) => {
         // urgent intervention announcement does not have content to view
-        return (this.caseTypeViewLicense !== CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT && this.caseTypeViewLicense !== CaseTypes.GENERAL_PROCESS_NOTIFICATION);
+        return (this.caseTypeViewLicense !== CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT &&
+                this.caseTypeViewLicense !== CaseTypes.GENERAL_PROCESS_NOTIFICATION &&
+                this.caseTypeViewLicense !== CaseTypes.FINANCIAL_ANALYSIS);
       }
     },
     // remove license/document

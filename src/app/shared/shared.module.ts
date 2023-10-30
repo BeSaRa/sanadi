@@ -47,7 +47,7 @@ import {ViewDocumentPopupComponent} from './popups/view-document-popup/view-docu
 import {UploadDocumentPopupComponent} from './popups/upload-document-popup/upload-document-popup.component';
 import {RecommendationsComponent} from './components/recommendations/recommendations.component';
 import {CaseCommentPopupComponent} from './popups/case-comment-popup/case-comment-popup.component';
-import {CommentsComponent} from './components/comments/comments.component';
+import {CommentsComponent} from './comments/comments.component';
 import {TableComponent} from './components/table/table.component';
 import {SortableTableDirective} from './directives/sortable-table.directive';
 import {PaginatorComponent} from './components/paginator/paginator.component';

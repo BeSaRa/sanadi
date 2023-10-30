@@ -169,4 +169,7 @@ export interface ILookupMap {
   ApprovalTemplateType: Lookup[];
   InterventionType: Lookup[];
   PageType: Lookup[];
+  ReportPeriodicity: Lookup[];
+  HalfType: Lookup[];
+  QuarterType: Lookup[];
 }

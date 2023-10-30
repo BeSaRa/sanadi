@@ -8,7 +8,7 @@ import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
 import { ExternalOrgAffiliationResult } from '@models/external-org-affiliation-result';
 import { ExternalOrgAffiliationSearchCriteria } from '@models/external-org-affiliation-search-criteria';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { FactoryService } from '@app/services/factory.service';
 import { Observable, of } from 'rxjs';
 import { InitialExternalOfficeApprovalResult } from '@app/models/initial-external-office-approval-result';
@@ -68,6 +68,7 @@ import { CastResponse } from "@decorators/cast-response";
 import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
 import { ProjectFundraising } from "@app/models/project-fundraising";
 import { ProjectImplementation } from "@models/project-implementation";
+import { FinancialAnalysis } from '@app/models/financial-analysis';
 
 const collectionInterceptor = new CollectionApprovalInterceptor()
 const collectorInterceptor = new CollectorApprovalInterceptor()
@@ -182,6 +183,9 @@ export class LicenseService {
         break;
       case CaseTypes.PROJECT_COMPLETION:
         url = this.urlService.URLS.PROJECT_COMPLETION;
+        break;
+      case CaseTypes.FINANCIAL_ANALYSIS:
+        url = this.urlService.URLS.FINANCIAL_ANALYSIS;
         break;
     }
     return url;
@@ -328,7 +332,15 @@ export class LicenseService {
   FinancialTransferLicensingSearch(criteria: Partial<FinancialTransferLicensing>): Observable<FinancialTransferLicensing[]> {
     return this._FinancialTransferLicensingSearch(criteria);
   }
+  @CastResponse(() => FinancialAnalysis)
+  private _FinancialAnalysisSearch(criteria: Partial<FinancialAnalysis>): Observable<FinancialAnalysis[]> {
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined }
+    return this.http.post<FinancialAnalysis[]>(this.getServiceUrlByCaseType(CaseTypes.FINANCIAL_ANALYSIS) + '/license/search', { ...criteria, ...orgId })
+  }
 
+  FinancialAnalysisSearch(criteria: Partial<FinancialAnalysis>): Observable<FinancialAnalysis[]> {
+    return this._FinancialAnalysisSearch(criteria);
+  }
   @CastResponse(() => InitialExternalOfficeApproval)
   private _loadInitialLicenseByLicenseId(licenseId: string): Observable<InitialExternalOfficeApproval> {
     return this.http.get<InitialExternalOfficeApproval>(this.getServiceUrlByCaseType(CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL) + '/license/' + licenseId + '/details');
@@ -456,7 +468,14 @@ export class LicenseService {
   loadFinancialTransferLicensingByLicenseId(licenseId: string): Observable<FinancialTransferLicensing> {
     return this._loadFinancialTransferLicensingByLicenseId(licenseId);
   }
+  @CastResponse(() => FinancialTransferLicensing)
+  private _loadFinancialAnalysisByLicenseId(licenseId: string): Observable<FinancialAnalysis> {
+    return this.http.get<FinancialAnalysis>(this.getServiceUrlByCaseType(CaseTypes.FINANCIAL_ANALYSIS) + '/license/' + licenseId + '/details');
+  }
 
+  loadFinancialAnalysisByLicenseId(licenseId: string): Observable<FinancialAnalysis> {
+    return this._loadFinancialAnalysisByLicenseId(licenseId);
+  }
 
   @CastResponse(() => InitialExternalOfficeApproval)
   _validateInitialApprovalLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<InitialExternalOfficeApproval> {
@@ -796,5 +815,15 @@ export class LicenseService {
   @CastResponse(() => ProjectImplementation)
   loadProjectImplementationLicenseById(licenseId: string): Observable<ProjectImplementation> {
     return this.http.get<ProjectImplementation>(this.getServiceUrlByCaseType(CaseTypes.PROJECT_IMPLEMENTATION) + '/license/' + licenseId + '/details')
+  }
+
+  @CastResponse(() => FinancialAnalysis)
+  loadFinancialAnalysisById(serialNumber: string): Observable<FinancialAnalysis> {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append('serialNumber', serialNumber);
+
+    return this.http.get<FinancialAnalysis>(this.getServiceUrlByCaseType(CaseTypes.FINANCIAL_ANALYSIS) + '/search/details',{
+      params :queryParams
+    })
   }
 }

@@ -2044,4 +2044,13 @@ export interface ILanguageKeys {
   training_classification:string;
   view_report:string;
   msg_user_oof_mode:string;
+  menu_financial_analysis:string;
+  report_periodicity:string;
+  report_type:string;
+  lbl_half:string;
+  lbl_quarter:string;
+ please_add_financial_report_to_launch:string;
+ upload_financial_report:string;
+ view_financial_report:string;
+
 }

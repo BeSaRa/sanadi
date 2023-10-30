@@ -76,6 +76,7 @@ import { ProjectFundraisingService } from '@services/project-fundraising.service
 import { ProjectImplementationService } from '@services/project-implementation.service';
 import { ProjectCompletionService } from './project-completion.service';
 import { SendToSingleComponent } from '@app/shared/popups/send-to-single/send-to-single.component';
+import { FinancialAnalysisService } from './financial-analysis.service';
 
 @Injectable({
   providedIn: 'root'
@@ -121,6 +122,7 @@ export class InboxService {
     private financialTransferLicensingService: FinancialTransferLicensingService,
     private projectImplementationService: ProjectImplementationService,
     private projectCompletionService: ProjectCompletionService,
+    private financialAnalysisService: FinancialAnalysisService,
   ) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
@@ -158,6 +160,7 @@ export class InboxService {
     this.services.set(CaseTypes.FINANCIAL_TRANSFERS_LICENSING, this.financialTransferLicensingService);
     this.services.set(CaseTypes.PROJECT_IMPLEMENTATION, this.projectImplementationService);
     this.services.set(CaseTypes.PROJECT_COMPLETION, this.projectCompletionService);
+    this.services.set(CaseTypes.FINANCIAL_ANALYSIS, this.financialAnalysisService);
   }
 
   @CastResponse(() => QueryResultSet)
