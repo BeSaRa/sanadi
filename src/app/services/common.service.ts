@@ -113,4 +113,16 @@ export class CommonService {
       }
     });
   }
+  loadExternalOffice(organizationId:number): Observable<AdminResult[]> {
+
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append('organizationId', organizationId);
+
+    return this.http.get(this._getURLSegment() + '/externalOffice', { params: queryParams })
+      .pipe(
+        catchError((_err: any) => of([])),
+        map((result: any) => result.rs as AdminResult[]),
+        map(list=>list.map((x)=>AdminResult.createInstance(x)))
+      );
+  }
 }

@@ -93,7 +93,8 @@ export class CaseInfoComponent implements OnInit {
     CaseTypes.PROJECT_IMPLEMENTATION,
     CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
     CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
-    CaseTypes.PROJECT_COMPLETION
+    CaseTypes.PROJECT_COMPLETION,
+    CaseTypes.FINANCIAL_ANALYSIS,
   ];
 
   // this should be updated when ever you will add a new document service

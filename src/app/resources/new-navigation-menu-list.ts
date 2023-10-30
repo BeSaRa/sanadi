@@ -51,6 +51,7 @@ enum SystemPathsEnum {
   URGENT_INTERVENTION_CLOSURE = '/home/services/urgent-intervention-closure',
   URGENT_INTERVENTION_FINANCIAL_NOTIFICATION = '/home/services/urgent-intervention-financial-notification',
   URGENT_INTERVENTION_LICENSE_FOLLOWUP = '/home/services/urgent-intervention-license-followup',
+  FINANCIAL_ANALYSIS = '/home/services/financial-analysis',
 }
 
 enum DefaultItemOrder {
@@ -94,6 +95,7 @@ enum DefaultItemOrder {
   SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION = 37,
   SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP = 38,
   SERVICE_PROJECT_COMPLETION = 39,
+  SERVICE_FINANCIAL_ANALYSIS = 40,
 
   SERVICE_SEARCH,
   TRAINING,
@@ -138,6 +140,7 @@ const GroupNames = {
   SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION: 'service_' + CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
   SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP: 'service_' + CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
   SERVICE_PROJECT_COMPLETION:  'service_' + CaseTypes.PROJECT_COMPLETION,
+  SERVICE_FINANCIAL_ANALYSIS:  'service_' + CaseTypes.FINANCIAL_ANALYSIS,
 
   TRAINING: 'training-services',
   ADMIN: 'administration'
@@ -2061,6 +2064,66 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 3201,
     group: GroupNames.SERVICE_PROJECT_COMPLETION,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 3301,
+    langKey: 'menu_financial_analysis',
+    path: SystemPathsEnum.FINANCIAL_ANALYSIS,
+    icon: 'mdi-file-swap',
+    isSvg: false,
+    caseType: CaseTypes.FINANCIAL_ANALYSIS,
+    menuKey: SystemMenuKeys.FINANCIAL_ANALYSIS,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.FINANCIAL_ANALYSIS_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: GroupNames.MAIN,
+    itemOrder: DefaultItemOrder.SERVICE_FINANCIAL_ANALYSIS,
+    svg: null,
+    data: {
+      childrenGroupName: GroupNames.SERVICE_FINANCIAL_ANALYSIS,
+      servicePath: SystemPathsEnum.FINANCIAL_ANALYSIS + '/service',
+      searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.FINANCIAL_ANALYSIS),
+      outputPath: SystemPathsEnum.FINANCIAL_ANALYSIS + '/outputs'
+    }
+  },
+  {
+    id: 3302,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.FINANCIAL_ANALYSIS + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.FINANCIAL_ANALYSIS,
+    permissionGroup: null,
+    parent: 3301,
+    group: GroupNames.SERVICE_FINANCIAL_ANALYSIS,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 3303,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.FINANCIAL_ANALYSIS),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_FINANCIAL_ANALYSIS,
+    permissionGroup: null,
+    parent: 3301,
+    group: GroupNames.SERVICE_FINANCIAL_ANALYSIS,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 3304,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.FINANCIAL_ANALYSIS + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 3301,
+    group: GroupNames.SERVICE_FINANCIAL_ANALYSIS,
     itemOrder: 3,
     svg: null
   },

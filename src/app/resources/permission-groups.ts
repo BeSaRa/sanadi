@@ -282,7 +282,11 @@ const projectCompletionServicesPermissionGroup: (EServicePermissionsEnum | strin
   EServicePermissionsEnum.SEARCH_SERVICE_PROJECT_COMPLETION,
   Constants.SERVICE_OUTPUT_PERMISSION
 ];
-
+const financialAnalysisServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.FINANCIAL_ANALYSIS,
+  EServicePermissionsEnum.SEARCH_SERVICE_FINANCIAL_ANALYSIS,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -323,7 +327,8 @@ const collectionServicesPermissionsGroup: EServicePermissionsEnum[] = [
 
 const remittanceServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.CUSTOMS_EXEMPTION_REMITTANCE,
-  EServicePermissionsEnum.FINANCIAL_TRANSFERS_LICENSING
+  EServicePermissionsEnum.FINANCIAL_TRANSFERS_LICENSING,
+  EServicePermissionsEnum.FINANCIAL_ANALYSIS
 ];
 
 const urgentInterventionServicesPermissionsGroup: EServicePermissionsEnum[] = [
@@ -373,6 +378,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION_SERVICES_PERMISSION_GROUP]: urgentInterventionFinancialNotificationServicesPermissionGroup,
   [PermissionGroupsEnum.URGENT_INTERVENTION_LICENSE_FOLLOWUP_SERVICES_PERMISSION_GROUP]: urgentInterventionLicenseFollowupServicesPermissionGroup,
   [PermissionGroupsEnum.PROJECT_COMPLETION_SERVICES_PERMISSION_GROUP]: projectCompletionServicesPermissionGroup,
+  [PermissionGroupsEnum.FINANCIAL_ANALYSIS_SERVICES_PERMISSION_GROUP]: financialAnalysisServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,

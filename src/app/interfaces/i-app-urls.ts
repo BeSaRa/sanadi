@@ -141,5 +141,7 @@ export interface IAppUrls {
   REASSIGN_BULK:string;
   PROJECT_COMPLETION:string;
   TRAINING_PROGRAM_CLASSIFICATION:string;
+  FINANCIAL_ANALYSIS:string;
+  FINANCIAL_REPORT:string;
   [index: string]: string;
 }

@@ -1,0 +1,136 @@
+<div class="row">
+  <tabs-list [accordionView]="accordionView" [hasForm]="true" class="py-4" (onTabChange)="onTabChange($event)"
+    [tabByIndex$]="tabIndex$">
+    <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
+      [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
+      [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
+    <tab name="attachments" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab"
+      [title]="lang.map.attachments"></tab>
+
+  </tabs-list>
+</div>
+
+<ng-container [formGroup]="form">
+  <ng-template #basicInfoTabTemplate>
+    <ng-container formGroupName="basicInfo">
+      <div class="row">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="requestType" asteriskIfRequired="requestType" class="form-label">{{lang.map.request_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true" placeholder="{{lang.map.select}}"
+            id="requestType" (change)="handleRequestTypeChange($event, true)" [notFoundText]="lang.map.msg_not_found"
+            [readonly]="!isEditRequestTypeAllowed()" appendTo="body" formControlName="requestType"
+            validationClasses="requestType">
+            <ng-option *ngFor="let option of requestTypesList" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requestType"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="oldLicenseSerial" asteriskIfRequired="oldLicenseSerial"
+            class="form-label">{{lang.map.license_number}}</label>
+          <div class="input-group">
+            <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
+              formControlName="oldLicenseSerial" type="text" [readOnly]="!isEditLicenseAllowed()"
+              validationClasses="oldLicenseSerial" [onlyInvalid]="false" class="form-control"
+              id="oldLicenseSerial" trimInput>
+            <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch($event)"
+              class="input-group-text"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <app-field-error-message controlName="oldLicenseSerial"></app-field-error-message>
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="reportPeriodicity" asteriskIfRequired="reportPeriodicity"
+            class="form-label">{{lang.map.report_periodicity}}</label>
+          <ng-select [selectOnTab]="true" labelForId="reportPeriodicity" [clearable]="true"
+            placeholder="{{lang.map.select}}" id="reportPeriodicity" [notFoundText]="lang.map.msg_not_found"
+            [readonly]="readonly" appendTo="body" formControlName="reportPeriodicity"
+            validationClasses="reportPeriodicity">
+            <ng-option *ngFor="let option of reportPeriodicityList" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="reportPeriodicity"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="reportTypeId" asteriskIfRequired="reportTypeId"
+            class="form-label">{{lang.map.report_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="reportTypeId" [clearable]="true" placeholder="{{lang.map.select}}"
+            id="reportTypeId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+            formControlName="reportTypeId" validationClasses="reportTypeId">
+            <ng-option *ngFor="let option of reportTypes" [value]="option.reportType">
+              {{option?.reportName}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="reportTypeId"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="year" for="year">{{lang.map.year}}</label>
+          <input id="year" validationClasses="year" formControlName="year"
+            [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(4)" class="form-control" [readonly]="readonly">
+          <app-field-error-message controlName="year"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div *ngIf="isQuarterTypeRequired" class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="quarterType" asteriskIfRequired="quarterType" class="form-label">{{lang.map.lbl_quarter}}</label>
+          <ng-select [selectOnTab]="true" labelForId="quarterType" [clearable]="true" placeholder="{{lang.map.select}}"
+            id="quarterType" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+            formControlName="quarterType" validationClasses="quarterType">
+            <ng-option *ngFor="let option of quarterTypeList" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="quarterType"></app-field-error-message>
+        </div>
+        <div *ngIf="isHalfTypeRequired" class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="halfType" asteriskIfRequired="halfType" class="form-label">{{lang.map.lbl_half}}</label>
+          <ng-select [selectOnTab]="true" labelForId="halfType" [clearable]="true" placeholder="{{lang.map.select}}"
+            id="halfType" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+            formControlName="halfType" validationClasses="halfType">
+            <ng-option *ngFor="let option of halfTypeList" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="halfType"></app-field-error-message>
+        </div>
+
+        <div *ngIf="isExternalOfficeIdRequired" class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="externalOfficeId" asteriskIfRequired="externalOfficeId"
+            class="form-label">{{lang.map.office_name}}</label>
+          <ng-select [selectOnTab]="true" labelForId="externalOfficeId" [clearable]="true"
+            placeholder="{{lang.map.select}}" id="externalOfficeId" [notFoundText]="lang.map.msg_not_found"
+            [readonly]="readonly" appendTo="body" formControlName="externalOfficeId"
+            validationClasses="externalOfficeId">
+            <ng-option *ngFor="let option of externalOfficeList" [value]="option.fnId">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="externalOfficeId"></app-field-error-message>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #specialExplanationsTabTemplate>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 mb-4 position-relative">
+        <label for="description" asteriskIfRequired="customTerms"
+          class="form-label">{{lang.map.special_explanations}}</label>
+        <textarea rows="5" id="customTerms" validationClasses="customTerms"
+          [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readOnly]="(readonly)"
+          formControlName="customTerms" trimInput class="form-control"></textarea>
+        <app-field-error-message controlName="customTerms"></app-field-error-message>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #attachmentsTab>
+    <attachments [caseId]="model?.id" [caseType]="model?.caseType" [model]="model" [formProperties]="formProperties"
+      [service]="service.documentService"></attachments>
+  </ng-template>
+</ng-container>
+
+

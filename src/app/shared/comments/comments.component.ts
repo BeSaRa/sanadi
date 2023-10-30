@@ -5,9 +5,9 @@ import {LangService} from '@app/services/lang.service';
 import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
 import {CaseComment} from '@app/models/case-comment';
 import {DialogService} from '@app/services/dialog.service';
-import {CaseCommentPopupComponent} from '../../popups/case-comment-popup/case-comment-popup.component';
+import {CaseCommentPopupComponent} from '../popups/case-comment-popup/case-comment-popup.component';
 import {EmployeeService} from '@app/services/employee.service';
-import {CommentHistoryPopupComponent} from '../../popups/comment-history-popup/comment-history-popup.component';
+import {CommentHistoryPopupComponent} from '../popups/comment-history-popup/comment-history-popup.component';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({

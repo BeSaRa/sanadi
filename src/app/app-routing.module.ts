@@ -406,6 +406,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/financial-analysis',
+        canActivate: [NewServicePermissionGuard.canActivate],
+        loadChildren: () => import('./modules/services/financial-analysis/financial-analysis.module')
+          .then(m => m.FinancialAnalysisModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.FINANCIAL_ANALYSIS_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.FINANCIAL_ANALYSIS
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

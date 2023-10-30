@@ -31,7 +31,7 @@
         <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
           <table-header tableTitle="attachments"
                         [add$]="addOtherAttachments"
-                        [allowAdd]="!disabled"
+                        [allowAdd]="!disabled && !isReportCaseType()"
                         [skipClearSort]="true"
                         [skipSearch]="true"
                         [customTemplate]="reloadAttachmentsTemplate"

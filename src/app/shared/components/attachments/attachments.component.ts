@@ -1,30 +1,34 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, of, Subject} from 'rxjs';
-import {filter, map, skip, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {FileNetDocument} from '@app/models/file-net-document';
-import {LangService} from '@app/services/lang.service';
-import {UntypedFormControl} from '@angular/forms';
-import {AttachmentTypeService} from '@app/services/attachment-type.service';
-import {DocumentService} from '@app/services/document.service';
-import {DialogService} from '@app/services/dialog.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {ToastService} from '@app/services/toast.service';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
-import {FileIconsEnum, FileMimeTypesEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {AdminResult} from '@app/models/admin-result';
-import {GridName, ItemId} from '@app/types/types';
-import {EmployeeService} from '@services/employee.service';
-import {ExternalUser} from '@app/models/external-user';
-import {InternalUser} from '@app/models/internal-user';
+import { SharedService } from '@app/services/shared.service';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
+import { filter, map, skip, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { FileNetDocument } from '@app/models/file-net-document';
+import { LangService } from '@app/services/lang.service';
+import { UntypedFormControl } from '@angular/forms';
+import { AttachmentTypeService } from '@app/services/attachment-type.service';
+import { DocumentService } from '@app/services/document.service';
+import { DialogService } from '@app/services/dialog.service';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { ToastService } from '@app/services/toast.service';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { AttachmentTypeServiceData } from '@app/models/attachment-type-service-data';
+import { FileExtensionsEnum, FileIconsEnum, FileMimeTypesEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { AdminResult } from '@app/models/admin-result';
+import { GridName, ItemId } from '@app/types/types';
+import { EmployeeService } from '@services/employee.service';
+import { ExternalUser } from '@app/models/external-user';
+import { InternalUser } from '@app/models/internal-user';
 import {
   OtherAttachmentDetailsPopupComponent
 } from '@app/shared/popups/other-attachment-details-popup/other-attachment-details-popup.component';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {CommonUtils} from '@helpers/common-utils';
-import {GlobalSettingsService} from '@app/services/global-settings.service';
-import {GlobalSettings} from '@app/models/global-settings';
-import {ActionIconsEnum} from '@enums/action-icons-enum';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { CommonUtils } from '@helpers/common-utils';
+import { GlobalSettingsService } from '@app/services/global-settings.service';
+import { GlobalSettings } from '@app/models/global-settings';
+import { ActionIconsEnum } from '@enums/action-icons-enum';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { AttachmentType } from '@app/models/attachment-type';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -103,12 +107,16 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
   allAttachmentTypesByCase: AttachmentTypeServiceData[] = [];
 
+  reportCases: CaseTypes[] = [
+    CaseTypes.FINANCIAL_ANALYSIS
+  ]
   constructor(public lang: LangService,
-              private dialog: DialogService,
-              private toast: ToastService,
-              private employeeService: EmployeeService,
-              private attachmentTypeService: AttachmentTypeService,
-              private globalSettingsService: GlobalSettingsService) {
+    private dialog: DialogService,
+    private toast: ToastService,
+    private employeeService: EmployeeService,
+    private attachmentTypeService: AttachmentTypeService,
+    private globalSettingsService: GlobalSettingsService,
+    private sharedService:SharedService) {
     this.attachmentTypeService.attachmentsComponent = this;
   }
 
@@ -146,14 +154,24 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  setAllowedFiles() {
-    this.globalSettingsService.getAllowedFileTypes()
+  private _getAllowedExtensionsTypes() {
+    if (this.isReportCaseType()) {
+      if(this.caseType === CaseTypes.FINANCIAL_ANALYSIS) {
+        this.allowedExtensions = [FileExtensionsEnum.CSV, FileExtensionsEnum.XLSX, FileExtensionsEnum.XLS];
+        return of(this.allowedExtensions);
+      }
+    }
+    return this.globalSettingsService.getAllowedFileTypes()
       .pipe(
         map(fileTypes => fileTypes.map(fileType => '.' + (fileType.extension ?? '').toLowerCase()))
       )
-      .subscribe(list => {
-        this.allowedExtensions = list;
-      })
+
+  }
+
+  setAllowedFiles() {
+    this._getAllowedExtensionsTypes().subscribe(list => {
+      this.allowedExtensions = list;
+    })
   }
 
   private loadDocumentsByCaseId(types: FileNetDocument[]): Observable<FileNetDocument[]> {
@@ -167,7 +185,25 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       .pipe(
         tap(_ => this.loaded = true),
         // load attachment types related to the service
-        switchMap(_ => this.caseType ? this.attachmentTypeService.loadTypesByCaseType(this.caseType) : of([])),
+        switchMap(_ => {
+          if (this.isReportCaseType()) {
+            const fileNet = new AttachmentTypeServiceData().clone({
+              isRequired: true,
+              caseType: this.caseType,
+              attachmentTypeInfo: new AttachmentType().clone({
+                enName :this.lang.getEnglishLocalByKey('lbl_final_report'),
+                enDesc:this.lang.getEnglishLocalByKey('lbl_final_report'),
+                arName :this.lang.getArabicLocalByKey('lbl_final_report'),
+                arDesc :this.lang.getArabicLocalByKey('lbl_final_report'),
+              })
+            });
+            return of([fileNet])
+          }
+          if (!this.caseType) {
+            return of([]);
+          }
+          return this.attachmentTypeService.loadTypesByCaseType(this.caseType)
+        }),
         tap((types: AttachmentTypeServiceData[]) => {
           this.allAttachmentTypesByCase = types;
           this.multiAttachmentTypes.clear();
@@ -186,7 +222,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe((attachments) => {
-        this.attachments = attachments;
+        this.attachments = this.isReportCaseType() ? attachments.slice(0,1) : attachments;
         this.separateConditionalAttachments();
         this.loadedStatus$.next(true);
       });
@@ -197,7 +233,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     const typeIds = types.map(type => type.attachmentTypeInfo.id!);
     const attachmentTypeIds = attachments.map(attachment => attachment.attachmentTypeInfo.id!);
     this.loadedAttachments = types.reduce((acc, file) => {
-      return {...acc, [file.attachmentTypeInfo.id!]: file};
+      return { ...acc, [file.attachmentTypeInfo.id!]: file };
     }, {} as Record<number, FileNetDocument>);
 
     const differenceIds = typeIds.filter((id) => !attachmentTypeIds.includes(id));
@@ -254,14 +290,14 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     const validFile = file ? (this.allowedExtensions.includes(file.name.getExtension())) : true;
     !validFile ? input.value = '' : null;
     if (!validFile) {
-      this.dialog.error(this.lang.map.msg_only_those_files_allowed_to_upload.change({files: this.allowedExtensions.join(', ')}));
+      this.dialog.error(this.lang.map.msg_only_those_files_allowed_to_upload.change({ files: this.allowedExtensions.join(', ') }));
       input.value = '';
       return;
     }
     const validFileSize = file ? (file.size <= this.allowedFileMaxSize * 1000 * 1024) : true;
     !validFileSize ? input.value = '' : null;
     if (!validFileSize) {
-      this.dialog.error(this.lang.map.msg_only_this_file_size_or_less_allowed_to_upload.change({size: this.allowedFileMaxSize}));
+      this.dialog.error(this.lang.map.msg_only_this_file_size_or_less_allowed_to_upload.change({ size: this.allowedFileMaxSize }));
       input.value = '';
       return;
     }
@@ -270,6 +306,17 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         switchMap(_ => {
+          if (this.isReportCaseType()) {
+            return this.model.addReport(this.caseId,
+              (new FileNetDocument()).clone({
+                documentTitle: this.lang.map.lbl_final_report,
+                description: this.lang.map.lbl_final_report,
+                attachmentTypeId: -1,
+                required: true,
+                files: input.files!,
+                isPublished: this.employeeService.isExternalUser() ? true : this.selectedFile?.isPublished
+              })) as Observable<FileNetDocument>
+          }
           if (this.selectedFile && this.selectedFile.id) {
             return this._updateAttachmentFile(input.files!);
           } else {
@@ -277,9 +324,9 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
           }
         })
       ).subscribe((attachment) => {
-      input.value = '';
-      this._afterSaveAttachmentFile(attachment, 'update');
-    });
+        input.value = '';
+        this._afterSaveAttachmentFile(attachment, 'update');
+      });
 
     /*const deleteFirst$ = this.selectedFile && this.selectedFile.id ? this.service.deleteDocument(this.selectedFile.id) : of(null);
     of(null)
@@ -343,38 +390,45 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     }
 
     this.dialog
-      .confirm(this.lang.map.msg_confirm_delete_x.change({x: file.documentTitle}))
+      .confirm(this.lang.map.msg_confirm_delete_x.change({ x: file.documentTitle }))
       .onAfterClose$.subscribe((userClick: UserClickOn) => {
-      if (userClick !== UserClickOn.YES) {
-        return;
-      }
+        if (userClick !== UserClickOn.YES) {
+          return;
+        }
 
-      this.service.deleteDocument(file.id)
-        .subscribe(() => {
-          this.toast.success(this.lang.map.msg_delete_x_success.change({x: file.documentTitle}));
-          let deletedFileIndex = this.attachments.indexOf(file);
-          if (file.attachmentTypeId === -1) {
-            this.attachments.splice(deletedFileIndex, 1);
-          } else {
-            this.attachments.splice(deletedFileIndex, 1, (new FileNetDocument()).clone({
-              documentTitle: file.documentTitle,
-              description: file.description,
-              attachmentTypeId: file.attachmentTypeId,
-              attachmentTypeInfo: file.attachmentTypeInfo,
-              attachmentTypeServiceData: file.attachmentTypeServiceData,
-              required: file.required,
-              attachmentTypeStatus: file.attachmentTypeStatus
-            }));
-          }
-          this.attachments = this.attachments.slice();
-          this.separateConditionalAttachments();
-        });
-    });
+        this.service.deleteDocument(file.id)
+          .subscribe(() => {
+            this.toast.success(this.lang.map.msg_delete_x_success.change({ x: file.documentTitle }));
+            let deletedFileIndex = this.attachments.indexOf(file);
+            if (file.attachmentTypeId === -1) {
+              this.attachments.splice(deletedFileIndex, 1);
+            } else {
+              this.attachments.splice(deletedFileIndex, 1, (new FileNetDocument()).clone({
+                documentTitle: file.documentTitle,
+                description: file.description,
+                attachmentTypeId: file.attachmentTypeId,
+                attachmentTypeInfo: file.attachmentTypeInfo,
+                attachmentTypeServiceData: file.attachmentTypeServiceData,
+                required: file.required,
+                attachmentTypeStatus: file.attachmentTypeStatus
+              }));
+            }
+            this.attachments = this.attachments.slice();
+            this.separateConditionalAttachments();
+          });
+      });
 
   }
 
   viewFile(file: FileNetDocument): void {
     if (this.isDisabledActionButtons(file, 'view')) {
+      return;
+    }
+    if (this.isReportCaseType()) {
+      this.service.downloadDocument(file.id)
+        .subscribe(model=>{
+         this.sharedService.downloadFileToSystem(model.blob)
+        });
       return;
     }
     this.service.downloadDocument(file.id)
@@ -502,13 +556,22 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     if (buttonType === 'view') {
       return !attachment.id;
     } else if (buttonType === 'delete') {
+      if (this.isReportCaseType()) {
+        return true;
+      }
       if (this.model && (this.model.isFinalApproved() || this.model.isFinalNotification())) {
         return true;
       }
       return this.disabled || !attachment.attachmentTypeStatus || !attachment.id || !this._isCreatedByCurrentUser(attachment);
     } else if (buttonType === 'upload') {
+      if(this.isReportCaseType()){
+        return !this.employeeService.isExternalUser()
+      }
       return this.disabled || !attachment.attachmentTypeStatus;
     } else if (buttonType === 'publish') {
+      if (this.isReportCaseType()) {
+        return true;
+      }
       return this.disabled;
     }
     return true;
@@ -525,10 +588,10 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
   private listenToFormPropertiesChange(attachment: FileNetDocument): void {
     const keys = Object.keys(this.formProperties);
-    combineLatest(keys.map(key => this.formProperties[key]().pipe(map(value => ({[key]: value})))))
+    combineLatest(keys.map(key => this.formProperties[key]().pipe(map(value => ({ [key]: value })))))
       .pipe(map(values => {
         return values.reduce((acc, currentValue) => {
-          return {...acc, ...currentValue};
+          return { ...acc, ...currentValue };
         }, {} as Record<string, number>);
       }))
       .pipe(takeUntil(this.customPropertiesDestroy$))
@@ -551,5 +614,9 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     } else {
       this.attachments.splice(existingIndex, 1, attachment);
     }
+  }
+
+  isReportCaseType(): boolean {
+    return this.reportCases.includes(this.caseType!)
   }
 }
