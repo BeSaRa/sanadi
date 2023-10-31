@@ -40,7 +40,8 @@ export class NpoEmployee extends BaseModel<NpoEmployee, NpoEmployeeService> {
   identificationType!: number;
   gender!: number;
   contractLocationType!: number;
-  officeId!: number;
+  officeId!: string;
+  charityId!: number;
   contractType!: number;
   jobContractType!: number;
   contractStatus!: number;
@@ -96,6 +97,7 @@ export class NpoEmployee extends BaseModel<NpoEmployee, NpoEmployeeService> {
       contractLocation,
       contractLocationType,
       officeId,
+      charityId,
       contractStatus,
       contractType,
       jobContractType,
@@ -130,7 +132,8 @@ export class NpoEmployee extends BaseModel<NpoEmployee, NpoEmployeeService> {
       department: controls ? [department, [CustomValidators.required, CustomValidators.maxLength(300)]] : department,
       contractLocation: controls ? [contractLocation, CustomValidators.required] : contractLocation,
       contractLocationType: controls ? [contractLocationType, CustomValidators.required] : contractLocationType,
-      officeId: controls ? [officeId, CustomValidators.maxLength(300)] : officeId,
+      officeId: controls ? [officeId] : officeId,
+      charityId: controls ? [charityId] : charityId,
       contractStatus: controls ? [contractStatus, CustomValidators.required] : contractStatus,
       contractType: controls ? [contractType, CustomValidators.required] : contractType,
       jobContractType: controls ? [jobContractType, CustomValidators.required] : jobContractType,

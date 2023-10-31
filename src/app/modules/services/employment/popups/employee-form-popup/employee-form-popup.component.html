@@ -141,23 +141,23 @@
                    [notFoundText]="lang.map.msg_not_found" appendTo="body" id="officeId"
                    [readonly]="!isEditRequestTypeAllowed"
                    validationClasses="officeId" formControlName="officeId">
-          <ng-option *ngFor="let option of implementingAgencyList" [value]="option.id">
+          <ng-option *ngFor="let option of implementingAgencyList" [value]="option.fnId">
             {{option.getName()}}</ng-option>
         </ng-select>
         <app-field-error-message controlName="officeId"></app-field-error-message>
       </div>
       <!-- internal office Id -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper" *ngIf="isInternal()">
-        <label asteriskIfRequired="officeId" for="officeId" labelForId="officeId" class="form-label">{{
+        <label asteriskIfRequired="charityId" for="charityId" labelForId="charityId" class="form-label">{{
           lang.map.office_name }}</label>
         <ng-select [selectOnTab]="true" [clearable]="false" placeholder="{{ lang.map.select }}"
-                   [notFoundText]="lang.map.msg_not_found" appendTo="body" id="officeId"
+                   [notFoundText]="lang.map.msg_not_found" appendTo="body" id="charityId"
                    [readonly]="!isEditRequestTypeAllowed"
-                   validationClasses="officeId" formControlName="officeId">
+                   validationClasses="charityId" formControlName="charityId">
           <ng-option *ngFor="let option of charityBranch" [value]="option.id">
             {{option.fullName}}</ng-option>
         </ng-select>
-        <app-field-error-message controlName="officeId"></app-field-error-message>
+        <app-field-error-message controlName="charityId"></app-field-error-message>
       </div>
       <!-- department -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative">

@@ -37,6 +37,7 @@ export class CharityBranch extends SearchableCloneable<CharityBranch> implements
   usageAdjectiveInfo!:AdminResult;
   status!: number;
   statusInfo!:AdminResult;
+  fnId!: string;
 
   searchFields: ISearchFieldsMap<CharityBranch> = {
     ...normalSearchFields(['fullName', 'address', 'streetNumber', 'zoneNumber', 'buildingNumber']),
