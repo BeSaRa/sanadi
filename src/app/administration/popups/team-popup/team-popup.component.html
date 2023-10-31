@@ -56,6 +56,25 @@
         </ng-select>
         <app-field-error-message controlName="parentDeptId"></app-field-error-message>
       </div>
+      <div class="col-sm-6 mb-4 position-relative" >
+        <label for="parentSectorId" asteriskIfRequired="parentSectorId"
+               class="form-label">{{langService.map.lbl_sector}}</label>
+        <ng-select [selectOnTab]="true" labelForId="parentSectorId" [clearable]="false"
+                   placeholder="{{langService.map.select}}" id="parentSectorId"
+                   [notFoundText]="langService.map.msg_not_found"
+                   formControlName="parentSectorId"
+                   [ngClass]="fm.getStatusClass('parentSectorId')"
+        [readonly]="true">
+          <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+          <ng-option *ngFor="let option of sectorsList" [value]="option.id">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="parentSectorId"></app-field-error-message>
+      </div>
+
+    </div>
+    <div class="row">
       <div class="col-sm-6 mb-4 position-relative">
         <label for="email" asteriskIfRequired="email" class="form-label">{{langService.map.lbl_email}}</label>
         <input trimInput id="email" formControlName="email" validationClasses="email" class="form-control"/>

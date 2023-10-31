@@ -2957,4 +2957,17 @@ export const newNavigationMenuList = [
     itemOrder: 24,
     svg: null
   },
+  {
+    id: 93,
+    langKey: 'menu_sectors',
+    path: '/home/administration/sectors',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_DONORS,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 25,
+    svg: null
+  },
 ];
