@@ -2052,5 +2052,9 @@ export interface ILanguageKeys {
  please_add_financial_report_to_launch:string;
  upload_financial_report:string;
  view_financial_report:string;
+ menu_sectors:string;
+ lbl_add_Sector:string;
+ lbl_edit_Sector:string;
+ lbl_sector:string;
 
 }

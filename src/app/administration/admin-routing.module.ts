@@ -1,3 +1,4 @@
+import { Sector } from '@app/models/sector';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {PermissionGuard} from '@app/guards/permission.guard';
@@ -41,6 +42,7 @@ import { AdminPermissionComponent } from '@app/administration/pages/admin-permis
 import { TrainingProgramAudienceComponent } from '@app/administration/pages/training-program-audience/training-program-audience.component';
 import { TrainingProgramClassificationComponent } from '@app/administration/pages/training-program-classification/training-program-classification.component';
 import { NpoEmployeeComponent } from '@app/administration/pages/npo-employee/npo-employee.component';
+import { SectorComponent } from './pages/sector/sector.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -267,6 +269,11 @@ const routes: Routes = [
     path: 'admin-permissions', component: AdminPermissionComponent,
     canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_PERMISSIONS, configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'sectors', component: SectorComponent,
+    canActivate: [PermissionGuard.canActivate],
+    data: {permissionKey: PermissionsEnum.MANAGE_DONORS, configPermissionGroup: null, checkAnyPermission: false}
   },
   {path: '**', component: ErrorPageComponent}
 ];

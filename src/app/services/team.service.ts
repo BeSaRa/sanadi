@@ -1,27 +1,28 @@
-import { Injectable } from '@angular/core';
-import { Team } from '../models/team';
-import { HttpClient } from '@angular/common/http';
-import { UrlService } from './url.service';
-import { FactoryService } from './factory.service';
-import { UserService } from './user.service';
-import { forkJoin, Observable, of } from 'rxjs';
-import { InternalUser } from '../models/internal-user';
-import { DialogRef } from '../shared/models/dialog-ref';
-import { IDialogData } from '@contracts/i-dialog-data';
-import { OperationTypes } from '../enums/operation-types.enum';
-import { DialogService } from './dialog.service';
-import { TeamPopupComponent } from '../administration/popups/team-popup/team-popup.component';
-import { map, switchMap } from 'rxjs/operators';
-import { ITeamCriteria } from '@contracts/i-team-criteria';
-import { InternalDepartmentService } from './internal-department.service';
-import { InternalDepartment } from '../models/internal-department';
-import { UserTeam } from '@app/models/user-team';
-import { UserTeamService } from '@app/services/user-team.service';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
-import { Pagination } from '@app/models/pagination';
-import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 import { ComponentType } from '@angular/cdk/portal';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
+import { Pagination } from '@app/models/pagination';
+import { UserTeam } from '@app/models/user-team';
+import { SectorService } from '@app/services/sector.service';
+import { UserTeamService } from '@app/services/user-team.service';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { ITeamCriteria } from '@contracts/i-team-criteria';
+import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { TeamPopupComponent } from '../administration/popups/team-popup/team-popup.component';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { InternalDepartment } from '../models/internal-department';
+import { InternalUser } from '../models/internal-user';
+import { Team } from '../models/team';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { DialogService } from './dialog.service';
+import { FactoryService } from './factory.service';
+import { InternalDepartmentService } from './internal-department.service';
+import { UrlService } from './url.service';
+import { UserService } from './user.service';
+import { Sector } from '@app/models/sector';
 
 @CastResponseContainer({
   $default: {
@@ -48,7 +49,8 @@ export class TeamService extends CrudWithDialogGenericService<Team> {
               private urlService: UrlService,
               public dialog: DialogService,
               private userTeamService: UserTeamService,
-              private internalDepartmentService: InternalDepartmentService) {
+              private internalDepartmentService: InternalDepartmentService,
+              private sectorService:SectorService) {
     super();
     FactoryService.registerService('TeamService', this);
   }
@@ -84,10 +86,11 @@ export class TeamService extends CrudWithDialogGenericService<Team> {
     return this.userService.loadActiveTeamMembers(teamId);
   }
 
-  private _loadDialogData(teamId?: number): Observable<{ team: Team, internalDepartments: InternalDepartment[] }> {
+  private _loadDialogData(teamId?: number): Observable<{ team: Team, internalDepartments: InternalDepartment[],sectors:Sector[] }> {
     return forkJoin({
       team: !teamId ? of(new Team()) : this.loadByIdComposite(teamId),
-      internalDepartments: this.internalDepartmentService.loadDepartments()
+      internalDepartments: this.internalDepartmentService.loadDepartments(),
+      sectors:this.sectorService.loadAsLookups()
     });
   }
 
@@ -98,7 +101,8 @@ export class TeamService extends CrudWithDialogGenericService<Team> {
           return of(this.dialog.show<IDialogData<Team>>(TeamPopupComponent, {
             model: result.team,
             operation: OperationTypes.CREATE,
-            parentDepartmentsList: result.internalDepartments
+            parentDepartmentsList: result.internalDepartments,
+            sectorsList:result.sectors
           }));
         })
       );
@@ -111,7 +115,8 @@ export class TeamService extends CrudWithDialogGenericService<Team> {
           return of(this.dialog.show<IDialogData<Team>>(TeamPopupComponent, {
             model: result.team,
             operation: OperationTypes.UPDATE,
-            parentDepartmentsList: result.internalDepartments
+            parentDepartmentsList: result.internalDepartments,
+            sectorsList:result.sectors
           }));
         })
       );
@@ -124,7 +129,8 @@ export class TeamService extends CrudWithDialogGenericService<Team> {
           return of(this.dialog.show<IDialogData<Team>>(TeamPopupComponent, {
             model: result.team,
             operation: OperationTypes.VIEW,
-            parentDepartmentsList: result.internalDepartments
+            parentDepartmentsList: result.internalDepartments,
+            sectorsList:result.sectors
           }));
         })
       );

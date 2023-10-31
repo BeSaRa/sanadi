@@ -1,3 +1,4 @@
+import { SectorService } from '@app/services/sector.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { of, Subject } from 'rxjs';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
@@ -12,6 +13,7 @@ import { LangService } from '@app/services/lang.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { catchError, exhaustMap, takeUntil } from 'rxjs/operators';
 import { InternalDepartment } from '@app/models/internal-department';
+import { Sector } from '@app/models/sector';
 
 @Component({
   selector: 'team-popup',
@@ -26,6 +28,7 @@ export class TeamPopupComponent implements OnInit {
   operation: OperationTypes;
   fm!: FormManager;
   parentDepartmentsList: InternalDepartment[];
+  sectorsList:Sector[] =[]
   validateFieldsVisible: boolean = true;
   saveVisible: boolean = true;
 
@@ -33,10 +36,11 @@ export class TeamPopupComponent implements OnInit {
     private toast: ToastService,
     private dialogRef: DialogRef,
     private fb: UntypedFormBuilder,
-    public langService: LangService) {
+    public langService: LangService,) {
     this.model = data.model;
     this.operation = data.operation;
     this.parentDepartmentsList = data.parentDepartmentsList;
+    this.sectorsList = data.sectorsList
   }
 
   ngOnInit(): void {

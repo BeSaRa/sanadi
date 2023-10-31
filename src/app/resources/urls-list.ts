@@ -148,4 +148,5 @@ export const urlsList: Partial<IAppUrls> = {
   TRAINING_PROGRAM_CLASSIFICATION: 'admin/training-program-classification',
   FINANCIAL_ANALYSIS: '/financial-analysis-service',
   FINANCIAL_REPORT: '/financial-report',
+  SECTOR: '/admin/internal/sector',
 };

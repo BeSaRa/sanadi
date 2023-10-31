@@ -143,5 +143,6 @@ export interface IAppUrls {
   TRAINING_PROGRAM_CLASSIFICATION:string;
   FINANCIAL_ANALYSIS:string;
   FINANCIAL_REPORT:string;
+  SECTOR:string;
   [index: string]: string;
 }
