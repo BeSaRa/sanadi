@@ -28,7 +28,8 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
   department!: string;
   contractLocation!: number;
   contractLocationType!: number;
-  officeId!: number;
+  officeId!: string;
+  charityId!: number;
   contractType!: number;
   jobContractType!: number;
   contractStatus!: number;
@@ -79,6 +80,7 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
       contractLocation: { langKey: 'contract_location', value: this.contractLocation },
       contractLocationType: { langKey: 'contract_location_type', value: this.contractLocationType },
       officeId: { langKey: 'office_name', value: this.officeId },
+      charityId: { langKey: 'office_name', value: this.charityId },
       contractStatus: { langKey: 'contract_status', value: this.contractStatus },
       contractType: { langKey: 'contract_type', value: this.contractType },
       jobContractType: { langKey: 'job_contract_type', value: this.jobContractType },
@@ -125,6 +127,11 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
       case 'officeId':
         adminResultValue = this.officeInfo;
         break;
+        // charityId is alias for officeId so it will use same info object
+      case 'charityId':
+        adminResultValue = this.officeInfo;
+        break;
+
       case 'contractExpiryDate':
         const contractExpiryDateValue = DateUtils.getDateStringFromDate(this.contractExpiryDate, 'DATEPICKER_FORMAT');
         adminResultValue = AdminResult.createInstance({ arName: contractExpiryDateValue, enName: contractExpiryDateValue });

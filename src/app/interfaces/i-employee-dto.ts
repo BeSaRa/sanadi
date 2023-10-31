@@ -15,7 +15,8 @@ export interface IEmployeeDto {
   department: string;
   contractLocation: number;
   contractLocationType: number;
-  officeId: number;
+  officeId: string;
+  charityId: number;
   contractType: number;
   jobContractType: number;
   contractStatus: number;

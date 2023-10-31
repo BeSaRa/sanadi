@@ -4,6 +4,7 @@ import { IMyDateModel } from "angular-mydatepicker";
 import { DateUtils } from "./../helpers/date-utils";
 import { Employee } from "./../models/employee";
 import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
+import { ContractLocationTypes } from '@app/enums/contract-location-types.enum';
 
 export class EmployeeInterceptor implements IModelInterceptor<Employee> {
   send(model: Partial<Employee>): Partial<Employee> {
@@ -27,6 +28,12 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
       : DateUtils.changeDateFromDatepicker(
         model.expIdPass as unknown as IMyDateModel
       )?.toISOString();
+
+    if (model.contractLocationType == ContractLocationTypes.External) {
+      delete model.charityId
+    } else {
+      delete model.officeId
+    }
 
     if (model.identificationType == IdentificationType.Identification) {
       delete model.passportNumber

@@ -261,7 +261,7 @@ export class NpoEmployeePopupComponent extends AdminGenericDialog<NpoEmployee> {
   private loadCharityMainBranch() {
     this.npoEmployeeService.getCharityHeadQuarterBranchByOrgId(this.model.orgId).subscribe((data: CharityBranch[]) => {
       this.charityBranch = data;
-      this.officeId.setValue(data[0].id);
+      this.charityId.setValue(data[0].id);
     })
   }
 
@@ -303,6 +303,10 @@ export class NpoEmployeePopupComponent extends AdminGenericDialog<NpoEmployee> {
   }
 
   get officeId() {
+    return this.form.controls.officeId as UntypedFormControl;
+  }
+
+  get charityId() {
     return this.form.controls.officeId as UntypedFormControl;
   }
 

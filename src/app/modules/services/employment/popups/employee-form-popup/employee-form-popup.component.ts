@@ -34,8 +34,6 @@ import { ImplementingAgencyTypes } from '@enums/implementing-agency-types.enum';
 import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
 import { NpoEmployeeService } from '@app/services/npo-employee.service';
 import { CharityBranch } from '@app/models/charity-branch';
-import { map } from 'rxjs/operators';
-import { CommonStatusEnum } from '@enums/common-status.enum';
 
 @Component({
   selector: "app-employee-form-popup",
@@ -199,7 +197,8 @@ export class EmployeeFormPopupComponent implements OnInit {
       department: ["", [CustomValidators.required, CustomValidators.maxLength(300)]],
       contractLocation: [null, CustomValidators.required],
       contractLocationType: [null, CustomValidators.required],
-      officeId: [null, CustomValidators.maxLength(300)],
+      officeId: [""],
+      charityId : [null],
       contractStatus: [null, CustomValidators.required],
       contractType: [null, CustomValidators.required],
       jobContractType: [null, CustomValidators.required],
@@ -408,12 +407,12 @@ export class EmployeeFormPopupComponent implements OnInit {
     if(this.employeeService.isExternalUser()) {
       this.npoEmployeeService.getCharityHeadQuarterBranch().subscribe((data: CharityBranch[]) => {
         this.charityBranch = data;
-        this.officeId.setValue(data[0].id);
+        this.charityId.setValue(data[0].id);
       })
     } else {
       this.data?.model && this.npoEmployeeService.getCharityHeadQuarterBranchByOrgId(this.data?.model.organizationId).subscribe((data: CharityBranch[]) => {
         this.charityBranch = data;
-        this.officeId.setValue(data[0].id);
+        this.charityId.setValue(data[0].id);
       })
     }
   }
@@ -477,6 +476,10 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   get officeId() {
     return this.form.controls.officeId as UntypedFormControl;
+  }
+
+  get charityId() {
+    return this.form.controls.charityId as UntypedFormControl;
   }
 
   get contractStatus() {
