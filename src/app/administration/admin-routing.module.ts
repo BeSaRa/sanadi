@@ -273,7 +273,7 @@ const routes: Routes = [
   {
     path: 'sectors', component: SectorComponent,
     canActivate: [PermissionGuard.canActivate],
-    data: {permissionKey: PermissionsEnum.MANAGE_DONORS, configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: PermissionsEnum.MANAGE_SECTOR, configPermissionGroup: null, checkAnyPermission: false}
   },
   {path: '**', component: ErrorPageComponent}
 ];

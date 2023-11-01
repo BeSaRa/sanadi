@@ -70,6 +70,7 @@ export class TeamPopupComponent implements OnInit {
         disabled: this.operation
       }, [CustomValidators.required]],
       parentDeptId: [this.model.parentDeptId, [CustomValidators.required]],
+      parentSectorId: [this.model.parentSectorId, []],
       ldapGroupName: [this.model.ldapGroupName, [CustomValidators.required]],
       email: [this.model.email, [
         CustomValidators.pattern('EMAIL'),

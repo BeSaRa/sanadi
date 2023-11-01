@@ -45,6 +45,7 @@ export class Sector extends BaseModel<Sector, SectorService>{
     const {
       arName,
       enName,
+      departmentId
     } = this;
     return {
       arName: controls ? [arName, [
@@ -59,6 +60,7 @@ export class Sector extends BaseModel<Sector, SectorService>{
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
+      departmentId: controls ? [departmentId]:departmentId
     }
   }
 

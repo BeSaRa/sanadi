@@ -21,6 +21,23 @@
         <app-field-error-message controlName="enName"></app-field-error-message>
       </div>
     </div>
+    <div class="row mb-3">
+      <div class="col-sm-6">
+        <label for="departmentId" asteriskIfRequired="departmentId"
+               class="form-label">{{lang.map.department}}</label>
+        <ng-select validationClasses="type" labelForId="departmentId"
+                   placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found"
+                   formControlName="departmentId"
+                   id="departmentId" appendTo="body"
+                   [readonly]="true">
+          <ng-option *ngFor="let option of departmentsList" [value]="option.id">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="departmentId"></app-field-error-message>
+      </div>
+    </div>
   </form>
 </div>
 <div class="dialog-actions">
