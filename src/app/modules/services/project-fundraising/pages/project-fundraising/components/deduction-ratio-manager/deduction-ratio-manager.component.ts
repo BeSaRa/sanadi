@@ -1,18 +1,18 @@
-import { AvailableLanguagesNames } from './../../../../../../../enums/available-languages-names-enum';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ProjectFundraising } from "@app/models/project-fundraising";
-import { ProjectFundraisingService } from "@services/project-fundraising.service";
-import { LangService } from "@services/lang.service";
-import { DeductionRatioItem } from "@app/models/deduction-ratio-item";
 import { AbstractControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
-import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from "rxjs";
-import { debounceTime, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { DeductedPercentage } from "@app/models/deducted-percentage";
-import { DialogService } from "@services/dialog.service";
+import { AvailableLanguagesNames } from '@app/enums/available-languages-names-enum';
 import { UserClickOn } from "@app/enums/user-click-on.enum";
-import currency from "currency.js";
+import { DeductedPercentage } from "@app/models/deducted-percentage";
+import { DeductionRatioItem } from "@app/models/deduction-ratio-item";
+import { ProjectFundraising } from "@app/models/project-fundraising";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { DialogService } from "@services/dialog.service";
 import { EmployeeService } from "@services/employee.service";
+import { LangService } from "@services/lang.service";
+import { ProjectFundraisingService } from "@services/project-fundraising.service";
+import currency from "currency.js";
+import { BehaviorSubject, ReplaySubject, Subject, combineLatest } from "rxjs";
+import { debounceTime, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
 
 @Component({
   selector: 'deduction-ratio-manager',
@@ -27,6 +27,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
     this.modelChange$.next(value)
   }
 
+  originalModel!: ProjectFundraising
   _model!: ProjectFundraising
   deductionList: DeductedPercentage[] = []
 
@@ -157,6 +158,11 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
           this.item.setValue(x);
           this.addItem()
         })
+        this._model.deductedPercentagesItemList.forEach((x,index)=>{
+          if(!this.originalModel.deductedPercentagesItemList.some(o=>o.deductionType ===  x.deductionType)){
+            this.removeDeductItem(x,index)
+          }
+        })
       })
   }
 
@@ -171,8 +177,8 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
     this.listenToControl(control)
     this.list.push(control)
     this.deductionList = this.deductionList.concat([item]);
-    this._model.addDeductionRatioItem(item)
     this.item.setValue(null)
+    this._model.addDeductionRatioItem(item)
     this.updateItemIds()
     this.onAddItem.emit()
   }
@@ -309,11 +315,15 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
       .subscribe((model) => {
         this.destroyInputsListeners.next();
         this._model = new ProjectFundraising()
-        this.list.clear()
-        this.generateFromModel(model)
+        if(this.deductionList.length === 0){
+          this.list.clear()
+          this.generateFromModel(model)
+          this.createInputListeners()
+        }
+
         this._model = model;
-        this.deductionList = model.deductedPercentagesItemList
-        this.createInputListeners()
+        this.originalModel =new ProjectFundraising().clone(model)
+        // this.deductionList = model.deductedPercentagesItemList
         this.updateItemIds();
         this.calculateDeductionRatio();
       })
@@ -323,10 +333,10 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
       'english_name' : 'arabic_name'
   }
   isDeductionSelected(row: DeductedPercentage) {
-    return this._model.deductedPercentagesItemList.includes(row)
+    return this._model.deductedPercentagesItemList.some(x=>x.deductionType == row.deductionType)
   }
   toggleDeduct(row: DeductedPercentage, index: number) {
-    this._model.deductedPercentagesItemList.includes(row) ?
+    this._model.deductedPercentagesItemList.some(x=>x.deductionType === row.deductionType) ?
       this.removeDeductItem(row, index) : this.addDeductItem(row, index)
   }
   private addDeductItem(item: DeductedPercentage, index: number) {
