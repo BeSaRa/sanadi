@@ -25,6 +25,7 @@ export class Team extends BaseModel<Team, TeamService> {
   createdBy!: number;
   status: number = CommonStatusEnum.ACTIVATED;
   email!:string;
+  parentSectorId!:number;
   statusDateModified: string | null = '';
   isInternal!:boolean;
 
