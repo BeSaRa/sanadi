@@ -1,17 +1,15 @@
-// const interceptor: SectorInterceptor = new SectorInterceptor()
-
-import { InterceptModel } from "@app/decorators/decorators/intercept-model";
-import { CommonStatusEnum } from "@app/enums/common-status.enum";
-import { normalSearchFields } from "@app/helpers/normal-search-fields";
-import { INames } from "@app/interfaces/i-names";
-import { SectorInterceptor } from "@app/model-interceptors/sector-interceptor";
-import { FactoryService } from "@app/services/factory.service";
-import { LangService } from "@app/services/lang.service";
-import { SectorService } from "@app/services/sector.service";
-import { ISearchFieldsMap } from "@app/types/types";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { AdminResult } from "./admin-result";
-import { BaseModel } from "./base-model";
+import {InterceptModel} from "@app/decorators/decorators/intercept-model";
+import {normalSearchFields} from "@app/helpers/normal-search-fields";
+import {INames} from "@app/interfaces/i-names";
+import {SectorInterceptor} from "@app/model-interceptors/sector-interceptor";
+import {FactoryService} from "@app/services/factory.service";
+import {LangService} from "@app/services/lang.service";
+import {SectorService} from "@app/services/sector.service";
+import {ISearchFieldsMap} from "@app/types/types";
+import {CustomValidators} from "@app/validators/custom-validators";
+import {AdminResult} from "./admin-result";
+import {BaseModel} from "./base-model";
+import {infoSearchFields} from "@helpers/info-search-fields";
 
 const interceptor: SectorInterceptor = new SectorInterceptor()
 
@@ -19,17 +17,17 @@ const interceptor: SectorInterceptor = new SectorInterceptor()
   receive: interceptor.receive,
   send: interceptor.send
 })
-export class Sector extends BaseModel<Sector, SectorService>{
+export class Sector extends BaseModel<Sector, SectorService> {
   id!: number;
   arName!: string;
   enName!: string;
-  status: number = CommonStatusEnum.ACTIVATED;
   departmentId!: number;
+
+  departmentInfo!: AdminResult;
 
   // extra properties
   service!: SectorService;
   langService!: LangService;
-  statusInfo!: AdminResult;
 
   constructor() {
     super();
@@ -39,13 +37,13 @@ export class Sector extends BaseModel<Sector, SectorService>{
 
   searchFields: ISearchFieldsMap<Sector> = {
     ...normalSearchFields(['arName', 'enName']),
+    ...infoSearchFields(['departmentInfo'])
   };
 
   buildForm(controls?: boolean): any {
     const {
       arName,
-      enName,
-      departmentId
+      enName
     } = this;
     return {
       arName: controls ? [arName, [
@@ -59,15 +57,11 @@ export class Sector extends BaseModel<Sector, SectorService>{
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
-      ]] : enName,
-      departmentId: controls ? [departmentId]:departmentId
+      ]] : enName
     }
   }
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
-
-
 }
-

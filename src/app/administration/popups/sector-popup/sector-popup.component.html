@@ -9,33 +9,22 @@
 </div>
 <div class="dialog-content" #dialogContent>
   <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
-    <div class="row mb-3">
-      <div class="col-sm-6 position-relative">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
         <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
         <input id="arName" validationClasses="arName" formControlName="arName" class="form-control">
         <app-field-error-message controlName="arName"></app-field-error-message>
       </div>
-      <div class="col-sm-6 position-relative">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
         <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.lbl_english_name}}</label>
         <input id="enName" validationClasses="enName" formControlName="enName" class="form-control">
         <app-field-error-message controlName="enName"></app-field-error-message>
       </div>
     </div>
-    <div class="row mb-3">
-      <div class="col-sm-6">
-        <label for="departmentId" asteriskIfRequired="departmentId"
-               class="form-label">{{lang.map.department}}</label>
-        <ng-select validationClasses="type" labelForId="departmentId"
-                   placeholder="{{lang.map.select}}"
-                   [notFoundText]="lang.map.msg_not_found"
-                   formControlName="departmentId"
-                   id="departmentId" appendTo="body"
-                   [readonly]="true">
-          <ng-option *ngFor="let option of departmentsList" [value]="option.id">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="departmentId"></app-field-error-message>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3">
+        <label for="departmentId" class="form-label">{{lang.map.department}}</label>
+        <span id="departmentId" class="form-control input-disabled">{{model.departmentInfo?.getName() || '&nbsp;'}}</span>
       </div>
     </div>
   </form>

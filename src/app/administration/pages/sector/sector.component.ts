@@ -38,8 +38,8 @@ export class SectorComponent extends AdminGenericComponent<Sector, SectorService
   }
 
   @ViewChild('table') table!: TableComponent;
-  displayedColumns: string[] = ['arName', 'enName',  'actions'];
-  searchColumns: string[] = [ 'search_arName', 'search_enName', 'search_actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'department',  'actions'];
+  searchColumns: string[] = [ 'search_arName', 'search_enName', 'search_department', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {
       key: 'arName',
@@ -77,9 +77,9 @@ export class SectorComponent extends AdminGenericComponent<Sector, SectorService
   ];
 
   sortingCallbacks = {
-    statusInfo: (a: Sector, b: Sector, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+    department: (a: Sector, b: Sector, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.departmentInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.departmentInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   }
