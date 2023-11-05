@@ -21,7 +21,10 @@ export class CustomServiceTemplateInterceptor implements IModelInterceptor<Custo
     delete model.arName;
     delete model.enName;
     delete model.approvalTemplateTypeInfo;
+    delete model.attachmentTypeInfo;
     delete model.langService;
     delete model.service;
+    delete model.createdOn;
+    delete model.lastModified;
   }
 }

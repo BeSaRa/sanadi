@@ -25,10 +25,13 @@ export class CustomServiceTemplate extends SearchableCloneable<CustomServiceTemp
   arName!: string;
   enName!: string;
   approvalTemplateTypeInfo!: AdminResult;
+  attachmentTypeInfo!: AdminResult;
   isOriginal!: boolean;
   isActive!: boolean;
   isInternal!: boolean;
   isPublished!: boolean;
+  createdOn!: string;
+  lastModified!: string;
 
   // extra properties
   service: CustomServiceTemplateService;
