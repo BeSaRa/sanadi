@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
@@ -57,7 +57,8 @@ import { ProjectTypes } from '@app/enums/project-types';
   templateUrl: './project-fundraising.component.html',
   styleUrls: ['./project-fundraising.component.scss']
 })
-export class ProjectFundraisingComponent extends EServicesGenericComponent<ProjectFundraising, ProjectFundraisingService> {
+export class ProjectFundraisingComponent extends EServicesGenericComponent<ProjectFundraising, ProjectFundraisingService>
+implements AfterViewInit {
   form!: UntypedFormGroup;
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoRenew.slice().sort((a, b) => a.lookupKey - b.lookupKey)
   permitTypes: Lookup[] = this.lookupService.listByCategory.ProjectPermitType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
@@ -136,6 +137,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     public lang: LangService) {
     super()
   }
+  ngAfterViewInit(): void {
+    this.checkTemplateTabValidity()
+  }
 
   _getNewInstance(): ProjectFundraising {
     return new ProjectFundraising()
@@ -176,7 +180,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.listenToMainDacOchaChanges()
     this.listenToDomainChanges()
     this.overrideValuesInCreate();
-    this.checkTemplateTabValidity();
+    // this.checkTemplateTabValidity();
     // this._test()
   }
 
