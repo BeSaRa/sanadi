@@ -323,7 +323,9 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
 
         this._model = model;
         this.originalModel =new ProjectFundraising().clone(model)
-        // this.deductionList = model.deductedPercentagesItemList
+        if(this.employeeService.isInternalUser()){
+          this.deductionList = model.deductedPercentagesItemList
+        }
         this.updateItemIds();
         this.calculateDeductionRatio();
       })
