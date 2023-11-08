@@ -270,18 +270,15 @@ export class FinancialAnalysisComponent extends EServicesGenericComponent<
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if (this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) {
-        this.readonly = false;
-      }
+      this.readonly = !this.employeeService.isCharityManager() && !this.employeeService.isCharityUser();
+
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       if(!this.model.taskDetails.isClaimed()){
         this.readonly = true;
       }
       // after claim, consider it same as user inbox and use same condition
      else {
-        if (this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) {
-          this.readonly = false;
-        }
+       this.readonly = !this.employeeService.isCharityManager() && !this.employeeService.isCharityUser()
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
       // if saved as draft, then no readonly
