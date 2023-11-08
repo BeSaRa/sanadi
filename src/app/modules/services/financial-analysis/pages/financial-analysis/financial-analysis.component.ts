@@ -274,8 +274,11 @@ export class FinancialAnalysisComponent extends EServicesGenericComponent<
         this.readonly = false;
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      if(!this.model.taskDetails.isClaimed()){
+        this.readonly = true;
+      }
       // after claim, consider it same as user inbox and use same condition
-      if (this.model.taskDetails.isClaimed()) {
+     else {
         if (this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) {
           this.readonly = false;
         }
