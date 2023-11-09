@@ -100,9 +100,12 @@ export class FinancialAnalysisService extends BaseGenericEService<FinancialAnaly
       { params: queryParams })
       .pipe(catchError(() => of([] as FinancialReport[])));
   }
-  licenseSearch(profileType: number): Observable<FinancialAnalysis[]> {
+  licenseSearch(profileType: number,oldApprovalSerial? :string): Observable<FinancialAnalysis[]> {
     let queryParams = new HttpParams();
     queryParams = queryParams.append('profileType', profileType);
+    if(oldApprovalSerial ){
+      queryParams = queryParams.append('oldApprovalSerial', oldApprovalSerial );
+    }
 
     return this.http.get<any>(this._getURLSegment() + '/search', {
       params: queryParams
