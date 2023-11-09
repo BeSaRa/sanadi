@@ -403,8 +403,8 @@ export class FinancialAnalysisComponent extends EServicesGenericComponent<
     this.licenseSearch$
       .pipe(
         takeUntil(this.destroy$),
-        exhaustMap(() => {
-          return this.loadLicensesByCriteria().pipe(catchError(() => of([])));
+        exhaustMap((value) => {
+          return this.loadLicensesByCriteria(value).pipe(catchError(() => of([])));
         })
       )
       .pipe(
@@ -466,8 +466,8 @@ export class FinancialAnalysisComponent extends EServicesGenericComponent<
       .subscribe(list => this.externalOfficeList = list)
 
   }
-  loadLicensesByCriteria(): Observable<FinancialAnalysis[]> {
-    return this.service.licenseSearch(this.employeeService.getProfile()!.profileType);
+  loadLicensesByCriteria(oldApprovalSerial?:string): Observable<FinancialAnalysis[]> {
+    return this.service.licenseSearch(this.employeeService.getProfile()!.profileType,oldApprovalSerial);
   }
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
@@ -502,7 +502,6 @@ export class FinancialAnalysisComponent extends EServicesGenericComponent<
       value.requestType = this.requestTypeField.value;
       value.oldLicenseSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
-      value.oldLicenseSerial = licenseDetails.fullSerial;
       value.documentTitle = '';
       value.fullSerial = null;
       value.description = '';
