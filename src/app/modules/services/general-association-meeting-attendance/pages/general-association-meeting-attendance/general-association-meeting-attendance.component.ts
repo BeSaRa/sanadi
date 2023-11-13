@@ -1,3 +1,4 @@
+import { NpoEmployeeService } from '@app/services/npo-employee.service';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import {
   AbstractControl,
@@ -216,7 +217,9 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     private toast: ToastService,
     private licenseService: LicenseService,
     private employeeService: EmployeeService,
-    private sharedService: SharedService) {
+    private sharedService: SharedService,
+    private npoEmployeeService:NpoEmployeeService // do not remove this it's used inside manage-members-popup
+    ) {
     super();
   }
 
