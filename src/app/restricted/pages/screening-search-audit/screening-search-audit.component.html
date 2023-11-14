@@ -1,0 +1,162 @@
+<fieldset class="mb-4">
+  <legend><span class="h6 text-primary text-capitalize">{{lang.map.menu_screening_search_audit}}</span></legend>
+  <form [formGroup]="form" autocomplete="off" action="#">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 col-lg-3 mb-3 position-relative">
+        <label for="targetArabicName" asteriskIfRequired="targetArabicName"
+          class="form-label">{{lang.map.lbl_arabic_name}}</label>
+        <input id="targetArabicName" validationClasses="targetArabicName" formControlName="targetArabicName"
+          class="form-control" trimInput />
+        <app-field-error-message controlName="targetArabicName"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-3 mb-3 position-relative">
+        <label for="targetEnglishName" asteriskIfRequired="targetEnglishName"
+          class="form-label">{{lang.map.lbl_english_name}}</label>
+        <input id="targetEnglishName" validationClasses="targetEnglishName" formControlName="targetEnglishName"
+          class="form-control" trimInput />
+        <app-field-error-message controlName="targetEnglishName"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-3 mb-3">
+        <label for="actionDateFrom" asteriskIfRequired="actionDateFrom" class="form-label">{{
+          lang.map.world_check_search_data_from }}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="actionDateFrom" id="actionDateFrom"
+            [options]="datepickerOptionsMap.actionDateFrom" (click)="dpactionDateFrom.toggleCalendar()"
+            #dpactionDateFrom="angular-mydatepicker" angular-mydatepicker validationClasses="actionDateFrom"
+            (inputFieldChanged)="
+              onDateChange($event, 'actionDateFrom', 'actionDateTo')
+            "></div>
+          <app-field-error-message controlName="actionDateFrom"></app-field-error-message>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-3 mb-3">
+        <label for="actionDateTo" asteriskIfRequired="actionDateTo" class="form-label">{{
+          lang.map.world_check_search_data_to
+          }}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="actionDateTo" id="actionDateTo"
+            [options]="datepickerOptionsMap.actionDateTo" (click)="actionDateTo.toggleCalendar()"
+            #actionDateTo="angular-mydatepicker" angular-mydatepicker validationClasses="actionDateTo"
+            (inputFieldChanged)="
+              onDateChange($event, 'actionDateFrom', 'actionDateTo')
+            "></div>
+          <app-field-error-message controlName="actionDateTo"></app-field-error-message>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 mb-3">
+        <label for="entityType" asteriskIfRequired="entityType"
+          class="form-label">{{lang.map.world_check_entity_type}}</label>
+        <ng-select [selectOnTab]="true" validationClasses="entityType" formControlName="entityType" [clearable]="true"
+          placeholder="{{lang.map.select}}" id="entityType" [notFoundText]="lang.map.msg_not_found" appendTo="body">
+          <ng-option *ngFor="let option of WORLD_CHECK_ENTITY_TYPE" [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="entityType"></app-field-error-message>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 mb-3">
+        <label for="actionType" asteriskIfRequired="actionType"
+          class="form-label">{{lang.map.world_check_action_type}}</label>
+        <ng-select [selectOnTab]="true" validationClasses="actionType" formControlName="actionType" [clearable]="true"
+          placeholder="{{lang.map.select}}" id="actionType" [notFoundText]="lang.map.msg_not_found" appendTo="body">
+          <ng-option *ngFor="let option of WORLD_CHECK_SEARCH_DECISION" [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="actionType"></app-field-error-message>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 mb-3">
+        <label for="searchType" asteriskIfRequired="searchType"
+          class="form-label">{{lang.map.world_check_search_type}}</label>
+        <ng-select [selectOnTab]="true" validationClasses="searchType" formControlName="searchType" [clearable]="true"
+          placeholder="{{lang.map.select}}" id="searchType" [notFoundText]="lang.map.msg_not_found" appendTo="body">
+          <ng-option *ngFor="let option of WORLD_CHECK_SEARCH_TYPE" [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="searchType"></app-field-error-message>
+      </div>
+      <div class="col-12 pt-3">
+        <button class="btn btn-primary" [disabled]="form.invalid" (click)="search$.next()"
+          type="submit">{{lang.map.lbl_search}}</button>
+      </div>
+    </div>
+  </form>
+</fieldset>
+<app-table #table attachmentHandler [paginator]="paginator" [data]="data" [columns]="displayedColumns">
+  <table cdk-table [dataSource]="table.dataSource" class="table mt-3 table-striped table-bordered caption-top">
+    <ng-container cdkColumnDef="extra-header">
+      <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+        <table-header tableTitle="menu_screening_search_audit" [skipSearch]="true">
+        </table-header>
+      </th>
+    </ng-container>
+    <ng-container cdkColumnDef="targetArabicName">
+      <th cdk-header-cell *cdkHeaderCellDef>
+        {{ lang.map.lbl_arabic_name }}
+      </th>
+      <td cdk-cell *cdkCellDef="let row">{{ row.targetArabicName }}</td>
+    </ng-container>
+    <ng-container cdkColumnDef="targetEnglishName">
+      <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_english_name}}</th>
+      <td cdk-cell *cdkCellDef="let row"> {{row.targetEnglishName}} </td>
+    </ng-container>
+    <ng-container cdkColumnDef="actionDate">
+      <th cdk-header-cell *cdkHeaderCellDef>
+        {{ lang.map.action_date }}
+      </th>
+      <td cdk-cell *cdkCellDef="let row">{{ row.actionDate|date }}</td>
+    </ng-container>
+    <ng-container cdkColumnDef="actionType">
+      <th cdk-header-cell *cdkHeaderCellDef>
+        {{ lang.map.action_type }}
+      </th>
+      <td cdk-cell *cdkCellDef="let row">{{ getName(WORLD_CHECK_SEARCH_DECISION, row.actionType) }}</td>
+    </ng-container>
+    <ng-container cdkColumnDef="entityType">
+      <th cdk-header-cell *cdkHeaderCellDef>
+        {{ lang.map.world_check_entity_type }}
+      </th>
+      <td cdk-cell *cdkCellDef="let row">{{ getName(WORLD_CHECK_ENTITY_TYPE, row.entityType) }}</td>
+    </ng-container>
+    <ng-container cdkColumnDef="serviceStatus">
+      <th cdk-header-cell *cdkHeaderCellDef>
+        {{ lang.map.service_status }}
+      </th>
+      <td cdk-cell *cdkCellDef="let row">{{ row.serviceStatus }}</td>
+    </ng-container>
+    <ng-container cdkColumnDef="internalUserId">
+      <th cdk-header-cell *cdkHeaderCellDef>
+        {{ lang.map.internal_user }}
+      </th>
+      <td cdk-cell *cdkCellDef="let row">{{ row.internalUserInfo.getName() }}</td>
+    </ng-container>
+    <ng-container cdkColumnDef="internalUserDeptId">
+      <th cdk-header-cell *cdkHeaderCellDef>
+        {{ lang.map.internal_user_dept }}
+      </th>
+      <td cdk-cell *cdkCellDef="let row">{{ row.internalUserDeptInfo.getName() }}</td>
+    </ng-container>
+    <ng-container cdkColumnDef="actions">
+      <th cdk-header-cell *cdkHeaderCellDef>
+        {{ lang.map.lbl_actions }}
+      </th>
+      <td cdk-cell *cdkCellDef="let row; index as itemIndex">
+        <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+        </grid-actions>
+      </td>
+    </ng-container>
+
+    <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+    <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+    <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+    <tr *cdkNoDataRow>
+      <td colspan="100" class="text-center">
+        {{ lang.map.no_records_to_display }}
+      </td>
+    </tr>
+  </table>
+</app-table>
+<app-paginator #paginator></app-paginator>

@@ -1,0 +1,23 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.make_decision}}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <div class="col-12 mb-3">
+    <label for="actionType" [control]="control" asteriskIfRequired
+      class="form-label">{{lang.map.world_check_action_type}}</label>
+    <ng-select [selectOnTab]="true" validationClasses [control]="control" [clearable]="true" [formControl]="control"
+      placeholder="{{lang.map.select}}" id="actionType" [notFoundText]="lang.map.msg_not_found" appendTo="body">
+      <ng-option *ngFor="let option of WORLD_CHECK_SEARCH_DECISION" [value]="option.lookupKey">
+        {{option.getName()}}
+      </ng-option>
+    </ng-select>
+    <app-field-error-message [control]="control"></app-field-error-message>
+  </div>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+  <button dialogClose class="btn btn-primary" [disabled]="control.invalid"
+    (click)="save$.next()">{{lang.map.btn_save}}</button>
+</div>

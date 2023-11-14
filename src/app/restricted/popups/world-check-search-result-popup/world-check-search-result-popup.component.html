@@ -1,0 +1,86 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.world_check_search_result}}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <div class="row mb-3">
+    <div class="col-12">
+      <h5>{{lang.map.search_info}}</h5>
+    </div>
+    <div class="col-12 col-md-4 mb-3">
+      <strong class="text-primary">{{lang.map.search_keyword}}:</strong> {{data.result.name}}
+    </div>
+    <div class="col-12 col-md-4 mb-3">
+      <strong class="text-primary">{{lang.map.case_id}}:</strong> {{data.result.caseId}}
+    </div>
+    <div class="col-12 col-md-4 mb-3">
+      <strong class="text-primary">{{lang.map.world_check_entity_type}}:</strong> {{data.result.entityType}}
+    </div>
+    <div class="col-12 col-md-4 mb-3">
+      <strong class="text-primary">{{lang.map.exact_matches}}:</strong> {{data.result.exactMatches}}
+    </div>
+    <div class="col-12 col-md-4 mb-3">
+      <strong class="text-primary">{{lang.map.screen_date}}:</strong> {{data.result.creationDate|date}}
+    </div>
+    <div class="col-12 col-md-4 mb-3">
+      <strong class="text-primary">{{lang.map.total_result}}:</strong> {{data.result.results.length}}
+    </div>
+    <div class="col-12 col-md-4 mb-3">
+      <strong class="text-primary">{{lang.map.medium_matches}}:</strong> {{data.result.mediumMatches}}
+    </div>
+    <div class="col-12 col-md-4 mb-3">
+      <strong class="text-primary">{{lang.map.strong_matches}}:</strong> {{data.result.strongMatches}}
+    </div>
+    <div class="col-12 col-md-4 mb-3">
+      <strong class="text-primary">{{lang.map.weak_matches}}:</strong> {{data.result.weakMatches}}
+    </div>
+  </div>
+  <app-table #table [data]="data.result.results" [columns]="displayedColumns">
+    <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+
+      <ng-container cdkColumnDef="matchStrength">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.match_strength}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.matchStrength}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="matchedTerm">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.matched_term}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.matchedTerm}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="primaryName">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.primary_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.primaryName}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="dateOfBirth">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.date_of_birth}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{getBirthDays(row.events)}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="dead">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_dead}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{getDeadDays(row.events)}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="category">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_category}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.category}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="gender">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.gender}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.gender}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="countryLinks">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.country_links}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{getCountries(row.countryLinks)}} </td>
+      </ng-container>
+
+      <tr *cdkNoDataRow>
+        <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+      </tr>
+      <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
+    </table>
+  </app-table>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+  <button *ngIf="data.operation != operationTypes.VIEW" (click)="$makeDecision.next(data.result.id)" class="btn btn-primary">{{lang.map.make_decision}}</button>
+</div>

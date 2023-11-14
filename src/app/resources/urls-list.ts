@@ -149,4 +149,5 @@ export const urlsList: Partial<IAppUrls> = {
   FINANCIAL_ANALYSIS: '/financial-analysis-service',
   FINANCIAL_REPORT: '/financial-report',
   SECTOR: '/admin/internal/sector',
+  WORLD_CHECK: '/restricted/screening/world-check'
 };

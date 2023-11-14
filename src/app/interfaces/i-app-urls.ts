@@ -144,5 +144,6 @@ export interface IAppUrls {
   FINANCIAL_ANALYSIS:string;
   FINANCIAL_REPORT:string;
   SECTOR:string;
+  WORLD_CHECK:string;
   [index: string]: string;
 }

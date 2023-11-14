@@ -97,6 +97,7 @@ enum DefaultItemOrder {
   SERVICE_PROJECT_COMPLETION = 39,
   SERVICE_FINANCIAL_ANALYSIS = 40,
 
+  RESTRICTED,
   SERVICE_SEARCH,
   TRAINING,
   ADMIN
@@ -143,6 +144,7 @@ const GroupNames = {
   SERVICE_FINANCIAL_ANALYSIS:  'service_' + CaseTypes.FINANCIAL_ANALYSIS,
 
   TRAINING: 'training-services',
+  RESTRICTED: 'restricted',
   ADMIN: 'administration'
 }
 
@@ -2968,6 +2970,49 @@ export const newNavigationMenuList = [
     parent: 6,
     group: GroupNames.ADMIN,
     itemOrder: 25,
+    svg: null
+  },
+  {
+    id: 24,
+    langKey: 'menu_restricted',
+    path: '/home/restricted',
+    icon: 'mdi-database-search',
+    isSvg: false,
+    permission: null,
+    menuKey: SystemMenuKeys.RESTRICTED,
+    permissionGroup: PermissionGroupsEnum.RESTRICTED_PERMISSIONS_GROUP,
+    parent: null,
+    group: GroupNames.RESTRICTED,
+    itemOrder: DefaultItemOrder.RESTRICTED,
+    svg: null,
+    data: {
+      childrenGroupName: GroupNames.RESTRICTED
+    }
+  },
+  {
+    id: 4001,
+    langKey: 'menu_world_check_search',
+    path: '/home/restricted/world-check-search',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.WORLD_CHECK_SEARCH,
+    permissionGroup: null,
+    parent: 24,
+    group: GroupNames.RESTRICTED,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 4002,
+    langKey: 'menu_screening_search_audit',
+    path: '/home/restricted/screening-search-audit',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.SCREENING_SEARCH_AUDIT,
+    permissionGroup: null,
+    parent: 24,
+    group: GroupNames.RESTRICTED,
+    itemOrder: 1,
     svg: null
   },
 ];
