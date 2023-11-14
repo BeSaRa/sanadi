@@ -264,6 +264,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.loadCountries();
     this.loadGoals();
     this.listenToTemplateSearch();
+
   }
 
   setUserProfiles(): void {
@@ -315,6 +316,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.listenToExecutionFieldChange();
     this.listenToIsConstructionalChange();
     this.listenToProjectTypeChange();
+    this.listenToSecondSDGGoal();
+    this.listenToThirdSDGGoal();
   }
 
   listenToProjectTypeChange() {
@@ -824,7 +827,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this._handleProjectClassifications();
     this.isOutsideQatarWorkArea = false;
 
-    this.setRequiredValidator(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal', 'firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
+    this.setRequiredValidator(['firstSDGoal', 'firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
 
     this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
     this.displayDevGoals = false;
@@ -1071,5 +1074,27 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.foreignCountriesProjectsService.loadForeignCountriesProjectsNeeds(countryId).subscribe(list => {
       this.foreignCountriesProjectsNeeds = list;
     });
+  }
+  secondeSDGGoalHasValue():boolean{
+    return !!this.secondSDGoal.value
+  }
+  thirdSDGGoalHasValue():boolean{
+    return !!this.thirdSDGoal.value
+  }
+  listenToSecondSDGGoal(){
+    this.secondSDGoal.valueChanges
+    .pipe(
+      takeUntil(this.destroy$),
+      tap(_=>this.secondSDGoalPercentage.setValue("0"))
+    )
+    .subscribe()
+  }
+  listenToThirdSDGGoal(){
+    this.thirdSDGoal.valueChanges
+    .pipe(
+      takeUntil(this.destroy$),
+      tap(_=>this.thirdSDGoalPercentage.setValue("0"))
+    )
+    .subscribe()
   }
 }

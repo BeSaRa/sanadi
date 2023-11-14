@@ -496,6 +496,7 @@
               <input id="secondSDGoalPercentage" validationClasses="secondSDGoalPercentage"
                      [mask]="inputMaskPatterns.PERCENT"
                      [dropSpecialCharacters]="false"
+                     [readonly]="readonly|| !secondeSDGGoalHasValue()"
                      formControlName="secondSDGoalPercentage" class="form-control">
               <div class="input-group-append">
                 <span class="input-group-text">%</span>
@@ -510,6 +511,7 @@
               <input id="thirdSDGoalPercentage" validationClasses="thirdSDGoalPercentage"
                      [mask]="inputMaskPatterns.PERCENT"
                      [dropSpecialCharacters]="false"
+                     [readonly]="readonly|| !thirdSDGGoalHasValue()"
                      formControlName="thirdSDGoalPercentage" class="form-control">
               <div class="input-group-append">
                 <span class="input-group-text">%</span>
