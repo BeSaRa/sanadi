@@ -1024,6 +1024,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
    return this.isExtendRequestType() || this.isCancelRequestType()
   }
   isOtherFundraisingSourcingHaveElements(){
-    return this.selfFinancing.value.length > 0 || this.financialGrant.value.length > 0
+    return this.selfFinancing?.value?.length > 0 || this.financialGrant?.value?.length > 0
   }
 }
