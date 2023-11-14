@@ -13,7 +13,10 @@ const sanadiPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.SANADI_SEARCH_REQUEST,
   PermissionsEnum.SANADI_PARTIAL_REQUEST_REPORT
 ];
-
+const restrictedPermissionsGroup: PermissionsEnum[] = [
+  PermissionsEnum.WORLD_CHECK_SEARCH,
+  PermissionsEnum.SCREENING_SEARCH_AUDIT
+];
 const adminPermissionsGroup: PermissionsEnum[] = [
   // PermissionsEnum.ADD_ORG_USER,
   // PermissionsEnum.EDIT_ORG_USER,
@@ -393,7 +396,8 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.TRAINING_PROGRAMS_PAGE_GROUP]: trainingProgramsPagePermissionsGroup,
   [PermissionGroupsEnum.TRAINING_PROGRAMS_MENU_ITEM_GROUP]: trainingProgramsMenuPermissionsGroup,
   [PermissionGroupsEnum.FOLLOWUP_PERMISSIONS_GROUP]: followupPermissionsGroup,
-  [PermissionGroupsEnum.GIVE_USERS_PERMISSIONS]: giveUsersPermissions
+  [PermissionGroupsEnum.GIVE_USERS_PERMISSIONS]: giveUsersPermissions,
+  [PermissionGroupsEnum.RESTRICTED_PERMISSIONS_GROUP]: restrictedPermissionsGroup,
 };
 
 export {permissionGroups as PermissionsGroupMap};

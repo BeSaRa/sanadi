@@ -447,6 +447,7 @@ const routes: Routes = [
         data: {permissionKey: EServicePermissionsEnum.E_SERVICES_SEARCH},
       },
       {path: 'sanady', loadChildren: () => import('./sanady/sanady.module').then(m => m.SanadyModule)},
+      {path: 'restricted', loadChildren: () => import('./restricted/restricted.module').then(m => m.RestrictedModule)},
       /*{
         path: 'projects',
         canActivate: [ServicesGuard.canActivate],

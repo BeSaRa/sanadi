@@ -169,6 +169,9 @@ export interface ILookupMap {
   ApprovalTemplateType: Lookup[];
   InterventionType: Lookup[];
   PageType: Lookup[];
+  WORLD_CHECK_ENTITY_TYPE: Lookup[];
+  WORLD_CHECK_SEARCH_DECISION: Lookup[];
+  WORLD_CHECK_SEARCH_TYPE: Lookup[];
   ReportPeriodicity: Lookup[];
   HalfType: Lookup[];
   QuarterType: Lookup[];
