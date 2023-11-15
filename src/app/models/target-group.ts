@@ -10,6 +10,7 @@ import {normalSearchFields} from "@helpers/normal-search-fields";
 export class TargetGroup extends SearchableCloneable<TargetGroup> {
   services!: string;
   targetedGroup!: string;
+  itemId!:string;
 
   // extra properties
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;

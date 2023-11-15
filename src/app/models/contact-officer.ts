@@ -18,6 +18,7 @@ export class ContactOfficer extends SearchableCloneable<ContactOfficer> implemen
   phone!: string;
   mobileNo!: string;
   passportNumber!: string;
+  itemId!:string;
 
   searchFields: ISearchFieldsMap<ContactOfficer> = {
     ...normalSearchFields(['arabicName', 'englishName', 'email', 'phone', 'passportNumber'])

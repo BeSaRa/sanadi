@@ -11,6 +11,7 @@ import {CommonUtils} from '@helpers/common-utils';
 export class CommercialActivity extends SearchableCloneable<CommercialActivity> implements IAuditModelProperties<CommercialActivity> {
   activityName!: string;
   details!: string;
+  itemId!:string;
 
   searchFields: ISearchFieldsMap<CommercialActivity> = {
     ...normalSearchFields(['activityName', 'details']),

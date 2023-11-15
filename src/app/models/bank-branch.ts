@@ -21,6 +21,7 @@ export class BankBranch extends SearchableCloneable<BankBranch> implements IAudi
   recordNo!: string;
   phone!: string;
   postalCode!: string;
+  itemId!: string;
 
   searchFields: ISearchFieldsMap<BankBranch> = {
     ...normalSearchFields(['fullName', 'email', 'fax', 'recordNo', 'phone'])

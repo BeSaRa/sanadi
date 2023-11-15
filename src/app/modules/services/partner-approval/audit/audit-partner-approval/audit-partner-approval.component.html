@@ -16,7 +16,7 @@
   <audit-bank-account [newVersionList]="newVersion.bankAccountList"
                       [oldVersionList]="oldVersion.bankAccountList"
                       [caseType]="newVersion.caseType"
-                      [uniqueComparisonProperty]="'iBan'">
+                      [uniqueComparisonProperty]="'itemId'">
   </audit-bank-account>
 </ng-template>
 <ng-template #tradeLicenseTemplate>
@@ -24,49 +24,53 @@
   <heading-row labelKey="commercial_activity"></heading-row>
   <audit-commercial-activity [newVersionList]="newVersion.commercialActivitiesList"
                              [oldVersionList]="oldVersion.commercialActivitiesList"
-                             [uniqueComparisonProperty]="'activityName'"
+                             [uniqueComparisonProperty]="'itemId'"
   ></audit-commercial-activity>
 </ng-template>
 <ng-template #goalsTemplate>
   <heading-row labelKey="goals"></heading-row>
   <audit-goals [newVersionList]="newVersion.displayGoals"
                [oldVersionList]="oldVersion.displayGoals"
+               [uniqueComparisonProperty]="'itemId'"
   ></audit-goals>
   <heading-row labelKey="domain"></heading-row>
   <audit-goals-list [newVersionList]="newVersion.goalsList"
                     [oldVersionList]="oldVersion.goalsList"
+                    [uniqueComparisonProperty]="'itemId'"
   ></audit-goals-list>
   <heading-row labelKey="target_groups"></heading-row>
   <audit-target-group [newVersionList]="newVersion.targetGroupList"
                       [oldVersionList]="oldVersion.targetGroupList"
+                      [uniqueComparisonProperty]="'itemId'"
   ></audit-target-group>
   <heading-row labelKey="work_areas"></heading-row>
   <audit-work-areas [newVersionList]="newVersion.workAreaObjectList"
                     [oldVersionList]="oldVersion.workAreaObjectList"
-                    [uniqueComparisonProperty]="'englishName'"
+                    [uniqueComparisonProperty]="'itemId'"
   ></audit-work-areas>
 </ng-template>
 <ng-template #managementCouncilsTemplate>
   <audit-management-council [newVersionList]="newVersion.managementCouncilList"
                             [oldVersionList]="oldVersion.managementCouncilList"
-                            [uniqueComparisonProperty]="'phone'"
+                            [uniqueComparisonProperty]="'itemId'"
   ></audit-management-council>
 </ng-template>
 <ng-template #executiveManagementsTemplate>
   <audit-executive-management [newVersionList]="newVersion.executiveManagementList"
                               [oldVersionList]="oldVersion.executiveManagementList"
-                              [uniqueComparisonProperty]="'phone'"
+                              [uniqueComparisonProperty]="'itemId'"
                               [hidePassport]="false"
   ></audit-executive-management>
 </ng-template>
 <ng-template #contactOfficersTemplate>
   <audit-contact-officers [newVersionList]="newVersion.contactOfficerList"
                           [oldVersionList]="oldVersion.contactOfficerList"
-                          [uniqueComparisonProperty]="'phone'"
+                          [uniqueComparisonProperty]="'itemId'"
   ></audit-contact-officers>
 </ng-template>
 <ng-template #approvalReasonsTemplate>
   <audit-approval-reasons [newVersionList]="newVersion.approvalReasonList"
                           [oldVersionList]="oldVersion.approvalReasonList"
+                          [uniqueComparisonProperty]="'itemId'"
   ></audit-approval-reasons>
 </ng-template>

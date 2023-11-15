@@ -15,6 +15,7 @@ export class GoalList extends SearchableCloneable<GoalList> implements IAuditMod
   mainUNOCHACategory!: number | null;
   mainUNOCHACategoryInfo!: AdminResult;
   domainInfo!: AdminResult;
+  itemId!:string;
 
   searchFields: ISearchFieldsMap<GoalList> = {
     ...infoSearchFields(['domainInfo', 'mainDACCategoryInfo', 'mainUNOCHACategoryInfo']),
