@@ -12,6 +12,7 @@ export class ApprovalReason extends SearchableCloneable<ApprovalReason> implemen
   projects!: string;
   research!: string;
   fieldVisit!: string;
+  itemId!:string;
 
   searchFields: ISearchFieldsMap<ApprovalReason> = {
     ...normalSearchFields(['projects', 'research', 'fieldVisit'])

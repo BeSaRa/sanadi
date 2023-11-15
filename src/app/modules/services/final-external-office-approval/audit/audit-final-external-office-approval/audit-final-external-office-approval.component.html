@@ -12,21 +12,21 @@
   <audit-bank-account [newVersionList]="newVersion.bankAccountList"
                       [oldVersionList]="oldVersion.bankAccountList"
                       [caseType]="newVersion.caseType"
-                      [uniqueComparisonProperty]="'iBan'">
+                      [uniqueComparisonProperty]="'itemId'">
   </audit-bank-account>
 </ng-template>
 
 <ng-template #executiveManagementsTemplate>
   <audit-executive-management [newVersionList]="newVersion.executiveManagementList"
                               [oldVersionList]="oldVersion.executiveManagementList"
-                              [uniqueComparisonProperty]="'phone'"
+                              [uniqueComparisonProperty]="'itemId'"
                               [hidePassport]="false"
   ></audit-executive-management>
 </ng-template>
 <ng-template #bankBranchTemplate>
  <audit-bank-branch [newVersionList]="newVersion.branchList"
                     [oldVersionList]="oldVersion.branchList"
-                    [uniqueComparisonProperty]="'fullName'"
+                    [uniqueComparisonProperty]="'itemId'"
                   >
  </audit-bank-branch>
 </ng-template>

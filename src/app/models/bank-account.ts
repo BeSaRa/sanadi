@@ -26,6 +26,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> implements IAu
   category?: number;
   bankInfo!: Bank;
   isMergeAccount!: boolean;
+  itemId!: string;
   subAccounts: BankAccount[] = [];
   bankCategoryInfo!: Lookup;
   type!: number;

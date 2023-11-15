@@ -44,12 +44,6 @@ export class AuditApprovalReasonsComponent extends AuditListGenericComponent<App
     return item.getValuesWithLabels();
   }
 
-  existsInList(objComparison: IFindInList<ApprovalReason>): ApprovalReason | undefined {
-    return objComparison.listToCompareWith.find((item) => (
-      item.projects === objComparison.itemToCompare.projects
-      && item.fieldVisit === objComparison.itemToCompare.fieldVisit
-      && item.research === objComparison.itemToCompare.research)
-    );
-  }
+
 
 }

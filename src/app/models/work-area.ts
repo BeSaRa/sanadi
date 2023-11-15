@@ -17,6 +17,7 @@ export class WorkArea extends SearchableCloneable<WorkArea> implements IAuditMod
   objectDBId?: number;
   id!: number;
   countryInfo!: AdminResult;
+  itemId!:string;
 
   searchFields: ISearchFieldsMap<WorkArea> = {
     ...infoSearchFields(['countryInfo']),

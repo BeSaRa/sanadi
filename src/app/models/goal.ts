@@ -10,6 +10,7 @@ import {ObjectUtils} from '@helpers/object-utils';
 
 export class Goal extends SearchableCloneable<Goal> implements IAuditModelProperties<Goal> {
   goal!: string;
+  itemId!:string;
 
   // extra properties
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;

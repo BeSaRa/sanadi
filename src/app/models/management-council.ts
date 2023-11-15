@@ -21,6 +21,7 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> im
   nationality!: number;
   passportNumber!: string;
   nationalityInfo!: AdminResult
+  itemId!:string;
 
   searchFields: ISearchFieldsMap<ManagementCouncil> = {
     ...infoSearchFields(['nationalityInfo']),

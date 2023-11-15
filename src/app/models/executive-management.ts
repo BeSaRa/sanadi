@@ -20,7 +20,8 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
   nationality!: number;
   passportNumber!: string;
   identificationNumber!: string;
-  nationalityInfo!: AdminResult
+  nationalityInfo!: AdminResult;
+  itemId!:string;
 
   searchFields: ISearchFieldsMap<ExecutiveManagement> = {
     ...infoSearchFields(['nationalityInfo']),

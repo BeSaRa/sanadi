@@ -50,10 +50,4 @@ export class AuditTargetGroupComponent extends AuditListGenericComponent<TargetG
     return item.getValuesWithLabels();
   }
 
-  existsInList(objComparison: IFindInList<TargetGroup>): TargetGroup | undefined {
-    return objComparison.listToCompareWith.find((item) => (
-      item.services === objComparison.itemToCompare.services
-      && item.targetedGroup === objComparison.itemToCompare.targetedGroup)
-    );
-  }
 }

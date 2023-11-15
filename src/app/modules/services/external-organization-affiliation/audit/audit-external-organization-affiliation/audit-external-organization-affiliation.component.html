@@ -13,14 +13,14 @@
   <audit-bank-account [newVersionList]="newVersion.bankAccountDTOs"
                       [oldVersionList]="oldVersion.bankAccountDTOs"
                       [caseType]="newVersion.caseType"
-                      [uniqueComparisonProperty]="'iBan'">
+                      [uniqueComparisonProperty]="'itemId'">
   </audit-bank-account>
 </ng-template>
 
 <ng-template #executiveManagementsTemplate>
   <audit-executive-management [newVersionList]="newVersion.executiveManagementDTOs"
                               [oldVersionList]="oldVersion.executiveManagementDTOs"
-                              [uniqueComparisonProperty]="'identificationNumber'"
+                              [uniqueComparisonProperty]="'itemId'"
                               [hidePassport]="false"
                               [hideQId]="false"
   ></audit-executive-management>
@@ -29,7 +29,7 @@
   <audit-contact-officers [newVersionList]="newVersion.contactOfficerDTOs"
                           [oldVersionList]="oldVersion.contactOfficerDTOs"
                           [displayColumns]="contactOfficersColumns"
-                          [uniqueComparisonProperty]="'phone'"
+                          [uniqueComparisonProperty]="'itemId'"
   ></audit-contact-officers>
 </ng-template>
 <ng-template #specialExplanationTemplate>

@@ -49,8 +49,4 @@ export class AuditGoalsComponent extends AuditListGenericComponent<Goal> {
   getControlLabels(item: Goal): { [p: string]: ControlValueLabelLangKey } {
     return item.getValuesWithLabels();
   }
-
-  existsInList(objComparison: IFindInList<Goal>): Goal | undefined {
-    return objComparison.listToCompareWith.find((item) => item.goal === objComparison.itemToCompare.goal);
-  }
 }
