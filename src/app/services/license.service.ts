@@ -824,6 +824,11 @@ export class LicenseService {
 
     return this.http.get<FinancialAnalysis>(this.getServiceUrlByCaseType(CaseTypes.FINANCIAL_ANALYSIS) + '/search/details',{
       params :queryParams
-    })
+    }).pipe(
+      map((result:FinancialAnalysis)=> {
+        result.fullSerial = serialNumber
+        return result;
+      })
+    )
   }
 }
