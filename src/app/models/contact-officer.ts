@@ -10,6 +10,7 @@ import {CommonUtils} from '@helpers/common-utils';
 import {INames} from "@contracts/i-names";
 import {LangService} from "@services/lang.service";
 import {FactoryService} from "@services/factory.service";
+import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 
 export class ContactOfficer extends SearchableCloneable<ContactOfficer> implements IAuditModelProperties<ContactOfficer> {
   arabicName!: string;
@@ -58,6 +59,7 @@ export class ContactOfficer extends SearchableCloneable<ContactOfficer> implemen
       phone: {langKey: 'lbl_phone', value: this.phone},
       passportNumber: {langKey: 'passport_number', value: this.passportNumber},
       mobileNo: {langKey: 'mobile_number', value: this.mobileNo},
+      itemId: {langKey: {} as keyof ILanguageKeys, value: this.itemId},
     };
   }
 
@@ -74,6 +76,7 @@ export class ContactOfficer extends SearchableCloneable<ContactOfficer> implemen
       phone: control ? [values.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phone,
       mobileNo: control ? [values.mobileNo, CustomValidators.commonValidations.phone] : values.mobileNo,
       passportNumber: control ? [values.passportNumber, [...CustomValidators.commonValidations.passport]] : values.passportNumber,
+      itemId: control ? [values.itemId, []] : values.itemId,
     };
   }
 

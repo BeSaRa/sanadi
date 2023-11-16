@@ -372,7 +372,7 @@ export class FinancialAnalysisComponent extends EServicesGenericComponent<
   private _validateSingleLicense(license: FinancialAnalysis): Observable<undefined | FinancialAnalysis> {
     return this.licenseService.loadFinancialAnalysisById(
       license.fullSerial
-    ) as Observable<undefined | FinancialAnalysis>;
+    )as Observable<undefined | FinancialAnalysis>;
   }
   private _openSelectLicense(
     licenses: FinancialAnalysis[]
