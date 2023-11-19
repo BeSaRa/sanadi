@@ -2083,4 +2083,5 @@ export interface ILanguageKeys {
   service_status:string;
   internal_user:string;
   internal_user_dept:string;
+  transaction_amount_value:string;
 }
