@@ -25,7 +25,7 @@ export class CollectorItem extends _LicenseApproval implements HasLicenseApprova
   jobTitle!: string;
   mobileNo!: string;
   nationality!: number;
-  phone!: string;
+  email!: string;
   relationship!: number;
   licenseStatusInfo!: AdminResult;
   licenseDurationTypeInfo!: AdminResult;
@@ -47,7 +47,7 @@ export class CollectorItem extends _LicenseApproval implements HasLicenseApprova
       nationality: { langKey: 'lbl_nationality', value: this.nationality },
       relationship: { langKey: 'relationship', value: this.relationship },
       jobTitle: { langKey: 'job_title', value: this.jobTitle },
-      phone: { langKey: 'lbl_phone', value: this.phone },
+      email: { langKey: 'lbl_email', value: this.email },
       licenseEndDate: { langKey: 'license_end_date', value: this.licenseEndDate },
       oldLicenseFullSerial: { langKey: 'serial_number', value: this.oldLicenseFullSerial }
     };
@@ -64,7 +64,7 @@ export class CollectorItem extends _LicenseApproval implements HasLicenseApprova
       nationality: controls ? [values.nationality, [CustomValidators.required]] : values.nationality,
       relationship: controls ? [values.relationship] : values.relationship,
       jobTitle: controls ? [values.jobTitle, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.jobTitle,
-      phone: controls ? [values.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phone,
+      email: controls ? [values.email, [CustomValidators.required].concat(CustomValidators.commonValidations.email)] : values.email,
       licenseEndDate: controls ? [values.licenseEndDate, [CustomValidators.required]] : values.licenseEndDate,
       oldLicenseFullSerial: controls ? [values.oldLicenseFullSerial] : values.oldLicenseFullSerial,
     }
