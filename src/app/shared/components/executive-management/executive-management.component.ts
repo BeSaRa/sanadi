@@ -25,7 +25,7 @@ export class ExecutiveManagementComponent extends UiCrudListGenericComponent<Exe
     super();
   }
 
-  displayColumns: string[] = ['identificationNumber', 'arabicName', 'englishName', 'email', 'passportNumber', 'actions'];
+  displayColumns: string[] = ['identificationNumber','englishName', 'passportNumber', 'actions'];
   actions: IMenuItem<ExecutiveManagement>[] = [
     {
       type: 'action',
@@ -53,9 +53,9 @@ export class ExecutiveManagementComponent extends UiCrudListGenericComponent<Exe
     if (this.hidePassport) {
       this.displayColumns = this.displayColumns.filter(x => x !== 'passportNumber');
     }
-    if (this.hideQId) {
-      this.displayColumns = this.displayColumns.filter(x => x !== 'identificationNumber');
-    }
+    // if (this.hideQId) {
+    //   this.displayColumns = this.displayColumns.filter(x => x !== 'identificationNumber');
+    // }
   }
 
   _getNewInstance(override?: Partial<ExecutiveManagement> | undefined): ExecutiveManagement {

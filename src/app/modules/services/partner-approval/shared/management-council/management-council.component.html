@@ -11,12 +11,16 @@
             </table-header>
           </th>
         </ng-container>
+        <ng-container cdkColumnDef="identificationNumber">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.national_id_number}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.identificationNumber}} </td>
+        </ng-container>
         <ng-container cdkColumnDef="arabicName">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.arabic_name}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.arabicName}} </td>
         </ng-container>
         <ng-container cdkColumnDef="englishName">
-          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.english_name}}</th>
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.arabic_name}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
         </ng-container>
         <ng-container cdkColumnDef="nationality">

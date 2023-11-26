@@ -22,7 +22,7 @@ export class ManagementCouncilComponent extends UiCrudListGenericComponent<Manag
     super();
   }
 
-  displayColumns: string[] = ['arabicName', 'englishName', 'email', 'nationality', 'passportNumber', 'actions'];
+  displayColumns: string[] = ['identificationNumber','englishName', 'passportNumber', 'actions'];
   actions: IMenuItem<ManagementCouncil>[] = [
     {
       type: 'action',

@@ -195,7 +195,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
       country: control ? [values.country, CustomValidators.required] : values.country,
       city: control ? [values.city, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.city,
       address: control ? [values.address, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.address,
-      region: control ? [values.region, [CustomValidators.required, CustomValidators.maxLength(50)]] : values.region,
+      region: control ? [values.region, [CustomValidators.maxLength(50)]] : values.region,
       headQuarterType: control ? [values.headQuarterType, CustomValidators.required] : values.headQuarterType,
       latitude: control ? [values.latitude, [
         CustomValidators.required,
@@ -211,9 +211,8 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
       phone: control ? [values.phone, [CustomValidators.required].concat(
         CustomValidators.commonValidations.phone
       ),] : values.phone,
-      fax: control ? [values.fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax),] : values.fax,
+      fax: control ? [values.fax, [CustomValidators.number].concat(CustomValidators.commonValidations.fax),] : values.fax,
       website: control ? [values.website, [
-        CustomValidators.required,
         CustomValidators.pattern('WEBSITE'),
       ],
       ] : values.website,
@@ -223,12 +222,11 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
         CustomValidators.maxLength(100),
       ],
       ] : values.email,
-      postalCode: control ? [values.postalCode, [CustomValidators.required, CustomValidators.maxLength(100)],] : values.postalCode,
+      postalCode: control ? [values.postalCode, [ CustomValidators.maxLength(100)],] : values.postalCode,
       firstSocialMedia: control ? [values.firstSocialMedia, [CustomValidators.required, CustomValidators.maxLength(100)],] : values.firstSocialMedia,
       secondSocialMedia: control ? [values.secondSocialMedia, CustomValidators.maxLength(100)] : values.secondSocialMedia,
       thirdSocialMedia: control ? [values.thirdSocialMedia, CustomValidators.maxLength(100)] : values.thirdSocialMedia,
       description: control ? [values.description, [
-        CustomValidators.required,
         CustomValidators.maxLength(
           CustomValidators.defaultLengths.EXPLANATIONS
         ),

@@ -20,12 +20,13 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> im
   // mobileNo!: string;
   nationality!: number;
   passportNumber!: string;
+  identificationNumber!: string;
   nationalityInfo!: AdminResult
   itemId!:string;
 
   searchFields: ISearchFieldsMap<ManagementCouncil> = {
     ...infoSearchFields(['nationalityInfo']),
-    ...normalSearchFields(['arabicName', 'englishName', 'email', 'passportNumber'])
+    ...normalSearchFields(['arabicName', 'englishName', 'identificationNumber', 'passportNumber'])
   };
 
   // extra properties
@@ -60,7 +61,7 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> im
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      arabicName: {langKey: 'arabic_name', value: this.arabicName},
+      identificationNumber: {langKey: 'national_id_number', value: this.identificationNumber},
       englishName: {langKey: 'english_name', value: this.englishName},
       email: {langKey: 'lbl_email', value: this.email},
       phone: {langKey: 'lbl_phone', value: this.phone},
@@ -74,15 +75,16 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> im
     const values = ObjectUtils.getControlValues<ManagementCouncil>(this.getValuesWithLabels());
 
     return {
-      arabicName: control ? [values.arabicName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : values.arabicName,
-      englishName: control ? [values.englishName, [CustomValidators.required, CustomValidators.pattern('ENG_ONLY'),
+      identificationNumber: control ? [values.identificationNumber, [CustomValidators.number]] : values.identificationNumber,
+      // arabicName: control ? [values.arabicName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
+      //   CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+      //   CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : values.arabicName,
+      englishName: control ? [values.englishName, [CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : values.englishName,
-      email: control ? [values.email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : values.email,
+      //email: control ? [values.email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : values.email,
       jobTitle: control ? [values.jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : values.jobTitle,
-      phone: control ? [values.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phone,
+      //phone: control ? [values.phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phone,
       // mobileNo: control ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
       nationality: control ? [values.nationality, CustomValidators.required] : values.nationality,
       passportNumber: control ? [values.passportNumber, [...CustomValidators.commonValidations.passport]] : values.passportNumber
