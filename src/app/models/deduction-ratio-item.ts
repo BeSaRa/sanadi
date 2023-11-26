@@ -42,9 +42,9 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
     return this[currentLang + 'Name' as keyof INames]
   }
 
-  convertToDeductionPercent(): DeductedPercentage {
+  convertToDeductionPercent(percentage?:number): DeductedPercentage {
     return new DeductedPercentage().clone({
-      deductionPercent: this.minLimit,
+      deductionPercent: percentage?? this.minLimit,
       deductionType: this.id,
       deductionTypeInfo: AdminResult.createInstance({
         arName: this.arName,
