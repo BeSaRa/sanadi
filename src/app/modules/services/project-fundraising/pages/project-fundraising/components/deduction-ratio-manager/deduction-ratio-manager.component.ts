@@ -172,7 +172,8 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
     //   return
     // }
 
-    const item = (this.item.value as DeductionRatioItem).convertToDeductionPercent()
+    const deductionPercentage = this.originalModel.deductedPercentagesItemList.find(x=>x.deductionType === this.item.value.id)?.deductionPercent
+    const item = (this.item.value as DeductionRatioItem).convertToDeductionPercent(deductionPercentage)
     const control = this.addController(item.deductionType, item.deductionPercent);
     this.listenToControl(control)
     this.list.push(control)

@@ -387,7 +387,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
       || (ignoreCountries ? false : this.calculateAllCountriesAmount() !== this.targetAmount)
       || (ignoreCountries ? false : this.amountOverCountriesList.some(item => item.targetAmount <= 0))
       || this.amountOverYearsList.some(item => item.targetAmount <= 0)
-      || this.administrativeDeductionAmount <= 0
+      || this.administrativeDeductionAmount < 0
   }
 
   approve(): DialogRef {
