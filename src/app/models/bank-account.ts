@@ -78,7 +78,6 @@ export class BankAccount extends SearchableCloneable<BankAccount> implements IAu
         CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH),
       ]] : values.accountNumber,
       iBan: control ? [values.iBan, [
-        CustomValidators.required,
         CustomValidators.pattern('ENG_NUM_ONLY'),
         CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH),
       ]] : values.iBan,
