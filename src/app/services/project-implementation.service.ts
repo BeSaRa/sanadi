@@ -41,6 +41,7 @@ import {
 import { ImplementationFundraising } from '@models/implementation-fundraising';
 import { ImplementingAgency } from '@models/implementing-agency';
 import { NOT_RETRY_TOKEN } from '@app/http-context/tokens';
+import { isArray } from 'lodash';
 
 @CastResponseContainer({
   $default: {
@@ -173,7 +174,13 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
   }
 
   getCriteria(criteria: ImplementationCriteriaContract): ImplementationCriteriaContract {
-    return Object.keys(criteria).filter(key => !!criteria[key as keyof ImplementationCriteriaContract]).reduce((acc, key) => {
+    return Object.keys(criteria)
+    .filter(key => {
+      return (isArray(criteria[key as keyof ImplementationCriteriaContract]))
+        ?!!(criteria[key as keyof ImplementationCriteriaContract] as []).filter(v => !!v).length
+        : !!criteria[key as keyof ImplementationCriteriaContract]
+    })
+    .reduce((acc, key) => {
       return { ...acc, [key]: criteria[key as keyof ImplementationCriteriaContract] };
     }, {} as ImplementationCriteriaContract);
   }
