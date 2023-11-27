@@ -1,0 +1,12 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.templates}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" (click)="close()" aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 900px">
+  <project-model></project-model>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button (click)="close()" class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

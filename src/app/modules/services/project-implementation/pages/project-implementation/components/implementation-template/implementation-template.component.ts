@@ -11,6 +11,8 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, UntypedFormControl} 
 import {CustomValidators} from "@app/validators/custom-validators";
 import {ServiceRequestTypes} from '@enums/service-request-types';
 import {CommonUtils} from '@helpers/common-utils';
+import { ProjectModel } from '@app/models/project-model';
+import { ProjectModelPreviewComponent } from '@app/modules/services/project-models/popups/project-model-preview/project-model-preview.component';
 
 @Component({
   selector: 'implementation-template',
@@ -131,7 +133,11 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
   viewTemplate(template: ImplementationTemplate) {
     template.view()
   }
-
+  viewProjrctModel(template: ProjectModel) {
+    this.dialog.show(ProjectModelPreviewComponent, {
+      id: template.requestCaseId
+    })
+  }
   removeTemplate(template: ImplementationTemplate) {
     if (this.disabled || this.isUpdateRequestType()) return;
     this.dialog

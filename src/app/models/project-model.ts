@@ -67,6 +67,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
   beneficiaries19to60: number = 0;
   beneficiariesOver60: number = 0;
   projectTotalCost!: number;
+  requestCaseId!: string;
   description!: string;
   needsAssessment!: string;
   templateSerial!: number;

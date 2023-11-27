@@ -49,6 +49,14 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.domain}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.domainInfo.getName()}} </td>
       </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell style="width:200px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row">
+          <button (click)="viewProjrctModel(row)" class="btn p-0 icon-btn">
+            <i class="mdi text-primary mdi-eye"></i>
+          </button>
+        </td>
+      </ng-container>
       <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
       <tr *cdkNoDataRow>
