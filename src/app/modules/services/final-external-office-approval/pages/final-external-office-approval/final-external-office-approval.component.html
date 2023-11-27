@@ -177,6 +177,13 @@
                 </div>
               </div>
             </div>
+             <!-- Email -->
+             <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
+              <input formControlName="email" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                     validationClasses="email" trimInput class="form-control" id="email">
+              <app-field-error-message controlName="email"></app-field-error-message>
+            </div>
           </div>
           <div class="row">
             <!-- Record Number -->
@@ -212,19 +219,13 @@
               <app-field-error-message controlName="phone"></app-field-error-message>
             </div>
             <!-- Fax Number -->
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <!-- <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label asteriskIfRequired="fax" for="fax" class="form-label">{{lang.map.fax_number}}</label>
               <input formControlName="fax" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      validationClasses="fax" trimInput class="form-control" id="fax">
               <app-field-error-message controlName="fax"></app-field-error-message>
-            </div>
-            <!-- Email -->
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
-              <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
-              <input formControlName="email" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                     validationClasses="email" trimInput class="form-control" id="email">
-              <app-field-error-message controlName="email"></app-field-error-message>
-            </div>
+            </div> -->
+
           </div>
           <div class="row">
             <!-- Special Explanation -->
