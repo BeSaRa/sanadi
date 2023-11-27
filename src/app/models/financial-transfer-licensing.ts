@@ -278,7 +278,6 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         ? [
             transfereeIBAN,
             [
-              CustomValidators.required,
               CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH),
             ],
           ]
