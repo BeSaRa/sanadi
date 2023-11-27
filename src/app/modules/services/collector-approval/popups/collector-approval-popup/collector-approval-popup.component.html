@@ -93,10 +93,10 @@
     </div>
     <div class="row">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="phone" for="phone">{{lang.map.lbl_phone}}</label>
-        <input id="phone" validationClasses="phone" formControlName="phone" class="form-control"
+        <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
+        <input id="email" validationClasses="email" formControlName="email" class="form-control"
           [readonly]="(isCancelRequestType() || readonly)">
-        <app-field-error-message controlName="phone"></app-field-error-message>
+        <app-field-error-message controlName="email"></app-field-error-message>
       </div>
       <div class="col-sm-12 col-md-4 mb-4 position-relative">
         <label for="licenseEndDate" asteriskIfRequired="licenseEndDate"

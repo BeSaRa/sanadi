@@ -49,7 +49,7 @@ export class CollectorLicense {
   oldLicenseFullSerial!: string;
   organizationCode!: string;
   organizationId!: number;
-  phone!: string;
+  email!: string;
   publicTerms!: string;
   relationship!: number;
   requestCaseId!: string;
@@ -94,7 +94,7 @@ export class CollectorLicense {
     collectorItem.gender = this.gender;
     collectorItem.nationality = this.nationality;
     collectorItem.relationship = this.relationship;
-    collectorItem.phone = this.phone;
+    collectorItem.email = this.email;
     collectorItem.licenseEndDate = this.licenseEndDate;
     collectorItem.licenseStartDate = this.licenseStartDate || this.licenseApprovedDate
     // collectorItem.licenseEndDate = this.licenseEndDate
