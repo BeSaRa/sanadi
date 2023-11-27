@@ -105,9 +105,9 @@ export class EmploymentApproveComponent implements OnInit, OnDestroy {
   isCancelRequestType(): boolean {
     return this.data.model.requestType === EmploymentRequestType.CANCEL;
   }
-  isInterm() {
-    return this.data.model.employeeInfoDTOs[0].contractType == ContractTypes.Interim
-  }
+  // isInterm() {
+  //   return this.data.model.employeeInfoDTOs[0].contractType == ContractTypes.Interim
+  // }
   isApproval() {
     return this.data.model.category == EmploymentCategory.APPROVAL
   }
