@@ -349,13 +349,16 @@ export class ProjectImplementation
 
   private _isCustomApprove(): boolean {
 
+    if(this.employeeService.isCharityManager()){
+      return false;
+    }
     if (this.isSubmissionMechanismRegistration()) {
       if (this.employeeService.isSupervisionAndControlUser() || this.employeeService.isDevelopmentalExpert() || this.employeeService.isConstructionExpert()) {
         return false;
       }
     }
     if (this.requestType === AllRequestTypesEnum.NEW || this.requestType === AllRequestTypesEnum.EXTEND) {
-      if (this.isSubmissionMechanismNotification() && this.employeeService.isCharityManager()) {
+      if (this.isSubmissionMechanismNotification()) {
         return true;
       }
       if (this.isSubmissionMechanismRegistration() || this.isSubmissionMechanismSubmission()) {
