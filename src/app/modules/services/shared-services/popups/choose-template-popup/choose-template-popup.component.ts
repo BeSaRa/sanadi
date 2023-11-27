@@ -14,6 +14,8 @@ import {ProjectImplementationService} from "@services/project-implementation.ser
 import {catchError, filter, map, switchMap} from "rxjs/operators";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {of} from "rxjs";
+import { DialogService } from '@app/services/dialog.service';
+import { ProjectModelPreviewComponent } from '@app/modules/services/project-models/popups/project-model-preview/project-model-preview.component';
 
 @Component({
   selector: 'choose-template',
@@ -50,15 +52,17 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
                 requestType: number
                 caseId?: string,
               },
+              private dialog: DialogService,
               private projectImplementationService: ProjectImplementationService,
               private dialogRef: DialogRef,
               public lang: LangService) {
     this.data.workArea === ProjectWorkArea.OUTSIDE_QATAR ? this.displayedColumns.splice(3, 0, 'domain') : null;
     this.oldImplementationTemplate = data.implementationTemplate;
     this.oldProjectTemplate = data.projectTemplate;
-    this.data.caseType === CaseTypes.PROJECT_IMPLEMENTATION ? this.displayedColumns.push('targetAmount') : null
-    this.caseId = this.data.caseId
-    this.requestType = this.data.requestType
+    this.data.caseType === CaseTypes.PROJECT_IMPLEMENTATION ? this.displayedColumns.push('targetAmount') : null;
+    this.caseId = this.data.caseId;
+    this.requestType = this.data.requestType;
+    this.displayedColumns.push('actions');
   }
 
   ngAfterViewInit(): void {
@@ -68,7 +72,11 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
   close(): void {
     this.dialogRef.close(undefined)
   }
-
+  viewProjrctModel(template: ProjectModel) {
+    this.dialog.show(ProjectModelPreviewComponent, {
+      id: template.requestCaseId
+    })
+  }
   save(): void {
     if (this.isSaveDisabled())
       return;

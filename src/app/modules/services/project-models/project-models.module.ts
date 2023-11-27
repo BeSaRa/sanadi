@@ -18,6 +18,7 @@ import { AuditEvaluationIndicatorComponent } from './audit/audit-evaluation-indi
 import { AuditProjectAddressComponent } from './audit/audit-project-address/audit-project-address.component';
 import { AuditProjectComponentComponent } from './audit/audit-project-component/audit-project-component.component';
 import { AuditProjectModelForeignCountriesProjectComponent } from './audit/audit-project-model-foreign-countries-project/audit-project-model-foreign-countries-project.component';
+import { ProjectModelPreviewComponent } from './popups/project-model-preview/project-model-preview.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { AuditProjectModelForeignCountriesProjectComponent } from './audit/audit
     AuditEvaluationIndicatorComponent,
     AuditProjectAddressComponent,
     AuditProjectComponentComponent,
-    AuditProjectModelForeignCountriesProjectComponent
+    AuditProjectModelForeignCountriesProjectComponent,
+    ProjectModelPreviewComponent
   ],
   imports: [
     CommonModule,
