@@ -42,10 +42,10 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
     }
 
     delete model.contractStatusInfo
-    delete model.contractTypeInfo
+    // delete model.contractTypeInfo
     delete model.genderInfo
     delete model.identificationTypeInfo
-    delete model.jobContractTypeInfo
+    // delete model.jobContractTypeInfo
     delete model.nationalityInfo
     delete model.orgUnitInfo
     delete model.statusInfo
@@ -79,9 +79,9 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
     );
     model.genderInfo = AdminResult.createInstance(model.genderInfo ?? {});
     model.contractStatusInfo = AdminResult.createInstance(model.contractStatusInfo  ?? {});
-    model.contractTypeInfo = AdminResult.createInstance(model.contractTypeInfo  ?? {});
+    // model.contractTypeInfo = AdminResult.createInstance(model.contractTypeInfo  ?? {});
     model.identificationTypeInfo = AdminResult.createInstance(model.identificationTypeInfo  ?? {});
-    model.jobContractTypeInfo = AdminResult.createInstance(model.jobContractTypeInfo  ?? {});
+    // model.jobContractTypeInfo = AdminResult.createInstance(model.jobContractTypeInfo  ?? {});
     model.nationalityInfo = AdminResult.createInstance(model.nationalityInfo  ?? {});
     model.orgUnitInfo = AdminResult.createInstance(model.orgUnitInfo  ?? {});
     model.statusInfo = AdminResult.createInstance(model.statusInfo  ?? {});

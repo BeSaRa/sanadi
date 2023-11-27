@@ -97,7 +97,8 @@ export class Employment
     return this.requestType === EmploymentRequestType.CANCEL;
   }
   isInterm() {
-    return this.employeeInfoDTOs[0].contractType == ContractTypes.Interim
+    // return this.employeeInfoDTOs[0].contractType == ContractTypes.Interim
+    return true;
   }
   getEmployees():Employee[]{
     return this.employeeInfoDTOs as Employee[]

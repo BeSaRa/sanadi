@@ -23,15 +23,15 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
   passportNumber!: string;
   gender!: number;
   nationality!: number;
-  phone!: string;
-  email!: string;
-  department!: string;
-  contractLocation!: number;
+  // phone!: string;
+  // department!: string;
+  // jobContractType!: number;
+  // contractLocation!: number;
+  // contractType!: number;
   contractLocationType!: number;
+  email!: string;
   officeId!: string;
   charityId!: number;
-  contractType!: number;
-  jobContractType!: number;
   contractStatus!: number;
   qId!: string;
   updatedBy!: number;
@@ -46,10 +46,10 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
   officeInfo!: AdminResult;
   functionalGroupInfo!: AdminResult;
   contractStatusInfo!: AdminResult;
-  contractTypeInfo!: AdminResult;
+  // contractTypeInfo!: AdminResult;
   genderInfo!: AdminResult;
   identificationTypeInfo!: AdminResult;
-  jobContractTypeInfo!: AdminResult;
+  // jobContractTypeInfo!: AdminResult;
   nationalityInfo!: AdminResult;
   orgUnitInfo!: AdminResult;
   statusInfo!: AdminResult;
@@ -74,16 +74,16 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
       passportNumber: { langKey: 'passport_number', value: this.passportNumber },
       gender: { langKey: 'gender', value: this.gender },
       nationality: { langKey: 'lbl_nationality', value: this.nationality },
-      phone: { langKey: 'lbl_phone', value: this.phone },
+      // phone: { langKey: 'lbl_phone', value: this.phone },
       email: { langKey: 'lbl_email', value: this.email },
-      department: { langKey: 'department', value: this.department },
-      contractLocation: { langKey: 'contract_location', value: this.contractLocation },
+      // department: { langKey: 'department', value: this.department },
+      // contractLocation: { langKey: 'contract_location', value: this.contractLocation },
       contractLocationType: { langKey: 'contract_location_type', value: this.contractLocationType },
       officeId: { langKey: 'office_name', value: this.officeId },
       charityId: { langKey: 'office_name', value: this.charityId },
       contractStatus: { langKey: 'contract_status', value: this.contractStatus },
-      contractType: { langKey: 'contract_type', value: this.contractType },
-      jobContractType: { langKey: 'job_contract_type', value: this.jobContractType },
+      // contractType: { langKey: 'contract_type', value: this.contractType },
+      // jobContractType: { langKey: 'job_contract_type', value: this.jobContractType },
       contractExpiryDate: { langKey: 'contract_expiry_date', value: this.contractExpiryDate, comparisonValue: this.contractExpiryDateStamp },
       workStartDate: { langKey: 'work_start_date', value: this.workStartDate, comparisonValue: this.workStartDateStamp },
       workEndDate: { langKey: 'work_end_date', value: this.workEndDate, comparisonValue: this.workEndDateStamp },
@@ -106,18 +106,18 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
       case 'nationality':
         adminResultValue = this.nationalityInfo;
         break;
-      case 'contractType':
-        adminResultValue = this.contractTypeInfo;
-        break;
-      case 'contractLocation':
-        adminResultValue = this.contractLocationInfo;
-        break;
+      // case 'contractType':
+      //   adminResultValue = this.contractTypeInfo;
+      //   break;
+      // case 'contractLocation':
+      //   adminResultValue = this.contractLocationInfo;
+      //   break;
       case 'contractLocationType':
         adminResultValue = this.contractLocationTypeInfo;
         break;
-      case 'jobContractType':
-        adminResultValue = this.jobContractTypeInfo;
-        break;
+      // case 'jobContractType':
+      //   adminResultValue = this.jobContractTypeInfo;
+      //   break;
       case 'contractStatus':
         adminResultValue = this.contractStatusInfo;
         break;
