@@ -1,32 +1,49 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
-    <button type="button" class="btn-close btn-close-white"
-            tabindex="-1" [dialogClose]="models" aria-label="Close"></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="models"
+      aria-label="Close"></button>
   </div>
 </div>
 <div class="dialog-content" style="width: 1000px">
   <div class="row pb-3">
-    <app-page-header [customTemplate]="headerTemplate" *ngIf="candidatesListType == candidatesListTypeEnum.ADD" [pageTitle]="'training_program_candidate'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
+    <app-page-header [customTemplate]="headerTemplate" *ngIf="candidatesListType == candidatesListTypeEnum.ADD"
+      [pageTitle]="'training_program_candidate'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
     </app-page-header>
-    <app-page-header [customTemplate]="headerTemplate" *ngIf="candidatesListType != candidatesListTypeEnum.ADD" [pageTitle]="candidatesListType == candidatesListTypeEnum.CERTIFY ? 'training_program_trainees' : 'training_program_candidate'" [clickOnReload$]="reload$">
+    <app-page-header [customTemplate]="headerTemplate" *ngIf="candidatesListType != candidatesListTypeEnum.ADD"
+      [pageTitle]="candidatesListType == candidatesListTypeEnum.CERTIFY ? 'training_program_trainees' : 'training_program_candidate'"
+      [clickOnReload$]="reload$">
     </app-page-header>
     <ng-template #headerTemplate>
-      <button class="btn icon-button" (click)="print()">
-        <i class="mdi mdi-printer text-primary" tooltip="{{lang.map.print}}"></i>
-      </button>
+      <div class="d-flex">
+        <button class="btn icon-button" (click)="print()">
+          <i class="mdi mdi-printer text-primary" tooltip="{{lang.map.print}}"></i>
+        </button>
+        <app-bulk-actions class="" *ngIf="table.selection && table.selection.selected.length" [actionsList]="bulkActions"
+          [selectedRecords]="table.selection.selected"
+          [hasTableHeaderContainer]="true"></app-bulk-actions>
+      </div>
     </ng-template>
     <app-grid-search (searchTextEvent)="searchText = $event"></app-grid-search>
   </div>
   <div class="row">
     <div class="col-12">
       <div class="table-responsive">
-        <app-table #table [paginator]="paginator" sortableTable
-                   [columns]="displayedColumns"
-                   [data]="models"
-                   [filter]="searchText"
-                   [filterCallback]="searchCallback">
+        <app-table #table [paginator]="paginator" sortableTable [columns]="displayedColumns" [data]="models"
+          [filter]="searchText" [selectable]="true" [useSearchToFilter]="true" [filterCallback]="searchCallback">
           <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
+            <ng-container cdkColumnDef="rowSelection">
+              <th class="select-all-td" cdk-header-cell *cdkHeaderCellDef>
+                <input type="checkbox" [disabled]="table.filter"
+                  [indeterminate]="table.selection.hasValue() && !table.allSelected()"
+                  (change)="$event ? table.toggleAll() : null"
+                  [checked]="table.selection.hasValue() && table.allSelected()" class="form-check-input">
+              </th>
+              <td cdk-cell *cdkCellDef="let row">
+                <input type="checkbox" (click)="$event.stopPropagation()" [checked]="table.selection.isSelected(row)"
+                  (change)="$event ? table.selection.toggle(row) : null" class="form-check-input">
+              </td>
+            </ng-container>
             <ng-container cdkColumnDef="arName">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>
               <td cdk-cell *cdkCellDef="let row">{{row.trainee.arName}}</td>
@@ -36,7 +53,8 @@
               <td cdk-cell *cdkCellDef="let row">{{row.trainee.enName}}</td>
             </ng-container>
             <ng-container cdkColumnDef="department">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_program_trainee_department}}</th>
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_program_trainee_department}}
+              </th>
               <td cdk-cell *cdkCellDef="let row">{{row.trainee.department}}</td>
             </ng-container>
             <ng-container cdkColumnDef="status">
@@ -48,30 +66,43 @@
               <td cdk-cell *cdkCellDef="let row">{{row.trainee.phoneNumber}}</td>
             </ng-container>
             <ng-container cdkColumnDef="employementPosition">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_program_trainee_employment_position}}</th>
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header>
+                {{lang.map.training_program_trainee_employment_position}}</th>
               <td cdk-cell *cdkCellDef="let row">{{row.trainee.employementPosition}}</td>
             </ng-container>
             <ng-container cdkColumnDef="nationality">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_nationality}}</th>
               <td cdk-cell *cdkCellDef="let row">{{row.trainee.nationalityInfo.getName()}}</td>
             </ng-container>
+            <ng-container cdkColumnDef="externalOrgId">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.trainee_entity_belongs}}</th>
+              <td cdk-cell *cdkCellDef="let row">{{row.trainee.externalOrgInfo &&
+                row.trainee.externalOrgInfo.getName()}}</td>
+            </ng-container>
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row" class="table-actions">
                 <div class="d-flex flex-row">
-                  <button *ngIf="showDeleteButton(row)" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="btn icon-btn">
+                  <button *ngIf="showDeleteButton(row)" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}"
+                    class="btn icon-btn">
                     <i class="mdi mdi-close-box text-primary"></i>
                   </button>
-                  <button *ngIf="showEditButton(row)" (click)="edit(row , $event)" tooltip="{{lang.map.btn_edit}}" class="btn icon-btn">
+                  <button *ngIf="showEditButton(row)" (click)="edit(row , $event)" tooltip="{{lang.map.btn_edit}}"
+                    class="btn icon-btn">
                     <i class="mdi mdi-pen text-primary"></i>
                   </button>
-                  <button *ngIf="candidatesListType == candidatesListTypeEnum.EVALUATE && !row.addedByRACA" (click)="reviewCandidate($event, row)" tooltip="{{lang.map.training_program_accept_or_reject}}" class="btn icon-btn">
+                  <button *ngIf="candidatesListType == candidatesListTypeEnum.EVALUATE && !row.addedByRACA"
+                    (click)="reviewCandidate($event, row)" tooltip="{{lang.map.training_program_accept_or_reject}}"
+                    class="btn icon-btn">
                     <i class="mdi mdi-eye text-primary"></i>
                   </button>
-                  <button *ngIf="candidatesListType == candidatesListTypeEnum.CERTIFY && row.isAttended && row.isCertificateReady" (click)="downloadCertificate($event, row)" tooltip="{{lang.map.btn_download}}" class="btn icon-btn">
+                  <button
+                    *ngIf="candidatesListType == candidatesListTypeEnum.CERTIFY && row.isAttended && row.isCertificateReady"
+                    (click)="downloadCertificate($event, row)" tooltip="{{lang.map.btn_download}}" class="btn icon-btn">
                     <i class="mdi mdi-download text-primary"></i>
                   </button>
-                  <a *ngIf="candidatesListType == candidatesListTypeEnum.VIEW_STATUS && row.status == traineeStatusEnum.REJECTED_TRAINEE" href="#" (click)="showRejectionReason($event, row)" class="icon-btn">
+                  <a *ngIf="candidatesListType == candidatesListTypeEnum.VIEW_STATUS && row.status == traineeStatusEnum.REJECTED_TRAINEE"
+                    href="#" (click)="showRejectionReason($event, row)" class="icon-btn">
                     {{lang.map.trainee_rejection_reason}}
                   </a>
                 </div>

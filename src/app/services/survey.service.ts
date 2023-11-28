@@ -42,11 +42,11 @@ export class SurveyService extends CrudGenericService<Survey> {
   surveyTemplateInterceptor = new SurveyTemplateInterceptor();
 
   constructor(public http: HttpClient,
-              private trainingProgramService: TrainingProgramService,
-              private exceptionHandlerService: ExceptionHandlerService,
-              private tokenService: TokenService,
-              private domSanitizer: DomSanitizer,
-              private urlService: UrlService) {
+    private trainingProgramService: TrainingProgramService,
+    private exceptionHandlerService: ExceptionHandlerService,
+    private tokenService: TokenService,
+    private domSanitizer: DomSanitizer,
+    private urlService: UrlService) {
     super();
     FactoryService.registerService('SurveyService', this);
   }
@@ -102,8 +102,13 @@ export class SurveyService extends CrudGenericService<Survey> {
     return this._loadSurveyByTraineeIdAndProgramId(traineeId, trainingProgramId, authToken).pipe(map(result => result[0]));
   }
 
-  printReport(programId: number): Observable<BlobModel> {
+  printReport(programId: number, exportType = 'pdf'): Observable<BlobModel> {
     return this.http.get(this._getServiceURL() + `/stats/${programId}/export`, {
+      params: new HttpParams({
+        fromObject: {
+          exportType
+        }
+      }),
       observe: 'body',
       responseType: 'blob'
     }).pipe(map(blob => new BlobModel(blob, this.domSanitizer)));

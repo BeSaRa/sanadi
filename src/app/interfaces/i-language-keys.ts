@@ -2084,4 +2084,8 @@ export interface ILanguageKeys {
   internal_user:string;
   internal_user_dept:string;
   transaction_amount_value:string;
+  trainee_entity_belongs:string;
+  candidates_has_been_accepted:string;
+  candidates_has_been_rejected:string;
+  export_word_file:string;
 }

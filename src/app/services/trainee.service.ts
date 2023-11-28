@@ -1,27 +1,27 @@
-import {Injectable} from '@angular/core';
-import {Trainee} from '@app/models/trainee';
-import {ComponentType} from '@angular/cdk/portal';
-import {DialogService} from '@app/services/dialog.service';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from '@app/services/url.service';
-import {FactoryService} from '@app/services/factory.service';
-import {TraineeInterceptor} from '@app/model-interceptors/trainee-interceptor';
-import {Observable, of} from 'rxjs';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
+import { Injectable } from '@angular/core';
+import { Trainee } from '@app/models/trainee';
+import { ComponentType } from '@angular/cdk/portal';
+import { DialogService } from '@app/services/dialog.service';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from '@app/services/url.service';
+import { FactoryService } from '@app/services/factory.service';
+import { TraineeInterceptor } from '@app/model-interceptors/trainee-interceptor';
+import { Observable, of } from 'rxjs';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
 import {
   TrainingProgramTraineePopupComponent
 } from '@app/training-services/popups/training-program-trainee-popup/training-program-trainee-popup.component';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {exhaustMap} from 'rxjs/operators';
-import {TraineeData} from '@app/models/trainee-data';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { exhaustMap } from 'rxjs/operators';
+import { TraineeData } from '@app/models/trainee-data';
 import {
   RejectTraineePopupComponent
 } from '@app/training-services/popups/reject-trainee-popup/reject-trainee-popup.component';
-import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
-import {Pagination} from '@app/models/pagination';
-import {HasInterception, InterceptParam} from '@decorators/intercept-model';
-import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-generic-service';
+import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
+import { Pagination } from '@app/models/pagination';
+import { HasInterception, InterceptParam } from '@decorators/intercept-model';
+import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 
 @CastResponseContainer({
   $default: {
@@ -29,7 +29,7 @@ import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-gener
   },
   $pagination: {
     model: () => Pagination,
-    shape: {'rs.*': () => Trainee}
+    shape: { 'rs.*': () => Trainee }
   },
   traineeByTrainingIdAndTraineeId: {
     model: () => TraineeData
@@ -43,8 +43,8 @@ export class TraineeService extends CrudWithDialogGenericService<Trainee> {
   interceptor: TraineeInterceptor = new TraineeInterceptor();
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              public dialog: DialogService) {
+    private urlService: UrlService,
+    public dialog: DialogService) {
     super();
     FactoryService.registerService('TraineeService', this);
   }
@@ -69,10 +69,22 @@ export class TraineeService extends CrudWithDialogGenericService<Trainee> {
     });
   }
 
+  @CastResponse(undefined)
+  acceptBulk(trainees: {
+    trainingProgramId: number,
+    traineeId: number
+  }[]): Observable<Trainee> {
+    return this.http.put<Trainee>(this._getServiceURL() + '/bulk/accept-trainee', trainees);
+  }
+
   @CastResponse('')
   reject(trainingProgramId: number, traineeId: number, refusalComment: string): Observable<boolean> {
     return this.http.put<boolean>(this._getServiceURL() + '/refuse-trainee',
-      {trainingProgramId: trainingProgramId, traineeId: traineeId, refusalComment: refusalComment});
+      { trainingProgramId: trainingProgramId, traineeId: traineeId, refusalComment: refusalComment });
+  }
+  @CastResponse('')
+  rejectBulk(trainees: { trainingProgramId: number, traineeId: number, refusalComment: string }[]): Observable<boolean> {
+    return this.http.put<boolean>(this._getServiceURL() + '/bulk/refuse-trainee', trainees);
   }
 
   deleteTrainee(trainingProgramId: number, traineeId: number): Observable<boolean> {
@@ -125,13 +137,13 @@ export class TraineeService extends CrudWithDialogGenericService<Trainee> {
     });
   }
 
-  openRejectCandidateDialog(model: Trainee, trainingProgramId: number, comment: string): Observable<DialogRef> {
-    return of(this.dialog.show<IDialogData<Trainee>>(RejectTraineePopupComponent, {
-      model: model,
-      operation: OperationTypes.UPDATE,
-      trainingProgramId: trainingProgramId,
-      comment: comment
-    }));
+  openRejectCandidateDialog(ids: number[], trainingProgramId: number, comment: string): Observable<DialogRef> {
+    return of(this.dialog
+      .show<{ ids: number[], trainingProgramId: number, comment: string }>(RejectTraineePopupComponent, {
+        ids: ids,
+        trainingProgramId: trainingProgramId,
+        comment: comment
+      }));
   }
 
   private openEvaluateCandidateDialog(model: TraineeData, trainingProgramId: number, operation: OperationTypes): DialogRef {

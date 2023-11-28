@@ -62,4 +62,11 @@ export class ViewSurveyPopupComponent {
         window.open(blob.url);
       });
   }
+  exportReportAsWord(): void {
+    this.surveyService
+      .printReport(this.program.id, 'word')
+      .subscribe((blob) => {
+        window.open(blob.url);
+      });
+  }
 }

@@ -58,6 +58,7 @@ export enum ActionIconsEnum {
   NOTIFICATION_TERMINATED = 'mdi-stop',
   BRIEFCASE = 'mdi-bag-checked',
   USER_CHECK = 'mdi-account-check',
+  USER_CANCEL = 'mdi-account-cancel',
   CERTIFICATE = 'mdi-certificate',
   USER_CLOCK = 'mdi-account-clock',
   POLL = 'mdi-poll',

@@ -284,7 +284,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   }
 
   rejectCandidate() {
-    const sub = this.model.openRejectCandidateDialog(this.trainingProgramId, this.rejectionComment)
+    const sub = this.traineeService.openRejectCandidateDialog([this.model.id], this.trainingProgramId, this.rejectionComment)
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap((dialogRef) => {
         return dialogRef.onAfterClose$;

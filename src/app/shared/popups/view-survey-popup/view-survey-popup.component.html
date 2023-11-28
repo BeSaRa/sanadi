@@ -9,6 +9,9 @@
     <button (click)="printReport()" [tooltip]="lang.map.print" class="btn icon-btn">
       <i class="mdi mdi-printer text-primary"></i>
     </button>
+    <button (click)="exportReportAsWord()" [tooltip]="lang.map.export_word_file" class="btn icon-btn">
+      <i class="mdi mdi-file-word text-primary"></i>
+    </button>
   </div>
   <app-table #table [paginator]="paginator" sortableTable
              [columns]="displayedColumns"

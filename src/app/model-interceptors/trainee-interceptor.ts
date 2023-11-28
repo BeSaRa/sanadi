@@ -4,6 +4,7 @@ import {FactoryService} from '@app/services/factory.service';
 import {LookupService} from '@app/services/lookup.service';
 import {Lookup} from '@app/models/lookup';
 import {TraineeData} from '@app/models/trainee-data';
+import { AdminResult } from '@app/models/admin-result';
 
 export class TraineeInterceptor implements IModelInterceptor<TraineeData> {
   receive(model: TraineeData): TraineeData {
@@ -15,7 +16,8 @@ export class TraineeInterceptor implements IModelInterceptor<TraineeData> {
 
     let nationalityInfo = (lookupService.listByCategory.Nationality.find(s => s.lookupKey == model.trainee.nationality)!);
     model.trainee.nationalityInfo = (new Lookup()).clone(nationalityInfo);
-
+    model.trainee.externalOrgInfo = model.trainee.externalOrgInfo && AdminResult.createInstance(model.trainee.externalOrgInfo);
+    
     model.trainee.addedByRACA = model.addedByRACA;
     return model;
   }
