@@ -1,8 +1,5 @@
-import { AdminstrationDepartmentCodes } from './../../../enums/department-code.enum';
-import { CaseTypes } from './../../../enums/case-types.enum';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { LangService } from '@app/services/lang.service';
-import { DIALOG_DATA_TOKEN } from '../../tokens/tokens';
 import { InboxService } from '@app/services/inbox.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { TeamService } from '@app/services/team.service';
@@ -23,6 +20,10 @@ import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { CaseModel } from "@app/models/case-model";
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { ServiceDataService } from '@app/services/service-data.service';
+import { Consultation } from '@app/models/consultation';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { AdminstrationDepartmentCodes } from '@app/enums/department-code.enum';
+import { CaseTypes } from '@app/enums/case-types.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -104,7 +105,12 @@ export class SendToComponent implements OnInit, OnDestroy {
   }
 
   loadUsers(): void {
-    const id = this.employee.getInternalDepartment()?.mainTeam.id!;
+    let id;
+    if(this.data.task.getCaseType() == CaseTypes.CONSULTATION) {
+      id = (this.data.task as Consultation).mainTeamId;
+    } else {
+      id = this.employee.getInternalDepartment()?.mainTeam.id!;
+    }
     this.teamService
       .loadTeamMembers(id)
       .pipe(takeUntil(this.destroy$))
