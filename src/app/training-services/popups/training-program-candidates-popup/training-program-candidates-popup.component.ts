@@ -1,6 +1,6 @@
 import { BlobModel } from '@app/models/blob-model';
 import { SharedService } from '@app/services/shared.service';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { TrainingProgram } from '@app/models/training-program';
 import { BehaviorSubject, of, Subject } from 'rxjs';
@@ -21,13 +21,17 @@ import { CertificateService } from '@app/services/certificate.service';
 import { TraineeStatus } from '@app/enums/trainee-status';
 import { EmployeeService } from '@app/services/employee.service';
 import { TrainingProgramService } from '@app/services/training-program.service';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'training-program-candidates',
   templateUrl: './training-program-candidates-popup.component.html',
   styleUrls: ['./training-program-candidates-popup.component.scss']
 })
-export class TrainingProgramCandidatesPopupComponent implements OnInit {
+export class TrainingProgramCandidatesPopupComponent implements OnInit, AfterViewInit {
+  @ViewChild('table') table!: TableComponent;
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   add$: Subject<any> = new Subject<any>();
   reviewCandidate$: Subject<number> = new Subject<number>();
@@ -41,7 +45,7 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
       onClick: _ => this.reload$.next(null),
     }
   ];
-  displayedColumns: string[] = ['arName', 'enName', 'department', 'phoneNumber', 'employementPosition', 'status', 'nationality', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'department', 'phoneNumber', 'employementPosition', 'externalOrgId', 'status', 'nationality', 'actions'];
   edit$: Subject<Trainee> = new Subject<Trainee>();
   models: Trainee[] = [];
   trainingProgramId: number;
@@ -50,6 +54,20 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
   candidatesListTypeEnum = CandidatesListTypeEnum;
   traineeStatusEnum = TraineeStatus;
   isInternalUser!: boolean;
+  acceptCandidate$: Subject<any> = new Subject<any>();
+  rejectionComment: string = '';
+  bulkActions: IGridAction[] = [
+    {
+      langKey: 'lbl_accept',
+      icon: ActionIconsEnum.USER_CHECK,
+      callback: ($event: MouseEvent, data?: any) => this.acceptCandidate$.next()
+    },
+    {
+      langKey: 'lbl_reject',
+      icon: ActionIconsEnum.USER_CANCEL,
+      callback: ($event: MouseEvent, data?: any) => this.rejectCandidate()
+    }
+  ];
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<number>,
     public lang: LangService,
     public service: TraineeService,
@@ -64,12 +82,48 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
     this.candidatesListType = data.candidatesListType;
   }
 
+  rejectCandidate() {
+    const ids = this.table.selection.selected.map((item) => {
+      return item.id;
+    });
+    const sub = this.service.openRejectCandidateDialog(ids, this.trainingProgramId, this.rejectionComment)
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap((dialogRef) => {
+        return dialogRef.onAfterClose$;
+      }))
+      .subscribe((userClick: UserClickOn) => {
+        sub.unsubscribe();
+      });
+  }
+  listenToAcceptTrainee() {
+    this.acceptCandidate$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap(() => {
+        const ids = this.table.selection.selected.map((item) => {
+          return {
+            trainingProgramId: this.trainingProgramId,
+            traineeId: item.id
+          };
+        });
+        return this.service.acceptBulk(ids)
+      }))
+      .subscribe(() => {
+        this.toast.success(this.lang.map.candidates_has_been_accepted);
+        this.reload$.next(null);
+      });
+  }
   ngOnInit(): void {
     this.isInternalUser = this.employeeService.isInternalUser();
     this.listenToAdd();
     this.listenToEdit();
     this.listenToReload();
+    this.listenToAcceptTrainee();
     this.listenToReviewCandidate();
+  }
+  ngAfterViewInit(): void {
+    if(this.candidatesListType !== this.candidatesListTypeEnum.EVALUATE || !!this.table.selection.selected.filter(item => !!item.addedByRACA).length || !this.isInternalUser) {
+      this.displayedColumns.shift();
+    }    
   }
 
   listenToAdd() {
@@ -181,5 +235,16 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
     this.trainingProgramService.loadProgramExport(this.trainingProgramId).subscribe((file: BlobModel) => {
       this.sharedService.openViewContentDialog(file, { documentTitle: this.trainingProgramId });
     })
+  }
+  toggleAllSelectable(): void {
+    if (this.table.allSelected()) {
+      this.table.clearSelection();
+    } else {
+      this.table.dataSource.data.forEach((item: TrainingProgram) => this.table.selection.select(item));
+    }
+  }
+
+  afterReload(): void {
+    this.table && this.table.clearSelection();
   }
 }

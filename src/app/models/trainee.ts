@@ -4,9 +4,12 @@ import { LangService } from '@app/services/lang.service';
 import { TraineeService } from '@app/services/trainee.service';
 import { INames } from '@app/interfaces/i-names';
 import { Lookup } from '@app/models/lookup';
-import { searchFunctionType } from '@app/types/types';
+import { ISearchFieldsMap, searchFunctionType } from '@app/types/types';
 import { InterceptModel } from "@decorators/intercept-model";
 import { TraineeInterceptor } from "@app/model-interceptors/trainee-interceptor";
+import { infoSearchFields } from '@helpers/info-search-fields';
+import { Followup } from './followup';
+import { AdminResult } from './admin-result';
 
 const { receive, send } = new TraineeInterceptor()
 
@@ -27,15 +30,21 @@ export class Trainee extends BaseModel<Trainee, TraineeService>{
   service: TraineeService;
   lang: LangService;
   status!: number;
-  statusInfo!: Lookup;
-  nationalityInfo!: Lookup;
   externalOrgId!: number;
   addedByRACA!: boolean;
   isDraft!: boolean;
 
-  searchFields: { [key: string]: searchFunctionType | string } = {
+  statusInfo!: Lookup;
+  nationalityInfo!: Lookup;
+  externalOrgInfo!: AdminResult;
+  
+  searchFields: ISearchFieldsMap<Trainee>  = {
     arName: 'arName',
-    enName: 'enName'
+    enName: 'enName',
+    phoneNumber: 'phoneNumber',
+    department: 'department',
+    employementPosition: 'employementPosition',
+    ...infoSearchFields(['statusInfo', 'nationalityInfo', 'externalOrgInfo']),
   };
 
   constructor() {
@@ -58,9 +67,5 @@ export class Trainee extends BaseModel<Trainee, TraineeService>{
 
   reject(trainingProgramId: number, comment: string) {
     return this.service.reject(trainingProgramId, this.id, comment);
-  }
-
-  openRejectCandidateDialog(trainingProgramId: number, comment: string) {
-    return this.service.openRejectCandidateDialog(this, trainingProgramId, comment);
   }
 }
