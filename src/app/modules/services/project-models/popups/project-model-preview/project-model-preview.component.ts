@@ -19,8 +19,8 @@ export class ProjectModelPreviewComponent implements AfterViewInit {
     private projectModelService: ProjectModelService,
     private dialogRef: DialogRef,
     @Inject(DIALOG_DATA_TOKEN) public data: {
-    id: string,
-  },
+      id: string,
+    },
   ) { }
 
   ngAfterViewInit(): void {

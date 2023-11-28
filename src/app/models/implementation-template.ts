@@ -33,7 +33,8 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> im
   beneficiaryRegion!: string
   region!: string
   notes!: string
-  projectTotalCost!: number
+  projectTotalCost!: number;
+  requestCaseId!: string;
   executionCountryInfo!: AdminResult
   targetAmount!: number;
   beneficiaryCountry!: number;
