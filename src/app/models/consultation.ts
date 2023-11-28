@@ -29,6 +29,7 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> i
   fullName!: string;
   mobileNo!: string;
   requestBody!: string;
+  mainTeamId!: number;
   organizationInfo!: AdminResult;
   categoryInfo!: AdminResult;
   service: ConsultationService;
