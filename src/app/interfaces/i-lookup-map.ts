@@ -175,4 +175,5 @@ export interface ILookupMap {
   ReportPeriodicity: Lookup[];
   HalfType: Lookup[];
   QuarterType: Lookup[];
+  MeetingInitiator: Lookup[];
 }

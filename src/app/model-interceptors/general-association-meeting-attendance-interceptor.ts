@@ -51,6 +51,7 @@ export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInt
     model.requestTypeInfo = model.requestTypeInfo ? AdminResult.createInstance(model.requestTypeInfo) : AdminResult.createInstance({});
     model.meetingTypeInfo = AdminResult.createInstance(model.meetingTypeInfo || {});
     model.meetingClassificationInfo = AdminResult.createInstance(model.meetingClassificationInfo || {});
+    model.meetingClassificationInfo = AdminResult.createInstance(model.meetingClassificationInfo || {});
     model.meetingDateTimestamp = !model.meetingDate ? null : DateUtils.getTimeStampFromDate(model.meetingDate);
     model.agenda = model.agenda.map((a) => new GeneralAssociationAgenda().clone(a))
     return model;
@@ -62,5 +63,6 @@ export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInt
     delete model.meetingClassificationInfo;
     delete model.managerDecisionInfo;
     delete model.requestTypeInfo;
+    delete model.meetingInitiatorInfo;
   }
 }

@@ -58,7 +58,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   location!: string;
   meetingDate!: string | IMyDateModel;
   meetingTime!: number;
-  meetingInitiator!: string;
+  meetingInitiator!: number;
   managerDecision!: number;
   managerJustification!: string;
   meetingReportID!: string;
@@ -79,6 +79,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   meetingTypeInfo!: AdminResult;
   meetingClassificationInfo!: AdminResult;
   managerDecisionInfo!: AdminResult;
+  meetingInitiatorInfo!: AdminResult;
   isFinal!: boolean;
   meetingDateTimestamp!: number | null;
 
@@ -116,6 +117,9 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
         break;
       case 'meetingClassification':
         adminResultValue = this.meetingClassificationInfo;
+        break;
+      case 'meetingInitiator':
+        adminResultValue = this.meetingInitiatorInfo;
         break;
       case 'meetingDate':
         const dateValue = DateUtils.getDateStringFromDate(this.meetingDate, 'DATEPICKER_FORMAT');
@@ -180,7 +184,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
       location: controls ? [location, [CustomValidators.required, CustomValidators.maxLength(300), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : location,
       meetingDate: controls ? [meetingDate, [CustomValidators.required]] : meetingDate,
       meetingTime: controls ? [meetingTime, []] : meetingTime,
-      meetingInitiator: controls ? [meetingInitiator, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : meetingInitiator,
+      meetingInitiator: controls ? [meetingInitiator, [CustomValidators.required]] : meetingInitiator,
       meetingClassification: controls ? [meetingClassification, [CustomValidators.required]] : meetingClassification,
       periodical: controls ? [periodical, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]] : periodical,
       year: controls ? [{
