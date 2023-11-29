@@ -309,7 +309,6 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         ? [
             transferFromIBAN,
             [
-              CustomValidators.required,
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),
