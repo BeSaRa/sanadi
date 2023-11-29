@@ -1,3 +1,4 @@
+import { NpoEmployeeService } from './../../../../../services/npo-employee.service';
 import {BankAccountOperationTypes} from '@enums/bank-account-operation-types';
 import {Component} from '@angular/core';
 import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
@@ -83,7 +84,9 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
               private toast: ToastService,
               private licenseService: LicenseService,
               private bankService: BankService,
-              private employeeService: EmployeeService) {
+              private employeeService: EmployeeService,
+              // don't remove this its related to dependency injection issue
+              private npoEmployeeService:NpoEmployeeService) {
     super();
   }
 
