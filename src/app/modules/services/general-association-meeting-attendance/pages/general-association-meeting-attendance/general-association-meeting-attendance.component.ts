@@ -75,6 +75,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     .sort((a, b) => a.lookupKey - b.lookupKey);
   meetingClassifications: Lookup[] = this.lookupService.listByCategory.MeetingClassification
     .sort((a, b) => a.lookupKey - b.lookupKey);
+    meetingInitiators: Lookup[] = this.lookupService.listByCategory.MeetingInitiator
+    .sort((a, b) => a.lookupKey - b.lookupKey);
 
   datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap!: DatepickerOptionsMap;
@@ -698,6 +700,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       result.year = licenseDetails.year;
 
       result.meetingClassificationInfo = licenseDetails.meetingClassificationInfo;
+      result.meetingInitiatorInfo = licenseDetails.meetingInitiatorInfo;
       result.meetingTypeInfo = licenseDetails.meetingTypeInfo;
 
       result.generalAssociationMembers = licenseDetails.generalAssociationMembers;
