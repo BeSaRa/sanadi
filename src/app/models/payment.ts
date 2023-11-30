@@ -40,9 +40,10 @@ export class Payment extends SearchableCloneable<Payment> implements IAuditModel
   }
 
   getValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    const dueDateStamp = DateUtils.getTimeStampFromDate(this.dueDate);
     return {
       paymentNo: {langKey: 'payment_name', value: this.paymentNo},
-      dueDate: {langKey: 'due_date', value: this.dueDate},
+      dueDate: {langKey: 'due_date', value: this.dueDate,comparisonValue : dueDateStamp},
       totalCost: {langKey: 'amount', value: this.totalCost},
       notes: {langKey: 'notes', value: this.notes},
       itemId : {langKey: {} as keyof ILanguageKeys, value: this.itemId ,skipAuditComparison :true},
@@ -62,11 +63,18 @@ export class Payment extends SearchableCloneable<Payment> implements IAuditModel
 
   getAdminResultByProperty(property: keyof Payment): AdminResult {
     let adminResultValue: AdminResult;
-    let value: any = this[property];
-    if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
-      value = '';
+    switch (property) {
+      case 'dueDate':
+        const startDateValue = DateUtils.getDateStringFromDate(this.dueDate, 'DATEPICKER_FORMAT');
+        adminResultValue = AdminResult.createInstance({arName: startDateValue, enName: startDateValue});
+        break;
+      default:
+        let value: any = this[property];
+        if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
+          value = '';
+        }
+        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
     }
-    adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
     return adminResultValue ?? new AdminResult();
   }
 }
