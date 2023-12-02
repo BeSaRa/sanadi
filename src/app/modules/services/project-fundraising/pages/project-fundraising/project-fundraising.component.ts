@@ -50,6 +50,8 @@ import { ServiceDataService } from "@services/service-data.service";
 import { ServiceData } from "@app/models/service-data";
 import { ExecutionFields } from '@app/enums/execution-fields';
 import { ProjectTypes } from '@app/enums/project-types';
+import { ProjectModel } from '@app/models/project-model';
+import { ProjectModelPreviewComponent } from '@app/modules/services/project-models/popups/project-model-preview/project-model-preview.component';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -456,6 +458,11 @@ implements AfterViewInit {
       })
   }
 
+  viewProjrctModel(template: ProjectTemplate) {
+    this.dialog.show(ProjectModelPreviewComponent, {
+      id: template.requestCaseId
+    })
+  }
   private getSearchTemplateCriteria(): Record<any, any> {
     const workArea = this.projectWorkArea.value
     const domain = this.domain.value;
