@@ -82,5 +82,5 @@
 <div class="dialog-actions">
   <div class="flex-grow-1"></div>
   <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
-  <button *ngIf="data.operation != operationTypes.VIEW" (click)="$makeDecision.next(data.result.id)" class="btn btn-primary">{{lang.map.make_decision}}</button>
+  <button (click)="$makeDecision.next(data.result.id)" class="btn btn-primary">{{lang.map.make_decision}}</button>
 </div>
