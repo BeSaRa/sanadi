@@ -17,6 +17,7 @@ import { WorldCheckService } from '@app/services/world-check.service';
 })
 export class MakeDecisionComponent implements OnInit {
   control = new FormControl('', [CustomValidators.required]);
+  comment = new FormControl('');
   WORLD_CHECK_SEARCH_DECISION: Lookup[] = this.lookupService.listByCategory.WORLD_CHECK_SEARCH_DECISION;
   destroy$: Subject<any> = new Subject<any>();
   save$: Subject<void> = new Subject<void>();
@@ -40,7 +41,8 @@ export class MakeDecisionComponent implements OnInit {
       switchMap(() => {
         return this.service.worlddCheckInquire({
           first: this.data.resultId,
-          second: this.control.value?.toString() as string
+          second: this.control.value?.toString() as string,
+          comment: this.comment.value || ''
         })
       })
     )
