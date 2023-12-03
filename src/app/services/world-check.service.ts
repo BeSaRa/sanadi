@@ -77,7 +77,7 @@ export class WorldCheckService extends CrudGenericService<WorldCheckSearch> {
   })
   // first ==> id
   // second ==> decision
-  worlddCheckInquire(inquire: {first: string, second: string}): Observable<boolean> {
+  worlddCheckInquire(inquire: {first: string, second: string, comment: string}): Observable<boolean> {
     return this.http.put<boolean>(this._getServiceURL() + '/inquiry/status', inquire);
   }
   openViewWorldCheckSearchResult(result: WorldCheckSearchResult, operation?: OperationTypes): DialogRef {

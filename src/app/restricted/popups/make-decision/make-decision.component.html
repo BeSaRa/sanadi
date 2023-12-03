@@ -14,6 +14,11 @@
     </ng-select>
     <app-field-error-message [control]="control"></app-field-error-message>
   </div>
+  <div class="col-sm-12 mb-3 position-relative">
+    <label class="form-label" for="comment">{{lang.map.comment}}</label>
+    <textarea name="comment" [formControl]="comment" id="comment" rows="4"
+      class="form-control"></textarea>
+  </div>
 </div>
 <div class="dialog-actions">
   <div class="flex-grow-1"></div>
