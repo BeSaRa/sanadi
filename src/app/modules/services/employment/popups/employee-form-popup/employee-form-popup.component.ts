@@ -425,7 +425,7 @@ export class EmployeeFormPopupComponent implements OnInit {
   }
 
   isInterim() {
-    return this.contractType.value == ContractTypes.Interim;
+    return this.contractType && this.contractType.value == ContractTypes.Interim;
   }
 
   isExternal() {
