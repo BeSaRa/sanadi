@@ -27,7 +27,7 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto, IAudi
   // department!: string;
   // jobContractType!: number;
   // contractLocation!: number;
-  // contractType!: number;
+  contractType!: number;
   contractLocationType!: number;
   email!: string;
   officeId!: string;

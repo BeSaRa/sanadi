@@ -80,7 +80,7 @@ export class Employment
     const { licenseStartDate, licenseEndDate } = this;
     return {
       licenseStartDate: [licenseStartDate, !this.isApproval() || this.isCancelRequestType() ? [] : Validators.required],
-      licenseEndDate: [licenseEndDate, !this.isInterm() || !this.isApproval() || this.isCancelRequestType()],
+      licenseEndDate: [licenseEndDate, !this.isInterm() || !this.isApproval() || this.isCancelRequestType()?[]: Validators.required],
     };
   }
   approve(): DialogRef {
@@ -97,8 +97,7 @@ export class Employment
     return this.requestType === EmploymentRequestType.CANCEL;
   }
   isInterm() {
-    // return this.employeeInfoDTOs[0].contractType == ContractTypes.Interim
-    return true;
+    return this.employeeInfoDTOs[0].contractType && this.employeeInfoDTOs[0].contractType == ContractTypes.Interim
   }
   getEmployees():Employee[]{
     return this.employeeInfoDTOs as Employee[]
