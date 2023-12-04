@@ -158,7 +158,7 @@
         <!-- Region -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="region" for="region" class="form-label">{{lang.map.neighborhood_street_building}}</label>
-          <input formControlName="region" type="text" [readOnly]="!isEditCountryAllowed()" validationClasses="region"
+          <input formControlName="region" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)" validationClasses="region"
                  class="form-control" trimInput id="region">
           <app-field-error-message controlName="region"></app-field-error-message>
         </div>
