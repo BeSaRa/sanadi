@@ -1,16 +1,16 @@
-import {AdminResult} from '@app/models/admin-result';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {SearchableCloneable} from '@app/models/searchable-cloneable';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {Bank} from '@app/models/bank';
-import {Lookup} from '@app/models/lookup';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
-import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
-import {AuditOperationTypes} from '@enums/audit-operation-types';
-import {ObjectUtils} from '@helpers/object-utils';
-import {CommonUtils} from '@helpers/common-utils';
-import {IAuditModelProperties} from '@contracts/i-audit-model-properties';
+import { AdminResult } from '@app/models/admin-result';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { SearchableCloneable } from '@app/models/searchable-cloneable';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { Bank } from '@app/models/bank';
+import { Lookup } from '@app/models/lookup';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
+import { AuditOperationTypes } from '@enums/audit-operation-types';
+import { ObjectUtils } from '@helpers/object-utils';
+import { CommonUtils } from '@helpers/common-utils';
+import { IAuditModelProperties } from '@contracts/i-audit-model-properties';
 
 export class BankAccount extends SearchableCloneable<BankAccount> implements IAuditModelProperties<BankAccount> {
   id!: number;
@@ -47,14 +47,14 @@ export class BankAccount extends SearchableCloneable<BankAccount> implements IAu
 
   getBankAccountValuesWithLabels(caseType?: CaseTypes): { [key: string]: ControlValueLabelLangKey } {
     const valuesWithLabels: { [key: string]: ControlValueLabelLangKey } = {
-      bankName: {langKey: 'bank_name', value: this.bankName},
-      accountNumber: {langKey: 'account_number', value: this.accountNumber},
-      iBan: {langKey: 'iban', value: this.iBan},
-      swiftCode: {langKey: 'swift_code', value: this.swiftCode},
-      country: {langKey: 'country', value: this.country},
-      currency: {langKey: 'currency', value: this.currency},
-      partnerName: {langKey: 'org_name_in_bank', value: this.partnerName},
-      category: {langKey: 'bank_category', value: this.category},
+      bankName: { langKey: 'bank_name', value: this.bankName },
+      accountNumber: { langKey: 'account_number', value: this.accountNumber },
+      iBan: { langKey: 'iban', value: this.iBan },
+      swiftCode: { langKey: 'swift_code', value: this.swiftCode },
+      country: { langKey: 'country', value: this.country },
+      currency: { langKey: 'currency', value: this.currency },
+      partnerName: { langKey: 'org_name_in_bank', value: this.partnerName },
+      category: { langKey: 'bank_category', value: this.category },
     };
     if (caseType === CaseTypes.PARTNER_APPROVAL) {
       delete valuesWithLabels.category;
@@ -121,12 +121,22 @@ export class BankAccount extends SearchableCloneable<BankAccount> implements IAu
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
           value = '';
         }
-        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
     }
     return adminResultValue ?? new AdminResult();
   }
 
   isEqual(record: BankAccount): boolean {
-    return this.iBan === record.iBan
+    return(
+    this.currency === record.currency &&
+    this.accountNumber === record.accountNumber &&
+    this.bankName === record.bankName &&
+    this.iBan === record.iBan &&
+    this.swiftCode === record.swiftCode &&
+    this.country === record.country &&
+    this.partnerName === record.partnerName &&
+    this.iBAN === record.iBAN &&
+    this.category === record.category
+     )
   }
 }
