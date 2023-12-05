@@ -27,7 +27,7 @@ export class NpoEmployee extends BaseModel<NpoEmployee, NpoEmployeeService> {
   englishName!: string;
   email!: string;
   phone!: string;
-  jobTitleName!: string;
+  jobTitle!: string;
   identificationNumber!: string;
   passportNumber!: string;
   jobNumber!: string;
@@ -85,7 +85,7 @@ export class NpoEmployee extends BaseModel<NpoEmployee, NpoEmployeeService> {
     const {
       arabicName,
       englishName,
-      jobTitleName,
+      jobTitle,
       identificationType,
       qId,
       passportNumber,
@@ -121,22 +121,22 @@ export class NpoEmployee extends BaseModel<NpoEmployee, NpoEmployeeService> {
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : englishName,
-      jobTitleName: controls ? [jobTitleName, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitleName,
+      jobTitle: controls ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitle,
       identificationType: controls ? [identificationType, CustomValidators.required] : identificationType,
       qId: controls ? [qId, CustomValidators.maxLength(50)] : qId,
       passportNumber: controls ? [passportNumber] : passportNumber,
       gender: controls ? [gender, CustomValidators.required] : gender,
       nationality: controls ? [nationality, CustomValidators.required] : nationality,
-      phone: controls ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
+      phone: controls ? [phone, [CustomValidators.number].concat(CustomValidators.commonValidations.phone)] : phone,
       email: controls ? [email, [CustomValidators.required].concat(CustomValidators.commonValidations.email)] : email,
-      department: controls ? [department, [CustomValidators.required, CustomValidators.maxLength(300)]] : department,
-      contractLocation: controls ? [contractLocation, CustomValidators.required] : contractLocation,
+      department: controls ? [department, [ CustomValidators.maxLength(300)]] : department,
+      contractLocation: controls ? [contractLocation] : contractLocation,
       contractLocationType: controls ? [contractLocationType, CustomValidators.required] : contractLocationType,
       officeId: controls ? [officeId] : officeId,
       charityId: controls ? [charityId] : charityId,
       contractStatus: controls ? [contractStatus, CustomValidators.required] : contractStatus,
-      contractType: controls ? [contractType, CustomValidators.required] : contractType,
-      jobContractType: controls ? [jobContractType, CustomValidators.required] : jobContractType,
+      contractType: controls ? [contractType] : contractType,
+      jobContractType: controls ? [jobContractType] : jobContractType,
       contractExpiryDate: controls ? [contractExpiryDate] : contractExpiryDate,
       workStartDate: controls ? [workStartDate, CustomValidators.required] : workStartDate,
       workEndDate: controls ? [workEndDate] : workEndDate,
@@ -152,7 +152,7 @@ export class NpoEmployee extends BaseModel<NpoEmployee, NpoEmployeeService> {
       arabicName: this.arabicName,
       englishName: this.englishName,
       identificationNumber: (this.identificationNumber ?? '') + '',
-      jobTitle: this.jobTitleName
+      jobTitle: this.jobTitle
     })
   }
 }

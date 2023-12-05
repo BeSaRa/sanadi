@@ -158,7 +158,7 @@ export class ManageExecutiveManagementMembersPopupComponent extends UiCrudDialog
     member.identificationNumber = npoEmployee.qId || npoEmployee.identificationNumber;
     member.email = npoEmployee.email;
     member.phone = npoEmployee.phone;
-    member.jobTitle = npoEmployee.jobTitleName;
+    member.jobTitle = npoEmployee.jobTitle;
     member.joinDate = npoEmployee.workStartDate;
     return member;
   }

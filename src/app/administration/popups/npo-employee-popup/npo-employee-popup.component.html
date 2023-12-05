@@ -92,13 +92,13 @@
         <app-field-error-message controlName="gender"></app-field-error-message>
       </div>
       <!-- phone -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+      <!-- <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="phone" for="phone" class="form-label">{{
           lang.map.lbl_phone
           }}</label>
         <input id="phone" validationClasses="phone" formControlName="phone" class="form-control" />
         <app-field-error-message controlName="phone"></app-field-error-message>
-      </div>
+      </div> -->
       <!-- email -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
@@ -150,11 +150,11 @@
         <app-field-error-message controlName="charityId"></app-field-error-message>
       </div>
       <!-- department -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+      <!-- <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="department" for="department" class="form-label">{{ lang.map.department }}</label>
         <input id="department" validationClasses="department" formControlName="department" class="form-control" />
         <app-field-error-message controlName="department"></app-field-error-message>
-      </div>
+      </div> -->
       <!-- functionalGroup -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper">
         <label asteriskIfRequired="functionalGroup" for="functionalGroup" labelForId="functionalGroup"
@@ -170,13 +170,13 @@
       </div>
       <!-- jobTitleName -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="jobTitleName" for="jobTitleName" class="form-label">{{lang.map.job_title}}</label>
-        <input id="jobTitleName" validationClasses="jobTitleName" formControlName="jobTitleName" class="form-control"
+        <label asteriskIfRequired="jobTitle" for="jobTitle" class="form-label">{{lang.map.job_title}}</label>
+        <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" class="form-control"
           trimInput>
-        <app-field-error-message controlName="jobTitleName"></app-field-error-message>
+        <app-field-error-message controlName="jobTitle"></app-field-error-message>
       </div>
       <!-- contractLocation -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+      <!-- <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="contractLocation" for="contractLocation" class="form-label">{{
           lang.map.contract_location }}</label>
         <ng-select [selectOnTab]="true" labelForId="contractLocation" [clearable]="true"
@@ -186,9 +186,9 @@
             option.getName() }}</ng-option>
         </ng-select>
         <app-field-error-message controlName="contractLocation"></app-field-error-message>
-      </div>
+      </div> -->
       <!-- contractType -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+      <!-- <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="contractType" for="contractType" labelForId="contractType" class="form-label">{{
           lang.map.contract_type }}</label>
         <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
@@ -198,9 +198,9 @@
           </ng-option>
         </ng-select>
         <app-field-error-message controlName="contractType"></app-field-error-message>
-      </div>
+      </div> -->
       <!-- jobContractType -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+      <!-- <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="jobContractType" for="jobContractType" labelForId="jobContractType"
           class="form-label">{{ lang.map.job_contract_type }}</label>
         <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
@@ -210,7 +210,7 @@
           </ng-option>
         </ng-select>
         <app-field-error-message controlName="jobContractType"></app-field-error-message>
-      </div>
+      </div> -->
       <!-- contractStatus -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="contractStatus" for="contractStatus" labelForId="contractStatus"
