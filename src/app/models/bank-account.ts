@@ -1,7 +1,7 @@
+import { CaseTypes } from './../enums/case-types.enum';
 import { AdminResult } from '@app/models/admin-result';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { SearchableCloneable } from '@app/models/searchable-cloneable';
-import { CaseTypes } from '@app/enums/case-types.enum';
 import { Bank } from '@app/models/bank';
 import { Lookup } from '@app/models/lookup';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
@@ -11,6 +11,7 @@ import { AuditOperationTypes } from '@enums/audit-operation-types';
 import { ObjectUtils } from '@helpers/object-utils';
 import { CommonUtils } from '@helpers/common-utils';
 import { IAuditModelProperties } from '@contracts/i-audit-model-properties';
+import { ValidatorFn } from '@angular/forms';
 
 export class BankAccount extends SearchableCloneable<BankAccount> implements IAuditModelProperties<BankAccount> {
   id!: number;
@@ -64,6 +65,20 @@ export class BankAccount extends SearchableCloneable<BankAccount> implements IAu
     return valuesWithLabels;
   }
 
+  private _isIBanRequired(caseType? : CaseTypes){
+    return caseType === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL
+  }
+  private _getIBanValidators(caseType?:CaseTypes):ValidatorFn[]{
+    return this._isIBanRequired(caseType) ? [
+      CustomValidators.required,
+      CustomValidators.pattern('ENG_NUM_ONLY'),
+      CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH),
+    ]:
+    [
+      CustomValidators.pattern('ENG_NUM_ONLY'),
+      CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH),
+    ]
+  }
   getBankAccountFields(control: boolean = false, caseType?: CaseTypes): any {
     const values = ObjectUtils.getControlValues<BankAccount>(this.getBankAccountValuesWithLabels(caseType));
     let controls: any = {
@@ -77,10 +92,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> implements IAu
         CustomValidators.number,
         CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH),
       ]] : values.accountNumber,
-      iBan: control ? [values.iBan, [
-        CustomValidators.pattern('ENG_NUM_ONLY'),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH),
-      ]] : values.iBan,
+      iBan: control ? [values.iBan, this._getIBanValidators(caseType) ] : values.iBan,
       swiftCode: control ? [values.swiftCode, [
         CustomValidators.required,
         ...CustomValidators.commonValidations.swiftCode
