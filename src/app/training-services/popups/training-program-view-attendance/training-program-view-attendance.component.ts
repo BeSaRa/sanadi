@@ -12,7 +12,7 @@ import {DialogService} from '@app/services/dialog.service';
 })
 export class TrainingProgramViewAttendanceComponent implements OnInit {
   @Input() model!: TrainingProgram;
-  displayedColumns: string[] = ['arName', 'enName', 'department', 'status', 'nationality', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'department', 'externalOrgId', 'status', 'nationality', 'actions'];
 
   constructor(public lang: LangService,
               public toast: ToastService,

@@ -23,7 +23,9 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     model.traineeList = model.traineeList.map(tr => {
       tr.statusInfo = (lookupService.listByCategory.TRAINING_TRAINEE_STATUS.find(s => s.lookupKey == tr.status)!) || new Lookup();
       tr.trainee = (new Trainee()).clone(tr.trainee);
+      tr.trainee.statusInfo = (lookupService.listByCategory.TRAINING_TRAINEE_STATUS.find(s => s.lookupKey == tr.status)!) || new Lookup();
       tr.trainee.nationalityInfo = (lookupService.listByCategory.Nationality.find(s => s.lookupKey == tr.trainee.nationality)!) || new Lookup();
+      tr.trainee.externalOrgInfo && (tr.trainee.externalOrgInfo = AdminResult.createInstance(tr.trainee.externalOrgInfo))
       return tr;
     });
 

@@ -39,6 +39,11 @@
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.candidate_status}}</th>
               <td cdk-cell *cdkCellDef="let row">{{row.statusInfo.getName()}}</td>
             </ng-container>
+            <ng-container cdkColumnDef="externalOrgId">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.trainee_entity_belongs}}</th>
+              <td cdk-cell *cdkCellDef="let row">{{row.trainee.externalOrgInfo &&
+                row.trainee.externalOrgInfo.getName()}}</td>
+            </ng-container>
             <ng-container cdkColumnDef="phoneNumber">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.home_phone_number}}</th>
               <td cdk-cell *cdkCellDef="let row">{{row.trainee.phoneNumber}}</td>

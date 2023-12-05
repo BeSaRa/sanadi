@@ -24,7 +24,7 @@ export class TrainingProgramAttendancePopupComponent implements OnInit {
   saveAttendance$: Subject<null> = new Subject();
   model!: TrainingProgram;
   operation!: OperationTypes;
-  displayedColumns: string[] = ['arName', 'enName', 'department', 'phoneNumber', 'currentJob', 'status', 'nationality', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'department', 'phoneNumber', 'currentJob', 'externalOrgId', 'status', 'nationality', 'actions'];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
               public lang: LangService,

@@ -47,7 +47,7 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit, AfterVie
   ];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'department', 'phoneNumber', 'employementPosition', 'externalOrgId', 'status', 'nationality', 'actions'];
   edit$: Subject<Trainee> = new Subject<Trainee>();
-  models: Trainee[] = [];
+  models: TraineeData[] = [];
   trainingProgramId: number;
   operation!: OperationTypes;
   candidatesListType!: number;
@@ -169,11 +169,10 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit, AfterVie
     this.reload$
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap(() => {
-        let load = this.service.trainingProgramCandidates(this.trainingProgramId);
-        return load.pipe(catchError(_ => of([])));
+        return this.trainingProgramService.getByIdComposite(this.trainingProgramId)
       }))
-      .subscribe((list: Trainee[]) => {
-        this.models = list;
+      .subscribe((list: TrainingProgram) => {
+        this.models = list.traineeList;
       });
   }
 
