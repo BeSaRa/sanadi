@@ -27,6 +27,8 @@ import { AuditDeductionRatioManagerComponent } from './audit/audit-deduction-rat
 import { AuditTargetedCountriesDistributionComponent } from './audit/audit-targeted-countries-distribution/audit-targeted-countries-distribution.component';
 import { AuditTargetedYearsDistributionComponent } from './audit/audit-targeted-years-distribution/audit-targeted-years-distribution.component';
 import { AuditTemplateListComponent } from './audit/audit-template-list/audit-template-list.component';
+import { ProjectModelsModule } from '../project-models/project-models.module';
+import { ProjectModelPreviewComponent } from '../project-models/popups/project-model-preview/project-model-preview.component';
 
 
 @NgModule({
@@ -47,7 +49,7 @@ import { AuditTemplateListComponent } from './audit/audit-template-list/audit-te
     CommonModule,
     EServicesMainModule,
     SharedServicesModule,
-    ProjectFundraisingRoutingModule
+    ProjectFundraisingRoutingModule,
   ]
 })
 export class ProjectFundraisingModule {

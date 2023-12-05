@@ -18,20 +18,13 @@ import { AuditEvaluationIndicatorComponent } from './audit/audit-evaluation-indi
 import { AuditProjectAddressComponent } from './audit/audit-project-address/audit-project-address.component';
 import { AuditProjectComponentComponent } from './audit/audit-project-component/audit-project-component.component';
 import { AuditProjectModelForeignCountriesProjectComponent } from './audit/audit-project-model-foreign-countries-project/audit-project-model-foreign-countries-project.component';
+import { ProjectModelPreviewComponent } from './popups/project-model-preview/project-model-preview.component';
+import { ProjectPreviewModuleModule } from './project-preview-module.module';
 
 
 @NgModule({
   declarations: [
-    ProjectModelComponent,
     ProjectModelOutputsComponent,
-    ComponentBudgetsComponent,
-    ComponentBudgetsPopupComponent,
-    EvaluationIndicatorsPopupComponent,
-    ForeignCountriesProjectPopupComponent,
-    EvaluationIndicatorsComponent,
-    ProjectAddressesComponent,
-    ProjectAddressesPopupComponent,
-    ForeignCountriesProjectsComponent,
     AuditProjectModelsComponent,
     AuditEvaluationIndicatorComponent,
     AuditProjectAddressComponent,
@@ -42,10 +35,8 @@ import { AuditProjectModelForeignCountriesProjectComponent } from './audit/audit
     CommonModule,
     EServicesMainModule,
     MapsModule,
-    ProjectModelsRoutingModule
-  ],
-  exports: [
-    ProjectModelComponent,
+    ProjectModelsRoutingModule,
+    ProjectPreviewModuleModule
   ]
 })
 export class ProjectModelsModule {

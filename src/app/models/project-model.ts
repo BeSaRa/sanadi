@@ -422,6 +422,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
   normalizeTemplate(): ProjectTemplate {
     return (new ProjectTemplate()).clone({
       templateId: this.id,
+      requestCaseId: this.requestCaseId,
       projectName: this.projectName,
       templateFullSerial: this.templateFullSerial,
       templateCost: this.projectTotalCost,
