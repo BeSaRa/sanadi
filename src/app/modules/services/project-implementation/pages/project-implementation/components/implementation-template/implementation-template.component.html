@@ -68,7 +68,7 @@
           <button [disabled]="disabled || isUpdateRequestType()" (click)="!disabled && !isUpdateRequestType() && removeTemplate(row)" class="btn p-0 icon-btn">
             <i class="mdi text-primary mdi-trash-can"></i>
           </button>
-          <button  (click)="viewProjrctModel(row)" class="btn icon-btn">
+          <button  (click)="viewProjrctModel(row)" [tooltip]="this.lang.map.template_file" class="btn icon-btn">
             <i class="mdi text-primary mdi-file-eye"></i>
           </button>
         </td>
