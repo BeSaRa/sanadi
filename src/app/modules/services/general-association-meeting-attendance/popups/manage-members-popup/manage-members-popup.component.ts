@@ -178,7 +178,7 @@ export class ManageMembersPopupComponent extends UiCrudDialogGenericComponent<Ge
     member.identificationNumber = npoEmployee.qId || npoEmployee.identificationNumber;
     member.arabicName = npoEmployee.arabicName;
     member.englishName = npoEmployee.englishName;
-    member.jobTitle = npoEmployee.jobTitleName;
+    member.jobTitle = npoEmployee.jobTitle;
 
     return member;
   }
