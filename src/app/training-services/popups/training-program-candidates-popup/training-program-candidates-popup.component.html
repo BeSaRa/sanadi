@@ -59,7 +59,7 @@
             </ng-container>
             <ng-container cdkColumnDef="status">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.candidate_status}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.trainee.statusInfo.getName()}}</td>
+              <td cdk-cell *cdkCellDef="let row">{{ row.trainee.statusInfo.getName() }}</td>
             </ng-container>
             <ng-container cdkColumnDef="phoneNumber">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.home_phone_number}}</th>
