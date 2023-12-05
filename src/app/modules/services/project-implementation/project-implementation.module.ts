@@ -41,8 +41,6 @@ import { AuditProjectImplementationComponent } from './audit/audit-project-imple
 import { AuditFundSourceComponent } from './audit/audit-fund-source/audit-fund-source.component';
 import { AuditImplementationFundraisingComponent } from './audit/audit-implementation-fundraising/audit-implementation-fundraising.component';
 import { AuditImplementationTemplateComponent } from './audit/audit-implementation-template/audit-implementation-template.component';
-import { ProjectModelsModule } from '../project-models/project-models.module';
-import { ProjectModelPreviewComponent } from '../project-models/popups/project-model-preview/project-model-preview.component';
 
 
 @NgModule({
@@ -63,7 +61,6 @@ import { ProjectModelPreviewComponent } from '../project-models/popups/project-m
     AuditFundSourceComponent,
     AuditImplementationFundraisingComponent,
     AuditImplementationTemplateComponent,
-    ProjectModelPreviewComponent
   ],
   imports: [
     CommonModule,
@@ -71,7 +68,6 @@ import { ProjectModelPreviewComponent } from '../project-models/popups/project-m
     EServicesMainModule,
     MapsModule,
     ProjectImplementationRoutingModule,
-    ProjectModelsModule
   ]
 })
 export class ProjectImplementationModule { }
