@@ -1996,17 +1996,26 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           });
         })
     } else if (item.getCaseType() === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
-      const component = this.component as unknown as OrganizationsEntitiesSupportComponent;
-      component.validateRejectTimplate()
-        .pipe(
-          tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
-          filter(valid => valid)
-        ).subscribe(() => {
-          item.reject().onAfterClose$.subscribe(actionTaken => {
-            actionTaken && this.navigateToSamePageThatUserCameFrom();
-          });
-        })
-    } else {
+      if (!this.employeeService.isLicensingUser() || !this.employeeService.isSupervisionAndControlUser()) {
+        item.reject().onAfterClose$.subscribe(actionTaken => {
+          actionTaken && this.navigateToSamePageThatUserCameFrom();
+        });
+      } else {
+        const model = item as unknown as OrganizationsEntitiesSupport;
+        const component = this.component as unknown as OrganizationsEntitiesSupportComponent;
+        component.validateApproveTimplate()
+          .pipe(
+            tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
+            filter(valid => valid)
+          ).subscribe(() => {
+            model.reject().onAfterClose$.subscribe(actionTaken => {
+              actionTaken && this.navigateToSamePageThatUserCameFrom();
+            });
+          })
+      }
+
+    }
+   else {
       item.reject().onAfterClose$.subscribe(actionTaken => {
         actionTaken && this.navigateToSamePageThatUserCameFrom();
       });

@@ -53,9 +53,9 @@
             <app-field-error-message [control]="selectedTemplateControl"></app-field-error-message>
           </div>
         </div>
-        <div class="col-md-4 mb-4 position-relative">
+        <div class="col-md-4 mb-4 position-relative"  *ngIf="isLicensingUser">
           <div class="input-group">
-            <file-uploader #fileUploader *ngIf="isLicensingUser && selectedTemplate && openFrom === openFromEnum.USER_INBOX" labelKey="template_file"
+            <file-uploader #fileUploader *ngIf="selectedTemplate && openFrom === openFromEnum.USER_INBOX" labelKey="template_file"
                            [isRequired]="true" (fileUploadEvent)="uploadTemplate($event)"
                            [allowedExtensions]="[fileExtensionsEnum.DOCX]">
             </file-uploader>
