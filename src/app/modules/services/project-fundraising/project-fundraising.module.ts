@@ -29,6 +29,7 @@ import { AuditTargetedYearsDistributionComponent } from './audit/audit-targeted-
 import { AuditTemplateListComponent } from './audit/audit-template-list/audit-template-list.component';
 import { ProjectModelsModule } from '../project-models/project-models.module';
 import { ProjectModelPreviewComponent } from '../project-models/popups/project-model-preview/project-model-preview.component';
+import { ProjectPreviewModuleModule } from '../project-models/project-preview-module.module';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import { ProjectModelPreviewComponent } from '../project-models/popups/project-m
     EServicesMainModule,
     SharedServicesModule,
     ProjectFundraisingRoutingModule,
+    ProjectPreviewModuleModule
   ]
 })
 export class ProjectFundraisingModule {

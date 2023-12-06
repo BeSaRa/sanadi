@@ -41,6 +41,7 @@ import { AuditProjectImplementationComponent } from './audit/audit-project-imple
 import { AuditFundSourceComponent } from './audit/audit-fund-source/audit-fund-source.component';
 import { AuditImplementationFundraisingComponent } from './audit/audit-implementation-fundraising/audit-implementation-fundraising.component';
 import { AuditImplementationTemplateComponent } from './audit/audit-implementation-template/audit-implementation-template.component';
+import { ProjectPreviewModuleModule } from '../project-models/project-preview-module.module';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { AuditImplementationTemplateComponent } from './audit/audit-implementati
     EServicesMainModule,
     MapsModule,
     ProjectImplementationRoutingModule,
+    ProjectPreviewModuleModule
   ]
 })
 export class ProjectImplementationModule { }
