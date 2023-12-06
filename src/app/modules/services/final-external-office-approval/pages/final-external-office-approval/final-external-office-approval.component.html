@@ -253,6 +253,7 @@
         #managersTab
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
         [list]="model?.executiveManagementList || []"
+        [caseType]="model?.caseType"
       ></executive-management>
       </ng-template>
       <ng-template #branchesTabTemplate>

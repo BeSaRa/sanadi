@@ -1,37 +1,15 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
-    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn"
-            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
-    <button type="button" class="btn-close btn-close-white"
-            tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
+    <button *ngIf="!hideFullScreen" type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1"
+      aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="null"
+      aria-label="Close"></button>
   </div>
 </div>
 <div class="dialog-content w800px" #dialogContent>
   <div [formGroup]="form">
-    <div class="row">
-       <!-- identification Number -->
-       <div  class="col-sm-12 col-md-6 mb-4 position-relative">
-        <label asteriskIfRequired="identificationNumber" for="identificationNumber" class="form-label">{{lang.map.national_id_number}}</label>
-        <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber" trimInput
-          class="form-control">
-        <app-field-error-message controlName="identificationNumber"></app-field-error-message>
-      </div>
-      <!-- Arabic Name -->
-      <!-- <div class="col-sm-12 col-md-6 mb-4 position-relative">
-        <label asteriskIfRequired="arabicName" for="arabicName" class="form-label">{{lang.map.arabic_name}}</label>
-        <input id="arabicName" validationClasses="arabicName" formControlName="arabicName" trimInput
-               class="form-control">
-        <app-field-error-message controlName="arabicName"></app-field-error-message>
-      </div> -->
-      <!-- English Name -->
-      <div class="col-sm-12 col-md-6 mb-4 position-relative">
-        <label asteriskIfRequired="englishName" for="englishName" class="form-label">{{lang.map.arabic_name}}</label>
-        <input id="englishName" validationClasses="englishName" formControlName="englishName" trimInput
-          class="form-control">
-        <app-field-error-message controlName="englishName"></app-field-error-message>
-      </div>
-    </div>
+
     <div class="row">
       <!-- Phone -->
       <!-- <div class="col-sm-12 col-md-6 mb-4 position-relative">
@@ -58,13 +36,37 @@
       </div> -->
     </div>
     <div class="row">
+       <!-- identification Number -->
+       <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="identificationNumber" for="identificationNumber"
+          class="form-label">{{lang.map.national_id_number}}</label>
+        <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber"
+          trimInput class="form-control">
+        <app-field-error-message controlName="identificationNumber"></app-field-error-message>
+      </div>
+      <!-- Arabic Name -->
+      <div *ngIf="isArabicNameRequired()" class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="arabicName" for="arabicName" class="form-label">{{lang.map.arabic_name}}</label>
+        <input id="arabicName" validationClasses="arabicName" formControlName="arabicName" trimInput
+          class="form-control">
+        <app-field-error-message controlName="arabicName"></app-field-error-message>
+      </div>
+
+      <!-- English Name -->
+      <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <label asteriskIfRequired="englishName" for="englishName" class="form-label">{{isArabicNameRequired()
+          ?lang.map.english_name : lang.map.arabic_name }}</label>
+        <input id="englishName" validationClasses="englishName" formControlName="englishName" trimInput
+          class="form-control">
+        <app-field-error-message controlName="englishName"></app-field-error-message>
+      </div>
       <!-- nationalities -->
       <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="nationalities.length">
         <label asteriskIfRequired="nationality" for="nationality"
-               class="form-label">{{lang.map.lbl_nationality}}</label>
+          class="form-label">{{lang.map.lbl_nationality}}</label>
         <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false" placeholder="{{lang.map.select}}"
-                   id="nationality" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="nationality"
-                   validationClasses="nationality">
+          id="nationality" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="nationality"
+          validationClasses="nationality">
           <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey" [disabled]="!option.isActive()">
             {{option.getName()}}</ng-option>
         </ng-select>
@@ -76,8 +78,6 @@
         <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" trimInput class="form-control">
         <app-field-error-message controlName="jobTitle"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
       <!-- Passport -->
       <div *ngIf="!hidePassport" class="col-sm-12 col-md-6 mb-4 position-relative">
         <label asteriskIfRequired="passportNumber" for="passportNumber"
@@ -87,15 +87,17 @@
         <app-field-error-message controlName="passportNumber"></app-field-error-message>
       </div>
     </div>
+
+
   </div>
 </div>
 <div class="dialog-actions">
   <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
-          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
   <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
-          class="btn btn-primary">{{lang.map.btn_save}}</button>
+    class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

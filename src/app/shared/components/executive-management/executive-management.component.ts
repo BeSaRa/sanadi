@@ -9,6 +9,7 @@ import {
 import {UiCrudListGenericComponent} from '@app/generics/ui-crud-list-generic-component';
 import {ComponentType} from '@angular/cdk/portal';
 import {IKeyValue} from '@app/interfaces/i-key-value';
+import { CaseTypes } from '@app/enums/case-types.enum';
 
 @Component({
   selector: 'executive-management',
@@ -25,7 +26,7 @@ export class ExecutiveManagementComponent extends UiCrudListGenericComponent<Exe
     super();
   }
 
-  displayColumns: string[] = ['identificationNumber','englishName', 'passportNumber', 'actions'];
+  displayColumns: string[] = ['identificationNumber','arabicName','englishName', 'passportNumber', 'actions'];
   actions: IMenuItem<ExecutiveManagement>[] = [
     {
       type: 'action',
@@ -53,6 +54,10 @@ export class ExecutiveManagementComponent extends UiCrudListGenericComponent<Exe
     if (this.hidePassport) {
       this.displayColumns = this.displayColumns.filter(x => x !== 'passportNumber');
     }
+    if(!this.isArabicRequired()){
+      this.displayColumns = this.displayColumns.filter(x => x !== 'arabicName');
+
+    }
     // if (this.hideQId) {
     //   this.displayColumns = this.displayColumns.filter(x => x !== 'identificationNumber');
     // }
@@ -77,4 +82,8 @@ export class ExecutiveManagementComponent extends UiCrudListGenericComponent<Exe
       hideQId: this.hideQId
     };
   }
+  isArabicRequired(){
+   return this.caseType === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL
+  }
+
 }

@@ -370,6 +370,7 @@
         [pageTitleKey]="'executive_management'"
         [list]="model?.executiveManagementList || []"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
+        [caseType]="model?.caseType"
       ></executive-management>
     </ng-template>
 
