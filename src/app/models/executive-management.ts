@@ -65,9 +65,7 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
   getManagerFields(control: boolean = false): any {
     const values = ObjectUtils.getControlValues<ExecutiveManagement>(this.getValuesWithLabels(false, false));
     return {
-      // arabicName: control ? [values.arabicName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
-      //   CustomValidators.maxLength(100),
-      //   CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : values.arabicName,
+      arabicName: control ? [values.arabicName, []] : values.arabicName,
       englishName: control ? [values.englishName, [CustomValidators.required,
         CustomValidators.maxLength(100),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : values.englishName,
