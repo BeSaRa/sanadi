@@ -28,6 +28,9 @@ export class ProjectModelPreviewComponent implements AfterViewInit {
       this.projectModelComponent.operation = OperationTypes.VIEW;
       this.projectModelComponent.readonly = true;
       this.projectModelComponent.outModel = model;
+      this.projectModelComponent.fromDialog = true;
+      this.projectModelComponent._afterBuildForm();
+      this.projectModelComponent.attachmentComponent.forceReload()
     })
   }
   close(): void {
