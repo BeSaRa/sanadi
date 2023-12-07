@@ -434,7 +434,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
 
   organizationFinalApprove(_externalUserData: { form: UntypedFormGroup, organizationOfficers: OrganizationOfficer[] }): DialogRef {
-    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_APPROVE, false, this);
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_FINAL_APPROVE, false, this);
   }
 
   organizationFinalReject(): DialogRef {
