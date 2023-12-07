@@ -40,7 +40,6 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   implements HasLicenseApprovalMonthly, IAuditModelProperties<ProjectFundraising>,
   ICaseModel<ProjectFundraising>,
   CaseModelContract<ProjectFundraisingService, ProjectFundraising> {
-
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   service: ProjectFundraisingService;
   caseType: number = CaseTypes.PROJECT_FUNDRAISING
@@ -55,7 +54,8 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   exportedLicenseFullSerial!: string
   exportedLicenseId!: string
   exportedLicenseSerial!: number
-  licenseVSID!: string
+  licenseVSID!: string;
+  vsId!: string;
   customTerms!: string
   publicTerms!: string
   licenseStatusInfo!: AdminResult
@@ -432,7 +432,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
       englishName: this.enName,
       projectLicenseFullSerial: this.fullSerial,
       projectLicenseSerial: this.serial,
-      projectLicenseId: this.id,
+      projectLicenseId: this.licenseVSID,
       projectTotalCost: this.targetAmount,
       permitType: this.permitType,
       permitTypeInfo: this.permitTypeInfo,
