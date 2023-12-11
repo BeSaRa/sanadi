@@ -165,10 +165,10 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
   }
 
   @CastResponse(() => ProjectFundraising)
-  getConsumedAmount(fundraisingId: string, templateId: string, caseId: string, requestType: number): Observable<ProjectFundraising> {
+  getConsumedAmount(fundraisingVsId: string, templateId: string, caseId: string, requestType: number): Observable<ProjectFundraising> {
     return this.http.get<ProjectFundraising>(this.urlService.URLS.PROJECT_FUNDRAISING + '/license/consumed', {
       params: new HttpParams({
-        fromObject: { fundraisingId, templateId, ...caseId ? { caseId } : null, requestType }
+        fromObject: { fundraisingVsId, templateId, ...caseId ? { caseId } : null, requestType }
       })
     });
   }

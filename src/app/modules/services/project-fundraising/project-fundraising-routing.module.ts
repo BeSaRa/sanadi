@@ -12,6 +12,7 @@ import {ErrorPageComponent} from '@app/shared/components/error-page/error-page.c
 import {
   ProjectFundraisingOutputsComponent
 } from '@modules/services/project-fundraising/pages/project-fundraising-outputs/project-fundraising-outputs.component';
+import { CollectedFundsComponent } from './pages/collected-funds/collected-funds.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,16 @@ const routes: Routes = [
       permissionGroup: null,
       checkAnyPermission: false,
       render: 'ProjectFundraisingComponent'
+    }
+  },
+  {
+    path: 'collected-funds', component: CollectedFundsComponent,
+    canActivate: [NewServicePermissionGuard.canActivate],
+    resolve: {info: ServiceItemResolver.resolve, countries: CountryResolver.resolve},
+    data: {
+      permissionKey: EServicePermissionsEnum.PROJECT_FUNDRAISING,
+      permissionGroup: null,
+      checkAnyPermission: false,
     }
   },
   {

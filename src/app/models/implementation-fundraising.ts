@@ -20,6 +20,7 @@ export class ImplementationFundraising extends Cloneable<ImplementationFundraisi
   projectLicenseId!: string
   permitType!: number
   projectTotalCost!: number
+  collected!: number
   remainingAmount!: number
   consumedAmount!: number
   totalCost!: number
@@ -52,6 +53,7 @@ export class ImplementationFundraising extends Cloneable<ImplementationFundraisi
       projectLicenseFullSerial: { langKey: 'license_number', value: this.projectLicenseFullSerial },
       permitType: { langKey: 'permit_type', value: this.permitType },
       projectTotalCost: { langKey: 'project_total_cost', value: this.projectTotalCost },
+      collected: { langKey: 'collected_amount', value: this.collected },
       totalCost: { langKey: 'total_cost', value: this.totalCost },
       remainingAmount: { langKey: 'remaining_amount', value: this.remainingAmount },
       consumedAmount: { langKey: 'consumed_amount', value: this.consumedAmount },

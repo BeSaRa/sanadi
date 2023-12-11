@@ -73,7 +73,7 @@ export class SelectProjectFundraisingPopupComponent implements OnInit, OnDestroy
     this.selection$
       .pipe(filter(item => !this.selectedIds.includes(item.id)))
       .pipe(exhaustMap((model) => {
-        return this.service.getConsumedAmount(model.id, this.data.templateId, this.data.caseId, this.data.requestType).pipe(map(license => ({
+        return this.service.getConsumedAmount(model.licenseVSID, this.data.templateId, this.data.caseId, this.data.requestType).pipe(map(license => ({
           consumedAmount: license.consumed!,
           model
         })))

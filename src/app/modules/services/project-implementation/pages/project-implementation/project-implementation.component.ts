@@ -299,21 +299,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.listenToFundingResources()
 
     this.listenToLicenseDatesChanges()
-
-    this.fundingResources.setValidators([
-      this.validateFundingResources([
-        'implementationFundraising',
-        'financialGrant',
-        'selfFinancing',
-      ]),
-      this.validateFundingResources([
-        'payment',
-      ])])
-
     this.handleRequestTypeChange(this.requestType.value)
-
-
-
   }
 
   loadLicenseById(): void {
@@ -804,22 +790,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       }
     }
     this.handleCustomFormReadonly()
-  }
-
-  private validateFundingResources(fields: string[]): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      // return null
-      const group = control as FormGroup
-      const totalFundResources = fields.reduce((acc, key) => {
-        return acc + (group.get(key)?.getRawValue() ?? []).reduce((acc: number, item: FundingResourceContract) => acc + item.totalCost, 0)
-      }, 0)
-      return this.projectTotalCost && (this.projectTotalCost.value > totalFundResources) || ((this.projectTotalCost.value < totalFundResources)) ? {
-        fundingResources: {
-          actually: totalFundResources,
-          expected: Number(this.projectTotalCost.value)
-        }
-      } : null
-    }
   }
 
   clearLicense() {

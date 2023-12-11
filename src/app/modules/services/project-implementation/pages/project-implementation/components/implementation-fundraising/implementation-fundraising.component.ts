@@ -65,6 +65,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     'projectTotalCost',
     'consumedAmount',
     'remainingAmount',
+    'collected',
     'totalCost',
     'actions'
   ];
@@ -240,8 +241,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   takeRemaining(index: number) {
     const ctrl = this.inputs.at(index)
     const model = this.value[index];
-    const remainingAmount = model.remainingAmount >= model.projectTotalCost ?
-      model.projectTotalCost :
+    const remainingAmount = model.remainingAmount >= model.projectTotalCost - model.collected ?
+      model.projectTotalCost - model.collected :
       model.remainingAmount;
     ctrl.setValue(remainingAmount)
   }
@@ -321,7 +322,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
 
   isFullAmountConsumed(): void {
     const template = this.getTemplatePermit()
-    template ? this.amountConsumed.emit(template.totalCost === template.remainingAmount) : this.amountConsumed.emit(true)
+    template ? this.amountConsumed.emit(template.projectTotalCost === template.remainingAmount) : this.amountConsumed.emit(true)
   }
 
 

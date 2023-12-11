@@ -1,0 +1,140 @@
+<div class="row">
+  <div class="col-md-4 col-sm-12 mb-4 position-relative">
+    <label class="form-label" asteriskIfRequired [control]="licenseSearchControl"
+      for="oldLicenseFullSerial">{{lang.map.license_number}}</label>
+    <div class="input-group">
+      <input (keydown.enter)="licenseSearch($event)" [formControl]="licenseSearchControl" type="text" validationClasses
+        [control]="licenseSearchControl" class="form-control">
+      <button type="button" (click)="licenseSearch($event)" class="input-group-text">
+        <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+      <app-field-error-message [control]="licenseSearchControl"></app-field-error-message>
+    </div>
+  </div>
+  <div class="col-12 mb-4" *ngIf="summary">
+    <div class="row">
+      <div class="col-md-4 col-sm-12 mb-4">
+        <label class="form-label">{{lang.map.created_by}}</label>
+        <span class="form-control">
+          {{ summary.creatorInfo?.getName() }}
+        </span>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4">
+        <label class="form-label">{{lang.map.profile}}</label>
+        <span class="form-control">
+          {{ summary.profileInfo?.getName() }}
+        </span>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4">
+        <label class="form-label">{{lang.map.creation_date}}</label>
+        <span class="form-control">
+          {{ summary.createdOn| date }}
+        </span>
+      </div>
+
+      <div class="col-md-4 col-sm-12 mb-4">
+        <label class="form-label">{{lang.map.refunded_amount}}</label>
+        <span class="form-control">
+          {{ summary.refundedAmount }}
+        </span>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4">
+        <label class="form-label">{{lang.map.remaining_amount}}</label>
+        <span class="form-control">
+          {{ summary.remainingAmount }}
+        </span>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4">
+        <label class="form-label">{{lang.map.remaining_percentage}}</label>
+        <span class="form-control">
+          {{ summary.remainingPercentage }}
+        </span>
+      </div>
+
+      <div class="col-md-4 col-sm-12 mb-4">
+        <label class="form-label">{{lang.map.target_amount}}</label>
+        <span class="form-control">
+          {{ summary.targetAmount }}
+        </span>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4">
+        <label class="form-label">{{lang.map.total_collected}}</label>
+        <span class="form-control">
+          {{ summary.totalCollected }}
+        </span>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4">
+        <label class="form-label">{{lang.map.total_consumed}}</label>
+        <span class="form-control">
+          {{ summary.totalConsumed }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <app-table #table [paginator]="paginator" [selectable]="true" [data]="models" [columns]="displayedColumns"
+      sortableTable>
+      <table cdk-table [dataSource]="table.dataSource" class="table table-bordered caption-top">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="payments" [reload$]="reload$" [skipSearch]="true" [allowAdd]="!!summary"
+              [add$]="add$" [sort]="table.dataSource.sort" [customTemplate]="legendHeaderTemplate">
+            </table-header>
+          </th>
+        </ng-container>
+        <ng-container cdkColumnDef="permitType">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.permit_type}}</th>
+          <td cdk-cell *cdkCellDef="let row">{{row.permitTypeInfo.getName()}}</td>
+        </ng-container>
+        <ng-container cdkColumnDef="projectTotalCost">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.project_total_cost}}</th>
+          <td cdk-cell *cdkCellDef="let row">{{row.projectTotalCost}}</td>
+        </ng-container>
+        <ng-container cdkColumnDef="collectedAmount">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.collected_amount}}</th>
+          <td cdk-cell *cdkCellDef="let row">{{row.collectedAmount}}</td>
+        </ng-container>
+        <ng-container cdkColumnDef="totalCost">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
+          <td cdk-cell *cdkCellDef="let row">{{row.totalCost}}</td>
+        </ng-container>
+        <ng-container cdkColumnDef="approvalStatus">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.status}}</th>
+          <td cdk-cell *cdkCellDef="let row">{{row.approvalStatusInfo.getName()}}</td>
+        </ng-container>
+        <ng-container cdkColumnDef="actions">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+          <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+            </grid-actions>
+          </td>
+        </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+        <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
+        <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: displayedColumns;" [class]="row.approvalStatus === approvalStatus.Rejected ? 'bg-removed-row' :
+            (isRefundRow(row) ? '' : (row.approvalStatus === approvalStatus.Approved ?
+            'bg-added-row' : 'bg-updated-row'))">
+        </tr>
+        <tr *cdkNoDataRow>
+          <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+        </tr>
+      </table>
+    </app-table>
+    <app-paginator #paginator></app-paginator>
+    <context-menu-item #menu [actions]="actions"></context-menu-item>
+  </div>
+</div>
+<ng-template #legendHeaderTemplate>
+  <div class="d-flex align-items-center justify-content-end gap-1">
+    <div class="p-1 my-1 fw-normal btn btn-outline-secondary">
+      {{lang.map.lbl_refund}}
+    </div>
+    <div class="p-1 my-1 fw-normal btn btn-success">
+      {{lang.map.approve}}</div>
+    <div class="p-1 my-1 fw-normal btn btn-warning">
+      {{lang.map.pending}}
+    </div>
+    <div class="p-1 my-1 fw-normal btn btn-danger">
+      {{lang.map.lbl_reject}}
+    </div>
+  </div>
+</ng-template>
