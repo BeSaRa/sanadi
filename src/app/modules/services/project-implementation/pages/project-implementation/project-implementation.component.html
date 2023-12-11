@@ -227,7 +227,7 @@
                      [projectTotalCost]="projectTotalCost.value"
                      formControlName="selfFinancing"></fund-source>
         <br>
-        <payments [projectTotalCost]="projectTotalCost.value"
+        <payments [projectTotalCost]="projectTotalCost.value" [projectCollectedValue]="projectTotalCost.value - this.remainingAmount"
                   formControlName="payment"></payments>
       </ng-container>
     </ng-template>

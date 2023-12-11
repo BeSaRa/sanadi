@@ -2088,4 +2088,19 @@ export interface ILanguageKeys {
   candidates_has_been_accepted:string;
   candidates_has_been_rejected:string;
   export_word_file:string;
+  menu_collected_funds:string;
+  refunded_amount:string;
+  remaining_percentage:string;
+  total_collected:string;
+  total_consumed:string;
+  lbl_refund:string;
+  msg_confirm_refund_selected:string;
+  add_fund_amount:string;
+  collected_amount:string;
+  msg_fund_added_success:string;
+  msg_refunded_success:string;
+  msg_reject_success:string;
+  msg_refund_request_added:string;
+  msg_add_fund_request_success:string;
+  pending:string;
 }

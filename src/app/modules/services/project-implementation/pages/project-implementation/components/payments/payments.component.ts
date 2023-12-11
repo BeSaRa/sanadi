@@ -40,12 +40,21 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
     this._projectTotalCost = val || 0
     this.calculateRemaining()
   }
-
   get projectTotalCost(): number {
     return this._projectTotalCost
   }
+  
+  private _projectCollectedValue!: number
+  @Input()
+  set projectCollectedValue(val: number) {
+    this._projectCollectedValue = val || 0
+    this.calculateRemaining()
+  }
+  get projectCollectedValue(): number {
+    return this._projectCollectedValue
+  }
 
-  remainingAmount!: number
+  remainingAmount!: number;
 
   destroy$ = new Subject<void>()
   addPaymentDialog$ : Subject<any> = new Subject<any>();
@@ -143,7 +152,6 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
         this.onTouch()
         this.calculateRemaining()
       })
-
   }
 
   editItem(item: Payment, index: number) {
@@ -207,7 +215,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   calculateRemaining(): void {
-    this.remainingAmount = currency(this.projectTotalCost).subtract((this.value ?? []).reduce((acc, item) => {
+    this.remainingAmount = currency(this.projectCollectedValue).subtract((this.value ?? []).reduce((acc, item) => {
       return acc + item.totalCost
     }, 0)).value
     this.calculateTotal()
@@ -218,7 +226,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   calculateAllExcept(index: number): number {
-    return currency(this.projectTotalCost).subtract((this.inputs.controls as FormControl<number>[]).reduce((acc, item, currentIndex) => {
+    return currency(this.projectCollectedValue).subtract((this.inputs.controls as FormControl<number>[]).reduce((acc, item, currentIndex) => {
       return acc + (index === currentIndex ? 0 : Number(item.getRawValue()))
     }, 0)).value
   }

@@ -11,6 +11,8 @@ import { ServiceRequestTypes } from '@app/enums/service-request-types';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
 import { FinancialAnalysis } from '@app/models/financial-analysis';
+import { of } from "rxjs";
+import { filter, catchError } from "rxjs/operators";
 
 @Component({
   selector: 'select-license-popup',
@@ -112,23 +114,25 @@ export class SelectLicensePopupComponent {
         }
         this.dialogRef.close({ selected: license, details: requestDetails });
       });
-    }else if (this.caseType === CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP) {
+    } else if (this.caseType === CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP) {
       this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.vsId).subscribe((requestDetails) => {
         if (!requestDetails) {
           return;
         }
         this.dialogRef.close({ selected: license, details: requestDetails });
       });
-    }else if (this.caseType === CaseTypes.FINANCIAL_ANALYSIS) {
+    } else if (this.caseType === CaseTypes.FINANCIAL_ANALYSIS) {
       this.licenseService.loadFinancialAnalysisById((license as unknown as FinancialAnalysis).fullSerial).subscribe((requestDetails) => {
         if (!requestDetails) {
           return;
         }
         this.dialogRef.close({ selected: license, details: requestDetails });
       });
-    }
-     else {
+    } else {
       this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id)
+      .pipe(catchError((err) => {
+        return of(false)
+      }), filter(rs => !!rs))
         .subscribe((licenseDetails) => {
           if (!licenseDetails) {
             return;

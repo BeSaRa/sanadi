@@ -438,6 +438,19 @@ export const newNavigationMenuList = [
   },
   {
     id: 504,
+    langKey: 'menu_collected_funds',
+    path: SystemPathsEnum.PROJECT_FUNDRAISING + '/collected-funds',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.PROJECT_FUNDRAISING,
+    permissionGroup: null,
+    parent: 501,
+    group: GroupNames.SERVICE_PROJECT_FUNDRAISING,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 505,
     langKey: serviceOutputLabel,
     path: SystemPathsEnum.PROJECT_FUNDRAISING + '/outputs',
     icon: serviceOutputIcon,
@@ -446,7 +459,7 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 501,
     group: GroupNames.SERVICE_PROJECT_FUNDRAISING,
-    itemOrder: 3,
+    itemOrder: 4,
     svg: null
   },
   {

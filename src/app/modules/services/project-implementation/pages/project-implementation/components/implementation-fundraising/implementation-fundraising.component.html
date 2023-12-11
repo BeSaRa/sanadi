@@ -41,6 +41,11 @@
         <td cdk-cell
             *cdkCellDef="let row"> {{row.consumedAmount | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
       </ng-container>
+      <ng-container cdkColumnDef="collected">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.collected_amount}}</th>
+        <td cdk-cell
+            *cdkCellDef="let row"> {{row.collected | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+      </ng-container>
       <ng-container cdkColumnDef="remainingAmount">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.remaining_amount}}</th>
         <td cdk-cell
