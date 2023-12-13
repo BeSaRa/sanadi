@@ -146,6 +146,10 @@ import { UserSecurityComponent } from './shared/user-security/user-security.comp
 import { UserSubTeamComponent } from './shared/user-sub-team/user-sub-team.component';
 import { UserTeamComponent } from './shared/user-team/user-team.component';
 import { SectorPopupComponent } from './popups/sector-popup/sector-popup.component';
+import { CharityProfileComponent } from './pages/charity-profile/charity-profile.component';
+import { NpoProfileComponent } from './pages/npo-profile/npo-profile.component';
+import { NpoProfilePopupComponent } from './popups/npo-profile-popup/npo-profile-popup.component';
+import { CharityProfilePopupComponent } from './popups/charity-profile-popup/charity-profile-popup.component';
 
 @NgModule({
   declarations: [
@@ -251,7 +255,11 @@ import { SectorPopupComponent } from './popups/sector-popup/sector-popup.compone
     NpoEmployeeComponent,
     NpoEmployeePopupComponent,
     SectorComponent,
-    SectorPopupComponent
+    SectorPopupComponent,
+    NpoProfileComponent,
+    CharityProfileComponent,
+    NpoProfilePopupComponent,
+    CharityProfilePopupComponent
   ],
   imports: [
     SharedModule,

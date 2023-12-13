@@ -12,6 +12,7 @@ export class RealBeneficiaryInterceptor implements IModelInterceptor<RealBenefic
     model.idDate = DateUtils.getDateStringFromDate(model.idDate);
     model.idExpiryDate = DateUtils.getDateStringFromDate(model.idExpiryDate);
     model.passportDate = DateUtils.getDateStringFromDate(model.passportDate);
+    model.passportExpiryDate = DateUtils.getDateStringFromDate(model.passportExpiryDate);
     model.lastUpdateDate = DateUtils.getDateStringFromDate(model.lastUpdateDate);
     model.birthDateStamp = !model.birthDate ? null : DateUtils.getTimeStampFromDate(model.birthDate);
     model.idDateStamp = !model.idDate ? null : DateUtils.getTimeStampFromDate(model.idDate);

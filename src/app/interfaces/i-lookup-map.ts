@@ -176,4 +176,5 @@ export interface ILookupMap {
   HalfType: Lookup[];
   QuarterType: Lookup[];
   MeetingInitiator: Lookup[];
+  ProfileStatus: Lookup[];
 }

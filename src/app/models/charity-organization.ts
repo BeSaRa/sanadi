@@ -8,6 +8,7 @@ import { CharityBranch } from './charity-branch';
 import { CharityOrganizationUpdate } from './charity-organization-update';
 import { OrganizationOfficer } from './organization-officer';
 import { Profile } from './profile';
+import { AdminResult } from './admin-result';
 
 const interceptor = new CharityOrganizationInterceptor();
 
@@ -57,6 +58,8 @@ export class CharityOrganization extends BaseModel<
   branchList: CharityBranch[] = [];
   contactOfficerList: OrganizationOfficer[] = [];
   complianceOfficerList: OrganizationOfficer[] = [];
+  statusInfo!:AdminResult
+  activityTypeInfo!:AdminResult
 
   getName(): string {
     return this.langService.map.lang === 'en' ? this.enName : this.arName;
