@@ -12,12 +12,17 @@ import { FounderMembers } from './founder-members';
 import { NpoBankAccount } from './npo-bank-account';
 import { NpoContactOfficer } from './npo-contact-officer';
 import { RealBeneficiary } from './real-beneficiary';
+import { ISearchFieldsMap } from '@app/types/types';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Validators } from '@angular/forms';
 
 const interceptor: NpoDataInterceptor = new NpoDataInterceptor()
 
 @InterceptModel({
   receive: interceptor.receive,
-  send: interceptor.send
+  send: interceptor.send,
 })
 export class NpoData extends BaseModel<NpoData, NpoDataService> {
   service: NpoDataService;
@@ -49,6 +54,7 @@ export class NpoData extends BaseModel<NpoData, NpoDataService> {
   snapChat!: string;
   youTube!: string;
   profileId!: number;
+  status!:number;
   contactOfficerList: NpoContactOfficer[] = [];
   founderList: FounderMembers[] = [];
   bankAccountList: NpoBankAccount[] = [];
@@ -59,6 +65,10 @@ export class NpoData extends BaseModel<NpoData, NpoDataService> {
   clearanceInfo!: AdminResult;
   disbandmentInfo!: AdminResult;
   registrationAuthorityInfo!: AdminResult;
+  statusInfo!: AdminResult;
+  establishmentDateString!: string;
+  registrationDateString!: string;
+
 
   constructor() {
     super();
@@ -67,5 +77,32 @@ export class NpoData extends BaseModel<NpoData, NpoDataService> {
   }
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+  searchFields: ISearchFieldsMap<NpoData> = {
+    ...normalSearchFields(['arName', 'enName']),
+    ...infoSearchFields(['statusInfo'])
+  };
+  buildForm(controls?:boolean){
+    const {
+      arName,
+      enName,
+      registrationAuthority,
+      unifiedEconomicRecord,
+      activityType,
+      registrationNumber
+
+    } = this;
+    return {
+      arName: controls ? [arName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')]] : arName,
+      enName: controls ? [enName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : enName,
+      unifiedEconomicRecord: controls ? [unifiedEconomicRecord, [Validators.required, Validators.maxLength(150)]] : unifiedEconomicRecord,
+      activityType: controls ? [activityType, [Validators.required]] : activityType,
+      registrationNumber: controls ? [registrationNumber, []] : registrationNumber,
+      registrationAuthority: controls ? [registrationAuthority, []] : registrationAuthority,
+    };
   }
 }

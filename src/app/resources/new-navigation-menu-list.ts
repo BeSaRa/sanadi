@@ -2986,6 +2986,32 @@ export const newNavigationMenuList = [
     svg: null
   },
   {
+    id: 94,
+    langKey: 'menu_npo_profile',
+    path: '/home/administration/npo-profile',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_NPO_PROFILE_DATA,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 26,
+    svg: null
+  },
+  {
+    id: 95,
+    langKey: 'menu_charity_profile',
+    path: '/home/administration/charity-profile',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_CHARITY_PROFILE_DATA,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 27,
+    svg: null
+  },
+  {
     id: 24,
     langKey: 'menu_restricted',
     path: '/home/restricted',

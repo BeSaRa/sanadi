@@ -2103,4 +2103,6 @@ export interface ILanguageKeys {
   msg_refund_request_added:string;
   msg_add_fund_request_success:string;
   pending:string;
+  menu_npo_profile:string;
+  menu_charity_profile:string;
 }
