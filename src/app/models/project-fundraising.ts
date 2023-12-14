@@ -56,6 +56,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   exportedLicenseSerial!: number
   licenseVSID!: string;
   vsId!: string;
+  collected!: number;
   customTerms!: string
   publicTerms!: string
   licenseStatusInfo!: AdminResult
@@ -427,6 +428,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   }
 
   convertToFundraisingTemplate(): ImplementationFundraising {
+    console.log(this)
     return new ImplementationFundraising().clone({
       arabicName: this.arName,
       englishName: this.enName,
