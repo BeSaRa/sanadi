@@ -7,7 +7,6 @@ import { UrlService } from './url.service';
 import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
 import { Pagination } from '@app/models/pagination';
 import { FundSummary } from '@app/models/fund-summary';
-import { approvalStatusEnum } from '@app/enums/approvalStatus.enum';
 
 @CastResponseContainer({
   $default: {
@@ -73,33 +72,22 @@ export class CollectedFundsService {
   }
 
   approveFund(unit: FundUnit) {
-    return this.http.put<FundUnit>(this._getServiceURL() + 'collected/approve', {
-      fundraisingVsId: unit.fundraisingVsId,
-      permitType: unit.permitType,
-      projectTotalCost: unit.projectTotalCost,
-      collectedAmount: unit.collectedAmount,
-      approvalStatus: approvalStatusEnum.Approved,
-      totalCost: unit.totalCost,
+    return this.http.put<FundUnit>(this._getServiceURL() + 'collected/approve/', {}, {
+      params: new HttpParams({fromObject: {
+        id: unit.id
+      }})
     })
   }
   rejectFund(unit: FundUnit) {
-    return this.http.put<FundUnit>(this._getServiceURL() + 'collected/reject', {
-      fundraisingVsId: unit.fundraisingVsId,
-      permitType: unit.permitType,
-      projectTotalCost: unit.projectTotalCost,
-      collectedAmount: unit.collectedAmount,
-      approvalStatus: approvalStatusEnum.Rejected,
-      totalCost: unit.totalCost,
+    return this.http.put<FundUnit>(this._getServiceURL() + 'collected/reject', {}, {
+      params: new HttpParams({fromObject: {
+        id: unit.id
+      }})
     })
   }
   reFundItem(unit: FundUnit) {
     return this.http.post<FundUnit[]>(this._getServiceURL() + 'collected/refund', {
-      fundraisingVsId: unit.fundraisingVsId,
-      permitType: unit.permitType,
-      projectTotalCost: unit.projectTotalCost,
-      collectedAmount: unit.collectedAmount,
-      approvalStatus: unit.approvalStatus,
-      totalCost: unit.totalCost,
+      id: unit.id
     })
   }
 }
