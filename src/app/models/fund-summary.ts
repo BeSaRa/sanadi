@@ -23,6 +23,7 @@ export class FundSummary {
     targetAmount!: number;
     totalCollected!: number;
     totalConsumed!: number;
+    permitType!: number;
 
     creatorInfo!: AdminResult;
     profileInfo!: AdminResult;

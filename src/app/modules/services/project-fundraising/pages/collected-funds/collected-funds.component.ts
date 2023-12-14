@@ -46,7 +46,7 @@ export class CollectedFundsComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private projectFundraisingService: ProjectFundraisingService,
     private licenseService: LicenseService,
-    private employeeService: EmployeeService,
+    public employeeService: EmployeeService,
     private toast: ToastService) {
   }
   ngOnInit(): void {
@@ -181,6 +181,7 @@ export class CollectedFundsComponent implements OnInit, OnDestroy {
         return this.dialogService.show(AddFundUnitPopupComponent, {
           vsId: this.summary.fundraisingVsId,
           projectTotalCost: this.summary.targetAmount,
+          permitType: this.summary.permitType,
         }).onAfterClose$
       }))
       .subscribe(() => {
