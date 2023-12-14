@@ -2105,4 +2105,5 @@ export interface ILanguageKeys {
   pending:string;
   menu_npo_profile:string;
   menu_charity_profile:string;
+  license_end_date_percentage:string;
 }

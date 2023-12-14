@@ -30,7 +30,18 @@
           {{ summary.createdOn| date }}
         </span>
       </div>
-
+      <div class="col-md-4 col-sm-12 mb-4">
+        <label class="form-label">{{lang.map.license_end_date}}</label>
+        <span class="form-control">
+          {{ summary.licenseEndDate| date }}
+        </span>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4">
+        <label class="form-label">{{lang.map.license_end_date_percentage}}</label>
+        <span class="form-control">
+          {{ summary.licenseEndPercentage }}
+        </span>
+      </div>
       <div class="col-md-4 col-sm-12 mb-4">
         <label class="form-label">{{lang.map.refunded_amount}}</label>
         <span class="form-control">
