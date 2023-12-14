@@ -87,7 +87,7 @@
       <table cdk-table [dataSource]="table.dataSource" class="table table-bordered caption-top">
         <ng-container cdkColumnDef="extra-header">
           <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-            <table-header tableTitle="payments" [reload$]="reload$" [skipSearch]="true" [allowAdd]="!!summary"
+            <table-header tableTitle="payments" [reload$]="reload$" [skipSearch]="true" [allowAdd]="!!summary && !employeeService.isInternalUser()"
               [add$]="add$" [sort]="table.dataSource.sort" [customTemplate]="legendHeaderTemplate">
             </table-header>
           </th>

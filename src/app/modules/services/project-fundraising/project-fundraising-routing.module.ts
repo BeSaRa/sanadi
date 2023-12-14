@@ -31,7 +31,7 @@ const routes: Routes = [
     canActivate: [NewServicePermissionGuard.canActivate],
     resolve: {info: ServiceItemResolver.resolve, countries: CountryResolver.resolve},
     data: {
-      permissionKey: EServicePermissionsEnum.PROJECT_FUNDRAISING,
+      permissionKey: EServicePermissionsEnum.COLLECTED_FUNDS,
       permissionGroup: null,
       checkAnyPermission: false,
     }

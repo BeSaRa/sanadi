@@ -477,6 +477,9 @@ export class EmployeeService {
       if (!canSearch) {
         canSearch = this.userCanManage(key);
       }
+      if (key === CaseTypes.PROJECT_FUNDRAISING) {
+        this.userCanView(key) && this._addToPermissionMap(EServicePermissionsEnum.COLLECTED_FUNDS);
+      }
     });
     canSearch && this.permissionMap.set(EServicePermissionsEnum.E_SERVICES_SEARCH.toLowerCase(), new Permission().clone({
       permissionKey: EServicePermissionsEnum.E_SERVICES_SEARCH
