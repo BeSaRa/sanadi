@@ -1836,11 +1836,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             });
           })
       } else if (item.getCaseType() === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
-        if (!this.employeeService.isLicensingUser() || !this.employeeService.isSupervisionAndControlUser()) {
-          item.approve().onAfterClose$.subscribe(actionTaken => {
-            actionTaken && this.navigateToSamePageThatUserCameFrom();
-          });
-        } else {
+        if (this.employeeService.isLicensingUser() ) {
           const model = item as unknown as OrganizationsEntitiesSupport;
           const component = this.component as unknown as OrganizationsEntitiesSupportComponent;
           component.validateApproveTimplate()
@@ -1852,6 +1848,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
                 actionTaken && this.navigateToSamePageThatUserCameFrom();
               });
             })
+
+        } else {
+          item.approve().onAfterClose$.subscribe(actionTaken => {
+            actionTaken && this.navigateToSamePageThatUserCameFrom();
+          });
         }
 
       }
