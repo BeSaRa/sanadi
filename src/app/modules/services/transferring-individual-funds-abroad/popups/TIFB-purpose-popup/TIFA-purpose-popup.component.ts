@@ -148,9 +148,9 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
   }
 
   private loadOchas() {
-    this.dacOchaService.loadByType(AdminLookupTypeEnum.OCHA)
+    this.dacOchaService.loadMainDacOcha()
     .pipe(
-      map(list => list.filter(x=>x.isActive() || x.id === this.model.mainUNOCHACategory) )
+      map(list => list.filter(x=>x.isActive() && x.type === DomainTypes.HUMANITARIAN) )
     )
     .subscribe(list => {
 
@@ -173,9 +173,9 @@ export class TIFAPurposePopupComponent extends UiCrudDialogGenericComponent<Tran
   }
 
   private loadDacs() {
-    this.dacOchaService.loadByType(AdminLookupTypeEnum.DAC)
+    this.dacOchaService.loadMainDacOcha()
     .pipe(
-      map(list => list.filter(x=>x.isActive() || x.id === this.model.mainDACCategory) )
+      map(list => list.filter(x=>x.isActive() && x.type === DomainTypes.DEVELOPMENT) )
     )
     .subscribe(list => {
       this.mainDacs = list;
