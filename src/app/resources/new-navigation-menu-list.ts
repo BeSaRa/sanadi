@@ -442,7 +442,7 @@ export const newNavigationMenuList = [
     path: SystemPathsEnum.PROJECT_FUNDRAISING + '/collected-funds',
     icon: serviceAddUpdateIcon,
     isSvg: false,
-    permission: EServicePermissionsEnum.PROJECT_FUNDRAISING,
+    permission: EServicePermissionsEnum.COLLECTED_FUNDS,
     permissionGroup: null,
     parent: 501,
     group: GroupNames.SERVICE_PROJECT_FUNDRAISING,
