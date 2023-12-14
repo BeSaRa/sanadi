@@ -7,8 +7,6 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { filter, takeUntil, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { CollectedFundsService } from '@app/services/collected-funds.service';
-import { Lookup } from '@app/models/lookup';
-import { LookupService } from '@app/services/lookup.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { ToastService } from '@app/services/toast.service';
 
@@ -20,18 +18,17 @@ import { ToastService } from '@app/services/toast.service';
 export class AddFundUnitPopupComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject();
   save$: Subject<void> = new Subject();
-  permitTypes: Lookup[] = this.lookupService.listByCategory.ProjectPermitType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   form!: FormGroup;
   constructor(
     private dialogRef: DialogRef,
     private fb: FormBuilder,
-    private lookupService: LookupService,
     private employeeService: EmployeeService,
     private toast: ToastService,
     private service: CollectedFundsService,
     @Inject(DIALOG_DATA_TOKEN) public data: {
       vsId: string,
-      projectTotalCost: number
+      projectTotalCost: number,
+      permitType: number
     },
     public lang: LangService,
   ) { }
@@ -43,7 +40,6 @@ export class AddFundUnitPopupComponent implements OnInit, OnDestroy {
   buildForm() {
     this.form = this.fb.group({
       collectedAmount: [0, [CustomValidators.required, Validators.min(1)]],
-      permitType: [null, [CustomValidators.required]]
     })
   }
   private _listenToSave() {
@@ -53,9 +49,9 @@ export class AddFundUnitPopupComponent implements OnInit, OnDestroy {
       .pipe(switchMap(_ => {
         return this.service.createFundsUnit({
           collectedAmount: +this.form.value.collectedAmount,
-          permitType: +this.form.value.permitType,
           approvalStatus: 0,
           fundraisingVsId: this.data.vsId,
+          permitType: this.data.permitType,
           projectTotalCost: this.data.projectTotalCost,
           totalCost: 0
         })

@@ -5,15 +5,6 @@
 <div class="dialog-content no-fixed-height min-w400px">
   <form novalidate autocomplete="off" [formGroup]="form">
     <div class="col-sm-12 mb-4 position-relative">
-      <label class="form-label" asteriskIfRequired="permitType"
-             for="permitType">{{lang.map.permit_type}}</label>
-      <ng-select validationClasses="permitType" appendTo="body" [clearable]="true" id="permitType"
-                 formControlName="permitType">
-        <ng-option [value]="option.lookupKey" *ngFor="let option of permitTypes">{{option.getName()}}</ng-option>
-      </ng-select>
-      <app-field-error-message controlName="permitType"></app-field-error-message>
-    </div>
-    <div class="col-sm-12 mb-4 position-relative">
       <label asteriskIfRequired="collectedAmount" for="collectedAmount"
         class="form-label">{{ lang.map.collected_amount }}</label>
       <input id="collectedAmount" validationClasses="collectedAmount" formControlName="collectedAmount" class="form-control" type="number" trimInput>
