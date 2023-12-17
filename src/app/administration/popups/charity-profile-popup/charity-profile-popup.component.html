@@ -155,6 +155,51 @@
           [innerHTML]="model && model.buildingNumber || '&nbsp;'"></span>
       </div>
     </div>
+    <div class="row">
+      <heading-row labelKey="social_media"></heading-row>
+      <!-- facebook -->
+      <div class="col-sm-6 mb-4 position-relative">
+        <label  for="facebook" class="form-label">{{
+          lang.map.lbl_facebook
+          }}</label>
+        <span id="facebook" class="form-control input-disabled"
+          [innerHTML]="model && model.facebook || '&nbsp;'"></span>
+
+      </div>
+      <!-- twitter -->
+      <div class="col-sm-6 mb-4 position-relative">
+        <label  for="twitter" class="form-label">{{
+          lang.map.lbl_twitter
+          }}</label>
+       <span id="twitter" class="form-control input-disabled"
+       [innerHTML]="model && model.twitter || '&nbsp;'"></span>
+      </div>
+      <!-- instagram -->
+      <div class="col-sm-6 mb-4 position-relative">
+        <label  for="instagram" class="form-label">{{
+          lang.map.lbl_instagram
+          }}</label>
+      <span id="instagram" class="form-control input-disabled"
+      [innerHTML]="model && model.instagram || '&nbsp;'"></span>
+      </div>
+      <!-- snapChat -->
+      <div class="col-sm-6 mb-4 position-relative">
+        <label  for="snapChat" class="form-label">{{
+          lang.map.lbl_snapchat
+          }}</label>
+        <span id="snapChat" class="form-control input-disabled"
+        [innerHTML]="model && model.snapChat || '&nbsp;'"></span>
+      </div>
+      <!-- youTube -->
+      <div class="col-sm-6 mb-4 position-relative">
+        <label  for="youTube" class="form-label">{{
+          lang.map.lbl_youtube
+          }}</label>
+        <span id="youTube" class="form-control input-disabled"
+        [innerHTML]="model && model.youTube || '&nbsp;'"></span>
+      </div>
+
+    </div>
   </ng-template>
   <ng-template #branchesTemplate>
     <div class="row">
@@ -269,12 +314,12 @@
               </th>
               <td cdk-cell *cdkCellDef="let row">{{ row.fullName }}</td>
             </ng-container>
-            <ng-container cdkColumnDef="identificationNumber">
+            <ng-container cdkColumnDef="qid">
               <th cdk-header-cell sortable-header *cdkHeaderCellDef>
                 {{ lang.map.identification_number }}
               </th>
               <td cdk-cell *cdkCellDef="let row">
-                {{ row.identificationNumber }}
+                {{ row.qid }}
               </td>
             </ng-container>
             <ng-container cdkColumnDef="email">

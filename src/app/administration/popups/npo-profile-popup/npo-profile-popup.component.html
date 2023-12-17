@@ -23,6 +23,9 @@
     <tab [hideIcon]="true" [name]="tabsData.beneficiaries.name" [hasError]="false" [template]="beneficiariesTemplate"
       [title]="lang.map.lbl_real_beneficiary">
     </tab>
+    <tab [hideIcon]="true" [name]="tabsData.contactOfficers.name" [hasError]="false" [template]="contactOfficersTemplate"
+      [title]="lang.map.contact_officers">
+    </tab>
   </tabs-list>
   <ng-template #basicInfoTab>
     <div class="row">
@@ -148,17 +151,60 @@
           [innerHTML]="model && model.buildingNumber || '&nbsp;'"></span>
       </div>
     </div>
+    <div class="row">
+      <heading-row labelKey="social_media"></heading-row>
+      <!-- facebook -->
+      <div class="col-sm-6 mb-4 position-relative">
+        <label  for="facebook" class="form-label">{{
+          lang.map.lbl_facebook
+          }}</label>
+        <span id="facebook" class="form-control input-disabled"
+          [innerHTML]="model && model.facebook || '&nbsp;'"></span>
+
+      </div>
+      <!-- twitter -->
+      <div class="col-sm-6 mb-4 position-relative">
+        <label  for="twitter" class="form-label">{{
+          lang.map.lbl_twitter
+          }}</label>
+       <span id="twitter" class="form-control input-disabled"
+       [innerHTML]="model && model.twitter || '&nbsp;'"></span>
+      </div>
+      <!-- instagram -->
+      <div class="col-sm-6 mb-4 position-relative">
+        <label  for="instagram" class="form-label">{{
+          lang.map.lbl_instagram
+          }}</label>
+      <span id="instagram" class="form-control input-disabled"
+      [innerHTML]="model && model.instagram || '&nbsp;'"></span>
+      </div>
+      <!-- snapChat -->
+      <div class="col-sm-6 mb-4 position-relative">
+        <label  for="snapChat" class="form-label">{{
+          lang.map.lbl_snapchat
+          }}</label>
+        <span id="snapChat" class="form-control input-disabled"
+        [innerHTML]="model && model.snapChat || '&nbsp;'"></span>
+      </div>
+      <!-- youTube -->
+      <div class="col-sm-6 mb-4 position-relative">
+        <label  for="youTube" class="form-label">{{
+          lang.map.lbl_youtube
+          }}</label>
+        <span id="youTube" class="form-control input-disabled"
+        [innerHTML]="model && model.youTube || '&nbsp;'"></span>
+      </div>
+
+    </div>
   </ng-template>
   <ng-template #bankAccountsTemplate>
     <div class="row">
       <div class="col-12">
-        <app-table #table sortableTable [data]="model.bankAccountList" [columns]="bankAccountsDisplayColumns"
-                   >
+        <app-table #table sortableTable [data]="model.bankAccountList" [columns]="bankAccountsDisplayColumns">
           <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
 
             <ng-container cdkColumnDef="bankName">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header
-                 > {{lang.map.bank_name}}</th>
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.bank_name}}</th>
               <td cdk-cell *cdkCellDef="let row"> {{row.bankInfo.getName()}} </td>
             </ng-container>
             <ng-container cdkColumnDef="accountNumber">
@@ -171,7 +217,7 @@
             </ng-container>
 
             <tr cdk-header-row *cdkHeaderRowDef="bankAccountsDisplayColumns" class="table-row-header"></tr>
-            <tr cdk-row *cdkRowDef="let row; columns: bankAccountsDisplayColumns;" ></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: bankAccountsDisplayColumns;"></tr>
             <tr *cdkNoDataRow>
               <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
             </tr>
@@ -183,8 +229,7 @@
   <ng-template #foundersTemplate>
     <div class="row">
       <div class="col-12">
-        <app-table #table sortableTable [data]="model.founderList" [columns]="foundersDisplayColumns"
-                   >
+        <app-table #table sortableTable [data]="model.founderList" [columns]="foundersDisplayColumns">
           <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
 
             <ng-container cdkColumnDef="fullName">
@@ -209,7 +254,7 @@
             </ng-container>
 
             <tr cdk-header-row *cdkHeaderRowDef="foundersDisplayColumns" class="table-row-header"></tr>
-            <tr cdk-row *cdkRowDef="let row; columns: foundersDisplayColumns;" ></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: foundersDisplayColumns;"></tr>
             <tr *cdkNoDataRow>
               <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
             </tr>
@@ -221,8 +266,7 @@
   <ng-template #beneficiariesTemplate>
     <div class="row">
       <div class="col-12">
-        <app-table #table sortableTable [data]="model.beneficiaryList" [columns]="realBeneficiaryDisplayColumns"
-                   >
+        <app-table #table sortableTable [data]="model.beneficiaryList" [columns]="realBeneficiaryDisplayColumns">
           <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
 
             <ng-container cdkColumnDef="arName">
@@ -268,7 +312,56 @@
               <td cdk-cell *cdkCellDef="let row">{{ row.passportExpiryDate }}</td>
             </ng-container>
             <tr cdk-header-row *cdkHeaderRowDef="realBeneficiaryDisplayColumns" class="table-row-header"></tr>
-            <tr cdk-row *cdkRowDef="let row; columns: realBeneficiaryDisplayColumns;" ></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: realBeneficiaryDisplayColumns;"></tr>
+            <tr *cdkNoDataRow>
+              <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+            </tr>
+          </table>
+        </app-table>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #contactOfficersTemplate>
+    <div class="row">
+      <div class="col-12">
+        <app-table #table sortableTable [data]="model.contactOfficerList" [columns]="contactOfficersDisplayColumns"
+                   >
+          <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+
+            <ng-container cdkColumnDef="fullName">
+              <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+                {{ lang.map.full_name }}
+              </th>
+              <td cdk-cell *cdkCellDef="let row">{{ row.fullName }}</td>
+            </ng-container>
+            <ng-container cdkColumnDef="qid">
+              <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+                {{ lang.map.identification_number }}
+              </th>
+              <td cdk-cell *cdkCellDef="let row">
+                {{ row.qid }}
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="email">
+              <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+                {{ lang.map.lbl_email }}
+              </th>
+              <td cdk-cell *cdkCellDef="let row">{{ row.email }}</td>
+            </ng-container>
+            <ng-container cdkColumnDef="phoneNumber">
+              <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+                {{ lang.map.lbl_phone }}
+              </th>
+              <td cdk-cell *cdkCellDef="let row">{{ row.phone }}</td>
+            </ng-container>
+            <ng-container cdkColumnDef="extraPhoneNumber">
+              <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+                {{ lang.map.lbl_extra_phone_number }}
+              </th>
+              <td cdk-cell *cdkCellDef="let row">{{ row.extraPhone }}</td>
+            </ng-container>
+            <tr cdk-header-row *cdkHeaderRowDef="contactOfficersDisplayColumns" class="table-row-header"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: contactOfficersDisplayColumns;" ></tr>
             <tr *cdkNoDataRow>
               <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
             </tr>

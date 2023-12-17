@@ -16,7 +16,7 @@ export class CharityProfilePopupComponent {
   model!: CharityOrganization;
   branchesDisplayColumns: string[] = ['fullName', 'address', 'streetNumber', 'zoneNumber', 'buildingNumber'];
   complianceOfficersDisplayColumns: string[] = ['fullName', 'identificationNumber', 'email', 'phoneNumber', 'extraPhoneNumber'];
-  contactOfficersDisplayColumns: string[] = ['fullName', 'identificationNumber', 'email', 'phoneNumber', 'extraPhoneNumber'];
+  contactOfficersDisplayColumns: string[] = ['fullName', 'qid', 'email', 'phoneNumber', 'extraPhoneNumber'];
 
   constructor(public dialogRef: DialogRef,
     public lang: LangService,
