@@ -17,6 +17,7 @@ import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { Validators } from '@angular/forms';
+import { EmployeeService } from '@app/services/employee.service';
 
 const interceptor: NpoDataInterceptor = new NpoDataInterceptor()
 
@@ -27,6 +28,7 @@ const interceptor: NpoDataInterceptor = new NpoDataInterceptor()
 export class NpoData extends BaseModel<NpoData, NpoDataService> {
   service: NpoDataService;
   langService: LangService;
+  employeeService! :EmployeeService ;
   id!: number;
   unifiedEconomicRecord!: string;
   activityType!: number;
@@ -74,6 +76,7 @@ export class NpoData extends BaseModel<NpoData, NpoDataService> {
     super();
     this.service = FactoryService.getService('NpoDataService');
     this.langService = FactoryService.getService('LangService');
+    this.employeeService = FactoryService.getService('EmployeeService');
   }
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
@@ -105,4 +108,7 @@ export class NpoData extends BaseModel<NpoData, NpoDataService> {
       registrationAuthority: controls ? [registrationAuthority, []] : registrationAuthority,
     };
   }
+  get canView():boolean{
+    return this.employeeService.isInternalUser() || this.employeeService.getProfile()?.id === this.profileId
+    }
 }

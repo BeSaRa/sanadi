@@ -1,20 +1,17 @@
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { ProfileTypes } from '@app/enums/profile-types.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { SortEvent } from '@app/interfaces/sort-event';
-import { NpoData } from '@app/models/npo-data';
-import { Profile } from '@app/models/profile';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { NpoDataService } from '@app/services/npo-data.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { CharityOrganizationProfileExtraDataService } from '@services/charity-organization-profile-extra-data.service';
+import { NpoData } from '@models/npo-data';
 import { of, Subject } from 'rxjs';
 import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
 
@@ -31,7 +28,8 @@ export class NpoProfileComponent extends AdminGenericComponent<NpoData, NpoDataS
       type: 'action',
       label: 'view',
       icon: ActionIconsEnum.VIEW,
-      onClick: (item: NpoData) => this.view$.next(item)
+      onClick: (item: NpoData) => this.view$.next(item),
+      show:(item:NpoData) => item.canView
     },
 
   ];
