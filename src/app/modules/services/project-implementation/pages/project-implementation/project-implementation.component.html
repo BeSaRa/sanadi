@@ -5,7 +5,7 @@
     </tab>
     <tab name="project_info" [hasError]="projectInfo.invalid" [template]="project_info"
          [title]="lang.map.project_info"></tab>
-    <tab name="fundingResources" [hasError]="fundingResources.invalid" [template]="funding_sources"
+    <tab name="fundingResources" [hasError]="fundingResources.invalid || totalPayments !== totalFundingResource" [template]="funding_sources"
          [title]="lang.map.funding_resources"></tab>
     <tab name="special_explanations" [hasError]="specialExplanations.invalid" [template]="special_explanations"
          [title]="lang.map.special_explanations"></tab>
@@ -227,7 +227,7 @@
                      [projectTotalCost]="projectTotalCost.value"
                      formControlName="selfFinancing"></fund-source>
         <br>
-        <payments [projectTotalCost]="projectTotalCost.value" [projectCollectedValue]="projectTotalCost.value - this.remainingAmount"
+        <payments [projectTotalCost]="projectTotalCost.value" [projectCollectedValue]="totalFundingResource"
                   formControlName="payment"></payments>
       </ng-container>
     </ng-template>
