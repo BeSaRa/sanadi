@@ -18,6 +18,7 @@ export class NpoProfilePopupComponent {
   bankAccountsDisplayColumns: string[] = ['bankName', 'accountNumber', 'iBAN']
   realBeneficiaryDisplayColumns: string[] = ['arName', 'enName', 'birthDate', 'birthLocation','passportNumber','passportDate','passportExpiryDate'];
   foundersDisplayColumns: string[] = [ 'fullName','jobTitle','nationality', 'email', 'phone'];
+  contactOfficersDisplayColumns: string[] = ['fullName', 'qid', 'email', 'phoneNumber', 'extraPhoneNumber'];
 
   constructor(public dialogRef: DialogRef,
     public lang: LangService,
@@ -61,6 +62,14 @@ export class NpoProfilePopupComponent {
       name: 'founders',
       langKey: 'lbl_founder_members',
       index: 2,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+
+    },
+    contactOfficers: {
+      name: 'contactOfficers',
+      langKey: 'contact_officers',
+      index: 3,
       validStatus: () => true,
       isTouchedOrDirty: () => true,
 
