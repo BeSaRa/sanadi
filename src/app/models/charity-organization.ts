@@ -9,6 +9,7 @@ import { CharityOrganizationUpdate } from './charity-organization-update';
 import { OrganizationOfficer } from './organization-officer';
 import { Profile } from './profile';
 import { AdminResult } from './admin-result';
+import { EmployeeService } from '@app/services/employee.service';
 
 const interceptor = new CharityOrganizationInterceptor();
 
@@ -24,6 +25,7 @@ export class CharityOrganization extends BaseModel<
     'CharityOrganizationService'
   );
   langService: LangService = FactoryService.getService('LangService');
+  employeeService :EmployeeService = FactoryService.getService('EmployeeService');
   id!: number;
   profileId!: number;
   profileInfo!: Profile;
@@ -128,5 +130,8 @@ export class CharityOrganization extends BaseModel<
       registrationDate
     });
     return model;
+  }
+ get canView():boolean{
+  return this.employeeService.isInternalUser() || this.employeeService.getProfile()?.id === this.profileId
   }
 }

@@ -28,7 +28,8 @@ export class CharityProfileComponent extends AdminGenericComponent<CharityOrgani
       type: 'action',
       label: 'view',
       icon: ActionIconsEnum.VIEW,
-      onClick: (item: CharityOrganization) => this.view$.next(item)
+      onClick: (item: CharityOrganization) => this.view$.next(item),
+      show:(item:CharityOrganization) => item.canView
     },
 
   ];
