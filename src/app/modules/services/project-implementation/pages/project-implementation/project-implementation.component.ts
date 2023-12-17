@@ -19,6 +19,7 @@ import { SaveTypes } from '@app/enums/save-types';
 import { ServiceRequestTypes } from "@app/enums/service-request-types";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { EServicesGenericComponent } from "@app/generics/e-services-generic-component";
+import { Payment } from '@app/models/payment';
 import { ProjectImplementation } from "@app/models/project-implementation";
 import { ServiceData } from '@app/models/service-data';
 import { EmployeeService } from '@app/services/employee.service';
@@ -299,6 +300,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.listenToFundingResources()
 
     this.listenToLicenseDatesChanges()
+
     this.handleRequestTypeChange(this.requestType.value)
   }
 
@@ -716,6 +718,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   private calculateRemaining(): void {
     const projectTotalCost = this.projectTotalCost.getRawValue() as number
+    
+    this.remainingAmount = currency(projectTotalCost).subtract(this.totalFundingResource).value
+  }
+  get totalFundingResource() {
     const grant = this.financialGrant.getRawValue() ?? [] as FundingResourceContract[];
     const self = this.selfFinancing.getRawValue() ?? [] as FundingResourceContract[];
     const fundRaising = this.implementationFundraising.getRawValue() ?? [] as FundingResourceContract[];
@@ -723,12 +729,16 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     const totalFundingResource = allFields.reduce((acc, fields) => {
       return acc + this.getTotalCost(fields)
     }, 0)
-
-    this.remainingAmount = currency(projectTotalCost).subtract(totalFundingResource).value
+    return currency(totalFundingResource).value
   }
-
-  private getTotalCost(list: (FundingResourceContract)[]): number {
+  
+  getTotalCost(list: (FundingResourceContract)[]): number {
     return list.reduce((acc, item) => {
+      return acc + item.totalCost
+    }, 0)
+  }
+  get totalPayments(): number {
+    return this.payment.value.reduce((acc: number, item: Payment) => {
       return acc + item.totalCost
     }, 0)
   }
@@ -790,6 +800,22 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       }
     }
     this.handleCustomFormReadonly()
+  }
+
+  private validateFundingResources(fields: string[]): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      // return null
+      const group = control as FormGroup
+      const totalFundResources = fields.reduce((acc, key) => {
+        return acc + (group.get(key)?.getRawValue() ?? []).reduce((acc: number, item: FundingResourceContract) => acc + item.totalCost, 0)
+      }, 0)
+      return this.projectTotalCost && (this.projectTotalCost.value > totalFundResources) || ((this.projectTotalCost.value < totalFundResources)) ? {
+        fundingResources: {
+          actually: totalFundResources,
+          expected: 0
+        }
+      } : null
+    }
   }
 
   clearLicense() {

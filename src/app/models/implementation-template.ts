@@ -144,7 +144,7 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> im
           projectTotalCost: license.targetAmount,
           consumedAmount: license.consumed || 0,
           collected: license.collected,
-          remainingAmount: license.targetAmount - (license.consumed || 0),
+          remainingAmount: license.collected - (license.consumed || 0),
           isMain: true
         })) : of(undefined)
       }))
