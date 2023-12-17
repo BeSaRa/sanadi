@@ -12,7 +12,6 @@
           <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
             <table-header tableTitle="menu_npo_profile"
                           [reload$]="reload$"
-                          [add$]="add$"
                           (textChange)="filterControl.setValue($event)"
                           [sort]="table.dataSource.sort"
                           ></table-header>
