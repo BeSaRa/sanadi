@@ -456,6 +456,14 @@ tr.risk {
 }
 
 th.remain {
+  background-color: burlywood;
+  color: white;
+
+  i {
+    color: white !important;
+  }
+}
+th.collectZero {
   background-color: red;
   color: white;
 
