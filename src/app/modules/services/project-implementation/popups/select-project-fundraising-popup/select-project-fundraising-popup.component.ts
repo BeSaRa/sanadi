@@ -73,13 +73,14 @@ export class SelectProjectFundraisingPopupComponent implements OnInit, OnDestroy
     this.selection$
       .pipe(filter(item => !this.selectedIds.includes(item.id)))
       .pipe(exhaustMap((model) => {
-        return this.service.getConsumedAmount(model.licenseVSID, this.data.templateId, this.data.caseId, this.data.requestType).pipe(map(license => ({
+        return this.service.getConsumedAmount(model.vsId, this.data.templateId, this.data.caseId, this.data.requestType).pipe(map(license => ({
           consumedAmount: license.consumed!,
+          collected: license.collected,
           model
         })))
       }))
       .pipe(filter((value) => {
-        const hasRemaining = currency(value.model.targetAmount).subtract(value.consumedAmount).value
+        const hasRemaining = currency(value.model.collected).subtract(value.consumedAmount).value
         return hasRemaining ? (() => {
           return true
         })() : (() => {
@@ -91,8 +92,9 @@ export class SelectProjectFundraisingPopupComponent implements OnInit, OnDestroy
         return model.convertToFundraisingTemplate().clone({
           projectTotalCost: model.targetAmount,
           consumedAmount,
-          remainingAmount: currency(model.targetAmount).subtract(consumedAmount).value,
-          totalCost: 0 //currency(model.targetAmount).subtract(consumedAmount).value
+          collected: model.collected,
+          remainingAmount: currency(model.collected).subtract(consumedAmount).value,
+          totalCost: 0
         })
       }))
       .pipe(takeUntil(this.destroy$))
