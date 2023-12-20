@@ -26,6 +26,8 @@
     <tab [hideIcon]="true" [name]="tabsData.contactOfficers.name" [hasError]="false" [template]="contactOfficersTemplate"
       [title]="lang.map.contact_officers">
     </tab>
+    <tab [name]="tabsData.internalBranches.name"
+    [template]="externalOfficesTab" [title]="lang.map.external_offices"></tab>
   </tabs-list>
   <ng-template #basicInfoTab>
     <div class="row">
@@ -369,6 +371,9 @@
         </app-table>
       </div>
     </div>
+  </ng-template>
+  <ng-template #externalOfficesTab>
+    <external-office-list [externalOffices$]="externalOffices$" [externalOfficesColumns]="externalOfficesColumns"></external-office-list>
   </ng-template>
 </div>
 <div class="dialog-actions">
