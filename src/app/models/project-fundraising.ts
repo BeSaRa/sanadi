@@ -428,7 +428,6 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   }
 
   convertToFundraisingTemplate(): ImplementationFundraising {
-    console.log(this)
     return new ImplementationFundraising().clone({
       arabicName: this.arName,
       englishName: this.enName,
