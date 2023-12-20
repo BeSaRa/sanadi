@@ -57,14 +57,14 @@
       </div>
     </div>
     <div class="row">
-      <!-- unified economic record -->
       <div class="col-sm-6 mb-4 position-relative">
-        <label for="unifiedEconomicRecord" class="form-label">
-          {{lang.map.unified_economic_record}}
+        <label for="registrationAuthority" class="form-label">
+          {{lang.map.registration_authority}}
         </label>
-        <span id="unifiedEconomicRecord" class="form-control input-disabled"
-          [innerHTML]="model && model.unifiedEconomicRecord || '&nbsp;'"></span>
+        <span id="registrationAuthority" class="form-control input-disabled"
+          [innerHTML]="model && model.profileInfo.registrationAuthorityInfo.getName()  || '&nbsp;'"></span>
       </div>
+
       <!-- activity type -->
       <div class="col-sm-6 mb-4 position-relative">
         <label for="activityType" class="form-label">
@@ -81,6 +81,14 @@
         </label>
         <span id="establishmentDate" class="form-control input-disabled"
           [innerHTML]="model && model.establishmentDateString  || '&nbsp;'"></span>
+      </div>
+      <!-- unified economic record -->
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="unifiedEconomicRecord" class="form-label">
+          {{lang.map.unified_economic_record}}
+        </label>
+        <span id="unifiedEconomicRecord" class="form-control input-disabled"
+          [innerHTML]="model && model.unifiedEconomicRecord || '&nbsp;'"></span>
       </div>
     </div>
 
@@ -151,6 +159,13 @@
         </label>
         <span id="buildingNumber" class="form-control input-disabled"
           [innerHTML]="model && model.buildingNumber || '&nbsp;'"></span>
+      </div>
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="hotline" class="form-label">
+          {{lang.map.hotline}}
+        </label>
+        <span id="hotline" class="form-control input-disabled"
+          [innerHTML]="model && model.hotline || '&nbsp;'"></span>
       </div>
     </div>
     <div class="row">

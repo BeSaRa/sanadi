@@ -22,6 +22,8 @@ import { RealBeneficiaryInterceptor } from '@app/model-interceptors/real-benefic
 import { RealBeneficiary } from '@app/models/real-beneficiary';
 import { FounderMemberInterceptor } from '@app/model-interceptors/founder-member-interceptor';
 import { FounderMembers } from '@app/models/founder-members';
+import { Profile } from '@app/models/profile';
+import { ProfileInterceptor } from '@app/model-interceptors/profile-interceptor';
 
 @CastResponseContainer({
   $default: {
@@ -43,6 +45,7 @@ export class NpoDataService extends CrudWithDialogGenericService<NpoData> {
   npoBankInterceptor: IModelInterceptor< Partial<NpoBankAccount>> = new NpoBankInterceptor();
   realBeneficiaryInterceptor: IModelInterceptor<RealBeneficiary> = new RealBeneficiaryInterceptor();
   founderMembersInterceptor: IModelInterceptor<FounderMembers> = new FounderMemberInterceptor();
+  profileInterceptor: IModelInterceptor<Profile> = new ProfileInterceptor();
 
   constructor(public http: HttpClient,
     private urlService: UrlService,
