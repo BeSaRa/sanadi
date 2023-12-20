@@ -1,11 +1,15 @@
 import { Component, Inject } from '@angular/core';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
 import { NpoData } from '@app/models/npo-data';
+import { FinalExternalOfficeApprovalService } from '@app/services/final-external-office-approval.service';
 import { LangService } from '@app/services/lang.service';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { TabMap } from '@app/types/types';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-npo-profile-popup',
@@ -22,8 +26,14 @@ export class NpoProfilePopupComponent {
 
   constructor(public dialogRef: DialogRef,
     public lang: LangService,
-    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<NpoData>) {
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<NpoData>,
+    private finalExternalOfficeApprovalService: FinalExternalOfficeApprovalService) {
     this.model = data.model;
+  }
+  ngOnInit(): void {
+    this.externalOffices$ = this.finalExternalOfficeApprovalService.licenseSearch({
+      organizationId: this.model.profileId,
+    });
   }
   onTabChange(_$event: TabComponent) {
   }
@@ -74,5 +84,21 @@ export class NpoProfilePopupComponent {
       isTouchedOrDirty: () => true,
 
     },
-  };
+    internalBranches: {
+      name: 'internalBranchesTab',
+      langKey: 'internal_branches' as keyof ILanguageKeys,
+      index: 4,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+    },
+  }
+  externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
+  externalOfficesColumns = [
+    'externalOfficeName',
+    'country',
+    'region',
+    'establishmentDate',
+    'actions',
+  ];
+
 }
