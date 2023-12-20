@@ -51,8 +51,6 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   caseId!: string
   @Input()
   requestType!: number
-  @Input()
-  isOtherFundraisingSourcingHaveElements!: boolean
 
   @Output()
   amountConsumed: EventEmitter<boolean> = new EventEmitter<boolean>()
@@ -345,7 +343,6 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   }
   isItemDisabled(index :number){
     if(!this.value[index].isMain) return false;
-    return this.value.length > 1 ||
-    this.isOtherFundraisingSourcingHaveElements
+    return this.value.length > 1
   }
 }
