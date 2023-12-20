@@ -82,13 +82,12 @@
     </div>
   </div>
   <div class="col-12">
-    <app-table #table [paginator]="paginator" [selectable]="true" [data]="models" [columns]="displayedColumns"
-      sortableTable>
+    <app-table #table [paginator]="paginator" [selectable]="true" [data]="models" [columns]="displayedColumns">
       <table cdk-table [dataSource]="table.dataSource" class="table table-bordered caption-top">
         <ng-container cdkColumnDef="extra-header">
           <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
             <table-header tableTitle="payments" [reload$]="reload$" [skipSearch]="true" [allowAdd]="!!summary && !employeeService.isInternalUser()"
-              [add$]="add$" [sort]="table.dataSource.sort" [customTemplate]="legendHeaderTemplate">
+              [add$]="add$" [customTemplate]="legendHeaderTemplate">
             </table-header>
           </th>
         </ng-container>
