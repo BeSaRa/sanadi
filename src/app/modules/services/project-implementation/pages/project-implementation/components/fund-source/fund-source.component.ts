@@ -132,11 +132,6 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
       return
     }
 
-    if (!this.permitAmountConsumed) {
-      this.dialog.alert(this.lang.map.cannot_take_this_action_before_consume_full_permit_amount)
-      return;
-    }
-
     if (this.remainingAmount === 0) {
       this.dialog.info(this.lang.map.cannot_add_funding_resources_full_amount_have_been_used)
       return;

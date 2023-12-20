@@ -128,7 +128,7 @@
         </th>
       </ng-container>
       <ng-container cdkColumnDef="RemainingValue">
-        <th colspan="2" [ngClass]="{remain:remainingAmount!==0}" cdk-header-cell
+        <th colspan="2" [ngClass]="{remain:remainingAmount!==0, collectZero:remainingAmount==projectTotalCost}" cdk-header-cell
             *cdkFooterCellDef>
           <div class="d-flex align-items-center h6 mb-0">
             {{remainingAmount | mask: inputMaskPatterns.SEPARATOR: inputMaskPatterns.THOUSAND_SEPARATOR}}
