@@ -19,7 +19,6 @@ export class NpoDataInterceptor implements IModelInterceptor<NpoData> {
     model.disbandmentInfo && (model.disbandmentInfo = AdminResult.createInstance(model.disbandmentInfo));
     model.registrationAuthorityInfo && (model.registrationAuthorityInfo = AdminResult.createInstance(model.registrationAuthorityInfo));
     model.statusInfo && (model.statusInfo = AdminResult.createInstance(model.statusInfo));
-    model.profileInfo && (model.profileInfo = Object.assign(new Profile, model.profileInfo));
 
     model.establishmentDate = DateUtils.changeDateToDatepicker(model.establishmentDate);
     model.disbandmentDate = DateUtils.changeDateToDatepicker(model.disbandmentDate);
@@ -29,6 +28,7 @@ export class NpoDataInterceptor implements IModelInterceptor<NpoData> {
     model.establishmentDateString = DateUtils.getDateStringFromDate(model.establishmentDate);
     let service: NpoDataService = FactoryService.getService('NpoDataService');
 
+    model.profileInfo && (model.profileInfo = service.profileInterceptor.receive(new Profile().clone(model.profileInfo)));
     if (model.bankAccountList && model.bankAccountList.length > 0) {
       model.bankAccountList = model.bankAccountList.map(x => service.npoBankInterceptor.receive(new NpoBankAccount().clone(x)) as NpoBankAccount);
     }
