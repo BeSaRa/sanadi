@@ -109,16 +109,16 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   constructor(public lang: LangService,
-              public fb: UntypedFormBuilder,
-              private lookupService: LookupService,
-              public service: ProjectImplementationService,
-              public toast: ToastService,
-              private activatedRoute: ActivatedRoute,
-              private dacOchaService: DacOchaService,
-              public employeeService: EmployeeService,
-              private licenseService: LicenseService,
-              public dialog: DialogService,
-              private serviceDataService:ServiceDataService) {
+    public fb: UntypedFormBuilder,
+    private lookupService: LookupService,
+    public service: ProjectImplementationService,
+    public toast: ToastService,
+    private activatedRoute: ActivatedRoute,
+    private dacOchaService: DacOchaService,
+    public employeeService: EmployeeService,
+    private licenseService: LicenseService,
+    public dialog: DialogService,
+    private serviceDataService:ServiceDataService) {
     super();
 
   }
@@ -383,7 +383,25 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.handleDisplayFields(model)
     this.handleMandatoryFields()
     this.calculateRemaining()
-    if(!fromSelectedLicense){
+    this.implementationFundraising.setValue([]);
+    model.implementationFundraising.forEach((model: ImplementationFundraising) => {
+      this.service.getConsumedAmount(model.projectLicenseId, this.implementationTemplate.value[0] ?? this.implementationTemplate.value[0].id, null, this.requestType.value)
+        .subscribe((res) => {
+          
+          this.implementationFundraising.setValue([...this.implementationFundraising.value, 
+            res.convertToFundraisingTemplate().clone({
+              projectTotalCost: res.targetAmount,
+              consumedAmount: res.consumed || 0,
+              collected: res.collected,
+              remainingAmount: res.collected - (res.consumed || 0),
+              totalCost: res.consumed,
+              isMain: true
+            })
+          ])
+        })
+    })
+
+    if (!fromSelectedLicense) {
       this.beneficiaryCountry.setValue(null);
       this.implementingAgencyType.setValue(null);
     }
@@ -718,7 +736,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   private calculateRemaining(): void {
     const projectTotalCost = this.projectTotalCost.getRawValue() as number
-    
+
     this.remainingAmount = currency(projectTotalCost).subtract(this.totalFundingResource).value
   }
   get totalFundingResource() {
@@ -731,7 +749,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }, 0)
     return currency(totalFundingResource).value
   }
-  
+
   getTotalCost(list: (FundingResourceContract)[]): number {
     return list.reduce((acc, item) => {
       return acc + item.totalCost
@@ -752,8 +770,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       return;
     }
     if (this.model?.caseStatus === CommonCaseStatus.DRAFT ||
-        this.model?.caseStatus === CommonCaseStatus.NEW
-      ){
+      this.model?.caseStatus === CommonCaseStatus.NEW
+    ){
       this.readonly = false;
       this.handleCustomFormReadonly();
       return;
@@ -943,7 +961,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       },
       {
         field: this.implementingAgencyType,
-        disabled: () => this.isCancelRequestType() || this.isExtendRequestType() || this.implementingAgencyList.value.length > 0
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType() || this.implementingAgencyList.value?.length > 0
       },
       {
         field: this.licenseStartDate,
@@ -1017,7 +1035,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.requestType.value && this.requestType.value === ServiceRequestTypes.EXTEND;
   }
   isLicenseStartDateDisabled(){
-   return this.isExtendRequestType() || this.isCancelRequestType()
+    return this.isExtendRequestType() || this.isCancelRequestType()
   }
   isOtherFundraisingSourcingHaveElements(){
     return this.selfFinancing?.value?.length > 0 || this.financialGrant?.value?.length > 0
