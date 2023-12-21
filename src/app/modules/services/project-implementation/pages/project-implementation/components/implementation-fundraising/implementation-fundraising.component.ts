@@ -134,10 +134,10 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         this.createInputList(value)
       })
       .then(() => {
-        this.value = value ?? []
-        this.listenToControls()
-        this.calculateTotal()
-        this.isFullAmountConsumed()
+          this.value = value ?? []
+          this.listenToControls()
+          this.calculateTotal()
+          this.isFullAmountConsumed()
       })
   }
 
@@ -158,7 +158,6 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     ctrl.valueChanges
       .pipe(map(value => Number(value)))
       .pipe(filter(_ => !this.disabled))
-      .pipe(debounceTime(250))
       .pipe(takeUntil((this.destroy$)))
       .pipe(filter(_ => this.value && !!this.value[index]))
       .pipe(map(value => {
@@ -229,7 +228,9 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
 
   listenToControls(): void {
     (this.inputs.controls as UntypedFormControl[]).forEach((ctrl, index) => {
-      this.listenToControl(ctrl, index)
+      ((i: number) => {
+        this.listenToControl(ctrl, i);
+      })(index)
     })
   }
 
@@ -258,7 +259,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       this.dialog.alert(this.lang.map.please_add_template_to_proceed)
       return
     }
-
+    
     if (this.remainingAmount === 0) {
       this.dialog.info(this.lang.map.cannot_add_funding_resources_full_amount_have_been_used)
       return;
@@ -342,7 +343,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       })
   }
   isItemDisabled(index :number){
-    if(!this.value[index].isMain) return false;
-    return this.value.length > 1
+    // if(!this.value[index].isMain) return false;
+    // return this.value.length > 1
   }
 }

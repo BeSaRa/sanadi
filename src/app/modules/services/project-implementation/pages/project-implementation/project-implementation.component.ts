@@ -45,7 +45,7 @@ import { ToastService } from "@services/toast.service";
 import {IMyDateModel } from "angular-mydatepicker";
 import currency from "currency.js";
 import dayjs from "dayjs";
-import { iif, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, iif, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -383,23 +383,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.handleDisplayFields(model)
     this.handleMandatoryFields()
     this.calculateRemaining()
-    this.implementationFundraising.setValue([]);
-    model.implementationFundraising.forEach((model: ImplementationFundraising) => {
-      this.service.getConsumedAmount(model.projectLicenseId, this.implementationTemplate.value[0] ? this.implementationTemplate.value[0].templateId : '', null, this.requestType.value)
-        .subscribe((res) => {
-          
-          this.implementationFundraising.setValue([...this.implementationFundraising.value, 
-            res.convertToFundraisingTemplate().clone({
-              projectTotalCost: res.targetAmount,
-              consumedAmount: res.consumed || 0,
-              collected: res.collected,
-              remainingAmount: res.collected - (res.consumed || 0),
-              totalCost: res.consumed,
-              isMain: true
-            })
-          ])
-        })
-    })
 
     if (!fromSelectedLicense) {
       this.beneficiaryCountry.setValue(null);
@@ -496,6 +479,29 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
       const model = this._prepareLicense(licenseDetails)
       this._updateForm(model, true);
+      this.implementationFundraising.setValue([]);
+      const fundsLicenseList: Observable<ProjectFundraising>[] = [];
+      model.implementationFundraising.forEach((model: ImplementationFundraising) => {
+        const req = this.service
+          .getConsumedAmount(model.projectLicenseId, this.implementationTemplate.value && this.implementationTemplate.value[0] ? this.implementationTemplate.value[0].templateId : '', null, this.requestType.value);
+        fundsLicenseList.push(req);
+      })
+      combineLatest(fundsLicenseList)
+        .pipe(map((res) => {
+          return res.map((item, i) => {
+            return item.convertToFundraisingTemplate().clone({
+              projectTotalCost: item.targetAmount,
+              consumedAmount: item.consumed || 0,
+              collected: item.collected,
+              remainingAmount: item.collected - (item.consumed || 0),
+              totalCost: model.implementationFundraising[i].totalCost,
+              isMain: model.implementationFundraising[i].isMain
+            })
+          })
+        }))
+        .subscribe((res) => {
+          this.implementationFundraising.setValue(res);
+        })
     }
     this.licenseStartDate.setValue(this.licenseStartDate.value);
     this.implementingAgencyList.setValue(this.implementingAgencyList.value);
