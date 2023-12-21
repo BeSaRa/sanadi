@@ -20,6 +20,7 @@ import { ServiceRequestTypes } from "@app/enums/service-request-types";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { EServicesGenericComponent } from "@app/generics/e-services-generic-component";
 import { Payment } from '@app/models/payment';
+import { ProjectFundraising } from '@app/models/project-fundraising';
 import { ProjectImplementation } from "@app/models/project-implementation";
 import { ServiceData } from '@app/models/service-data';
 import { EmployeeService } from '@app/services/employee.service';
