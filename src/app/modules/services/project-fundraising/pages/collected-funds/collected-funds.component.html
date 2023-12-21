@@ -86,7 +86,7 @@
       <table cdk-table [dataSource]="table.dataSource" class="table table-bordered caption-top">
         <ng-container cdkColumnDef="extra-header">
           <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-            <table-header tableTitle="payments" [reload$]="reload$" [skipSearch]="true" [allowAdd]="!!summary && !employeeService.isInternalUser()"
+            <table-header [skipClearSort]="true" tableTitle="payments" [reload$]="reload$" [skipSearch]="true" [allowAdd]="!!summary && !employeeService.isInternalUser()"
               [add$]="add$" [customTemplate]="legendHeaderTemplate">
             </table-header>
           </th>
@@ -120,7 +120,7 @@
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
         <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
-        <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: displayedColumns;" [class]="row.approvalStatus === approvalStatus.Rejected ? 'bg-removed-row' :
+        <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: displayedColumns;" [class]="row.approvalStatus === approvalStatus.Rejected ? 'bg-deleted-row' :
             (isRefundRow(row) ? '' : (row.approvalStatus === approvalStatus.Approved ?
             'bg-added-row' : 'bg-updated-row'))">
         </tr>
@@ -135,7 +135,7 @@
 </div>
 <ng-template #legendHeaderTemplate>
   <div class="d-flex align-items-center justify-content-end gap-1">
-    <div class="p-1 my-1 fw-normal btn btn-outline-secondary" style="cursor: default;" >
+    <div class="p-1 my-1 fw-normal btn btn-light" style="cursor: default;" >
       {{lang.map.lbl_refund}}
     </div>
     <div class="p-1 my-1 fw-normal btn btn-success" style="cursor: default;">

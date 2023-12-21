@@ -79,7 +79,7 @@ export class CollectedFundsComponent implements OnInit, OnDestroy {
       type: 'action',
       label: 'lbl_refund',
       icon: 'mdi-cash-refund',
-      show: (item: FundUnit) => this.employeeService.isExternalUser() && item.approvalStatus != approvalStatusEnum.Pending && item.approvalStatus != approvalStatusEnum.Approved && !this.isRefundRow(item),
+      show: (item: FundUnit) => this.employeeService.isExternalUser() && item.approvalStatus != approvalStatusEnum.Pending && item.approvalStatus == approvalStatusEnum.Approved && !this.isRefundRow(item),
       onClick: (item: FundUnit) => this.refund$.next(item)
     },
   ];
