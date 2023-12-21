@@ -385,7 +385,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.calculateRemaining()
     this.implementationFundraising.setValue([]);
     model.implementationFundraising.forEach((model: ImplementationFundraising) => {
-      this.service.getConsumedAmount(model.projectLicenseId, this.implementationTemplate.value[0] ?? this.implementationTemplate.value[0].id, null, this.requestType.value)
+      this.service.getConsumedAmount(model.projectLicenseId, this.implementationTemplate.value[0] ? this.implementationTemplate.value[0].templateId : '', null, this.requestType.value)
         .subscribe((res) => {
           
           this.implementationFundraising.setValue([...this.implementationFundraising.value, 
@@ -756,9 +756,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }, 0)
   }
   get totalPayments(): number {
-    return this.payment.value.reduce((acc: number, item: Payment) => {
+    return (this.payment.value && this.payment.value.reduce((acc: number, item: Payment) => {
       return acc + item.totalCost
-    }, 0)
+    }, 0)) || 0
   }
 
   // noinspection DuplicatedCode
