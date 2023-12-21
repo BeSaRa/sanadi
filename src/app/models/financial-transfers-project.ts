@@ -19,6 +19,7 @@ export class FinancialTransfersProject extends SearchableCloneable<FinancialTran
   transferAmount!: number;
   dueAmount!: number;
   projectName!: string;
+  projectLicenseId!: string;
 
   searchFields: ISearchFieldsMap<FinancialTransfersProject> = {
     ...normalSearchFields(['fullSerial', 'qatariTransactionAmount', 'notes']),

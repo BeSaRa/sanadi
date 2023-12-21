@@ -93,6 +93,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
       dueAmount: this.selectedProject!.dueAmount,
       transferAmount: this.selectedProject!.transferAmount,
       projectTotalCost: this.selectedProject!.projectTotalCost,
+      projectLicenseId: this.selectedProject!.projectLicenseId,
       remainingAmount: this.selectedProject!.remainingAmount,
     });
   }
