@@ -43,7 +43,7 @@ import { LicenseService } from "@services/license.service";
 import { LookupService } from "@services/lookup.service";
 import { ProjectImplementationService } from "@services/project-implementation.service";
 import { ToastService } from "@services/toast.service";
-import {IMyDateModel } from "angular-mydatepicker";
+import { IMyDateModel } from "angular-mydatepicker";
 import currency from "currency.js";
 import dayjs from "dayjs";
 import { combineLatest, iif, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
@@ -65,7 +65,7 @@ import {
   templateUrl: './project-implementation.component.html',
   styleUrls: ['./project-implementation.component.scss']
 })
-export class ProjectImplementationComponent extends EServicesGenericComponent<ProjectImplementation, ProjectImplementationService> implements AfterViewInit{
+export class ProjectImplementationComponent extends EServicesGenericComponent<ProjectImplementation, ProjectImplementationService> implements AfterViewInit {
   form!: UntypedFormGroup;
   licenseSearch$: Subject<string> = new Subject()
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoRenew.slice().sort((a, b) => a.lookupKey - b.lookupKey);
@@ -88,7 +88,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   FundSourceType: typeof FundSourceType = FundSourceType
 
   datepickerOptionsMap = {
-    licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none', openSelectorTopOfInput: true})
+    licenseStartDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none', openSelectorTopOfInput: true })
   }
   remainingAmount: number = 0;
   selectedLicense?: ProjectImplementation;
@@ -119,7 +119,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     public employeeService: EmployeeService,
     private licenseService: LicenseService,
     public dialog: DialogService,
-    private serviceDataService:ServiceDataService) {
+    private serviceDataService: ServiceDataService) {
     super();
 
   }
@@ -256,7 +256,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
 
     // this.cd.detectChanges();
   }
@@ -349,7 +349,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     if (
       [OperationTypes.CREATE, OperationTypes.UPDATE].includes(operation) && [SaveTypes.FINAL, SaveTypes.COMMIT].includes(saveType)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -389,6 +389,37 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       this.beneficiaryCountry.setValue(null);
       this.implementingAgencyType.setValue(null);
     }
+    if (this.operation == this.operationTypes.CREATE) {
+      this.implementationFundraising.setValue([]);
+    }
+    const fundsLicenseList: Observable<ProjectFundraising>[] = [];
+    model.implementationFundraising.forEach((model: ImplementationFundraising) => {
+      const req = this.service
+        .getConsumedAmount(model.projectLicenseId, this.implementationTemplate.value && this.implementationTemplate.value[0] ? this.implementationTemplate.value[0].templateId : '', null, this.requestType.value);
+      fundsLicenseList.push(req);
+    })
+    combineLatest(fundsLicenseList)
+      .pipe(map((res) => {
+        return res.map((item, i) => {
+          return item.convertToFundraisingTemplate().clone({
+            projectTotalCost: item.targetAmount,
+            consumedAmount: item.consumed || 0,
+            collected: item.collected,
+            remainingAmount: item.collected - (item.consumed || 0),
+            totalCost: model.implementationFundraising[i].totalCost,
+            isMain: model.implementationFundraising[i].isMain
+          })
+        })
+      }))
+      .subscribe((res) => {
+        if (this.operation == this.operationTypes.CREATE) {
+          this.implementationFundraising.setValue(res);
+        } else {
+          this.implementationFundraising.value.forEach((v: ImplementationFundraising, i: number) => {
+            v.collected = res[i].collected
+          })
+        }
+      })
   }
 
   _resetForm(): void {
@@ -466,7 +497,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   private openSelectLicense(licenses: ProjectImplementation[]): Observable<undefined | ProjectImplementation> {
-    return this.licenseService.openNewSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectLicenseDisplayColumns)
+    return this.licenseService.openNewSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestType.value || null }), true, this.service.selectLicenseDisplayColumns)
       .onAfterClose$
       .pipe(map((result: ({ selected: ProjectImplementation, details: ProjectImplementation } | undefined)) => result ? result.details : result));
   }
@@ -480,34 +511,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
       const model = this._prepareLicense(licenseDetails)
       this._updateForm(model, true);
-      this.implementationFundraising.setValue([]);
-      const fundsLicenseList: Observable<ProjectFundraising>[] = [];
-      model.implementationFundraising.forEach((model: ImplementationFundraising) => {
-        const req = this.service
-          .getConsumedAmount(model.projectLicenseId, this.implementationTemplate.value && this.implementationTemplate.value[0] ? this.implementationTemplate.value[0].templateId : '', null, this.requestType.value);
-        fundsLicenseList.push(req);
-      })
-      combineLatest(fundsLicenseList)
-        .pipe(map((res) => {
-          return res.map((item, i) => {
-            return item.convertToFundraisingTemplate().clone({
-              projectTotalCost: item.targetAmount,
-              consumedAmount: item.consumed || 0,
-              collected: item.collected,
-              remainingAmount: item.collected - (item.consumed || 0),
-              totalCost: model.implementationFundraising[i].totalCost,
-              isMain: model.implementationFundraising[i].isMain
-            })
-          })
-        }))
-        .subscribe((res) => {
-          this.implementationFundraising.setValue(res);
-        })
     }
     this.licenseStartDate.setValue(this.licenseStartDate.value);
     this.implementingAgencyList.setValue(this.implementingAgencyList.value);
   }
-  private _prepareLicense(licenseDetails:ProjectImplementation):ProjectImplementation{
+  private _prepareLicense(licenseDetails: ProjectImplementation): ProjectImplementation {
     let model: any = new ProjectImplementation().clone(licenseDetails);
     model.requestType = this.requestType.value;
     model.oldLicenseFullSerial = licenseDetails.fullSerial;
@@ -641,8 +649,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .pipe(this.holdToGetUserResponse())
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: DomainTypes) => {
-        this.mainUNOCHACategory.setValue(null, {emitEvent: false})
-        this.mainDACCategory.setValue(null, {emitEvent: false})
+        this.mainUNOCHACategory.setValue(null, { emitEvent: false })
+        this.mainDACCategory.setValue(null, { emitEvent: false })
         this.displayDac = value === DomainTypes.DEVELOPMENT;
         this.displayOcha = value === DomainTypes.HUMANITARIAN;
         this.loadDacOuchMain()
@@ -778,7 +786,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }
     if (this.model?.caseStatus === CommonCaseStatus.DRAFT ||
       this.model?.caseStatus === CommonCaseStatus.NEW
-    ){
+    ) {
       this.readonly = false;
       this.handleCustomFormReadonly();
       return;
@@ -853,12 +861,12 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   private listenToFieldsWillEffectTemplateAndFundSources(): void {
     const fields: { ctrl: AbstractControl, key: string }[] = [
-      {ctrl: this.projectWorkArea, key: 'projectWorkArea'},
-      {ctrl: this.internalProjectClassification, key: 'internalProjectClassification'},
-      {ctrl: this.domain, key: 'domain'},
-      {ctrl: this.mainUNOCHACategory, key: 'mainUNOCHACategory'},
-      {ctrl: this.mainDACCategory, key: 'projectWorkArea'},
-      {ctrl: this.beneficiaryCountry, key: 'beneficiaryCountry'},
+      { ctrl: this.projectWorkArea, key: 'projectWorkArea' },
+      { ctrl: this.internalProjectClassification, key: 'internalProjectClassification' },
+      { ctrl: this.domain, key: 'domain' },
+      { ctrl: this.mainUNOCHACategory, key: 'mainUNOCHACategory' },
+      { ctrl: this.mainDACCategory, key: 'projectWorkArea' },
+      { ctrl: this.beneficiaryCountry, key: 'beneficiaryCountry' },
     ]
 
     const observables = fields.map((item) => {
@@ -880,7 +888,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
           })))
       }))
       // if not don't display the popup
-      .subscribe(({answer, field, oldValue}) => {
+      .subscribe(({ answer, field, oldValue }) => {
         answer == UserClickOn.YES ? (() => {
           // user click yes
           this.implementationTemplate.setValue([])
@@ -890,7 +898,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         })() : (() => {
           const currentOldValue = this.oldStoredValues[field] || oldValue;
           const ctrl = fields.find(i => i.key === field)!.ctrl
-          ctrl.setValue(currentOldValue, {emitEvent: false})
+          ctrl.setValue(currentOldValue, { emitEvent: false })
           this.oldStoredValues[field] = currentOldValue
         })()
       })
@@ -972,7 +980,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       },
       {
         field: this.licenseStartDate,
-        disabled: () =>  false
+        disabled: () => false
       },
       {
         field: this.projectEvaluationSLA,
@@ -1009,8 +1017,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     ];
 
     allFields.forEach(field => {
-      field.disabled() || this.readonly ? field.field.disable({emitEvent: false}) : field.field.enable({emitEvent: false});
-      field.field.updateValueAndValidity({emitEvent: false});
+      field.disabled() || this.readonly ? field.field.disable({ emitEvent: false }) : field.field.enable({ emitEvent: false });
+      field.field.updateValueAndValidity({ emitEvent: false });
     })
 
   }
@@ -1025,7 +1033,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
           duration: Number(this.licenseDuration.value)
         }
       }))
-      .subscribe(({startDate, duration}) => {
+      .subscribe(({ startDate, duration }) => {
         this.licenseEndDate = duration && startDate ? dayjs(startDate.singleDate?.jsDate).add(duration, 'month').format('YYYY-MM-DD') : '';
       })
   }
@@ -1041,7 +1049,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   isExtendRequestType(): boolean {
     return this.requestType.value && this.requestType.value === ServiceRequestTypes.EXTEND;
   }
-  isLicenseStartDateDisabled(){
+  isLicenseStartDateDisabled() {
     return this.isExtendRequestType() || this.isCancelRequestType()
   }
 }
