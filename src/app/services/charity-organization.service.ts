@@ -1,3 +1,4 @@
+import { ProfileService } from '@services/profile.service';
 import { ComponentType } from '@angular/cdk/portal';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -9,7 +10,7 @@ import { CharityOrganization } from '@app/models/charity-organization';
 import { FileStore } from '@app/models/file-store';
 import { Pagination } from '@app/models/pagination';
 import { Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { DialogService } from './dialog.service';
 import { FactoryService } from './factory.service';
 import { UrlService } from './url.service';
@@ -17,6 +18,8 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { CharityProfilePopupComponent } from '@app/administration/popups/charity-profile-popup/charity-profile-popup.component';
+import { Profile } from '@app/models/profile';
+import { PaginationContract } from '@app/contracts/pagination-contract';
 
 @CastResponseContainer({
   $default: {
@@ -36,7 +39,9 @@ import { CharityProfilePopupComponent } from '@app/administration/popups/charity
 export class CharityOrganizationService extends CrudWithDialogGenericService<CharityOrganization> {
   list: CharityOrganization[] = [];
   constructor(private domSanitizer: DomSanitizer
-    , public dialog: DialogService, public http: HttpClient, private urlService: UrlService) {
+    , public dialog: DialogService, public http: HttpClient,
+     private urlService: UrlService,
+    private profileService:ProfileService) {
     super();
     FactoryService.registerService('CharityOrganizationService', this);
   }
@@ -48,6 +53,9 @@ export class CharityOrganizationService extends CrudWithDialogGenericService<Cha
   }
   _getServiceURL(): string {
     return this.urlService.URLS.CHARITY_ORGANIZATION;
+  }
+  _getProfileURL():string{
+    return this.urlService.URLS.PROFILE
   }
   saveLogo(charityId: number, file: File) {
     const form = new FormData();
@@ -81,5 +89,14 @@ export class CharityOrganizationService extends CrudWithDialogGenericService<Cha
   })
   loadProfile(id:number): Observable<CharityOrganization> {
     return this.http.get<CharityOrganization>(this._getServiceURL() + `/profile/${id}`);
+  }
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  paginateComposite(options: Partial<PaginationContract>): Observable<Pagination<CharityOrganization[]>> {
+    return this.profileService.getCharitiesProfiles().pipe(
+      tap(result => this.list = result.rs),
+      tap(result => this._loadDone$.next(result.rs))
+    );
   }
 }

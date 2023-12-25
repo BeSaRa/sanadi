@@ -15,6 +15,8 @@ import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
 import {UrlService} from './url.service';
 import {CommonUtils} from '@helpers/common-utils';
+import { CharityOrganization } from '@app/models/charity-organization';
+import { NpoData } from '@app/models/npo-data';
 
 @CastResponseContainer({
   $default: {
@@ -105,6 +107,13 @@ export class ProfileService extends CrudWithDialogGenericService<Profile> {
   @CastResponse(undefined)
   getCharitiesNpoInstitutions() {
     return this.http.get<Profile[]>(this._getServiceURL() + '/charities-npo-institutions');
+  }
+
+  getCharitiesProfiles(){
+    return this.http.get<Pagination<CharityOrganization[]>>(this._getServiceURL() + `/charity/criteria`)
+  }
+  getNPOsProfiles(){
+    return this.http.get<Pagination<NpoData[]>>(this._getServiceURL() + `/npo/criteria`)
   }
 
 }
