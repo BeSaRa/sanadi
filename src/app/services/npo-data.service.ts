@@ -10,7 +10,7 @@ import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 import { ComponentType } from '@angular/cdk/portal';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { Pagination } from '@app/models/pagination';
@@ -24,6 +24,8 @@ import { FounderMemberInterceptor } from '@app/model-interceptors/founder-member
 import { FounderMembers } from '@app/models/founder-members';
 import { Profile } from '@app/models/profile';
 import { ProfileInterceptor } from '@app/model-interceptors/profile-interceptor';
+import { PaginationContract } from '@app/contracts/pagination-contract';
+import { ProfileService } from './profile.service';
 
 @CastResponseContainer({
   $default: {
@@ -49,7 +51,8 @@ export class NpoDataService extends CrudWithDialogGenericService<NpoData> {
 
   constructor(public http: HttpClient,
     private urlService: UrlService,
-    public dialog: DialogService) {
+    public dialog: DialogService,
+    private profileService:ProfileService) {
     super();
     FactoryService.registerService('NpoDataService', this);
   }
@@ -92,5 +95,14 @@ export class NpoDataService extends CrudWithDialogGenericService<NpoData> {
   })
   loadProfile(id:number): Observable<NpoData> {
     return this.http.get<NpoData>(this._getServiceURL() + `/profile/${id}`);
+  }
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  paginateComposite(options: Partial<PaginationContract>): Observable<Pagination<NpoData[]>> {
+    return this.profileService.getNPOsProfiles().pipe(
+      tap(result => this.list = result.rs),
+      tap(result => this._loadDone$.next(result.rs))
+    );
   }
 }
