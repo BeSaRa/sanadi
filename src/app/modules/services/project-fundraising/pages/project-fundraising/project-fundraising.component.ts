@@ -148,7 +148,7 @@ implements AfterViewInit {
   }
 
   _initComponent(): void {
-    this.loadSanadyDomains()
+    this.loadSanadyDomains();
     const profile = this.employeeService.getProfile()
     if (profile && (this.operation === OperationTypes.CREATE || this.operation === OperationTypes.UPDATE && this.employeeService.isExternalUser())) {
       const allowed = profile.getParsedPermitTypes()

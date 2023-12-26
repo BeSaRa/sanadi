@@ -1,32 +1,31 @@
-import {Injectable} from '@angular/core';
-import {FactoryService} from './factory.service';
-import {ExternalUser} from '../models/external-user';
-import {Permission} from '../models/permission';
-import {isValidValue} from '@helpers/utils';
-import {ILoginData} from '@contracts/i-login-data';
-import {UserTypes} from '../enums/user-types.enum';
-import {InternalUser} from '../models/internal-user';
-import {InternalDepartment} from '../models/internal-department';
-import {Team} from '../models/team';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {IUserSecurity} from '@app/interfaces/iuser-security';
-import {UserSecurityConfiguration} from '@app/models/user-security-configuration';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
-import {ConfigurationService} from '@app/services/configuration.service';
-import {PermissionsEnum} from '@app/enums/permissions-enum';
-import {Profile} from '@app/models/profile';
-import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
-import {StaticAppResourcesService} from '@services/static-app-resources.service';
-import {ProfileTypes} from '@app/enums/profile-types.enum';
-import {CustomMenu} from '@app/models/custom-menu';
-import {CustomMenuInterceptor} from '@app/model-interceptors/custom-menu-interceptor';
-import {ProfileInterceptor} from '@app/model-interceptors/profile-interceptor';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {UserRoleManageUserContract} from '@contracts/user-role-manage-user-contract';
-import {InternalUserInterceptor} from '@model-interceptors/internal-user-interceptor';
-import {ExternalUserInterceptor} from '@model-interceptors/external-user-interceptor';
-import {LangService} from '@services/lang.service';
+import { Injectable } from '@angular/core';
+import { FactoryService } from './factory.service';
+import { ExternalUser } from '../models/external-user';
+import { Permission } from '../models/permission';
+import { isValidValue } from '@helpers/utils';
+import { ILoginData } from '@contracts/i-login-data';
+import { UserTypes } from '../enums/user-types.enum';
+import { InternalUser } from '../models/internal-user';
+import { InternalDepartment } from '../models/internal-department';
+import { Team } from '../models/team';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { IUserSecurity } from '@app/interfaces/iuser-security';
+import { UserSecurityConfiguration } from '@app/models/user-security-configuration';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { EServicePermissionsEnum } from '@app/enums/e-service-permissions-enum';
+import { ConfigurationService } from '@app/services/configuration.service';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
+import { Profile } from '@app/models/profile';
+import { PermissionGroupsEnum } from '@app/enums/permission-groups-enum';
+import { StaticAppResourcesService } from '@services/static-app-resources.service';
+import { ProfileTypes } from '@app/enums/profile-types.enum';
+import { CustomMenu } from '@app/models/custom-menu';
+import { CustomMenuInterceptor } from '@app/model-interceptors/custom-menu-interceptor';
+import { ProfileInterceptor } from '@app/model-interceptors/profile-interceptor';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { UserRoleManageUserContract } from '@contracts/user-role-manage-user-contract';
+import { InternalUserInterceptor } from '@model-interceptors/internal-user-interceptor';
+import { ExternalUserInterceptor } from '@model-interceptors/external-user-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -112,7 +111,7 @@ export class EmployeeService {
   };
 
   constructor(private configService: ConfigurationService,
-              private staticResourcesService: StaticAppResourcesService) {
+    private staticResourcesService: StaticAppResourcesService) {
     FactoryService.registerService('EmployeeService', this);
   }
 
@@ -449,7 +448,17 @@ export class EmployeeService {
   }
 
   userCanAdd(caseType: number): boolean {
-    return this.userCan(caseType, 'canAdd');
+    if (caseType != CaseTypes.PROJECT_FUNDRAISING) {
+      return this.userCan(caseType, 'canAdd');
+    } else {
+      const profile = this.getProfile();
+      if (!profile) {
+        return this.userCan(caseType, 'canAdd')
+      } else {
+        const allowed = profile.getParsedPermitTypes()
+        return !!allowed.length && this.userCan(caseType, 'canAdd');
+      };
+    }
   }
 
   userCanManage(caseType: number): boolean {

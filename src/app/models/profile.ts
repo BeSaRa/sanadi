@@ -115,11 +115,7 @@ export class Profile extends BaseModel<Profile, ProfileService> {
 
   getParsedPermitTypes(): number[] {
     let parsed: { ids: number[] };
-    try {
-      parsed = JSON.parse(this.permitTypes)
-    } catch (e) {
-      parsed = {ids: []}
-    }
+    parsed = JSON.parse(this.permitTypes || '{"ids": []}')
     return parsed.hasOwnProperty('ids') ? parsed.ids : []
   }
 }
