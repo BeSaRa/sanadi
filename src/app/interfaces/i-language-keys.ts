@@ -1743,6 +1743,7 @@ export interface ILanguageKeys {
   lbl_process_type: string;
   organization_final_reject: string;
   organization_final_approve: string;
+  org_final_approve_task: string;
   variable_name: string;
   variable_value: string;
   available_values: string;
