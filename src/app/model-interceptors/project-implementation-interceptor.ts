@@ -32,6 +32,7 @@ export class ProjectImplementationInterceptor implements IModelInterceptor<Proje
     delete model.caseStatusInfo;
     delete model.licenseStatusInfo;
     delete model.langService;
+    delete model.orgInfo;
     model.beforeSend && model.beforeSend();
     return model;
   }
@@ -39,6 +40,7 @@ export class ProjectImplementationInterceptor implements IModelInterceptor<Proje
   receive(model: ProjectImplementation): ProjectImplementation {
     model.beneficiaryCountryInfo = AdminResult.createInstance(model.beneficiaryCountryInfo);
     model.domainInfo = AdminResult.createInstance(model.domainInfo);
+    model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.mainUNOCHACategoryInfo = AdminResult.createInstance(model.mainUNOCHACategoryInfo);
     model.subUNOCHACategoryInfo = AdminResult.createInstance(model.subUNOCHACategoryInfo);
     model.mainDACCategoryInfo = AdminResult.createInstance(model.mainDACCategoryInfo);

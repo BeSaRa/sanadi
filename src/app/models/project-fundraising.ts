@@ -105,7 +105,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   // extra properties
   employeeService: EmployeeService;
   consumed?: number
-
+  orgInfo!: AdminResult;
   constructor() {
     super();
     this.service = FactoryService.getService('ProjectFundraisingService');
