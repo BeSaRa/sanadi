@@ -131,8 +131,8 @@ export class CollectedFundsComponent implements OnInit, OnDestroy {
         this.reload$.next(null);
       });
   }
-
   
+
   licenseSearch($event?: Event) {
     $event?.preventDefault();
     this.licenseSearch$.next()
@@ -189,7 +189,7 @@ export class CollectedFundsComponent implements OnInit, OnDestroy {
       });
   }
   private openSelectLicense(licenses: ProjectFundraising[]): Observable<undefined | ProjectFundraising> {
-    return this.licenseService.openSelectLicenseDialog(licenses, new ProjectFundraising().clone({ caseType: CaseTypes.PROJECT_FUNDRAISING }), true, this.projectFundraisingService.selectLicenseDisplayColumns)
+    return this.licenseService.openSelectLicenseDialog(licenses, new ProjectFundraising().clone({ caseType: CaseTypes.PROJECT_FUNDRAISING }), true, this.projectFundraisingService.selectLicenseDisplayColumns, undefined, false, true)
       .onAfterClose$
       .pipe(map((result: ({ selected: ProjectFundraising, details: ProjectFundraising } | undefined)) => result ? result.details : result));
   }

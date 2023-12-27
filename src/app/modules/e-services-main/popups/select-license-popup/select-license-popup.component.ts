@@ -23,6 +23,7 @@ export class SelectLicensePopupComponent {
   displayedColumns: string[] = ['arName', 'enName', 'licenseNumber', 'status', 'endDate'];
   label: keyof ILanguageKeys = 'license';
   caseType: number;
+  withoutValidate: boolean = false;
   caseTypeViewLicense!: number;
   caseStatus: number;
   requestType: number;
@@ -39,14 +40,15 @@ export class SelectLicensePopupComponent {
       caseRecord: any | undefined,
       select: boolean,
       displayedColumns: string[],
-      isNotLicense: boolean
+      isNotLicense: boolean,
+      withoutValidate: boolean
     }) {
     this.caseType = this.data.caseRecord?.getCaseType();
     this.caseStatus = this.data.caseRecord?.getCaseStatus();
     this.requestType = this.data.caseRecord?.getRequestType() || -1;
     this.caseService = this.inboxService.getService(this.caseType);
     this.caseTypeViewLicense = SelectLicensePopupComponent._getCaseTypeForViewLicense(this.caseType, this.requestType);
-
+    this.withoutValidate = this.data.withoutValidate;
     if (this.data.displayedColumns.length > 0) {
       this.displayedColumns = [...this.data.displayedColumns];
     } else {
@@ -128,7 +130,7 @@ export class SelectLicensePopupComponent {
         }
         this.dialogRef.close({ selected: license, details: requestDetails });
       });
-    } else {
+    } else if (!this.withoutValidate) {
       this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id)
       .pipe(catchError((err) => {
         return of(false)
@@ -139,6 +141,8 @@ export class SelectLicensePopupComponent {
           }
           this.dialogRef.close({ selected: license, details: licenseDetails });
         });
+    } else {
+      this.dialogRef.close({ selected: license, details: license });
     }
   }
 }
