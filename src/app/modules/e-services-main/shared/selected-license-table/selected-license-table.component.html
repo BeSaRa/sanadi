@@ -54,6 +54,10 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo?.getName() || ''}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="orgInfo">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.orgInfo?.getName() || ''}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="requestTypeInfo">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.request_type}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.requestTypeInfo?.getName() || ''}} </td>

@@ -40,6 +40,7 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
   serviceKey: keyof ILanguageKeys = 'menu_projects_fundraising';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   searchColumns: string[] = ['fullSerial', 'subject', 'requestTypeInfo', 'createdOn', 'caseStatus', 'ouInfo'];
+  selectLicenseDisplayColumns = ['licenseNumber', 'orgInfo', 'status', 'actions'];
 
   constructor(public http: HttpClient,
     public domSanitizer: DomSanitizer,

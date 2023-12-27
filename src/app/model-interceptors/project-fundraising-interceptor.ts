@@ -50,7 +50,7 @@ export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectF
     })) : []
 
     model.countriesInfo = model.countriesInfo ? model.countriesInfo.map(item => AdminResult.createInstance(item)) : []
-
+    model.orgInfo = AdminResult.createInstance(model.orgInfo)
     model.domainInfo = AdminResult.createInstance(model.domainInfo)
     model.workAreaInfo = AdminResult.createInstance(model.workAreaInfo)
     model.permitTypeInfo = AdminResult.createInstance(model.permitTypeInfo)
@@ -79,6 +79,7 @@ export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectF
     delete model.subDACCategoryInfo
     delete model.internalProjectClassificationInfo
     delete model.sanadiDomainInfo
+    delete model.orgInfo
     delete model.sanadiMainClassificationInfo
     delete model.requestTypeInfo
     delete model.licenseStatusInfo

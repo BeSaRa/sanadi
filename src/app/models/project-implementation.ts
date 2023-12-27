@@ -82,6 +82,7 @@ export class ProjectImplementation
   creatorInfo!: AdminResult
   ouInfo!: AdminResult
   licenseStatusInfo!: AdminResult
+  orgInfo!: AdminResult
   inRenewalPeriod!: boolean
   usedInProjectCompletion!: boolean
   licenseClassName!: string;

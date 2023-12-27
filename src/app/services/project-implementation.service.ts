@@ -61,6 +61,7 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
   serviceKey: keyof ILanguageKeys = 'menu_project_implementation';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   searchColumns: string[] = ['fullSerial', 'subject', 'requestTypeInfo', 'createdOn', 'caseStatus', 'ouInfo'];
+  selectLicenseDisplayColumns = ['licenseNumber', 'orgInfo', 'status', 'actions'];
 
   constructor(
     public http: HttpClient,
