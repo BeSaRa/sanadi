@@ -10,7 +10,7 @@ import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 import { ComponentType } from '@angular/cdk/portal';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { Pagination } from '@app/models/pagination';
@@ -100,9 +100,6 @@ export class NpoDataService extends CrudWithDialogGenericService<NpoData> {
     fallback: '$pagination'
   })
   paginateComposite(options: Partial<PaginationContract>): Observable<Pagination<NpoData[]>> {
-    return this.profileService.getNPOsProfiles().pipe(
-      tap(result => this.list = result.rs),
-      tap(result => this._loadDone$.next(result.rs))
-    );
+    return this.loadByFilterPaginate(options, {})
   }
 }
