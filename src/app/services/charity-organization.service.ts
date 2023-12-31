@@ -94,9 +94,6 @@ export class CharityOrganizationService extends CrudWithDialogGenericService<Cha
     fallback: '$pagination'
   })
   paginateComposite(options: Partial<PaginationContract>): Observable<Pagination<CharityOrganization[]>> {
-    return this.profileService.getCharitiesProfiles().pipe(
-      tap(result => this.list = result.rs),
-      tap(result => this._loadDone$.next(result.rs))
-    );
+    return this.loadByFilterPaginate(options, {});
   }
 }
