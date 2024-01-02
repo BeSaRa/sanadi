@@ -982,8 +982,9 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
 
   isEditReceiverTypeAllowed(): boolean {
     return (
-      !this.isExternalTransferType() &&
-      this.transfereeType.value === FinancialTransfereeTypes.AUTHORIZED_ENTITY
+      this.transferType.value !== FinancialTransferTypes.OVERSEAS_OFFICE_OPERATING_EXPENSES &&
+      this.transfereeType.value === FinancialTransfereeTypes.AUTHORIZED_ENTITY &&
+      this.transferType.value === FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY
     );
   }
   isSearchAuthorizedEntityAllowed() {
