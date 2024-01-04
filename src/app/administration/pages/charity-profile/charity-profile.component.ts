@@ -93,7 +93,7 @@ export class CharityProfileComponent extends AdminGenericComponent<CharityOrgani
     this.view$.pipe(
       takeUntil(this.destroy$),
       exhaustMap((model) => {
-        return this.service.openViewDialog(model.id).pipe(catchError((_) => of(null)));
+        return this.service.openViewDialog(model.profileId).pipe(catchError((_) => of(null)));
       })
     )
       .pipe(
