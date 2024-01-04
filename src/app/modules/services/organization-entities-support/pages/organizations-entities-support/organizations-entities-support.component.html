@@ -53,21 +53,26 @@
             <app-field-error-message [control]="selectedTemplateControl"></app-field-error-message>
           </div>
         </div>
+        <div class="col-md-2 mb-4 position-relative">
+          <div style="font-size: 19px; padding-top: 2rem">
+            <button class="btn btn-primary btn-sm ms-2" 
+                    [tooltip]="lang.map.view + ' ' + lang.map.uploaded_templates"
+                    (click)="selectTemplatePopup(false)"><i
+              class="mdi mdi-file-eye"></i></button>
+          </div>
+        </div>
         <div class="col-md-4 mb-4 position-relative"  *ngIf="isLicensingUser">
           <div class="input-group">
             <file-uploader #fileUploader *ngIf="selectedTemplate && openFrom === openFromEnum.USER_INBOX" labelKey="template_file"
                            [isRequired]="true" (fileUploadEvent)="uploadTemplate($event)"
                            [allowedExtensions]="[fileExtensionsEnum.DOCX]">
             </file-uploader>
-            <div style="font-size: 19px; padding-top: 2rem">
-              <button class="btn btn-primary btn-sm ms-2" *ngIf="isInternalUser"
-                      [tooltip]="lang.map.view + ' ' + lang.map.uploaded_templates"
-                      (click)="selectTemplatePopup(false)"><i
-                class="mdi mdi-file-eye"></i></button>
-            </div>
+           
           </div>
         </div>
+       
       </div>
+     
       <div class="row">
         <div class="col-sm-12 col-md-4 mb-4 position-relative" [hidden]="!showOtherService">
           <label class="form-label" asteriskIfRequired="otherService" for="otherService">{{lang.map.lbl_other}}</label>
