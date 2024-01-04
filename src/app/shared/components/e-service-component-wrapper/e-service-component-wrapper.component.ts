@@ -1836,7 +1836,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             });
           })
       } else if (item.getCaseType() === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
-        if (this.employeeService.isLicensingUser() ) {
+        if (this.employeeService.isLicensingUser()) {
           const model = item as unknown as OrganizationsEntitiesSupport;
           const component = this.component as unknown as OrganizationsEntitiesSupportComponent;
           component.validateApproveTimplate()
@@ -1997,14 +1997,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           });
         })
     } else if (item.getCaseType() === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
-      if (!this.employeeService.isLicensingUser() || !this.employeeService.isSupervisionAndControlUser()) {
-        item.reject().onAfterClose$.subscribe(actionTaken => {
-          actionTaken && this.navigateToSamePageThatUserCameFrom();
-        });
-      } else {
+      if (this.employeeService.isLicensingUser()) {
         const model = item as unknown as OrganizationsEntitiesSupport;
         const component = this.component as unknown as OrganizationsEntitiesSupportComponent;
-        component.validateApproveTimplate()
+        component.validateRejectTimplate()
           .pipe(
             tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
             filter(valid => valid)
@@ -2013,10 +2009,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
               actionTaken && this.navigateToSamePageThatUserCameFrom();
             });
           })
-      }
 
+      } else{
+        item.reject().onAfterClose$.subscribe(actionTaken => {
+          actionTaken && this.navigateToSamePageThatUserCameFrom();
+        });
+      }
     }
-   else {
+    else {
       item.reject().onAfterClose$.subscribe(actionTaken => {
         actionTaken && this.navigateToSamePageThatUserCameFrom();
       });
