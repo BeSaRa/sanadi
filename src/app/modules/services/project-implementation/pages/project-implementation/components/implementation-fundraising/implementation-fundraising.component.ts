@@ -275,6 +275,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     const criteria = this.service.getCriteria(this.criteria())
     delete criteria.mainDAC;
     delete criteria.mainUNOCHA;
+    delete criteria.internalProjectClassification;
     this.service.loadFundraisingLicensesByCriteria(criteria, criteria.workArea!)
       .pipe(tap(models => !models.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(models => !!models.length))
