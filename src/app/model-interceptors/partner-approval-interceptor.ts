@@ -1,23 +1,23 @@
-import {WorkArea} from '@models/work-area';
-import {CommercialActivity} from '@models/commercial-activity';
-import {IModelInterceptor} from '@contracts/i-model-interceptor';
-import {TaskDetails} from '@models/task-details';
-import {AdminResult} from '@models/admin-result';
-import {PartnerApproval} from '@models/partner-approval';
-import {FactoryService} from '@app/services/factory.service';
-import {PartnerApprovalService} from '@app/services/partner-approval.service';
-import {DateUtils} from '@app/helpers/date-utils';
-import {IMyDateModel} from 'angular-mydatepicker';
-import {BankAccount} from '@app/models/bank-account';
-import {ExecutiveManagement} from '@app/models/executive-management';
-import {Goal} from '@app/models/goal';
-import {ManagementCouncil} from '@app/models/management-council';
-import {TargetGroup} from '@app/models/target-group';
-import {ContactOfficer} from '@app/models/contact-officer';
-import {ApprovalReason} from '@app/models/approval-reason';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {GoalList} from '@app/models/goal-list';
-import {LookupService} from '@services/lookup.service';
+import { WorkArea } from '@models/work-area';
+import { CommercialActivity } from '@models/commercial-activity';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { TaskDetails } from '@models/task-details';
+import { AdminResult } from '@models/admin-result';
+import { PartnerApproval } from '@models/partner-approval';
+import { FactoryService } from '@app/services/factory.service';
+import { PartnerApprovalService } from '@app/services/partner-approval.service';
+import { DateUtils } from '@app/helpers/date-utils';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { BankAccount } from '@app/models/bank-account';
+import { ExecutiveManagement } from '@app/models/executive-management';
+import { Goal } from '@app/models/goal';
+import { ManagementCouncil } from '@app/models/management-council';
+import { TargetGroup } from '@app/models/target-group';
+import { ContactOfficer } from '@app/models/contact-officer';
+import { ApprovalReason } from '@app/models/approval-reason';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { GoalList } from '@app/models/goal-list';
+import { LookupService } from '@services/lookup.service';
 
 export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerApproval> {
   receive(model: PartnerApproval): PartnerApproval {
@@ -47,7 +47,7 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
     model.approvalReasonList = model.approvalReasonList.map((x) => service.approvalReasonInterceptor.receive(new ApprovalReason().clone(x)));
     model.workAreaObjectList = model.workAreaObjectList.map((x) => service.workAreaInterceptor.receive(new WorkArea().clone(x)));
     model.commercialActivitiesList = model.commercialActivitiesList.map((x) => service.commercialActivityInterceptor.receive(new CommercialActivity().clone(x)));
-    model.displayGoals = model.goals.map(x => new Goal().clone({goal: x}))
+    model.displayGoals = model.goals.map(x => new Goal().clone({ goal: x }))
     model.establishmentDateTimestamp = !model.establishmentDate ? null : DateUtils.getTimeStampFromDate(model.establishmentDate);
     model.commercialLicenseEndDateTimestamp = !model.commercialLicenseEndDate ? null : DateUtils.getTimeStampFromDate(model.commercialLicenseEndDate);
 
@@ -78,47 +78,55 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
     );
     model.bankAccountList = model.bankAccountList?.map((x: BankAccount) => {
       delete x.category;
-      return service.bankAccountInterceptor.send(new BankAccount().clone(x)) as BankAccount;
+      return service.bankAccountInterceptor.send(new BankAccount().clone({ ...x })) as BankAccount;
     });
     model.goalsList = model.goalsList?.map((x: GoalList) => {
-      return service.goalListInterceptor.send(x) as GoalList;
+      return service.goalListInterceptor.send({ ...x }) as GoalList;
     });
     model.managementCouncilList = model.managementCouncilList?.map(
       (x: ManagementCouncil) => {
         return service.managementCouncilInterceptor.send(
-          x
+          { ...x }
         ) as ManagementCouncil;
       }
     );
     model.executiveManagementList = model.executiveManagementList?.map(
       (x: ExecutiveManagement) => {
         return service.executiveManagementInterceptor.send(
-          x
+          { ...x }
         ) as ExecutiveManagement;
       }
     );
     model.targetGroupList = model.targetGroupList?.map((x: TargetGroup) => {
-      return service.targetGroupInterceptor.send(x) as TargetGroup;
+      return service.targetGroupInterceptor.send(
+        { ...x }
+      ) as TargetGroup;
     });
     model.contactOfficerList = model.contactOfficerList?.map(
       (x: ContactOfficer) => {
-        return service.contactOfficerInterceptor.send(x) as ContactOfficer;
+        return service.contactOfficerInterceptor.send(
+          { ...x }
+        ) as ContactOfficer;
       }
     );
     model.approvalReasonList = model.approvalReasonList?.map(
       (x: ApprovalReason) => {
-        return service.approvalReasonInterceptor.send(x) as ApprovalReason;
+        return service.approvalReasonInterceptor.send(
+          { ...x }
+        ) as ApprovalReason;
       }
     );
     model.commercialActivitiesList = model.commercialActivitiesList?.map(
       (x: CommercialActivity) => {
         return service.commercialActivityInterceptor.send(
-          x
+          { ...x }
         ) as CommercialActivity;
       }
     );
     model.workAreaObjectList = model.workAreaObjectList?.map((x: WorkArea) => {
-      return service.workAreaInterceptor.send(x) as WorkArea;
+      return service.workAreaInterceptor.send({
+        ...x
+      }) as WorkArea;
     });
 
     model.goals = model.displayGoals?.map(x => x.goal) ?? [];
