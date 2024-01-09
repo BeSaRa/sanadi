@@ -261,7 +261,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
           ]
         : transferringEntityName,
       transferAccountNumber: control
-        ? [transferAccountNumber, [CustomValidators.required, CustomValidators.number]]
+        ? [transferAccountNumber, [CustomValidators.required]]
         : transferAccountNumber,
       transfereeBankName: control
         ? [
