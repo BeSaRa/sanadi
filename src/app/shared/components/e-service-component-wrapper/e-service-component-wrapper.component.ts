@@ -1823,19 +1823,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         model.approveWithSave(component.selectedInternalUsers, meetingDate, year).onAfterClose$.subscribe(actionTaken => {
           actionTaken && this.navigateToSamePageThatUserCameFrom();
         });
-      } else if (item.getCaseType() === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
-        const model = item as unknown as AwarenessActivitySuggestion;
-        const component = this.component as unknown as AwarenessActivitySuggestionComponent;
-        component.validateApproveTimplate()
-          .pipe(
-            tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
-            filter(valid => valid)
-          ).subscribe(() => {
-            model.approve().onAfterClose$.subscribe(actionTaken => {
-              actionTaken && this.navigateToSamePageThatUserCameFrom();
-            });
-          })
-      } else if (item.getCaseType() === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
+      } else if (item.getCaseType() === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT ||
+        item.getCaseType() === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
         if (this.employeeService.isLicensingUser()) {
           const model = item as unknown as OrganizationsEntitiesSupport;
           const component = this.component as unknown as OrganizationsEntitiesSupportComponent;
@@ -1985,18 +1974,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private rejectAction(item: CaseModel<any, any>) {
-    if (item.getCaseType() === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
-      const component = this.component as unknown as AwarenessActivitySuggestionComponent;
-      component.validateRejectTimplate()
-        .pipe(
-          tap(valid => !valid && this.service.dialog.error(this.lang.map.invalid_template)),
-          filter(valid => valid)
-        ).subscribe(() => {
-          item.reject().onAfterClose$.subscribe(actionTaken => {
-            actionTaken && this.navigateToSamePageThatUserCameFrom();
-          });
-        })
-    } else if (item.getCaseType() === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
+    if (item.getCaseType() === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT ||
+      item.getCaseType() === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
       if (this.employeeService.isLicensingUser()) {
         const model = item as unknown as OrganizationsEntitiesSupport;
         const component = this.component as unknown as OrganizationsEntitiesSupportComponent;
@@ -2010,7 +1989,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             });
           })
 
-      } else{
+      } else {
         item.reject().onAfterClose$.subscribe(actionTaken => {
           actionTaken && this.navigateToSamePageThatUserCameFrom();
         });
