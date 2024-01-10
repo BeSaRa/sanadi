@@ -27,7 +27,7 @@ export class MakeDecisionComponent implements OnInit {
     private service: WorldCheckService,
     private dialogRef: DialogRef,
     @Inject(DIALOG_DATA_TOKEN) public data: {
-      resultId: string
+      resultId: number
     }) { }
 
   ngOnInit() {
@@ -40,8 +40,8 @@ export class MakeDecisionComponent implements OnInit {
       filter(_ => this.control.valid),
       switchMap(() => {
         return this.service.worlddCheckInquire({
-          first: this.data.resultId,
-          second: this.control.value?.toString() as string,
+          id: this.data.resultId,
+          actionType: this.control.value?.toString() as string,
           comment: this.comment.value || ''
         })
       })
