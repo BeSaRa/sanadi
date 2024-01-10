@@ -110,8 +110,8 @@ export class ScreeningSearchAuditComponent implements OnInit {
   getSerachCriteria(form: WorldCheckSearch) {
     return {
       ...form,
-      actionDateFrom: !form.actionDateFrom ? '' : DateUtils.changeDateFromDatepicker(form.actionDateFrom as unknown as IMyDateModel)?.toISOString(),
-      actionDateTo: !form.actionDateTo ? '' : DateUtils.changeDateFromDatepicker(form.actionDateTo as unknown as IMyDateModel)?.toISOString()
+      actionDateFrom: !form.actionDateFrom ? null : DateUtils.getTimeStampFromDate(form.actionDateFrom as unknown as IMyDateModel),
+      actionDateTo: !form.actionDateTo ? null : DateUtils.getTimeStampFromDate(form.actionDateTo as unknown as IMyDateModel)
     };
   }
   onDateChange(
