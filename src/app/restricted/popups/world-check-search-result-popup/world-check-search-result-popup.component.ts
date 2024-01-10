@@ -44,19 +44,19 @@ export class WorldCheckSearchResultPopupComponent implements OnInit, OnDestroy {
       .subscribe(() => this.dialogRef.close());
   }
   getDeadDays(events: any) {
-    const dead = events.find((e: any) => e.type == 'DEATH');
+    const dead = events?.find((e: any) => e.type == 'DEATH');
     return dead ? dead.fullDate : ' --- ';
   }
   getBirthDays(events: any) {
-    const birth = events.filter((e: any) => e.type == 'BIRTH');
+    const birth = events?.filter((e: any) => e.type == 'BIRTH')??[];
     return birth.reduce((curr: any, next: any) => {
       return (curr ? curr + ' / ' : '') + next.fullDate
     }, '');
   }
   getCountries(countries: any) {
-    return countries.reduce((curr: any, next: any) => {
+    return countries?.reduce((curr: any, next: any) => {
       return (curr ? curr + ' / ' : '') + next.country.name
-    }, '');
+    }, '')?? '';
   }
   ngOnDestroy(): void {
     this.destroy$.next();
