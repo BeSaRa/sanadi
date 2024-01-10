@@ -40,7 +40,7 @@ export class WorldCheckSearch extends BaseModel<WorldCheckSearch, WorldCheckServ
   }
   buildInquireForm() {
     return {
-      targetName: ['', [CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]],
+      targetName: ['', [CustomValidators.required,CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]],
       entityType: [null, [CustomValidators.required]],
     }
   }
