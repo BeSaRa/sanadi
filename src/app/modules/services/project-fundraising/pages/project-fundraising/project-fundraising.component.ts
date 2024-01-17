@@ -197,10 +197,10 @@ implements AfterViewInit {
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
-    if (this.model && !this.model.deductedPercentagesItemList.length) {
-      this.invalidItemMessage();
-      return false
-    }
+    // if (this.model && !this.model.deductedPercentagesItemList.length) {
+    //   this.invalidItemMessage();
+    //   return false
+    // }
     return true;
   }
 
@@ -455,6 +455,7 @@ implements AfterViewInit {
       }))
       .subscribe((template: ProjectTemplate) => {
         this.model && template && this.model.setTemplate(template as ProjectTemplate) && this.model.setProjectTotalCost(template.templateCost) && this.projectTotalCost.setValue(template.templateCost, { emitEvent: false })
+        this.onDeductionRatioChanges()
       })
   }
 

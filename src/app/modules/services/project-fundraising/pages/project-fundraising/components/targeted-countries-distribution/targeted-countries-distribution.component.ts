@@ -300,7 +300,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     this.deductionRatioChanges$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter(value => value))
-      .pipe(filter(_ => !!this._model.deductedPercentagesItemList.length))
+     // .pipe(filter(_ => !!this._model.deductedPercentagesItemList.length))
       .subscribe(() => {
         this.addOrphanItem()
         this.updateOrphanItem()
