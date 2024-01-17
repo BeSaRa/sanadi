@@ -52,6 +52,8 @@ import {GdxQCBResponse} from '@app/models/gdx-qcb-response';
 import {DomSanitizer} from '@angular/platform-browser';
 import {FileExtensionsEnum} from "@enums/file-extension-mime-types-icons.enum";
 import {SharedService} from "@services/shared.service";
+import { GdxMoiPersonal } from '@app/models/gdx-moi-personal';
+import { GdxMoiAddress } from '@app/models/gdx-moi-address';
 
 const beneficiarySearchLogCriteriaInterceptor = new BeneficiarySearchLogCriteriaInterceptor();
 
@@ -335,7 +337,20 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
         })
       )
   }
-
+  @CastResponse(() => GdxMoiPersonal, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addPersonalInfoInquiry(criteria: IGdxCriteria) {
+    return this.http.post<GdxMoiPersonal[]>(this._getGDXServiceURL() + '/moi/person-info', criteria);
+  }
+  @CastResponse(() => GdxMoiAddress, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addAddressInfoInquiry(criteria: IGdxCriteria) {
+    return this.http.post<GdxMoiAddress[]>(this._getGDXServiceURL() + '/moi/address-info', criteria);
+  }
   downloadQCBReport(gdxServiceLogId: number) {
     return this.http.get(this._getGDXServiceURL() + '/qcb/download-report/' + gdxServiceLogId, {
       responseType: 'blob'

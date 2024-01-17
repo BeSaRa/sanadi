@@ -76,7 +76,7 @@ export class IntegrationInquiryLogListComponent {
       type: 'action',
       label: 'select',
       show: () => GdxServicesEnum.QCB !== this.gdxServiceId,
-      disabled: (item) => !item.viewable,
+      disabled: (item) => item.viewable,
       onClick: (item: GdxServiceLog) => this.selectLog(item)
     },
     // download
@@ -166,6 +166,12 @@ export class IntegrationInquiryLogListComponent {
         break;
       case GdxServicesEnum.QCB:
         request = this.beneficiaryService.addQCBInquiryReport(this._getGDXCriteria());
+        break;
+      case GdxServicesEnum.MOI_ADDRESS_INFO:
+        request = this.beneficiaryService.addAddressInfoInquiry(this._getGDXCriteria());
+        break;
+      case GdxServicesEnum.MOI_PERSONAL_INFO:
+        request = this.beneficiaryService.addPersonalInfoInquiry(this._getGDXCriteria());
         break;
       default:
         request = null;

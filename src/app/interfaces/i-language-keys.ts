@@ -2107,4 +2107,21 @@ export interface ILanguageKeys {
   menu_npo_profile:string;
   menu_charity_profile:string;
   license_end_date_percentage:string;
+  integration_moi:string;
+  moi_address:string;
+  moi_personal:string;
+  lbl_street_ar:string;
+  lbl_street_en:string;
+  lbl_ar_name_1:string;
+  lbl_ar_name_2:string;
+  lbl_ar_name_3:string;
+  lbl_ar_name_4:string;
+  lbl_ar_name_5:string;
+  lbl_en_name_1:string;
+  lbl_en_name_2:string;
+  lbl_en_name_3:string;
+  lbl_en_name_4:string;
+  lbl_en_name_5:string;
+  lbl_nat_code_ar:string;
+  lbl_nat_code_en:string;
 }
