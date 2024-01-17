@@ -394,10 +394,12 @@ implements AfterViewInit {
   private setDefaultValues(): void {
     if (this.operation === OperationTypes.CREATE) {
       this.requestType.setValue(ServiceRequestTypes.NEW)
-      this.projectWorkArea.setValue(ProjectWorkArea.INSIDE_QATAR)
+      if(this.permitType.value !== ProjectPermitTypes.CHARITY){
+        this.projectWorkArea.setValue(ProjectWorkArea.INSIDE_QATAR)
+      }
       this.permitType.setValue((this.permitTypes[0] && this.permitTypes[0].lookupKey) || null)
-      this.domain.setValue(DomainTypes.HUMANITARIAN)
-      this.projectType.setValue(FundraisingProjectTypes.SOFTWARE)
+      // this.domain.setValue(DomainTypes.HUMANITARIAN)
+      // this.projectType.setValue(FundraisingProjectTypes.SOFTWARE)
       this.countriesField.setValue([this.qatarCountry.id])
     }
   }
@@ -800,7 +802,7 @@ implements AfterViewInit {
     this.templateRequired = this.displayAllFields && model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
     this.displaySanadySection = !!(this.displayInsideQatar && model.projectType && model.projectType === FundraisingProjectTypes.AIDS && this.permitType.value !== ProjectPermitTypes.SECTIONAL_BASKET)
     this.displayInternalSection = !!(this.displayInsideQatar && model.projectType && model.projectType === FundraisingProjectTypes.SOFTWARE && this.permitType.value !== ProjectPermitTypes.SECTIONAL_BASKET)
-    this.displayDacSection = this.displayOutsideQatar && model.domain === DomainTypes.DEVELOPMENT
+    this.displayDacSection = this.displayOutsideQatar && model.domain === DomainTypes.DEVELOPMENT && this.permitType.value !== ProjectPermitTypes.SECTIONAL_BASKET
     this.displaySubDacSection = this.displayDacSection && this.permitType.value !== ProjectPermitTypes.SECTIONAL_BASKET;
     this.displayOchaSection = this.displayOutsideQatar && model.domain === DomainTypes.HUMANITARIAN && model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
   }
@@ -1122,6 +1124,8 @@ implements AfterViewInit {
           if(this.projectWorkArea.value === ExecutionFields.OutsideQatar )
               this.countriesField.setValue(null,{ emitEvent: false })
          })()
+         this.domain.setValue(null, { emitEvent: false })
+         this.projectType.setValue(null, { emitEvent: false })
             // this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR,{ emitEvent: false });
 
       })
