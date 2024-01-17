@@ -711,7 +711,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         }
       })
   }
-
+   private _executionCountry?:number;
+   get executionCountry(){
+    return this._executionCountry;
+   }
   private listenToImplementationTemplateChanges() {
     this.implementationTemplate
       .valueChanges
@@ -719,6 +722,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .pipe(tap((value: ImplementationTemplate[]) => {
         value && value.length ? (() => {
           this.projectTotalCost.patchValue(value[0].projectTotalCost)
+          this._executionCountry = value[0].executionCountry
         })() : (() => {
           this.projectTotalCost.patchValue(0)
           this.implementationFundraising.setValue([])
