@@ -17,6 +17,8 @@ import { GdxMmeResponse } from '@app/models/gdx-mme-leased-contract';
 import { GdxQatarCharityResponse } from '@app/models/gdx-qatar-charity-response';
 import { GdxMsdfSecurityResponse } from '@app/models/gdx-msdf-security';
 import { GdxMsdfHousingResponse } from '@app/models/gdx-msdf-housing';
+import { GdxMoiAddress } from '@app/models/gdx-moi-address';
+import { GdxMoiPersonal } from '@app/models/gdx-moi-personal';
 
 export interface IGdxServiceRelatedData {
   [GdxServiceRelatedTypesEnum.MOJ_FLATS]: GdxFlatInfo[],
@@ -37,4 +39,6 @@ export interface IGdxServiceRelatedData {
   [GdxServiceRelatedTypesEnum.EID_CHARITABLE_FOUNDATION]: GdxEidCharitableFoundationResponse[],
   [GdxServiceRelatedTypesEnum.HOUSING_BENEFICIARY_STATUS]: GdxMsdfHousingResponse[],
   [GdxServiceRelatedTypesEnum.SECURITY_BENEFICIARY_STATUS]: GdxMsdfSecurityResponse[],
+  [GdxServiceRelatedTypesEnum.MOI_ADDRESS_INFO]: GdxMoiAddress[],
+  [GdxServiceRelatedTypesEnum.MOI_PERSONAL_INFO]: GdxMoiPersonal[],
 }

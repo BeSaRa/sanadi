@@ -1,0 +1,111 @@
+<div class="row">
+  <div class="col-12">
+    <app-table #table sortableTable
+               [data]="list"
+               [columns]="displayedColumns"
+               [filter]="filterControl.value" [useSearchToFilter]="true">
+      <table class="table table-striped table-bordered caption-top" cdk-table
+             [dataSource]="table.dataSource">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="moi_personal" [headerClass]="'bg-secondary'"
+                          [sort]="table.dataSource.sort"
+                          (textChange)="filterControl.setValue($event)">
+            </table-header>
+          </th>
+        </ng-container>
+
+        <ng-container cdkColumnDef="qidNum">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.identification_number}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.qidNum}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="arbName1">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_ar_name_1}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.arbName1}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="arbName2">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_ar_name_2}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.arbName2}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="arbName3">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_ar_name_3}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.arbName3}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="arbName4">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_ar_name_4}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.arbName4}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="arbName5">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_ar_name_5}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.arbName5}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="engName1">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_en_name_1}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.engName1}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="engName2">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_en_name_2}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.engName2}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="engName3">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_en_name_3}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.engName3}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="engName4">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_en_name_4}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.engName4}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="engName5">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_en_name_5}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.engName5}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="birthDateStr">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.date_of_birth}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.birthDateStr}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="idCardExpiryDate">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.id_expiry_date}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.idCardExpiryDate}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="natCodeTextAR">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_nat_code_ar}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.natCodeTextAR}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="natCodeTextEN">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_nat_code_en}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.natCodeTextEN}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="sex">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.gender}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.sex}}</span></td>
+        </ng-container>
+
+        <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+        <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: table.columns;"
+            (contextmenu)="menu.open($event , row)"></tr>
+        <tr *cdkNoDataRow>
+          <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+        </tr>
+      </table>
+    </app-table>
+    <context-menu-item #menu
+                       [actions]="actions"></context-menu-item>
+  </div>
+</div>

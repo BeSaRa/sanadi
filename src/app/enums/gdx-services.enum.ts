@@ -16,4 +16,6 @@ export enum GdxServicesEnum {
   HOUSING_BENEFICIARY_STATUS = '15',
   SECURITY_BENEFICIARY_STATUS = '16',
   QCB = '17',
+  MOI_ADDRESS_INFO = '18',
+  MOI_PERSONAL_INFO = '19',
 }

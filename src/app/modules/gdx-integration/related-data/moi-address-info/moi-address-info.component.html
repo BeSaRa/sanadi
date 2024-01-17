@@ -1,0 +1,92 @@
+<div class="row">
+  <div class="col-12">
+    <app-table #table sortableTable
+               [data]="list"
+               [columns]="displayedColumns"
+               [filter]="filterControl.value" [useSearchToFilter]="true">
+      <table class="table table-striped table-bordered caption-top" cdk-table
+             [dataSource]="table.dataSource">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="moi_address" [headerClass]="'bg-secondary'"
+                          [sort]="table.dataSource.sort"
+                          (textChange)="filterControl.setValue($event)">
+            </table-header>
+          </th>
+        </ng-container>
+
+        <ng-container cdkColumnDef="qidNum">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.identification_number}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.qidNum}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="addressDesc">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.address_details}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.addressDesc}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="buildingNum">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.building_number}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.buildingNum}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="email">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_email}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.email}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="mobileNum">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_mobile_number}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.mobileNum}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="postBoxNum">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_po_box_num}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.postBoxNum}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="streetNameAr">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_street_ar}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.streetNameAr}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="streetNameEn">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_street_en}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.streetNameEn}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="streetNum">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.street_no_lbl}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.streetNum}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="telephoneNum">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_phone}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.telephoneNum}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="unitNum">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.unit_number}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.unitNum}}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="zoneNum">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header
+              > {{lang.map.lbl_zone}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{row.zoneNum}}</span></td>
+        </ng-container>
+
+
+        <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+        <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: table.columns;"
+            (contextmenu)="menu.open($event , row)"></tr>
+        <tr *cdkNoDataRow>
+          <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+        </tr>
+      </table>
+    </app-table>
+    <context-menu-item #menu
+                       [actions]="actions"></context-menu-item>
+  </div>
+</div>

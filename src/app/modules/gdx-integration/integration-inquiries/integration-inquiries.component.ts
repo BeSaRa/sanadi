@@ -1,17 +1,17 @@
-import {SharedService} from '@app/services/shared.service';
-import {Component, Input, ViewChild} from '@angular/core';
-import {Subject} from 'rxjs';
-import {Beneficiary} from '@app/models/beneficiary';
-import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
-import {GdxServiceRelatedTypesEnum} from '@app/enums/gdx-service-related-types.enum';
-import {GdxServiceLog} from '@app/models/gdx-service-log';
-import {LangService} from '@services/lang.service';
-import {TabMap} from '@app/types/types';
-import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response';
-import {IGdxServiceRelatedData} from '@contracts/i-gdx-service-related-data';
-import {CommonUtils} from '@helpers/common-utils';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {ITabData} from '@contracts/i-tab-data';
+import { SharedService } from '@app/services/shared.service';
+import { Component, Input, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Beneficiary } from '@app/models/beneficiary';
+import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
+import { GdxServiceRelatedTypesEnum } from '@app/enums/gdx-service-related-types.enum';
+import { GdxServiceLog } from '@app/models/gdx-service-log';
+import { LangService } from '@services/lang.service';
+import { TabMap } from '@app/types/types';
+import { GdxGarsiaPensionResponse } from '@app/models/gdx-garsia-pension-response';
+import { IGdxServiceRelatedData } from '@contracts/i-gdx-service-related-data';
+import { CommonUtils } from '@helpers/common-utils';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { ITabData } from '@contracts/i-tab-data';
 import {
   IntegrationInquiryLogListComponent
 } from '@app/modules/gdx-integration/integration-inquiry-log-list/integration-inquiry-log-list.component';
@@ -21,14 +21,14 @@ import {
 import {
   GarsiaPensionListComponent
 } from '@app/modules/gdx-integration/related-data/garsia-pension-list/garsia-pension-list.component';
-import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
-import {GdxMojResponse} from '@app/models/gdx-moj-response';
-import {GdxMoeResponse} from '@app/models/gdx-moe-pending-installments';
-import {MoeStudentInfoComponent} from '../related-data/moe-student-info/moe-student-info.component';
-import {MoeInstallmentsComponent} from '../related-data/moe-installments/moe-installments.component';
-import {MoePendingPaymentComponent} from '../related-data/moe-pending-payment/moe-pending-payment.component';
-import {TabsListComponent} from "@app/shared/components/tabs/tabs-list.component";
-import {BeneficiaryService} from '@app/services/beneficiary.service';
+import { GdxMolPayrollResponse } from '@app/models/gdx-mol-payroll-response';
+import { GdxMojResponse } from '@app/models/gdx-moj-response';
+import { GdxMoeResponse } from '@app/models/gdx-moe-pending-installments';
+import { MoeStudentInfoComponent } from '../related-data/moe-student-info/moe-student-info.component';
+import { MoeInstallmentsComponent } from '../related-data/moe-installments/moe-installments.component';
+import { MoePendingPaymentComponent } from '../related-data/moe-pending-payment/moe-pending-payment.component';
+import { TabsListComponent } from "@app/shared/components/tabs/tabs-list.component";
+import { BeneficiaryService } from '@app/services/beneficiary.service';
 
 @Component({
   selector: 'integration-inquiries',
@@ -198,6 +198,26 @@ export class IntegrationInquiriesComponent {
       serviceId: GdxServicesEnum.QCB,
       isLoaded: false
     },
+    moi_address: {
+      name: 'moi_address',
+      index: 13,
+      langKey: 'moi_address',
+      show: () => true,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.MOI_ADDRESS_INFO,
+      isLoaded: false
+    },
+    moi_personal: {
+      name: 'moi_personal',
+      index: 14,
+      langKey: 'moi_personal',
+      show: () => true,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.MOI_PERSONAL_INFO,
+      isLoaded: false
+    },
   };
   charityTabsData: TabMap = {
     qatarZakatFund: {
@@ -296,6 +316,8 @@ export class IntegrationInquiriesComponent {
     [GdxServiceRelatedTypesEnum.EID_CHARITABLE_FOUNDATION]: [],
     [GdxServiceRelatedTypesEnum.HOUSING_BENEFICIARY_STATUS]: [],
     [GdxServiceRelatedTypesEnum.SECURITY_BENEFICIARY_STATUS]: [],
+    [GdxServiceRelatedTypesEnum.MOI_PERSONAL_INFO]: [],
+    [GdxServiceRelatedTypesEnum.MOI_ADDRESS_INFO]: [],
   };
 
   onMainTabChange(tab: TabComponent): void {
@@ -376,6 +398,12 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.SECURITY_BENEFICIARY_STATUS:
         this.relatedData[this.gdxServiceRelatedTypesEnum.SECURITY_BENEFICIARY_STATUS] = [log.gdxServiceResponseParsed];
+        break;
+      case GdxServicesEnum.MOI_ADDRESS_INFO:
+        this.relatedData[GdxServiceRelatedTypesEnum.MOI_ADDRESS_INFO] = [log.gdxServiceResponseParsed];
+        break;
+      case GdxServicesEnum.MOI_PERSONAL_INFO:
+        this.relatedData[GdxServiceRelatedTypesEnum.MOI_PERSONAL_INFO] = [log.gdxServiceResponseParsed];
         break;
       default:
         break;
@@ -479,6 +507,12 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.SECURITY_BENEFICIARY_STATUS:
         this.relatedData[GdxServiceRelatedTypesEnum.SECURITY_BENEFICIARY_STATUS] = [];
+        break;
+      case GdxServicesEnum.MOI_ADDRESS_INFO:
+        this.relatedData[GdxServiceRelatedTypesEnum.MOI_ADDRESS_INFO] = [];
+        break;
+      case GdxServicesEnum.MOI_PERSONAL_INFO:
+        this.relatedData[GdxServiceRelatedTypesEnum.MOI_PERSONAL_INFO] = [];
         break;
       default:
         break;
