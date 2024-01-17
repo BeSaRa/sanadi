@@ -48,8 +48,10 @@ export class ImplementingAgencyListComponent implements ControlValueAccessor, On
   }
 
   @Input()
-  set country(value: number) {
-    this.country$.next(value)
+  set country(value: number|undefined) {
+    if(!!value){
+      this.country$.next(value)
+    }
   }
 
   change: EventEmitter<ImplementingAgency[]> = new EventEmitter<ImplementingAgency[]>()

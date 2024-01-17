@@ -149,13 +149,13 @@
         <implementation-template [requestType]="requestType.value"
                                  [caseId]="model!.id" formControlName="implementationTemplate"
                                  [criteria]="getCriteria"></implementation-template>
-        <implementing-agency-list [country]="beneficiaryCountry.value"
+        <implementing-agency-list [country]="executionCountry"
                                   [type]="implementingAgencyType.value"
                                   formControlName="implementingAgencyList">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="implementingAgencyType"
                    for="implementingAgencyType">{{lang.map.implementation_agency_type}}</label>
-            <ng-select [readonly]="readonly" validationClasses="implementingAgencyType" appendTo="body"
+            <ng-select [readonly]="readonly ||!executionCountry" validationClasses="implementingAgencyType" appendTo="body"
                        [clearable]="true"
                        id="implementingAgencyType"
                        formControlName="implementingAgencyType">
