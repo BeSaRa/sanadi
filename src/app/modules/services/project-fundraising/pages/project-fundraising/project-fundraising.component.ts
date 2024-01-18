@@ -881,7 +881,7 @@ implements AfterViewInit {
       .pipe(this.holdTillGetUserResponse())
       .subscribe((value: ProjectWorkArea) => {
         value === ProjectWorkArea.OUTSIDE_QATAR && (() => {
-          !this.domain.value && this.domain.setValue(DomainTypes.HUMANITARIAN, { emitEvent: false })
+          !this.domain.value && this.domain.setValue(DomainTypes.HUMANITARIAN)
           this.domain.updateValueAndValidity({ emitEvent: false })
           this.loadDacOuchMain()
           this.emptyFields(aidFields)
@@ -890,7 +890,7 @@ implements AfterViewInit {
         })()
 
         value === ProjectWorkArea.INSIDE_QATAR && (() => {
-          !this.projectType.value && this.projectType.setValue(FundraisingProjectTypes.SOFTWARE, { emitEvent: false })
+          !this.projectType.value && this.projectType.setValue(FundraisingProjectTypes.SOFTWARE)
           this.projectType.updateValueAndValidity({ emitEvent: false })
           this.emptyFields(domainFields)
           this.countriesField.setValue([this.qatarCountry.id], { emitEvent: false })

@@ -87,5 +87,8 @@ export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectF
     delete model.licenseDurationType
     delete model.taskDetails;
     delete model.itemId
+    if(model.id){
+      delete model.targetAmount
+    }
   }
 }
