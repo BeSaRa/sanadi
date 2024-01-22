@@ -802,7 +802,7 @@ implements AfterViewInit {
     this.templateRequired = this.displayAllFields && model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
     this.displaySanadySection = !!(this.displayInsideQatar && model.projectType && model.projectType === FundraisingProjectTypes.AIDS && this.permitType.value !== ProjectPermitTypes.SECTIONAL_BASKET)
     this.displayInternalSection = !!(this.displayInsideQatar && model.projectType && model.projectType === FundraisingProjectTypes.SOFTWARE && this.permitType.value !== ProjectPermitTypes.SECTIONAL_BASKET)
-    this.displayDacSection = this.displayOutsideQatar && model.domain === DomainTypes.DEVELOPMENT && this.permitType.value !== ProjectPermitTypes.SECTIONAL_BASKET
+    this.displayDacSection = this.displayOutsideQatar && model.domain === DomainTypes.DEVELOPMENT
     this.displaySubDacSection = this.displayDacSection && this.permitType.value !== ProjectPermitTypes.SECTIONAL_BASKET;
     this.displayOchaSection = this.displayOutsideQatar && model.domain === DomainTypes.HUMANITARIAN && model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
   }
