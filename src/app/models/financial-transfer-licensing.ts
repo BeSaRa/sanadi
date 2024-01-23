@@ -318,7 +318,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
       accountNumber: control
         ? [
             accountNumber,
-            [CustomValidators.required, CustomValidators.number],
+            [CustomValidators.required],
           ]
         : accountNumber,
     };
