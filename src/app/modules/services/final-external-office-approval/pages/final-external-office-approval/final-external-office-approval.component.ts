@@ -37,6 +37,7 @@ import {BankAccountComponent} from '@modules/services/shared-services/components
 import {ExecutiveManagementComponent} from '@app/shared/components/executive-management/executive-management.component';
 import {UserClickOn} from '@enums/user-click-on.enum';
 import {LicenseDurationType} from '@enums/license-duration-type';
+import { AllRequestTypesEnum } from '@app/enums/all-request-types-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -62,14 +63,14 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       name: 'bankAccountsTab',
       langKey: 'bank_details',
       validStatus: () => {
-        return !this.bankAccountComponentRef ||  this.bankAccountComponentRef.list.length > 0;
+        return !this.isUpdateOrRenewCase || (!this.bankAccountComponentRef ||  this.bankAccountComponentRef.list.length > 0);
       }
     },
     managers: {
       name: 'managersTab',
       langKey: 'managers',
       validStatus: () => {
-        return !this.executiveManagementComponentRef ||  this.executiveManagementComponentRef.list.length > 0;
+        return !this.isUpdateOrRenewCase || (!this.executiveManagementComponentRef ||  this.executiveManagementComponentRef.list.length > 0);
       }
     },
     branches: {
@@ -708,5 +709,10 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         });
       });
   }
-
+  
+  public get isUpdateOrRenewCase() : boolean {
+   return this.requestType$.value === AllRequestTypesEnum.RENEW ||
+    this.requestType$.value === AllRequestTypesEnum.UPDATE
+  }
+  
 }
