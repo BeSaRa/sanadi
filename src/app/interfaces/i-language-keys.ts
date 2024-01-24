@@ -2108,4 +2108,5 @@ export interface ILanguageKeys {
   menu_charity_profile: string;
   license_end_date_percentage: string;
   local_name: string;
+  approved_by: string;
 }
