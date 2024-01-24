@@ -109,14 +109,14 @@ export class SendToComponent implements OnInit, OnDestroy {
     let id;
     if (this.data.task.getCaseType() == CaseTypes.CONSULTATION) {
       id = (this.data.task as Consultation).mainTeamId;
-    } else if (this.data.task.getCaseType() == CaseTypes.INQUIRY) {
+    }else if (this.data.task.getCaseType() == CaseTypes.INQUIRY) {
       id = this.employee
       .teams
       .find(x => x.ldapGroupName === InternalDepartmentsGroupsNames.ES_Communication_specialist)?.id ??
       this.employee.getInternalDepartment()?.mainTeam.id!;
 
     }
-    else {
+     else {
       id = this.employee.getInternalDepartment()?.mainTeam.id!;
     }
     this.teamService
