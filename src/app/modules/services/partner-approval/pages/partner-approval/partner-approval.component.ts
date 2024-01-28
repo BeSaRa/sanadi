@@ -73,6 +73,9 @@ export class PartnerApprovalComponent
   formProperties = {
     requestType: () => {
       return this.getObservableField('requestType', 'requestType');
+    },
+    requestClassification: () => {
+      return this.getObservableField('requestClassification', 'requestClassification');
     }
   }
 
@@ -616,6 +619,10 @@ export class PartnerApprovalComponent
 
   get requestType(): AbstractControl {
     return this.form.get('basic')?.get('requestType') as UntypedFormControl;
+  }
+  
+  get requestClassification(): AbstractControl {
+    return this.form.get('basic')?.get('requestClassification') as UntypedFormControl;
   }
 
   get licenseNumber(): AbstractControl {
