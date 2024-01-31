@@ -205,7 +205,8 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         return this._isValidDraftData();
       }
       const invalidTabs = this._getInvalidTabs();
-      if (invalidTabs.length > 0 && !this.isRenewOrUpdateRequestType()) {
+      // if (invalidTabs.length > 0 && !this.isRenewOrUpdateRequestType()) {
+      if (invalidTabs.length > 0 ) {
         const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
         this.dialogService.error(listHtml.outerHTML);
         return false;
