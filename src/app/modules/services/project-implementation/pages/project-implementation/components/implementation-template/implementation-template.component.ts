@@ -135,7 +135,7 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
   viewTemplate(template: ImplementationTemplate) {
     template.view()
   }
-  viewProjrctModel(template: ProjectModel) {
+  viewProjectModel(template: ProjectModel) {
     this.dialog.show(ProjectModelPreviewComponent, {
       id: template.requestCaseId
     })
