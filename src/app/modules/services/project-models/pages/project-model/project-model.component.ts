@@ -143,6 +143,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   isOutsideQatarWorkArea: boolean = false;
   isCharityProfile: boolean = false;
   isInstitutionProfile: boolean = false;
+  isInternalUser: boolean = false;
 
   templateSerialControl: UntypedFormControl = new UntypedFormControl(null);
   filterControl: UntypedFormControl = new UntypedFormControl('');
@@ -270,6 +271,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   setUserProfiles(): void {
     this.isCharityProfile = this.employeeService.isCharityProfile();
     this.isInstitutionProfile = this.employeeService.isInstitutionProfile();
+    this.isInternalUser = this.employeeService.isInternalUser();
   }
 
   getQatarId() {
