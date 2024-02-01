@@ -148,7 +148,8 @@
       <ng-container formGroupName="projectInfo">
         <implementation-template [requestType]="requestType.value"
                                  [caseId]="model!.id" formControlName="implementationTemplate"
-                                 [criteria]="getCriteria"></implementation-template>
+                                 [criteria]="getCriteria"
+                                 [disableRemove]="isAllowedToUpdateModel()"></implementation-template>
         <implementing-agency-list [country]="executionCountry"
                                   [type]="implementingAgencyType.value"
                                   formControlName="implementingAgencyList">
@@ -212,7 +213,8 @@
                                     [projectTotalCost]="projectTotalCost.value"
                                     [caseId]="model!.getCaseId()"
                                     [requestType]="requestType.value"
-                                    formControlName="implementationFundraising"></implementation-fundraising>
+                                    formControlName="implementationFundraising"
+                                    [disableRemove]="isAllowedToUpdateModel()"></implementation-fundraising>
         <br>
         <fund-source [permitAmountConsumed]="permitAmountConsumed"
                      [remainingAmount]="remainingAmount"

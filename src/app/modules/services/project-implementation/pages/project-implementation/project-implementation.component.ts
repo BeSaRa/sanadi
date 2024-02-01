@@ -17,6 +17,7 @@ import { OperationTypes } from '@app/enums/operation-types.enum';
 import { ProjectWorkArea } from "@app/enums/project-work-area";
 import { SaveTypes } from '@app/enums/save-types';
 import { ServiceRequestTypes } from "@app/enums/service-request-types";
+import { SubmissionMechanisms } from '@app/enums/submission-mechanisms.enum';
 import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { EServicesGenericComponent } from "@app/generics/e-services-generic-component";
 import { Payment } from '@app/models/payment';
@@ -796,7 +797,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       return;
     }
     let caseStatus = model.getCaseStatus();
-    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
+    if (!this.isAllowedToUpdateModel() || caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
       this.readonly = true;
       this.handleCustomFormReadonly();
       return;
@@ -837,6 +838,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       }
     }
     this.handleCustomFormReadonly()
+  }
+
+   isAllowedToUpdateModel() {
+    return this.model?.caseStatus == CommonCaseStatus.FINAL_APPROVE && this.model?.isSubmissionMechanismNotification();
   }
 
   private validateFundingResources(fields: string[]): ValidatorFn {

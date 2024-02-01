@@ -51,6 +51,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   caseId!: string
   @Input()
   requestType!: number
+  @Input() 
+  disableRemove :boolean = false;
 
   @Output()
   amountConsumed: EventEmitter<boolean> = new EventEmitter<boolean>()
