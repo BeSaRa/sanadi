@@ -30,6 +30,8 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
   @Input()
   disabled: boolean = false;
   @Input()
+  disableRemove: boolean = false;
+  @Input()
   caseId?: string
   @Input()
   requestType!: number
