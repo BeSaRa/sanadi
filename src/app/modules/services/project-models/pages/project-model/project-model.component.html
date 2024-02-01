@@ -627,7 +627,7 @@
             <app-field-error-message controlName="beneficiaryPercentageInHostCommunity"></app-field-error-message>
           </div>
         </div>
-        <ng-container *ngIf="isCharityProfile || isInstitutionProfile">
+        <ng-container *ngIf="isCharityProfile || isInstitutionProfile || isInternalUser">
           <div class="row">
             <div class="col-sm-12 mb-4 position-relative">
               <label class="form-label" asteriskIfRequired="needsAssessment"
