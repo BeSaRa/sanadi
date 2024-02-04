@@ -385,6 +385,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.handleDisplayFields(model)
     this.handleMandatoryFields()
     this.calculateRemaining()
+    this._executionCountry = model.implementationTemplate[0]?.executionCountry
 
     if (!fromSelectedLicense) {
       this.beneficiaryCountry.setValue(null);
@@ -985,7 +986,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       },
       {
         field: this.implementingAgencyType,
-        disabled: () => this.isCancelRequestType() || this.isExtendRequestType() || this.implementingAgencyList.value?.length > 0
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType() //|| this.implementingAgencyList.value?.length > 0
       },
       {
         field: this.licenseStartDate,
