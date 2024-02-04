@@ -29,15 +29,17 @@ export class ImplementingAgencyListComponent implements ControlValueAccessor, On
   private country$: Subject<number> = new Subject()
   public selectedAgency: UntypedFormControl = new UntypedFormControl()
   private ides: string[] = [];
-  agencies$ = combineLatest([this.type$, this.country$])
-    .pipe(takeUntil(this.destroy$))
-    .pipe(switchMap(([type, country]) => {
-      return this.commonService.loadProjectAgencies(type, country)
-    }))
-    .pipe(tap((list)=>{
-      !!(list && list.length === 1 && (this.value??[]).length === 0 && (this.selectedAgency.setValue(list[0])))
-      this.addSelectedAgency()
-    }))
+  agencies :AdminResult[] =[];
+  _= combineLatest([this.type$, this.country$])
+  .pipe(takeUntil(this.destroy$))
+  .pipe(switchMap(([type, country]) => {
+    return this.commonService.loadProjectAgencies(type, country)
+  }))
+  .pipe(tap((list)=>{
+    this.agencies = list;
+    !!(list && list.length === 1 && (this.value??[]).length === 0 && (this.selectedAgency.setValue(list[0])))
+    this.addSelectedAgency()
+  })).subscribe()
 
   @Input()
   disabled: boolean = false;
@@ -71,6 +73,7 @@ export class ImplementingAgencyListComponent implements ControlValueAccessor, On
       const ctrl = this.injector.get(NgControl, null, {optional: true})
       this.control = (ctrl?.control as FormControl) || undefined
     })
+   
   }
 
   ngOnDestroy(): void {

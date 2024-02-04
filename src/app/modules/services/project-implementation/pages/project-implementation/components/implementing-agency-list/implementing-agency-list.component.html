@@ -7,7 +7,7 @@
         <ng-select [readonly]="disabled" appendTo="body" [clearable]="true" id="agencies"
                    [formControl]="selectedAgency">
           <ng-option [disabled]="isExists(option)" [value]="option"
-                     *ngFor="let option of (agencies$|async)">{{option.getName()}}</ng-option>
+                     *ngFor="let option of agencies">{{option.getName()}}</ng-option>
         </ng-select>
       </div>
       <button [disabled]="disabled" (click)="!disabled && addSelectedAgency()" class="btn icon-btn">
