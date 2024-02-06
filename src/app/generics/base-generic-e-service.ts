@@ -1,4 +1,4 @@
-import {Observable, of} from 'rxjs';
+import {Observable, interval, of} from 'rxjs';
 import {CastResponse} from '@decorators/cast-response';
 import {FactoryService} from '@services/factory.service';
 import {HttpClient, HttpParams} from '@angular/common/http';
@@ -16,7 +16,7 @@ import {SearchService} from '@services/search.service';
 import {CaseComment} from '../models/case-comment';
 import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
 import {IFormRowGroup} from '@contracts/iform-row-group';
-import {map} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {FBuilder} from '@helpers/FBuilder';
 import {FileNetDocument} from '../models/file-net-document';
 import {BlobModel} from '../models/blob-model';
@@ -160,6 +160,14 @@ export abstract class BaseGenericEService<T extends { id: string }> {
   })
   licensesSearch(model: Partial<T>): Observable<T[]> {
     return this.searchService.licensesSearch(model);
+  }
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  reGenerateLicense(licenseId:string): Observable<boolean> {
+    return this.http.get<boolean>(this._getURLSegment() + '/license/' + licenseId + '/regenerate')
+    
   }
   @CastResponse(undefined, {
     unwrap: 'rs',
