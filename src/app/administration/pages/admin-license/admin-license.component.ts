@@ -3,7 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { CaseTypes } from '@app/enums/case-types.enum';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import { FBuilder } from '@app/helpers/FBuilder';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
@@ -17,10 +20,11 @@ import { DialogService } from '@app/services/dialog.service';
 import { InboxService } from '@app/services/inbox.service';
 import { LangService } from '@app/services/lang.service';
 import { LicenseService } from '@app/services/license.service';
+import { ToastService } from '@app/services/toast.service';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { filter, map, skip, startWith, takeUntil } from 'rxjs/operators';
+import { filter, map, skip, startWith, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-license',
@@ -32,12 +36,12 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private selectedService!: BaseGenericEService<any>;
 
-  searchColumns: string[] = ['fullSerial','arName','enName','subject','creatorInfo','ouInfo','licenseStartDate', 'licenseEndDate'];
+  searchColumns: string[] = ['fullSerial','arName','enName','subject','creatorInfo','ouInfo','licenseStartDate', 'licenseEndDate','actions'];
   headerColumn: string[] = ['extra-header'];
   form!: UntypedFormGroup;
   fields: FormlyFieldConfig[] = [];
   results: CaseModel<any, any>[] = [];
-  actions: IMenuItem<CaseModel<any, any>>[] = [];
+  actions: IMenuItem<CaseModel<any, any>>[] = [ ];
   search$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   tabIndex$: Subject<number> = new Subject<number>();
   defaultDates: string = '';
@@ -78,7 +82,8 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
               private licenseService: LicenseService,
               private dialog: DialogService,
               private http:HttpClient,
-              private employeeService: EmployeeService) {
+              private employeeService: EmployeeService,
+              private toast:ToastService) {
   }
 
   ngOnDestroy(): void {
@@ -172,14 +177,22 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
   private buildGridActions() {
     this.actions = [
-      // open
-      {
-        type: 'action',
-        icon: 'mdi-eye',
-        label: 'open_task',
-        data: {hideFromViewer: true},
-        onClick: (item: CaseModel<any, any>) => this.actionExportLicense(item)
-      },
+      // // open
+      // {
+      //   type: 'action',
+      //   icon: 'mdi-eye',
+      //   label: 'open_task',
+      //   data: {hideFromViewer: true},
+      //   onClick: (item: CaseModel<any, any>) => this.actionExportLicense(item)
+      // },
+      // regenerate
+  {
+    type: 'action',
+    icon: ActionIconsEnum.RELOAD,
+    label: 'btn_regenerate_license',
+    show: ()=>this.employeeService.hasPermissionTo(PermissionsEnum.REGENERATE_LICENSE),
+    onClick: (item: CaseModel<any,any>) => this.regenerateLicense(item)
+  },
     ];
   }
 
@@ -308,5 +321,18 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       this.search$.next(null);
       this.oldValuesAssigned = true;
     });
+  }
+  private regenerateLicense(item:CaseModel<any,any>){
+    this.dialog.confirm(this.lang.map.msg_confirm_regenerate_license)
+      .onAfterClose$
+      .pipe(
+        filter(click=> click === UserClickOn.YES),
+        switchMap(_=> this.selectedService.reGenerateLicense(item.id)),
+        take(1),
+        tap(success => {
+          success ? this.toast.success(this.lang.map.msg_regenerate_license_success) :
+                    this.toast.error(this.lang.map.msg_regenerate_license_failed)})
+        )
+      .subscribe();
   }
 }

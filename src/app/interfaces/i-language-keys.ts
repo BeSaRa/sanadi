@@ -2109,4 +2109,8 @@ export interface ILanguageKeys {
   license_end_date_percentage: string;
   local_name: string;
   approved_by: string;
+  msg_confirm_regenerate_license:string;
+  msg_regenerate_license_success:string;
+  msg_regenerate_license_failed:string;
+  btn_regenerate_license:string;
 }

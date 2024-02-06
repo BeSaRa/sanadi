@@ -76,6 +76,14 @@
             <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.created_by}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.creatorInfo?.getName()}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="actions">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+            <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+              <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+                
+              </grid-actions>
+            </td>
+          </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
           <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
