@@ -21,6 +21,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CustomPropertyTypes} from '@app/enums/custom-property-types';
 import {CommonUtils} from '@helpers/common-utils';
 import {UserTypes} from '@app/enums/user-types.enum';
+import { CaseTypes } from '@app/enums/case-types.enum';
 
 @Component({
   selector: 'attachment-type-service-data-popup',
@@ -149,6 +150,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   }
 
   isRequestTypeUsed(customProperty: CustomProperty, requestType: number): boolean {
+   
     if (customProperty.type === CustomPropertyTypes.TABLE || customProperty.name !== 'requestType') {
       return false;
     } else {
@@ -158,6 +160,8 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
         if (CommonUtils.isValidValue(savedRequestType)) {
           return this.savedRequestTypesForService.filter(x => x !== savedRequestType).includes(requestType);
         }
+      }else if(this.selectedService.caseType === CaseTypes.PARTNER_APPROVAL){
+        return false;
       }
       return this.savedRequestTypesForService.includes(requestType);
     }
