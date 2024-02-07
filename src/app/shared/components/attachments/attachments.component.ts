@@ -567,7 +567,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       if(this.isReportCaseType()){
         return !this.employeeService.isExternalUser() || this.disabled
       }
-      return this.disabled || !attachment.attachmentTypeStatus;
+      return this.disabled || !attachment.attachmentTypeStatus || !this._isCreatedByCurrentUser(attachment);
     } else if (buttonType === 'publish') {
       if (this.isReportCaseType()) {
         return true;
