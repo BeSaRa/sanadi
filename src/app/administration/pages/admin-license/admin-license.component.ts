@@ -30,18 +30,18 @@ import { filter, map, skip, startWith, switchMap, take, takeUntil, tap } from 'r
   selector: 'app-admin-license',
   templateUrl: './admin-license.component.html',
   styleUrls: ['./admin-license.component.scss'],
-  encapsulation : ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None
 })
 export class AdminLicenseComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private selectedService!: BaseGenericEService<any>;
 
-  searchColumns: string[] = ['fullSerial','arName','enName','subject','creatorInfo','ouInfo','licenseStartDate', 'licenseEndDate','actions'];
+  searchColumns: string[] = ['fullSerial', 'arName', 'enName', 'subject', 'creatorInfo', 'ouInfo', 'licenseStartDate', 'licenseEndDate', 'actions'];
   headerColumn: string[] = ['extra-header'];
   form!: UntypedFormGroup;
   fields: FormlyFieldConfig[] = [];
   results: CaseModel<any, any>[] = [];
-  actions: IMenuItem<CaseModel<any, any>>[] = [ ];
+  actions: IMenuItem<CaseModel<any, any>>[] = [];
   search$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   tabIndex$: Subject<number> = new Subject<number>();
   defaultDates: string = '';
@@ -50,7 +50,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   searchState: any;
   oldValuesAssigned: boolean = false;
 
-   servicesWithoutLicense = [
+  servicesWithoutLicense = [
     CaseTypes.INQUIRY,
     CaseTypes.CONSULTATION,
     CaseTypes.INTERNATIONAL_COOPERATION,
@@ -77,13 +77,13 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
 
 
   constructor(public lang: LangService,
-              private activatedRoute: ActivatedRoute,
-              private inboxService: InboxService,
-              private licenseService: LicenseService,
-              private dialog: DialogService,
-              private http:HttpClient,
-              private employeeService: EmployeeService,
-              private toast:ToastService) {
+    private activatedRoute: ActivatedRoute,
+    private inboxService: InboxService,
+    private licenseService: LicenseService,
+    private dialog: DialogService,
+    private http: HttpClient,
+    private employeeService: EmployeeService,
+    private toast: ToastService) {
   }
 
   ngOnDestroy(): void {
@@ -103,7 +103,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
 
   private hasSearchPermission(caseType: number): boolean {
-    if(this.employeeService.isInternalUser()){
+    if (this.employeeService.isInternalUser()) {
       return !this.servicesWithoutLicense.includes(caseType)
     }
     return !this.servicesWithoutLicense.includes(caseType) && this.employeeService.userCanManage(caseType);
@@ -113,10 +113,13 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     const caseType = (this.selectedService.getSearchCriteriaModel()).caseType;
     let criteria = this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames);
     criteria.caseType = caseType;
-     this.searchState = this.normalizeSearchCriteria(criteria);
+    this.searchState = this.normalizeSearchCriteria(criteria);
     this.selectedService
       .licensesSearch(criteria)
       .subscribe((results: CaseModel<any, any>[]) => {
+        results.forEach(item => {
+          item.searchFields = { ...item.searchFields, arName: 'arName', enName: 'enName' }
+        })
         this.results = results;
         if (this.results.length) {
           this.tabIndex$.next(1);
@@ -149,7 +152,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       });
   }
   private _loadSearchFields() {
-      this.http.get<IFormRowGroup[]>('assets/search/admin_license.json' )
+    this.http.get<IFormRowGroup[]>('assets/search/admin_license.json')
       .pipe(
         map((rows: IFormRowGroup[]) => {
           for (const row of rows) {
@@ -160,16 +163,16 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
           rows = rows.filter(x => x.fields && x.fields.length > 0);
           return FBuilder.castFormlyFields(rows)
         }))
-        .subscribe((fields) => {
-          this.stringifyDefaultDates(fields[0]);
-          this.fields = fields;
-          this.setOldValues();
-          this.getFieldsNames(fields);
-        }); ;
+      .subscribe((fields) => {
+        this.stringifyDefaultDates(fields[0]);
+        this.fields = fields;
+        this.setOldValues();
+        this.getFieldsNames(fields);
+      });;
   }
 
-  actionExportLicense(item :CaseModel<any,any>) {
-    this.licenseService.showLicenseContent({id: item.id}, item.caseType)
+  actionExportLicense(item: CaseModel<any, any>) {
+    this.licenseService.showLicenseContent({ id: item.id }, item.caseType)
       .subscribe((blob) => {
         window.open(blob.url);
         this.search$.next(null);
@@ -186,13 +189,13 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       //   onClick: (item: CaseModel<any, any>) => this.actionExportLicense(item)
       // },
       // regenerate
-  {
-    type: 'action',
-    icon: ActionIconsEnum.RELOAD,
-    label: 'btn_regenerate_license',
-    show: ()=>this.employeeService.hasPermissionTo(PermissionsEnum.REGENERATE_LICENSE),
-    onClick: (item: CaseModel<any,any>) => this.regenerateLicense(item)
-  },
+      {
+        type: 'action',
+        icon: ActionIconsEnum.RELOAD,
+        label: 'btn_regenerate_license',
+        show: () => this.employeeService.hasPermissionTo(PermissionsEnum.REGENERATE_LICENSE),
+        onClick: (item: CaseModel<any, any>) => this.regenerateLicense(item)
+      },
     ];
   }
 
@@ -201,7 +204,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
 
   private fillFormMessage() {
-    this.dialog.error(this.lang.map.at_least_one_field_should_be_filled.change({fields: ''}));
+    this.dialog.error(this.lang.map.at_least_one_field_should_be_filled.change({ fields: '' }));
   }
 
   private prepareCriteriaModel() {
@@ -216,8 +219,8 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
 
 
 
-     const invalidForm$ = this.search$.pipe(filter(_ => this.form.invalid));
-     const validEmptyForm$ = validForm$.pipe(filter(model => !model.criteriaHasValues()));
+    const invalidForm$ = this.search$.pipe(filter(_ => this.form.invalid));
+    const validEmptyForm$ = validForm$.pipe(filter(model => !model.criteriaHasValues()));
 
     const validFormWithValue$ = validForm$.pipe(
       filter(model => model.criteriaHasValues()),
@@ -240,10 +243,10 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     return this.lang.getLocalByKey(serviceKey).getName();
   }
 
-  get selectedServiceKey(): keyof ILanguageKeys  {
-   if(!this.selectedService){
-    return 'service_name';
-   }
+  get selectedServiceKey(): keyof ILanguageKeys {
+    if (!this.selectedService) {
+      return 'service_name';
+    }
     return this.selectedService.serviceKey;
   }
 
@@ -253,7 +256,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
 
   selectedTabChanged($event: TabComponent) {
-    $event.name === 'result_tab' ? this.serviceControl.disable({emitEvent: false}) : this.serviceControl.enable({emitEvent: false});
+    $event.name === 'result_tab' ? this.serviceControl.disable({ emitEvent: false }) : this.serviceControl.enable({ emitEvent: false });
   }
 
   isConsultationSelected(): boolean {
@@ -265,15 +268,15 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
 
   stringifyDefaultDates(field?: FormlyFieldConfig): void {
-    if(field?.fieldGroup){
+    if (field?.fieldGroup) {
       this.defaultDates = JSON.stringify(field.fieldGroup!.reduce((prev, item) => {
-        return {...prev, [(item.key as string)]: item.defaultValue};
+        return { ...prev, [(item.key as string)]: item.defaultValue };
       }, {} as any));
     }
   }
 
   private setDefaultDates(): void {
-    if(this.defaultDates){
+    if (this.defaultDates) {
       let dates = <Record<string, any>>(JSON.parse(this.defaultDates));
       Object.keys(dates).forEach((key: string) => {
         let date = dates[key] as any;
@@ -314,7 +317,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
           (key === 'createdOnTo' || key === 'createdOnFrom') ? (control.patchValue({
             dateRange: undefined,
             isRange: false,
-            singleDate: {jsDate: new Date(oldValues[key])}
+            singleDate: { jsDate: new Date(oldValues[key]) }
           })) : control.patchValue(isNaN(Number(oldValues[key])) ? oldValues[key] : Number(oldValues[key]));
         }
       });
@@ -322,17 +325,18 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       this.oldValuesAssigned = true;
     });
   }
-  private regenerateLicense(item:CaseModel<any,any>){
+  private regenerateLicense(item: CaseModel<any, any>) {
     this.dialog.confirm(this.lang.map.msg_confirm_regenerate_license)
       .onAfterClose$
       .pipe(
-        filter(click=> click === UserClickOn.YES),
-        switchMap(_=> this.selectedService.reGenerateLicense(item.id)),
+        filter(click => click === UserClickOn.YES),
+        switchMap(_ => this.selectedService.reGenerateLicense(item.id)),
         take(1),
         tap(success => {
           success ? this.toast.success(this.lang.map.msg_regenerate_license_success) :
-                    this.toast.error(this.lang.map.msg_regenerate_license_failed)})
-        )
+            this.toast.error(this.lang.map.msg_regenerate_license_failed)
+        })
+      )
       .subscribe();
   }
 }
