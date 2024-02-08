@@ -508,6 +508,12 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
    
     this.handleRequestTypeChange(model.requestType, false);
+    if(!!model.domain){
+      this.onDomainChange();
+      let selectedId = this.domain.value === DomainTypes.HUMANITARIAN ? this.mainUNOCHACategory.value : this.mainDACCategory.value;
+      selectedId ? this.loadSubDacOcha(selectedId) : this.emptySubCategories();
+
+    }
     if (model.domain === DomainTypes.DEVELOPMENT) {
       this.displayDevGoals = true;
     }
@@ -743,7 +749,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   onDomainChange() {
-    this.loadDacMainOcha().subscribe();
+    this.loadDacMainOcha()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe();
     if (this.domain.value === DomainTypes.HUMANITARIAN) {
       this.emptyFieldsAndValidation([
         'mainDACCategory',
@@ -755,6 +763,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         'secondSDGoalPercentage',
         'thirdSDGoalPercentage'
       ]);
+      this._resetModelSDPercentageValues();
       this.setRequiredValidator(['mainUNOCHACategory', 'subUNOCHACategory']);
       this.displayDevGoals = false;
       this.categoryGoalPercentGroup.setValidators(null);
@@ -780,12 +789,19 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
           'secondSDGoalPercentage',
           'thirdSDGoalPercentage'
         ]);
+        this._resetModelSDPercentageValues();
       } else {
         this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
       }
 
     }
     this.categoryGoalPercentGroup.updateValueAndValidity();
+  }
+
+  private _resetModelSDPercentageValues() {
+    this.model!.firstSDGoalPercentage = 0;
+    this.model!.secondSDGoalPercentage = 0;
+    this.model!.thirdSDGoalPercentage = 0;
   }
 
   listenToExecutionFieldChange() {
