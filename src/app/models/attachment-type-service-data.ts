@@ -69,4 +69,10 @@ export class AttachmentTypeServiceData extends BaseModel<AttachmentTypeServiceDa
     }
     return this.lookupService.findLookupByLookupKey(this.lookupService.listByCategory.AllRequestTypes, requestType)?.getName() ?? '';
   }
+  isEqual(attachmentTypeServiceData:AttachmentTypeServiceData):boolean{
+
+    return this.userType === attachmentTypeServiceData.userType &&
+           this.caseType === attachmentTypeServiceData.caseType &&
+           this.customProperties === attachmentTypeServiceData.customProperties
+  }
 }

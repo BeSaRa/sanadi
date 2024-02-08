@@ -205,7 +205,8 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   }
 
   addServiceData(): void {
-    const sub = this.attachmentTypeServiceDataService.openCreateServiceDialog(this.model.id, this.serviceDataList).onAfterClose$.subscribe(() => {
+    const sub = this.attachmentTypeServiceDataService.openCreateServiceDialog(this.model.id, this.serviceDataList)
+    .onAfterClose$.subscribe(() => {
       this.reload();
       sub.unsubscribe();
     });
