@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn} from '@angular/forms';
 import {ProjectModelProjectTypes} from '@app/enums/project-model-project-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
@@ -56,7 +56,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
   templateUrl: './project-model.component.html',
   styleUrls: ['./project-model.component.scss']
 })
-export class ProjectModelComponent extends EServicesGenericComponent<ProjectModel, ProjectModelService> {
+export class ProjectModelComponent extends EServicesGenericComponent<ProjectModel, ProjectModelService> implements AfterViewInit {
   form!: UntypedFormGroup;
 
   _saveFail(error: any): void {
@@ -251,6 +251,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
               private foreignCountriesProjectsService: ForeignCountriesProjectsService,
               private serviceDataService: ServiceDataService) {
     super();
+  }
+  ngAfterViewInit(): void {
+    this.componentBudgetsRef.list = this.model?.componentList??[];
+    this.componentBudgetsRef.afterReload();
   }
 
   _getNewInstance(): ProjectModel {
@@ -502,8 +506,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       summaryPercentGroup: model.buildSummaryPercentGroup(false),
       description: model.description
     });
-    this.componentBudgetsRef.list = model.componentList;
-    this.componentBudgetsRef.afterReload();
+   
     this.handleRequestTypeChange(model.requestType, false);
     if (model.domain === DomainTypes.DEVELOPMENT) {
       this.displayDevGoals = true;
