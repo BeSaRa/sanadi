@@ -288,6 +288,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   private setDefaultValues(): void {
     if (this.operation === OperationTypes.CREATE) {
       this.requestType.patchValue(this.requestTypes[0].lookupKey);
+      this.isConstructional.patchValue(false);
       this.handleRequestTypeChange(this.requestTypes[0].lookupKey, false);
     }
   }
