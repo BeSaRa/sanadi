@@ -385,9 +385,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             if (this.model?.caseStatus === CommonCaseStatus.DRAFT) {
               return true;
             }
-            if ((item as ProjectImplementation).isSubmissionMechanismRegistration() || (item as ProjectImplementation).isSubmissionMechanismNotification()) {
-              return false;
-            }
+            // if ((item as ProjectImplementation).isSubmissionMechanismRegistration() || (item as ProjectImplementation).isSubmissionMechanismNotification()) {
+            //   return false;
+            // }
           }
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
             if (item.caseStatus === CommonCaseStatus.CANCELLED) {
