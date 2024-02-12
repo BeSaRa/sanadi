@@ -803,7 +803,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       return;
     }
     let caseStatus = model.getCaseStatus();
-    if (!this.isAllowedToUpdateModel() || caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
+    if ( caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
       this.readonly = true;
       this.handleCustomFormReadonly();
       return;
@@ -816,7 +816,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         if (this.employeeService.isCharityManager()) {
           this.readonly = false;
         } else if (this.employeeService.isCharityUser()) {
-          this.readonly = !model.isReturned();
+          this.readonly = !model.isReturned() ||!this.isAllowedToUpdateModel() ;
         }
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
