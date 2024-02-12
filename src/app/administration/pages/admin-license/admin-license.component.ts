@@ -36,7 +36,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private selectedService!: BaseGenericEService<any>;
 
-  searchColumns: string[] = ['fullSerial', 'arName', 'enName', 'subject', 'creatorInfo', 'ouInfo', 'licenseStartDate', 'licenseEndDate', 'actions'];
+  searchColumns: string[] = ['fullSerial', 'arName', 'enName', 'subject', 'creatorInfo', 'ouInfo', 'licenseStartDate', 'licenseEndDate'];
   headerColumn: string[] = ['extra-header'];
   form!: UntypedFormGroup;
   fields: FormlyFieldConfig[] = [];
@@ -142,6 +142,14 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .pipe(startWith(serviceNumber))
       .pipe(filter(val => !!val))
+      .pipe(tap(val=> {
+        if(val ===CaseTypes.PARTNER_APPROVAL ){
+          this.searchColumns = [...this.searchColumns,'actions']
+        }
+        else{
+          this.searchColumns = ['fullSerial', 'arName', 'enName', 'subject', 'creatorInfo', 'ouInfo', 'licenseStartDate', 'licenseEndDate']
+        }
+      }))
       .pipe(map(val => Number(val)))
       .pipe(map(val => this.inboxService.getService(val)))
       .subscribe((service: BaseGenericEService<any>) => {
