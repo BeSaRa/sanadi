@@ -259,7 +259,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   ngAfterViewInit() {
 
-    // this.cd.detectChanges();
+    this.beneficiaryCountry.disable({emitEvent:false})
+    this.beneficiaryCountry.updateValueAndValidity({emitEvent:false})
+    //  this.cd.detectChanges();
   }
   _getNewInstance(): ProjectImplementation {
     return new ProjectImplementation()
@@ -450,8 +452,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
     this.requestType.setValue(ServiceRequestTypes.NEW)
     this.projectWorkArea.setValue(ProjectWorkArea.INSIDE_QATAR)
+    // this.projectWorkArea.updateValueAndValidity({emitEvent: true})
     this.beneficiaryCountry.setValue(this.qatarCountry.id)
-    this.beneficiaryCountry.disable();
+     this.beneficiaryCountry.disable();
+     this.beneficiaryCountry.updateValueAndValidity();
     this.internalProjectClassification.setValue(this.internalProjectClassifications[0].lookupKey)
   }
 
@@ -959,7 +963,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       },
       {
         field: this.beneficiaryCountry,
-        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType() || this.isNewRequestType() && this.projectWorkArea.value === ProjectWorkArea.INSIDE_QATAR
       },
       {
         field: this.domain,
@@ -1059,6 +1063,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   isCancelRequestType(): boolean {
     return this.requestType.value && this.requestType.value === ServiceRequestTypes.CANCEL;
+  }
+  isNewRequestType(): boolean {
+    return this.requestType.value && this.requestType.value === ServiceRequestTypes.NEW;
   }
 
   isExtendRequestType(): boolean {
