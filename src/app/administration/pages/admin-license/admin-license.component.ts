@@ -143,7 +143,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       .pipe(startWith(serviceNumber))
       .pipe(filter(val => !!val))
       .pipe(tap(val=> {
-        if(val ===CaseTypes.PARTNER_APPROVAL ){
+        if(val ===CaseTypes.PROJECT_IMPLEMENTATION ){
           this.searchColumns = [...this.searchColumns,'actions']
         }
         else{
