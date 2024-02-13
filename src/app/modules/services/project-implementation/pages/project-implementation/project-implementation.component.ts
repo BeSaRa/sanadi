@@ -259,8 +259,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   ngAfterViewInit() {
 
-    this.beneficiaryCountry.disable({emitEvent:false})
-    this.beneficiaryCountry.updateValueAndValidity({emitEvent:false})
+    this.beneficiaryCountry.disable({ emitEvent: false })
+    this.beneficiaryCountry.updateValueAndValidity({ emitEvent: false })
     //  this.cd.detectChanges();
   }
   _getNewInstance(): ProjectImplementation {
@@ -454,8 +454,14 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.projectWorkArea.setValue(ProjectWorkArea.INSIDE_QATAR)
     // this.projectWorkArea.updateValueAndValidity({emitEvent: true})
     this.beneficiaryCountry.setValue(this.qatarCountry.id)
-     this.beneficiaryCountry.disable();
-     this.beneficiaryCountry.updateValueAndValidity();
+    this.beneficiaryCountry.disable();
+    this.beneficiaryCountry.updateValueAndValidity();
+    this.implementationTemplate.setValue([]);
+    this.implementingAgencyList.setValue([]);
+    this.implementationFundraising.setValue([]);
+    this.financialGrant.setValue([]);
+    this.selfFinancing.setValue([]);
+    this.payment.setValue([]);
     this.internalProjectClassification.setValue(this.internalProjectClassifications[0].lookupKey)
   }
 
@@ -722,10 +728,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         }
       })
   }
-   private _executionCountry?:number;
-   get executionCountry(){
+  private _executionCountry?: number;
+  get executionCountry() {
     return this._executionCountry;
-   }
+  }
   private listenToImplementationTemplateChanges() {
     this.implementationTemplate
       .valueChanges
@@ -807,7 +813,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       return;
     }
     let caseStatus = model.getCaseStatus();
-    if ( caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
+    if (caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
       this.readonly = true;
       this.handleCustomFormReadonly();
       return;
@@ -820,7 +826,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         if (this.employeeService.isCharityManager()) {
           this.readonly = false;
         } else if (this.employeeService.isCharityUser()) {
-          this.readonly = !model.isReturned() ||!this.isAllowedToUpdateModel() ;
+          this.readonly = !model.isReturned() || !this.isAllowedToUpdateModel();
         }
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
@@ -850,7 +856,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.handleCustomFormReadonly()
   }
 
-   isAllowedToUpdateModel() {
+  isAllowedToUpdateModel() {
     return this.model?.caseStatus == CommonCaseStatus.FINAL_APPROVE && this.model?.isSubmissionMechanismNotification();
   }
 
