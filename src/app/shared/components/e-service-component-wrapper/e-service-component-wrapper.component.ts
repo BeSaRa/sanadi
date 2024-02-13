@@ -420,11 +420,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           if (item.isCancelled() || this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
             return false;
           }
-          if (item.caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
-            if ((item as ProjectImplementation).isSubmissionMechanismRegistration() || (item as ProjectImplementation).isSubmissionMechanismNotification()) {
-              return false;
-            }
-          }
+          // if (item.caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
+          //   if ((item as ProjectImplementation).isSubmissionMechanismRegistration() || (item as ProjectImplementation).isSubmissionMechanismNotification()) {
+          //     return false;
+          //   }
+          // }
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
             if (item.caseStatus === CommonCaseStatus.CANCELLED) {
               return false;
