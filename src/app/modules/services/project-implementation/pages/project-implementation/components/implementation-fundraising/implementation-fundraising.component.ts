@@ -22,6 +22,7 @@ import { ImplementationTemplate } from "@models/implementation-template";
 import { ReasonPopupComponent } from "@app/shared/popups/reason-popup/reason-popup.component";
 import { ReasonContract } from "@contracts/reason-contract";
 import { ProjectPermitTypes } from '@app/enums/project-permit-types';
+import { DomainTypes } from '@app/enums/domain-types';
 
 @Component({
   selector: 'implementation-fundraising',
@@ -275,7 +276,9 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     }
 
     const criteria = this.service.getCriteria(this.criteria())
-    delete criteria.mainDAC;
+    if(criteria.domain === DomainTypes.HUMANITARIAN){
+      delete criteria.mainDAC;
+    }
     delete criteria.mainUNOCHA;
     delete criteria.internalProjectClassification;
     this.service.loadFundraisingLicensesByCriteria(criteria, criteria.workArea!)
