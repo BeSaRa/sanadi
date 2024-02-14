@@ -14,7 +14,8 @@
     "eservices-ebla": "ng build --base-href /eservices-ui/ebla/",
     "prod:env": "npm run prod && node environments.js CONFIGURATION.json",
     "prod:eservices": "npm run eservices && node environments.js CONFIGURATION.json",
-    "version": "node ./bin/index.js"
+    "version": "node ./bin/index.js",
+    "release": "npm run prod:eservices NEW"
   },
   "private": true,
   "dependencies": {
