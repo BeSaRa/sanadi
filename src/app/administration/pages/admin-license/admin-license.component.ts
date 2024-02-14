@@ -68,11 +68,6 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT
 
   ]
-  servicesWithRegenerate = [
-    CaseTypes.PROJECT_IMPLEMENTATION,
-    CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
-    CaseTypes.PARTNER_APPROVAL,
-  ]
   serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.hasSearchPermission(caseType));
   serviceControl: UntypedFormControl = new UntypedFormControl(this.serviceNumbers[0]);
 
@@ -148,8 +143,8 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       .pipe(startWith(serviceNumber))
       .pipe(filter(val => !!val))
       .pipe(tap(val=> {
-        if(this.servicesWithRegenerate.includes(val) ){
-          this.searchColumns = ['fullSerial', 'arName', 'enName', 'subject', 'creatorInfo', 'ouInfo', 'licenseStartDate', 'licenseEndDate','actions']
+        if(val ===CaseTypes.PROJECT_IMPLEMENTATION ){
+          this.searchColumns = [...this.searchColumns,'actions']
         }
         else{
           this.searchColumns = ['fullSerial', 'arName', 'enName', 'subject', 'creatorInfo', 'ouInfo', 'licenseStartDate', 'licenseEndDate']
