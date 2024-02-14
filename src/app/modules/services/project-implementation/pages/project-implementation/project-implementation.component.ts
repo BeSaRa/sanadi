@@ -428,11 +428,13 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   _resetForm(): void {
     const caseStatus = this.model?.caseStatus;
+    const sequenceNumber = this.model?.sequenceNumber;
     const id = caseStatus === CommonCaseStatus.DRAFT ? this.model!.id : undefined
 
     this.model = this._getNewInstance();
     !!caseStatus && (this.model.caseStatus = caseStatus)
     !!id && (this.model!.id = id)
+    !!sequenceNumber && (this.model!.sequenceNumber = sequenceNumber)
     this.operation = OperationTypes.CREATE;
     this.selectedLicense = undefined
     this.implementationTemplate.setValue([])
