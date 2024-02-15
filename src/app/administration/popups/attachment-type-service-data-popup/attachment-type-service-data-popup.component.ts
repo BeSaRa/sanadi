@@ -277,7 +277,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
             caseType: this.selectedService.caseType
           });
           attachmentTypeServiceData = this.mapAttachmentTypeServiceDataToSend(attachmentTypeServiceData, this.customPropertiesKeyValue);
-          if(!attachmentTypeServiceData.id && this.existingList.some(item=>item.isEqual(attachmentTypeServiceData))){
+          if( this.existingList.some(item=>item.id !==attachmentTypeServiceData.id && item.isEqual(attachmentTypeServiceData))){
             this.toast.alert(this.lang.map.msg_duplicated_item);
             return  of(null);
           }
