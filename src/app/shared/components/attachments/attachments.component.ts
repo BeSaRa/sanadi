@@ -568,7 +568,6 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         return !this.employeeService.isExternalUser() || this.disabled
       }
       return this.disabled || !attachment.attachmentTypeStatus ||
-       (this.employeeService.isInternalUser() && !this._isCreatedByCurrentUser(attachment)) ||
        (!!attachment.id && !this._isCreatedByCurrentUser(attachment));
     } else if (buttonType === 'publish') {
       if (this.isReportCaseType()) {
@@ -606,7 +605,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   }
 
   private removeAttachment(attachment: FileNetDocument): void {
-    this.attachments = this.attachments.filter(item => item.attachmentTypeServiceData!.id !== attachment.attachmentTypeServiceData?.id);
+    this.attachments = this.attachments.filter(item => item.attachmentTypeServiceData?.id !== attachment.attachmentTypeServiceData?.id);
   }
 
   private addAttachment(attachment: FileNetDocument): void {
