@@ -357,11 +357,11 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   handleLicenseDurationTypeChange() {
     const prevV = this.licenseDurationField.value;
     this.licenseDurationField.setValidators([]);
-    if (this.isPermanentLicenseDurationTypes()) {
-      this.licenseDurationField.setValidators([Validators.required]);
-    }
     this.licenseDurationField.reset();
-    this.licenseDurationField.setValue(prevV);
+    if (this.isTemporaryLicenseDurationTypes()) {
+      this.licenseDurationField.setValidators([Validators.required]);
+      this.licenseDurationField.setValue(prevV);
+    }
   }
 
   handleOfficeTypeChenge() {
@@ -374,7 +374,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     this.countriesField.setValue(prevV);
   }
 
-  isPermanentLicenseDurationTypes() {
+  isTemporaryLicenseDurationTypes() {
     return this.licenseDurationTypeField.value == LicenseDurationType.TEMPORARY
   }
 
