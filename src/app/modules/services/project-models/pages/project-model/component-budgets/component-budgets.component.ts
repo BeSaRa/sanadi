@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {UntypedFormControl} from '@angular/forms';
 import {ProjectComponent} from '@app/models/project-component';
 import {UiCrudListGenericComponent} from "@app/generics/ui-crud-list-generic-component";
@@ -22,6 +22,11 @@ export class ComponentBudgetsComponent extends UiCrudListGenericComponent<Projec
   constructor() {
     super();
   }
+
+@Input('list') set _list(list:ProjectComponent[]){
+  this.list = list;
+  this._setProjectTotalCost()
+}
 
   displayColumns: string[] = ['componentName', 'details', 'expensesType', 'totalCost', 'actions'];
   footerColumns: string[] = ['totalComponentCostLabel', 'totalComponentCost'];
