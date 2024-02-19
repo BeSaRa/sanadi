@@ -583,7 +583,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     if (this.employeeService.isExternalUser()) {
       return ('' + ((user as ExternalUser).qid ?? '')).trim() === attachment.createdBy;
     } else {
-      return (user as InternalUser).domainName === attachment.createdBy;
+      return (user as InternalUser).domainName.toLowerCase() === attachment.createdBy.toLowerCase();
     }
   }
 
