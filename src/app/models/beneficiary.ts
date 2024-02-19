@@ -86,6 +86,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   requestorPhoneNumber!: string;
   status!: number;
   statusDateModified!: string;
+  expiryDate!: string|IMyDateModel;
 
   // not belong to the model
   service: BeneficiaryService;
@@ -174,6 +175,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       benPrimaryIdNumber,
       benPrimaryIdType,
       benPrimaryIdNationality,
+      expiryDate,
       phoneNumber1,
       employeer,
       benDependentsCount,
@@ -199,7 +201,8 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
     return {
       benPrimaryIdType: controls ? [benPrimaryIdType, CustomValidators.required] : benPrimaryIdType,
       benPrimaryIdNumber: controls ? [benPrimaryIdNumber, CustomValidators.required] : benPrimaryIdNumber,
-      benPrimaryIdNationality: controls ? [benPrimaryIdNationality, CustomValidators.required] : benPrimaryIdNationality,
+      benPrimaryIdNationality: controls ? [benPrimaryIdNationality, [CustomValidators.required, CustomValidators.maxDate(new Date())]] : benPrimaryIdNationality,
+      expiryDate: controls ? [expiryDate, CustomValidators.required] : expiryDate,
       benSecIdType: controls ? [benSecIdType] : benSecIdType,
       benSecIdNumber: controls ? [benSecIdNumber] : benSecIdNumber,
       benSecIdNationality: controls ? [benSecIdNationality] : benSecIdNationality,

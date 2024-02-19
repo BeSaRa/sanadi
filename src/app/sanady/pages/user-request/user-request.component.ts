@@ -10,7 +10,7 @@ import {
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
-import {BehaviorSubject, merge, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, forkJoin, iif, merge, Observable, of, Subject} from 'rxjs';
 import {
   catchError,
   delay,
@@ -81,6 +81,8 @@ import {DonorService} from '@services/donor.service';
 import {SharedService} from '@services/shared.service';
 import {BeneficiaryRequesterRelationTypes} from '@app/enums/beneficiary-requester-relation-types';
 import {CanComponentDeactivateContract} from "@contracts/can-component-deactivate-contract";
+import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
+import { IMyDateModel } from 'angular-mydatepicker';
 
 @Component({
   selector: 'app-user-request',
@@ -224,7 +226,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     creationDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
     statusDateModified: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     aidApprovalDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    aidPaymentDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
+    aidPaymentDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    expiryDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
@@ -929,6 +932,12 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     }
   }
 
+  setExpiryDateForSanadyResult(list:Beneficiary[],expiryDate:IMyDateModel):Observable<Beneficiary[]>{
+    list.forEach(x=>{
+      x.expiryDate = expiryDate
+    })
+    return of(list);
+  }
   getBeneficiaryData($event?: Event) {
     $event?.preventDefault();
     $event?.stopPropagation();
@@ -938,19 +947,28 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     const idType = this.primaryIdTypeField?.value;
     const primaryNumber = this.primaryIdNumberField?.value;
     const nationality = this.primaryNationalityField?.value;
+    const expiryDate = this.expiryDateField?.value;
 
-    if (!primaryNumber || !idType || !nationality) {
+    if (!primaryNumber || !idType || !nationality || !expiryDate) {
       this.dialogService.info(this.langService.map.msg_invalid_search_criteria);
       return;
     }
-
-    this.beneficiaryService
-      .loadByCriteria({
-        benPrimaryIdNumber: primaryNumber ? primaryNumber : undefined,
-        benPrimaryIdType: primaryNumber ? idType : undefined,
-        benPrimaryIdNationality: nationality ? nationality : undefined
-      })
-      .pipe(takeUntil(this.destroy$))
+    const criteria = {
+      benPrimaryIdNumber: primaryNumber ? primaryNumber : undefined,
+      benPrimaryIdType: primaryNumber ? idType : undefined,
+      benPrimaryIdNationality: nationality ? nationality : undefined,
+    }
+    this.beneficiaryService.loadByCriteria(criteria)
+      .pipe(
+        switchMap((list)=>{
+          return iif(()=> list.length > 0,this.setExpiryDateForSanadyResult(list,expiryDate),
+          this.beneficiaryService.getBeneficiaryFromMoiData({...criteria,expiryDate}).pipe(
+            map((beneficiary)=> [beneficiary])
+          ))
+         
+        }),
+        takeUntil(this.destroy$)
+        )
       .subscribe(list => {
         if (!list.length) {
           this.dialogService.info(this.langService.map.no_result_for_your_search_criteria)
@@ -1256,6 +1274,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
 
   get primaryNationalityField(): UntypedFormControl {
     return this.personalInfoTab.get('benPrimaryIdNationality') as UntypedFormControl;
+  }
+  get expiryDateField(): UntypedFormControl {
+    return this.personalInfoTab.get('expiryDate') as UntypedFormControl;
   }
 
   get secondaryIdTypeField(): UntypedFormControl {
