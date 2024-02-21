@@ -500,6 +500,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         result.bankAccountList = (licenseDetails as FinalExternalOfficeApproval).bankAccountList;
         result.executiveManagementList = (licenseDetails as FinalExternalOfficeApproval).executiveManagementList;
         result.branchList = (licenseDetails as FinalExternalOfficeApproval).branchList;
+        result.licenseEndDate = licenseDetails.licenseEndDate?.includes('9999') ? undefined: licenseDetails.licenseEndDate;
       }
 
       this._updateForm((new FinalExternalOfficeApproval()).clone(result));
