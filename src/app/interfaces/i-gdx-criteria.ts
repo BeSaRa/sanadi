@@ -1,7 +1,6 @@
 export interface IGdxCriteria {
-  benId?: number;
+  benId: number;
   qId: string;
   gdxServiceId: string;
   orgUserId?: number;
-  expiryDate?:string;
 }

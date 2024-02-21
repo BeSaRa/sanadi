@@ -1,4 +1,3 @@
-import { IMyDateModel } from 'angular-mydatepicker';
 import {IValueOperator} from './i-value-operator';
 
 export interface IBeneficiaryCriteria {
@@ -14,7 +13,6 @@ export interface IBeneficiaryCriteria {
   benSecIdNumber: string;
   phoneNumber1: string;
   occuptionStatus: number
-  expiryDate: string;
 }
 
 
