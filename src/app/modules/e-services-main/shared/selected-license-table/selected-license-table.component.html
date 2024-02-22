@@ -76,7 +76,7 @@
           </ng-container>
           <ng-container cdkColumnDef="endDate">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_end_date}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.licenseEndDate|date: 'mediumDate'}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.licenseEndDate?.includes('9999')? '': row.licenseEndDate|date: 'mediumDate'}} </td>
           </ng-container>
           <ng-container cdkColumnDef="shipmentSource">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.shipment_source}}</th>
