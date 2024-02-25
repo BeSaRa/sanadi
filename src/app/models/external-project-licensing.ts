@@ -7,6 +7,7 @@ export class ExternalProjectLicensing extends Cloneable<ExternalProjectLicensing
   fullSerial!:string;
   arName!:string;
   enName!:string;
+  organizationId!:number;
   private langService: LangService;
 
   constructor() {
