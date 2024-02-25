@@ -445,6 +445,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
       targetAmount: this.targetAmount ? this.targetAmount : this.projectTotalCost,
       beneficiaryCountry:this.beneficiaryCountry,
       beneficiaryCountryInfo:this.beneficiaryCountryInfo,
+      templateFullSerial:this.templateFullSerial,
     })
   }
 }
