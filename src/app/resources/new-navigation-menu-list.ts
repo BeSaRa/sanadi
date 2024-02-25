@@ -3012,7 +3012,7 @@ export const newNavigationMenuList = [
     svg: null
   },
   {
-    id: 24,
+    id: 4000,
     langKey: 'menu_restricted',
     path: '/home/restricted',
     icon: 'mdi-database-search',
@@ -3036,7 +3036,7 @@ export const newNavigationMenuList = [
     isSvg: false,
     permission: PermissionsEnum.WORLD_CHECK_SEARCH,
     permissionGroup: null,
-    parent: 24,
+    parent: 4000,
     group: GroupNames.RESTRICTED,
     itemOrder: 1,
     svg: null
@@ -3049,7 +3049,7 @@ export const newNavigationMenuList = [
     isSvg: false,
     permission: PermissionsEnum.SCREENING_SEARCH_AUDIT,
     permissionGroup: null,
-    parent: 24,
+    parent: 4000,
     group: GroupNames.RESTRICTED,
     itemOrder: 1,
     svg: null
