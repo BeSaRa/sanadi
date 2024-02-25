@@ -6,6 +6,7 @@ import { UiCrudListGenericComponent } from '@app/generics/ui-crud-list-generic-c
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { ExternalProjectLicensing } from '@app/models/external-project-licensing';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
 import { FinancialTransfersProject } from '@models/financial-transfers-project';
 import {
   FinancialTransfersProjectsPopupComponent
@@ -17,13 +18,11 @@ import {
   styleUrls: ['./financial-transfers-projects.component.scss'],
 })
 export class FinancialTransfersProjectsComponent extends UiCrudListGenericComponent<FinancialTransfersProject> {
-  @Input() approvedFinancialTransferProjects: ExternalProjectLicensing[] = [];
   @Input() requestType: number = FinancialTransferRequestTypes.NEW;
   @Input() submissionMechanism!: number;
   @Output() listUpdated = new EventEmitter<number>();
   @Output() financialTransfersProjectListUpdated= new EventEmitter<FinancialTransfersProject[]>();
-
-  constructor() {
+  constructor( ) {
     super();
   }
 
@@ -66,12 +65,12 @@ export class FinancialTransfersProjectsComponent extends UiCrudListGenericCompon
 
   getExtraDataForPopup(): IKeyValue {
     return {
-      approvedFinancialTransferProjects: this.approvedFinancialTransferProjects,
       requestType: this.requestType,
       submissionMechanism: this.submissionMechanism
     };
   }
 
+ 
   addAllowed(): boolean {
     return !this.readonly && this.requestType == FinancialTransferRequestTypes.NEW;
   }

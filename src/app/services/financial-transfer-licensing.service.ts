@@ -119,15 +119,15 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
     unwrap: 'rs',
     fallback: '$default'
   })
-  private _loadExternalProjects(): Observable<ExternalProjectLicensing[]> {
+  private _loadExternalProjects(criteria:Partial<ExternalProjectLicensing>={}): Observable<ExternalProjectLicensing[]> {
     return this.http.post<ExternalProjectLicensing[]>(
       this._getURLSegment() + '/external-project-license/search',
-      {}
+      criteria
     );
   }
 
-  loadEternalProjects() {
-    return this._loadExternalProjects();
+  loadEternalProjects(criteria:Partial<ExternalProjectLicensing>={}) {
+    return this._loadExternalProjects(criteria);
   }
 
   @CastResponse(undefined, {

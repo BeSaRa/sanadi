@@ -125,7 +125,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   authorizedEntityBankAccounts: BankAccount[] = [];
   transferEntityBankAccounts: BankAccount[] = [];
   bankAccountsControl!: UntypedFormControl;
-  approvedFinancialTransferProjectsList: ExternalProjectLicensing[] = [];
+  // approvedFinancialTransferProjectsList: ExternalProjectLicensing[] = [];
 
   listenAllowed = true;
   @ViewChild('financialTransfersProjectsTab')
@@ -241,7 +241,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this._listenToAuthorizedEntitySearch();
     this._listenToPreRegisteredSearch();
     this._loadTransferEntityBankAccounts();
-    this._loadExternalProjects();
+    // this._loadExternalProjects();
   }
 
   _buildForm(): void {
@@ -746,19 +746,19 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
         this.transferEntityBankAccounts = [...accounts];
       });
   }
-  private _loadExternalProjects() {
-    this.service
-      .loadEternalProjects()
-      .pipe(
-        take(1),
-        map((projects) =>
-          projects.map((x) => new ExternalProjectLicensing().clone(x))
-        )
-      )
-      .subscribe((projects) => {
-        this.approvedFinancialTransferProjectsList = projects;
-      });
-  }
+  // private _loadExternalProjects() {
+  //   this.service
+  //     .loadEternalProjects()
+  //     .pipe(
+  //       take(1),
+  //       map((projects) =>
+  //         projects.map((x) => new ExternalProjectLicensing().clone(x))
+  //       )
+  //     )
+  //     .subscribe((projects) => {
+  //       this.approvedFinancialTransferProjectsList = projects;
+  //     });
+  // }
   private _listenToTransferTypeChange() {
     this.transferType.valueChanges
       .pipe(

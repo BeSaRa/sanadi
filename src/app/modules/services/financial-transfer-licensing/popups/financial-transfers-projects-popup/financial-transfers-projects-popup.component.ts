@@ -8,11 +8,12 @@ import {UiCrudDialogGenericComponent} from '@app/generics/ui-crud-dialog-generic
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {ExternalProjectLicensing} from '@app/models/external-project-licensing';
 import {FinancialTransfersProject} from '@app/models/financial-transfers-project';
+import { EmployeeService } from '@app/services/employee.service';
 import {FinancialTransferLicensingService} from '@app/services/financial-transfer-licensing.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Observable, of} from 'rxjs';
-import {catchError, debounceTime, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, debounceTime, filter, map, switchMap, take, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'financial-transfers-projects-popup',
@@ -28,10 +29,13 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   financialTransferProjectControl!: UntypedFormControl;
   lastQatariTransactionAmountValue: any;
 
+
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<FinancialTransfersProject>,
               public dialogRef: DialogRef,
               public fb: UntypedFormBuilder,
-              private financialTransferLicensingService: FinancialTransferLicensingService) {
+              private financialTransferLicensingService: FinancialTransferLicensingService,
+              private employeeService: EmployeeService
+              ) {
     super();
     this.setInitDialogData(data);
     this.popupTitleKey = 'lbl_projects';
@@ -48,8 +52,29 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   initPopup(): void {
     this._listenToFinancialTransferProjectChange();
     this._listenQatariTransactionAmountChange()
+    this._loadExternalProjects();
   }
-
+  private _loadExternalProjects() {
+    let criteria =  !!this.model.fullSerial ? {
+      fullSerial: this.model.fullSerial
+    } : {
+      organizationId: this.employeeService.getCurrentUser().getProfileId()
+    };
+    this.financialTransferLicensingService
+      .loadEternalProjects(criteria)
+      .pipe(
+        take(1),
+        map((projects) =>
+          projects.map((x) => new ExternalProjectLicensing().clone(x))
+        )
+      )
+      .subscribe((projects) => {
+        this.approvedFinancialTransferProjects = projects;
+        const approvedProject = this.approvedFinancialTransferProjects?.find(x => x.fullSerial === this.model.fullSerial);
+        this.financialTransferProjectControl.patchValue(approvedProject?.id, {emitEvent: false, onlySelf: true});
+        
+      });
+  }
   getPopupHeadingText(): string {
     return '';
   }
@@ -104,9 +129,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
 
   buildForm(): void {
     this.form = this.fb.group(this.model.getFormFields(true));
-    const approvedProject = this.approvedFinancialTransferProjects.find(x => x.fullSerial === this.model.fullSerial);
     this.financialTransferProjectControl = this.fb.control([]);
-    this.financialTransferProjectControl.patchValue(approvedProject?.id, {emitEvent: false, onlySelf: true});
   }
 
   private _listenQatariTransactionAmountChange() {
