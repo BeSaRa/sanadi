@@ -44,6 +44,7 @@ import {PartnerApprovalService} from '@services/partner-approval.service';
 import {
   FinancialTransfersProjectsComponent
 } from '@modules/services/financial-transfer-licensing/shared/financial-transfers-projects/financial-transfers-projects.component';
+import { AllRequestTypesEnum } from '@app/enums/all-request-types-enum';
 
 @Component({
   selector: 'app-financial-transfers-licensing',
@@ -887,7 +888,8 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
             this.requestTypeField.setValue(requestTypeValue);
           }
           this.requestType$.next(requestTypeValue);
-
+          this.readonly = requestTypeValue === AllRequestTypesEnum.CANCEL
+         
           this._handleLicenseValidationsByRequestType();
           this._handleAffidavitOfCompletionFieldsValidations( requestTypeValue);
         } else {
@@ -962,6 +964,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }
 
+  
   isEditLicenseAllowed(): boolean {
     let isAllowed =
       !this.model?.id || (!!this.model?.id && this.model.canCommit());
