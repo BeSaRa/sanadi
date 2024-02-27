@@ -894,7 +894,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
             this.requestTypeField.setValue(requestTypeValue);
           }
           this.requestType$.next(requestTypeValue);
-          this.readonly = requestTypeValue === AllRequestTypesEnum.CANCEL
+          this.readonly = this.employeeService.isExternalUser() ? requestTypeValue === AllRequestTypesEnum.CANCEL : true;
          
           this._handleLicenseValidationsByRequestType();
           this._handleAffidavitOfCompletionFieldsValidations( requestTypeValue);

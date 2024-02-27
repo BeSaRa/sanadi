@@ -433,7 +433,7 @@ export class InboxService {
     return this.takeActionOnTask(taskId, {}, service);
   }
 
-  takeActionWithComment(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>, commentLabel: keyof ILanguageKeys = 'comment'): DialogRef {
+  takeActionWithComment(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>, commentLabel: keyof ILanguageKeys = 'comment',forceRequiredComment= false): DialogRef {
     const service = this.getService(caseType);
     return this.dialog.show(ActionWithCommentPopupComponent, {
       service,
@@ -442,7 +442,8 @@ export class InboxService {
       actionType,
       claimBefore,
       task,
-      commentLabel
+      commentLabel,
+      forceRequiredComment
     });
   }
 
