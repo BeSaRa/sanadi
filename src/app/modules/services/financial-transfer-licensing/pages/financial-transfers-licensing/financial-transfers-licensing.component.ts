@@ -121,7 +121,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   licenseSearch$: Subject<string> = new Subject<string>();
   authorizedEntitySearch$: Subject<{ type: number; country: number }> =
     new Subject();
-  preRegisteredSearch$: Subject<null> = new Subject();
+  preRegisteredSearch$: Subject<{country: number}> = new Subject();
   selectedLicense?: FinancialTransferLicensing;
   authorizedEntityBankAccounts: BankAccount[] = [];
   transferEntityBankAccounts: BankAccount[] = [];
@@ -600,10 +600,16 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   private _listenToPreRegisteredSearch() {
     this.preRegisteredSearch$
       .pipe(
+        tap((criteria) => {
+          if(!criteria.country){
+            this.dialogService.info(this.lang.map.transfer_to_country_required)
+          }
+        }),
+        filter(criteria=> !!criteria.country),
+        exhaustMap((criteria) =>
+          this.service.search({country: criteria.country}).pipe(catchError(() => of([])))
+        ),
         takeUntil(this.destroy$),
-        exhaustMap((_) =>
-          this.service.search({}).pipe(catchError(() => of([])))
-        )
       )
       .pipe(
         exhaustMap((list) => this._openSelectedPreRegisteredEntities(list)),
@@ -1066,7 +1072,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       if (this.transferType.value) {
       }
 
-      this.preRegisteredSearch$.next();
+      this.preRegisteredSearch$.next({country: this.transferCountry.value});
       return;
     }
   }
@@ -1141,6 +1147,9 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   }
   get country(): UntypedFormControl {
     return this.transferOperationGroup.get('country') as UntypedFormControl;
+  }
+  get transferCountry(): UntypedFormControl {
+    return this.transferOperationGroup.get('transferCountry') as UntypedFormControl;
   }
   get transferType(): UntypedFormControl {
     return this.transferOperationGroup.get(
