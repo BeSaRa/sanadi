@@ -411,6 +411,9 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
   finalApprove(): DialogRef {
     return this.service.finalApprove(this, WFResponseType.FINAL_APPROVE)
   }
+  returnToOrganization(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.RETURN_TO_ORG, false, this,'comment',true);
+  }
   getSpecialExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       description: {langKey: 'special_explanations', value: this.description},
