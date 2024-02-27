@@ -75,7 +75,8 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       taskId: string,
       task: QueryResult | CaseModel<any, any>,
       claimBefore: boolean,
-      commentLabel: keyof ILanguageKeys
+      commentLabel: keyof ILanguageKeys,
+      forceRequiredComment: boolean
     },
     private dialogRef: DialogRef,
     private toast: ToastService,
@@ -314,6 +315,9 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   }
 
   private isCommentRequired(): boolean {
+    if(this.data.forceRequiredComment){
+      return true;
+    }
     return this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE || this.action === WFResponseType.COMPLETE || this.action === WFResponseType.RETURN || this.action === WFResponseType.CLOSE || this.action === WFResponseType.FINAL_REJECT || this.action === WFResponseType.ORGANIZATION_REJECT || this.action === WFResponseType.VALIDATE_REJECT || this.action === WFResponseType.ORGANIZATION_FINAL_REJECT;
   }
 
