@@ -26,6 +26,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   approvedFinancialTransferProjects: ExternalProjectLicensing[] = [];
   requestType: number;
   submissionMechanism: number;
+  caseId: number;
   financialTransferProjectControl!: UntypedFormControl;
   lastQatariTransactionAmountValue: any;
 
@@ -43,6 +44,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
     this.requestType = data.extras?.requestType
     this.submissionMechanism = data.extras?.submissionMechanism
     this.approvedFinancialTransferProjects = data.extras?.approvedFinancialTransferProjects;
+    this.caseId = data.extras?.caseId;
   }
 
   _getNewInstance(override?: Partial<FinancialTransfersProject> | undefined): FinancialTransfersProject {
@@ -52,15 +54,14 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   initPopup(): void {
     this._listenToFinancialTransferProjectChange();
     this._listenQatariTransactionAmountChange()
-    this._loadExternalProjects();
+    if (!this.isViewPopup) {
+      this._loadExternalProjects();
+    }
   }
   private _loadExternalProjects() {
-    let criteria = this.operation === OperationTypes.VIEW ? {
-      fullSerial: this.model.fullSerial
-    } : this.employeeService.isExternalUser() ? {
+    let criteria = this.employeeService.isExternalUser() ? {
       organizationId: this.employeeService.getCurrentUser().getProfileId()
-    } :
-      {};
+    } : {};
     this.financialTransferLicensingService
       .loadEternalProjects(criteria)
       .pipe(
@@ -121,6 +122,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
       projectTotalCost: this.selectedProject!.projectTotalCost,
       projectLicenseId: this.selectedProject!.projectLicenseId,
       remainingAmount: this.selectedProject!.remainingAmount,
+      projectName : this.selectedProject!.projectName
     });
   }
 
@@ -131,6 +133,9 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   buildForm(): void {
     this.form = this.fb.group(this.model.getFormFields(true));
     this.financialTransferProjectControl = this.fb.control([]);
+    if (!!this.model.fullSerial) {
+      this.selectedProject = this.model;
+    }
   }
 
   private _listenQatariTransactionAmountChange() {
@@ -161,7 +166,8 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
 
           const qatariTransactionAmount = this.requestType === FinancialTransferRequestTypes.UPDATE ?
             this.qatariTransactionAmount.value : undefined;
-          return this.financialTransferLicensingService.loadEternalProjectsDetails(value, qatariTransactionAmount)
+          const caseId = this.operation === this.operationTypes.UPDATE ? this.caseId: undefined;
+          return this.financialTransferLicensingService.loadEternalProjectsDetails(value, qatariTransactionAmount,caseId)
             .pipe(
               catchError(_ => of(null)),
             )
@@ -182,5 +188,8 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
 
   get qatariTransactionAmount(): UntypedFormControl {
     return this.form.get('qatariTransactionAmount') as UntypedFormControl;
+  }
+  get isViewPopup(): boolean {
+    return this.operation === this.operationTypes.VIEW
   }
 }
