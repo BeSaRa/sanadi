@@ -20,6 +20,7 @@ import {
 export class FinancialTransfersProjectsComponent extends UiCrudListGenericComponent<FinancialTransfersProject> {
   @Input() requestType: number = FinancialTransferRequestTypes.NEW;
   @Input() submissionMechanism!: number;
+  @Input() caseId!: number;
   @Output() listUpdated = new EventEmitter<number>();
   @Output() financialTransfersProjectListUpdated= new EventEmitter<FinancialTransfersProject[]>();
   constructor( ) {
@@ -66,7 +67,8 @@ export class FinancialTransfersProjectsComponent extends UiCrudListGenericCompon
   getExtraDataForPopup(): IKeyValue {
     return {
       requestType: this.requestType,
-      submissionMechanism: this.submissionMechanism
+      submissionMechanism: this.submissionMechanism,
+      caseId:this.caseId
     };
   }
 

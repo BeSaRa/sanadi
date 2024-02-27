@@ -134,17 +134,21 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
     unwrap: 'rs',
     fallback: '$default'
   })
-  private _loadExternalProjectsDetails(licenseId: string,qatariTransactionAmount?:number): Observable<FinancialTransfersProject> {
+  private _loadExternalProjectsDetails(licenseId: string,qatariTransactionAmount?:number,caseId?:number): Observable<FinancialTransfersProject> {
     let queryParams = new HttpParams();
+    queryParams = queryParams.append('licenseId',licenseId)
     if(!!qatariTransactionAmount){
       queryParams = queryParams.append('oldLicenseAmount',qatariTransactionAmount)
     }
+    if(!!caseId){
+      queryParams = queryParams.append('caseId',caseId)
+    }
     return this.http.get<FinancialTransfersProject>(
-      this._getURLSegment() + '/external-project-details/' + licenseId + '/details',
+      this._getURLSegment() + '/external-project-details/',
       {params: queryParams});
   }
-  loadEternalProjectsDetails(licenseId: string,qatariTransactionAmount?:number) {
-    return this._loadExternalProjectsDetails(licenseId,qatariTransactionAmount);
+  loadEternalProjectsDetails(licenseId: string,qatariTransactionAmount?:number,caseId?:number) {
+    return this._loadExternalProjectsDetails(licenseId,qatariTransactionAmount,caseId);
   }
   getSearchCriteriaModel<
     S extends FinancialTransferLicensing

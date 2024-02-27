@@ -238,7 +238,7 @@
       <financial-transfers-projects #financialTransfersProjectsTab [list]="model?.financialTransfersProjects  || []"
         [readonly]="readonly" (listUpdated)="updateTransactionAmount($event)"
         [submissionMechanism]="submissionMechanism"
-        
+        [caseId]="model?.getCaseId()"
         [requestType]="model?.requestType || financialTransferRequestTypesEnum.NEW"
         (financialTransfersProjectListUpdated)="onProjectsListUpdated($event)">
       </financial-transfers-projects>
