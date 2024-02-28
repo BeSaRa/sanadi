@@ -390,6 +390,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
           this.currentBeneficiary = undefined;
         }
         this.updateBeneficiaryForm(this.currentBeneficiary);
+        setTimeout(() => {
+          
+          this.buildingPlate?.disableUpdateForExistingValues()
+        }, 200);
+
       });
   }
 
@@ -407,12 +412,30 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
 
       this.requesterRelationTypeField.setValue(this.isRequesterSameAsBeneficiary());
     }
+    Object.entries(this.personalInfoTab.controls).forEach(([key,control])=>{
+      if(this.searchInputs.includes(key)) return ;
+
+      if(!control.value){
+        control.enable()  ;
+      }else{
+        control.disable();
+      }
+    })
+    Object.values(this.addressTab.controls).forEach(control=>{
+      if(!control.value){
+        control.enable()  ;
+      }else{
+        control.disable();
+      }
+      
+    })
+    
     // this.handleRequesterRelationTypeChange((selectedBeneficiary ? selectedBeneficiary.benRequestorRelationType : undefined), false);
     this.handleRequesterRelationTypeChange();
     this.handleEmploymentStatusChange((selectedBeneficiary ? selectedBeneficiary.occuptionStatus : undefined), false);
     setTimeout(() => this.toggleRequesterRelationTypeReadonly(), 100);
   }
-
+  searchInputs = ['benPrimaryIdType','benPrimaryIdNationality','expiryDate','benPrimaryIdNumber','benSecIdType','benSecIdNationality','benSecIdNumber']
   private updateRequestForm(request: undefined | SubventionRequest) {
     if (!request) {
       this.requestInfoTab?.reset();
