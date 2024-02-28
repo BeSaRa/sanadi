@@ -922,6 +922,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
         this.form.setControl('requestStatusTab', this.buildRequestStatusTab(response.request));
 
         this.isPartialRequest = response.request.isPartial;
+        if(this.isPartialRequest){
+          this.expiryDateField.clearValidators();
+        }
 
         if (this.currentParamType === this.routeParamTypes.partial) {
           response.request.statusDateModified = response.request.creationDate;
