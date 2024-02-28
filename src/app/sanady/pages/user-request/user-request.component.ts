@@ -938,6 +938,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     })
     return of(list);
   }
+ get isQIDType():boolean{
+    return this.primaryIdTypeField?.value === BeneficiaryIdTypes.QID;
+  }
   getBeneficiaryData($event?: Event) {
     $event?.preventDefault();
     $event?.stopPropagation();
@@ -949,14 +952,20 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     const nationality = this.primaryNationalityField?.value;
     const expiryDate = this.expiryDateField?.value;
 
-    if (!primaryNumber || !idType || !nationality || !expiryDate) {
+    if (!primaryNumber || !idType || !nationality ) {
       this.dialogService.info(this.langService.map.msg_invalid_search_criteria);
       return;
+    }
+    if(this.isQIDType && !expiryDate){
+      this.dialogService.info(this.langService.map.msg_QID_expiry_Date_required);
+      return;
+
     }
     const criteria = {
       benPrimaryIdNumber: primaryNumber ? primaryNumber : undefined,
       benPrimaryIdType: primaryNumber ? idType : undefined,
       benPrimaryIdNationality: nationality ? nationality : undefined,
+      
     }
     this.beneficiaryService.loadByCriteria(criteria)
       .pipe(
