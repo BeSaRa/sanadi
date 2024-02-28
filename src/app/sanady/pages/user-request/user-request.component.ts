@@ -924,6 +924,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
         this.isPartialRequest = response.request.isPartial;
         if(this.isPartialRequest){
           this.expiryDateField.clearValidators();
+
         }
 
         if (this.currentParamType === this.routeParamTypes.partial) {
@@ -982,7 +983,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       this.dialogService.info(this.langService.map.msg_invalid_search_criteria);
       return;
     }
-    if(this.isQIDType && !expiryDate){
+    if(this.isQIDType && !expiryDate && !this.editMode){
       this.dialogService.info(this.langService.map.msg_QID_expiry_Date_required);
       return;
 
