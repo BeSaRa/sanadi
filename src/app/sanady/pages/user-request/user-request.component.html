@@ -277,7 +277,7 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="dateOfBirth"
-                 [ngClass]="{'input-disabled': (!isBeneficiaryEnquired || readOnly || isPartialRequest)}"
+                 [ngClass]="{'input-disabled': (!isBeneficiaryEnquired || readOnly || isPartialRequest || dateOfBirthField.disabled)}"
                  id="dateOfBirth" [options]="datepickerOptionsMap.dateOfBirth"
                  (click)="isBeneficiaryEnquired && !isPartialRequest && !readOnly && dpDateOfBirth.toggleCalendar()"
                  #dpDateOfBirth="angular-mydatepicker"
@@ -487,7 +487,7 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-6 mb-4">
-        <building-plate #buildingPlate [record]="currentBeneficiary" [readOnly]="readOnly || isPartialRequest"
+        <building-plate #buildingPlate [record]="currentBeneficiary" [readOnly]="true"
                         [propertyMap]="{buildingNo: 'buildingName', street:'streetName', zone: 'zone', unit: 'unit'}"
                         [propertyRequiredMap]="{unit: false}"></building-plate>
       </div>
