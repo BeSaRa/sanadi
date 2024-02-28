@@ -81,7 +81,7 @@ export class BuildingPlateComponent implements OnInit {
   }
 
   isValidForm(): boolean {
-    return this.form.valid;
+    return this.form.disabled ? true: this.form.valid ;
   }
 
   isTouchedOrDirty(): boolean {
@@ -151,6 +151,15 @@ export class BuildingPlateComponent implements OnInit {
       [this._getPropertyKey('street')]: this.streetField.value,
       [this._getPropertyKey('unit')]: this.unitField.value,
     }
+  }
+  disableUpdateForExistingValues() {
+    Object.values(this.form.controls).forEach(control=>{
+      if(!control.value){
+        control.enable();
+      }else{
+        control.disable();
+      }
+    })
   }
 
 }
