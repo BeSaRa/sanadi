@@ -2113,4 +2113,5 @@ export interface ILanguageKeys {
   msg_regenerate_license_success:string;
   msg_regenerate_license_failed:string;
   btn_regenerate_license:string;
+  msg_QID_expiry_Date_required:string;
 }
