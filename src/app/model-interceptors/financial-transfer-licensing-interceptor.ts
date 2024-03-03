@@ -26,6 +26,7 @@ export class FinancialTransferLicensingInterceptor
       (model.transferTypeInfo = AdminResult.createInstance(
         model.transferTypeInfo
       ));
+   model.actualTransferDate && (model.actualTransferDate =  DateUtils.changeDateToDatepicker(model.actualTransferDate))
     model.transfereeTypeInfo &&
       (model.transfereeTypeInfo = AdminResult.createInstance(
         model.transfereeTypeInfo
