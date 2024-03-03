@@ -148,7 +148,7 @@ export function CastResponse(
     if (!target[$$_CAST_RESPONSE]) {
       target[$$_CAST_RESPONSE] = {}
     }
-
+    
     target[$$_CAST_RESPONSE][propertyKey] = propertyKey
 
 
@@ -201,3 +201,62 @@ export function CastResponseContainer(
     return target
   }
 }
+
+export function CastPagination(callback: undefined | string | (() => ClassConstructor<any>),
+  options: CastResponseContract = {
+    fallback: '$default',
+    unwrap: 'rs'
+  }
+): MethodDecorator {
+  return <T>(
+    target: any,
+    propertyKey: string | symbol,
+    descriptor: TypedPropertyDescriptor<T>
+  ) => {
+    if (!target[$$_CAST_RESPONSE]) {
+      target[$$_CAST_RESPONSE] = {}
+    }
+    target[$$_CAST_RESPONSE][propertyKey] = propertyKey
+
+
+    const original = descriptor.value! as unknown as () => Observable<any>
+    descriptor.value = function (this: any, ...args: []): Observable<any> {
+      const containerMap = this[$$_CAST_RESPONSE_CONTAINER] as Map<string | symbol,
+        CastOptionContract>
+      let hasUnwrap: boolean
+      let unwrapProperty = ''
+
+      if (options.unwrap) {
+        hasUnwrap = true
+        unwrapProperty = options.unwrap
+      }
+
+      if (containerMap && containerMap.has(propertyKey) && containerMap.get(propertyKey)!.unwrap) {
+        hasUnwrap = true
+        unwrapProperty = containerMap.get(propertyKey)!.unwrap!
+      }
+
+      return original
+        .apply(this, args)
+        .pipe(
+          map(models => {
+            const count = models.count;
+            models = isObject(models) && hasUnwrap && models.hasOwnProperty(unwrapProperty) ? models[unwrapProperty] : models
+            return {
+              rs: models ?
+                Array.isArray(models)
+                  ? caseCollection(callback, models, options, this, propertyKey)
+                  : castModel(callback, models, options, this, propertyKey)
+                : models,
+              count: count
+            }
+
+          }
+          )
+        )
+    } as unknown as T
+    return descriptor
+
+  }
+}
+

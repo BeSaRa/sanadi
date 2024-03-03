@@ -1,30 +1,32 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {InboxService} from '@services/inbox.service';
-import {EmployeeService} from '@services/employee.service';
-import {ConfigurationService} from '@services/configuration.service';
-import {LicenseService} from '@services/license.service';
-import {DialogService} from '@services/dialog.service';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
-import {CaseModel} from '@models/case-model';
-import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {GeneralInterceptor} from '@model-interceptors/general-interceptor';
-import {GeneralSearchCriteriaInterceptor} from '@model-interceptors/general-search-criteria-interceptor';
-import {IServiceConstructor} from '@contracts/iservice-constructor';
-import {filter, map, skip, takeUntil, tap} from 'rxjs/operators';
-import {CommonUtils} from '@helpers/common-utils';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {HasLicenseApproval} from '@contracts/has-license-approval';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { InboxService } from '@services/inbox.service';
+import { EmployeeService } from '@services/employee.service';
+import { ConfigurationService } from '@services/configuration.service';
+import { LicenseService } from '@services/license.service';
+import { DialogService } from '@services/dialog.service';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
+import { CaseModel } from '@models/case-model';
+import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { GeneralInterceptor } from '@model-interceptors/general-interceptor';
+import { GeneralSearchCriteriaInterceptor } from '@model-interceptors/general-search-criteria-interceptor';
+import { IServiceConstructor } from '@contracts/iservice-constructor';
+import { filter, map, skip, takeUntil, tap } from 'rxjs/operators';
+import { CommonUtils } from '@helpers/common-utils';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { HasLicenseApproval } from '@contracts/has-license-approval';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { EServicePermissionsEnum } from '@app/enums/e-service-permissions-enum';
+import { Pagination } from '@app/models/pagination';
+import { PageEvent } from '@app/interfaces/page-event';
 
 @Component({
   selector: 'search-service-individual',
@@ -44,6 +46,7 @@ export class SearchServiceIndividualComponent {
   fields: FormlyFieldConfig[] = [];
   serviceControl: UntypedFormControl = new UntypedFormControl(null, [CustomValidators.required]);
   results: CaseModel<any, any>[] = [];
+  count: number = 0;
   actions: IMenuItem<CaseModel<any, any>>[] = [];
   search$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   tabIndex$: Subject<number> = new Subject<number>();
@@ -52,7 +55,12 @@ export class SearchServiceIndividualComponent {
   filter: string = '';
   searchState: any;
   oldValuesAssigned: boolean = false;
-
+  pageEvent: PageEvent = {
+    pageIndex: 1,
+    pageSize: 10,
+    length: 0,
+    previousPageIndex: null
+  }
   printLicense = [
     CaseTypes.URGENT_INTERVENTION_LICENSING,
     CaseTypes.FUNDRAISING_LICENSING,
@@ -66,14 +74,14 @@ export class SearchServiceIndividualComponent {
   };
 
   constructor(public lang: LangService,
-              private toast: ToastService,
-              private router: Router,
-              private activatedRoute: ActivatedRoute,
-              private inboxService: InboxService,
-              private employeeService: EmployeeService,
-              private configService: ConfigurationService,
-              private licenseService: LicenseService,
-              private dialog: DialogService) {
+    private toast: ToastService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private inboxService: InboxService,
+    private employeeService: EmployeeService,
+    private configService: ConfigurationService,
+    private licenseService: LicenseService,
+    private dialog: DialogService) {
   }
 
   ngOnDestroy(): void {
@@ -147,6 +155,7 @@ export class SearchServiceIndividualComponent {
             this.fields = fields;
             this.setOldValues();
             this.getFieldsNames(fields);
+            this.pageEvent.pageIndex = 1;
           });
       });
   }
@@ -179,7 +188,7 @@ export class SearchServiceIndividualComponent {
   }
 
   actionOpen(item: CaseModel<any, any>) {
-    this.router.navigate([item.itemRoute, this.searchState], {queryParams: {item: item.itemDetails}}).then();
+    this.router.navigate([item.itemRoute, this.searchState], { queryParams: { item: item.itemDetails } }).then();
   }
 
   actionManageAttachments(item: CaseModel<any, any>) {
@@ -206,7 +215,7 @@ export class SearchServiceIndividualComponent {
   }
 
   actionExportLicense(exportedLicenseId: string, caseType: number) {
-    this.licenseService.showLicenseContent({id: exportedLicenseId}, caseType)
+    this.licenseService.showLicenseContent({ id: exportedLicenseId }, caseType)
       .subscribe((blob) => {
         window.open(blob.url);
         this.search$.next(null);
@@ -228,7 +237,7 @@ export class SearchServiceIndividualComponent {
         type: 'action',
         icon: 'mdi-eye',
         label: 'open_task',
-        data: {hideFromViewer: true},
+        data: { hideFromViewer: true },
         onClick: (item: CaseModel<any, any>) => this.actionOpen(item)
       },
       // view logs
@@ -243,7 +252,7 @@ export class SearchServiceIndividualComponent {
         type: 'action',
         icon: 'mdi-paperclip',
         label: 'manage_attachments',
-        data: {hideFromViewer: true},
+        data: { hideFromViewer: true },
         show: (item: CaseModel<any, any>) => {
           let caseStatus = item.getCaseStatus();
           return (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
@@ -257,15 +266,15 @@ export class SearchServiceIndividualComponent {
         type: 'action',
         icon: 'mdi-star-settings',
         label: 'manage_recommendations',
-        data: {hideFromViewer: true},
+        data: { hideFromViewer: true },
         show: (item: CaseModel<any, any>) => {
           return this.employeeService.isInternalUser() &&
             ![CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
-              CaseTypes.PARTNER_APPROVAL,
-              CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
-              CaseTypes.INTERNAL_PROJECT_LICENSE,
-              CaseTypes.EXTERNAL_PROJECT_MODELS,
-              CaseTypes.URGENT_INTERVENTION_LICENSING].includes(item.caseType);
+            CaseTypes.PARTNER_APPROVAL,
+            CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+            CaseTypes.INTERNAL_PROJECT_LICENSE,
+            CaseTypes.EXTERNAL_PROJECT_MODELS,
+            CaseTypes.URGENT_INTERVENTION_LICENSING].includes(item.caseType);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageRecommendations(item);
@@ -276,7 +285,7 @@ export class SearchServiceIndividualComponent {
         type: 'action',
         icon: 'mdi-comment-text-multiple-outline',
         label: 'manage_comments',
-        data: {hideFromViewer: true},
+        data: { hideFromViewer: true },
         show: (item: CaseModel<any, any>) => {
           return this.employeeService.isInternalUser() && item.getCaseStatus() !== CommonCaseStatus.CANCELLED;
         },
@@ -336,11 +345,14 @@ export class SearchServiceIndividualComponent {
   }
 
   private fillFormMessage() {
-    this.dialog.error(this.lang.map.at_least_one_field_should_be_filled.change({fields: ''}));
+    this.dialog.error(this.lang.map.at_least_one_field_should_be_filled.change({ fields: '' }));
   }
 
   private prepareCriteriaModel() {
-    return (this.selectedService.getSearchCriteriaModel().clone(this.form.value)) as CaseModel<any, any>;
+    const caseModel = (this.selectedService.getSearchCriteriaModel().clone(this.form.value)) as CaseModel<any, any>;
+      caseModel.pageSize = this.pageEvent.pageSize;
+      caseModel.pageNumber = this.pageEvent.pageIndex     
+    return caseModel;
   }
 
   get selectedServiceKey(): keyof ILanguageKeys {
@@ -353,7 +365,7 @@ export class SearchServiceIndividualComponent {
   }
 
   selectedTabChanged($event: TabComponent) {
-    $event.name === 'result_tab' ? this.serviceControl.disable({emitEvent: false}) : this.serviceControl.enable({emitEvent: false});
+    $event.name === 'result_tab' ? this.serviceControl.disable({ emitEvent: false }) : this.serviceControl.enable({ emitEvent: false });
   }
 
   isConsultationSelected(): boolean {
@@ -366,7 +378,7 @@ export class SearchServiceIndividualComponent {
 
   stringifyDefaultDates(field: FormlyFieldConfig): void {
     this.defaultDates = JSON.stringify(field.fieldGroup!.reduce((prev, item) => {
-      return {...prev, [(item.key as string)]: item.defaultValue};
+      return { ...prev, [(item.key as string)]: item.defaultValue };
     }, {} as any));
   }
 
@@ -405,7 +417,7 @@ export class SearchServiceIndividualComponent {
           (key === 'createdOnTo' || key === 'createdOnFrom') ? (control.patchValue({
             dateRange: undefined,
             isRange: false,
-            singleDate: {jsDate: new Date(oldValues[key])}
+            singleDate: { jsDate: new Date(oldValues[key]) }
           })) : control.patchValue(isNaN(Number(oldValues[key])) ? oldValues[key] : Number(oldValues[key]));
         }
       });
@@ -419,11 +431,15 @@ export class SearchServiceIndividualComponent {
     const caseType = (this.selectedService.getSearchCriteriaModel()).caseType;
     let criteria = this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames);
     criteria.caseType = caseType;
+    criteria.pageSize = value.pageSize
+    criteria.pageNumber = value.pageNumber
+    criteria.loadAllAdminResult = false;
     this.searchState = this.normalizeSearchCriteria(criteria);
     this.selectedService
-      .search(criteria)
-      .subscribe((results: CaseModel<any, any>[]) => {
-        this.results = results;
+      .paginateSearch(criteria)
+      .subscribe((pagination: Pagination<CaseModel<any, any>[]>) => {
+        this.results = pagination.rs;
+        this.count = pagination.count;
         if (this.results.length) {
           this.tabIndex$.next(1);
         } else {
@@ -431,7 +447,18 @@ export class SearchServiceIndividualComponent {
         }
       });
   }
+  private _isFormBuilt(): boolean {
+    return Object.keys(this.form.controls).length > 0
+  }
+  pageChange($event: PageEvent): void {
+    if (!this._isFormBuilt()) return;
+    $event.pageIndex ++;
+    this.pageEvent = $event
 
+    const model = this.prepareCriteriaModel()
+    this.search(model)
+  }
+ 
   private normalizeSearchCriteria(criteria: any): any {
     return {
       ...(GeneralInterceptor.send(new GeneralSearchCriteriaInterceptor().send(criteria))),
