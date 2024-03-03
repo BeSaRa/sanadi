@@ -21,6 +21,7 @@ export class FinancialTransfersProjectsComponent extends UiCrudListGenericCompon
   @Input() requestType: number = FinancialTransferRequestTypes.NEW;
   @Input() submissionMechanism!: number;
   @Input() caseId!: number;
+  @Input() country!: number;
   @Output() listUpdated = new EventEmitter<number>();
   @Output() financialTransfersProjectListUpdated= new EventEmitter<FinancialTransfersProject[]>();
   constructor( ) {
@@ -34,7 +35,8 @@ export class FinancialTransfersProjectsComponent extends UiCrudListGenericCompon
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: FinancialTransfersProject) => this.edit$.next(item),
-      show: (_item: FinancialTransfersProject) => !this.readonly
+      show: (_item: FinancialTransfersProject) => !this.readonly ,
+      disabled : ()=> !this.country
     },
     {
       type: 'action',
@@ -68,13 +70,15 @@ export class FinancialTransfersProjectsComponent extends UiCrudListGenericCompon
     return {
       requestType: this.requestType,
       submissionMechanism: this.submissionMechanism,
-      caseId:this.caseId
+      caseId:this.caseId,
+      country :this.country
     };
   }
 
  
   addAllowed(): boolean {
-    return !this.readonly && this.requestType == FinancialTransferRequestTypes.NEW;
+    
+    return !this.readonly && this.requestType == FinancialTransferRequestTypes.NEW && !!this.country;
   }
 
   _init(): void {

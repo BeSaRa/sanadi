@@ -27,6 +27,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   requestType: number;
   submissionMechanism: number;
   caseId: number;
+  country: number;
   financialTransferProjectControl!: UntypedFormControl;
   lastQatariTransactionAmountValue: any;
 
@@ -45,6 +46,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
     this.submissionMechanism = data.extras?.submissionMechanism
     this.approvedFinancialTransferProjects = data.extras?.approvedFinancialTransferProjects;
     this.caseId = data.extras?.caseId;
+    this.country = data.extras?.country
   }
 
   _getNewInstance(override?: Partial<FinancialTransfersProject> | undefined): FinancialTransfersProject {
@@ -60,7 +62,8 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   }
   private _loadExternalProjects() {
     let criteria = this.employeeService.isExternalUser() ? {
-      organizationId: this.employeeService.getCurrentUser().getProfileId()
+      organizationId: this.employeeService.getCurrentUser().getProfileId(),
+      beneficiaryCountry:this.country 
     } : {};
     this.financialTransferLicensingService
       .loadEternalProjects(criteria)
