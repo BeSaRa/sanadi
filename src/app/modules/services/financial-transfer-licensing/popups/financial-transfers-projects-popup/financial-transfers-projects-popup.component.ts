@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { UiCrudDialogComponentDataContract } from '@app/contracts/ui-crud-dialog-component-data-contract';
+import { licenseStatus } from '@app/enums/License-status.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { FinancialTransferRequestTypes } from '@app/enums/service-request-types';
 import { SubmissionMechanisms } from '@app/enums/submission-mechanisms.enum';
@@ -63,7 +64,8 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   private _loadExternalProjects() {
     let criteria = this.employeeService.isExternalUser() ? {
       organizationId: this.employeeService.getCurrentUser().getProfileId(),
-      beneficiaryCountry:this.country 
+      beneficiaryCountry:this.country ,
+      licenseStatus: licenseStatus.Valid
     } : {};
     this.financialTransferLicensingService
       .loadEternalProjects(criteria)
