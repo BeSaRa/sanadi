@@ -89,6 +89,7 @@ export class ProjectImplementation
   projectTotalCost: number = 0;
   licenseEndDate!: string;
   sequenceNumber:number = 0;
+  oldTotalCost:number = 0;
 
   searchFields: ISearchFieldsMap<ProjectImplementation> = {
     ...dateSearchFields(['createdOn']),
