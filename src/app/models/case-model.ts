@@ -1,34 +1,34 @@
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {AdminResult} from './admin-result';
-import {TaskDetails} from './task-details';
-import {FileNetModel} from './FileNetModel';
-import {Observable} from 'rxjs';
-import {BlobModel} from './blob-model';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
-import {ComponentType} from '@angular/cdk/overlay';
-import {DynamicComponentService} from '@services/dynamic-component.service';
-import {delay, map, take, tap} from 'rxjs/operators';
-import {CaseViewerPopupComponent} from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
-import {IESComponent} from '@contracts/iescomponent';
-import {OpenFrom} from '../enums/open-from.enum';
-import {EmployeeService} from '@services/employee.service';
-import {FactoryService} from '@services/factory.service';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {ICaseModel} from "@app/interfaces/icase-model";
-import {IBulkResult} from "@app/interfaces/ibulk-result";
-import {InboxService} from "@app/services/inbox.service";
-import {WFResponseType} from "@app/enums/wfresponse-type.enum";
-import {LicenseApprovalModel} from "@app/models/license-approval-model";
-import {INavigatedItem} from "@app/interfaces/inavigated-item";
-import {EncryptionService} from "@app/services/encryption.service";
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {BaseGenericEService} from "@app/generics/base-generic-e-service";
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {UntypedFormGroup} from '@angular/forms';
-import {OrganizationOfficer} from '@app/models/organization-officer';
-import {CaseModelContract} from "@contracts/case-model-contract";
-import {CommonUtils} from '@helpers/common-utils';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { AdminResult } from './admin-result';
+import { TaskDetails } from './task-details';
+import { FileNetModel } from './FileNetModel';
+import { Observable } from 'rxjs';
+import { BlobModel } from './blob-model';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { IMenuItem } from '../modules/context-menu/interfaces/i-menu-item';
+import { ComponentType } from '@angular/cdk/overlay';
+import { DynamicComponentService } from '@services/dynamic-component.service';
+import { delay, map, take, tap } from 'rxjs/operators';
+import { CaseViewerPopupComponent } from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
+import { IESComponent } from '@contracts/iescomponent';
+import { OpenFrom } from '../enums/open-from.enum';
+import { EmployeeService } from '@services/employee.service';
+import { FactoryService } from '@services/factory.service';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { ICaseModel } from "@app/interfaces/icase-model";
+import { IBulkResult } from "@app/interfaces/ibulk-result";
+import { InboxService } from "@app/services/inbox.service";
+import { WFResponseType } from "@app/enums/wfresponse-type.enum";
+import { LicenseApprovalModel } from "@app/models/license-approval-model";
+import { INavigatedItem } from "@app/interfaces/inavigated-item";
+import { EncryptionService } from "@app/services/encryption.service";
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { UntypedFormGroup } from '@angular/forms';
+import { OrganizationOfficer } from '@app/models/organization-officer';
+import { CaseModelContract } from "@contracts/case-model-contract";
+import { CommonUtils } from '@helpers/common-utils';
 
 export abstract class CaseModel<S extends BaseGenericEService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel<T>, CaseModelContract<S, T> {
   serial!: number;
@@ -55,6 +55,9 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   encrypt!: EncryptionService;
   organizationId!: number;
   submissionMechanism!: number;
+  pageSize: number = 10;
+  pageNumber: number = 1;
+  loadAllAdminResult!: boolean; 
 
   constructor() {
     super();
@@ -126,7 +129,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
     return Object.keys(this).filter((key) => (self[key] !== '' && self[key] !== null))
       .filter(field => fields ? fields.indexOf(field) !== -1 : field)
       .reduce((acc, current) => {
-        return (current === 'service') ? acc : {...acc, [current]: self[current]};
+        return (current === 'service') ? acc : { ...acc, [current]: self[current] };
       }, {});
   }
 
@@ -164,7 +167,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
           loadedModel: model,
           actions,
           componentService: this.service
-        }, {fullscreen: false})),
+        }, { fullscreen: false })),
         tap(ref => {
           const instance = ref.instance as unknown as CaseViewerPopupComponent;
           instance.viewInit

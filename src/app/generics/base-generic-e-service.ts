@@ -1,5 +1,5 @@
 import {Observable, interval, of} from 'rxjs';
-import {CastResponse} from '@decorators/cast-response';
+import {CastPagination, CastResponse} from '@decorators/cast-response';
 import {FactoryService} from '@services/factory.service';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {DialogService} from '@services/dialog.service';
@@ -34,6 +34,7 @@ import {CaseModel} from '@app/models/case-model';
 import {FollowupComponent} from '@app/shared/popups/followup/followup.component';
 import {QueryResult} from '@app/models/query-result';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import { Pagination } from '@app/models/pagination';
 
 export abstract class BaseGenericEService<T extends { id: string }> {
   protected constructor() {
@@ -153,6 +154,15 @@ export abstract class BaseGenericEService<T extends { id: string }> {
   })
   search(model: Partial<T>): Observable<T[]> {
     return this.searchService.search(model);
+  }
+ 
+  @CastPagination(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  paginateSearch(model: Partial<T>): Observable<Pagination<T[]>> {
+    return this.searchService.search(model)
+    
   }
   @CastResponse(undefined, {
     unwrap: 'rs',

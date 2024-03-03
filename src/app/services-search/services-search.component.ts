@@ -23,6 +23,8 @@ import {HasLicenseApproval} from '@app/interfaces/has-license-approval';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 import {CommonUtils} from '@helpers/common-utils';
+import { PageEvent } from '@app/interfaces/page-event';
+import { Pagination } from '@app/models/pagination';
 
 @Component({
   selector: 'services-search',
@@ -41,6 +43,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.hasSearchPermission(caseType));
   serviceControl: UntypedFormControl = new UntypedFormControl(this.serviceNumbers[0]);
   results: CaseModel<any, any>[] = [];
+  count: number = 0;
   actions: IMenuItem<CaseModel<any, any>>[] = [];
   search$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   tabIndex$: Subject<number> = new Subject<number>();
@@ -49,7 +52,12 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   filter: string = '';
   searchState: any;
   oldValuesAssigned: boolean = false;
-
+  pageEvent: PageEvent = {
+    pageIndex: 1,
+    pageSize: 10,
+    length: 0,
+    previousPageIndex: null
+  }
   printLicense = [
     CaseTypes.URGENT_INTERVENTION_LICENSING,
     CaseTypes.FUNDRAISING_LICENSING,
@@ -107,11 +115,15 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     const caseType = (this.selectedService.getSearchCriteriaModel()).caseType;
     let criteria = this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames);
     criteria.caseType = caseType;
+    criteria.pageSize = value.pageSize;
+    criteria.pageNumber = value.pageNumber;
+    criteria.loadAllAdminResult = false;
     this.searchState = this.normalizeSearchCriteria(criteria);
     this.selectedService
-      .search(criteria)
-      .subscribe((results: CaseModel<any, any>[]) => {
-        this.results = results;
+      .paginateSearch(criteria)
+      .subscribe((pagination: Pagination<CaseModel<any, any>[]>) => {
+        this.results = pagination.rs;
+        this.count = pagination.count;
         if (this.results.length) {
           this.tabIndex$.next(1);
         } else {
@@ -119,7 +131,17 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         }
       });
   }
+  private _isFormBuilt(): boolean {
+    return Object.keys(this.form.controls).length > 0
+  }
+  pageChange($event: PageEvent): void {
+    if (!this._isFormBuilt()) return;
+    $event.pageIndex ++;
+    this.pageEvent = $event
 
+    const model = this.prepareCriteriaModel()
+    this.search(model)
+  }
   private normalizeSearchCriteria(criteria: any): any {
     return {
       ...(GeneralInterceptor.send(new GeneralSearchCriteriaInterceptor().send(criteria))),
@@ -177,6 +199,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
             this.fields = fields;
             this.setOldValues();
             this.getFieldsNames(fields);
+            this.pageEvent.pageIndex = 1
           });
       });
   }
@@ -350,7 +373,11 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   private prepareCriteriaModel() {
-    return (this.selectedService.getSearchCriteriaModel().clone(this.form.value)) as CaseModel<any, any>;
+    const caseModel = (this.selectedService.getSearchCriteriaModel().clone(this.form.value)) as CaseModel<any, any>;
+      caseModel.pageSize = this.pageEvent.pageSize;
+      caseModel.pageNumber = this.pageEvent.pageIndex 
+    
+    return caseModel;
   }
 
   private listenToSearch() {
