@@ -124,7 +124,8 @@ export class FinancialTransferLicensingApprovePopupComponent implements OnInit, 
   }
 
   private isCommentRequired(): boolean {
-    return this.isCancelRequestType();
+    // return this.isCancelRequestType();
+    return true;
   }
 
   ngOnDestroy(): void {
