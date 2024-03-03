@@ -383,6 +383,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }, {
       emitEvent: !fromSelectedLicense
     })
+    this.model.oldTotalCost = this.model.implementationFundraising[0]?.totalCost ?? 0;
     this.handleRequestTypeChange(model.requestType)
     this.handleDisplayFields(model)
     this.handleMandatoryFields()
