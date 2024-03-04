@@ -181,6 +181,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
   editAidItem?: SubventionAid;
   editMode = false;
   isBeneficiaryEnquired = false;
+  isUserRequestPage = true;
 
   aidsActions: IMenuItem<SubventionAid>[] = [
     // edit
@@ -266,7 +267,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       langKey: 'personal_info',
       index: 0,
       // checkTouchedDirty: true,
-      validStatus: () => this.personalInfoTab && this.personalInfoTab.valid,
+      validStatus: () => this.personalInfoTab && this.personalInfoTab.valid || this.personalInfoTab.disabled ,
       isTouchedOrDirty: () => this.personalInfoTab && (this.personalInfoTab.touched || this.personalInfoTab.dirty)
     },
     income: {
@@ -288,7 +289,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       langKey: 'lbl_address',
       index: 1,
       // checkTouchedDirty: true,
-      validStatus: () => this.addressTab && this.addressTab.valid && !!this.buildingPlate && this.buildingPlate.isValidForm(),
+      validStatus: () => this.addressTab && (this.addressTab.disabled || this.addressTab.valid) && !!this.buildingPlate && this.buildingPlate.isValidForm(),
       isTouchedOrDirty: () => (this.addressTab && (this.addressTab.touched || this.addressTab.dirty)) || (this.buildingPlate && this.buildingPlate.isTouchedOrDirty())
     },
     requestInfo: {
@@ -877,6 +878,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
           pluck('id'),
           tap(_ => {
             this.currentParamType = this.routeParamTypes.normal;
+            this.isUserRequestPage = false;
           })
         ),
       partialRequestId$ = this.activeRoute.params
@@ -885,6 +887,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
           pluck('partial-id'),
           tap(_ => {
             this.currentParamType = this.routeParamTypes.partial;
+            this.isUserRequestPage = false;
           })
         );
 
@@ -923,10 +926,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
         this.form.setControl('requestStatusTab', this.buildRequestStatusTab(response.request));
 
         this.isPartialRequest = response.request.isPartial;
-        if(this.isPartialRequest){
-          this.expiryDateField.clearValidators();
-
-        }
 
         if (this.currentParamType === this.routeParamTypes.partial) {
           response.request.statusDateModified = response.request.creationDate;
@@ -1778,6 +1777,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       this.primaryNationalityField.updateValueAndValidity();
 
       this.setNationalityVisibility('primary', value);
+      if(this.isUserRequestPage && value ===  this.beneficiaryIdTypesEnum.QID){
+        this.expiryDateField.setValidators([CustomValidators.required]);
+      }else{
+        this.expiryDateField.clearValidators();
+      }
     });
   }
 

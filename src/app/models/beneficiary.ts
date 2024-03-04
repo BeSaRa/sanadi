@@ -202,7 +202,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       benPrimaryIdType: controls ? [benPrimaryIdType, CustomValidators.required] : benPrimaryIdType,
       benPrimaryIdNumber: controls ? [benPrimaryIdNumber, CustomValidators.required] : benPrimaryIdNumber,
       benPrimaryIdNationality: controls ? [benPrimaryIdNationality, [CustomValidators.required, CustomValidators.maxDate(new Date())]] : benPrimaryIdNationality,
-      expiryDate: controls ? [expiryDate, CustomValidators.required] : expiryDate,
+      expiryDate: controls ? [expiryDate] : expiryDate,
       benSecIdType: controls ? [benSecIdType] : benSecIdType,
       benSecIdNumber: controls ? [benSecIdNumber] : benSecIdNumber,
       benSecIdNationality: controls ? [benSecIdNationality] : benSecIdNationality,
