@@ -951,11 +951,15 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
         } else if (this.employeeService.isCharityUser()) {
           this.readonly = !this.model.isReturned();
         }
+      }else{
+        this.readonly = true;
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
       // if saved as draft, then no readonly
       if (this.model?.canCommit()) {
         this.readonly = false;
+      }else{
+        this.readonly = true;
       }
     }
   }
