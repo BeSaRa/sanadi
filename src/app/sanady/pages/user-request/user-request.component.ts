@@ -789,7 +789,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     if (!this.isPrivateIdFieldGroupValid()) {
       return false;
     }
-    return this.arabicNameField.valid && this.englishNameField.valid;
+    return (this.arabicNameField.disabled ||this.arabicNameField.valid) && 
+           (this.englishNameField.disabled ||this.englishNameField.valid);
   }
 
   downloadDisclosureForm(): void {
