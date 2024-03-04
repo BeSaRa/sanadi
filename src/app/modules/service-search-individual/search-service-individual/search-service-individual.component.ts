@@ -70,7 +70,7 @@ export class SearchServiceIndividualComponent {
   ]
 
   get criteriaTitle(): string {
-    return this.lang.map.search_result + (this.results.length ? ' (' + this.results.length + ')' : '');
+    return this.lang.map.search_result + (this.count > 0 ? ' (' + this.count + ')' : '');
   };
 
   constructor(public lang: LangService,
@@ -142,6 +142,7 @@ export class SearchServiceIndividualComponent {
       .subscribe((service: BaseGenericEService<any>) => {
         this.selectedService = service;
         this.searchColumns = this.selectedService.searchColumns;
+        this._resetPaginationResults();
         if (this.employeeService.isExternalUser()) {
           this.searchColumns = this.searchColumns.filter(x => x !== 'organization' && x !== 'organizationId' && x !== 'ouInfo');
         }
@@ -155,7 +156,6 @@ export class SearchServiceIndividualComponent {
             this.fields = fields;
             this.setOldValues();
             this.getFieldsNames(fields);
-            this.pageEvent.pageIndex = 1;
           });
       });
   }
@@ -182,7 +182,11 @@ export class SearchServiceIndividualComponent {
     const lastColumns = ['caseStatus', 'creatorInfo', 'createdOn'];
     this.searchColumns = this.searchColumns.filter(x => !lastColumns.includes(x)).concat(lastColumns);
   }
-
+  private _resetPaginationResults() {
+    this.pageEvent.pageIndex = 1;
+    this.pageEvent.pageSize = 10;
+    this.count = 0;
+  }
   actionViewLogs(item: CaseModel<any, any>) {
     item.viewLogs().onAfterClose$.subscribe(() => this.search$.next(null));
   }

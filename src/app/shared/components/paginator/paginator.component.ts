@@ -48,8 +48,14 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   totalPages: number = 0;
 
   @Input()
+  set page(value: number) {
+    this.pageIndex = value;
+    this.updatePaginationStatus();
+  }
+  @Input()
   set pageSize(value: number) {
     this._pageSize = Number(value);
+    this.itemsPerPageControl?.setValue(value,{emitEvent:false});
     this.updatePaginationStatus();
   };
 

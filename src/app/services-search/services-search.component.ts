@@ -67,7 +67,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   ]
 
   get criteriaTitle(): string {
-    return this.lang.map.search_result + (this.results.length ? ' (' + this.results.length + ')' : '');
+    return this.lang.map.search_result + (this.count > 0 ? ' (' + this.count + ')' : '');
   };
 
 
@@ -186,6 +186,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         // this.updateRoute();
         this.selectedService = service;
         this.searchColumns = this.selectedService.searchColumns;
+        this._resetPaginationResults();
         if (this.employeeService.isExternalUser()) {
           this.searchColumns = this.searchColumns.filter(x => x !== 'organization' && x !== 'organizationId' && x !== 'ouInfo');
         }
@@ -199,9 +200,14 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
             this.fields = fields;
             this.setOldValues();
             this.getFieldsNames(fields);
-            this.pageEvent.pageIndex = 1
           });
       });
+  }
+
+  private _resetPaginationResults() {
+    this.pageEvent.pageIndex = 1;
+    this.pageEvent.pageSize = 10;
+    this.count = 0;
   }
 
   actionViewLogs(item: CaseModel<any, any>) {
