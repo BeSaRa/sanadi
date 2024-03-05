@@ -251,7 +251,7 @@
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label for="currency" asteriskIfRequired="currency" class="form-label">{{lang.map.currency}}</label>
           <ng-select [selectOnTab]="true" labelForId="currency" [clearable]="true" placeholder="{{lang.map.select}}"
-            id="currency" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+            id="currency" [notFoundText]="lang.map.msg_not_found" [readonly]="editAffidavitOfCompletionNotAllowed" appendTo="body"
             formControlName="currency" validationClasses="currency">
             <ng-option *ngFor="let option of currencies" [value]="option.lookupKey">
               {{option.getName()}}
@@ -264,7 +264,7 @@
             for="currencyTransferTransactionAmount">{{lang.map.transaction_amount_in_transfer_currency}}</label>
           <input validationClasses="currencyTransferTransactionAmount"
             formControlName="currencyTransferTransactionAmount" type="text" id="currencyTransferTransactionAmount"
-            [readonly]="readonly" class="form-control">
+            [readonly]="editAffidavitOfCompletionNotAllowed" class="form-control">
           <app-field-error-message controlName="currencyTransferTransactionAmount"></app-field-error-message>
         </div>
         <div class="mb-4 col-md-4 col-sm-12 position-relative">
@@ -273,9 +273,9 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="actualTransferDate" id="actualTransferDate"
-              [ngClass]="{'input-disabled': readonly}" id="establishmentDate"
+              [ngClass]="{'input-disabled': editAffidavitOfCompletionNotAllowed}" id="establishmentDate"
               [options]="datepickerOptionsMap.actualTransferDate"
-              (click)="!readonly && dpactualTransferDate.toggleCalendar()" #dpactualTransferDate="angular-mydatepicker"
+              (click)="!editAffidavitOfCompletionNotAllowed && dpactualTransferDate.toggleCalendar()" #dpactualTransferDate="angular-mydatepicker"
               angular-mydatepicker validationClasses="actualTransferDate">
             </div>
           </div>
@@ -286,7 +286,7 @@
           <label class="form-label" asteriskIfRequired="transferNumber"
             for="transferNumber">{{lang.map.transfer_number}}</label>
           <input validationClasses="transferNumber" formControlName="transferNumber" type="text" id="transferNumber"
-            [readonly]="readonly" class="form-control">
+            [readonly]="editAffidavitOfCompletionNotAllowed" class="form-control">
           <app-field-error-message controlName="transferNumber"></app-field-error-message>
         </div>
       </div>
