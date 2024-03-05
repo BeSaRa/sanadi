@@ -1,46 +1,46 @@
 import { FinancialTransfersProject } from '@app/models/financial-transfers-project';
-import {ExternalProjectLicensing} from '@models/external-project-licensing';
-import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup,} from '@angular/forms';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {ImplementingAgencyTypes} from '@enums/implementing-agency-types.enum';
-import {OpenFrom} from '@enums/open-from.enum';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {SaveTypes} from '@enums/save-types';
-import {ServiceRequestTypes} from '@enums/service-request-types';
-import {SubmissionMechanisms} from '@enums/submission-mechanisms.enum';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {CommonUtils} from '@helpers/common-utils';
-import {DateUtils} from '@helpers/date-utils';
-import {Bank} from '@models/bank';
-import {BankAccount} from '@models/bank-account';
-import {FinancialTransferLicensing} from '@models/financial-transfer-licensing';
-import {FinancialTransferLicensingSearchCriteria} from '@models/financial-transfer-licesing-search-criteria';
-import {Lookup} from '@models/lookup';
-import {DialogService} from '@services/dialog.service';
-import {EmployeeService} from '@services/employee.service';
-import {FinalExternalOfficeApprovalService} from '@services/final-external-office-approval.service';
-import {FinancialTransferLicensingService} from '@services/financial-transfer-licensing.service';
-import {LangService} from '@services/lang.service';
-import {LicenseService} from '@services/license.service';
-import {LookupService} from '@services/lookup.service';
-import {ToastService} from '@services/toast.service';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {DatepickerOptionsMap, ReadinessStatus, TabMap,} from '@app/types/types';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CountryService} from '@services/country.service';
-import {Observable, of, Subject} from 'rxjs';
-import {catchError, exhaustMap, filter, map, switchMap, take, takeUntil, tap,} from 'rxjs/operators';
-import {FinancialTransferRequestTypes} from '@enums/service-request-types';
-import {FinancialTransferTypes} from '@enums/financial-transfer-types.enum';
-import {FinancialTransfereeTypes} from '@enums/financial-transferee-types.enum';
-import {AdminResult} from '@models/admin-result';
-import {Country} from '@models/country';
-import {FinalExternalOfficeApproval} from '@models/final-external-office-approval';
-import {PartnerApproval} from '@models/partner-approval';
-import {CommonService} from '@services/common.service';
-import {PartnerApprovalService} from '@services/partner-approval.service';
+import { ExternalProjectLicensing } from '@models/external-project-licensing';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, } from '@angular/forms';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { ImplementingAgencyTypes } from '@enums/implementing-agency-types.enum';
+import { OpenFrom } from '@enums/open-from.enum';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { SaveTypes } from '@enums/save-types';
+import { ServiceRequestTypes } from '@enums/service-request-types';
+import { SubmissionMechanisms } from '@enums/submission-mechanisms.enum';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { CommonUtils } from '@helpers/common-utils';
+import { DateUtils } from '@helpers/date-utils';
+import { Bank } from '@models/bank';
+import { BankAccount } from '@models/bank-account';
+import { FinancialTransferLicensing } from '@models/financial-transfer-licensing';
+import { FinancialTransferLicensingSearchCriteria } from '@models/financial-transfer-licesing-search-criteria';
+import { Lookup } from '@models/lookup';
+import { DialogService } from '@services/dialog.service';
+import { EmployeeService } from '@services/employee.service';
+import { FinalExternalOfficeApprovalService } from '@services/final-external-office-approval.service';
+import { FinancialTransferLicensingService } from '@services/financial-transfer-licensing.service';
+import { LangService } from '@services/lang.service';
+import { LicenseService } from '@services/license.service';
+import { LookupService } from '@services/lookup.service';
+import { ToastService } from '@services/toast.service';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { DatepickerOptionsMap, ReadinessStatus, TabMap, } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CountryService } from '@services/country.service';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, exhaustMap, filter, map, switchMap, take, takeUntil, tap, } from 'rxjs/operators';
+import { FinancialTransferRequestTypes } from '@enums/service-request-types';
+import { FinancialTransferTypes } from '@enums/financial-transfer-types.enum';
+import { FinancialTransfereeTypes } from '@enums/financial-transferee-types.enum';
+import { AdminResult } from '@models/admin-result';
+import { Country } from '@models/country';
+import { FinalExternalOfficeApproval } from '@models/final-external-office-approval';
+import { PartnerApproval } from '@models/partner-approval';
+import { CommonService } from '@services/common.service';
+import { PartnerApprovalService } from '@services/partner-approval.service';
 import {
   FinancialTransfersProjectsComponent
 } from '@modules/services/financial-transfer-licensing/shared/financial-transfers-projects/financial-transfers-projects.component';
@@ -113,21 +113,22 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     }),
   };
   formProperties = {
-    requestType: ()=>{
-      return this.getObservableField('requestTypeField','requestType')
+    requestType: () => {
+      return this.getObservableField('requestTypeField', 'requestType')
     }
   };
   countries: Country[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
   authorizedEntitySearch$: Subject<{ type: number; country: number }> =
     new Subject();
-  preRegisteredSearch$: Subject<{country: number}> = new Subject();
+  preRegisteredSearch$: Subject<{ country: number }> = new Subject();
   selectedLicense?: FinancialTransferLicensing;
   authorizedEntityBankAccounts: BankAccount[] = [];
   transferEntityBankAccounts: BankAccount[] = [];
   bankAccountsControl!: UntypedFormControl;
   // approvedFinancialTransferProjectsList: ExternalProjectLicensing[] = [];
 
+  readonlyRequestTypes =[AllRequestTypesEnum.CANCEL,AllRequestTypesEnum.TRANSFER_STATEMENT_TRANSFERRED];
   listenAllowed = true;
   @ViewChild('financialTransfersProjectsTab')
   financialTransfersProjectsComponentRef!: FinancialTransfersProjectsComponent;
@@ -339,7 +340,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     }
   }
 
-  _destroyComponent(): void {}
+  _destroyComponent(): void { }
 
   _getNewInstance(): FinancialTransferLicensing {
     return new FinancialTransferLicensing().clone();
@@ -390,7 +391,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     // patch the form here
     this.form.patchValue({
       basicInfo: model.getBasicInfoFields(),
-     transferOperation: model.getTransferOperationFields(),
+      transferOperation: model.getTransferOperationFields(),
       transfereeBankAccount: model.getTransfereeBankAccountFields(),
       transferBankAccount: model.getTransferBankAccountFields(),
       affidavitOfCompletion: model.getAffidavitOfCompletionFields(),
@@ -457,19 +458,19 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     }
     this.oldLicenseFullSerialField.updateValueAndValidity();
   }
-  private _handleAffidavitOfCompletionFieldsValidations(requestType:number): void {
+  private _handleAffidavitOfCompletionFieldsValidations(requestType: number): void {
     this._resetAffidavitOfCompletionGroup();
 
     let isAffidavitOfCompletionRequired = false;
 
-    if(requestType === FinancialTransferRequestTypes.NEW ||
-      requestType === FinancialTransferRequestTypes.UPDATE){
-        if(this.submissionMechanism === SubmissionMechanisms.NOTIFICATION){
-          isAffidavitOfCompletionRequired = true;
-        }
+    if (requestType === FinancialTransferRequestTypes.NEW ||
+      requestType === FinancialTransferRequestTypes.UPDATE) {
+      if (this.submissionMechanism === SubmissionMechanisms.NOTIFICATION) {
+        isAffidavitOfCompletionRequired = true;
       }
+    }
 
-    if(requestType === FinancialTransferRequestTypes.TRANSFER_STATEMENT_TRANSFERRED){
+    if (requestType === FinancialTransferRequestTypes.TRANSFER_STATEMENT_TRANSFERRED) {
       isAffidavitOfCompletionRequired = true;
     }
     if (isAffidavitOfCompletionRequired) {
@@ -539,8 +540,8 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
         tap((list) =>
           !list.length
             ? this.dialogService.info(
-                this.lang.map.no_result_for_your_search_criteria
-              )
+              this.lang.map.no_result_for_your_search_criteria
+            )
             : null
         ),
         // allow only the collection if it has value
@@ -548,16 +549,16 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
         exhaustMap((licenses) => {
           return licenses.length === 1
             ? this._validateSingleLicense(licenses[0]).pipe(
-                map((data) => {
-                  if (!data) {
-                    return of(null);
-                  }
-                  return data;
-                }),
-                catchError(() => {
+              map((data) => {
+                if (!data) {
                   return of(null);
-                })
-              )
+                }
+                return data;
+              }),
+              catchError(() => {
+                return of(null);
+              })
+            )
             : this._openSelectLicense(licenses);
         }),
         filter((info): info is FinancialTransferLicensing => {
@@ -601,13 +602,13 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.preRegisteredSearch$
       .pipe(
         tap((criteria) => {
-          if(!criteria.country){
+          if (!criteria.country) {
             this.dialogService.info(this.lang.map.transfer_to_country_required)
           }
         }),
-        filter(criteria=> !!criteria.country),
+        filter(criteria => !!criteria.country),
         exhaustMap((criteria) =>
-          this.service.search({country: criteria.country}).pipe(catchError(() => of([])))
+          this.service.search({ country: criteria.country }).pipe(catchError(() => of([])))
         ),
         takeUntil(this.destroy$),
       )
@@ -651,9 +652,9 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
           (
             result:
               | {
-                  selected: FinancialTransferLicensing;
-                  details: FinancialTransferLicensing;
-                }
+                selected: FinancialTransferLicensing;
+                details: FinancialTransferLicensing;
+              }
               | undefined
           ) => {
             return result ? result.details : result;
@@ -677,9 +678,9 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
           (
             result:
               | {
-                  selected: AdminResult;
-                  details: PartnerApproval | FinalExternalOfficeApproval;
-                }
+                selected: AdminResult;
+                details: PartnerApproval | FinalExternalOfficeApproval;
+              }
               | undefined
           ) => {
             if (result) {
@@ -725,9 +726,9 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
           (
             result:
               | {
-                  selected: FinancialTransferLicensing;
-                  details: FinancialTransferLicensing;
-                }
+                selected: FinancialTransferLicensing;
+                details: FinancialTransferLicensing;
+              }
               | undefined
           ) => {
             return result ? result.selected : result;
@@ -770,7 +771,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.transferType.valueChanges
       .pipe(
         takeUntil(this.destroy$),
-        filter(_=>this.listenAllowed),
+        filter(_ => this.listenAllowed),
         tap((_) => {
           this.model!.financialTransfersProjects = [];
           this.tabsData.financialTransfersProjects.validStatus = () => true;
@@ -793,7 +794,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.targetCountry.valueChanges
       .pipe(
         takeUntil(this.destroy$),
-        filter(_=>this.listenAllowed),
+        filter(_ => this.listenAllowed),
         tap((value) => this.country.setValue(value))
       )
       .subscribe();
@@ -802,7 +803,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.country.valueChanges
       .pipe(
         takeUntil(this.destroy$),
-        filter(_=>this.listenAllowed),
+        filter(_ => this.listenAllowed),
         tap((_) =>
           this.isExternalTransferType()
             ? this._resetTransfereeBankAccountGroup(false)
@@ -825,9 +826,9 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
           }
           if (value === FinancialTransfereeTypes.AUTHORIZED_ENTITY) {
             this.receiverType.setValidators([CustomValidators.required]);
-            if(this.transferType.value ===  FinancialTransferTypes.OVERSEAS_OFFICE_OPERATING_EXPENSES ){
+            if (this.transferType.value === FinancialTransferTypes.OVERSEAS_OFFICE_OPERATING_EXPENSES) {
               this.receiverType.setValue(ImplementingAgencyTypes.ExternalOffice);
-            }else{
+            } else {
               this.receiverType.setValue(ImplementingAgencyTypes.Partner);
             }
           }
@@ -894,16 +895,20 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
             this.requestTypeField.setValue(requestTypeValue);
           }
           this.requestType$.next(requestTypeValue);
-          this.readonly = this.employeeService.isExternalUser() ? requestTypeValue === AllRequestTypesEnum.CANCEL : true;
-         
+          this.readonly = this.employeeService.isExternalUser() ?
+            this.readonlyRequestTypes.includes(requestTypeValue) :
+            true;
+
           this._handleLicenseValidationsByRequestType();
-          this._handleAffidavitOfCompletionFieldsValidations( requestTypeValue);
+          this._handleAffidavitOfCompletionFieldsValidations(requestTypeValue);
         } else {
           this.requestTypeField.setValue(this.requestType$.value);
         }
       });
   }
-
+  get editAffidavitOfCompletionNotAllowed(): boolean {
+    return this.readonly && this.requestTypeField.value !== AllRequestTypesEnum.TRANSFER_STATEMENT_TRANSFERRED;
+  }
   isAttachmentReadonly(): boolean {
     if (!this.model?.id) {
       return false;
@@ -938,6 +943,10 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
+      if(this.readonlyRequestTypes.includes(this.requestTypeField.value)){
+        this.readonly = true;
+        return;
+      }
       if (this.employeeService.isCharityManager()) {
         this.readonly = false;
       } else if (this.employeeService.isCharityUser()) {
@@ -951,14 +960,14 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
         } else if (this.employeeService.isCharityUser()) {
           this.readonly = !this.model.isReturned();
         }
-      }else{
+      } else {
         this.readonly = true;
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
       // if saved as draft, then no readonly
       if (this.model?.canCommit()) {
         this.readonly = false;
-      }else{
+      } else {
         this.readonly = true;
       }
     }
@@ -966,7 +975,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   isFinancialTransfersProjectsRequired(): boolean {
     return (
       this.transferType.value ===
-        FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY ||
+      FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY ||
       this.transferType.value === FinancialTransferTypes.PROJECTS_TO_OTHERS
     );
   }
@@ -974,7 +983,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }
 
-  
+
   isEditLicenseAllowed(): boolean {
     let isAllowed =
       !this.model?.id || (!!this.model?.id && this.model.canCommit());
@@ -988,7 +997,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   isQatariTransactionAmountAllowed(): boolean {
     return (
       this.transferType.value ===
-        FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY ||
+      FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY ||
       this.transferType.value === FinancialTransferTypes.PROJECTS_TO_OTHERS
     );
   }
@@ -997,13 +1006,13 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     return (
       // this.transferType.value !== FinancialTransferTypes.OVERSEAS_OFFICE_OPERATING_EXPENSES &&
       this.transfereeType.value === FinancialTransfereeTypes.AUTHORIZED_ENTITY &&
-     ( this.transferType.value === FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY ||
-      this.transferType.value === FinancialTransferTypes.PROJECTS_TO_OTHERS)
+      (this.transferType.value === FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY ||
+        this.transferType.value === FinancialTransferTypes.PROJECTS_TO_OTHERS)
     );
   }
   isSearchAuthorizedEntityAllowed() {
     return (
-     !this.readonly && this.transfereeType.value === FinancialTransfereeTypes.AUTHORIZED_ENTITY
+      !this.readonly && this.transfereeType.value === FinancialTransfereeTypes.AUTHORIZED_ENTITY
     );
   }
   isPreRegisteredEntityAllowed() {
@@ -1020,9 +1029,9 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   isExternalTransferType(): boolean {
     return (
       this.transferType.value ===
-        FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY ||
+      FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY ||
       this.transferType.value ===
-        FinancialTransferTypes.OVERSEAS_OFFICE_OPERATING_EXPENSES
+      FinancialTransferTypes.OVERSEAS_OFFICE_OPERATING_EXPENSES
     );
   }
   isFinancialProjectsRequired(): boolean {
@@ -1077,7 +1086,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       if (this.transferType.value) {
       }
 
-      this.preRegisteredSearch$.next({country: this.transferCountry.value});
+      this.preRegisteredSearch$.next({ country: this.transferCountry.value });
       return;
     }
   }
@@ -1094,7 +1103,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.selectedLicense = licenseDetails;
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
-      let value:any  = new FinancialTransferLicensing().clone({
+      let value: any = new FinancialTransferLicensing().clone({
         ...licenseDetails,
       });
       value.requestType = this.requestTypeField.value;
@@ -1246,7 +1255,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   get specialExplanationsField(): UntypedFormControl {
     return this.form.get('description') as UntypedFormControl;
   }
-  onProjectsListUpdated(financialTransfersProject:FinancialTransfersProject[]){
+  onProjectsListUpdated(financialTransfersProject: FinancialTransfersProject[]) {
     this.model!.financialTransfersProjects = financialTransfersProject;
   }
   //#endregion
