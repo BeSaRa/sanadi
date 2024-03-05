@@ -241,6 +241,7 @@
         [caseId]="model?.getCaseId()"
         [country]="country.value"
         [requestType]="model?.requestType || financialTransferRequestTypesEnum.NEW"
+        [modelQatariTransactionAmount]="model?.qatariTransactionAmount?? 0"
         (financialTransfersProjectListUpdated)="onProjectsListUpdated($event)">
       </financial-transfers-projects>
     </ng-container>
