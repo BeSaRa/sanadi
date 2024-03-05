@@ -31,6 +31,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   country: number;
   financialTransferProjectControl!: UntypedFormControl;
   lastQatariTransactionAmountValue: any;
+  modelQatariTransactionAmount :number;
 
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<FinancialTransfersProject>,
@@ -47,7 +48,8 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
     this.submissionMechanism = data.extras?.submissionMechanism
     this.approvedFinancialTransferProjects = data.extras?.approvedFinancialTransferProjects;
     this.caseId = data.extras?.caseId;
-    this.country = data.extras?.country
+    this.country = data.extras?.country,
+    this.modelQatariTransactionAmount = data.extras?.modelQatariTransactionAmount
   }
 
   _getNewInstance(override?: Partial<FinancialTransfersProject> | undefined): FinancialTransfersProject {
@@ -170,7 +172,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
         switchMap((value: string) => {
 
           const qatariTransactionAmount = this.requestType === FinancialTransferRequestTypes.UPDATE ?
-            this.qatariTransactionAmount.value : undefined;
+            this.modelQatariTransactionAmount : undefined;
           const caseId = this.operation === this.operationTypes.UPDATE ? this.caseId: undefined;
           return this.financialTransferLicensingService.loadEternalProjectsDetails(value, qatariTransactionAmount,caseId)
             .pipe(

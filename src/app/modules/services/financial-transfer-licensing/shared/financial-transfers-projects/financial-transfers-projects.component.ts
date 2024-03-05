@@ -22,6 +22,7 @@ export class FinancialTransfersProjectsComponent extends UiCrudListGenericCompon
   @Input() submissionMechanism!: number;
   @Input() caseId!: number;
   @Input() country!: number;
+  @Input() modelQatariTransactionAmount!: number;
   @Output() listUpdated = new EventEmitter<number>();
   @Output() financialTransfersProjectListUpdated= new EventEmitter<FinancialTransfersProject[]>();
   constructor( ) {
@@ -71,7 +72,8 @@ export class FinancialTransfersProjectsComponent extends UiCrudListGenericCompon
       requestType: this.requestType,
       submissionMechanism: this.submissionMechanism,
       caseId:this.caseId,
-      country :this.country
+      country :this.country,
+      modelQatariTransactionAmount :this.modelQatariTransactionAmount
     };
   }
 
