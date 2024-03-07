@@ -106,9 +106,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
       this.displayRequiredFieldsMessage();
       return false;
     }
-    const isQatariTransactionAmountValid = this.submissionMechanism === SubmissionMechanisms.NOTIFICATION || (this.qatariTransactionAmount.value <= this.selectedProject!.dueAmount)
-    if (!isQatariTransactionAmountValid) {
-      this.toast.error(this.lang.map.msg_qatari_transaction_should_not_exceed_due_amount);
+    if (!this._isQatariTransactionAmountValid()) {
       return false;
     }
 
@@ -117,6 +115,15 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
       return false;
     }
     return true;
+  }
+
+    private _isQatariTransactionAmountValid(): boolean {
+    if(this.submissionMechanism === SubmissionMechanisms.NOTIFICATION){
+      this.toast.error(this.lang.map.msg_qatari_transaction_should_not_exceed_project_cost)
+      return this.qatariTransactionAmount.value <= this.selectedProject.projectTotalCost;
+    }
+    this.toast.error(this.lang.map.msg_qatari_transaction_should_not_exceed_due_amount);
+    return this.qatariTransactionAmount.value <= this.selectedProject!.dueAmount
   }
 
   prepareModel(model: FinancialTransfersProject, form: UntypedFormGroup): FinancialTransfersProject | Observable<FinancialTransfersProject> {

@@ -2114,4 +2114,5 @@ export interface ILanguageKeys {
   msg_regenerate_license_failed:string;
   btn_regenerate_license:string;
   msg_QID_expiry_Date_required:string;
+  msg_qatari_transaction_should_not_exceed_project_cost:string;
 }
