@@ -1798,10 +1798,15 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     if (item.caseStatus === CommonCaseStatus.CANCELLED) {
       return false;
     }
+    // if (item.isApproved && this.internal) {
+    //   return false;
+    // }
+
     //@ts-ignore
-    if (item.isApproved && this.internal) {
-      return false;
+    if (!item.isApproved) {
+      return true;
     }
+    
     return this.employeeService.isLicensingUser() || !this.internal;
   }
 
