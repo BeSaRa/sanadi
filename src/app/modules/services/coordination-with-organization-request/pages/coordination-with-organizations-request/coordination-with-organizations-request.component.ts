@@ -867,60 +867,6 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     });
 
 
-    // const input = $event.target as HTMLInputElement;
-    // const file = input.files?.item(0);
-    // const validFile = file ? file.type === 'application/pdf' : true;
-    // !validFile ? (input.value = '') : null;
-    // if (!validFile) {
-    //   this.dialog.error(
-    //     this.lang.map.msg_only_those_files_allowed_to_upload.change({
-    //       files: this.allowedExtensions.join(','),
-    //     })
-    //   );
-    //   input.value = '';
-    //   return;
-    // }
-    // const deleteFirst$ = this.model?.coordinationReportId
-    //   ? this.service.documentService.deleteDocument(
-    //       this.model.coordinationReportId
-    //     ).pipe(
-    //       take(1),
-    //       catchError(_=>of(null))
-    //     )
-    //   : of(null);
-    // of(null)
-    //   .pipe(switchMap((_) => deleteFirst$))
-    //   .pipe(
-    //     take(1),
-    //     switchMap((_) => {
-    //       return this.service.documentService.addSingleDocument(
-    //         this.model!.id,
-    //         new FileNetDocument().clone({
-    //           documentTitle: this.lang.map.lbl_final_report,
-    //           description: this.lang.map.lbl_final_report,
-    //           attachmentTypeId: -1,
-    //           required: false,
-    //           files: input.files!,
-    //           isPublished: false,
-    //         })
-    //       );
-    //     }),
-    //     concatMap((attachment) => {
-    //       this.model!.coordinationReportId = attachment.id;
-    //       this.model!.coordinationReportVSId = attachment.vsId;
-    //       return this.model!.save()
-    //       .pipe(tap((model)=>{
-    //         this.model!.participatingOrganizaionList = model.participatingOrganizaionList;
-    //       }))
-
-    //     }),
-
-    //   )
-    //   .subscribe(_ => {
-    //     input.value = '';
-    //     this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
-
-    //   });
   }
   private _createAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
     return this.service.documentService
@@ -965,6 +911,19 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       licenseStartDate: this.licenseStartDate,
       licenseEndDate: this.licenseEndDate,
     };
+  }
+
+  get allowedToUploadFinalReport(): boolean {
+    return  this.isInternalUser &&
+            this.model!.isApproved &&
+            !this.isFinal
+            && this.model!.isClaimed()
+  }
+  get isFinal(): boolean {
+    return [
+      CommonCaseStatus.FINAL_APPROVE,
+      CommonCaseStatus.FINAL_REJECTION
+     ].includes(this.model!.getCaseStatus())
   }
 
   get isOtherDomain() {

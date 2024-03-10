@@ -130,7 +130,7 @@
                                 (requestTerminate)="terminateOrganizationTask($event)">
 
       </participant-organization>
-      <button *ngIf="isLicensingUser && model?.isApproved"
+      <button *ngIf="allowedToUploadFinalReport"
               [tooltip]="lang.map.upload_file" style="margin-inline-end: 1rem;"
               class="btn btn-primary" (click)="uploadAttachment(uploader)">
         {{lang.map.upload_final_report}}
