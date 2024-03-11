@@ -31,7 +31,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   country: number;
   financialTransferProjectControl!: UntypedFormControl;
   lastQatariTransactionAmountValue: any;
-  modelQatariTransactionAmount :number;
+  modelQatariTransactionAmount: number;
 
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<FinancialTransfersProject>,
@@ -49,7 +49,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
     this.approvedFinancialTransferProjects = data.extras?.approvedFinancialTransferProjects;
     this.caseId = data.extras?.caseId;
     this.country = data.extras?.country,
-    this.modelQatariTransactionAmount = data.extras?.modelQatariTransactionAmount
+      this.modelQatariTransactionAmount = data.extras?.modelQatariTransactionAmount
   }
 
   _getNewInstance(override?: Partial<FinancialTransfersProject> | undefined): FinancialTransfersProject {
@@ -66,7 +66,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   private _loadExternalProjects() {
     let criteria = this.employeeService.isExternalUser() ? {
       organizationId: this.employeeService.getCurrentUser().getProfileId(),
-      beneficiaryCountry:this.country ,
+      beneficiaryCountry: this.country,
       licenseStatus: licenseStatus.Valid
     } : {};
     this.financialTransferLicensingService
@@ -117,13 +117,19 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
     return true;
   }
 
-    private _isQatariTransactionAmountValid(): boolean {
-    if(this.submissionMechanism === SubmissionMechanisms.NOTIFICATION){
-      this.toast.error(this.lang.map.msg_qatari_transaction_should_not_exceed_project_cost)
-      return this.qatariTransactionAmount.value <= this.selectedProject.projectTotalCost;
+  private _isQatariTransactionAmountValid(): boolean {
+    const isValid = this.submissionMechanism === SubmissionMechanisms.NOTIFICATION ? 
+    this.qatariTransactionAmount.value <= this.selectedProject.projectTotalCost :
+    this.qatariTransactionAmount.value <= this.selectedProject!.dueAmount ;
+
+    const errorMessage = this.submissionMechanism === SubmissionMechanisms.NOTIFICATION ? 
+    this.lang.map.msg_qatari_transaction_should_not_exceed_project_cost :
+    this.lang.map.msg_qatari_transaction_should_not_exceed_due_amount;
+    
+    if (!isValid) {
+      this.toast.error( errorMessage)
     }
-    this.toast.error(this.lang.map.msg_qatari_transaction_should_not_exceed_due_amount);
-    return this.qatariTransactionAmount.value <= this.selectedProject!.dueAmount
+    return isValid;
   }
 
   prepareModel(model: FinancialTransfersProject, form: UntypedFormGroup): FinancialTransfersProject | Observable<FinancialTransfersProject> {
@@ -136,7 +142,7 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
       projectTotalCost: this.selectedProject!.projectTotalCost,
       projectLicenseId: this.selectedProject!.projectLicenseId,
       remainingAmount: this.selectedProject!.remainingAmount,
-      projectName : this.selectedProject!.projectName
+      projectName: this.selectedProject!.projectName
     });
   }
 
@@ -180,8 +186,8 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
 
           const qatariTransactionAmount = this.requestType === FinancialTransferRequestTypes.UPDATE ?
             this.modelQatariTransactionAmount : undefined;
-          const caseId = this.operation === this.operationTypes.UPDATE ? this.caseId: undefined;
-          return this.financialTransferLicensingService.loadEternalProjectsDetails(value, qatariTransactionAmount,caseId)
+          const caseId = this.operation === this.operationTypes.UPDATE ? this.caseId : undefined;
+          return this.financialTransferLicensingService.loadEternalProjectsDetails(value, qatariTransactionAmount, caseId)
             .pipe(
               catchError(_ => of(null)),
             )
