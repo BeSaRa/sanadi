@@ -264,6 +264,8 @@
           <label class="form-label" asteriskIfRequired="currencyTransferTransactionAmount"
             for="currencyTransferTransactionAmount">{{lang.map.transaction_amount_in_transfer_currency}}</label>
           <input validationClasses="currencyTransferTransactionAmount"
+            [mask]="inputMask.SEPARATOR"
+            [thousandSeparator]="inputMask.THOUSAND_SEPARATOR"
             formControlName="currencyTransferTransactionAmount" type="text" id="currencyTransferTransactionAmount"
             [readonly]="editAffidavitOfCompletionNotAllowed" class="form-control">
           <app-field-error-message controlName="currencyTransferTransactionAmount"></app-field-error-message>
