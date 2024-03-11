@@ -13,6 +13,7 @@ import { EmployeeService } from '@app/services/employee.service';
 import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { CustomValidators } from '@app/validators/custom-validators';
 import { Observable, of } from 'rxjs';
 import { catchError, debounceTime, filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
 
@@ -32,6 +33,8 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
   financialTransferProjectControl!: UntypedFormControl;
   lastQatariTransactionAmountValue: any;
   modelQatariTransactionAmount: number;
+  inputMask = CustomValidators.inputMaskPatterns
+
 
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: UiCrudDialogComponentDataContract<FinancialTransfersProject>,
@@ -63,7 +66,8 @@ export class FinancialTransfersProjectsPopupComponent extends UiCrudDialogGeneri
       this._loadExternalProjects();
     }
   }
-  private _loadExternalProjects() {
+ 
+  private _loadExternalProjects() {    
     let criteria = this.employeeService.isExternalUser() ? {
       organizationId: this.employeeService.getCurrentUser().getProfileId(),
       beneficiaryCountry: this.country,

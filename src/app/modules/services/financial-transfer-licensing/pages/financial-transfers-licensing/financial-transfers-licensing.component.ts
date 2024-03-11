@@ -127,7 +127,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   transferEntityBankAccounts: BankAccount[] = [];
   bankAccountsControl!: UntypedFormControl;
   // approvedFinancialTransferProjectsList: ExternalProjectLicensing[] = [];
-
+  inputMask = CustomValidators.inputMaskPatterns
   readonlyRequestTypes =[AllRequestTypesEnum.CANCEL,AllRequestTypesEnum.TRANSFER_STATEMENT_TRANSFERRED];
   listenAllowed = true;
   @ViewChild('financialTransfersProjectsTab')
