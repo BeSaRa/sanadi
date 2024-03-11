@@ -260,8 +260,11 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       explanation: model.formBuilder(false).explanation
     });
     this.handleRequestTypeChange(model.requestType, false);
-    this._lestenToExternalProjectImplementation();
-    this._lestenToInternalProjectImplementation();
+    if(!this.model.projectLicenseFullSerial){
+      this._lestenToExternalProjectImplementation();
+      this._lestenToInternalProjectImplementation();
+    }
+    
     this.cd.detectChanges();
   }
   _afterBuildForm(): void {
