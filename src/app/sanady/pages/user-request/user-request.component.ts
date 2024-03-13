@@ -416,17 +416,17 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     Object.entries(this.personalInfoTab.controls).forEach(([key,control])=>{
       if(this.searchInputs.includes(key)) return ;
 
-      if(!control.value){
-        control.enable()  ;
-      }else{
+      if(CommonUtils.isValidValue(control.value)){
         control.disable();
+      }else{
+        control.enable()  ;
       }
     })
     Object.values(this.addressTab.controls).forEach(control=>{
-      if(!control.value){
-        control.enable()  ;
+      if(CommonUtils.isValidValue(control.value)){
+        control.disable()  ;
       }else{
-        control.disable();
+        control.enable();
       }
       
     })
