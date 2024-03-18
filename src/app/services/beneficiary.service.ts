@@ -367,7 +367,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   getBeneficiaryFromMoiData(criteria:Partial<IBeneficiaryCriteria> ) {
 
     const {benPrimaryIdNumber,expiryDate} = criteria;
-    const expiryDateString = DateUtils.changeDateFromDatepicker(expiryDate as unknown as IMyDateModel)?.toISOString()
+    const expiryDateString = DateUtils.changeDateFromDatepicker(expiryDate as unknown as IMyDateModel)?.toLocaleDateString('en-CA')
     return forkJoin([this.addPersonalInfoInquiry(benPrimaryIdNumber!,expiryDateString!), 
                      this.addAddressInfoInquiry(benPrimaryIdNumber!,expiryDateString!)])
     .pipe(
