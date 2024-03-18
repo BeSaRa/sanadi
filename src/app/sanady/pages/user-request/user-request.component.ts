@@ -994,13 +994,15 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       benPrimaryIdNationality: nationality ? nationality : undefined,
       
     }
-    this.beneficiaryService.loadByCriteria(criteria)
+    this.beneficiaryService.getBeneficiaryFromMoiData({...criteria,expiryDate})
       .pipe(
         switchMap((list)=>{
-          return iif(()=> list.length > 0,this.setExpiryDateForSanadyResult(list,expiryDate),
-          this.beneficiaryService.getBeneficiaryFromMoiData({...criteria,expiryDate}).pipe(
-            map((beneficiary)=> [beneficiary])
-          ))
+          return iif(()=> list.length > 0,of(list),
+          this.beneficiaryService.loadByCriteria(criteria)
+          .pipe(
+            switchMap(list =>this.setExpiryDateForSanadyResult(list,expiryDate))
+          )
+          )
          
         }),
         takeUntil(this.destroy$)
