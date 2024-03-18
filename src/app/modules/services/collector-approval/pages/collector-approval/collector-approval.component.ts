@@ -271,7 +271,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if(this.employeeService.isExternalUser() && this.model.isReturned()){
+      if(this.employeeService.isExternalUser()){
         this.readonly = false;
       }
       // if (this.employeeService.isCharityManager()) {
@@ -283,7 +283,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
       
       // after claim, consider it same as user inbox and use same condition
       if (this.model.taskDetails.isClaimed()) {
-        if(this.employeeService.isExternalUser() && this.model.isReturned()){
+        if(this.employeeService.isExternalUser()){
           this.readonly = false;
         }
         // if (this.employeeService.isCharityManager()) {
