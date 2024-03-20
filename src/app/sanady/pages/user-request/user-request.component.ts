@@ -10,7 +10,7 @@ import {
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
-import { BehaviorSubject, forkJoin, iif, merge, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, iif, merge, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
   delay,
@@ -138,11 +138,17 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     this.loadMainAidLookups();
     this.loadDonors();
   }
+  private _unEditableFields: UntypedFormControl[] = []
 
   ngAfterViewInit(): void {
     this.handleRequesterRelationTypeChange();
     this.listenToRouteParams();
     this.cd.detectChanges();
+    this._unEditableFields = [
+      this.arabicNameField,
+      this.englishNameField,
+      this.dateOfBirthField
+    ]
   }
 
   ngOnDestroy() {
@@ -391,10 +397,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
           this.currentBeneficiary = undefined;
         }
         this.updateBeneficiaryForm(this.currentBeneficiary);
-        setTimeout(() => {
+        // setTimeout(() => {
 
-          this.buildingPlate?.disableUpdateForExistingValues()
-        }, 200);
+        //   this.buildingPlate?.disableUpdateForExistingValues()
+        // }, 200);
 
       });
   }
@@ -437,15 +443,30 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       } else {
         control.enable();
       }
-
     })
+    // Object.entries(this.personalInfoTab.controls).forEach(([key, control]) => {
+    //   if (this.searchInputs.includes(key)) return;
 
+    //   if (CommonUtils.isValidValue(control.value)) {
+    //     control.disable();
+    //   } else {
+    //     control.enable();
+    //   }
+    // })
+    // Object.values(this.addressTab.controls).forEach(control => {
+    //   if (CommonUtils.isValidValue(control.value)) {
+    //     control.disable();
+    //   } else {
+    //     control.enable();
+    //   }
+
+    // })
     // this.handleRequesterRelationTypeChange((selectedBeneficiary ? selectedBeneficiary.benRequestorRelationType : undefined), false);
     this.handleRequesterRelationTypeChange();
     this.handleEmploymentStatusChange((selectedBeneficiary ? selectedBeneficiary.occuptionStatus : undefined), false);
     setTimeout(() => this.toggleRequesterRelationTypeReadonly(), 100);
   }
-  searchInputs = ['benPrimaryIdType', 'benPrimaryIdNationality', 'expiryDate', 'benPrimaryIdNumber', 'benSecIdType', 'benSecIdNationality', 'benSecIdNumber']
+  // searchInputs = ['benPrimaryIdType', 'benPrimaryIdNationality', 'expiryDate', 'benPrimaryIdNumber', 'benSecIdType', 'benSecIdNationality', 'benSecIdNumber']
   personalInputs = ['arName', 'enName', 'gender', 'dateOfBirth']
   private updateRequestForm(request: undefined | SubventionRequest) {
     if (!request) {
@@ -1004,19 +1025,49 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       benPrimaryIdNationality: nationality ? nationality : undefined,
 
     }
-    this.beneficiaryService.getBeneficiaryFromMoiData({ ...criteria, expiryDate })
-      .pipe(
-        switchMap((list) => {
-          return iif(() => list.length > 0, of(list),
-            this.beneficiaryService.loadByCriteria(criteria)
-              .pipe(
-                switchMap(list => this.setExpiryDateForSanadyResult(list, expiryDate))
-              )
-          )
 
-        }),
-        takeUntil(this.destroy$)
-      )
+    // this.beneficiaryService.getBeneficiaryFromMoiData({ ...criteria, expiryDate })
+    //   .pipe(
+    //     switchMap((list) => {
+    //       return iif(() => list.length > 0, of(list),
+    //         this.beneficiaryService.loadByCriteria(criteria)
+    //           .pipe(
+    //             switchMap(list => this.setExpiryDateForSanadyResult(list, expiryDate))
+    //           )
+    //       )
+
+    //     }),
+    //     takeUntil(this.destroy$)
+    //   )
+    combineLatest([
+      this.beneficiaryService.loadByCriteria(criteria),
+      this.beneficiaryService.getBeneficiaryFromMoiData({ ...criteria, expiryDate })
+    ]).pipe(
+      switchMap(res => {
+        let [sanadyBeneficiaries, moiBeneficiary] = res
+        if(!sanadyBeneficiaries.length ) {
+          moiBeneficiary.expiryDate = expiryDate
+          return of([moiBeneficiary])
+        }
+        sanadyBeneficiaries.forEach(item => {
+          if (CommonUtils.isValidValue(moiBeneficiary.arName)) {
+            item.arName = moiBeneficiary.arName
+          }
+          if (CommonUtils.isValidValue(moiBeneficiary.enName)) {
+            item.enName = moiBeneficiary.enName
+          }
+          if (CommonUtils.isValidValue(moiBeneficiary.dateOfBirth)) {
+            item.dateOfBirth = moiBeneficiary.dateOfBirth
+          }
+          item.expiryDate = expiryDate
+        })
+
+        return of(sanadyBeneficiaries)
+      }),
+
+      takeUntil(this.destroy$),
+
+    )
       .subscribe(list => {
         if (!list.length) {
           this.dialogService.info(this.langService.map.no_result_for_your_search_criteria)
