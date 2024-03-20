@@ -364,7 +364,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     }
     return this.http.post<GdxMoiAddress>(this._getGDXServiceURL() + '/moi/address-info', criteria);
   }
-  getBeneficiaryFromMoiData(criteria:Partial<IBeneficiaryCriteria> ):Observable<Beneficiary[]> {
+  getBeneficiaryFromMoiData(criteria:Partial<IBeneficiaryCriteria> ):Observable<Beneficiary> {
 
     const {benPrimaryIdNumber,expiryDate} = criteria;
     const expiryDateString = DateUtils.changeDateFromDatepicker(expiryDate as unknown as IMyDateModel)?.toLocaleDateString('en-CA')
@@ -388,8 +388,13 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
           dateOfBirth : person.birthDate
          })
       }),
-      map((beneficiary)=> [beneficiary]),
-      catchError(_=> of([]))
+      //map((beneficiary)=> [beneficiary]),
+      catchError(_=> of(new Beneficiary().clone({
+        benPrimaryIdNationality : criteria.benPrimaryIdNationality,
+        benPrimaryIdNumber : criteria.benPrimaryIdNumber,
+        benPrimaryIdType : criteria.benPrimaryIdType,
+        expiryDate: criteria.expiryDate,
+      })))
     )
   }
   downloadQCBReport(gdxServiceLogId: number) {
