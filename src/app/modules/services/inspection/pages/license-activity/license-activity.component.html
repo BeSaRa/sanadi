@@ -1,0 +1,96 @@
+<div class="row mb-4">
+    <div class="col">
+        <div class="d-flex align-items-center justify-content-start">
+            <h1 class="h6 text-primary">{{lang.map.menu_service_search}}</h1>
+            <div>
+                <select [formControl]="serviceControl" class="form-select mx-4">
+                    <option [ngValue]="service" *ngFor="let service of serviceNumbers">{{inboxService.getServiceName(service)}}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <tabs-list (onTabChange)="selectedTabChanged($event)" [tabByIndex$]="tabIndex$">
+        <tab [title]="lang.map.search_criteria" [template]="formCriteria"></tab>
+        <tab name="result_tab" [title]="criteriaTitle" [template]="searchResult"></tab>
+    </tabs-list>
+    <ng-template #formCriteria>
+        <form autocomplete="off" (keydown.enter)="search$.next(null)" [formGroup]="form">
+        </form>
+        <button class="btn mb-4 btn-primary shadow shadow-sm" type="submit"
+            (click)="search$.next(null)">{{lang.map.lbl_search}}</button>
+        <button class="btn mb-4 btn-secondary shadow shadow-sm mx-2"
+            (click)="resetCriteria()">{{lang.map.btn_reset}}</button>
+    </ng-template>
+    <ng-template #searchResult>
+        <div class="col-12">
+            <app-table #table sortableTable [filter]="filter" [useSearchToFilter]="true" [paginator]="paginator"
+                [data]="results" [columns]="searchColumns">
+                <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
+                    <ng-container cdkColumnDef="extra-header">
+                        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                            <table-header (textChange)="filter = $event" [tableTitle]="selectedServiceKey"
+                                [sort]="table.dataSource.sort" [reload$]="search$">
+                            </table-header>
+                        </th>
+                    </ng-container>
+                    <ng-container cdkColumnDef="licenseNumber">
+                        <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+                            {{lang.map.serial_number}}</th>
+                        <td cdk-cell *cdkCellDef="let row">
+                            {{row.licenseNumber }}
+                        </td>
+                    </ng-container>
+                    <ng-container cdkColumnDef="inspectorId">
+                        <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+                            {{lang.map.lbl_inspector}}</th>
+                        <td cdk-cell *cdkCellDef="let row">
+                            {{row.actualInspection?.inspectorId }}
+                        </td>
+                    </ng-container>
+                    <ng-container cdkColumnDef="caseType">
+                        <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+                            {{lang.map.service_type}}</th>
+                        <td cdk-cell *cdkCellDef="let row">
+                            {{!!row.caseType ? inboxService.getServiceName(row.caseType): '' }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container cdkColumnDef="inspectionDate">
+                        <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.lbl_inspection_date}}</th>
+                        <td cdk-cell *cdkCellDef="let row"> {{row.inspectionDate|date}} </td>
+                    </ng-container>
+                    <ng-container cdkColumnDef="licenseType">
+                        <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.license_type}}</th>
+                        <td cdk-cell *cdkCellDef="let row"> {{row.licenseTypeInfo?.getName()}} </td>
+                    </ng-container>
+                    <ng-container cdkColumnDef="status">
+                        <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.status}}</th>
+                        <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo?.getName()}} </td>
+                    </ng-container>
+
+                    <ng-container cdkColumnDef="actions">
+                        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+                        <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+                            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+
+                            </grid-actions>
+                        </td>
+                    </ng-container>
+                    <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+                    <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+                    <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;">
+                    </tr>
+                    <tr *cdkNoDataRow>
+                        <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+                    </tr>
+                </table>
+                <app-paginator #paginator (pageChange)="pageChange($event)" [page]="pageEvent.pageIndex"
+                    [pageSize]="pageEvent.pageSize" [backend]="true" [length]="results.length"></app-paginator>
+            </app-table>
+        </div>
+    </ng-template>
+    <context-menu-item #menu></context-menu-item>
+</div>

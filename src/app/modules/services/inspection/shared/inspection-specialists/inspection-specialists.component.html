@@ -1,0 +1,82 @@
+<div class="row">
+  <app-table #tableInternal [useSearchToFilter]="true" [data]="internalSpecialists" [columns]="displayedColumns">
+    <table cdk-table [dataSource]="tableInternal.dataSource" class="table table-striped table-bordered caption-top">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header tableTitle="lbl_inspection_specialists" [add$]="addInternalSpecialistDialog$"
+            [allowAdd]="!disabled" [skipClearSort]="true" [skipSearch]="true">
+          </table-header>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="arName">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="enName">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+            <grid-actions [record]="row" [actions]="internalActions" [itemIndex]="itemIndex">
+             
+            </grid-actions>
+        </td>
+    </ng-container>
+
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr *cdkNoDataRow>
+        <td colspan="20">{{lang.map.no_records_to_display}}</td>
+      </tr>
+    </table>
+  </app-table>
+
+</div>
+
+
+<div class="row">
+  <app-table #tableExternal [useSearchToFilter]="true" [data]="externalSpecialists" [columns]="externalSpecialistColumns">
+    <table cdk-table [dataSource]="tableExternal.dataSource" class="table table-striped table-bordered caption-top">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header tableTitle="lbl_external_specialists" [add$]="addExternalSpecialistDialog$"
+            [allowAdd]="!disabled" [skipClearSort]="true" [skipSearch]="true">
+          </table-header>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="externalSpecialistName">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_external_specialist_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.externalSpecialistName}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="externalSpecialistAdjective">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_external_specialist_adjective}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.externalSpecialistAdjective}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="externalSpecialistEntity">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_external_specialist_entity}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.externalSpecialistEntity}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+            <grid-actions [record]="row" [actions]="externalActions" [itemIndex]="itemIndex">
+             
+            </grid-actions>
+        </td>
+    </ng-container>
+
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="externalSpecialistColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: externalSpecialistColumns;"></tr>
+
+      <tr *cdkNoDataRow>
+        <td colspan="20">{{lang.map.no_records_to_display}}</td>
+      </tr>
+    </table>
+  </app-table>
+
+</div>

@@ -131,4 +131,21 @@ export class InternalUserService extends CrudWithDialogGenericService<InternalUs
   searchByArabicOrEnglishName(options?: any): Observable<InternalUser[]> {
     return this._searchByArabicOrEnglishName(options);
   }
+
+  @HasInterception
+  @CastResponse(() => InternalUser, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  getInspectors(): Observable<InternalUser[]> {
+    return this.http.get<InternalUser[]>(this._getServiceURL() + '/all-inspectors' );
+  }
+  @HasInterception
+  @CastResponse(() => InternalUser, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  getAllActive(): Observable<InternalUser[]> {
+    return this.http.get<InternalUser[]>(this._getServiceURL() + '/all-Active' );
+  }
 }

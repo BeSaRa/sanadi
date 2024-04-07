@@ -1,0 +1,82 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{lang.map.lbl_license_activities}}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 600px">
+    <ng-container [formGroup]="form">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="activityName"
+                    for="activityName">{{lang.map.lbl_activity_name}}</label>
+                <input id="activityName" validationClasses="activityName" formControlName="activityName"
+                    class="form-control" [readOnly]="readonly">
+                <app-field-error-message controlName="activityName"></app-field-error-message>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="activityDescription"
+                    for="activityDescription">{{lang.map.lbl_activity_description}}</label>
+                <input id="activityDescription" validationClasses="activityDescription"
+                    formControlName="activityDescription" class="form-control" [readOnly]="readonly">
+                <app-field-error-message controlName="activityDescription"></app-field-error-message>
+            </div>
+
+        </div>
+        <div class="row">
+            <div *ngIf="!readonly" class="col-md-6 col-sm-12 mb-4 position-relative">
+                <div>
+                    <label for="caseType">{{lang.map.menu_service_search}}</label>
+                    <div>
+                        <select [formControl]="serviceControl" id="caseType" class="form-select mt-2">
+                            <option [ngValue]="service" *ngFor="let service of serviceNumbers">
+                                {{inboxService?.getServiceName(service)??''}}
+                            </option>
+
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label for="licenseNumber" class="form-label">
+                    {{lang.map.license_number}}
+                </label>
+                <div class="form-control input-disabled d-flex justify-content-between">
+                    <span id="licenseNumber" [innerHTML]="model && model.licenseNumber || '&nbsp;'"></span>
+                    <button (click)="searchForLicense()" type="button" [disabled]="readonly || !serviceControl.value"
+                        class="input-group-text">
+                        <i class="mdi mdi-magnify text-primary"></i>
+                    </button>
+                </div>
+
+
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label for="licenseType" class="form-label">
+                    {{lang.map.license_type}}
+                </label>
+                <span id="licenseType" class="form-control input-disabled"
+                    [innerHTML]="model && inboxService.getServiceName(model.licenseType) || '&nbsp;'"></span>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="otherData"
+                    for="otherData">{{lang.map.lbl_other_data}}</label>
+                <input id="otherData" validationClasses="otherData" formControlName="otherData" class="form-control"
+                    [readOnly]="readonly">
+                <app-field-error-message controlName="otherData"></app-field-error-message>
+            </div>
+        </div>
+        <div class="row">
+
+           
+        </div>
+
+
+
+    </ng-container>
+</div>
+<div class="dialog-actions">
+    <div class="flex-grow-1"></div>
+    <button (click)="form.valid && save()" [disabled]="form.invalid"
+        class="btn btn-primary">{{lang.map.btn_save}}</button>
+    <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

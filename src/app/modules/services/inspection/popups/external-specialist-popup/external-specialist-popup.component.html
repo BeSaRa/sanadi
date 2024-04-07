@@ -1,0 +1,67 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{lang.map.lbl_external_specialists}}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 600px">
+    <ng-container [formGroup]="form">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="externalSpecialistName"
+                    for="externalSpecialistName">{{lang.map.lbl_external_specialist_name}}</label>
+                <input id="externalSpecialistName" validationClasses="externalSpecialistName" formControlName="externalSpecialistName"
+                    class="form-control"
+                    [readOnly]="readonly">
+                <app-field-error-message controlName="externalSpecialistName"></app-field-error-message>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="externalSpecialistAdjective"
+                    for="externalSpecialistAdjective">{{lang.map.lbl_external_specialist_adjective}}</label>
+                <input id="externalSpecialistAdjective" validationClasses="externalSpecialistAdjective"
+                    formControlName="externalSpecialistAdjective" class="form-control"
+                    [readOnly]="readonly">
+                <app-field-error-message controlName="externalSpecialistAdjective"></app-field-error-message>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="externalSpecialistEntity"
+                    for="externalSpecialistEntity">{{lang.map.lbl_external_specialist_entity}}</label>
+                <input id="externalSpecialistEntity" validationClasses="externalSpecialistEntity" formControlName="externalSpecialistEntity"
+                    class="form-control"
+                    [readOnly]="readonly">
+                <app-field-error-message controlName="externalSpecialistEntity"></app-field-error-message>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="externalSpecialistPhone"
+                    for="externalSpecialistPhone">{{lang.map.lbl_external_specialist_phone}}</label>
+                <input id="externalSpecialistPhone" validationClasses="externalSpecialistPhone"
+                    formControlName="externalSpecialistPhone" class="form-control"
+                    [readOnly]="readonly">
+                <app-field-error-message controlName="externalSpecialistPhone"></app-field-error-message>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="externalSpecialistOther"
+                    for="externalSpecialistOther">{{lang.map.lbl_other_data}}</label>
+                <input id="externalSpecialistOther" validationClasses="externalSpecialistOther" formControlName="externalSpecialistOther"
+                    class="form-control"
+                    [readOnly]="readonly">
+                <app-field-error-message controlName="externalSpecialistOther"></app-field-error-message>
+            </div>
+        
+
+        </div>
+     
+      
+
+    </ng-container>
+</div>
+<div class="dialog-actions">
+    <div class="flex-grow-1"></div>
+    <button (click)="form.valid && save()" [disabled]="form.invalid"
+        class="btn btn-primary">{{lang.map.btn_save}}</button>
+    <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

@@ -1,0 +1,54 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.lbl_edit_actual_inspection}}</h1>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+    aria-label="Close"></button>
+</div>
+<div class="dialog-content " style="width: 600px">
+  <div class="row">
+    <tabs-list class="py-4">
+      <tab [name]="tabsData.activities.name" [template]="activitiesTabTemplate"
+        [title]="lang.map[tabsData.activities.langKey]"></tab>
+      <tab [name]="tabsData.specialists.name" [template]="specialistsTabTemplate"
+        [title]="lang.map[tabsData.specialists.langKey]"></tab>
+      <tab [name]="tabsData.inspector.name" [template]="inspectorTabTemplate"
+        [title]="lang.map[tabsData.inspector.langKey]"></tab>
+
+    </tabs-list>
+  </div>
+
+  <ng-template #activitiesTabTemplate>
+    <manage-license-activities [list]="model.licenseActivities" [actualInspection]="model" [disabled]="readonly"></manage-license-activities>
+  </ng-template>
+  <ng-template #specialistsTabTemplate>
+    <manage-inspection-specialists [list]="model.inspectionSpecialists"
+      [actualInspection]="model" [disabled]="readonly"></manage-inspection-specialists>
+  </ng-template>
+  <ng-template #inspectorTabTemplate>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="caseType">{{lang.map.lbl_inspector}}</label>
+        <div>
+          <select  [formControl]="inspectorControl" id="caseType" class="form-select mt-2">
+            <option [ngValue]="option.generalUserId" *ngFor="let option of (inspectors$ | async)">
+              {{option.getName()}}
+            </option>
+
+          </select>
+        </div>
+      
+      </div>
+      <div *ngIf="!readonly" class="col-sm-12 col-md-6 mb-3 position-relative d-flex align-items-end">
+        <button class="btn btn-primary"
+        [disabled]="!inspectorControl.value"
+        (click)="changeInspector($event)">{{lang.map.btn_save}}</button>
+      </div>
+    </div>
+
+  </ng-template>
+</div>
+
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

@@ -45,6 +45,7 @@ import { AidLookupContainerComponent } from './pages/aid-lookup-container/aid-lo
 import { AidLookupComponent } from './pages/aid-lookup/aid-lookup.component';
 import { AttachmentTypesComponent } from './pages/attachment-types/attachment-types.component';
 import { BankComponent } from './pages/bank/bank.component';
+import { CharityProfileComponent } from './pages/charity-profile/charity-profile.component';
 import { CountryComponent } from './pages/country/country.component';
 import { CustomMenuComponent } from './pages/custom-menu/custom-menu.component';
 import { CustomRoleComponent } from './pages/custom-role/custom-role.component';
@@ -58,10 +59,12 @@ import { ExternalUserComponent } from './pages/external-user/external-user.compo
 import { FieldAssessmentComponent } from './pages/field-assessment/field-assessment.component';
 import { GeneralProcessComponent } from './pages/general-process/general-process.component';
 import { GlobalSettingsComponent } from './pages/global-settings/global-settings.component';
+import { InspectionOperationComponent } from './pages/inspection-operation/inspection-operation.component';
 import { InternalDepartmentComponent } from './pages/internal-department/internal-department.component';
 import { InternalUserComponent } from './pages/internal-user/internal-user.component';
 import { JobTitleComponent } from './pages/job-title/job-title.component';
 import { LocalizationComponent } from './pages/localization/localization.component';
+import { NpoProfileComponent } from './pages/npo-profile/npo-profile.component';
 import { ProfilesComponent } from './pages/profiles/profiles.component';
 import { SdGoalListComponent } from './pages/sd-goal-list/sd-goal-list.component';
 import { SdGoalComponent } from './pages/sd-goal/sd-goal.component';
@@ -89,6 +92,7 @@ import {
 import {
   CharityOrganizationProfileExtraDataPopupComponent
 } from './popups/charity-organization-profile-extra-data-popup/charity-organization-profile-extra-data-popup.component';
+import { CharityProfilePopupComponent } from './popups/charity-profile-popup/charity-profile-popup.component';
 import { ChecklistItemPopupComponent } from './popups/checklist-item-popup/checklist-item-popup.component';
 import { ChecklistPopupComponent } from './popups/checklist-popup/checklist-popup.component';
 import { CustomMenuDefaultsPopupComponent } from './popups/custom-menu-defaults-popup/custom-menu-defaults-popup.component';
@@ -108,15 +112,18 @@ import { GeneralProcessPopupComponent } from './popups/general-process-popup/gen
 import {
   ProcessFieldWrapperComponent
 } from './popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
+import { InspectionOperationPopupComponent } from './popups/inspection-operation-popup/inspection-operation-popup.component';
 import {
   InternalDepartmentPopupComponent,
 } from './popups/internal-department-popup/internal-department-popup.component';
 import { InternalUserPopupComponent } from './popups/internal-user-popup/internal-user-popup.component';
 import { JobTitlePopupComponent } from './popups/job-title-popup/job-title-popup.component';
 import { NpoEmployeePopupComponent } from './popups/npo-employee-popup/npo-employee-popup.component';
+import { NpoProfilePopupComponent } from './popups/npo-profile-popup/npo-profile-popup.component';
 import { OrgUnitFieldPopupComponent } from './popups/org-unit-field-popup/org-unit-field-popup.component';
 import { ProfilePopupComponent } from './popups/profile-popup/profile-popup.component';
 import { SdGoalPopupComponent } from './popups/sd-goal-popup/sd-goal-popup.component';
+import { SectorPopupComponent } from './popups/sector-popup/sector-popup.component';
 import { SelectQuestionPopupComponent } from './popups/select-question-popup/select-question-popup.component';
 import {
   ServiceDataFollowupConfigurationPopupComponent
@@ -145,11 +152,7 @@ import { UserSecurityExternalComponent } from './shared/user-security-external/u
 import { UserSecurityComponent } from './shared/user-security/user-security.component';
 import { UserSubTeamComponent } from './shared/user-sub-team/user-sub-team.component';
 import { UserTeamComponent } from './shared/user-team/user-team.component';
-import { SectorPopupComponent } from './popups/sector-popup/sector-popup.component';
-import { CharityProfileComponent } from './pages/charity-profile/charity-profile.component';
-import { NpoProfileComponent } from './pages/npo-profile/npo-profile.component';
-import { NpoProfilePopupComponent } from './popups/npo-profile-popup/npo-profile-popup.component';
-import { CharityProfilePopupComponent } from './popups/charity-profile-popup/charity-profile-popup.component';
+import { InspectionOperationChildrenPopupComponent } from './popups/inspection-operation-children-popup/inspection-operation-children-popup.component';
 
 @NgModule({
   declarations: [
@@ -259,7 +262,10 @@ import { CharityProfilePopupComponent } from './popups/charity-profile-popup/cha
     NpoProfileComponent,
     CharityProfileComponent,
     NpoProfilePopupComponent,
-    CharityProfilePopupComponent
+    CharityProfilePopupComponent,
+    InspectionOperationComponent,
+    InspectionOperationPopupComponent,
+    InspectionOperationChildrenPopupComponent
   ],
   imports: [
     SharedModule,

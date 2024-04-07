@@ -77,6 +77,7 @@ import { ProjectImplementationService } from '@services/project-implementation.s
 import { ProjectCompletionService } from './project-completion.service';
 import { SendToSingleComponent } from '@app/shared/popups/send-to-single/send-to-single.component';
 import { FinancialAnalysisService } from './financial-analysis.service';
+import { LangService } from './lang.service';
 
 @Injectable({
   providedIn: 'root'
@@ -84,8 +85,30 @@ import { FinancialAnalysisService } from './financial-analysis.service';
 export class InboxService {
   services: Map<number, any> = new Map<number, any>();
 
+  servicesWithoutLicense = [
+    CaseTypes.INQUIRY,
+    CaseTypes.CONSULTATION,
+    CaseTypes.INTERNATIONAL_COOPERATION,
+    CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    CaseTypes.INTERNAL_PROJECT_LICENSE,
+    CaseTypes.EXTERNAL_PROJECT_MODELS,
+    CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
+    CaseTypes.URGENT_INTERVENTION_CLOSURE,
+    CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+    CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
+    CaseTypes.NPO_MANAGEMENT,
+    CaseTypes.GENERAL_PROCESS_NOTIFICATION,
+    CaseTypes.CHARITY_ORGANIZATION_UPDATE,
+    CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT
+
+]
+  get licenseServices(){
+    return Array.from(this.services.keys()).filter(item => !this.servicesWithoutLicense.includes(item));
+  }
   constructor(private http: HttpClient,
     private dialog: DialogService,
+    private lang :LangService,
     private inquiryService: InquiryService,
     private consultationService: ConsultationService,
     private internationalCooperationService: InternationalCooperationService,
@@ -508,4 +531,15 @@ export class InboxService {
       }
     });
   }
+  getServiceName(service: number) {
+    if(!service) return;
+    let serviceKey: keyof ILanguageKeys;
+    try {
+        serviceKey = this.getService(service).serviceKey;
+    } catch (e) {
+        console.error(`Please register your service inside the inboxService with number {${service}}`);
+        return '';
+    }
+    return this.lang.getLocalByKey(serviceKey).getName();
+}
 }

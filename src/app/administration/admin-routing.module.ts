@@ -45,6 +45,7 @@ import { NpoEmployeeComponent } from '@app/administration/pages/npo-employee/npo
 import { SectorComponent } from './pages/sector/sector.component';
 import { NpoProfileComponent } from './pages/npo-profile/npo-profile.component';
 import { CharityProfileComponent } from './pages/charity-profile/charity-profile.component';
+import { InspectionOperationComponent } from './pages/inspection-operation/inspection-operation.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -286,6 +287,11 @@ const routes: Routes = [
     path: 'charity-profile', component: CharityProfileComponent,
     canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.MANAGE_CHARITY_PROFILE_DATA, configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'inspection-operation', component: InspectionOperationComponent,
+    canActivate: [PermissionGuard.canActivate],
+    data: {permissionKey: PermissionsEnum.MANAGE_INSPECTION_MAIN_SUBTASK, configPermissionGroup: null, checkAnyPermission: false}
   },
   {path: '**', component: ErrorPageComponent}
 ];
