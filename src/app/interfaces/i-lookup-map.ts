@@ -177,4 +177,13 @@ export interface ILookupMap {
   QuarterType: Lookup[];
   MeetingInitiator: Lookup[];
   ProfileStatus: Lookup[];
+  PriorityType: Lookup[];
+  ProposedInspectionTaskType: Lookup[];
+  ActualInspectionTaskType: Lookup[];
+  TaskNature: Lookup[];
+  TaskArea: Lookup[];
+  Relation: Lookup[];
+  taskAUnknownOrganization: Lookup[];
+  InspectionTaskStatus: Lookup[];
+  InspectionActivityStatus: Lookup[];
 }

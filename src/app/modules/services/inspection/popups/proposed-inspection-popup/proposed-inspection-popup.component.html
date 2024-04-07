@@ -1,0 +1,84 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
+      fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+      aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content" #dialogContent>
+  <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="departmentId" asteriskIfRequired="departmentId"
+          class="form-label">{{lang.map.department}}</label>
+        <ng-select [selectOnTab]="true" labelForId="departmentId" [clearable]="true" placeholder="{{lang.map.select}}"
+          id="departmentId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+          formControlName="departmentId" validationClasses="departmentId">
+          <ng-option *ngFor="let option of departmentsList$ |async" [value]="option.id">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="departmentId"></app-field-error-message>
+
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="proposedTaskType" asteriskIfRequired="proposedTaskType" class="form-label">{{lang.map.lbl_proposed_task}}</label>
+        <ng-select [selectOnTab]="true" labelForId="proposedTaskType" [clearable]="true" placeholder="{{lang.map.select}}"
+          id="proposedTaskType" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+          formControlName="proposedTaskType" validationClasses="proposedTaskType">
+          <ng-option *ngFor="let option of proposedTaskTypes" [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="proposedTaskType"></app-field-error-message>
+
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="otherProposedTask" for="otherProposedTask"
+          class="form-label">{{lang.map.lbl_other_proposed_task}}</label>
+        <input formControlName="otherProposedTask" type="text" [readOnly]="readonly || !isOtherProposedTaskType"
+          validationClasses="otherProposedTask" class="form-control" trimInput id="otherProposedTask">
+        <app-field-error-message controlName="otherProposedTask"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="complaintNumber" for="complaintNumber"
+          class="form-label">{{lang.map.lbl_complaint_number}}</label>
+        <input formControlName="complaintNumber" type="text" [readOnly]="readonly || !isComplainProposedTaskType"
+          validationClasses="complaintNumber" class="form-control" trimInput id="complaintNumber">
+        <app-field-error-message controlName="complaintNumber"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="priority" asteriskIfRequired="priority" class="form-label">{{lang.map.lbl_priority}}</label>
+        <ng-select [selectOnTab]="true" labelForId="priority" [clearable]="true" placeholder="{{lang.map.select}}"
+          id="priority" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+          formControlName="priority" validationClasses="priority">
+          <ng-option *ngFor="let option of priorities" [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="priority"></app-field-error-message>
+
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="operationDescription" for="operationDescription"
+          class="form-label">{{lang.map.lbl_operation_description}}</label>
+        <input formControlName="operationDescription" type="text" [readOnly]="readonly"
+          validationClasses="operationDescription" class="form-control" trimInput id="operationDescription">
+        <app-field-error-message controlName="operationDescription"></app-field-error-message>
+      </div>
+    </div>
+
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+    class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

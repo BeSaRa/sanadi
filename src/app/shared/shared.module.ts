@@ -152,6 +152,7 @@ import {ValueDifferencesListComponent} from './components/value-differences-list
 import { LangNamePipe } from './pipes/lang-name.pipe';
 import { SendToSingleComponent } from './popups/send-to-single/send-to-single.component';
 import { UploadFilePopupComponent } from './popups/upload-file-popup/upload-file-popup.component';
+import { CommentPopupComponent } from './popups/comment-popup/comment-popup.component';
 
 @NgModule({
   declarations: [
@@ -273,7 +274,8 @@ import { UploadFilePopupComponent } from './popups/upload-file-popup/upload-file
     VacationTableComponent,
     SetVacationPopupComponent,
     LangNamePipe,
-    UploadFilePopupComponent
+    UploadFilePopupComponent,
+    CommentPopupComponent
   ],
   imports: [
     CommonModule,
@@ -376,7 +378,8 @@ import { UploadFilePopupComponent } from './popups/upload-file-popup/upload-file
     CaseAuditLogComponent,
     ValueDifferencesListComponent,
     LangNamePipe,
-    UploadFilePopupComponent
+    UploadFilePopupComponent,
+    CommentPopupComponent
   ]
 })
 export class SharedModule {

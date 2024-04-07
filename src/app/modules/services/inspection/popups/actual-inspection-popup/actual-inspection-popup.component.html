@@ -1,0 +1,300 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ popupTitle }}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
+      fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+      aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content" #dialogContent>
+  <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="departmentId" asteriskIfRequired="departmentId" class="form-label">{{ lang.map.department }}</label>
+        <ng-select [selectOnTab]="true" labelForId="departmentId" [clearable]="true" placeholder="{{ lang.map.select }}"
+          id="departmentId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+          formControlName="departmentId" validationClasses="departmentId">
+          <ng-option *ngFor="let option of departmentsList$ | async" [value]="option.id">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="departmentId"></app-field-error-message>
+      </div>
+
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="proposedTaskSerial" for="proposedTaskSerial" class="form-label">
+          {{ lang.map.lbl_proposed_task_serial}}</label>
+        <input formControlName="proposedTaskSerial" type="text" [readOnly]="readonly ||isProposedInspection()"
+          validationClasses="proposedTaskSerial" class="form-control" trimInput id="proposedTaskSerial" />
+        <app-field-error-message controlName="proposedTaskSerial"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="actualTaskType" asteriskIfRequired="actualTaskType" class="form-label">
+          {{ lang.map.lbl_task_type}}</label>
+        <ng-select [selectOnTab]="true" labelForId="actualTaskType" [clearable]="true"
+          placeholder="{{ lang.map.select }}" id="actualTaskType" [notFoundText]="lang.map.msg_not_found"
+          [readonly]="readonly" appendTo="body" formControlName="actualTaskType" validationClasses="actualTaskType">
+          <ng-option *ngFor="let option of ActualInspectionTaskTypes" [value]="option.lookupKey">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="actualTaskType"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="mainOperationType" asteriskIfRequired="mainOperationType" class="form-label">{{
+          lang.map.lbl_main_operation }}</label>
+        <ng-select [selectOnTab]="true" labelForId="mainOperationType" [clearable]="true"
+          placeholder="{{ lang.map.select }}" id="mainOperationType" [notFoundText]="lang.map.msg_not_found"
+          [readonly]="readonly" appendTo="body" formControlName="mainOperationType"
+          validationClasses="mainOperationType">
+          <ng-option *ngFor="let option of mainInspectionOperations" [value]="option.id">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="mainOperationType"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="subOperationType" asteriskIfRequired="subOperationType" class="form-label">{{
+          lang.map.lbl_sub_operation }}</label>
+        <ng-select [selectOnTab]="true" labelForId="subOperationType" [clearable]="true"
+          placeholder="{{ lang.map.select }}" id="subOperationType" [notFoundText]="lang.map.msg_not_found"
+          [readonly]="readonly" appendTo="body" formControlName="subOperationType" validationClasses="subOperationType">
+          <ng-option *ngFor="let option of subInspectionOperations" [value]="option.id">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="subOperationType"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="priority" asteriskIfRequired="priority" class="form-label">{{ lang.map.lbl_priority }}</label>
+        <ng-select [selectOnTab]="true" labelForId="priority" [clearable]="true" placeholder="{{ lang.map.select }}"
+          id="priority" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+          formControlName="priority" validationClasses="priority">
+          <ng-option *ngFor="let option of priorities" [value]="option.lookupKey">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="priority"></app-field-error-message>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="operationDescription" for="operationDescription" class="form-label">{{
+          lang.map.lbl_operation_description }}</label>
+        <input formControlName="operationDescription" type="text" [readOnly]="readonly"
+          validationClasses="operationDescription" class="form-control" trimInput id="operationDescription" />
+        <app-field-error-message controlName="operationDescription"></app-field-error-message>
+      </div>
+
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="knownOrgId" asteriskIfRequired="knownOrgId" class="form-label">{{
+          lang.map.lbl_organization_known_entities
+          }}</label>
+        <ng-select [selectOnTab]="true" labelForId="knownOrgId" [clearable]="true" placeholder="{{ lang.map.select }}"
+          id="knownOrgId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+          formControlName="knownOrgId" validationClasses="knownOrgId">
+          <ng-option *ngFor="let option of profiles$ | async" [value]="option.id">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="knownOrgId"></app-field-error-message>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 mt-2 form-check form-switch" *ngIf="!readonly">
+        <div class="ms-3">
+          <label class="form-check-label" for="unKnown">{{lang.map.lbl_unKnown}}</label>
+          <input id="unKnown" class="form-check-input" type="checkbox" [checked]="unKnownState$ | async" tooltip="{{
+              (unKnownState$ | async)
+                ? lang.map.btn_deactivate
+                : lang.map.btn_activate
+            }}" (click)="!readonly && unKnownToggle$.next()" />
+
+        </div>
+      </div>
+      <span afterTemplate class="form-check form-switch switch-action" *ngIf="!readonly">
+      </span>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="unknownOrgType" asteriskIfRequired="unknownOrgType" class="form-label">
+          {{ lang.map.lbl_unknown_org_type }}</label>
+        <ng-select [selectOnTab]="true" labelForId="unknownOrgType" [clearable]="true"
+          placeholder="{{ lang.map.select }}" id="unknownOrgType" [notFoundText]="lang.map.msg_not_found"
+          [readonly]="readonly || !(unKnownState$ | async)" appendTo="body" formControlName="unknownOrgType"
+          validationClasses="unknownOrgType">
+          <ng-option *ngFor="let option of taskAUnknownOrganizations" [value]="option.lookupKey">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="unknownOrgType"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="unknownOrgName" for="unknownOrgName" class="form-label">{{
+          lang.map.lbl_unknown_org_name }}</label>
+        <input formControlName="unknownOrgName" type="text" [readOnly]="readonly || !(unKnownState$ | async)"
+          validationClasses="unknownOrgName" class="form-control" trimInput id="unknownOrgName" />
+        <app-field-error-message controlName="unknownOrgName"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="unknownOrgOtherData" for="unknownOrgOtherData" class="form-label">{{
+          lang.map.lbl_unknown_org_other_data }}</label>
+        <input formControlName="unknownOrgOtherData" type="text" [readOnly]="readonly || !(unKnownState$ | async)"
+          validationClasses="unknownOrgOtherData" class="form-control" trimInput id="unknownOrgOtherData" />
+        <app-field-error-message controlName="unknownOrgOtherData"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="unknownOrgEmail" for="unknownOrgEmail" class="form-label">{{
+          lang.map.lbl_email }}</label>
+        <input formControlName="unknownOrgEmail" type="text" [readOnly]="readonly || !(unKnownState$ | async)"
+          validationClasses="unknownOrgEmail" class="form-control" trimInput id="unknownOrgEmail" />
+        <app-field-error-message controlName="unknownOrgEmail"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-6 mb-3 position-relative">
+        <label for="dateFrom" asteriskIfRequired="dateFrom" class="form-label">{{lang.map.starting_date}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="dateFrom" id="dateFrom" [options]="datepickerOptionsMap.dateFrom"
+            [ngClass]="{'input-disabled': readonly}" (click)="!readonly && dpDateFrom.toggleCalendar()"
+            (inputFieldChanged)="onDateChange($event, 'dateFrom', 'dateTo')" #dpDateFrom="angular-mydatepicker"
+            angular-mydatepicker validationClasses="dateFrom">
+          </div>
+          <app-field-error-message controlName="dateFrom"></app-field-error-message>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 mb-3 position-relative">
+        <label for="dateTo" asteriskIfRequired="dateTo" class="form-label">{{lang.map.ending_date}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="dateTo" id="dateTo" [options]="datepickerOptionsMap.dateTo"
+            [ngClass]="{'input-disabled': readonly}" (click)="!readonly && dpDateTo.toggleCalendar()"
+            (inputFieldChanged)="onDateChange($event, 'dateFrom', 'dateTo')" #dpDateTo="angular-mydatepicker"
+            angular-mydatepicker validationClasses="dateTo"></div>
+          <app-field-error-message controlName="dateTo"></app-field-error-message>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="taskNature" asteriskIfRequired="taskNature" class="form-label">
+          {{ lang.map.lbl_task_nature }}</label>
+        <ng-select [selectOnTab]="true" labelForId="taskNature" [clearable]="true" placeholder="{{ lang.map.select }}"
+          id="taskNature" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+          formControlName="taskNature" validationClasses="taskNature">
+          <ng-option *ngFor="let option of taskNatures" [value]="option.lookupKey">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="taskNature"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="taskArea" asteriskIfRequired="taskArea" class="form-label">
+          {{ lang.map.lbl_task_area }}</label>
+        <ng-select [selectOnTab]="true" labelForId="taskArea" [clearable]="true" placeholder="{{ lang.map.select }}"
+          id="taskArea" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly " appendTo="body"
+          formControlName="taskArea" validationClasses="taskArea">
+          <ng-option *ngFor="let option of taskAreas" [value]="option.lookupKey">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="taskArea"></app-field-error-message>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="countryId" asteriskIfRequired="countryId" class="form-label">
+          {{ lang.map.country }}</label>
+        <ng-select [selectOnTab]="true" labelForId="countryId" [clearable]="true" placeholder="{{ lang.map.select }}"
+          id="countryId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+          formControlName="countryId" validationClasses="countryId">
+          <ng-option *ngFor="let option of (countries$ | async)" [value]="option.id">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="taskNature"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="moneyLaundryOrTerrorism" asteriskIfRequired="moneyLaundryOrTerrorism" class="form-label">
+          {{ lang.map.lbl_money_laundry_or_terrorism }}</label>
+        <ng-select [selectOnTab]="true" labelForId="moneyLaundryOrTerrorism" [clearable]="true"
+          placeholder="{{ lang.map.select }}" id="moneyLaundryOrTerrorism" [notFoundText]="lang.map.msg_not_found"
+          [readonly]="readonly" appendTo="body" formControlName="moneyLaundryOrTerrorism"
+          validationClasses="moneyLaundryOrTerrorism">
+          <ng-option *ngFor="let option of YesNo" [value]="option.lookupKey">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="moneyLaundryOrTerrorism"></app-field-error-message>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="relation" asteriskIfRequired="relation" class="form-label">
+          {{ lang.map.lbl_relation }}</label>
+        <ng-select [selectOnTab]="true" labelForId="relation" [clearable]="true" placeholder="{{ lang.map.select }}"
+          id="relation" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly " appendTo="body"
+          formControlName="relation" validationClasses="relation">
+          <ng-option *ngFor="let option of relations" [value]="option.lookupKey">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="relation"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="inspectorId" asteriskIfRequired="inspectorId" class="form-label">
+          {{ lang.map.lbl_inspector }}</label>
+        <ng-select [selectOnTab]="true" labelForId="inspectorId" [clearable]="true" placeholder="{{ lang.map.select }}"
+          id="inspectorId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+          formControlName="inspectorId" validationClasses="inspectorId">
+          <ng-option *ngFor="let option of (inspectors$ | async)" [value]="option.generalUserId">
+            {{ option.getName() }}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="inspectorId"></app-field-error-message>
+      </div>
+    </div>
+
+    <div class="row">
+      <inspection-specialists  formControlName="inspectionSpecialists" [disabled]="readonly"></inspection-specialists>
+    </div>
+    <div class="row">
+      <license-activities  formControlName="licenseActivities" [disabled]="readonly"></license-activities>
+    </div>
+    <div class="row">
+      <div class="col-12 mb-4 position-relative">
+        <label asteriskIfRequired="taskSubject" for="taskSubject" class="form-label">{{lang.map.lbl_task_subject
+          }}</label>
+        <textarea rows="5" id="taskSubject" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+          validationClasses="taskSubject" formControlName="taskSubject" class="form-control" trimInput></textarea>
+        <app-field-error-message controlName="taskSubject"></app-field-error-message>
+      </div>
+    </div>
+  </form>
+
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+    tooltip="{{ lang.map.validate_fields }}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)" class="btn btn-primary">
+    {{ lang.map.btn_save }}
+  </button>
+  <button [dialogClose]="model" class="btn btn-secondary">
+    {{ lang.map.btn_cancel }}
+  </button>
+</div>

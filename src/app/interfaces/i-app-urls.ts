@@ -143,7 +143,10 @@ export interface IAppUrls {
   TRAINING_PROGRAM_CLASSIFICATION:string;
   FINANCIAL_ANALYSIS:string;
   FINANCIAL_REPORT:string;
+  PROPOSED_INSPECTION: string,
+  ACTUAL_INSPECTION: string,
   SECTOR:string;
   WORLD_CHECK:string;
+  License_Activity:string;
   [index: string]: string;
 }

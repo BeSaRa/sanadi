@@ -1,3 +1,4 @@
+import { InspectionModule } from './modules/services/inspection/inspection.module';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from './pages/home/home.component';
@@ -414,6 +415,16 @@ const routes: Routes = [
           permissionGroup: PermissionGroupsEnum.FINANCIAL_ANALYSIS_SERVICES_PERMISSION_GROUP,
           checkAnyPermission: true,
           caseType: CaseTypes.FINANCIAL_ANALYSIS
+        } as Partial<ICustomRouteData>
+      },
+      {
+        path: 'services/inspection',
+        canActivate: [NewServicePermissionGuard.canActivate],
+        loadChildren: () => import('./modules/services/inspection/inspection.module')
+          .then(m => m.InspectionModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.INSPECTION_SERVICE_PERMISSION_GROUP,
+          checkAnyPermission: true,
         } as Partial<ICustomRouteData>
       },
       {

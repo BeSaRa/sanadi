@@ -52,6 +52,7 @@ enum SystemPathsEnum {
   URGENT_INTERVENTION_FINANCIAL_NOTIFICATION = '/home/services/urgent-intervention-financial-notification',
   URGENT_INTERVENTION_LICENSE_FOLLOWUP = '/home/services/urgent-intervention-license-followup',
   FINANCIAL_ANALYSIS = '/home/services/financial-analysis',
+  INSPECTION = '/home/services/inspection',
 }
 
 enum DefaultItemOrder {
@@ -96,6 +97,7 @@ enum DefaultItemOrder {
   SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP = 38,
   SERVICE_PROJECT_COMPLETION = 39,
   SERVICE_FINANCIAL_ANALYSIS = 40,
+  SERVICE_INSPECTION = 41,
 
   RESTRICTED,
   SERVICE_SEARCH,
@@ -142,6 +144,7 @@ const GroupNames = {
   SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP: 'service_' + CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
   SERVICE_PROJECT_COMPLETION:  'service_' + CaseTypes.PROJECT_COMPLETION,
   SERVICE_FINANCIAL_ANALYSIS:  'service_' + CaseTypes.FINANCIAL_ANALYSIS,
+  INSPECTION:  'Inspection',
 
   TRAINING: 'training-services',
   RESTRICTED: 'restricted',
@@ -2142,6 +2145,78 @@ export const newNavigationMenuList = [
     itemOrder: 3,
     svg: null
   },
+
+  {
+    id: 3401,
+    langKey: 'menu_inspection',
+    path: SystemPathsEnum.INSPECTION,
+    icon: 'mdi-file-swap',
+    isSvg: false,
+    menuKey: SystemMenuKeys.INSPECTION,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.INSPECTION_SERVICE_PERMISSION_GROUP,
+    parent: null,
+    group: GroupNames.MAIN,
+    itemOrder: DefaultItemOrder.SERVICE_INSPECTION,
+    svg: null,
+    data: {
+      childrenGroupName: GroupNames.INSPECTION,
+      actualPath: SystemPathsEnum.INSPECTION + '/actual',
+      proposedPath: SystemPathsEnum.INSPECTION + '/actual',
+    }
+  },
+  {
+    id: 3402,
+    langKey: 'menu_proposed_inspection',
+    path: SystemPathsEnum.INSPECTION + '/proposed',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.PROPOSED_INSPECTION,
+    permissionGroup: null,
+    parent: 3401,
+    group: GroupNames.INSPECTION,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 3403,
+    langKey: 'menu_actual_inspection',
+    path: SystemPathsEnum.INSPECTION + '/actual',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.ACTUAL_INSPECTION,
+    permissionGroup: null,
+    parent: 3401,
+    group: GroupNames.INSPECTION,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 3404,
+    langKey: 'menu_activity_implementation',
+    path: SystemPathsEnum.INSPECTION + '/implementation',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.INSPECTION,
+    permissionGroup: null,
+    parent: 3401,
+    group: GroupNames.INSPECTION,
+    itemOrder: 3,
+    svg: null
+  },
+  // {
+  //   id: 3405,
+  //   langKey: 'menu_admin_license',
+  //   path: SystemPathsEnum.INSPECTION + '/licenses',
+  //   icon: serviceAddUpdateIcon,
+  //   isSvg: false,
+  //   permission: PermissionsEnum.MANAGE_LICENSES_AND_PERMITS,
+  //   permissionGroup: null,
+  //   parent: 3401,
+  //   group: GroupNames.INSPECTION,
+  //   itemOrder: 4,
+  //   svg: null
+  // },
   /*{
     id: 100001,
     langKey: 'menu_internal_project_license',
@@ -3012,7 +3087,20 @@ export const newNavigationMenuList = [
     svg: null
   },
   {
-    id: 4000,
+    id: 96,
+    langKey: 'menu_inspection_operation',
+    path: '/home/administration/inspection-operation',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_INSPECTION_MAIN_SUBTASK,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 28,
+    svg: null
+  },
+  {
+    id: 24,
     langKey: 'menu_restricted',
     path: '/home/restricted',
     icon: 'mdi-database-search',

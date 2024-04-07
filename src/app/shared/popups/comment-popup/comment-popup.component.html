@@ -1,0 +1,33 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+    <h1 class="h6 text-white">{{ lang.map[popupTitle] }}</h1>
+    <div>
+      <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
+        fullscreenBtn></button>
+      <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose
+        aria-label="Close"></button>
+    </div>
+  </div>
+  <div class="dialog-content w600px no-fixed-height" #dialogContent>
+    <div class="row mb-4">
+        <div class="col-12 position-relative">
+          <label class="form-label" for="comment" asteriskIfRequired [control]="comment">{{ lang.map.comment
+            }}</label>
+          <textarea name="comment" [formControl]="comment" id="comment" rows="3" [placeholder]="lang.map.type_your_comment"
+            class="form-control" validationClasses [control]="comment"
+            ></textarea>
+          <app-field-error-message [control]="comment"></app-field-error-message>
+        </div>
+      </div>
+   
+  
+  </div>
+  <div class="dialog-actions">
+  
+    <span class="flex-grow-1"></span>
+    <button [disabled]="comment.invalid" (click)="save$.next()" class="btn btn-primary">
+      {{ lang.map.btn_save }}
+    </button>
+    <button  class="btn btn-secondary" dialogClose>
+      {{ lang.map.btn_cancel }}
+    </button>
+  </div>
