@@ -6,7 +6,12 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.item_location}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <span>{{row.getName()}}</span>
-            <span *ngIf="row.organizationId && row.organizationId !== -1"> / {{row.getOrgName()}}</span>
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="profile">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.profile}}</th>
+          <td cdk-cell *cdkCellDef="let row">
+            <span *ngIf="row.organizationId && row.organizationId !== -1"> {{row.getOrgName()}}</span>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="stepSubject">
