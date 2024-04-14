@@ -261,30 +261,30 @@ export class FinancialAnalysisComponent extends EServicesGenericComponent<
     }
 
     let caseStatus = this.model.getCaseStatus();
-    if (
-      caseStatus == CommonCaseStatus.FINAL_APPROVE ||
-      caseStatus === CommonCaseStatus.FINAL_REJECTION
-    ) {
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
       return;
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      this.readonly = !this.employeeService.isCharityManager() && !this.employeeService.isCharityUser();
-
-    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      if(!this.model.taskDetails.isClaimed()){
-        this.readonly = true;
+      if(this.employeeService.isExternalUser() && this.model.isReturned()){
+        this.readonly = false;
       }
+     
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       // after claim, consider it same as user inbox and use same condition
-     else {
-       this.readonly = !this.employeeService.isCharityManager() && !this.employeeService.isCharityUser()
+      if (this.model.taskDetails.isClaimed()) {
+        if(this.employeeService.isExternalUser() && this.model.isReturned()){
+          this.readonly = false;
+        }
+       
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
-      // if saved as draft, then no readonly
+      // if saved as draft and opened by creator who is charity user, then no readonly
       if (this.model?.canCommit()) {
         this.readonly = false;
       }
+     
     }
   }
   handleRequestTypeChange(

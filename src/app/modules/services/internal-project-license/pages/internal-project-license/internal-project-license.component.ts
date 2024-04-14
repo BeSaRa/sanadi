@@ -1,7 +1,7 @@
-import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {InternalProjectLicense} from '@models/internal-project-license';
-import {InternalProjectLicenseService} from '@services/internal-project-license.service';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { InternalProjectLicense } from '@models/internal-project-license';
+import { InternalProjectLicenseService } from '@services/internal-project-license.service';
 import {
   AbstractControl,
   UntypedFormArray,
@@ -11,38 +11,38 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import {IKeyValue} from '@contracts/i-key-value';
-import {LangService} from '@services/lang.service';
-import {LookupService} from '@services/lookup.service';
-import {DialogService} from '@services/dialog.service';
-import {EmployeeService} from '@services/employee.service';
-import {ConfigurationService} from '@services/configuration.service';
-import {ToastService} from '@services/toast.service';
-import {Observable, of, Subject} from 'rxjs';
-import {SaveTypes} from '@enums/save-types';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {OpenFrom} from '@enums/open-from.enum';
-import {Lookup} from '@models/lookup';
-import {CommonUtils} from '@helpers/common-utils';
-import {ServiceRequestTypes} from '@enums/service-request-types';
-import {catchError, exhaustMap, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {InternalProjectLicenseResult} from '@models/internal-project-license-result';
-import {AidLookup} from '@models/aid-lookup';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {AidLookupService} from '@services/aid-lookup.service';
-import {AidTypes} from '@enums/aid-types.enum';
-import {SDGoal} from '@models/sdgoal';
-import {SDGoalService} from '@services/sdgoal.service';
-import {DateUtils} from '@helpers/date-utils';
-import {ProjectComponent} from '@models/project-component';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {LicenseService} from '@services/license.service';
-import {InternalProjectLicenseSearchCriteria} from '@models/internal-project-license-search-criteria';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {FileIconsEnum} from '@enums/file-extension-mime-types-icons.enum';
-import {DatepickerOptionsMap} from '@app/types/types';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import { IKeyValue } from '@contracts/i-key-value';
+import { LangService } from '@services/lang.service';
+import { LookupService } from '@services/lookup.service';
+import { DialogService } from '@services/dialog.service';
+import { EmployeeService } from '@services/employee.service';
+import { ConfigurationService } from '@services/configuration.service';
+import { ToastService } from '@services/toast.service';
+import { Observable, of, Subject } from 'rxjs';
+import { SaveTypes } from '@enums/save-types';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { OpenFrom } from '@enums/open-from.enum';
+import { Lookup } from '@models/lookup';
+import { CommonUtils } from '@helpers/common-utils';
+import { ServiceRequestTypes } from '@enums/service-request-types';
+import { catchError, exhaustMap, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { InternalProjectLicenseResult } from '@models/internal-project-license-result';
+import { AidLookup } from '@models/aid-lookup';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { AidLookupService } from '@services/aid-lookup.service';
+import { AidTypes } from '@enums/aid-types.enum';
+import { SDGoal } from '@models/sdgoal';
+import { SDGoalService } from '@services/sdgoal.service';
+import { DateUtils } from '@helpers/date-utils';
+import { ProjectComponent } from '@models/project-component';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { LicenseService } from '@services/license.service';
+import { InternalProjectLicenseSearchCriteria } from '@models/internal-project-license-search-criteria';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { FileIconsEnum } from '@enums/file-extension-mime-types-icons.enum';
+import { DatepickerOptionsMap } from '@app/types/types';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
 
 @Component({
   selector: 'internal-project-license',
@@ -51,17 +51,17 @@ import {CommonCaseStatus} from '@enums/common-case-status.enum';
 })
 export class InternalProjectLicenseComponent extends EServicesGenericComponent<InternalProjectLicense, InternalProjectLicenseService> implements AfterViewInit {
   constructor(public lang: LangService,
-              private cd: ChangeDetectorRef,
-              public service: InternalProjectLicenseService,
-              public lookupService: LookupService,
-              private dialogService: DialogService,
-              public employeeService: EmployeeService,
-              private configurationService: ConfigurationService,
-              private toastService: ToastService,
-              private aidLookupService: AidLookupService,
-              private sdGoalService: SDGoalService,
-              private licenseService: LicenseService,
-              public fb: UntypedFormBuilder) {
+    private cd: ChangeDetectorRef,
+    public service: InternalProjectLicenseService,
+    public lookupService: LookupService,
+    private dialogService: DialogService,
+    public employeeService: EmployeeService,
+    private configurationService: ConfigurationService,
+    private toastService: ToastService,
+    private aidLookupService: AidLookupService,
+    private sdGoalService: SDGoalService,
+    private licenseService: LicenseService,
+    public fb: UntypedFormBuilder) {
     super();
   }
 
@@ -164,7 +164,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   selectedLicense?: InternalProjectLicense;
 
   datepickerOptionsMap: DatepickerOptionsMap = {
-    expectedImpactDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
+    expectedImpactDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' })
   };
 
   getTabInvalidStatus(tabName: string): boolean {
@@ -184,10 +184,10 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
           'secondSDGoalPercentage',
           'thirdSDGoalPercentage'
         ], [
-          this.lang.getLocalByKey('first_sd_goal_percentage'),
-          this.lang.getLocalByKey('second_sd_goal_percentage'),
-          this.lang.getLocalByKey('third_sd_goal_percentage')
-        ]);
+        this.lang.getLocalByKey('first_sd_goal_percentage'),
+        this.lang.getLocalByKey('second_sd_goal_percentage'),
+        this.lang.getLocalByKey('third_sd_goal_percentage')
+      ]);
     } else if (groupName === 'beneficiaryAnalysisIndividualPercent') {
       validators = CustomValidators.validateSum(100, 2,
         [
@@ -284,12 +284,12 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         return false;
       } else {
         if (!this._checkValidFamilyOrIndividualSwitch()) {
-          this.toastService.error(this.lang.map.at_least_one_field_should_be_filled.change({fields: this.lang.map.family_beneficiary + ', ' + this.lang.map.individual_beneficiary}));
+          this.toastService.error(this.lang.map.at_least_one_field_should_be_filled.change({ fields: this.lang.map.family_beneficiary + ', ' + this.lang.map.individual_beneficiary }));
           return false;
         }
         // if project component total cost is 0, mark it invalid
         if (!this.projectTotalCostField || !CommonUtils.isValidValue(this.projectTotalCostField.value) || this.projectTotalCostField.value === 0) {
-          this.toastService.error(this.lang.map.err_invalid_project_component_total_x.change({value: this.projectTotalCostField.value || 0}));
+          this.toastService.error(this.lang.map.err_invalid_project_component_total_x.change({ value: this.projectTotalCostField.value || 0 }));
           return false;
         }
         return true;
@@ -315,7 +315,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialogService.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialogService.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toastService.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -576,29 +576,62 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if (this.employeeService.isCharityManager()) {
+      if (this.employeeService.isExternalUser() && this.model.isReturned()) {
         this.readonly = false;
-      } else if (this.employeeService.isCharityUser()) {
-        this.readonly = !this.model.isReturned();
       }
+
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       // after claim, consider it same as user inbox and use same condition
       if (this.model.taskDetails.isClaimed()) {
-        if (this.employeeService.isCharityManager()) {
+        if (this.employeeService.isExternalUser() && this.model.isReturned()) {
           this.readonly = false;
-        } else if (this.employeeService.isCharityUser()) {
-          this.readonly = !this.model.isReturned();
         }
+
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
-      // if saved as draft, then no readonly
+      // if saved as draft and opened by creator who is charity user, then no readonly
       if (this.model?.canCommit()) {
         this.readonly = false;
       }
+      this._handleRequestTypeDependentControls();
+      this._handleAllNationalityReadonly();
     }
-    this._handleRequestTypeDependentControls();
-    this._handleAllNationalityReadonly();
   }
+  // handleReadonly(): void {
+  //   // if record is new, no readonly (don't change as default is readonly = false)
+  //   if (!this.model?.id) {
+  //     return;
+  //   }
+
+  //   let caseStatus = this.model.getCaseStatus();
+  //   if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+  //     this.readonly = true;
+  //     return;
+  //   }
+
+  //   if (this.openFrom === OpenFrom.USER_INBOX) {
+  //     if (this.employeeService.isCharityManager()) {
+  //       this.readonly = false;
+  //     } else if (this.employeeService.isCharityUser()) {
+  //       this.readonly = !this.model.isReturned();
+  //     }
+  //   } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+  //     // after claim, consider it same as user inbox and use same condition
+  //     if (this.model.taskDetails.isClaimed()) {
+  //       if (this.employeeService.isCharityManager()) {
+  //         this.readonly = false;
+  //       } else if (this.employeeService.isCharityUser()) {
+  //         this.readonly = !this.model.isReturned();
+  //       }
+  //     }
+  //   } else if (this.openFrom === OpenFrom.SEARCH) {
+  //     // if saved as draft, then no readonly
+  //     if (this.model?.canCommit()) {
+  //       this.readonly = false;
+  //     }
+  //   }
+
+  // }
 
   isEditRequestTypeAllowed(): boolean {
     // allow edit if new record or saved as draft
@@ -652,7 +685,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
           }
         } else {
           this.oldLicenseFullSerialField.setValidators([CustomValidators.required, (control) => {
-            return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true};
+            return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : { select_license: true };
           }]);
         }
         this.oldLicenseFullSerialField.updateValueAndValidity();
@@ -695,7 +728,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
 
   private _checkValidFamilyOrIndividualSwitch(): boolean {
     const validFamilyOrIndividual = this.familyBeneficiarySwitchField.value || this.individualBeneficiarySwitchField.value;
-    this.validFamilyOrIndividualSwitchMsg = validFamilyOrIndividual ? '&nbsp;' : this.lang.map.at_least_one_field_should_be_filled.change({fields: '(' + this.lang.map.family_beneficiary + ', ' + this.lang.map.individual_beneficiary + ')'});
+    this.validFamilyOrIndividualSwitchMsg = validFamilyOrIndividual ? '&nbsp;' : this.lang.map.at_least_one_field_should_be_filled.change({ fields: '(' + this.lang.map.family_beneficiary + ', ' + this.lang.map.individual_beneficiary + ')' });
     return validFamilyOrIndividual;
   }
 
@@ -800,7 +833,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   private listenToLicenseSearch() {
     this.licenseSearch$
       .pipe(exhaustMap(oldLicenseFullSerial => {
-        return this.loadLicencesByCriteria({fullSerial: oldLicenseFullSerial})
+        return this.loadLicencesByCriteria({ fullSerial: oldLicenseFullSerial })
           .pipe(catchError(() => of([])));
       }))
       .pipe(
@@ -817,21 +850,21 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
                   if (!data) {
                     return of(null);
                   }
-                  return {selected: licenses[0], details: data};
+                  return { selected: licenses[0], details: data };
                 }),
                 catchError(() => {
                   return of(null);
                 })
               );
           } else {
-            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null})).onAfterClose$;
+            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestTypeField.value || null })).onAfterClose$;
           }
         }),
         // allow only if the user select license
         filter<{ selected: InternalProjectLicenseResult, details: InternalProjectLicense }, any>
-        ((selection): selection is { selected: InternalProjectLicenseResult, details: InternalProjectLicense } => {
-          return !!(selection);
-        }),
+          ((selection): selection is { selected: InternalProjectLicenseResult, details: InternalProjectLicense } => {
+            return !!(selection);
+          }),
         takeUntil(this.destroy$)
       )
       .subscribe((selection) => {
@@ -877,7 +910,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   loadAidLookup(aidType: AidTypes, parentId?: number): void {
-    this.aidLookupService.loadByCriteria({aidType: aidType, parent: parentId})
+    this.aidLookupService.loadByCriteria({ aidType: aidType, parent: parentId })
       .subscribe((data) => {
         if (aidType === AidTypes.CLASSIFICATIONS) {
           this.mainCategoriesList = data;
