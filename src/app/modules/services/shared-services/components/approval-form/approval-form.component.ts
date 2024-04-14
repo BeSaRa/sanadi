@@ -30,7 +30,7 @@ import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 })
 export class ApprovalFormComponent implements OnInit, OnDestroy {
   @Input()
-  model!: HasRequestType & HasLicenseDurationType & CaseModel<any, any>;
+  model!: HasRequestType & HasLicenseDurationType & CaseModel<any, any> & {publicTerms:string};
   @Input()
   service!: BaseGenericEService<any>
   destroy$: Subject<any> = new Subject();
@@ -140,6 +140,7 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
       }))
       .pipe(tap(service => {
         this.servicePublicTerms = service.serviceTerms
+        this.model.publicTerms = service.serviceTerms
       }))
       .pipe(switchMap(_ => {
         return this.loadUserCustomTerms()
