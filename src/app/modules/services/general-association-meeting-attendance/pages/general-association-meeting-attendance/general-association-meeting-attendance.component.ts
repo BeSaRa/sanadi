@@ -745,31 +745,30 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     }
 
     let caseStatus = this.model.getCaseStatus();
-    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
       return;
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if (this.employeeService.isCharityManager()) {
-        this.readonly = this.model.isInitialApproved();
-      } else if (this.employeeService.isCharityUser()) {
-        this.readonly = this.model.isInitialApproved() ? true : !this.model.isReturned();
+      if(this.employeeService.isExternalUser() && this.model.isReturned()){
+        this.readonly = false;
       }
+     
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       // after claim, consider it same as user inbox and use same condition
       if (this.model.taskDetails.isClaimed()) {
-        if (this.employeeService.isCharityManager()) {
+        if(this.employeeService.isExternalUser() && this.model.isReturned()){
           this.readonly = false;
-        } else if (this.employeeService.isCharityUser()) {
-          this.readonly = !this.model.isReturned();
         }
+       
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
       // if saved as draft and opened by creator who is charity user, then no readonly
       if (this.model?.canCommit()) {
         this.readonly = false;
       }
+     
     }
   }
 

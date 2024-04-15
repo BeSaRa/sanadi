@@ -466,34 +466,67 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
     }
 
     let caseStatus = this.model.getCaseStatus();
-    if (CommonCaseStatus && (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION)) {
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
       return;
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if (this.employeeService.isCharityManager()) {
+      if (this.employeeService.isExternalUser() && this.model.isReturned()) {
         this.readonly = false;
-      } else if (this.employeeService.isCharityUser()) {
-        this.readonly = !this.model.isReturned();
       }
+
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       // after claim, consider it same as user inbox and use same condition
       if (this.model.taskDetails.isClaimed()) {
-        if (this.employeeService.isCharityManager()) {
+        if (this.employeeService.isExternalUser() && this.model.isReturned()) {
           this.readonly = false;
-        } else if (this.employeeService.isCharityUser()) {
-          this.readonly = !this.model.isReturned();
         }
+
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
-      // if saved as draft, then no readonly
+      // if saved as draft and opened by creator who is charity user, then no readonly
       if (this.model?.canCommit()) {
         this.readonly = false;
       }
+   
+      this._handleRequestTypeDependentControls();
     }
-    this._handleRequestTypeDependentControls();
   }
+  // handleReadonly(): void {
+  //   // if record is new, no readonly (don't change as default is readonly = false)
+  //   if (!this.model?.id) {
+  //     return;
+  //   }
+
+  //   let caseStatus = this.model.getCaseStatus();
+  //   if (CommonCaseStatus && (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION)) {
+  //     this.readonly = true;
+  //     return;
+  //   }
+
+  //   if (this.openFrom === OpenFrom.USER_INBOX) {
+  //     if (this.employeeService.isCharityManager()) {
+  //       this.readonly = false;
+  //     } else if (this.employeeService.isCharityUser()) {
+  //       this.readonly = !this.model.isReturned();
+  //     }
+  //   } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+  //     // after claim, consider it same as user inbox and use same condition
+  //     if (this.model.taskDetails.isClaimed()) {
+  //       if (this.employeeService.isCharityManager()) {
+  //         this.readonly = false;
+  //       } else if (this.employeeService.isCharityUser()) {
+  //         this.readonly = !this.model.isReturned();
+  //       }
+  //     }
+  //   } else if (this.openFrom === OpenFrom.SEARCH) {
+  //     // if saved as draft, then no readonly
+  //     if (this.model?.canCommit()) {
+  //       this.readonly = false;
+  //     }
+  //   }
+  // }
 
   private validateSingleLicense(license: UrgentInterventionAnnouncementResult): Observable<undefined | UrgentInterventionAnnouncement> {
     return this.licenseService.validateLicenseByRequestType<UrgentInterventionAnnouncement>(this.model!.caseType, this.requestTypeField.value, license.id) as Observable<undefined | UrgentInterventionAnnouncement>;

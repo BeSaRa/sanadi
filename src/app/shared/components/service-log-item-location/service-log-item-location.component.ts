@@ -58,7 +58,7 @@ export class ServiceLogItemLocationComponent {
     this.onReload.emit(true);
   }
 
-  private _displayedColumns = ['location','stepSubject'];
+  private _displayedColumns = ['location','profile','stepSubject'];
 
   get displayedColumns(): string[] {
     if (this.canTerminateAnyItemLocation()) {

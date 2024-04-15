@@ -57,6 +57,7 @@ import { GdxMoiPersonal } from '@app/models/gdx-moi-personal';
 import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
 import { DateUtils } from '@app/helpers/date-utils';
 import { IMyDateModel } from 'angular-mydatepicker';
+import { LookupService } from './lookup.service';
 
 const beneficiarySearchLogCriteriaInterceptor = new BeneficiarySearchLogCriteriaInterceptor();
 
@@ -82,7 +83,8 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     public domSanitizer: DomSanitizer,
     private configurationService: ConfigurationService,
     private sharedService: SharedService,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+  private lookupService: LookupService) {
     super();
     FactoryService.registerService('BeneficiaryService', this);
   }
@@ -366,12 +368,14 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   }
   getBeneficiaryFromMoiData(criteria:Partial<IBeneficiaryCriteria> ):Observable<Beneficiary[]> {
 
+    const genders = this.lookupService.listByCategory.Gender
     const {benPrimaryIdNumber,expiryDate} = criteria;
     const expiryDateString = DateUtils.changeDateFromDatepicker(expiryDate as unknown as IMyDateModel)?.toLocaleDateString('en-CA')
     return forkJoin([this.addPersonalInfoInquiry(benPrimaryIdNumber!,expiryDateString!), 
                      this.addAddressInfoInquiry(benPrimaryIdNumber!,expiryDateString!)])
     .pipe(
       map(([person,address])=>{
+        const gender = genders.find((gender) => gender.enName.toLowerCase() === person.sex.toLowerCase())?.lookupKey;
          return new Beneficiary().clone({
           arName : person.arabicName,
           enName : person.englishName,
@@ -385,7 +389,8 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
           benPrimaryIdNumber : criteria.benPrimaryIdNumber,
           benPrimaryIdType : criteria.benPrimaryIdType,
           expiryDate: criteria.expiryDate,
-          dateOfBirth : person.birthDate
+          dateOfBirth : person.birthDate,
+          gender :gender
          })
       }),
       map((beneficiary)=> [beneficiary]),

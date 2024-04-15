@@ -115,7 +115,6 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
   }
 
   handleReadonly(): void {
-
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
       return;
@@ -126,29 +125,27 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
       this.readonly = true;
       return;
     }
+
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if (this.employeeService.isCharityManager()) {
+      if(this.employeeService.isExternalUser() && this.model.isReturned()){
         this.readonly = false;
-      } else if (this.employeeService.isCharityUser()) {
-        this.readonly = !this.model.isReturned();
       }
+     
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       // after claim, consider it same as user inbox and use same condition
       if (this.model.taskDetails.isClaimed()) {
-        if (this.employeeService.isCharityManager()) {
+        if(this.employeeService.isExternalUser() && this.model.isReturned()){
           this.readonly = false;
-        } else if (this.employeeService.isCharityUser()) {
-          this.readonly = !this.model.isReturned();
         }
+       
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
-      // if saved as draft, then no readonly
+      // if saved as draft and opened by creator who is charity user, then no readonly
       if (this.model?.canCommit()) {
         this.readonly = false;
       }
+     
     }
-    this.processFieldBuilder.buildMode = this.readonly ? 'view' : 'use';
-    this.processFieldBuilder.generateFromString(this.model?.template)
   }
 
   _getNewInstance(): GeneralProcessNotification {
