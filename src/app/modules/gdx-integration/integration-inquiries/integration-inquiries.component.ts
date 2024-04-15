@@ -116,7 +116,7 @@ export class IntegrationInquiriesComponent {
       name: 'mol',
       index: 4,
       langKey: 'integration_mol',
-      show: () => false,
+      show: () => true,
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       serviceId: GdxServicesEnum.MOL,
