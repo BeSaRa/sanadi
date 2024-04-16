@@ -1,6 +1,6 @@
 import { CaseTypes } from "@app/enums/case-types.enum";
-import {AdminResult} from "@app/models/admin-result";
-import {TaskDetails} from "@app/models/task-details";
+import { AdminResult } from "@app/models/admin-result";
+import { TaskDetails } from "@app/models/task-details";
 
 export class GeneralInterceptor {
   static receive(model: any): any {
@@ -9,7 +9,9 @@ export class GeneralInterceptor {
     model.taskDetails && (model.taskDetails.fromUserInfo = AdminResult.createInstance(model.taskDetails.fromUserInfo ?? {}));
     model.creatorInfo && (model.creatorInfo = AdminResult.createInstance(model.creatorInfo))
     model.ouInfo && (model.ouInfo = AdminResult.createInstance(model.ouInfo))
-    model.caseStatusInfo && (model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo))
+    model.caseStatusInfo && (model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo));
+    model.inspectionStatusInfo && (model.inspectionStatusInfo = AdminResult.createInstance(model.inspectionStatusInfo));
+    model.inspectorInfo && (model.inspectorInfo = AdminResult.createInstance(model.inspectorInfo));
     return model;
   }
 
@@ -28,12 +30,14 @@ export class GeneralInterceptor {
     delete model.ouInfo;
     delete model.auditOperation;
 
-    if(model.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
-      if(!!model.taskDetails?.piid && !model.taskDetails.isMain){
-        model.taskDetails={  piid:model.taskDetails.piid };
+    if (model.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+      if (!!model.taskDetails?.piid && !model.taskDetails.isMain) {
+        model.taskDetails = { piid: model.taskDetails.piid };
         return model;
       }
     }
+    delete model.inspectionStatusInfo;
+    delete model.inspectorInfo;
     delete model.taskDetails;
     return model;
   }

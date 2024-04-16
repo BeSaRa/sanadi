@@ -2204,19 +2204,19 @@ export const newNavigationMenuList = [
     itemOrder: 3,
     svg: null
   },
-  // {
-  //   id: 3405,
-  //   langKey: 'menu_admin_license',
-  //   path: SystemPathsEnum.INSPECTION + '/licenses',
-  //   icon: serviceAddUpdateIcon,
-  //   isSvg: false,
-  //   permission: PermissionsEnum.MANAGE_LICENSES_AND_PERMITS,
-  //   permissionGroup: null,
-  //   parent: 3401,
-  //   group: GroupNames.INSPECTION,
-  //   itemOrder: 4,
-  //   svg: null
-  // },
+  {
+    id: 3405,
+    langKey: 'menu_admin_license',
+    path: SystemPathsEnum.INSPECTION + '/licenses',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_LICENSES_AND_PERMITS,
+    permissionGroup: null,
+    parent: 3401,
+    group: GroupNames.INSPECTION,
+    itemOrder: 4,
+    svg: null
+  },
   /*{
     id: 100001,
     langKey: 'menu_internal_project_license',
@@ -3100,7 +3100,7 @@ export const newNavigationMenuList = [
     svg: null
   },
   {
-    id: 24,
+    id: 4000,
     langKey: 'menu_restricted',
     path: '/home/restricted',
     icon: 'mdi-database-search',

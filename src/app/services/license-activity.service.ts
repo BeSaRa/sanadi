@@ -1,27 +1,28 @@
 import { ComponentType } from "@angular/cdk/portal";
 import { HttpClient, HttpEventType, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import { CastResponse, CastResponseContainer } from "@app/decorators/decorators/cast-response";
 import { HasInterception, InterceptParam } from "@app/decorators/decorators/intercept-model";
 import { OperationTypes } from "@app/enums/operation-types.enum";
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 import { IDialogData } from "@app/interfaces/i-dialog-data";
+import { BlobModel } from "@app/models/blob-model";
+import { FileNetDocument } from "@app/models/file-net-document";
+import { InspectionLog } from "@app/models/inspection-log";
+import { LicenseActivity } from "@app/models/license-activity";
 import { Pagination } from "@app/models/pagination";
 import { ProposedInspection } from "@app/models/proposed-inspection";
+import { InspectionLogsPopupComponent } from "@app/modules/services/inspection/popups/inspection-logs-popup/inspection-logs-popup.component";
+import { LicenseActivityCompletePopupComponent } from "@app/modules/services/inspection/popups/license-activity-complete-popup/license-activity-complete-popup.component";
+import { LicenseActivityPopupComponent } from "@app/modules/services/inspection/popups/license-activity-popup/license-activity-popup.component";
 import { DialogRef } from "@app/shared/models/dialog-ref";
+import { ViewDocumentPopupComponent } from "@app/shared/popups/view-document-popup/view-document-popup.component";
 import { Observable, of } from "rxjs";
-import { filter, map, switchMap } from "rxjs/operators";
+import { filter, map, switchMap, take, tap } from "rxjs/operators";
 import { DialogService } from "./dialog.service";
 import { FactoryService } from "./factory.service";
 import { UrlService } from "./url.service";
-import { LicenseActivity } from "@app/models/license-activity";
-import { LicenseActivityPopupComponent } from "@app/modules/services/inspection/popups/license-activity-popup/license-activity-popup.component";
-import { ActualInspection } from "@app/models/actual-inspection";
-import { FileNetDocument } from "@app/models/file-net-document";
-import { LicenseActivityCompletePopupComponent } from "@app/modules/services/inspection/popups/license-activity-complete-popup/license-activity-complete-popup.component";
-import { BlobModel } from "@app/models/blob-model";
-import { ViewDocumentPopupComponent } from "@app/shared/popups/view-document-popup/view-document-popup.component";
-import { DomSanitizer } from "@angular/platform-browser";
 
 @CastResponseContainer({
   $default: {
@@ -33,16 +34,16 @@ import { DomSanitizer } from "@angular/platform-browser";
   }
 })
 @Injectable({
-  providedIn:'root'
+  providedIn: 'root'
 })
 export class LicenseActivityService extends CrudWithDialogGenericService<LicenseActivity> {
 
   list: LicenseActivity[] = [];
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              public dialog: DialogService,
-             public domSanitizer: DomSanitizer) {
+    private urlService: UrlService,
+    public dialog: DialogService,
+    public domSanitizer: DomSanitizer) {
     super();
     FactoryService.registerService('LicenseActivityService', this);
   }
@@ -79,17 +80,17 @@ export class LicenseActivityService extends CrudWithDialogGenericService<License
   @HasInterception
   @CastResponse(undefined)
   create(@InterceptParam() model: LicenseActivity): Observable<LicenseActivity> {
-    return this.http.post<LicenseActivity>(this._getServiceURL() , model);
+    return this.http.post<LicenseActivity>(this._getServiceURL(), model);
   }
   @HasInterception
   @CastResponse(undefined)
   updateLicense(@InterceptParam() model: LicenseActivity): Observable<LicenseActivity> {
-   
-    return this.http.put<LicenseActivity>(this._getServiceURL() , model);
+
+    return this.http.put<LicenseActivity>(this._getServiceURL(), model);
   }
 
-  
-  private prepareDocument(document: FileNetDocument){
+
+  private prepareDocument(document: FileNetDocument) {
     const clonedDocument = document.clone() as Partial<FileNetDocument>;
     const content = clonedDocument.files?.item(0);
     const formData = new FormData();
@@ -111,22 +112,22 @@ export class LicenseActivityService extends CrudWithDialogGenericService<License
       delete clonedDocument.description;
     }
     content ? formData.append('content', content) : null;
-    return {formData: formData, clonedDocument: clonedDocument}
+    return { formData: formData, clonedDocument: clonedDocument }
   }
   @CastResponse(() => FileNetDocument, {
     fallback: '$default',
     unwrap: 'rs'
   })
-   saveDocument(taskFolderId:string,taskId:number, document: FileNetDocument, progressCallback?: (percentage: number) => void): Observable<FileNetDocument> {
-   
-    const {formData,clonedDocument} = this.prepareDocument(document);
-    return this.http.post<FileNetDocument>(this._getServiceURL()+'/document', formData, {
+  saveDocument(taskFolderId: string, taskId: number, document: FileNetDocument, progressCallback?: (percentage: number) => void): Observable<FileNetDocument> {
+
+    const { formData, clonedDocument } = this.prepareDocument(document);
+    return this.http.post<FileNetDocument>(this._getServiceURL() + '/document', formData, {
       params: new HttpParams({
         fromObject: {
-         ...clonedDocument as any,
+          ...clonedDocument as any,
           taskFolderId,
           taskId
-          
+
         },
 
       }),
@@ -149,13 +150,13 @@ export class LicenseActivityService extends CrudWithDialogGenericService<License
   @CastResponse(undefined)
   complete(@InterceptParam() model: LicenseActivity): Observable<LicenseActivity> {
     const params = new HttpParams({
-      fromObject:{
-        status:model.status,
-        comment:model.comment
+      fromObject: {
+        status: model.status,
+        comment: model.comment
       }
     })
-    return this.http.post<LicenseActivity>(this._getServiceURL()+`/complete-activity/${model.id}` , {},{
-      params:params
+    return this.http.post<LicenseActivity>(this._getServiceURL() + `/complete-activity/${model.id}`, {}, {
+      params: params
     });
   }
   downloadDocument(docId: string): Observable<BlobModel> {
@@ -172,5 +173,20 @@ export class LicenseActivityService extends CrudWithDialogGenericService<License
     }, {
       escToClose: true
     });
+  }
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  getHistory(licenseNumber: string) {
+    return this.http.get<InspectionLog[]>(this._getServiceURL() + '/license-history',
+      {
+        params: new HttpParams({
+          fromObject: {
+            licenseNumber
+          }
+        })
+      })
+     
   }
 }
