@@ -79,15 +79,28 @@ export class LicenseActivityService extends CrudWithDialogGenericService<License
   }
   @HasInterception
   @CastResponse(undefined)
-  create(@InterceptParam() model: LicenseActivity): Observable<LicenseActivity> {
-    return this.http.post<LicenseActivity>(this._getServiceURL(), model);
+  save(@InterceptParam() model: LicenseActivity, actualTask:number): Observable<LicenseActivity> {
+    return this.http.post<LicenseActivity>(this._getServiceURL()+'/save', model,{
+      params: new HttpParams({
+        fromObject:{
+          actualTask
+        }
+      })
+    });
   }
   @HasInterception
   @CastResponse(undefined)
-  updateLicense(@InterceptParam() model: LicenseActivity): Observable<LicenseActivity> {
-
-    return this.http.put<LicenseActivity>(this._getServiceURL(), model);
+  updateLicense
+  (@InterceptParam() model: LicenseActivity, actualTask:number): Observable<LicenseActivity> {
+    return this.http.put<LicenseActivity>(this._getServiceURL()+'/update', model,{
+      params: new HttpParams({
+        fromObject:{
+          actualTask
+        }
+      })
+    });
   }
+ 
 
 
   private prepareDocument(document: FileNetDocument) {

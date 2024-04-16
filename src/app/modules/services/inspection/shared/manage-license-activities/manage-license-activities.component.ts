@@ -108,12 +108,15 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
       .pipe(filter((value: LicenseActivity): value is LicenseActivity => !!value))
       .pipe(
         switchMap((value: LicenseActivity) => {
-          value.actualInspection = new ActualInspection().clone({
-            id: this.actualInspection.id
-          })
+          // value.actualInspection = new ActualInspection().clone({
+          //   id: this.actualInspection.id
+          // })
           value.inspectionDate = new Date().toISOString()
           value.isDefined = true;
-          return this.licenseActivityService.create(value)
+          return this.licenseActivityService.save(value,this.actualInspection.id)
+          .pipe(
+            map(_=> value)
+          )
         }), tap(() => {
           this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: this.lang.map.license_activity }));
         }),
@@ -174,10 +177,13 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((value: LicenseActivity) => {
 
-          value.actualInspection = {
-            id: this.actualInspection.id
-          } as ActualInspection
-          return this.licenseActivityService.updateLicense(value)
+          // value.actualInspection = {
+          //   id: this.actualInspection.id
+          // } as ActualInspection
+          return this.licenseActivityService.updateLicense(value,this.actualInspection.id)
+          .pipe(
+            map(_=> value)
+          )
         }),
         tap(() => {
           this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: this.lang.map.license_activity }));

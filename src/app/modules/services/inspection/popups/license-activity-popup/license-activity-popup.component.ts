@@ -62,8 +62,8 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
 
     save() {
         const item = new LicenseActivity().clone({
+            ... this.model,
             ...this.form.getRawValue(),
-            ... this.model
         })
         this.dialogRef.close(item)
     }
