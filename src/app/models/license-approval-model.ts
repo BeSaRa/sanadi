@@ -26,6 +26,12 @@ export abstract class LicenseApprovalModel<S extends BaseGenericEService<M>, M e
   exportedLicenseId!: string;
   exportedLicenseSerial!: number;
   ignoreSendInterceptor?: boolean;
+  inspectionStatus!:number
+  licenseType!:number
+  inspectorId!:number
+  lastInspectionDate!:string;
+  inspectionStatusInfo!:AdminResult;
+  inspectorInfo!:AdminResult;
 
 
   patchAndUpdateModel(data: Partial<LicenseApprovalModel<any, any>>, callback?: (data: any) => any): Observable<any> {

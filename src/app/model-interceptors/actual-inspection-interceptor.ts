@@ -10,6 +10,8 @@ import { InternalUser } from "@app/models/internal-user";
 import { ProposedInspectionInterceptor } from "./proposed_inspection-interceptor";
 import { ProposedInspection } from "@app/models/proposed-inspection";
 import { AdminResult } from "@app/models/admin-result";
+import { InspectionLogInterceptor } from "./inspection-log-interceptor";
+import { InspectionLog } from "@app/models/inspection-log";
 
 export class ActualInspectionInterceptor implements IModelInterceptor<ActualInspection>
 {
@@ -17,6 +19,8 @@ export class ActualInspectionInterceptor implements IModelInterceptor<ActualInsp
     const licenseActivityInterceptor = new LicenseActivityInterceptor();
     const internalUserInterceptor = new InternalUserInterceptor();
     const proposedInspectionInterceptor = new ProposedInspectionInterceptor();
+    const inspectionLogInterceptor = new InspectionLogInterceptor();
+
     model.moneyLaundryOrTerrorism = model.moneyLaundryOrTerrorism === LinkedProjectTypes.YES ? true : false;
     model.licenseActivities = model.licenseActivities?.map(item => licenseActivityInterceptor.send(item) as LicenseActivity);
     model.dateFrom && (model.dateFrom = DateUtils.changeDateFromDatepicker(model.dateFrom as unknown as IMyDateModel)?.toISOString());
@@ -28,18 +32,19 @@ export class ActualInspectionInterceptor implements IModelInterceptor<ActualInsp
       return item
     })
     model.proposedInspectionTask && (model.proposedInspectionTask = proposedInspectionInterceptor.send(model.proposedInspectionTask) as ProposedInspection)
-    
+    model.inspectionLog && (model.inspectionLog = model.inspectionLog.map(item => inspectionLogInterceptor.send(item) as InspectionLog) )
     ActualInspectionInterceptor._deleteBeforeSend(model);
     return model;
   }
   receive(model: ActualInspection): ActualInspection {
 
+    const inspectionLogInterceptor = new InspectionLogInterceptor();
     model.moneyLaundryOrTerrorism = model.moneyLaundryOrTerrorism ? LinkedProjectTypes.YES : LinkedProjectTypes.NO;
     model.mainOperationInfo = AdminResult.createInstance(model.mainOperationInfo);
     model.subOperationInfo = AdminResult.createInstance(model.subOperationInfo);
     model.inspectorInfo = AdminResult.createInstance(model.inspectorInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
-    model.inspectionLog?.forEach(item => item.actionInfo = AdminResult.createInstance(item.actionInfo));
+    model.inspectionLog && (model.inspectionLog = model.inspectionLog.map(item => inspectionLogInterceptor.receive(item)))
 
     model.dateFrom = DateUtils.changeDateToDatepicker(model.dateFrom);
     model.dateTo = DateUtils.changeDateToDatepicker(model.dateTo);

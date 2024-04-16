@@ -2166,4 +2166,8 @@ export interface ILanguageKeys {
   msg_confirm_change_inspector:string;
   inspectorChangedSuccess:string;
   manage_task:string;
+  has_inspected:string;
+  compliance_status:string;
+  last_inspection_date:string;
+  inspection_history:string;
 }
