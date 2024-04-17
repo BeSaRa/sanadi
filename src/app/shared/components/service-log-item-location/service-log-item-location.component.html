@@ -9,7 +9,7 @@
           </td>
         </ng-container>
         <ng-container cdkColumnDef="profile">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.profile}}</th>
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_the_organization}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <span *ngIf="row.organizationId && row.organizationId !== -1"> {{row.getOrgName()}}</span>
           </td>
