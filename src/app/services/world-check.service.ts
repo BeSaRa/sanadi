@@ -69,7 +69,11 @@ export class WorldCheckService extends CrudGenericService<WorldCheckSearch> {
     return this.http.get<WorldCheckSearchResult>(this._getServiceURL() + '/inquiry/' + id);
   }
   getInquiryById(id: number): Observable<WorldCheckSearchResult> {
-    return this._getInquiryById(id).pipe(map((rs: any) => rs.response))
+    return this._getInquiryById(id).pipe(map((rs: any) => {
+      return {
+        id, ...rs.response
+      }
+    } ))
   }
   @CastResponse(undefined, {
     fallback: '$default',
