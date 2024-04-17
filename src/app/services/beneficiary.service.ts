@@ -375,7 +375,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
                      this.addAddressInfoInquiry(benPrimaryIdNumber!,expiryDateString!)])
     .pipe(
       map(([person,address])=>{
-        const gender = genders.find((gender) => gender.enName.toLowerCase() === person.sex.toLowerCase())?.lookupKey;
+        const gender = genders.find((gender) => gender.enName.toLowerCase() === person.sex.trim().toLowerCase())?.lookupKey;
          return new Beneficiary().clone({
           arName : person.arabicName,
           enName : person.englishName,
