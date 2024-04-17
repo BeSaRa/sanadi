@@ -105,7 +105,9 @@ export class ScreeningSearchAuditComponent implements OnInit {
         return this.service.openViewWorldCheckSearchResult(result, OperationTypes.VIEW)
           .onAfterClose$
       }))
-      .subscribe();
+      .subscribe(_=>{
+        this.search$.next()
+      });
   }
   getSerachCriteria(form: WorldCheckSearch) {
     return {
