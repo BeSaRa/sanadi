@@ -1,7 +1,7 @@
 import {HttpClient, HttpEventType, HttpParams} from '@angular/common/http';
 import {FileNetDocument} from '@models/file-net-document';
 import {Observable} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
+import {concatMap, filter, map, switchMap} from 'rxjs/operators';
 import {BlobModel} from '@models/blob-model';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {DialogService} from './dialog.service';
@@ -77,7 +77,10 @@ export class DocumentService {
   updateSingleDocument(caseId: string,
                        document: FileNetDocument,
                        progressCallback?: (percentage: number) => void): Observable<FileNetDocument> {
-    return this._saveDocument(OperationTypes.UPDATE, caseId, document, progressCallback);
+    return this.deleteDocument(document.id)
+    .pipe(
+      switchMap(_=> this._saveDocument(OperationTypes.CREATE, caseId, document, progressCallback))
+    )                        
   }
 
   addBulkDocuments(caseId: string,

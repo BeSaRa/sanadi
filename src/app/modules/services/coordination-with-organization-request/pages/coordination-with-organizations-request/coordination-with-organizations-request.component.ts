@@ -914,10 +914,12 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   }
 
   get allowedToUploadFinalReport(): boolean {
-    return  this.isInternalUser &&
-            !!this.model && this.model.isApproved &&
-            !this.isFinal
-            && this.model.isClaimed()
+    return (!!this.model &&this.model.isApproved && !this.isFinal)
+          &&
+          (this.employeeService.isLicensingUser() || (this.isInternalUser && this.model.isClaimed()))
+    // return  this.isInternalUser &&
+            
+            // && this.model.isClaimed()
   }
   get isFinal(): boolean {
     return [
