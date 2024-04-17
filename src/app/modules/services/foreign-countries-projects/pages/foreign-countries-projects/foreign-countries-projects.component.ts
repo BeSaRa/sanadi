@@ -227,6 +227,9 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
       if (data.length == 1) {
         this.countryField.disable();
         this.countryField.setValue(data[0].countryId);
+      }else{
+        this.countryField.enable();
+
       }
       this.countries = data;
     })
