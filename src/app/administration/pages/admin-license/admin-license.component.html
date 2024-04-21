@@ -91,7 +91,10 @@
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
           </tr>
         </table>
-        <app-paginator #paginator [length]="results.length"></app-paginator>
+        <!-- <app-paginator #paginator [length]="results.length"></app-paginator> -->
+        <app-paginator #paginator (pageChange)="pageChange($event)" [page]="pageEvent.pageIndex - 1"
+        [pageSize]="pageEvent.pageSize"
+        [backend]="true" [length]="count"></app-paginator>
       </app-table>
     </div>
   </ng-template>
