@@ -2,7 +2,7 @@ import { exhaustMap, map, takeUntil, tap, switchMap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { LookupService } from './../../../services/lookup.service';
 import { Lookup } from './../../../models/lookup';
-import { FormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Component, OnInit, inject } from '@angular/core';
 import { LangService } from '@app/services/lang.service';
 import { filter } from 'rxjs/operators';
@@ -78,9 +78,13 @@ export class ScreeningSearchAuditComponent implements OnInit {
     this.form = this.fb.group(new WorldCheckSearch().buildSearchForm());
 
     this.datepickerControlsMap = {
-      actionDateFrom: this.form.get('actionDateFrom')!,
-      actionDateTo: this.form.get('actionDateTo')!,
+      actionDateFrom:  this.actionDateFromField,
+      actionDateTo: this.actionDateToField,
     };
+    const now =  new Date();
+    const year = now.getFullYear();
+    this.actionDateToField.patchValue(DateUtils.changeDateToDatepicker(now))
+    this.actionDateFromField.patchValue(DateUtils.changeDateToDatepicker(now.setFullYear(year -1)))
   }
   listenToSearchEvent() {
     this.search$
@@ -133,4 +137,10 @@ export class ScreeningSearchAuditComponent implements OnInit {
     this.destroy$.complete();
   }
 
+  get actionDateFromField():UntypedFormControl{
+    return this.form.get('actionDateFrom') as UntypedFormControl;
+  }
+  get actionDateToField():UntypedFormControl{
+    return this.form.get('actionDateTo') as UntypedFormControl;
+  }
 }
