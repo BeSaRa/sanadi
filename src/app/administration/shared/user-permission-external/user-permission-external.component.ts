@@ -68,6 +68,10 @@ export class UserPermissionExternalComponent implements OnInit, OnDestroy {
     PermissionsEnum.SANADI_SEARCH_BENEFICIARY,
     PermissionsEnum.SANADI_SEARCH_BENEFICIARY_BY_NAME
   ];
+  private restrictedServicePermissions: string[] = [
+    PermissionsEnum.WORLD_CHECK_SEARCH,
+    PermissionsEnum.SCREENING_SEARCH_AUDIT
+  ];
 
   ngOnInit(): void {
     this._setDefaultPermissions();
@@ -92,7 +96,7 @@ export class UserPermissionExternalComponent implements OnInit, OnDestroy {
           || (permission.groupId === UserPermissionGroupsEnum.TRAINING_PERMISSIONS
             && permission.permissionKey !== PermissionsEnum.TRAINING_CHARITY_MANAGEMENT)
           || this.loggedInInternalUserOnlyPermissions.includes(permission.permissionKey)
-          || this.loggedInSuperAdminOnlyPermissions.includes(permission.permissionKey);
+          || this.loggedInSuperAdminOnlyPermissions.includes(permission.permissionKey)
       });
     } else {
       // if not super admin, restrict the super admin only visible permissions
@@ -183,7 +187,9 @@ export class UserPermissionExternalComponent implements OnInit, OnDestroy {
   private buildPermissionGroups(groups: Lookup[], permissions: Permission[]): void {
     const permissionsByGroup = new Map<number, Permission[]>();
     this.permissionGroups = [];
-    permissions.reduce((record, permission) => {
+    permissions
+    .filter(permission=> !this.restrictedServicePermissions.includes(permission.permissionKey))
+    .reduce((record, permission) => {
       return permissionsByGroup.set(permission.groupId, (permissionsByGroup.get(permission.groupId) || []).concat(permission));
     }, {} as any);
     groups.forEach(group => this.permissionGroups.push(
