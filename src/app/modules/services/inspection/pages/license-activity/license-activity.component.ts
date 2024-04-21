@@ -31,6 +31,9 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, skip, startWith, take, takeUntil, tap } from 'rxjs/operators';
 import { InspectionLogsPopupComponent } from '../../popups/inspection-logs-popup/inspection-logs-popup.component';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { PageEvent } from '@app/interfaces/page-event';
+import { CaseModel } from '@app/models/case-model';
+import { Pagination } from '@app/models/pagination';
 
 @Component({
     selector: 'license-activity',
@@ -132,15 +135,18 @@ export class LicenseActivityComponent implements OnInit, OnDestroy {
       const caseType = (this.selectedService.getSearchCriteriaModel()).caseType;
       let criteria = this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames);
       criteria.caseType = caseType;
+      criteria.pageSize = value.pageSize;
+      criteria.pageNumber = value.pageNumber;
       this.searchState = this.normalizeSearchCriteria(criteria);
       this.selectedService
-        .licensesSearch(criteria)
-      
-        .subscribe((results: LicenseApprovalModel<any, any>[]) => {
-          results.forEach(item => {
-            item.searchFields = { ...item.searchFields }
+        .paginateLicensesSearch(criteria)
+        .subscribe((pagination: Pagination<CaseModel<any, any>[]>) => {
+          pagination.rs.forEach(item => {
+            item.searchFields = { ...item.searchFields, arName: 'arName', enName: 'enName' }
           })
-          this.results = results;
+          this.results = pagination.rs as LicenseApprovalModel<any,any>[];
+          this.count = pagination.count;
+          this.results = this.results.map(x=>GeneralInterceptor.receive(x))
           if (this.results.length) {
             this.tabIndex$.next(1);
           } else {
@@ -233,7 +239,11 @@ export class LicenseActivityComponent implements OnInit, OnDestroy {
     }
   
     private prepareCriteriaModel() {
-      return (this.selectedService.getSearchCriteriaModel().clone(this.form.value)) as LicenseApprovalModel<any, any>;
+      const caseModel = (this.selectedService.getSearchCriteriaModel().clone(this.form.value)) as CaseModel<any, any>;
+      caseModel.pageSize = this.pageEvent.pageSize;
+      caseModel.pageNumber = this.pageEvent.pageIndex 
+    
+    return caseModel;
     }
   
     private listenToSearch() {
@@ -343,6 +353,29 @@ export class LicenseActivityComponent implements OnInit, OnDestroy {
         this.oldValuesAssigned = true;
       });
     }
-   
+    pageEvent: PageEvent = {
+      pageIndex: 1,
+      pageSize: 10,
+      length: 0,
+      previousPageIndex: null
+    }
+    count: number = 0;
+  
+    private _isFormBuilt(): boolean {
+      return Object.keys(this.form.controls).length > 0
+    }
+    pageChange($event: PageEvent): void {
+      if (!this._isFormBuilt()) return;
+      $event.pageIndex ++;
+      this.pageEvent = $event
+  
+      const model = this.prepareCriteriaModel()
+      this.search(model)
+    }
+    private _resetPaginationResults() {
+      this.pageEvent.pageIndex = 1;
+      this.pageEvent.pageSize = 10;
+      this.count = 0;
+    } 
   }
   

@@ -12,9 +12,11 @@ import { FBuilder } from '@app/helpers/FBuilder';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { IFormRowGroup } from '@app/interfaces/iform-row-group';
 import { IServiceConstructor } from '@app/interfaces/iservice-constructor';
+import { PageEvent } from '@app/interfaces/page-event';
 import { GeneralInterceptor } from '@app/model-interceptors/general-interceptor';
 import { GeneralSearchCriteriaInterceptor } from '@app/model-interceptors/general-search-criteria-interceptor';
 import { CaseModel } from '@app/models/case-model';
+import { Pagination } from '@app/models/pagination';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { DialogService } from '@app/services/dialog.service';
 import { InboxService } from '@app/services/inbox.service';
@@ -120,14 +122,17 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     const caseType = (this.selectedService.getSearchCriteriaModel()).caseType;
     let criteria = this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames);
     criteria.caseType = caseType;
+    criteria.pageSize = value.pageSize;
+    criteria.pageNumber = value.pageNumber;
     this.searchState = this.normalizeSearchCriteria(criteria);
     this.selectedService
-      .licensesSearch(criteria)
-      .subscribe((results: CaseModel<any, any>[]) => {
-        results.forEach(item => {
+      .paginateLicensesSearch(criteria)
+      .subscribe((pagination: Pagination<CaseModel<any, any>[]>) => {
+        pagination.rs.forEach(item => {
           item.searchFields = { ...item.searchFields, arName: 'arName', enName: 'enName' }
         })
-        this.results = results;
+        this.results = pagination.rs;
+        this.count = pagination.count;
         if (this.results.length) {
           this.tabIndex$.next(1);
         } else {
@@ -164,6 +169,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
         this.results = [];
         this.form.reset();
         this.setDefaultDates();
+        this._resetPaginationResults();
       });
   }
   private _loadSearchFields() {
@@ -223,7 +229,11 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
 
   private prepareCriteriaModel() {
-    return (this.selectedService.getSearchCriteriaModel().clone(this.form.value)) as CaseModel<any, any>;
+    const caseModel = (this.selectedService.getSearchCriteriaModel().clone(this.form.value)) as CaseModel<any, any>;
+    caseModel.pageSize = this.pageEvent.pageSize;
+    caseModel.pageNumber = this.pageEvent.pageIndex 
+  
+  return caseModel;
   }
 
   private listenToSearch() {
@@ -353,5 +363,29 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+  pageEvent: PageEvent = {
+    pageIndex: 1,
+    pageSize: 10,
+    length: 0,
+    previousPageIndex: null
+  }
+  count: number = 0;
+
+  private _isFormBuilt(): boolean {
+    return Object.keys(this.form.controls).length > 0
+  }
+  pageChange($event: PageEvent): void {
+    if (!this._isFormBuilt()) return;
+    $event.pageIndex ++;
+    this.pageEvent = $event
+
+    const model = this.prepareCriteriaModel()
+    this.search(model)
+  }
+  private _resetPaginationResults() {
+    this.pageEvent.pageIndex = 1;
+    this.pageEvent.pageSize = 10;
+    this.count = 0;
   }
 }

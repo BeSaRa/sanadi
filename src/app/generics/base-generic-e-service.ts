@@ -171,6 +171,9 @@ export abstract class BaseGenericEService<T extends { id: string }> {
   licensesSearch(model: Partial<T>): Observable<T[]> {
     return this.searchService.licensesSearch(model);
   }
+  paginateLicensesSearch(model: Partial<T>): Observable<Pagination<T[]>> {
+    return this.searchService.licensesSearch(model);
+  }
   @CastResponse(undefined, {
     unwrap: 'rs',
     fallback: '$default'
