@@ -2145,7 +2145,7 @@ export const newNavigationMenuList = [
     itemOrder: 3,
     svg: null
   },
-
+  
   {
     id: 3401,
     langKey: 'menu_inspection',
@@ -2161,15 +2161,15 @@ export const newNavigationMenuList = [
     svg: null,
     data: {
       childrenGroupName: GroupNames.INSPECTION,
-      actualPath: SystemPathsEnum.INSPECTION + '/actual',
-      proposedPath: SystemPathsEnum.INSPECTION + '/actual',
+      // actualPath: SystemPathsEnum.INSPECTION + '/actual',
+      // proposedPath: SystemPathsEnum.INSPECTION + '/actual',
     }
   },
   {
     id: 3402,
     langKey: 'menu_proposed_inspection',
     path: SystemPathsEnum.INSPECTION + '/proposed',
-    icon: serviceAddUpdateIcon,
+    icon: 'mdi-file-sign',
     isSvg: false,
     permission: EServicePermissionsEnum.PROPOSED_INSPECTION,
     permissionGroup: null,
@@ -2182,7 +2182,7 @@ export const newNavigationMenuList = [
     id: 3403,
     langKey: 'menu_actual_inspection',
     path: SystemPathsEnum.INSPECTION + '/actual',
-    icon: serviceAddUpdateIcon,
+    icon: 'mdi-file-chart-check-outline',
     isSvg: false,
     permission: EServicePermissionsEnum.ACTUAL_INSPECTION,
     permissionGroup: null,
@@ -2195,7 +2195,7 @@ export const newNavigationMenuList = [
     id: 3404,
     langKey: 'menu_activity_implementation',
     path: SystemPathsEnum.INSPECTION + '/implementation',
-    icon: serviceAddUpdateIcon,
+    icon: 'mdi-file-eye-outline',
     isSvg: false,
     permission: EServicePermissionsEnum.INSPECTION,
     permissionGroup: null,
@@ -2208,7 +2208,7 @@ export const newNavigationMenuList = [
     id: 3405,
     langKey: 'menu_admin_license',
     path: SystemPathsEnum.INSPECTION + '/licenses',
-    icon: serviceAddUpdateIcon,
+    icon: 'mdi-file-find-outline',
     isSvg: false,
     permission: PermissionsEnum.MANAGE_LICENSES_AND_PERMITS,
     permissionGroup: null,
