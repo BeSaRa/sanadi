@@ -8,8 +8,10 @@ import { ActualInspectionComponent } from './pages/actual-inspection/actual-insp
 import { LicenseActivityComponent } from './pages/license-activity/license-activity.component';
 import { ProposedInspectionComponent } from './pages/proposed-inspection/proposed-inspection.component';
 import { ActivityImplementationComponent } from './pages/activity-implementation/activity-implementation.component';
+import { InspectionHomeComponent } from './pages/inspection-home/inspection-home.component';
 
 const routes: Routes = [
+  {path: '', component: InspectionHomeComponent},
   {
     path: 'actual', component: ActualInspectionComponent,
     canActivate: [NewServicePermissionGuard.canActivate],
