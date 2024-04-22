@@ -1,31 +1,26 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild, inject } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { OperationTypes } from '@app/enums/operation-types.enum';
+import { ActualInspectionCreationSource } from '@app/enums/actual-inspection-creation-source.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
-import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { SortEvent } from '@app/interfaces/sort-event';
 import { ActualInspection } from '@app/models/actual-inspection';
-import { InternalDepartment } from '@app/models/internal-department';
 import { ProposedInspection } from '@app/models/proposed-inspection';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { DialogService } from '@app/services/dialog.service';
-import { InternalDepartmentService } from '@app/services/internal-department.service';
+import { EmployeeService } from '@app/services/employee.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { ProposedInspectionService } from '@app/services/proposed-inspection.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
+import { CommentPopupComponent } from '@app/shared/popups/comment-popup/comment-popup.component';
 import { Subject, of } from 'rxjs';
 import { catchError, exhaustMap, filter, switchMap, take, takeUntil } from 'rxjs/operators';
-import { ActualInspectionPopupComponent } from '../../popups/actual-inspection-popup/actual-inspection-popup.component';
-import { ActionWithCommentPopupComponent } from '@app/shared/popups/action-with-comment-popup/action-with-comment-popup.component';
-import { CommentPopupComponent } from '@app/shared/popups/comment-popup/comment-popup.component';
-import { ActualInspectionService } from '@app/services/actual-inspection.service';
-import { ActualInspectionCreationSource } from '@app/enums/actual-inspection-creation-source.enum';
 
 @Component({
   selector: 'proposed-inspection',
@@ -88,7 +83,8 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
     private lookupService: LookupService,
     private fb: FormBuilder,
     private dialogService: DialogService,
-    private actualInspectionService: ActualInspectionService
+    private actualInspectionService: ActualInspectionService,
+    private employeeService: EmployeeService
     ) {
     super();
 
@@ -100,7 +96,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
       property: 'proposedTaskType',
       label: 'lbl_proposed_task',
       selectOptions: {
-        options: this.lookupService.listByCategory.ReceiverType,
+        options: this.lookupService.listByCategory.ProposedInspectionTaskType,
         labelProperty: 'getName',
         optionValueKey: 'lookupKey'
       }
@@ -171,7 +167,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
   }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      departmentId: [null], proposedTaskType: [null], priority: [null], status: [null]
+       proposedTaskType: [null], priority: [null], status: [null]
     })
   }
   delete(model: ProposedInspection, event?: MouseEvent): void {

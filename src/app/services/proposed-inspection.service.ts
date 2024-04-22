@@ -8,7 +8,7 @@ import { FactoryService } from '@services/factory.service';
 import { ComponentType } from '@angular/cdk/portal';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { IDialogData } from '@contracts/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
@@ -16,6 +16,8 @@ import {Pagination} from '@app/models/pagination';
 import { ProposedInspection } from '@app/models/proposed-inspection';
 import { ProposedInspectionPopupComponent } from '@app/modules/services/inspection/popups/proposed-inspection-popup/proposed-inspection-popup.component';
 import { HasInterception, InterceptParam } from '@app/decorators/decorators/intercept-model';
+import { PaginationContract } from '@app/contracts/pagination-contract';
+import { EmployeeService } from './employee.service';
 
 @CastResponseContainer({
   $default: {
@@ -34,7 +36,8 @@ export class ProposedInspectionService extends CrudWithDialogGenericService<Prop
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              public dialog: DialogService) {
+              public dialog: DialogService,
+            private employeeService: EmployeeService) {
     super();
     FactoryService.registerService('ProposedInspectionService', this);
   }
@@ -70,5 +73,29 @@ export class ProposedInspectionService extends CrudWithDialogGenericService<Prop
   
   reject(@InterceptParam() model: ProposedInspection,reason: string): Observable<ProposedInspection> {
     return this.http.post<ProposedInspection>(this._getServiceURL() +`/reject/${model.id}`,reason);
+  }
+  
+  paginateComposite(options: Partial<PaginationContract>): Observable<Pagination<ProposedInspection[]>> {
+    return this._filterPaginate(options,{}).pipe(
+      tap(result => this.list = result.rs),
+      tap(result => this._loadDone$.next(result.rs))
+    );
+  }
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+   private _filterPaginate(options: Partial<PaginationContract>, paginateFilter: Partial<ProposedInspection>): Observable<Pagination<ProposedInspection[]>> {
+    return this.http.post<Pagination<ProposedInspection[]>>(this._getServiceURL() + '/filter/pg', { ...paginateFilter,
+      departmentId: this.employeeService.getInternalDepartment()?.id
+     }, {
+      params: { ...options }
+    })
+  }
+
+  loadByFilterPaginate(options: Partial<PaginationContract>, paginateFilter: Partial<ProposedInspection>): Observable<Pagination<ProposedInspection[]>> {
+    return this._filterPaginate(options, paginateFilter).pipe(
+      tap(result => this.list = result.rs),
+      tap(result => this._loadDone$.next(result.rs))
+    );
   }
 }
