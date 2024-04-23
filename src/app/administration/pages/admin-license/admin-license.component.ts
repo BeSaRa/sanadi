@@ -131,6 +131,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
         pagination.rs.forEach(item => {
           item.searchFields = { ...item.searchFields, arName: 'arName', enName: 'enName' }
         })
+        pagination.rs = pagination.rs.map(item => GeneralInterceptor.receive(item))
         this.results = pagination.rs;
         this.count = pagination.count;
         if (this.results.length) {

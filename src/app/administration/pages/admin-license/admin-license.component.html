@@ -86,7 +86,7 @@
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
           <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
-          <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
+          <tr cdk-row  *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
           </tr>
@@ -98,5 +98,5 @@
       </app-table>
     </div>
   </ng-template>
-  <context-menu-item #menu [actions]="actions"></context-menu-item>
+  <!-- <context-menu-item #menu [actions]="actions"></context-menu-item> -->
 </div>
