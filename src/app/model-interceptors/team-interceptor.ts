@@ -12,6 +12,7 @@ export class TeamInterceptor implements IModelInterceptor<Team> {
     model.statusInfo = isValidAdminResult(model.statusInfo) ? AdminResult.createInstance(model.statusInfo) : AdminResult.createInstance({});
     model.createdByInfo = isValidAdminResult(model.createdByInfo) ? AdminResult.createInstance(model.createdByInfo) : AdminResult.createInstance({});
     model.updatedByInfo = isValidAdminResult(model.updatedByInfo) ? AdminResult.createInstance(model.updatedByInfo) : AdminResult.createInstance({});
+    model.sectorInfo = isValidAdminResult(model.sectorInfo) ? AdminResult.createInstance(model.sectorInfo) : AdminResult.createInstance({});
 
     model.autoClaim = isValidValue(model.autoClaim) ? model.autoClaim : false;
     model.isHidden = isValidValue(model.isHidden) ? model.isHidden : false;
@@ -30,6 +31,7 @@ export class TeamInterceptor implements IModelInterceptor<Team> {
     delete model.createdByInfo;
     delete model.statusInfo;
     delete model.updatedByInfo;
+    delete model.sectorInfo;
 
     return model;
   }

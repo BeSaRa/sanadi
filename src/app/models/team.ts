@@ -32,6 +32,7 @@ export class Team extends BaseModel<Team, TeamService> {
   createdByInfo!: AdminResult;
   updatedByInfo!: AdminResult;
   statusInfo!: AdminResult;
+  sectorInfo!: AdminResult;
   createdOnString: string = '';
   updatedOnString: string = '';
   statusDateModifiedString: string = '';

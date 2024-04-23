@@ -50,6 +50,7 @@ export class GeneralProcessNotification
   needSubject!: string;
   processType!: number;
   template!: string;
+  competentDepartmentAuthName!:string;
 
   followUpDate!: string | IMyDateModel;
   subject!: string;
@@ -95,7 +96,7 @@ export class GeneralProcessNotification
       case 'caseStatus':
         adminResultValue = this.caseStatusInfo;
         break;
-      case 'competentDepartmentID':
+      case 'competentDepartmentAuthName':
         adminResultValue = this.subTeam;
         break;
       case 'departmentId':
@@ -136,7 +137,7 @@ export class GeneralProcessNotification
     return {
       projectDescription: {langKey: 'project_description', value: this.projectDescription},
       departmentId: {langKey: 'department', value: this.departmentId},
-      competentDepartmentID: {langKey: 'lbl_sub_team', value: this.competentDepartmentID},
+      competentDepartmentAuthName: {langKey: 'lbl_sub_team', value: this.competentDepartmentAuthName},
       domain: {langKey: 'classification', value: this.domain},
       firstSubDomain: {langKey: 'sub_classification', value: this.firstSubDomain},
       processid: {langKey: 'lbl_process', value: this.processid},
@@ -159,7 +160,7 @@ export class GeneralProcessNotification
       oldFullSerial,
       projectDescription,
       departmentId,
-      competentDepartmentID,
+      competentDepartmentAuthName,
       domain,
       firstSubDomain,
       processid,
@@ -174,7 +175,7 @@ export class GeneralProcessNotification
       description: controls ? [description, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)] : description,
       DSNNN: {
         departmentId: controls ? [departmentId] : departmentId,
-        competentDepartmentID: controls ? [competentDepartmentID] : competentDepartmentID,
+        competentDepartmentAuthName: controls ? [competentDepartmentAuthName] : competentDepartmentAuthName,
         domain: controls ? [domain] : domain,
         firstSubDomain: controls ? [firstSubDomain] : firstSubDomain,
         processType: controls ? [processType] : processType,

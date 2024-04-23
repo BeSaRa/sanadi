@@ -1,40 +1,41 @@
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { SubTeamService } from '@services/sub-team.service';
-import { GeneralProcess } from '@models/genral-process';
-import { AdminLookupService } from '@services/admin-lookup.service';
-import { Lookup } from '@models/lookup';
-import { UserClickOn } from '@enums/user-click-on.enum';
-import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { EmployeeService } from '@services/employee.service';
-import { CommonCaseStatus } from '@enums/common-case-status.enum';
-import { OpenFrom } from '@enums/open-from.enum';
-import { ToastService } from '@services/toast.service';
-import { IKeyValue } from '@contracts/i-key-value';
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { CommonUtils } from '@helpers/common-utils';
-import { GeneralProcessNotification } from '@models/general-process-notification';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { OperationTypes } from '@enums/operation-types.enum';
-import { SaveTypes } from '@enums/save-types';
-import { LangService } from '@services/lang.service';
-import { Observable, of, Subject } from 'rxjs';
-import { CaseTypes } from '@enums/case-types.enum';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   ProcessFieldBuilder
 } from '@app/administration/popups/general-process-popup/process-formly-components/process-fields-builder';
-import { GeneralProcessNotificationService } from '@services/general-process-notification.service';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { Team } from '@app/models/team';
+import { ServiceDataService } from '@app/services/service-data.service';
+import { TeamService } from '@app/services/team.service';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { IKeyValue } from '@contracts/i-key-value';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
 import { AllRequestTypesEnum } from '@enums/all-request-types-enum';
+import { CaseTypes } from '@enums/case-types.enum';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { OpenFrom } from '@enums/open-from.enum';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { SaveTypes } from '@enums/save-types';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { CommonUtils } from '@helpers/common-utils';
 import { AdminLookup } from '@models/admin-lookup';
+import { GeneralProcessNotification } from '@models/general-process-notification';
+import { GeneralProcess } from '@models/genral-process';
 import { InternalDepartment } from '@models/internal-department';
-import { SubTeam } from '@models/sub-team';
+import { Lookup } from '@models/lookup';
+import { AdminLookupService } from '@services/admin-lookup.service';
 import { DialogService } from '@services/dialog.service';
+import { EmployeeService } from '@services/employee.service';
+import { GeneralProcessNotificationService } from '@services/general-process-notification.service';
+import { GeneralProcessService } from '@services/general-process.service';
+import { InternalDepartmentService } from '@services/internal-department.service';
+import { LangService } from '@services/lang.service';
 import { LicenseService } from '@services/license.service';
 import { LookupService } from '@services/lookup.service';
-import { InternalDepartmentService } from '@services/internal-department.service';
-import { GeneralProcessService } from '@services/general-process.service';
-import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { ToastService } from '@services/toast.service';
+import { Observable, Subject, of } from 'rxjs';
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-general-process-notification',
@@ -56,12 +57,14 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
   subClassificationsList: AdminLookup[] = [];
   _subClassificationsList: AdminLookup[] = [];
   departmentList: InternalDepartment[] = [];
-  subTeamsList: SubTeam[] = [];
+  subSectionsList: Team[] = [];
+  allSectionsList: Team[] = [];
 
   form!: UntypedFormGroup;
   processTemplateForm!: UntypedFormGroup;
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: GeneralProcessNotification;
+  sections: Record<number, number[]> = {};
 
   tabsData: IKeyValue = {
     basicInfo: {
@@ -107,8 +110,9 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
     private employeeService: EmployeeService,
     private adminLookupService: AdminLookupService,
     private internalDepartmentService: InternalDepartmentService,
-    private subTeamService: SubTeamService,
-    private generalProcessService: GeneralProcessService) {
+    private generalProcessService: GeneralProcessService,
+    private serviceDataService: ServiceDataService,
+  private teamService: TeamService) {
     super();
     this.processFieldBuilder = new ProcessFieldBuilder();
     this.processFieldBuilder.buildMode = 'use';
@@ -127,24 +131,24 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if(this.employeeService.isExternalUser() && this.model.isReturned()){
+      if (this.employeeService.isExternalUser() && this.model.isReturned()) {
         this.readonly = false;
       }
-     
+
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       // after claim, consider it same as user inbox and use same condition
       if (this.model.taskDetails.isClaimed()) {
-        if(this.employeeService.isExternalUser() && this.model.isReturned()){
+        if (this.employeeService.isExternalUser() && this.model.isReturned()) {
           this.readonly = false;
         }
-       
+
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
       // if saved as draft and opened by creator who is charity user, then no readonly
       if (this.model?.canCommit()) {
         this.readonly = false;
       }
-     
+
     }
   }
 
@@ -165,17 +169,20 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
     this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
       this.departmentList = deparments;
     })
+
+    this.serviceDataService.loadCustomSettings(this.caseTypes.GENERAL_PROCESS_NOTIFICATION)
+      .subscribe(sectors => {
+        this.sections = sectors
+      })
+      this.teamService.loadActive().subscribe(teams=> this.allSectionsList = teams);
     this.filterProcess();
   }
 
-  private _loadSubTeam(parentTeamId?: number) {
+  private _loadSections(parentTeamId?: number) {
+
     if (parentTeamId)
-      this.subTeamService.loadActive().pipe(
-        map((teams) => teams.filter((team: SubTeam) => parentTeamId == team.parent)),
-        catchError(err => of([]))).subscribe(data => {
-          this.subTeamsList = data;
-        })
-    else this.subTeamsList = [];
+   this.subSectionsList = this.allSectionsList.filter(item=> this.sections[parentTeamId]?.includes(item.id))
+    else this.subSectionsList = [];
   }
 
   handleDepartmentChange() {
@@ -185,14 +192,14 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
 
   handleTeamChange(teamId?: number) {
     this.subTeamField.reset();
-    this._loadSubTeam(teamId);
+    this._loadSections(teamId);
     this.handlefilterProcess()
   }
 
   filterProcess() {
     const params = {
       departmentId: this.DSNNNFormGroup.value.departmentId,
-      subTeamId: this.DSNNNFormGroup.value.competentDepartmentID,
+      subTeamId: this.DSNNNFormGroup.value.competentDepartmentAuthName,
       mainClass: this.DSNNNFormGroup.value.domain,
       subClass: this.DSNNNFormGroup.value.firstSubDomain,
       processType: this.DSNNNFormGroup.value.processType
@@ -231,8 +238,8 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
       this.projectNameField.setValue(process?.arName);
       this.processTypeField.setValue(process?.processType);
       this.departmentField.setValue(process?.departmentId);
-      this._loadSubTeam(this.departmentList.find(d => d.id == this.departmentField.value)?.mainTeam.id);
-      this.subTeamField.setValue(process?.subTeamId);
+      //this._loadSubTeam(this.departmentList.find(d => d.id == this.departmentField.value)?.mainTeam.id);
+      //this.subTeamField.setValue(process?.subTeamId);
       this.domainField.setValue(process?.mainClass);
       this.subClassificationsList = this._subClassificationsList.filter(sc => sc.parentId == this.domainField.value);
       this.firstSubDomainField.setValue(process?.subClass);
@@ -364,7 +371,7 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
     }
     this.model = model;
     const formModel = model.buildForm();
-    this._loadSubTeam(this.model?.subTeam?.parent);
+    this._loadSections(this.model.departmentId);
     this.handleDomainChange(this.model?.domain)
     this.processFieldBuilder.generateFromString(this.model?.template)
 
@@ -500,7 +507,7 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
       result.projectDescription = licenseDetails.projectDescription;
 
       result.departmentId = licenseDetails.departmentId;
-      result.competentDepartmentID = licenseDetails.competentDepartmentID;
+      result.competentDepartmentAuthName = licenseDetails.competentDepartmentAuthName;
       result.domain = licenseDetails.domain;
       result.firstSubDomain = licenseDetails.firstSubDomain;
       result.processid = licenseDetails.processid;
@@ -553,7 +560,7 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
   }
 
   get subTeamField(): UntypedFormControl {
-    return this.DSNNNFormGroup.get('competentDepartmentID') as UntypedFormControl
+    return this.DSNNNFormGroup.get('competentDepartmentAuthName') as UntypedFormControl
   }
 
   get firstSubDomainField(): UntypedFormControl {

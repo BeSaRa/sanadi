@@ -106,4 +106,12 @@ export class ServiceDataService extends CrudWithDialogGenericService<ServiceData
   toggleFollowUpStatus(serviceId: number, status: boolean) {
     return status ? this._followUpEnable(serviceId) : this._followUpDisable(serviceId);
   }
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  loadCustomSettings(caseType: number): Observable<Record<number,number[]>> {
+    return this.http.get<Record<number,number[]>>(this._getServiceURL() + `/${caseType}/custom-setting`);
+  }
+
 }
