@@ -57,8 +57,8 @@
           <label asteriskIfRequired="departmentId" for="departmentId" class="form-label">{{ lang.map.department
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="departmentId" [clearable]="true"
-                     placeholder="{{ lang.map.select }}" id="departmentId" [readonly]="readonly"
-                     [notFoundText]="lang.map.msg_not_found" appendTo="body" (change)="handleDepartmentChange()"
+                     placeholder="{{ lang.map.select }}" id="departmentId" (change)="handleTeamChange($event)" [readonly]="readonly"
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" 
                      validationClasses="departmentId" formControlName="departmentId">
             <ng-option *ngFor="let option of departmentList" [value]="option.id">
               {{option.getName()}}
@@ -68,19 +68,19 @@
         </div>
         <!-- competent Department Id -->
         <div class="col-md-6 mb-4 position-relative">
-          <label asteriskIfRequired="competentDepartmentID" for="competentDepartmentID" class="form-label">{{
-            lang.map.lbl_sub_team
+          <label asteriskIfRequired="competentDepartmentAuthName" for="competentDepartmentAuthName" class="form-label">{{
+            lang.map.section
             }}</label>
-          <ng-select [selectOnTab]="true" labelForId="competentDepartmentID" [clearable]="true"
-                     placeholder="{{ lang.map.select }}" (change)="handlefilterProcess()" id="competentDepartmentID"
+          <ng-select [selectOnTab]="true" labelForId="competentDepartmentAuthName" [clearable]="true"
+                     placeholder="{{ lang.map.select }}"  id="competentDepartmentAuthName"
                      [readonly]="readonly"
-                     [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="competentDepartmentID"
-                     formControlName="competentDepartmentID">
-            <ng-option *ngFor="let option of subTeamsList" [value]="option.id">
-              {{option.getName()}}
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="competentDepartmentAuthName"
+                     formControlName="competentDepartmentAuthName">
+            <ng-option *ngFor="let option of subSectionsList" [value]="option.authName">
+              {{option.sectorInfo.getName()}}
             </ng-option>
           </ng-select>
-          <app-field-error-message controlName="competentDepartmentID"></app-field-error-message>
+          <app-field-error-message controlName="competentDepartmentAuthName"></app-field-error-message>
         </div>
         <!-- domain -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
