@@ -334,6 +334,9 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     // const systemMenu = customMenuList.find(x=>x.isSystem)!;
 
     customMenuList.forEach((item: CustomMenu) => {
+      if(item.userType !== UserTypes.ALL && item.userType !== this.employeeService.getCurrentUser().userType){
+        return;
+      }
       if (!item.parentMenuItemId && !item.isDefaultItem()) {
         parentList.push(item);
         return;
