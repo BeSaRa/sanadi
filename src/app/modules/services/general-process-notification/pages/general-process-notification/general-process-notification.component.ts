@@ -246,6 +246,9 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
       this.projectNameField.setValue(process?.arName);
       this.processTypeField.setValue(process?.processType);
       this.departmentField.setValue(process?.departmentId);
+      this._loadSections(process?.departmentId)
+      const section = this.subSectionsList.find(item => item.id == process?.teamId);
+      this.subTeamField.setValue(section?.authName)
       //this._loadSubTeam(this.departmentList.find(d => d.id == this.departmentField.value)?.mainTeam.id);
       //this.subTeamField.setValue(process?.subTeamId);
       this.domainField.setValue(process?.mainClass);
