@@ -2,6 +2,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { ActualInspectionCreationSource } from '@app/enums/actual-inspection-creation-source.enum';
+import { ActualInceptionStatus } from '@app/enums/actual-inspection-status.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
@@ -61,7 +62,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
       label: 'approve',
       icon: ActionIconsEnum.APPROVE,
       onClick: (item: ProposedInspection) => this.approve(item),
-      show:()=>this.isApproval
+      show:(item)=>this.isApproval && ![ActualInceptionStatus.COMPLETED,ActualInceptionStatus.CANCELED,ActualInceptionStatus.REJECTED].includes(item.status)
     },
     // reject
     {
@@ -69,7 +70,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
       label: 'lbl_reject',
       icon: ActionIconsEnum.BLOCK,
       onClick: (item: ProposedInspection) => this.reject(item),
-      show:()=>this.isApproval
+      show:(item)=>this.isApproval && ![ActualInceptionStatus.COMPLETED,ActualInceptionStatus.CANCELED,ActualInceptionStatus.REJECTED].includes(item.status)
     },
   ];
 
