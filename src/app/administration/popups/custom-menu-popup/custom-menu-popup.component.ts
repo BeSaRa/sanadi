@@ -153,7 +153,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
       return fields;
     }
 
-    return fields.concat([this.menuTypeControl, this.menuViewControl, this.userTypeControl]);
+    return fields.concat([this.menuTypeControl, this.menuViewControl]);
   }
 
   ngAfterViewInit(): void {
