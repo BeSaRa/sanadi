@@ -74,14 +74,14 @@
       </div>
       <!-- sub team -->
       <div class="col-sm-6 col-md-3 mb-4 position-relative">
-        <label for="subTeamId" asteriskIfRequired="subTeamId" class="form-label">{{lang.map.lbl_sub_team}}</label>
-        <ng-select validationClasses="type" [readonly]="isViewForm" labelForId="subTeamId" placeholder="{{lang.map.select}}"
-          [notFoundText]="lang.map.msg_not_found" formControlName="subTeamId" id="subTeamId" appendTo="body">
-          <ng-option *ngFor="let option of subTeamsList" [value]="option.id">
+        <label for="teamId" asteriskIfRequired="teamId" class="form-label">{{lang.map.lbl_sub_team}}</label>
+        <ng-select validationClasses="type" [readonly]="isViewForm" labelForId="teamId" placeholder="{{lang.map.select}}"
+          [notFoundText]="lang.map.msg_not_found" formControlName="teamId" id="teamId" appendTo="body">
+          <ng-option *ngFor="let option of subSectionsList" [value]="option.id">
             {{option.getName()}}
           </ng-option>
         </ng-select>
-        <app-field-error-message controlName="subTeamId"></app-field-error-message>
+        <app-field-error-message controlName="teamId"></app-field-error-message>
       </div>
     </div>
   </form>

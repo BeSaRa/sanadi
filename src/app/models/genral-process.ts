@@ -76,7 +76,7 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
       subClass: controls ? [subClass, [CustomValidators.required]] : subClass,
       departmentId: controls ? [departmentId, [CustomValidators.required]] : departmentId,
       teamId: controls ? [teamId, [CustomValidators.required]] : teamId,
-      subTeamId: controls ? [subTeamId, [CustomValidators.required]] : subTeamId,
+      subTeamId: controls ? [subTeamId, []] : subTeamId,
     }
   }
 }

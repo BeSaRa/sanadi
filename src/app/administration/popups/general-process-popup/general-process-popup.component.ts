@@ -1,5 +1,5 @@
 import { UntypedFormArray, Validators } from '@angular/forms';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, take } from 'rxjs/operators';
 import { InternalDepartment } from '@app/models/internal-department';
 import { AdminLookupService } from '@services/admin-lookup.service';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
@@ -29,6 +29,9 @@ import { DialogService } from '@app/services/dialog.service';
 import { TemplateField } from '@app/models/template-field';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { TeamService } from '@app/services/team.service';
+import { ServiceDataService } from '@app/services/service-data.service';
+import { CaseTypes } from '@app/enums/case-types.enum';
 
 @Component({
   selector: 'app-general-process-popup',
@@ -50,9 +53,14 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   _subClassificationsList: AdminLookup[] = [];
   subClassificationsList: AdminLookup[] = [];
   departmentList: InternalDepartment[] = [];
+  subSectionsList: Team[] = [];
+  allSectionsList: Team[] = [];
+  sections: Record<number, number[]> = {};
+
   private _teamsList: Team[] = [];
   subTeamsList: SubTeam[] = [];
   newCreatedFieldsIds: number[] = [];
+  caseTypes: any;
 
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
@@ -63,7 +71,9 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     private internalDepartmentService: InternalDepartmentService,
     private subTeamService: SubTeamService,
     private dialogService: DialogService,
-    private adminLookupService: AdminLookupService) {
+    private adminLookupService: AdminLookupService,
+    private teamService: TeamService,
+    private serviceDataService: ServiceDataService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -118,8 +128,19 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
       this.departmentList = deparments;
     })
+    this.serviceDataService.loadCustomSettings(CaseTypes.GENERAL_PROCESS_NOTIFICATION)
+      .pipe(take(1))
+      .subscribe(sectors => {
+        this.sections = sectors
+      })
+    this.teamService.loadActive()
+      .pipe(take(1))
+      .subscribe(teams => {
+        this.allSectionsList = teams
+        this._loadSections(this.model?.departmentId)
+      });
     if (this.model?.id) {
-      this._loadSubTeam(this.model?.teamId);
+      // this._loadSubTeam(this.model?.teamId);
       this.handleMainCatChange(this.model?.mainClass)
       this.processForm.generateFromString(this.model?.template)
       this.subClassField.setValue(this.model?.subClass);
@@ -145,6 +166,12 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
         this.isEditField = true;
       }
     })
+  }
+  private _loadSections(parentTeamId?: number) {
+
+    if (parentTeamId)
+      this.subSectionsList = this.allSectionsList.filter(item => this.sections[parentTeamId]?.includes(item.id))
+    else this.subSectionsList = [];
   }
   get isNewCreatedField() {
     return (this.isEditField && this.newCreatedFieldsIds.indexOf(this.fieldForm.value.identifyingName) != -1) || !this.isEditField;
@@ -191,8 +218,9 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     else this.subTeamsList = [];
   }
   handleDepartmentChange() {
-    this.teamField.setValue(this.departmentList.find(d => d.id == this.departmentField.value)?.mainTeam.id);
-    this.handleTeamChange(this.teamField.value);
+    this._loadSections(this.departmentField.value)
+    // this.teamField.setValue(this.departmentList.find(d => d.id == this.departmentField.value)?.mainTeam.id);
+    // this.handleTeamChange(this.teamField.value);
   }
   handleTeamChange(teamId?: number) {
     this.subTeamField.reset();
