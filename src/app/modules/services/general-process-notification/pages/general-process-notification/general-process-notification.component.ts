@@ -35,7 +35,7 @@ import { LicenseService } from '@services/license.service';
 import { LookupService } from '@services/lookup.service';
 import { ToastService } from '@services/toast.service';
 import { Observable, Subject, of } from 'rxjs';
-import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { catchError, exhaustMap, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-general-process-notification',
@@ -112,7 +112,7 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
     private internalDepartmentService: InternalDepartmentService,
     private generalProcessService: GeneralProcessService,
     private serviceDataService: ServiceDataService,
-  private teamService: TeamService) {
+    private teamService: TeamService) {
     super();
     this.processFieldBuilder = new ProcessFieldBuilder();
     this.processFieldBuilder.buildMode = 'use';
@@ -131,14 +131,14 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if (this.employeeService.isExternalUser() && this.model.isReturned()) {
+      if (this.employeeService.isExternalUser()) {
         this.readonly = false;
       }
 
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       // after claim, consider it same as user inbox and use same condition
       if (this.model.taskDetails.isClaimed()) {
-        if (this.employeeService.isExternalUser() && this.model.isReturned()) {
+        if (this.employeeService.isExternalUser()) {
           this.readonly = false;
         }
 
@@ -166,22 +166,30 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
         this.subClassificationsList = this._subClassificationsList.filter(sc => sc.parentId == this.model?.domain);
       }
     })
-    this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
-      this.departmentList = deparments;
-    })
+    this.internalDepartmentService.loadGeneralProcessDepartments()
+      .pipe(take(1))
+      .subscribe(deparments => {
+        this.departmentList = deparments;
+      })
 
     this.serviceDataService.loadCustomSettings(this.caseTypes.GENERAL_PROCESS_NOTIFICATION)
+      .pipe(take(1))
       .subscribe(sectors => {
         this.sections = sectors
       })
-      this.teamService.loadActive().subscribe(teams=> this.allSectionsList = teams);
+    this.teamService.loadActive()
+      .pipe(take(1))
+      .subscribe(teams => {
+        this.allSectionsList = teams
+        this._loadSections(this.model?.departmentId)
+      });
     this.filterProcess();
   }
 
   private _loadSections(parentTeamId?: number) {
 
     if (parentTeamId)
-   this.subSectionsList = this.allSectionsList.filter(item=> this.sections[parentTeamId]?.includes(item.id))
+      this.subSectionsList = this.allSectionsList.filter(item => this.sections[parentTeamId]?.includes(item.id))
     else this.subSectionsList = [];
   }
 
@@ -371,7 +379,7 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
     }
     this.model = model;
     const formModel = model.buildForm();
-    this._loadSections(this.model.departmentId);
+    //this._loadSections(this.model.departmentId);
     this.handleDomainChange(this.model?.domain)
     this.processFieldBuilder.generateFromString(this.model?.template)
 
