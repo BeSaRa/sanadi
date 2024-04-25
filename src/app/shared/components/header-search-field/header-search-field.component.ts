@@ -3,11 +3,14 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {
   ISearchColumnConfig,
   SearchColumnConfigMap,
-  SearchColumnEventType
+  SearchColumnEventType,
 } from '@app/interfaces/i-search-column-config';
 import {LangService} from '@app/services/lang.service';
 import {CommonUtils} from '@helpers/common-utils';
 import {ILanguageKeys} from '@contracts/i-language-keys';
+import { Observable, isObservable } from 'rxjs';
+import { take } from 'rxjs/operators';
+
 
 @Component({
   selector: 'header-search-field',
@@ -38,6 +41,7 @@ export class HeaderSearchFieldComponent implements OnInit {
   @Output() filterChange: EventEmitter<SearchColumnEventType> = new EventEmitter();
 
   options: any[] = [];
+  options$:Observable<any[]> = new Observable()
   optionValueKey: string = 'id';
   isMultiple: boolean = false;
 
@@ -66,9 +70,32 @@ export class HeaderSearchFieldComponent implements OnInit {
     return this.searchConfig[this.column];
   }
 
+  isObservableList(list:any): boolean{
+    return isObservable(list)
+  }
+
+  private  handelSelectOptions(){
+    if(!this.field.selectOptions){
+     return ;
+    }
+    if(this.field.selectOptions.options){
+      this.options =  this.field.selectOptions.options
+      return;
+    }
+    if(this.field.selectOptions.options$){
+     const sub =   this.field.selectOptions.options$
+        .subscribe(value=>{
+          this.options = value
+          sub.unsubscribe()
+        })
+        return;
+    }
+  }
   private _setSelectControlOptions() {
     if (this.isSelectColumn()) {
-      this.options = this.field.selectOptions?.options || [];
+
+      // this.options =  this.field.selectOptions?.options || [];
+      this.handelSelectOptions()
       this.optionValueKey = this.field.selectOptions?.optionValueKey || 'id';
       this.isMultiple = !!(this.field.selectOptions?.multiple);
     }

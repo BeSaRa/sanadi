@@ -1,6 +1,7 @@
 import { ILanguageKeys } from './i-language-keys';
 import { AdminLookup } from "@app/models/admin-lookup";
 import { Lookup } from "@app/models/lookup";
+import { Observable } from 'rxjs';
 
 export interface ISearchColumnConfig {
   key: string;
@@ -11,10 +12,11 @@ export interface ISearchColumnConfig {
   maxLength?: number;
   mask?: string;
   selectOptions?: {
-    options: Lookup[] | AdminLookup[] | any[];
+    options?: Lookup[] | AdminLookup[] | any[];
     multiple?: boolean;
     labelProperty: string;
     optionValueKey: string;
+    options$?: Observable<Lookup[]>|Observable<AdminLookup[]>|Observable<any[]>;
   }
 }
 
