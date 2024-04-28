@@ -119,12 +119,12 @@ export class ProposedInspectionPopupComponent extends AdminGenericDialog<Propose
         this.otherProposedTaskControl.clearValidators();
         this.otherProposedTaskControl.updateValueAndValidity();
       }),
-      tap((value:ReceiverTypes)=>{
-        if(value === ReceiverTypes.OTHER){
-          this.otherProposedTaskControl.setValidators([CustomValidators.required])
+      tap((value:ProposedTaskTypes)=>{
+        if(value === ProposedTaskTypes.OTHER){
+          this.otherProposedTaskControl.setValidators([CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)])
           this.otherProposedTaskControl.updateValueAndValidity()
         }
-        if(value === ReceiverTypes.PARTNER){
+        if(value === ProposedTaskTypes.COMPLAINT){
           this.complaintNumberControl.setValidators([CustomValidators.required])
           this.complaintNumberControl.updateValueAndValidity()
         }

@@ -52,7 +52,7 @@ export class ProposedInspection extends BaseModel<ProposedInspection, ProposedIn
     return {
       departmentId: controls ? [departmentId , [CustomValidators.required]]:departmentId,
       proposedTaskType: controls ? [proposedTaskType, [CustomValidators.required]] : proposedTaskType,
-      otherProposedTask: controls ? [otherProposedTask, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : otherProposedTask,
+      otherProposedTask: controls ? [otherProposedTask, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : otherProposedTask,
       complaintNumber: controls ? [complaintNumber, []] : complaintNumber,
       priority: controls ? [priority, [CustomValidators.required]] : priority,
       operationDescription: controls ? [operationDescription, [CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : operationDescription,
