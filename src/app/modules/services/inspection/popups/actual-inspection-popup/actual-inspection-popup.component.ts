@@ -98,7 +98,8 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
             .pipe(
                 tap((operations) => {
                     this.inspectionOperations = operations;
-                    this.mainInspectionOperations = operations.filter(item => item.parentId === null)
+                    this.mainInspectionOperations = operations
+                    .filter(item => item.parentId === null && (!!this.departmentIdControl.value ? item.departmentId === this.departmentIdControl.value : true))
                     this.model.mainOperationType &&
                     (
                         this.subInspectionOperations = this.inspectionOperations.filter(item => item.parentId === this.model.mainOperationType)
@@ -120,6 +121,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
 
     buildForm(): void {
         this.form = this.fb.group(this.model.buildForm(true));
+        this._listenToMainOperationTypeChange();
         this.departmentsList$ = this.internalDepartmentService.loadAsLookups()
         .pipe(
             tap(list =>{
@@ -137,7 +139,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
             this.readonly = true;
         }
         this._setDefaultValues();
-        this._listenToMainOperationTypeChange();
+        this._listenToDepartmentIdChange();
         this._listenToUnknownState();
         this._listenToTaskAreaChange();
         this._moneyLaundryOrTerrorismChange();
@@ -154,6 +156,19 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         this.relationControl.disable();
     }
 
+    private _listenToDepartmentIdChange(){
+        this.departmentIdControl.valueChanges
+        .pipe(
+            filter(departmentId =>!!departmentId),
+            tap(departmentId => {
+                this.mainOperationTypeControl.reset();
+                this.subOperationTypeControl.reset();
+                this.mainInspectionOperations = this.inspectionOperations.filter(item =>item.parentId === null && item.departmentId === departmentId);
+                this.subInspectionOperations= [];
+            }),
+            takeUntil(this.destroy$)
+        ).subscribe()
+    }
     private _moneyLaundryOrTerrorismChange() {
         this.moneyLaundryOrTerrorismControl.valueChanges
             .pipe(
@@ -218,6 +233,9 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     }
     get mainOperationTypeControl(): UntypedFormControl {
         return this.form.get('mainOperationType') as UntypedFormControl;
+    }
+    get subOperationTypeControl(): UntypedFormControl {
+        return this.form.get('subOperationType') as UntypedFormControl;
     }
     get knownOrgIdControl(): UntypedFormControl {
         return this.form.get('knownOrgId') as UntypedFormControl;
@@ -336,6 +354,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     private _listenToMainOperationTypeChange() {
         this.mainOperationTypeControl.valueChanges
             .pipe(
+                filter(type=>!!type),
                 tap((type: number) => {
                     this.subInspectionOperations = this.inspectionOperations.filter(item => item.parentId === type);
                 }),
