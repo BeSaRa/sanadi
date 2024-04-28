@@ -94,7 +94,6 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     datepickerControlsMap: DatepickerControlsMap = {};
 
     initPopup(): void {
-        this.departmentsList$ = this.internalDepartmentService.loadAsLookups()
         this.inspectionOperationService.loadAsLookups()
             .pipe(
                 tap((operations) => {
@@ -121,6 +120,16 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
 
     buildForm(): void {
         this.form = this.fb.group(this.model.buildForm(true));
+        this.departmentsList$ = this.internalDepartmentService.loadAsLookups()
+        .pipe(
+            tap(list =>{
+                const department = list.find(item => item.id === this.employeeService.getInternalDepartment()!.id)
+                department && (this.departmentIdControl.setValue(department.id) );
+            }),
+            filter(department => !!department),
+            takeUntil(this.destroy$),
+        )
+
         if (this.operation === OperationTypes.VIEW) {
             this.form.disable();
             this.saveVisible = false;
@@ -141,16 +150,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         }
     }
     private _setDefaultValues() {
-        const departmentIdSubscription = this.departmentsList$.pipe(
-            map(list =>
-                list.find(item => item.id === this.employeeService.getInternalDepartment()!.id)),
-            filter(department => !!department),
-            takeUntil(this.destroy$),
-        )
-            .subscribe((department) => {
-                this.departmentIdControl.setValue(department!.id)
-                departmentIdSubscription.unsubscribe();
-            })
+       
         this.relationControl.disable();
     }
 
