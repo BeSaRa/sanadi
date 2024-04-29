@@ -365,7 +365,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> i
         expectedImpact: controls ? [values.expectedImpact, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.expectedImpact,
         expectedResults: controls ? [values.expectedResults, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.expectedResults,
         sustainabilityItems: controls ? [values.sustainabilityItems, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.sustainabilityItems,
-        exitMechanism: controls ? [values.exitMechanism, [CustomValidators.required]] : values.exitMechanism,
+        exitMechanism: controls ? [values.exitMechanism, []] : values.exitMechanism,
         beneficiaryPercentageInHostCommunity: controls ? [values.beneficiaryPercentageInHostCommunity, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : values.beneficiaryPercentageInHostCommunity,
       };
     } else {
