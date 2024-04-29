@@ -136,7 +136,7 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
       relation: controls ? [values.relation, [CustomValidators.required]] : values.relation,
       inspectorId: controls ? [values.inspectorId, [CustomValidators.required]] : values.inspectorId,
       priority: controls ? [values.priority, [CustomValidators.required]] : values.priority,
-      taskSubject: controls ? [values.taskSubject, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.taskSubject,
+      taskSubject: controls ? [values.taskSubject, [ CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.taskSubject,
       licenseActivities: controls ? [values.licenseActivities, CustomValidators.requiredArray] : values.licenseActivities,
       inspectionSpecialists: controls ? [values.inspectionSpecialists,CustomValidators.requiredArray] : values.inspectionSpecialists,
     }
