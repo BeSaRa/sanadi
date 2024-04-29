@@ -138,7 +138,7 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
       priority: controls ? [values.priority, [CustomValidators.required]] : values.priority,
       taskSubject: controls ? [values.taskSubject, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.taskSubject,
       licenseActivities: controls ? [values.licenseActivities, CustomValidators.requiredArray] : values.licenseActivities,
-      inspectionSpecialists: controls ? [values.inspectionSpecialists,] : values.inspectionSpecialists,
+      inspectionSpecialists: controls ? [values.inspectionSpecialists,CustomValidators.requiredArray] : values.inspectionSpecialists,
     }
   }
   static mapFromProposedInspection(proposedInspection: ProposedInspection): ActualInspection {
