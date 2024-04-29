@@ -56,7 +56,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     ActualInspectionTaskTypes: Lookup[] = this.lookupService.listByCategory.ActualInspectionTaskType;
     taskNatures: Lookup[] = this.lookupService.listByCategory.TaskNature;
     taskAreas: Lookup[] = this.lookupService.listByCategory.TaskArea;
-    taskAUnknownOrganizations: Lookup[] = this.lookupService.listByCategory.taskAUnknownOrganization;
+    taskAUnknownOrganizations: Lookup[] = this.lookupService.listByCategory.UnknownOrganization;
     YesNo: Lookup[] = this.lookupService.listByCategory.LinkedProject;
     relations: Lookup[] = this.lookupService.listByCategory.Relation;
     inspectionOperations: InspectionOperation[] = [];
