@@ -190,7 +190,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       langKey: 'project_evaluation_indicators',
       index: 4,
       validStatus: () => {
-        return !this.evaluationIndicatorsRef || (this.evaluationIndicatorsRef.list.length > 0);
+        return true
+        // return !this.evaluationIndicatorsRef || (this.evaluationIndicatorsRef.list.length > 0);
         // return (this.model && this.model.evaluationIndicatorList && this.model.evaluationIndicatorList.length > 0)
       }
     },
