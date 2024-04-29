@@ -183,7 +183,7 @@ export interface ILookupMap {
   TaskNature: Lookup[];
   TaskArea: Lookup[];
   Relation: Lookup[];
-  taskAUnknownOrganization: Lookup[];
+  UnknownOrganization: Lookup[];
   InspectionTaskStatus: Lookup[];
   InspectionActivityStatus: Lookup[];
 }
