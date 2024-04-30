@@ -51,10 +51,22 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
     // reject
     {
       type: 'action',
-      label: 'btn_delete',
+      label: 'cancel_task',
       icon: ActionIconsEnum.BLOCK,
       onClick: (item: ActualInspection) => this.reject(item),
       show:  (item: ActualInspection) =>  ![ActualInceptionStatus.CANCELED,ActualInceptionStatus.COMPLETED].includes(item.status)
+      
+    },
+    // copy
+    {
+      type: 'action',
+      label: 'btn_copy_task',
+      icon: ActionIconsEnum.PRINT,
+      onClick: (item: ActualInspection) => this.service.copyDialog(ActualInspection.prepareCopy(item))
+      .onAfterClose$
+      .pipe(take(1))
+      
+      .subscribe(() => this.reload$.next(null)),
       
     },
   ];
