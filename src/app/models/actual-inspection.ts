@@ -22,7 +22,7 @@ import { infoSearchFields } from "@app/helpers/info-search-fields";
 
 const { send, receive } = new ActualInspectionInterceptor()
 @InterceptModel({ send, receive })
-export class ActualInspection extends BaseModel<ActualInspection, ActualInspectionService>{
+export class ActualInspection extends BaseModel<ActualInspection, ActualInspectionService> {
   employeeService!: EmployeeService
   service: ActualInspectionService;
   departmentId!: number;
@@ -37,8 +37,8 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
   unknownOrgName!: string;
   unknownOrgOtherData!: string;
   unknownOrgEmail!: string;
-  dateFrom!: string|IMyDateModel;
-  dateTo!: string|IMyDateModel;
+  dateFrom!: string | IMyDateModel;
+  dateTo!: string | IMyDateModel;
   taskNature!: number;
   taskArea!: number;
   countryId!: number;
@@ -55,15 +55,15 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
   inspectionLog: InspectionLog[] = [];
 
   proposedInspectionTask!: ProposedInspection
-  mainOperationInfo!:AdminResult;
-  subOperationInfo!:AdminResult;
-  inspectorInfo!:AdminResult;
-  statusInfo!:AdminResult;
+  mainOperationInfo!: AdminResult;
+  subOperationInfo!: AdminResult;
+  inspectorInfo!: AdminResult;
+  statusInfo!: AdminResult;
 
   searchFields: ISearchFieldsMap<ActualInspection> = {
     // ...dateSearchFields(['createdOn']),
-     ...infoSearchFields(['mainOperationInfo', 'subOperationInfo','statusInfo','inspectorInfo']),
-     ...normalSearchFields(['taskSerialNumber', 'operationDescription'])
+    ...infoSearchFields(['mainOperationInfo', 'subOperationInfo', 'statusInfo', 'inspectorInfo']),
+    ...normalSearchFields(['taskSerialNumber', 'operationDescription'])
   }
   finalizeSearchFields(): void {
     if (this.employeeService.isExternalUser()) {
@@ -136,9 +136,9 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
       relation: controls ? [values.relation, [CustomValidators.required]] : values.relation,
       inspectorId: controls ? [values.inspectorId, [CustomValidators.required]] : values.inspectorId,
       priority: controls ? [values.priority, [CustomValidators.required]] : values.priority,
-      taskSubject: controls ? [values.taskSubject, [ CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.taskSubject,
+      taskSubject: controls ? [values.taskSubject, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.taskSubject,
       licenseActivities: controls ? [values.licenseActivities, CustomValidators.requiredArray] : values.licenseActivities,
-      inspectionSpecialists: controls ? [values.inspectionSpecialists,CustomValidators.requiredArray] : values.inspectionSpecialists,
+      inspectionSpecialists: controls ? [values.inspectionSpecialists, CustomValidators.requiredArray] : values.inspectionSpecialists,
     }
   }
   static mapFromProposedInspection(proposedInspection: ProposedInspection): ActualInspection {
@@ -149,6 +149,48 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
       // actualTaskType: proposedInspection.proposedTaskType,
       priority: proposedInspection.priority,
       operationDescription: proposedInspection.operationDescription
+    })
+  }
+  static prepareCopy(model: ActualInspection): ActualInspection {
+
+    return new ActualInspection().clone({
+      departmentId: model.departmentId,
+      taskSerialNumber: model.taskSerialNumber,
+      proposedTaskSerial: model.proposedTaskSerial,
+      actualTaskType: model.actualTaskType,
+      mainOperationType: model.mainOperationType,
+      subOperationType: model.subOperationType,
+      operationDescription: model.operationDescription,
+      knownOrgId: model.knownOrgId,
+      unknownOrgType: model.unknownOrgType,
+      unknownOrgName: model.unknownOrgName,
+      unknownOrgOtherData: model.unknownOrgOtherData,
+      unknownOrgEmail: model.unknownOrgEmail,
+      dateFrom: model.dateFrom,
+      dateTo: model.dateTo,
+      taskNature: model.taskNature,
+      taskArea: model.taskArea,
+      countryId: model.countryId,
+      moneyLaundryOrTerrorism: model.moneyLaundryOrTerrorism,
+      relation: model.relation,
+      inspectorId: model.inspectorId,
+      priority: model.priority,
+      taskSubject: model.taskSubject,
+      // status: model.status,
+      creationSource: model.creationSource,
+      licenseActivities: model.licenseActivities.map(item => {
+        const newItem: Partial<LicenseActivity> = item
+        delete newItem.id
+        return newItem as LicenseActivity
+
+      }),
+      inspectionSpecialists: model.inspectionSpecialists.map(item => {
+        const newItem: Partial<InspectionSpecialist> = item
+        delete newItem.id
+        return newItem as InspectionSpecialist
+      }),
+      inspectionLog: model.inspectionLog,
+      proposedInspectionTask:model.proposedInspectionTask
     })
   }
 }

@@ -7,6 +7,7 @@ import { OperationTypes } from "@app/enums/operation-types.enum";
 import { Observable, of } from "rxjs";
 import { exhaustMap } from "rxjs/operators";
 import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { Cloneable } from "@app/models/cloneable";
 
 export abstract class CrudWithDialogGenericService<T extends { id: number }> extends CrudGenericService<T> implements IShowDialog<T> {
   /**
@@ -38,6 +39,13 @@ export abstract class CrudWithDialogGenericService<T extends { id: number }> ext
    */
   addDialog(): DialogRef | Observable<DialogRef> {
     return this.getDialog(new (this._getModel()), OperationTypes.CREATE);
+  }
+  /**
+   * @description open add dialog you can override it in your service class
+   * @returns DialogRef reference for the opened dialog
+   */
+  copyDialog(model:T): DialogRef {
+    return this.getDialog( model, OperationTypes.CREATE);
   }
 
   /**

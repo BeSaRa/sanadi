@@ -127,6 +127,8 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
             tap(list =>{
                 const department = list.find(item => item.id === this.employeeService.getInternalDepartment()!.id)
                 department && (this.departmentIdControl.setValue(department.id) );
+                this.mainOperationTypeControl.setValue(this.model.mainOperationType)
+                this.subOperationTypeControl.setValue(this.model.subOperationType)
             }),
             filter(department => !!department),
             takeUntil(this.destroy$),
@@ -138,11 +140,11 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
             this.validateFieldsVisible = false;
             this.readonly = true;
         }
-        this._setDefaultValues();
         this._listenToDepartmentIdChange();
         this._listenToUnknownState();
         this._listenToTaskAreaChange();
         this._moneyLaundryOrTerrorismChange();
+        this._setDefaultValues();
         if(this.readonly){
             this.inspectionSpecialistsArray.disable();
             this.licenseActivitiesArray.disable();
@@ -153,7 +155,11 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     }
     private _setDefaultValues() {
        
-        this.relationControl.disable();
+        if(this.moneyLaundryOrTerrorismControl.value !== LinkedProjectTypes.YES ){
+
+            this.relationControl.disable();
+        }
+     
     }
 
     private _listenToDepartmentIdChange(){
