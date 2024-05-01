@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { ActualInspectionCreationSource } from '@app/enums/actual-inspection-creation-source.enum';
 import { ActualInceptionStatus } from '@app/enums/actual-inspection-status.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
@@ -220,6 +221,23 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
   @ViewChild('table') table!: TableComponent;
   afterReload(): void {
     this.table && this.table.clearSelection();
+  }
+
+  getActualInspectionIcon(model:ActualInspection):string{
+
+    return model.creationSource === ActualInspectionCreationSource.PROPOSED_TASK_SOURCE ? 'mdi-file-sign' :
+    model.creationSource === ActualInspectionCreationSource.ACTUAL_TASK_SOURCE ? 'mdi-file-chart-check-outline':
+    model.creationSource === ActualInspectionCreationSource.FOLLOW_UP_SOURCE ? 'mdi-file-eye-outline':
+    ''
+
+  }
+  getActualInspectionToolTip(model:ActualInspection):string{
+
+    return model.creationSource === ActualInspectionCreationSource.PROPOSED_TASK_SOURCE ? this.lang.map.lbl_proposed_inspection_task :
+    model.creationSource === ActualInspectionCreationSource.ACTUAL_TASK_SOURCE ? this.lang.map.lbl_actual_inspection_task:
+    model.creationSource === ActualInspectionCreationSource.FOLLOW_UP_SOURCE ? this.lang.map.lbl_follow_up_inspection_task:
+    ''
+
   }
  
 }

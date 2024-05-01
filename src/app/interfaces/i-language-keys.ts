@@ -2173,4 +2173,7 @@ export interface ILanguageKeys {
   lbl_the_organization:string;
   btn_copy_task:string;
   lbl_actual_inspection:string;
+  lbl_actual_inspection_task:string;
+  lbl_proposed_inspection_task:string;
+  lbl_follow_up_inspection_task:string;
 }

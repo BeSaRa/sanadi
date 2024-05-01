@@ -70,8 +70,10 @@
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
             <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+            
               <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
-  
+                <i [tooltip]="getActualInspectionToolTip(row)" class="text-primary mdi {{getActualInspectionIcon(row)}}"></i>
+                <div class="vr"></div>
               </grid-actions>
             </td>
           </ng-container>
