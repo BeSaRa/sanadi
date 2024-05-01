@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { ActualInceptionStatus } from '@app/enums/actual-inspection-status.enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
@@ -11,6 +10,7 @@ import { ActualInspection } from '@app/models/actual-inspection';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { DialogService } from '@app/services/dialog.service';
+import { EmployeeService } from '@app/services/employee.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
@@ -19,7 +19,7 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CommentPopupComponent } from '@app/shared/popups/comment-popup/comment-popup.component';
 import { TabMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { Subject, of } from 'rxjs';
+import { Subject, of, timer } from 'rxjs';
 import { catchError, exhaustMap, filter, switchMap, take, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -102,7 +102,8 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
     public lang: LangService,
     private lookupService: LookupService,
     private fb: FormBuilder,
-    private dialogService: DialogService,) {
+    private dialogService: DialogService,
+  private employeeService: EmployeeService) {
     super();
     
 
@@ -196,8 +197,11 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
   }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      taskSerialNumber: [null], operationDescription: [null], inspectorId: [null], status: [null]
+      taskSerialNumber: [null], operationDescription: [null], inspectorId: [null], status: [ActualInceptionStatus.TABULATED],
+      departmentId:[this.employeeService.getInternalDepartment()?.id]
     })
+    timer(0)
+    .subscribe(_=>this.columnFilter$.next('filter'))
   }
   reject(model: ActualInspection, event?: MouseEvent): void {
     event?.preventDefault();
