@@ -2172,4 +2172,5 @@ export interface ILanguageKeys {
   inspection_history:string;
   lbl_the_organization:string;
   btn_copy_task:string;
+  lbl_actual_inspection:string;
 }

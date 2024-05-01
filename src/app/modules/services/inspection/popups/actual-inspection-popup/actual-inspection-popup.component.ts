@@ -205,7 +205,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
 
     afterSave(model: ActualInspection, dialogRef: DialogRef): void {
         const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
-        this.toast.success(message.change({ x: this.lang.map.lbl_proposed_task }));
+        this.toast.success(message.change({ x: this.lang.map.lbl_actual_inspection }));
         this.model = model;
         this.operation = OperationTypes.UPDATE;
         dialogRef.close(model);
