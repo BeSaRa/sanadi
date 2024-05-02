@@ -8,10 +8,12 @@ import { CommonUtils } from '@app/helpers/common-utils';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { SortEvent } from '@app/interfaces/sort-event';
 import { ActualInspection } from '@app/models/actual-inspection';
+import { InspectionOperation } from '@app/models/inspection-operation';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { DialogService } from '@app/services/dialog.service';
 import { EmployeeService } from '@app/services/employee.service';
+import { InspectionOperationService } from '@app/services/inspection-operation.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
@@ -20,15 +22,15 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CommentPopupComponent } from '@app/shared/popups/comment-popup/comment-popup.component';
 import { TabMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { Subject, of, timer } from 'rxjs';
-import { catchError, exhaustMap, filter, switchMap, take, takeUntil } from 'rxjs/operators';
+import { Observable, Subject, of, timer } from 'rxjs';
+import { catchError, exhaustMap, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-actual-inspection',
   templateUrl: './actual-inspection.component.html',
   styleUrls: ['./actual-inspection.component.scss'],
 })
-export class ActualInspectionComponent  extends AdminGenericComponent<ActualInspection, ActualInspectionService>{
+export class ActualInspectionComponent extends AdminGenericComponent<ActualInspection, ActualInspectionService> {
   usePagination = true;
   actions: IMenuItem<ActualInspection>[] = [
     // view
@@ -37,7 +39,7 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
       label: 'view',
       icon: ActionIconsEnum.VIEW,
       onClick: (item: ActualInspection) => this.view$.next(item),
-      show:  (item: ActualInspection) =>  [ActualInceptionStatus.CANCELED,ActualInceptionStatus.COMPLETED].includes(item.status)
+      show: (item: ActualInspection) => [ActualInceptionStatus.CANCELED, ActualInceptionStatus.COMPLETED].includes(item.status)
 
     },
     // edit
@@ -46,7 +48,7 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: ActualInspection) => this.edit$.next(item),
-      show:  (item: ActualInspection) =>  ![ActualInceptionStatus.CANCELED,ActualInceptionStatus.COMPLETED].includes(item.status)
+      show: (item: ActualInspection) => ![ActualInceptionStatus.CANCELED, ActualInceptionStatus.COMPLETED].includes(item.status)
 
     },
     // reject
@@ -55,8 +57,8 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
       label: 'cancel_task',
       icon: ActionIconsEnum.BLOCK,
       onClick: (item: ActualInspection) => this.reject(item),
-      show:  (item: ActualInspection) =>  ![ActualInceptionStatus.CANCELED,ActualInceptionStatus.COMPLETED].includes(item.status)
-      
+      show: (item: ActualInspection) => ![ActualInceptionStatus.CANCELED, ActualInceptionStatus.COMPLETED].includes(item.status)
+
     },
     // copy
     {
@@ -64,17 +66,17 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
       label: 'btn_copy_task',
       icon: ActionIconsEnum.PRINT,
       onClick: (item: ActualInspection) => this.service.copyDialog(ActualInspection.prepareCopy(item))
-      .onAfterClose$
-      .pipe(take(1))
-      
-      .subscribe(() => this.reload$.next(null)),
-      
+        .onAfterClose$
+        .pipe(take(1))
+
+        .subscribe(() => this.reload$.next(null)),
+
     },
   ];
 
-  displayedColumns: string[] = [ 'taskSerialNumber', 'operationDescription','mainOperationType', 'subOperationType', 'status','inspectorId','actions'];
-  searchColumns: string[] = [ 'search_taskSerialNumber', 'search_operationDescription', '_','__','search_status','___' ,'search_actions'];
-  
+  displayedColumns: string[] = ['taskSerialNumber', 'operationDescription', 'mainOperationType', 'subOperationType', 'status', 'inspectorId', 'actions'];
+  searchColumns: string[] = ['search_taskSerialNumber', 'search_operationDescription', 'search_main_operation', 'search_sub_operation', 'search_status', '___', 'search_actions'];
+
   onTabChange($event: TabComponent) {
   }
   tabIndex$: Subject<number> = new Subject<number>();
@@ -86,7 +88,7 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
       checkTouchedDirty: false,
       isTouchedOrDirty: () => false,
       show: () => true,
-      validStatus :()=> true
+      validStatus: () => true
     },
     proposedInspection: {
       name: 'proposedInspectionTab',
@@ -99,14 +101,18 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
   };
 
   view$: Subject<ActualInspection> = new Subject<ActualInspection>();
+  mainOperations$: Subject<InspectionOperation[]> = new Subject<InspectionOperation[]>();
+  subOperations$: Subject<InspectionOperation[]> = new Subject<InspectionOperation[]>();
+
+
   constructor(public service: ActualInspectionService,
     public lang: LangService,
     private lookupService: LookupService,
     private fb: FormBuilder,
     private dialogService: DialogService,
-  private employeeService: EmployeeService) {
+    private employeeService: EmployeeService,
+    private inspectionOperationService: InspectionOperationService) {
     super();
-    
 
   }
   searchColumnsConfig: SearchColumnConfigMap = {
@@ -123,9 +129,31 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
       property: 'operationDescription',
       label: 'lbl_operation_description',
       maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-      
+
     },
 
+    search_main_operation: {
+      key: 'mainOperationType',
+      controlType: 'select',
+      property: 'mainOperationType',
+      label: 'lbl_main_operation',
+      selectOptions: {
+        options$: this.mainOperations$,
+        labelProperty: 'getName',
+        optionValueKey: 'id'
+      }
+    },
+    search_sub_operation: {
+      key: 'subOperationType',
+      controlType: 'select',
+      property: 'subOperationType',
+      label: 'lbl_sub_operation',
+      selectOptions: {
+        options$: this.subOperations$,
+        labelProperty: 'getName',
+        optionValueKey: 'id'
+      }
+    },
     search_status: {
       key: 'status',
       controlType: 'select',
@@ -158,6 +186,14 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
   }
 
   protected _init(): void {
+    this.inspectionOperationService.loadAsLookups()
+      .pipe(
+        tap(list => {
+          this.mainOperations$.next(list.filter(item => item.parentId === null));
+          this.subOperations$.next( list.filter(item=>item.parentId !== null));
+          
+        })
+      ).subscribe()
     this.listenToView();
 
     this.buildFilterForm();
@@ -198,47 +234,49 @@ export class ActualInspectionComponent  extends AdminGenericComponent<ActualInsp
   }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
+      mainOperationType: [null],
+      subOperationType: [null],
       taskSerialNumber: [null], operationDescription: [null], inspectorId: [null], status: [ActualInceptionStatus.TABULATED],
-      departmentId:[this.employeeService.getInternalDepartment()?.id]
+      departmentId: [this.employeeService.getInternalDepartment()?.id]
     })
     timer(0)
-    .subscribe(_=>this.columnFilter$.next('filter'))
+      .subscribe(_ => this.columnFilter$.next('filter'))
   }
   reject(model: ActualInspection, event?: MouseEvent): void {
     event?.preventDefault();
     this.dialogService.show(CommentPopupComponent)
-    .onAfterClose$
-    .pipe(
+      .onAfterClose$
+      .pipe(
         take(1),
         switchMap((comment: string) => {
-            return this.service.reject(model, comment)
+          return this.service.reject(model, comment)
         })
 
-    ).subscribe(_ => {
+      ).subscribe(_ => {
         this.reload$.next(null)
-    })
+      })
   }
   @ViewChild('table') table!: TableComponent;
   afterReload(): void {
     this.table && this.table.clearSelection();
   }
 
-  getActualInspectionIcon(model:ActualInspection):string{
+  getActualInspectionIcon(model: ActualInspection): string {
 
     return model.creationSource === ActualInspectionCreationSource.PROPOSED_TASK_SOURCE ? 'mdi-file-sign' :
-    model.creationSource === ActualInspectionCreationSource.ACTUAL_TASK_SOURCE ? 'mdi-file-chart-check-outline':
-    model.creationSource === ActualInspectionCreationSource.FOLLOW_UP_SOURCE ? 'mdi-file-eye-outline':
-    ''
+      model.creationSource === ActualInspectionCreationSource.ACTUAL_TASK_SOURCE ? 'mdi-file-chart-check-outline' :
+        model.creationSource === ActualInspectionCreationSource.FOLLOW_UP_SOURCE ? 'mdi-file-eye-outline' :
+          ''
 
   }
-  getActualInspectionToolTip(model:ActualInspection):string{
+  getActualInspectionToolTip(model: ActualInspection): string {
 
     return model.creationSource === ActualInspectionCreationSource.PROPOSED_TASK_SOURCE ? this.lang.map.lbl_proposed_inspection_task :
-    model.creationSource === ActualInspectionCreationSource.ACTUAL_TASK_SOURCE ? this.lang.map.lbl_actual_inspection_task:
-    model.creationSource === ActualInspectionCreationSource.FOLLOW_UP_SOURCE ? this.lang.map.lbl_follow_up_inspection_task:
-    ''
+      model.creationSource === ActualInspectionCreationSource.ACTUAL_TASK_SOURCE ? this.lang.map.lbl_actual_inspection_task :
+        model.creationSource === ActualInspectionCreationSource.FOLLOW_UP_SOURCE ? this.lang.map.lbl_follow_up_inspection_task :
+          ''
 
   }
- 
+
 }
 
