@@ -97,6 +97,19 @@ export class ActualInspectionService extends CrudWithDialogGenericService<Actual
       })
     });
   }
+  @HasInterception
+  @CastResponse(undefined)
+  rejectBulk(ids:number[],rejectReason:string): Observable<ActualInspection> {
+    return this.http.delete<ActualInspection>(this._getServiceURL() +`/bulk/reason` , 
+    {
+      body:ids,
+      params: new HttpParams({
+        fromObject:{
+          rejectReason
+        }
+      })
+    });
+  }
   @CastResponse(undefined, {
     fallback: '$default',
     unwrap: 'rs'

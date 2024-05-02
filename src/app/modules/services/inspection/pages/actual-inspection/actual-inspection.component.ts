@@ -3,8 +3,10 @@ import { FormBuilder } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { ActualInspectionCreationSource } from '@app/enums/actual-inspection-creation-source.enum';
 import { ActualInceptionStatus } from '@app/enums/actual-inspection-status.enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { IGridAction } from '@app/interfaces/i-grid-action';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { SortEvent } from '@app/interfaces/sort-event';
 import { ActualInspection } from '@app/models/actual-inspection';
@@ -74,8 +76,8 @@ export class ActualInspectionComponent extends AdminGenericComponent<ActualInspe
     },
   ];
 
-  displayedColumns: string[] = ['taskSerialNumber', 'operationDescription', 'mainOperationType', 'subOperationType', 'status', 'inspectorId', 'actions'];
-  searchColumns: string[] = ['search_taskSerialNumber', 'search_operationDescription', 'search_main_operation', 'search_sub_operation', 'search_status', '___', 'search_actions'];
+  displayedColumns: string[] = ['rowSelection', 'taskSerialNumber', 'operationDescription', 'mainOperationType', 'subOperationType', 'status', 'inspectorId', 'actions'];
+  searchColumns: string[] = ['_', 'search_taskSerialNumber', 'search_operationDescription', 'search_main_operation', 'search_sub_operation', 'search_status', '___', 'search_actions'];
 
   onTabChange($event: TabComponent) {
   }
@@ -190,8 +192,8 @@ export class ActualInspectionComponent extends AdminGenericComponent<ActualInspe
       .pipe(
         tap(list => {
           this.mainOperations$.next(list.filter(item => item.parentId === null));
-          this.subOperations$.next( list.filter(item=>item.parentId !== null));
-          
+          this.subOperations$.next(list.filter(item => item.parentId !== null));
+
         })
       ).subscribe()
     this.listenToView();
@@ -247,6 +249,7 @@ export class ActualInspectionComponent extends AdminGenericComponent<ActualInspe
     this.dialogService.show(CommentPopupComponent)
       .onAfterClose$
       .pipe(
+        filter(comment=> !!comment),
         take(1),
         switchMap((comment: string) => {
           return this.service.reject(model, comment)
@@ -276,6 +279,50 @@ export class ActualInspectionComponent extends AdminGenericComponent<ActualInspe
         model.creationSource === ActualInspectionCreationSource.FOLLOW_UP_SOURCE ? this.lang.map.lbl_follow_up_inspection_task :
           ''
 
+  }
+
+  bulkActionsList: IGridAction[] = [
+    {
+      langKey: 'cancel_task',
+      icon: ActionIconsEnum.BLOCK,
+      callback: ($event: MouseEvent) => {
+        this.rejectBulk($event);
+      }
+    }
+  ];
+  get selectedRecords(): ActualInspection[] {
+    return this.table?.selection?.selected??[];
+  }
+  rejectBulk($event: MouseEvent): void {
+    $event.preventDefault();
+    if (this.selectedRecords.length > 0) {
+      const hasWrongSelection= this.selectedRecords
+      .some(item=>![ActualInceptionStatus.TABULATED, ActualInceptionStatus.UNDER_INSPECTION].includes(item.status));
+
+      if(hasWrongSelection){
+        this.dialogService.alert(this.lang.map.msg_all_inspection_must_be_tabulated_or_under_inspection)
+        return;
+      }
+      const message = this.lang.map.msg_confirm_cancel_x.change({ x: this.lang.map.lbl_actual_inspection });
+      this.dialogService.confirm(message)
+        .onAfterClose$
+        .pipe(
+          filter((click: UserClickOn) => click === UserClickOn.YES),
+          switchMap(_ => {
+            return this.dialogService.show(CommentPopupComponent)
+              .onAfterClose$
+             
+          }),
+          filter(comment=> !!comment),
+          switchMap((comment: string) => {
+            const ids = this.selectedRecords.map((item) => item.id);
+            return this.service.rejectBulk(ids, comment)
+          }),
+          take(1),
+          tap(_=> this.reload$.next(null)),
+        ).subscribe()
+        
+    }
   }
 
 }
