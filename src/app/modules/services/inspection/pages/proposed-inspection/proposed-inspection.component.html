@@ -28,7 +28,7 @@
         <ng-container cdkColumnDef="departmentId">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
           [sortCallback]="sortingCallbacks.department">{{ lang.map.department }}</th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.departmentInfo.getName() }}</td>
+          <td cdk-cell *cdkCellDef="let row">{{ row.departmentInfo?.getName() }}</td>
         </ng-container>
         <ng-container cdkColumnDef="proposedTaskType">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"

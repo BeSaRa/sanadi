@@ -3,7 +3,7 @@
   <div>
     <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
       fullscreenBtn></button>
-    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose
       aria-label="Close"></button>
   </div>
 </div>
@@ -268,10 +268,10 @@
     </div>
 
     <div class="row">
-      <inspection-specialists  formControlName="inspectionSpecialists" [disabled]="readonly"></inspection-specialists>
+      <inspection-specialists  formControlName="inspectionSpecialists" ></inspection-specialists>
     </div>
     <div class="row">
-      <license-activities  formControlName="licenseActivities" [disabled]="readonly"></license-activities>
+      <license-activities  formControlName="licenseActivities" ></license-activities>
     </div>
     <div class="row">
       <div class="col-12 mb-4 position-relative">
@@ -294,7 +294,7 @@
   <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)" class="btn btn-primary">
     {{ lang.map.btn_save }}
   </button>
-  <button [dialogClose]="model" class="btn btn-secondary">
+  <button dialogClose class="btn btn-secondary">
     {{ lang.map.btn_cancel }}
   </button>
 </div>

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { ActualInspectionCreationSource } from '@app/enums/actual-inspection-creation-source.enum';
@@ -28,10 +28,12 @@ import { catchError, exhaustMap, filter, switchMap, take, takeUntil } from 'rxjs
   templateUrl: 'proposed-inspection.component.html',
   styleUrls: ['proposed-inspection.component.scss'],
 })
-export class ProposedInspectionComponent extends AdminGenericComponent<ProposedInspection, ProposedInspectionService>{
-  
+export class ProposedInspectionComponent extends AdminGenericComponent<ProposedInspection, ProposedInspectionService> {
+
   usePagination = true;
   @Input() isApproval = false;
+  @Output() actualInspectionCreated = new EventEmitter()
+  readonlyStatuses = [ActualInceptionStatus.COMPLETED, ActualInceptionStatus.CANCELED, ActualInceptionStatus.REJECTED, ActualInceptionStatus.IN_PROGRESS]
   actions: IMenuItem<ProposedInspection>[] = [
     // view
     {
@@ -54,7 +56,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
       onClick: (item: ProposedInspection) => this.delete(item),
-      show:()=>!this.isApproval
+      show: () => !this.isApproval
     },
     // approve
     {
@@ -62,7 +64,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
       label: 'approve',
       icon: ActionIconsEnum.APPROVE,
       onClick: (item: ProposedInspection) => this.approve(item),
-      show:(item)=>this.isApproval && ![ActualInceptionStatus.COMPLETED,ActualInceptionStatus.CANCELED,ActualInceptionStatus.REJECTED].includes(item.status)
+      show: (item) => this.isApproval && !this.readonlyStatuses.includes(item.status)
     },
     // reject
     {
@@ -70,12 +72,12 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
       label: 'lbl_reject',
       icon: ActionIconsEnum.BLOCK,
       onClick: (item: ProposedInspection) => this.reject(item),
-      show:(item)=>this.isApproval && ![ActualInceptionStatus.COMPLETED,ActualInceptionStatus.CANCELED,ActualInceptionStatus.REJECTED].includes(item.status)
+      show: (item) => this.isApproval && !this.readonlyStatuses.includes(item.status)
     },
   ];
 
-  displayedColumns: string[] = [ 'proposedTaskType', 'priority','departmentId', 'status', 'actions'];
-  searchColumns: string[] = [ 'search_proposedTaskType', 'search_priority', '_','search_status', 'search_actions'];
+  displayedColumns: string[] = ['proposedTaskType', 'priority', 'departmentId', 'status', 'actions'];
+  searchColumns: string[] = ['search_proposedTaskType', 'search_priority', '_', 'search_status', 'search_actions'];
 
 
   view$: Subject<ProposedInspection> = new Subject<ProposedInspection>();
@@ -86,7 +88,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
     private dialogService: DialogService,
     private actualInspectionService: ActualInspectionService,
     private employeeService: EmployeeService
-    ) {
+  ) {
     super();
 
   }
@@ -168,23 +170,23 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
   }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-       proposedTaskType: [null], priority: [null], status: [null]
+      proposedTaskType: [null], priority: [null], status: [null]
     })
   }
   delete(model: ProposedInspection, event?: MouseEvent): void {
     event?.preventDefault();
-    const message = this.lang.map.msg_confirm_delete_x.change({x:this.lang.map.lbl_proposed_task});
+    const message = this.lang.map.msg_confirm_delete_x.change({ x: this.lang.map.lbl_proposed_task });
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
-      if (click === UserClickOn.YES) {
-        const sub = model.delete().subscribe(() => {
-          // @ts-ignore
-          this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
-          this.reload$.next(null);
-          sub.unsubscribe();
-        });
-      }
-    });
+        if (click === UserClickOn.YES) {
+          const sub = model.delete().subscribe(() => {
+            // @ts-ignore
+            this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
+            this.reload$.next(null);
+            sub.unsubscribe();
+          });
+        }
+      });
   }
   @ViewChild('table') table!: TableComponent;
   afterReload(): void {
@@ -192,16 +194,23 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
   }
   approve(item: ProposedInspection): void {
     this.actualInspectionService
-    .showCreateActualInspectionPopup(ActualInspectionCreationSource.PROPOSED_TASK_SOURCE,
-      ActualInspection.mapFromProposedInspection(item))
-   
+      .showCreateActualInspectionPopup(ActualInspectionCreationSource.PROPOSED_TASK_SOURCE,
+        ActualInspection.mapFromProposedInspection(item))
+      .pipe(
+        take(1),
+      ).subscribe(model => {
+        if(model){
+          this.actualInspectionCreated.emit(model);
+        }
+      })
+
   }
-  reject(item:ProposedInspection): void {
+  reject(item: ProposedInspection): void {
     this.dialogService.show(CommentPopupComponent)
-    .onAfterClose$.pipe(
-      take(1),
-      filter((comment) => !!comment),
-      switchMap((comment) => this.service.reject(item, comment))
-    ).subscribe();
+      .onAfterClose$.pipe(
+        take(1),
+        filter((comment) => !!comment),
+        switchMap((comment) => this.service.reject(item, comment))
+      ).subscribe();
   }
 }

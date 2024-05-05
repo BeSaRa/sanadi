@@ -19,6 +19,7 @@ import { InspectionLog } from "./inspection-log";
 import { IMyDateModel } from "angular-mydatepicker";
 import { normalSearchFields } from "@app/helpers/normal-search-fields";
 import { infoSearchFields } from "@app/helpers/info-search-fields";
+import { InternalUser } from "./internal-user";
 
 const { send, receive } = new ActualInspectionInterceptor()
 @InterceptModel({ send, receive })
@@ -142,13 +143,16 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
     }
   }
   static mapFromProposedInspection(proposedInspection: ProposedInspection): ActualInspection {
+    
+
     return new ActualInspection().clone({
       proposedInspectionTask: proposedInspection,
       departmentId: proposedInspection.departmentId,
       proposedTaskSerial: proposedInspection.taskSerialNumber,
       // actualTaskType: proposedInspection.proposedTaskType,
       priority: proposedInspection.priority,
-      operationDescription: proposedInspection.operationDescription
+      operationDescription: proposedInspection.operationDescription,
+    
     })
   }
   static prepareCopy(model: ActualInspection): ActualInspection {

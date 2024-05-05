@@ -115,6 +115,6 @@
   </div>
 </ng-template>
 <ng-template #proposedInspectionTabTemplate>
-  <proposed-inspection [isApproval]="true"></proposed-inspection>
+  <proposed-inspection [isApproval]="true" (actualInspectionCreated)="reload$.next(null)"></proposed-inspection>
 </ng-template>
  

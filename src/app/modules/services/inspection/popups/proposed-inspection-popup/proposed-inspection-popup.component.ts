@@ -89,7 +89,9 @@ export class ProposedInspectionPopupComponent extends AdminGenericDialog<Propose
       return this.lang.map.lbl_edit_proposed_inspection;
     } else if (this.operation === OperationTypes.VIEW) {
       return this.lang.map.view;
-    }
+    }else if (this.operation === OperationTypes.CREATE) {
+      return this.lang.map.lbl_create_proposed_inspection;
+  }
     return '';
   };
   get isOtherProposedTaskType ():boolean{
