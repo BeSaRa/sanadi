@@ -13,10 +13,13 @@ import { FormlyModule } from '@ngx-formly/core';
 import { InspectionRoutingModule } from './inspection-routing.module';
 import { ActivityImplementationComponent } from './pages/activity-implementation/activity-implementation.component';
 import { ActualInspectionComponent } from './pages/actual-inspection/actual-inspection.component';
+import { InspectionHomeComponent } from './pages/inspection-home/inspection-home.component';
 import { LicenseActivityComponent } from './pages/license-activity/license-activity.component';
 import { ProposedInspectionComponent } from './pages/proposed-inspection/proposed-inspection.component';
 import { ActualInspectionPopupComponent } from './popups/actual-inspection-popup/actual-inspection-popup.component';
 import { ExternalSpecialistPopupComponent } from './popups/external-specialist-popup/external-specialist-popup.component';
+import { InspectionActionLogPopupComponent } from './popups/inspection-action-log-popup/inspection-action-log-popup.component';
+import { InspectionLogsPopupComponent } from './popups/inspection-logs-popup/inspection-logs-popup.component';
 import { InspectionSpecialistsPopupComponent } from './popups/inspection-specialists-popup/inspection-specialists-popup.component';
 import { LicenseActivityCompletePopupComponent } from './popups/license-activity-complete-popup/license-activity-complete-popup.component';
 import { LicenseActivityPopupComponent } from './popups/license-activity-popup/license-activity-popup.component';
@@ -27,8 +30,6 @@ import { InspectionSpecialistsComponent } from './shared/inspection-specialists/
 import { LicenseActivitiesComponent } from './shared/license-activities/license-activities.component';
 import { ManageInspectionSpecialistsComponent } from './shared/manage-inspection-specialists/manage-inspection-specialists.component';
 import { ManageLicenseActivitiesComponent } from './shared/manage-license-activities/manage-license-activities.component';
-import { InspectionLogsPopupComponent } from './popups/inspection-logs-popup/inspection-logs-popup.component';
-import { InspectionHomeComponent } from './pages/inspection-home/inspection-home.component';
 
 @NgModule({
   imports: [
@@ -72,6 +73,7 @@ import { InspectionHomeComponent } from './pages/inspection-home/inspection-home
     LicenseActivityCompletePopupComponent,
     InspectionLogsPopupComponent,
     InspectionHomeComponent,
+    InspectionActionLogPopupComponent
   ],
 
 })

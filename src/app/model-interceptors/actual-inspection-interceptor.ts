@@ -1,17 +1,18 @@
 import { LinkedProjectTypes } from "@app/enums/linked-project-type.enum";
+import { DateUtils } from "@app/helpers/date-utils";
 import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { ActualInspection } from "@app/models/actual-inspection";
-import { LicenseActivity } from "@app/models/license-activity";
-import { LicenseActivityInterceptor } from "./license-activity-interceptor";
-import { IMyDateModel } from "angular-mydatepicker";
-import { DateUtils } from "@app/helpers/date-utils";
-import { InternalUserInterceptor } from "./internal-user-interceptor";
-import { InternalUser } from "@app/models/internal-user";
-import { ProposedInspectionInterceptor } from "./proposed_inspection-interceptor";
-import { ProposedInspection } from "@app/models/proposed-inspection";
 import { AdminResult } from "@app/models/admin-result";
+import { InspectionActionLog } from "@app/models/inspection-action-log";
+import { InternalUser } from "@app/models/internal-user";
+import { LicenseActivity } from "@app/models/license-activity";
+import { ProposedInspection } from "@app/models/proposed-inspection";
+import { IMyDateModel } from "angular-mydatepicker";
+import { InspectionActionLogInterceptor } from "./inspection-action-log-interceptor";
 import { InspectionLogInterceptor } from "./inspection-log-interceptor";
-import { InspectionLog } from "@app/models/inspection-log";
+import { InternalUserInterceptor } from "./internal-user-interceptor";
+import { LicenseActivityInterceptor } from "./license-activity-interceptor";
+import { ProposedInspectionInterceptor } from "./proposed_inspection-interceptor";
 
 export class ActualInspectionInterceptor implements IModelInterceptor<ActualInspection>
 {
@@ -19,7 +20,7 @@ export class ActualInspectionInterceptor implements IModelInterceptor<ActualInsp
     const licenseActivityInterceptor = new LicenseActivityInterceptor();
     const internalUserInterceptor = new InternalUserInterceptor();
     const proposedInspectionInterceptor = new ProposedInspectionInterceptor();
-    const inspectionLogInterceptor = new InspectionLogInterceptor();
+    const inspectionActionLogInterceptor = new InspectionActionLogInterceptor();
 
     model.moneyLaundryOrTerrorism = model.moneyLaundryOrTerrorism === LinkedProjectTypes.YES ? true : false;
     model.licenseActivities = model.licenseActivities?.map(item => licenseActivityInterceptor.send(item) as LicenseActivity);
@@ -32,19 +33,19 @@ export class ActualInspectionInterceptor implements IModelInterceptor<ActualInsp
       return item
     })
     model.proposedInspectionTask && (model.proposedInspectionTask = proposedInspectionInterceptor.send(model.proposedInspectionTask) as ProposedInspection)
-    model.inspectionLog && (model.inspectionLog = model.inspectionLog.map(item => inspectionLogInterceptor.send(item) as InspectionLog) )
+    model.inspectionLogs && (model.inspectionLogs = model.inspectionLogs.map(item => inspectionActionLogInterceptor.send(item) as InspectionActionLog) )
     ActualInspectionInterceptor._deleteBeforeSend(model);
     return model;
   }
   receive(model: ActualInspection): ActualInspection {
 
-    const inspectionLogInterceptor = new InspectionLogInterceptor();
+    const inspectionActionLogInterceptor = new InspectionActionLogInterceptor();
     model.moneyLaundryOrTerrorism = model.moneyLaundryOrTerrorism ? LinkedProjectTypes.YES : LinkedProjectTypes.NO;
     model.mainOperationInfo = AdminResult.createInstance(model.mainOperationInfo);
     model.subOperationInfo = AdminResult.createInstance(model.subOperationInfo);
     model.inspectorInfo = AdminResult.createInstance(model.inspectorInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
-    model.inspectionLog && (model.inspectionLog = model.inspectionLog.map(item => inspectionLogInterceptor.receive(item)))
+    model.inspectionLogs && (model.inspectionLogs = model.inspectionLogs.map(item => inspectionActionLogInterceptor.receive(item)))
 
     model.dateFrom = DateUtils.changeDateToDatepicker(model.dateFrom);
     model.dateTo = DateUtils.changeDateToDatepicker(model.dateTo);
