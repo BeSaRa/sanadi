@@ -130,12 +130,13 @@ export class ActualInspectionService extends CrudWithDialogGenericService<Actual
       })
     });
   }
+  
   showCreateActualInspectionPopup(creationSource:ActualInspectionCreationSource,model:ActualInspection){
-    this.dialog.show<IDialogData<ActualInspection>>(ActualInspectionPopupComponent, {
+   return this.dialog.show<IDialogData<ActualInspection>>(ActualInspectionPopupComponent, {
       model,
       operation: OperationTypes.CREATE,
       creationSource: creationSource
-    })
+    }).onAfterClose$
   }
   showViewActualInspectionPopup(model:ActualInspection){
     return this.dialog.show<IDialogData<ActualInspection>>(ManageInspectionPopupComponent, {

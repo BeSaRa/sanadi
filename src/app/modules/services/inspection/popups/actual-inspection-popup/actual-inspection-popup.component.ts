@@ -230,6 +230,8 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
             return this.lang.map.lbl_edit_actual_inspection;
         } else if (this.operation === OperationTypes.VIEW) {
             return this.lang.map.view;
+        } else if (this.operation === OperationTypes.CREATE) {
+            return this.lang.map.lbl_create_actual_inspection;
         }
         return '';
     };
