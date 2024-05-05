@@ -2,7 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { ActualInceptionStatus } from '@app/enums/actual-inspection-status.enum';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { ActualInspection } from '@app/models/actual-inspection';
+import { InspectionLog } from '@app/models/inspection-log';
+import { LicenseApprovalModel } from '@app/models/license-approval-model';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { DialogService } from '@app/services/dialog.service';
@@ -10,6 +14,9 @@ import { LangService } from '@app/services/lang.service';
 import { CommentPopupComponent } from '@app/shared/popups/comment-popup/comment-popup.component';
 import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { InspectionLogsPopupComponent } from '../../popups/inspection-logs-popup/inspection-logs-popup.component';
+import { InspectionActionLogPopupComponent } from '../../popups/inspection-action-log-popup/inspection-action-log-popup.component';
+import { InspectionActionLog } from '@app/models/inspection-action-log';
 
 @Component({
     selector: 'activity-implementation',
@@ -22,7 +29,7 @@ export class ActivityImplementationComponent implements OnInit, OnDestroy {
 
 
     models: ActualInspection[] = [];
-    list$: Observable<ActualInspection[]> = new Observable();
+    list$: Subject<ActualInspection[]> = new Subject();
     filterControl: UntypedFormControl = new UntypedFormControl('');
     reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     manage$: Subject<ActualInspection> = new Subject();
@@ -71,8 +78,16 @@ export class ActivityImplementationComponent implements OnInit, OnDestroy {
             onClick: (item: ActualInspection) => this.reject(item),
             show: (item: ActualInspection) => item.status === ActualInceptionStatus.UNDER_INSPECTION,
         },
+         // history
+         {
+            type: 'action',
+            icon: ActionIconsEnum.HISTORY,
+            label: 'inspection_history',
+            onClick: (item: ActualInspection) => this._loadHistory(item)
+          },
+          
+        ];
 
-    ];
 
 
     constructor(public lang: LangService,
@@ -110,11 +125,14 @@ export class ActivityImplementationComponent implements OnInit, OnDestroy {
     }
     private _listenToReload() {
         this.reload$.pipe(
-            tap((_) => {
-                this.list$ = this.actualInspectionService.loadByInspector().pipe(
+            switchMap((_) => {
+               return this.actualInspectionService.loadByInspector().pipe(
 
                 );
                 // this.list$ = this.actualInspectionService.loadComposite();
+            }),
+            tap(list=>{
+                this.list$.next(list);
             }),
             takeUntil(this.destroy$)
         )
@@ -145,4 +163,17 @@ export class ActivityImplementationComponent implements OnInit, OnDestroy {
             .pipe(tap((_) => this.reload$.next(null)))
             .subscribe()
     }
+    private _loadHistory(item: ActualInspection) {
+        this.dialog.show<IDialogData<InspectionActionLog[]>>(InspectionActionLogPopupComponent, {
+            model: item.inspectionLogs,
+            operation: OperationTypes.VIEW
+          })
+        // this.licenseActivityService.getHistory(item.fullSerial)
+        // .pipe(
+        //   take(1)
+        // )
+        // .subscribe((logs: InspectionLog[]) => {
+         
+        // })
+      }
 }

@@ -20,6 +20,7 @@ import { IMyDateModel } from "angular-mydatepicker";
 import { normalSearchFields } from "@app/helpers/normal-search-fields";
 import { infoSearchFields } from "@app/helpers/info-search-fields";
 import { InternalUser } from "./internal-user";
+import { InspectionActionLog } from "./inspection-action-log";
 
 const { send, receive } = new ActualInspectionInterceptor()
 @InterceptModel({ send, receive })
@@ -53,7 +54,7 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
 
   licenseActivities: LicenseActivity[] = [];
   inspectionSpecialists: InspectionSpecialist[] = [];
-  inspectionLog: InspectionLog[] = [];
+  inspectionLogs: InspectionActionLog[] = [];
 
   proposedInspectionTask!: ProposedInspection
   mainOperationInfo!: AdminResult;
@@ -193,7 +194,7 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
         delete newItem.id
         return newItem as InspectionSpecialist
       }),
-      inspectionLog: model.inspectionLog,
+      inspectionLogs: model.inspectionLogs,
       proposedInspectionTask:model.proposedInspectionTask
     })
   }
