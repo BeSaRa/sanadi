@@ -130,7 +130,6 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
                 this.mainOperationTypeControl.setValue(this.model.mainOperationType)
                 this.subOperationTypeControl.setValue(this.model.subOperationType)
             }),
-            filter(department => !!department),
             takeUntil(this.destroy$),
         )
 
