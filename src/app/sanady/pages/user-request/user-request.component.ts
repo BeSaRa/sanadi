@@ -138,11 +138,17 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     this.loadMainAidLookups();
     this.loadDonors();
   }
+  private _unEditableFields: UntypedFormControl[] = []
 
   ngAfterViewInit(): void {
     this.handleRequesterRelationTypeChange();
     this.listenToRouteParams();
     this.cd.detectChanges();
+    this._unEditableFields = [
+      this.arabicNameField,
+      this.englishNameField,
+      this.dateOfBirthField
+    ]
   }
 
   ngOnDestroy() {
