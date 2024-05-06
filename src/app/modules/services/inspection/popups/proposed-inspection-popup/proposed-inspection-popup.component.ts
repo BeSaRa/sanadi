@@ -1,7 +1,7 @@
 import { ProposedTaskTypes } from './../../../../../enums/proposed-task-types';
 import { LookupService } from '@app/services/lookup.service';
 import { Component, Inject, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { ReceiverTypes } from '@app/enums/receiver-type.enum';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { EmployeeService } from '@app/services/employee.service';
+import { EServicePermissionsEnum } from '@app/enums/e-service-permissions-enum';
 
 @Component({
     selector: 'proposed-inspection-popup',
@@ -49,17 +50,29 @@ export class ProposedInspectionPopupComponent extends AdminGenericDialog<Propose
   }
 
   initPopup(): void {
-    this.departmentsList$= this.internalDepartmentService.loadAsLookups()
 
   }
 
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
+    this.departmentsList$ = this.internalDepartmentService.loadAsLookups()
+    .pipe(
+        tap(list =>{
+            const department = list.find(item => item.id === this.employeeService.getInternalDepartment()!.id)
+            department && (this.departmentIdControl.setValue(department.id) );
+         
+        }),
+        takeUntil(this.destroy$),
+    )
     if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
       this.readonly = true;
+    }
+
+    if(!this.employeeService.hasPermissionTo(EServicePermissionsEnum.ACTUAL_INSPECTION)){
+      this.departmentIdControl.disable();
     }
     this._listenToProposedTaskTypeControlChanges();
   }
@@ -69,7 +82,7 @@ export class ProposedInspectionPopupComponent extends AdminGenericDialog<Propose
   }
 
   prepareModel(model: ProposedInspection, form: UntypedFormGroup): Observable<ProposedInspection> | ProposedInspection {
-    return (new ProposedInspection()).clone({ ...model, ...form.value,
+    return (new ProposedInspection()).clone({ ...model, ...form.getRawValue(),
     createdby: this.employeeService.getCurrentUser().generalUserId });
   }
 
@@ -101,14 +114,17 @@ export class ProposedInspectionPopupComponent extends AdminGenericDialog<Propose
     return this.proposedTaskTypeControl.value === ProposedTaskTypes.COMPLAINT
   }
 
-  get proposedTaskTypeControl(): UntypedFormGroup {
-    return this.form.get('proposedTaskType') as UntypedFormGroup;
+  get departmentIdControl(): UntypedFormControl {
+    return this.form.get('departmentId') as UntypedFormControl;
   }
-  get otherProposedTaskControl(): UntypedFormGroup {
-    return this.form.get('otherProposedTask') as UntypedFormGroup;
+  get proposedTaskTypeControl(): UntypedFormControl {
+    return this.form.get('proposedTaskType') as UntypedFormControl;
   }
-  get complaintNumberControl(): UntypedFormGroup {
-    return this.form.get('complaintNumber') as UntypedFormGroup;
+  get otherProposedTaskControl(): UntypedFormControl {
+    return this.form.get('otherProposedTask') as UntypedFormControl;
+  }
+  get complaintNumberControl(): UntypedFormControl {
+    return this.form.get('complaintNumber') as UntypedFormControl;
   }
   destroyPopup(): void {
   }
