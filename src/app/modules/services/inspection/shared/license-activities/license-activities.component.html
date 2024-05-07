@@ -11,6 +11,10 @@
               </table-header>
             </th>
           </ng-container>
+          <ng-container cdkColumnDef="licenseNumber">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_number}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.licenseNumber}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="activityName">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_activity_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.activityName}} </td>
@@ -22,7 +26,9 @@
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
-                <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">                  
+                <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">     
+                  <i class="mdi mdi-check-decagram text-primary me-2" *ngIf="!!row.licenseNumber"
+                  tooltip="{{lang.map.lbl_unKnown}}"></i>         
                 </grid-actions>
             </td>
         </ng-container>

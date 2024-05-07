@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { LicenseActivity } from '@app/models/license-activity';
@@ -8,11 +8,12 @@ import { LangService } from '@app/services/lang.service';
 import { LicenseActivityService } from '@app/services/license-activity.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { Subject } from 'rxjs';
-import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject, observable } from 'rxjs';
+import { filter, scan, startWith, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { SelectLicenseActivityPopupComponent } from '../select-license-activity-popup/select-license-activity-popup.component';
 import { InboxService } from '@app/services/inbox.service';
 import { ActualInspectionService } from '@app/services/actual-inspection.service';
+import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
     selector: 'license-activity-popup',
@@ -26,8 +27,11 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
     model: LicenseActivity
     readonly = false
     serviceNumbers: number[] = []
-    serviceControl!: UntypedFormControl ;
-
+    serviceControl!: UntypedFormControl;
+    unknownActivityControls:UntypedFormControl[]= [];
+    knownActivityControls:UntypedFormControl[]=[];
+    unKnownToggle$: Subject<void> = new Subject()
+    unKnownState$:Observable<boolean> = new Observable<boolean>()
     constructor(
         public lang: LangService,
         private dialogRef: DialogRef,
@@ -42,8 +46,8 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
         this.model = this.data.model
         this.readonly = this.data.readonly
         this.serviceNumbers = this.inboxService.licenseServices
-        this.serviceControl =  new UntypedFormControl(this.serviceNumbers[0])
-        
+        this.serviceControl = new UntypedFormControl(this.serviceNumbers[0])
+
     }
 
     ngOnInit(): void {
@@ -58,6 +62,28 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
 
     private buildForm() {
         this.form = this.fb.group(this.model.buildForm(true))
+        this.unknownActivityControls=[this.activityNameControl, this.activityDescriptionControl];
+        this.knownActivityControls=[this.licenseNumberControl, this.licenseTypeControl];
+        this.unKnownState$ = this.unKnownToggle$.pipe(
+            scan((state, _) => !state, !this.model.licenseNumber),
+            startWith(!this.model.licenseNumber),
+            tap((state) => {
+                if (state) {
+                    this.addValidators(this.unknownActivityControls,[CustomValidators.required]);
+                    this.removeValidators(this.knownActivityControls,[CustomValidators.required]);
+                 
+    
+                } else {
+                    this.addValidators(this.knownActivityControls,[CustomValidators.required]);
+                    this.removeValidators(this.unknownActivityControls,[CustomValidators.required]);
+                 
+                }
+            })
+    
+        )
+        if (!this.model.licenseNumber) {
+            this.unKnownToggle$.next()
+        }
     }
 
     save() {
@@ -80,12 +106,41 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
                         .pipe(takeUntil(this.destroy$))
                         .pipe(filter((value: LicenseActivity): value is LicenseActivity => !!value))
                         .pipe(tap(item => {
-                            this.model.licenseNumber = item.licenseNumber;
-                            this.model.licenseType = item.licenseType;
+                            // this.model.licenseNumber = item.licenseNumber;
+                            // this.model.licenseType = item.licenseType;
+                            this.licenseNumberControl.setValue(item.licenseNumber);
+                            this.licenseTypeControl.setValue(this.inboxService.getServiceName(item.licenseType));
+                            this.model.caseType = item.caseType
                         }))
                 }),
 
             )
             .subscribe()
+    }
+    get activityNameControl(): UntypedFormControl {
+        return this.form.get('activityName') as UntypedFormControl;
+    }
+    get activityDescriptionControl(): UntypedFormControl {
+        return this.form.get('activityDescription') as UntypedFormControl;
+    }
+    get licenseNumberControl(): UntypedFormControl {
+        return this.form.get('licenseNumber') as UntypedFormControl;
+    }
+    get licenseTypeControl(): UntypedFormControl {
+        return this.form.get('licenseType') as UntypedFormControl;
+    }
+
+    private addValidators(controls: UntypedFormControl[], validators: ValidatorFn[]) {
+        controls.forEach(control=>{
+            control.addValidators(validators)
+            control.updateValueAndValidity();
+        })
+    }
+    private removeValidators(controls: UntypedFormControl[], validators: ValidatorFn[]) {
+        controls.forEach(control=>{
+            control.removeValidators(validators);
+            control.reset();
+            control.updateValueAndValidity();
+        })
     }
 }

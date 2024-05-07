@@ -5,6 +5,22 @@
 <div class="dialog-content no-fixed-height" style="width: 600px">
     <ng-container [formGroup]="form">
         <div class="row">
+            <div class="col-sm-12 mt-2 form-check form-switch" *ngIf="!readonly">
+                <div class="ms-3">
+                    <label class="form-check-label" for="unKnown">{{lang.map.lbl_unKnown}}</label>
+                    <input id="unKnown" class="form-check-input" type="checkbox" [checked]="unKnownState$ | async"
+                        tooltip="{{
+                    (unKnownState$ | async)
+                      ? lang.map.btn_deactivate
+                      : lang.map.btn_activate
+                  }}" (click)="!readonly && unKnownToggle$.next()" />
+
+                </div>
+            </div>
+            <span afterTemplate class="form-check form-switch switch-action" *ngIf="!readonly">
+            </span>
+        </div>
+        <div *ngIf="(unKnownState$ | async)" class="row">
             <div class="col-md-6 col-sm-12 mb-4 position-relative">
                 <label class="form-label" asteriskIfRequired="activityName"
                     for="activityName">{{lang.map.lbl_activity_name}}</label>
@@ -21,7 +37,7 @@
             </div>
 
         </div>
-        <div class="row">
+        <div *ngIf="!(unKnownState$ | async)" class="row">
             <div *ngIf="!readonly" class="col-md-6 col-sm-12 mb-4 position-relative">
                 <div>
                     <label for="caseType">{{lang.map.menu_service_search}}</label>
@@ -37,6 +53,28 @@
                 </div>
             </div>
             <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="licenseNumber"
+                    for="licenseNumber">{{lang.map.license_number}}</label>
+                <div class="input-group">
+                    <input id="licenseNumber" validationClasses="licenseNumber" formControlName="licenseNumber"
+                    class="form-control" readonly trimInput>
+                    <button (click)="searchForLicense()" type="button" [disabled]="readonly || !serviceControl.value"
+                        class="input-group-text">
+                        <i class="mdi mdi-magnify text-primary"></i>
+                    </button>
+                    <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+                </div>
+           
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="licenseType"
+                    for="licenseType">{{lang.map.license_type}}</label>
+                <input id="licenseType" validationClasses="licenseType" formControlName="licenseType"
+                    class="form-control" readonly >
+                <app-field-error-message controlName="licenseType"></app-field-error-message>
+            </div>
+            <!-- <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                
                 <label for="licenseNumber" class="form-label">
                     {{lang.map.license_number}}
                 </label>
@@ -49,14 +87,14 @@
                 </div>
 
 
-            </div>
-            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            </div> -->
+            <!-- <div class="col-md-6 col-sm-12 mb-4 position-relative">
                 <label for="licenseType" class="form-label">
                     {{lang.map.license_type}}
                 </label>
                 <span id="licenseType" class="form-control input-disabled"
                     [innerHTML]="model && inboxService.getServiceName(model.licenseType) || '&nbsp;'"></span>
-            </div>
+            </div> -->
             <div class="col-md-6 col-sm-12 mb-4 position-relative">
                 <label class="form-label" asteriskIfRequired="otherData"
                     for="otherData">{{lang.map.lbl_other_data}}</label>
@@ -65,13 +103,6 @@
                 <app-field-error-message controlName="otherData"></app-field-error-message>
             </div>
         </div>
-        <div class="row">
-
-           
-        </div>
-
-
-
     </ng-container>
 </div>
 <div class="dialog-actions">
