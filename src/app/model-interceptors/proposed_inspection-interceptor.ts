@@ -9,6 +9,7 @@ export class ProposedInspectionInterceptor implements IModelInterceptor<Proposed
     model.statusInfo && (model.statusInfo = AdminResult.createInstance(model.statusInfo??{}));
     model.proposedTaskTypeInfo && (model.proposedTaskTypeInfo = AdminResult.createInstance(model.proposedTaskTypeInfo??{}));
     model.priorityInfo && (model.priorityInfo = AdminResult.createInstance(model.priorityInfo??{}));
+    model.userInfo && (model.userInfo = AdminResult.createInstance(model.userInfo??{}));
     return model;
   }
 
@@ -24,8 +25,10 @@ export class ProposedInspectionInterceptor implements IModelInterceptor<Proposed
     delete model.proposedTaskTypeInfo;
     delete model.ProposedTaskTypeInfo;
     delete model.priorityInfo;
+    delete model.userInfo;
     delete model.arName;
     delete model.enName
+    
 
   }
 
