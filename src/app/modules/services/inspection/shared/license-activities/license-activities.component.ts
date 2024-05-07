@@ -31,7 +31,7 @@ export class LicenseActivitiesComponent implements ControlValueAccessor, OnInit,
 
     value: LicenseActivity[] = [];
     destroy$ = new Subject<void>()
-    displayedColumns: string[] = ['activityName','activityDescription','actions'];
+    displayedColumns: string[] = ['licenseNumber','activityName','activityDescription','actions'];
     addLicenseActivityDialog$: Subject<any> = new Subject<any>();
     actions: IMenuItem<LicenseActivity>[] = [
         // view

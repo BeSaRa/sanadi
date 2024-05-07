@@ -17,6 +17,7 @@ export class LicenseActivity extends BaseModel<LicenseActivity, LicenseActivityS
   service: LicenseActivityService;
   licenseNumber!: string;
   licenseType!: number;
+  caseType!: number;
   otherData!: string;
   activityName!: string;
   activityDescription!: string;
@@ -68,11 +69,11 @@ export class LicenseActivity extends BaseModel<LicenseActivity, LicenseActivityS
       this.getFormValuesWithLabels()
     );
     return {
-      // licenseNumber : controls ? [values.licenseNumber,[]]: values.licenseNumber,
-      // licenseType : controls ? [values.licenseType,[]]: values.licenseType,
+      licenseNumber : controls ? [values.licenseNumber,[]]: values.licenseNumber,
+      licenseType : controls ? [values.licenseType,[]]: values.licenseType,
       otherData : controls ? [values.otherData,[]]: values.otherData,
-      activityName : controls ? [values.activityName,[CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]]: values.activityName,
-      activityDescription : controls ? [values.activityDescription,[CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]]: values.activityDescription,
+      activityName : controls ? [values.activityName,[CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]]: values.activityName,
+      activityDescription : controls ? [values.activityDescription,[CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]]: values.activityDescription,
     }
   }
   buildCompleteActivityForm(controls:boolean = false):any{
