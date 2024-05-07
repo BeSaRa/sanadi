@@ -297,4 +297,6 @@
   <button dialogClose class="btn btn-secondary">
     {{ lang.map.btn_cancel }}
   </button>
+  <button *ngIf="!readonly"  class="btn btn-secondary" (click)="resetForm()">{{lang.map.btn_reset}}</button>
+
 </div>

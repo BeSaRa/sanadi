@@ -385,6 +385,10 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
             }),
         };
     }
+    resetForm(){
+        this.form.reset()
+        this.departmentIdControl.setValue(this.employeeService.getInternalDepartment()?.id)
+      }
 
 }
 
