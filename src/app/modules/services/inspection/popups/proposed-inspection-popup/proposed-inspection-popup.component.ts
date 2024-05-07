@@ -150,6 +150,10 @@ export class ProposedInspectionPopupComponent extends AdminGenericDialog<Propose
       takeUntil(this.destroy$)
     ).subscribe()
   }
+  resetForm(){
+    this.form.reset()
+    this.departmentIdControl.setValue(this.employeeService.getInternalDepartment()?.id)
+  }
 }
 
 
