@@ -3,7 +3,7 @@
   <div>
     <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
       fullscreenBtn></button>
-    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose
       aria-label="Close"></button>
   </div>
 </div>
@@ -11,8 +11,7 @@
   <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
     <div class="row">
       <div class="col-sm-12 col-md-6 mb-3 position-relative">
-        <label for="departmentId" asteriskIfRequired="departmentId"
-          class="form-label">{{lang.map.department}}</label>
+        <label for="departmentId" asteriskIfRequired="departmentId" class="form-label">{{lang.map.department}}</label>
         <ng-select [selectOnTab]="true" labelForId="departmentId" [clearable]="true" placeholder="{{lang.map.select}}"
           id="departmentId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
           formControlName="departmentId" validationClasses="departmentId">
@@ -24,10 +23,11 @@
 
       </div>
       <div class="col-sm-12 col-md-6 mb-3 position-relative">
-        <label for="proposedTaskType" asteriskIfRequired="proposedTaskType" class="form-label">{{lang.map.lbl_proposed_task}}</label>
-        <ng-select [selectOnTab]="true" labelForId="proposedTaskType" [clearable]="true" placeholder="{{lang.map.select}}"
-          id="proposedTaskType" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
-          formControlName="proposedTaskType" validationClasses="proposedTaskType">
+        <label for="proposedTaskType" asteriskIfRequired="proposedTaskType"
+          class="form-label">{{lang.map.lbl_proposed_task}}</label>
+        <ng-select [selectOnTab]="true" labelForId="proposedTaskType" [clearable]="true"
+          placeholder="{{lang.map.select}}" id="proposedTaskType" [notFoundText]="lang.map.msg_not_found"
+          [readonly]="readonly" appendTo="body" formControlName="proposedTaskType" validationClasses="proposedTaskType">
           <ng-option *ngFor="let option of proposedTaskTypes" [value]="option.lookupKey">
             {{option.getName()}}
           </ng-option>
@@ -68,7 +68,23 @@
           validationClasses="operationDescription" class="form-control" trimInput id="operationDescription">
         <app-field-error-message controlName="operationDescription"></app-field-error-message>
       </div>
+
+      <div *ngIf="model.creationDate" class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="creationDate" class="form-label">
+          {{lang.map.creation_date}}
+        </label>
+        <span id="creationDate" class="form-control input-disabled"
+          [innerHTML]="(model && model.creationDate|date) || '&nbsp;'"></span>
+      </div>
+      <div *ngIf="model.userInfo" class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="createdBy" class="form-label">
+          {{lang.map.created_by}}
+        </label>
+        <span id="createdBy" class="form-control input-disabled"
+          [innerHTML]="model && model.userInfo?.getName()|| '&nbsp;'"></span>
+      </div>
     </div>
+
 
   </form>
 </div>
@@ -80,5 +96,5 @@
   <span class="flex-grow-1"></span>
   <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
     class="btn btn-primary">{{lang.map.btn_save}}</button>
-  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

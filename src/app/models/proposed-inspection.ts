@@ -24,11 +24,13 @@ export class ProposedInspection extends BaseModel<ProposedInspection, ProposedIn
   rejectionReason!: string;
   proposedTaskType!: number;
   createdby!:number;
+  creationDate!:string;
   inspectionLog!: AdminResult;
   proposedTaskTypeInfo!: AdminResult;
   statusInfo!: AdminResult;
   departmentInfo!: AdminResult;
   priorityInfo!: AdminResult;
+  userInfo!: AdminResult;
   /**
    *
    */
