@@ -12,7 +12,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { IDialogData } from '@contracts/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
-import {Pagination} from '@app/models/pagination';
+import { Pagination } from '@app/models/pagination';
 import { ProposedInspection } from '@app/models/proposed-inspection';
 import { ProposedInspectionPopupComponent } from '@app/modules/services/inspection/popups/proposed-inspection-popup/proposed-inspection-popup.component';
 import { HasInterception, InterceptParam } from '@app/decorators/decorators/intercept-model';
@@ -35,9 +35,9 @@ export class ProposedInspectionService extends CrudWithDialogGenericService<Prop
   list: ProposedInspection[] = [];
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              public dialog: DialogService,
-            private employeeService: EmployeeService) {
+    private urlService: UrlService,
+    public dialog: DialogService,
+    private employeeService: EmployeeService) {
     super();
     FactoryService.registerService('ProposedInspectionService', this);
   }
@@ -68,15 +68,15 @@ export class ProposedInspectionService extends CrudWithDialogGenericService<Prop
   @HasInterception
   @CastResponse(undefined)
   create(@InterceptParam() model: ProposedInspection): Observable<ProposedInspection> {
-    return this.http.post<ProposedInspection>(this._getServiceURL() , model);
+    return this.http.post<ProposedInspection>(this._getServiceURL(), model);
   }
-  
-  reject(@InterceptParam() model: ProposedInspection,reason: string): Observable<ProposedInspection> {
-    return this.http.post<ProposedInspection>(this._getServiceURL() +`/reject/${model.id}`,reason);
+
+  reject(@InterceptParam() model: ProposedInspection, reason: string): Observable<ProposedInspection> {
+    return this.http.post<ProposedInspection>(this._getServiceURL() + `/reject/${model.id}`, reason);
   }
-  
+
   paginateComposite(options: Partial<PaginationContract>): Observable<Pagination<ProposedInspection[]>> {
-    return this._filterPaginate(options,{}).pipe(
+    return this._filterPaginate(options, {}).pipe(
       tap(result => this.list = result.rs),
       tap(result => this._loadDone$.next(result.rs))
     );
@@ -84,10 +84,11 @@ export class ProposedInspectionService extends CrudWithDialogGenericService<Prop
   @CastResponse(undefined, {
     fallback: '$pagination'
   })
-   private _filterPaginate(options: Partial<PaginationContract>, paginateFilter: Partial<ProposedInspection>): Observable<Pagination<ProposedInspection[]>> {
-    return this.http.post<Pagination<ProposedInspection[]>>(this._getServiceURL() + '/filter/pg', { ...paginateFilter,
-      departmentId: this.employeeService.getInternalDepartment()?.id
-     }, {
+  private _filterPaginate(options: Partial<PaginationContract>, paginateFilter: Partial<ProposedInspection>): Observable<Pagination<ProposedInspection[]>> {
+    return this.http.post<Pagination<ProposedInspection[]>>(this._getServiceURL() + '/filter/pg', {
+      departmentId: this.employeeService.getInternalDepartment()?.id,
+      ...paginateFilter,
+    }, {
       params: { ...options }
     })
   }

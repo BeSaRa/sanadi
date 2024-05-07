@@ -9,19 +9,21 @@ import { CommonUtils } from '@app/helpers/common-utils';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { SortEvent } from '@app/interfaces/sort-event';
 import { ActualInspection } from '@app/models/actual-inspection';
+import { InternalDepartment } from '@app/models/internal-department';
 import { ProposedInspection } from '@app/models/proposed-inspection';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { DialogService } from '@app/services/dialog.service';
 import { EmployeeService } from '@app/services/employee.service';
+import { InternalDepartmentService } from '@app/services/internal-department.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { ProposedInspectionService } from '@app/services/proposed-inspection.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CommentPopupComponent } from '@app/shared/popups/comment-popup/comment-popup.component';
-import { Subject, of } from 'rxjs';
-import { catchError, exhaustMap, filter, switchMap, take, takeUntil } from 'rxjs/operators';
+import { Subject, of, timer } from 'rxjs';
+import { catchError, exhaustMap, filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'proposed-inspection',
@@ -33,6 +35,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
   usePagination = true;
   @Input() isApproval = false;
   @Output() actualInspectionCreated = new EventEmitter()
+  departments$:Subject<InternalDepartment[]> = new Subject<InternalDepartment[]>();
   readonlyStatuses = [ActualInceptionStatus.COMPLETED, ActualInceptionStatus.CANCELED, ActualInceptionStatus.REJECTED, ActualInceptionStatus.IN_PROGRESS]
   actions: IMenuItem<ProposedInspection>[] = [
     // view
@@ -77,7 +80,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
   ];
 
   displayedColumns: string[] = ['proposedTaskType', 'priority', 'departmentId', 'status', 'actions'];
-  searchColumns: string[] = ['search_proposedTaskType', 'search_priority', '_', 'search_status', 'search_actions'];
+  searchColumns: string[] = [];
 
 
   view$: Subject<ProposedInspection> = new Subject<ProposedInspection>();
@@ -87,9 +90,10 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
     private fb: FormBuilder,
     private dialogService: DialogService,
     private actualInspectionService: ActualInspectionService,
-    private employeeService: EmployeeService
+    private internalDepartmentService:InternalDepartmentService
   ) {
     super();
+   
 
   }
   searchColumnsConfig: SearchColumnConfigMap = {
@@ -115,7 +119,17 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
         optionValueKey: 'lookupKey'
       }
     },
-
+    search_departments: {
+      key: 'departmentId',
+      controlType: 'select',
+      property: 'departmentId',
+      label: 'department',
+      selectOptions: {
+        options$: this.departments$,
+        labelProperty: 'getName',
+        optionValueKey: 'id'
+      }
+    },
     search_status: {
       key: 'status',
       controlType: 'select',
@@ -130,9 +144,19 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
   }
 
   protected _init(): void {
+    this.internalDepartmentService.loadActive()
+    .pipe(
+      tap(list=>{
+        this.departments$.next(list)
+      }),
+      take(1)
+    ).subscribe()
     this.listenToView();
-
+   this.searchColumns= this.isApproval?
+    ['search_proposedTaskType', 'search_priority', 'search_departments', 'search_status', 'search_actions']:
+    ['search_proposedTaskType', 'search_priority', '_', 'search_status', 'search_actions'];
     this.buildFilterForm();
+
   }
   sortingCallbacks = {
 
@@ -170,8 +194,10 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
   }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      proposedTaskType: [null], priority: [null], status: [null]
+      proposedTaskType: [null], priority: [null], status: [null],departmentId:[null],
     })
+    // timer(200)
+    // .subscribe(_ => this.columnFilter$.next('filter'))
   }
   delete(model: ProposedInspection, event?: MouseEvent): void {
     event?.preventDefault();
