@@ -36,6 +36,9 @@
 
       </div>
     </div>
+    <div class="row" *ngIf="!!model.parentId">
+      <verification-templates formControlName="verificationListTemplate" ></verification-templates>
+    </div>
   </form>
 </div>
 <div class="dialog-actions">

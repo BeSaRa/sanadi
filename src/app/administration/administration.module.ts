@@ -112,6 +112,7 @@ import { GeneralProcessPopupComponent } from './popups/general-process-popup/gen
 import {
   ProcessFieldWrapperComponent
 } from './popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
+import { InspectionOperationChildrenPopupComponent } from './popups/inspection-operation-children-popup/inspection-operation-children-popup.component';
 import { InspectionOperationPopupComponent } from './popups/inspection-operation-popup/inspection-operation-popup.component';
 import {
   InternalDepartmentPopupComponent,
@@ -136,6 +137,7 @@ import { SurveySectionPopupComponent } from './popups/survey-section-popup/surve
 import { SurveyTemplatePopupComponent } from './popups/survey-template-popup/survey-template-popup.component';
 import { TeamPopupComponent } from './popups/team-popup/team-popup.component';
 import { VacationDatesPopupComponent } from './popups/vacation-dates-popup/vacation-dates-popup.component';
+import { VerificationTemplatePopupComponent } from './popups/verification-template-popup/verification-template-popup.component';
 import { BranchOfficersPopupComponent } from './shared/branch-officers-popup/branch-officers-popup.component';
 import { CustomMenuPermissionComponent } from './shared/custom-menu-permission/custom-menu-permission.component';
 import { CustomMenuUrlHandlerComponent } from './shared/custom-menu-url-handler/custom-menu-url-handler.component';
@@ -152,7 +154,7 @@ import { UserSecurityExternalComponent } from './shared/user-security-external/u
 import { UserSecurityComponent } from './shared/user-security/user-security.component';
 import { UserSubTeamComponent } from './shared/user-sub-team/user-sub-team.component';
 import { UserTeamComponent } from './shared/user-team/user-team.component';
-import { InspectionOperationChildrenPopupComponent } from './popups/inspection-operation-children-popup/inspection-operation-children-popup.component';
+import { VerificationTemplatesComponent } from './shared/verification-templates/verification-templates.component';
 
 @NgModule({
   declarations: [
@@ -265,7 +267,9 @@ import { InspectionOperationChildrenPopupComponent } from './popups/inspection-o
     CharityProfilePopupComponent,
     InspectionOperationComponent,
     InspectionOperationPopupComponent,
-    InspectionOperationChildrenPopupComponent
+    InspectionOperationChildrenPopupComponent,
+    VerificationTemplatesComponent,
+    VerificationTemplatePopupComponent
   ],
   imports: [
     SharedModule,
