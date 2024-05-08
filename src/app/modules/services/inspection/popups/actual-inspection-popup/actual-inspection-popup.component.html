@@ -3,12 +3,20 @@
   <div>
     <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
       fullscreenBtn></button>
-    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose
-      aria-label="Close"></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
   </div>
 </div>
 <div class="dialog-content" #dialogContent>
   <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+    <div class="row" *ngIf="model.proposedInspectionTask">
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="proposedTaskType" class="form-label">
+          {{lang.map.lbl_proposed_task}}
+        </label>
+        <span id="proposedTaskType" class="form-control input-disabled"
+          [innerHTML]="  model.proposedInspectionTask.proposedTaskTypeInfo?.getName() || '&nbsp;'"></span>
+      </div>
+    </div>
     <div class="row">
       <div class="col-sm-12 col-md-6 mb-3 position-relative">
         <label for="departmentId" asteriskIfRequired="departmentId" class="form-label">{{ lang.map.department }}</label>
@@ -268,10 +276,10 @@
     </div>
 
     <div class="row">
-      <inspection-specialists  formControlName="inspectionSpecialists" ></inspection-specialists>
+      <inspection-specialists formControlName="inspectionSpecialists"></inspection-specialists>
     </div>
     <div class="row">
-      <license-activities  formControlName="licenseActivities" ></license-activities>
+      <license-activities formControlName="licenseActivities"></license-activities>
     </div>
     <div class="row">
       <div class="col-12 mb-4 position-relative">
@@ -297,6 +305,6 @@
   <button dialogClose class="btn btn-secondary">
     {{ lang.map.btn_cancel }}
   </button>
-  <button *ngIf="!readonly"  class="btn btn-secondary" (click)="resetForm()">{{lang.map.btn_reset}}</button>
+  <button *ngIf="!readonly" class="btn btn-secondary" (click)="resetForm()">{{lang.map.btn_reset}}</button>
 
 </div>

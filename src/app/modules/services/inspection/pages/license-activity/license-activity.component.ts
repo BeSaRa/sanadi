@@ -231,9 +231,7 @@ export class LicenseActivityComponent implements OnInit, OnDestroy {
   followup(item: LicenseApprovalModel<any, any>): void {
     this.actualInspectionService
       .showCreateActualInspectionPopup(ActualInspectionCreationSource.FOLLOW_UP_SOURCE,
-        new ActualInspection().clone({
-          proposedTaskSerial :item.fullSerial
-        }))
+        new ActualInspection())
       .pipe(
         take(1),
       ).subscribe(model => {
