@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
@@ -12,13 +12,11 @@ import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { Observable } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'inspection-operation-popup',
     templateUrl: 'inspection-operation-popup.component.html',
     styleUrls: ['inspection-operation-popup.component.scss'],
-    changeDetection : ChangeDetectionStrategy.OnPush
 })
 export class InspectionOperationPopupComponent extends AdminGenericDialog<InspectionOperation> {
 

@@ -51,7 +51,8 @@ export class InspectionOperation extends BaseModel<InspectionOperation, Inspecti
       arName,
       egName,
       departmentId,
-      parentId
+      parentId,
+      verificationListTemplate
     } = this;
     return {
       arName: controls ? [arName, [
@@ -67,7 +68,8 @@ export class InspectionOperation extends BaseModel<InspectionOperation, Inspecti
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : egName,
       departmentId: controls ? [departmentId, [CustomValidators.required]] : departmentId,
-      parentId: controls ? [parentId, []] : parentId
+      parentId: controls ? [parentId, []] : parentId,
+      verificationListTemplate:controls?[verificationListTemplate,[]]:verificationListTemplate
     }
   }
 
