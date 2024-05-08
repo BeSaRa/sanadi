@@ -19,6 +19,7 @@ import { InternalDepartmentService } from '@app/services/internal-department.ser
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { ProposedInspectionService } from '@app/services/proposed-inspection.service';
+import { ToastService } from '@app/services/toast.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CommentPopupComponent } from '@app/shared/popups/comment-popup/comment-popup.component';
@@ -90,7 +91,8 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
     private fb: FormBuilder,
     private dialogService: DialogService,
     private actualInspectionService: ActualInspectionService,
-    private internalDepartmentService:InternalDepartmentService
+    private internalDepartmentService:InternalDepartmentService,
+    private toast:ToastService
   ) {
     super();
    
@@ -237,6 +239,9 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
         take(1),
         filter((comment) => !!comment),
         switchMap((comment) => this.service.reject(item, comment))
-      ).subscribe();
+      ).subscribe(_ => {
+        this.toast.success(this.lang.map.msg_reject_x_success.change({x: this.lang.map.lbl_proposed_task}))
+        this.reload$.next(null);
+      })
   }
 }
