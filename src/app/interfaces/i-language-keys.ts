@@ -2179,4 +2179,5 @@ export interface ILanguageKeys {
   msg_all_inspection_must_be_tabulated_or_under_inspection:string;
   lbl_create_proposed_inspection:string;
   lbl_create_actual_inspection:string;
+  msg_all_proposed_tasks_must_be_under_approval:string;
 }

@@ -6,6 +6,7 @@ import { ActualInceptionStatus } from '@app/enums/actual-inspection-status.enum'
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { IGridAction } from '@app/interfaces/i-grid-action';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { SortEvent } from '@app/interfaces/sort-event';
 import { ActualInspection } from '@app/models/actual-inspection';
@@ -36,7 +37,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
   usePagination = true;
   @Input() isApproval = false;
   @Output() actualInspectionCreated = new EventEmitter()
-  departments$:Subject<InternalDepartment[]> = new Subject<InternalDepartment[]>();
+  departments$: Subject<InternalDepartment[]> = new Subject<InternalDepartment[]>();
   readonlyStatuses = [ActualInceptionStatus.COMPLETED, ActualInceptionStatus.CANCELED, ActualInceptionStatus.REJECTED, ActualInceptionStatus.IN_PROGRESS]
   actions: IMenuItem<ProposedInspection>[] = [
     // view
@@ -80,7 +81,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
     },
   ];
 
-  displayedColumns: string[] = ['proposedTaskType', 'priority', 'departmentId', 'status', 'actions'];
+  displayedColumns: string[] = [];
   searchColumns: string[] = [];
 
 
@@ -91,11 +92,11 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
     private fb: FormBuilder,
     private dialogService: DialogService,
     private actualInspectionService: ActualInspectionService,
-    private internalDepartmentService:InternalDepartmentService,
-    private toast:ToastService
+    private internalDepartmentService: InternalDepartmentService,
+    private toast: ToastService
   ) {
     super();
-   
+
 
   }
   searchColumnsConfig: SearchColumnConfigMap = {
@@ -147,16 +148,19 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
 
   protected _init(): void {
     this.internalDepartmentService.loadActive()
-    .pipe(
-      tap(list=>{
-        this.departments$.next(list)
-      }),
-      take(1)
-    ).subscribe()
+      .pipe(
+        tap(list => {
+          this.departments$.next(list)
+        }),
+        take(1)
+      ).subscribe()
     this.listenToView();
-   this.searchColumns= this.isApproval?
-    ['search_proposedTaskType', 'search_priority', 'search_departments', 'search_status', 'search_actions']:
-    ['search_proposedTaskType', 'search_priority', '_', 'search_status', 'search_actions'];
+    this.displayedColumns = this.isApproval ?
+      ['proposedTaskType', 'priority', 'departmentId', 'status', 'actions'] :
+      ['rowSelection', 'proposedTaskType', 'priority', 'departmentId', 'status', 'actions'];
+    this.searchColumns = this.isApproval ?
+      ['search_proposedTaskType', 'search_priority', 'search_departments', 'search_status', 'search_actions'] :
+      ['_', 'search_proposedTaskType', 'search_priority', '__', 'search_status', 'search_actions'];
     this.buildFilterForm();
 
   }
@@ -196,7 +200,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
   }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      proposedTaskType: [null], priority: [null], status: [null],departmentId:[null],
+      proposedTaskType: [null], priority: [null], status: [null], departmentId: [null],
     })
     // timer(200)
     // .subscribe(_ => this.columnFilter$.next('filter'))
@@ -227,7 +231,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
       .pipe(
         take(1),
       ).subscribe(model => {
-        if(model){
+        if (model) {
           this.actualInspectionCreated.emit(model);
         }
       })
@@ -240,8 +244,48 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
         filter((comment) => !!comment),
         switchMap((comment) => this.service.reject(item, comment))
       ).subscribe(_ => {
-        this.toast.success(this.lang.map.msg_reject_x_success.change({x: this.lang.map.lbl_proposed_task}))
+        this.toast.success(this.lang.map.msg_reject_x_success.change({ x: this.lang.map.lbl_proposed_task }))
         this.reload$.next(null);
       })
+  }
+
+  bulkActionsList: IGridAction[] = [
+    {
+
+      langKey: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      callback: ($event: MouseEvent) => {
+        this.deleteBulk($event);
+      }
+    }
+  ];
+  get selectedRecords(): ActualInspection[] {
+    return this.table?.selection?.selected ?? [];
+  }
+  deleteBulk($event: MouseEvent): void {
+    $event.preventDefault();
+    if (this.selectedRecords.length > 0) {
+      const hasWrongSelection = this.selectedRecords
+        .some(item => ![ActualInceptionStatus.UNDER_APPROVAL].includes(item.status));
+
+      if (hasWrongSelection) {
+        this.dialogService.alert(this.lang.map.msg_all_proposed_tasks_must_be_under_approval)
+        return;
+      }
+      const message = this.lang.map.msg_confirm_cancel_x.change({ x: this.lang.map.lbl_actual_inspection });
+      this.dialogService.confirm(message)
+        .onAfterClose$
+        .pipe(
+          filter((click: UserClickOn) => click === UserClickOn.YES),
+
+          switchMap(() => {
+            const ids = this.selectedRecords.map((item) => item.id);
+            return this.service.deleteBulk(ids)
+          }),
+          take(1),
+          tap(_ => this.reload$.next(null)),
+        ).subscribe()
+
+    }
   }
 }

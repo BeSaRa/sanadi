@@ -1,3 +1,11 @@
+<ng-template #bulk>
+  <ng-container *ngIf="table">
+    <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
+                      [selectedRecords]="table.selection.selected" [actionsList]="bulkActionsList"
+                      [reversedColors]="true"
+                      [hasTableHeaderContainer]="true"></app-bulk-actions>
+  </ng-container>
+</ng-template>
 <div class="row">
   <div class="col-12">
     <app-table #table [paginator]="paginator"
@@ -15,15 +23,31 @@
                           [add$]="add$"
                           (textChange)="filterControl.setValue($event)"
                           [sort]="table.dataSource.sort"
-                          ></table-header>
+                          >
+                          <ng-container *ngTemplateOutlet="bulk"></ng-container>
+                        </table-header>
           </th>
         </ng-container>
+      
         <ng-container *ngFor="let column of searchColumns" [cdkColumnDef]="column">
           <th cdk-header-cell *cdkHeaderCellDef>
             <header-search-field (filterChange)="columnFilter$.next($event)" [form]="columnFilterForm"
                                      [searchConfig]="searchColumnsConfig" [column]="column">
             </header-search-field>
           </th>
+        </ng-container>
+        <ng-container cdkColumnDef="rowSelection">
+          <th class="select-all-td" cdk-header-cell *cdkHeaderCellDef>
+            <input type="checkbox" [disabled]="table.filter"
+                   [indeterminate]="table.selection.hasValue() && !table.allSelected()"
+                   (change)="$event ? table.toggleAll() : null"
+                   [checked]="table.selection.hasValue() && table.allSelected()"
+                   class="form-check-input">
+          </th>
+          <td cdk-cell *cdkCellDef="let row">
+            <input type="checkbox" (click)="$event.stopPropagation()" [checked]="table.selection.isSelected(row)"
+                   (change)="$event ? table.selection.toggle(row) : null" class="form-check-input">
+          </td>
         </ng-container>
         <ng-container cdkColumnDef="departmentId">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
