@@ -21,6 +21,10 @@ import { FactoryService } from "./factory.service";
 import { UrlService } from "./url.service";
 import { LicenseActivity } from "@app/models/license-activity";
 import { ActualInceptionStatus } from "@app/enums/actual-inspection-status.enum";
+import { DocumentService } from "./document.service";
+import { DomSanitizer } from "@angular/platform-browser";
+import { FileNetDocument } from "@app/models/file-net-document";
+import { InspectionDocumentService } from "./Inspection-document.service";
 
 @CastResponseContainer({
   $default: {
@@ -37,12 +41,16 @@ import { ActualInceptionStatus } from "@app/enums/actual-inspection-status.enum"
 export class ActualInspectionService extends CrudWithDialogGenericService<ActualInspection> {
 
   list: ActualInspection[] = [];
+  documentService = new InspectionDocumentService(this);
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              public dialog: DialogService) {
+              public dialog: DialogService,
+              public domSanitizer: DomSanitizer,
+            ) {
     super();
     FactoryService.registerService('ActualInspectionService', this);
+    this.documentService.loadDocuments = (caseId:string)=>this._loadDocuments(caseId)
   }
 
   _getModel(): new () => ActualInspection {
@@ -56,8 +64,15 @@ export class ActualInspectionService extends CrudWithDialogGenericService<Actual
   _getServiceURL(): string {
     return this.urlService.URLS.ACTUAL_INSPECTION;
   }
+ 
 
-
+  @CastResponse(() => FileNetDocument, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  private _loadDocuments(caseId: string): Observable<FileNetDocument[]> {
+    return this.http.get<FileNetDocument[]>(this._getServiceURL() + '/folder/contained-documents/' + caseId);
+  }
   openViewDialog(modelId: number): Observable<DialogRef> {
     return this.getByIdComposite(modelId).pipe(
       switchMap((ActualInspection: ActualInspection) => {
