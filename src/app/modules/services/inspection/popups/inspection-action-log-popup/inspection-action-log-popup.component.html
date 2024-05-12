@@ -20,7 +20,7 @@
               
               <ng-container cdkColumnDef="actionDate">
                 <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_inspection_date}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{row.actionDate | date}} </td>
+                <td cdk-cell *cdkCellDef="let row"> {{row.actionDate | date:'yyyy/MM/dd hh:mm a'}} </td>
               </ng-container>
            
            
