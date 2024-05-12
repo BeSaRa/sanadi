@@ -368,6 +368,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
                 filter(type=>!!type),
                 tap((type: number) => {
                     this.subInspectionOperations = this.inspectionOperations.filter(item => item.parentId === type);
+                    this.subOperationTypeControl.reset();
                 }),
                 takeUntil(this.destroy$)
             )
