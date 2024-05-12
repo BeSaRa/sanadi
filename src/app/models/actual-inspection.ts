@@ -51,6 +51,7 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
   taskSubject!: string;
   status!: number;
   creationSource!: number;
+  taskFolderId!:string;
 
   licenseActivities: LicenseActivity[] = [];
   inspectionSpecialists: InspectionSpecialist[] = [];

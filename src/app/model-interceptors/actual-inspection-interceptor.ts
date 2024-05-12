@@ -40,13 +40,14 @@ export class ActualInspectionInterceptor implements IModelInterceptor<ActualInsp
   receive(model: ActualInspection): ActualInspection {
 
     const inspectionActionLogInterceptor = new InspectionActionLogInterceptor();
+    const proposedInspectionInterceptor = new ProposedInspectionInterceptor();
     model.moneyLaundryOrTerrorism = model.moneyLaundryOrTerrorism ? LinkedProjectTypes.YES : LinkedProjectTypes.NO;
     model.mainOperationInfo = AdminResult.createInstance(model.mainOperationInfo);
     model.subOperationInfo = AdminResult.createInstance(model.subOperationInfo);
     model.inspectorInfo = AdminResult.createInstance(model.inspectorInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
     model.inspectionLogs && (model.inspectionLogs = model.inspectionLogs.map(item => inspectionActionLogInterceptor.receive(item)))
-
+    model.proposedInspectionTask && (model.proposedInspectionTask = proposedInspectionInterceptor.receive(model.proposedInspectionTask))
     model.dateFrom = DateUtils.changeDateToDatepicker(model.dateFrom);
     model.dateTo = DateUtils.changeDateToDatepicker(model.dateTo);
     return model

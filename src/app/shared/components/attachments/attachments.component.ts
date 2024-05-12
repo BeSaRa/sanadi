@@ -77,6 +77,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   caseType?: number;
   @Input()
   service!: DocumentService;
+  
   @ViewChild(TableComponent)
   table!: TableComponent;
 
@@ -559,7 +560,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       if (this.isReportCaseType()) {
         return true;
       }
-      if (this.model && (this.model.isFinalApproved() || this.model.isFinalNotification())) {
+      if (this.model && this.model.caseType && (this.model.isFinalApproved() || this.model.isFinalNotification())) {
         return true;
       }
       return this.disabled || !attachment.attachmentTypeStatus || !attachment.id || !this._isCreatedByCurrentUser(attachment);

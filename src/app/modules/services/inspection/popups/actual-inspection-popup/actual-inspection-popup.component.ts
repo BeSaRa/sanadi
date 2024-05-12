@@ -18,6 +18,8 @@ import { InternalDepartment } from '@app/models/internal-department';
 import { InternalUser } from '@app/models/internal-user';
 import { Lookup } from '@app/models/lookup';
 import { Profile } from '@app/models/profile';
+import { InspectionDocumentService } from '@app/services/Inspection-document.service';
+import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { CountryService } from '@app/services/country.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { InspectionOperationService } from '@app/services/inspection-operation.service';
@@ -30,7 +32,7 @@ import { ProfileService } from '@app/services/profile.service';
 import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { DatepickerControlsMap, DatepickerOptionsMap } from '@app/types/types';
+import { DatepickerControlsMap, DatepickerOptionsMap, TabMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { Observable, Subject, of } from 'rxjs';
@@ -83,6 +85,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         private profileService: ProfileService,
         private countryService: CountryService,
         private internalUserService: InternalUserService,
+        private actualInspectionService: ActualInspectionService,
         // don't remove this because its required for DI registration
         private licenseActivityService: LicenseActivityService) {
         super();
@@ -116,6 +119,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         this.inspectors$ = this.internalUserService.getInspectors();
         this._buildDatePickerMap();
         this._buildDatepickerControlsMap();
+        this.actualInspectionService.documentService.setModel(this.model);
 
     }
 
@@ -389,7 +393,26 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         this.form.reset()
         this.departmentIdControl.setValue(this.employeeService.getInternalDepartment()?.id)
       }
-
+      tabsData: TabMap = {
+        basicInfo: {
+          name: 'basicInfoTab',
+          langKey: 'lbl_basic_info',
+          index: 0,
+          checkTouchedDirty: false,
+          isTouchedOrDirty: () => false,
+          show: () => true,
+          validStatus: () => true
+        },
+        attachments: {
+          name: 'attachmentsTab',
+          langKey: 'attachments',
+          index: 1,
+          isTouchedOrDirty: () => false,
+          show: () => true,
+          validStatus: () => true
+        },
+    
+      };
 }
 
 
