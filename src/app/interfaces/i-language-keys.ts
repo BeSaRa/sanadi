@@ -2181,4 +2181,6 @@ export interface ILanguageKeys {
   lbl_create_actual_inspection:string;
   msg_all_proposed_tasks_must_be_under_approval:string;
   lbl_known:string;
+  msg_internal_specialist_required:string;
+  msg_activity_required:string;
 }

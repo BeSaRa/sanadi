@@ -14,6 +14,7 @@ import { BaseModel } from '@app/models/base-model';
 import { Country } from '@app/models/country';
 import { ExternalUser } from '@app/models/external-user';
 import { InspectionOperation } from '@app/models/inspection-operation';
+import { InspectionSpecialist } from '@app/models/inspection-specialist';
 import { InternalDepartment } from '@app/models/internal-department';
 import { InternalUser } from '@app/models/internal-user';
 import { Lookup } from '@app/models/lookup';
@@ -21,6 +22,7 @@ import { Profile } from '@app/models/profile';
 import { InspectionDocumentService } from '@app/services/Inspection-document.service';
 import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { CountryService } from '@app/services/country.service';
+import { DialogService } from '@app/services/dialog.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { InspectionOperationService } from '@app/services/inspection-operation.service';
 import { InternalDepartmentService } from '@app/services/internal-department.service';
@@ -86,6 +88,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         private countryService: CountryService,
         private internalUserService: InternalUserService,
         private actualInspectionService: ActualInspectionService,
+        private dialog:DialogService,
         // don't remove this because its required for DI registration
         private licenseActivityService: LicenseActivityService) {
         super();
@@ -195,6 +198,14 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     }
 
     beforeSave(model: ActualInspection, form: UntypedFormGroup): Observable<boolean> | boolean {
+        if(!this.inspectionSpecialistsArray.value.some((item:InspectionSpecialist) => item.internalSpecialist)){
+            this.dialog.error(this.lang.map.msg_internal_specialist_required)
+            return false
+        }
+        if(!this.licenseActivitiesArray.value.length){
+            this.dialog.error(this.lang.map.msg_activity_required)
+            return false
+        }
         return form.valid;
     }
 
