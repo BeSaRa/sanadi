@@ -28,7 +28,7 @@
             <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
                 <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">     
                   <i class="mdi mdi-check-decagram text-primary me-2" *ngIf="!!row.licenseNumber"
-                  tooltip="{{lang.map.lbl_unKnown}}"></i>         
+                  tooltip="{{lang.map.lbl_known}}"></i>         
                 </grid-actions>
             </td>
         </ng-container>
