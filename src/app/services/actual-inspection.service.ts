@@ -50,7 +50,6 @@ export class ActualInspectionService extends CrudWithDialogGenericService<Actual
             ) {
     super();
     FactoryService.registerService('ActualInspectionService', this);
-    this.documentService.loadDocuments = (caseId:string)=>this._loadDocuments(caseId)
   }
 
   _getModel(): new () => ActualInspection {
@@ -66,13 +65,7 @@ export class ActualInspectionService extends CrudWithDialogGenericService<Actual
   }
  
 
-  @CastResponse(() => FileNetDocument, {
-    fallback: '$default',
-    unwrap: 'rs'
-  })
-  private _loadDocuments(caseId: string): Observable<FileNetDocument[]> {
-    return this.http.get<FileNetDocument[]>(this._getServiceURL() + '/folder/contained-documents/' + caseId);
-  }
+  
   openViewDialog(modelId: number): Observable<DialogRef> {
     return this.getByIdComposite(modelId).pipe(
       switchMap((ActualInspection: ActualInspection) => {

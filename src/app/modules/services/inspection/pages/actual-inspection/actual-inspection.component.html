@@ -2,9 +2,11 @@
   <tabs-list  [hasForm]="true" class="py-4" (onTabChange)="onTabChange($event)"
     [tabByIndex$]="tabIndex$">
     <tab [name]="tabsData.actualInspection.name" 
-      [template]="actualInspectionTabTemplate" [title]="lang.map.menu_actual_inspection"></tab>
+      [template]="actualInspectionTabTemplate" [title]="lang.map.menu_actual_inspection"
+      [hideIcon]="true"></tab>
     <tab [name]="tabsData.proposedInspection.name"
-      [template]="proposedInspectionTabTemplate" [title]="lang.map.menu_proposed_inspection"></tab>
+      [template]="proposedInspectionTabTemplate" [title]="lang.map.menu_proposed_inspection"
+      [hideIcon]="true"></tab>
   
   </tabs-list>
 </div>
