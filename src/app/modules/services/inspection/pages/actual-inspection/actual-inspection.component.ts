@@ -238,11 +238,11 @@ export class ActualInspectionComponent extends AdminGenericComponent<ActualInspe
     this.columnFilterForm = this.fb.group({
       mainOperationType: [null],
       subOperationType: [null],
-      taskSerialNumber: [null], operationDescription: [null], inspectorId: [null], status: [ActualInceptionStatus.TABULATED],
-      departmentId: [this.employeeService.getInternalDepartment()?.id]
+      taskSerialNumber: [null], operationDescription: [null], inspectorId: [null], status: [],
+      // departmentId: [this.employeeService.getInternalDepartment()?.id]
     })
-    timer(0)
-      .subscribe(_ => this.columnFilter$.next('filter'))
+    // timer(0)
+    //   .subscribe(_ => this.columnFilter$.next('filter'))
   }
   reject(model: ActualInspection, event?: MouseEvent): void {
     event?.preventDefault();
