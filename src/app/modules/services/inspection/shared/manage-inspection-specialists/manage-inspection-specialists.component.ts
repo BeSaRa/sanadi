@@ -32,7 +32,7 @@ export class ManageInspectionSpecialistsComponent implements OnInit, OnDestroy {
     @Input() list: InspectionSpecialist[] = [];
     @Input() actualInspection!: ActualInspection;
 
-    internalSpecialists: InternalUser[] = [];
+    internalSpecialists: InspectionSpecialist[] = [];
     externalSpecialists: InspectionSpecialist[] = [];
     destroy$ = new Subject<void>()
     displayedColumns: string[] = ['arName', 'enName', 'actions'];
@@ -50,14 +50,14 @@ export class ManageInspectionSpecialistsComponent implements OnInit, OnDestroy {
 
     }
 
-    internalActions: IMenuItem<InternalUser>[] = [
+    internalActions: IMenuItem<InspectionSpecialist>[] = [
           
         // delete
         {
           type: 'action',
           label: 'btn_delete',
           icon: ActionIconsEnum.DELETE,
-          onClick: (item: InternalUser,index) => this.deleteInternalSpecialist(item,index),
+          onClick: (item: InspectionSpecialist,index) => this.deleteInternalSpecialist(item,index),
           show: () => !this.disabled
         },
         
@@ -98,7 +98,7 @@ export class ManageInspectionSpecialistsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.list.forEach(item => {
             if (!!item.internalSpecialist) {
-                this.internalSpecialists = this.internalSpecialists.concat(item.internalSpecialist)
+                this.internalSpecialists = this.internalSpecialists.concat(item)
             }
             else {
                 this.externalSpecialists = this.externalSpecialists.concat(item)
@@ -126,7 +126,10 @@ export class ManageInspectionSpecialistsComponent implements OnInit, OnDestroy {
                 switchMap((value: InspectionSpecialist) => {
 
                     return this.actualInspectionService.AddSpecialist(value, this.actualInspection)
-                        .pipe(map(_ => value))
+                        .pipe(map(id => {
+                            value.id = id;
+                            return value
+                        }))
                     //   return of(value)
                 }),
                 tap(() => {
@@ -160,12 +163,22 @@ export class ManageInspectionSpecialistsComponent implements OnInit, OnDestroy {
                     operation: OperationTypes.CREATE,
                 }).onAfterClose$
                     .pipe(takeUntil(this.destroy$))
-                    .pipe(filter((value: InspectionSpecialist): value is InspectionSpecialist => !!value))
+                    .pipe(filter((value: InspectionSpecialist) => !!value))
+                    .pipe(filter((value: InspectionSpecialist) => {
+                        if(this.list.some((item)=> item.internalSpecialist?.id === value.id)){
+                            this.toast.error(this.lang.map.msg_duplicate_record_in_list)
+                            return false
+                        }
+                        return true
+                    }))
                     .pipe(
                         switchMap((value: InspectionSpecialist) => {
 
                             return this.actualInspectionService.AddSpecialist(value, this.actualInspection)
-                            .pipe(map((_)=>value))
+                            .pipe(map(id => {
+                                value.id = id;
+                                return value
+                            }))
                         }),
                         tap(() => {
                             this.toast.success(this.lang.map.msg_added_x_success.change({ x: this.lang.map.specialist }));
@@ -176,13 +189,13 @@ export class ManageInspectionSpecialistsComponent implements OnInit, OnDestroy {
         ).subscribe((item) => {
             if (!!item) {
                 this.list = this.list.concat(item)
-                this.internalSpecialists = this.internalSpecialists.concat(item.internalSpecialist)
+                this.internalSpecialists = this.internalSpecialists.concat(item)
             }
 
 
         })
     }
-    deleteInternalSpecialist(item: InternalUser, index: number) {
+    deleteInternalSpecialist(item: InspectionSpecialist, index: number) {
         this.dialog
             .confirm(this.lang.map.msg_confirm_delete_selected)
             .onAfterClose$
@@ -204,7 +217,7 @@ export class ManageInspectionSpecialistsComponent implements OnInit, OnDestroy {
             )
             .subscribe((success) => {
                 if (success) {
-                    this.list = this.list.filter(x => x.internalSpecialist !== item)
+                    this.list = this.list.filter(x => x !== item)
                     this.internalSpecialists = this.internalSpecialists.filter(x => x !== item)
 
                 }

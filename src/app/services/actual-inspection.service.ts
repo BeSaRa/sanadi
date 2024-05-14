@@ -15,7 +15,7 @@ import { ActualInspectionPopupComponent } from "@app/modules/services/inspection
 import { ManageInspectionPopupComponent } from "@app/modules/services/inspection/popups/manage-inspection-popup/manage-inspection-popup.component";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { Observable, of } from "rxjs";
-import { switchMap } from "rxjs/operators";
+import { map, switchMap } from "rxjs/operators";
 import { DialogService } from "./dialog.service";
 import { FactoryService } from "./factory.service";
 import { UrlService } from "./url.service";
@@ -164,9 +164,10 @@ export class ActualInspectionService extends CrudWithDialogGenericService<Actual
   }
  
   @HasInterception
-  AddSpecialist( @InterceptParam()model: InspectionSpecialist,parent:ActualInspection) {
+    AddSpecialist( @InterceptParam()model: InspectionSpecialist,parent:ActualInspection) {
     model.actualInspection = {id:parent.id} as ActualInspection
-    return this.http.post<InspectionSpecialist>(this._getServiceURL()+'/specialist' , model);
+    return this.http.post<{sc:number,rs:number}>(this._getServiceURL()+'/specialist' , model)
+    .pipe(map(result => result.rs));
   }
  
   @HasInterception
