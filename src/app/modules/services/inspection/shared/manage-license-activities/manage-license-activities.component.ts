@@ -32,7 +32,7 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
 
   @Input() actualInspection!: ActualInspection
   destroy$ = new Subject<void>()
-  displayedColumns: string[] = ['activityName', 'activityDescription', 'comment', 'status', 'actions'];
+  displayedColumns: string[] = ['licenseNumber','activityName', 'activityDescription', 'comment', 'status', 'actions'];
   addLicenseActivityDialog$: Subject<any> = new Subject<any>();
 
 
@@ -73,7 +73,7 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
     {
       type: 'action',
       label: 'btn_complete',
-      icon: ActionIconsEnum.APPROVED,
+      icon: ActionIconsEnum.ACCEPT,
       onClick: (item: LicenseActivity, index) => this.complete(item, index),
       show: (item: LicenseActivity) => !item.status && !this.disabled,
 
