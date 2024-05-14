@@ -38,7 +38,7 @@ export class ManageInspectionPopupComponent {
     },
     specialists: {
       name: 'specialistsTab',
-      langKey: 'lbl_external_specialists',
+      langKey: 'lbl_inspection_specialists',
       index: 1,
       isTouchedOrDirty: () => false,
       show: () => true,
