@@ -107,10 +107,10 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
                         .pipe(filter((value: LicenseActivity): value is LicenseActivity => !!value))
                         .pipe(tap(item => {
                             // this.model.licenseNumber = item.licenseNumber;
-                            // this.model.licenseType = item.licenseType;
                             this.licenseNumberControl.setValue(item.licenseNumber);
-                            this.licenseTypeControl.setValue(this.inboxService.getServiceName(item.licenseType));
-                            this.model.caseType = item.caseType
+                            this.licenseTypeControl.setValue(item.licenseType);
+                            // this.model.licenseType = item.licenseType;
+                            this.model.caseType = item.licenseType
                         }))
                 }),
 
