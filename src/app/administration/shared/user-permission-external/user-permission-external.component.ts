@@ -60,6 +60,9 @@ export class UserPermissionExternalComponent implements OnInit, OnDestroy {
   fixedPermissionsListIds: number[] = [];
   restrictedUserPermissions: Map<number, boolean> = new Map<number, boolean>();
 
+  internalOnlyGroups:UserPermissionGroupsEnum[]=[
+    UserPermissionGroupsEnum.INSPECTION
+  ]
   private loggedInSuperAdminOnlyPermissions: string[] = [
     PermissionsEnum.SUB_ADMIN,
     PermissionsEnum.APPROVAL_ADMIN
@@ -167,7 +170,9 @@ export class UserPermissionExternalComponent implements OnInit, OnDestroy {
       }))
       .pipe(takeUntil(this.destroy$))
       .pipe(tap((allPermissions) => this._setFixedPermissionsList(allPermissions)))
-      .pipe(withLatestFrom(of(this.lookupService.listByCategory.ExternalUserPermissionGroup)))
+      .pipe(withLatestFrom(of(this.lookupService.listByCategory
+        .ExternalUserPermissionGroup.filter(group=> !this.internalOnlyGroups.includes(group.lookupKey) )
+      )))
       .pipe(switchMap(([permissions, groups]) => {
         this.buildPermissionGroups(groups, permissions);
         this.groupHandler = new CheckGroupHandler<Permission>(
