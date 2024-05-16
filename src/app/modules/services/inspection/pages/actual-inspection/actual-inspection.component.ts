@@ -41,7 +41,7 @@ export class ActualInspectionComponent extends AdminGenericComponent<ActualInspe
       label: 'view',
       icon: ActionIconsEnum.VIEW,
       onClick: (item: ActualInspection) => this.view$.next(item),
-      show: (item: ActualInspection) => [ActualInceptionStatus.CANCELED, ActualInceptionStatus.COMPLETED].includes(item.status)
+      show: (item: ActualInspection) => [ActualInceptionStatus.REJECTED, ActualInceptionStatus.COMPLETED].includes(item.status)
 
     },
     // edit
@@ -50,7 +50,7 @@ export class ActualInspectionComponent extends AdminGenericComponent<ActualInspe
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: ActualInspection) => this.edit$.next(item),
-      show: (item: ActualInspection) => ![ActualInceptionStatus.CANCELED, ActualInceptionStatus.COMPLETED].includes(item.status)
+      show: (item: ActualInspection) => ![ActualInceptionStatus.REJECTED, ActualInceptionStatus.COMPLETED].includes(item.status)
 
     },
     // reject
@@ -59,7 +59,7 @@ export class ActualInspectionComponent extends AdminGenericComponent<ActualInspe
       label: 'cancel_task',
       icon: ActionIconsEnum.BLOCK,
       onClick: (item: ActualInspection) => this.reject(item),
-      show: (item: ActualInspection) => ![ActualInceptionStatus.CANCELED, ActualInceptionStatus.COMPLETED].includes(item.status)
+      show: (item: ActualInspection) => ![ActualInceptionStatus.REJECTED, ActualInceptionStatus.COMPLETED].includes(item.status)
 
     },
     // copy
@@ -162,7 +162,7 @@ export class ActualInspectionComponent extends AdminGenericComponent<ActualInspe
       property: 'status',
       label: 'lbl_status',
       selectOptions: {
-        options: this.lookupService.listByCategory.InspectionTaskStatus,
+        options: this.lookupService.listByCategory.ActualInspectionTaskStatus,
         labelProperty: 'getName',
         optionValueKey: 'lookupKey'
       }
