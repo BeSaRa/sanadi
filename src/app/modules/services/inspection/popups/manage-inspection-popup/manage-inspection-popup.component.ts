@@ -52,6 +52,14 @@ export class ManageInspectionPopupComponent {
       show: () => true,
       validStatus: () => true
     },
+    attachments: {
+      name: 'attachmentsTab',
+      langKey: 'attachments',
+      index: 3,
+      isTouchedOrDirty: () => false,
+      show: () => true,
+      validStatus: () => true
+    },
   };
   inspectorControl!: UntypedFormControl;
 
@@ -72,6 +80,7 @@ export class ManageInspectionPopupComponent {
     if(this.readonly){
       this.inspectorControl.disable();
     }
+    this.model.service.documentService.setModel(this.model)
 
   }
 

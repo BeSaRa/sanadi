@@ -12,6 +12,8 @@
         [title]="lang.map[tabsData.specialists.langKey]"></tab>
       <tab [name]="tabsData.inspector.name" [template]="inspectorTabTemplate"
         [title]="lang.map[tabsData.inspector.langKey]"></tab>
+      <tab [name]="tabsData.attachments.name" [template]="attachmentsTabTemplate"
+        [title]="lang.map[tabsData.attachments.langKey]"></tab>
 
     </tabs-list>
   </div>
@@ -44,6 +46,10 @@
       </div>
     </div>
 
+  </ng-template>
+  <ng-template #attachmentsTabTemplate>
+    <attachments [caseId]="model?.id?.toString()" [model]="model" [service]="model.service.documentService"
+      [disabled]="readonly"></attachments>
   </ng-template>
 </div>
 
