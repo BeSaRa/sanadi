@@ -7,20 +7,20 @@
         <div class="row">
             <div class="col-sm-12 mt-2 form-check form-switch" *ngIf="!readonly">
                 <div class="ms-3">
-                    <label class="form-check-label" for="unKnown">{{lang.map.lbl_unKnown}}</label>
-                    <input id="unKnown" class="form-check-input" type="checkbox" [checked]="unKnownState$ | async"
+                    <label class="form-check-label" for="unKnown">{{lang.map.lbl_known}}</label>
+                    <input id="unKnown" class="form-check-input" type="checkbox" [checked]="knownState$ | async"
                         tooltip="{{
-                    (unKnownState$ | async)
+                    (knownState$ | async)
                       ? lang.map.btn_deactivate
                       : lang.map.btn_activate
-                  }}" (click)="!readonly && unKnownToggle$.next()" />
+                  }}" (click)="!readonly && knownToggle$.next()" />
 
                 </div>
             </div>
             <span afterTemplate class="form-check form-switch switch-action" *ngIf="!readonly">
             </span>
         </div>
-        <div *ngIf="(unKnownState$ | async)" class="row">
+        <div *ngIf="!(knownState$ | async)" class="row">
             <div class="col-md-6 col-sm-12 mb-4 position-relative">
                 <label class="form-label" asteriskIfRequired="activityName"
                     for="activityName">{{lang.map.lbl_activity_name}}</label>
@@ -37,7 +37,7 @@
             </div>
 
         </div>
-        <div *ngIf="!(unKnownState$ | async)" class="row">
+        <div *ngIf="(knownState$ | async)" class="row">
             <div *ngIf="!readonly" class="col-md-6 col-sm-12 mb-4 position-relative">
                 <div>
                     <label for="caseType">{{lang.map.menu_service_search}}</label>
