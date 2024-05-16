@@ -51,7 +51,7 @@ export class ActivityImplementationComponent implements OnInit, OnDestroy {
             icon: ActionIconsEnum.BRIEFCASE,
             label: 'manage_task',
             onClick: (item: ActualInspection) => this.manage$.next(item),
-            show: (item: ActualInspection) => ![ActualInceptionStatus.REJECTED, ActualInceptionStatus.COMPLETED].includes(item.status)
+            show: (item: ActualInspection) => [ActualInceptionStatus.UNDER_INSPECTION, ActualInceptionStatus.TABULATED].includes(item.status)
         },
         // start
         {
