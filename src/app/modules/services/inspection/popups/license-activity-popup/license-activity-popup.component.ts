@@ -30,8 +30,8 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
     serviceControl!: UntypedFormControl;
     unknownActivityControls:UntypedFormControl[]= [];
     knownActivityControls:UntypedFormControl[]=[];
-    unKnownToggle$: Subject<void> = new Subject()
-    unKnownState$:Observable<boolean> = new Observable<boolean>()
+    knownToggle$: Subject<void> = new Subject()
+    knownState$:Observable<boolean> = new Observable<boolean>()
     constructor(
         public lang: LangService,
         private dialogRef: DialogRef,
@@ -64,11 +64,11 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
         this.form = this.fb.group(this.model.buildForm(true))
         this.unknownActivityControls=[this.activityNameControl, this.activityDescriptionControl];
         this.knownActivityControls=[this.licenseNumberControl, this.licenseTypeControl];
-        this.unKnownState$ = this.unKnownToggle$.pipe(
-            scan((state, _) => !state, !this.model.licenseNumber),
-            startWith(!this.model.licenseNumber),
+        this.knownState$ = this.knownToggle$.pipe(
+            scan((state, _) => !state, this.model.id ? !!this.model.licenseNumber : !this.model.activityName),
+            startWith(this.model.id ? !!this.model.licenseNumber : !this.model.activityName),
             tap((state) => {
-                if (state) {
+                if (!state) {
                     this.addValidators(this.unknownActivityControls,[CustomValidators.required]);
                     this.removeValidators(this.knownActivityControls,[CustomValidators.required]);
                  
@@ -82,7 +82,7 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
     
         )
         if (!this.model.licenseNumber) {
-            this.unKnownToggle$.next()
+            this.knownToggle$.next()
         }
     }
 
