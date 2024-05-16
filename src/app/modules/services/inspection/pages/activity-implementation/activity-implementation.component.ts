@@ -43,7 +43,7 @@ export class ActivityImplementationComponent implements OnInit, OnDestroy {
             icon: ActionIconsEnum.VIEW,
             label: 'view',
             onClick: (item: ActualInspection) => this.view(item),
-            show: (item: ActualInspection) => [ActualInceptionStatus.CANCELED, ActualInceptionStatus.COMPLETED].includes(item.status)
+            show: (item: ActualInspection) => [ActualInceptionStatus.REJECTED, ActualInceptionStatus.COMPLETED].includes(item.status)
         },
         // manage
         {
@@ -51,7 +51,7 @@ export class ActivityImplementationComponent implements OnInit, OnDestroy {
             icon: ActionIconsEnum.BRIEFCASE,
             label: 'manage_task',
             onClick: (item: ActualInspection) => this.manage$.next(item),
-            show: (item: ActualInspection) => ![ActualInceptionStatus.CANCELED, ActualInceptionStatus.COMPLETED].includes(item.status)
+            show: (item: ActualInspection) => ![ActualInceptionStatus.REJECTED, ActualInceptionStatus.COMPLETED].includes(item.status)
         },
         // start
         {

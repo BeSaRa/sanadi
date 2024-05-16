@@ -186,4 +186,6 @@ export interface ILookupMap {
   UnknownOrganization: Lookup[];
   InspectionTaskStatus: Lookup[];
   InspectionActivityStatus: Lookup[];
+  ActualInspectionTaskStatus: Lookup[];
+  ProposedInspectionTaskStatus: Lookup[];
 }

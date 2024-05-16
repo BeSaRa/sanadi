@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { ProposedInceptionStatus } from '@app/enums/Proposed-inception-status';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { ActualInspectionCreationSource } from '@app/enums/actual-inspection-creation-source.enum';
-import { ActualInceptionStatus } from '@app/enums/actual-inspection-status.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
@@ -15,7 +15,6 @@ import { ProposedInspection } from '@app/models/proposed-inspection';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { DialogService } from '@app/services/dialog.service';
-import { EmployeeService } from '@app/services/employee.service';
 import { InternalDepartmentService } from '@app/services/internal-department.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
@@ -24,7 +23,7 @@ import { ToastService } from '@app/services/toast.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CommentPopupComponent } from '@app/shared/popups/comment-popup/comment-popup.component';
-import { Subject, of, timer } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { catchError, exhaustMap, filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
@@ -38,7 +37,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
   @Input() isApproval = false;
   @Output() actualInspectionCreated = new EventEmitter()
   departments$: Subject<InternalDepartment[]> = new Subject<InternalDepartment[]>();
-  readonlyStatuses = [ActualInceptionStatus.COMPLETED, ActualInceptionStatus.CANCELED, ActualInceptionStatus.REJECTED, ActualInceptionStatus.IN_PROGRESS]
+  readonlyStatuses = [ProposedInceptionStatus.COMPLETED, ProposedInceptionStatus.CANCELED, ProposedInceptionStatus.REJECTED, ProposedInceptionStatus.IN_PROGRESS]
   actions: IMenuItem<ProposedInspection>[] = [
     // view
     {
@@ -139,7 +138,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
       property: 'status',
       label: 'lbl_status',
       selectOptions: {
-        options: this.lookupService.listByCategory.InspectionTaskStatus,
+        options: this.lookupService.listByCategory.ProposedInspectionTaskStatus,
         labelProperty: 'getName',
         optionValueKey: 'lookupKey'
       }
@@ -266,7 +265,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
     $event.preventDefault();
     if (this.selectedRecords.length > 0) {
       const hasWrongSelection = this.selectedRecords
-        .some(item => ![ActualInceptionStatus.UNDER_APPROVAL].includes(item.status));
+        .some(item => ![ProposedInceptionStatus.UNDER_APPROVAL].includes(item.status));
 
       if (hasWrongSelection) {
         this.dialogService.alert(this.lang.map.msg_all_proposed_tasks_must_be_under_approval)
