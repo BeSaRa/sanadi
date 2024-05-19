@@ -362,9 +362,8 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         ? [
             transferNumber,
             [
-              CustomValidators.number,
               CustomValidators.maxLength(
-                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),
             ],
           ]
