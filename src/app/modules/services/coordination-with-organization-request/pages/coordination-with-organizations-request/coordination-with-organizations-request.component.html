@@ -3,7 +3,7 @@
     <tabs-list [accordionView]="accordionView" [hasForm]="true">
       <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
            [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
-      <tab [name]="tabsData.participantOrganizations.name" [template]="participating_organizaions"
+      <tab *ngIf="isInternalUser" [name]="tabsData.participantOrganizations.name" [template]="participating_organizaions"
            [title]="lang.map.participant_organizations" [hasError]="getTabInvalidStatus('participantOrganizations')">
       </tab>
       <tab *ngIf="!isInternalUser" [name]="tabsData.organizationOfficers.name" [template]="organization_officers"
