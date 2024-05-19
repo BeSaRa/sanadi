@@ -990,12 +990,21 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     );
   }
 
+  canChangeEntityTypeTransferTypes =[
+    FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY,
+    FinancialTransferTypes.PROJECTS_TO_OTHERS,
+    FinancialTransferTypes.PARTICIPATION_IN_INTERNATIONAL_CONFERENCES,
+    FinancialTransferTypes.MEMBERSHIP_IN_INTERNATIONAL_PROFESSIONAL_ASSOCIATIONS,
+    FinancialTransferTypes.OTHER_TRANSFERS,
+    FinancialTransferTypes.CONSULTING_SERVICES,
+    FinancialTransferTypes.PURCHASES_FROM_OUTSIDE_COUNTRY,
+    
+  ]
   isEditReceiverTypeAllowed(): boolean {
     return (
       // this.transferType.value !== FinancialTransferTypes.OVERSEAS_OFFICE_OPERATING_EXPENSES &&
       this.transfereeType.value === FinancialTransfereeTypes.AUTHORIZED_ENTITY &&
-      (this.transferType.value === FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY ||
-        this.transferType.value === FinancialTransferTypes.PROJECTS_TO_OTHERS)
+      this.canChangeEntityTypeTransferTypes.includes(this.transferType.value)
     );
   }
   isSearchAuthorizedEntityAllowed() {
