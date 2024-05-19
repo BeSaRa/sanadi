@@ -491,9 +491,8 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     ]);
     this.actualTransferDate.setValidators([]);
     this.transferNumber.setValidators([
-      CustomValidators.number,
       CustomValidators.maxLength(
-        CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
+        CustomValidators.defaultLengths.ENGLISH_NAME_MAX
       ),
     ]);
   }
