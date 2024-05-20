@@ -67,14 +67,14 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     private userPreferencesService:UserPreferencesService,
     private dialog:DialogService
     ) {
-    if (this.employeeService.isExternalUser()) {
-      this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'orgInfo');
-    }
+    // if (this.employeeService.isExternalUser()) {
+    //   this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'orgInfo');
+    // }
   }
 
   tableOptions: ITableOptions = {
     ready: false,
-    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_SUBJECT', 'BD_CASE_TYPE', 'action',  'PI_CREATE','ACTIVATED', 'PI_DUE','fromUserInfo','team','actions'],//'BD_SUBJECT', 'orgInfo'
+    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_SUBJECT', 'BD_CASE_TYPE', 'action',  'PI_CREATE','ACTIVATED', 'PI_DUE','fromUserInfo','team','orgInfo','actions'],//'BD_SUBJECT', 'orgInfo'
     searchText: '',
     isSelectedRecords: () => {
       if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
