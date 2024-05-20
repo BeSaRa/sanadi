@@ -35,7 +35,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
   subject!: string;
   transferCountry!: number;
   country!: number;
-  qatariTransactionAmount!:number;
+  qatariTransactionAmount!: number;
   //transferee bank account
   transfereeType!: number;
   transferringEntityName!: string;
@@ -51,7 +51,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
   // affidavit of completion
   currency!: number;
   currencyTransferTransactionAmount!: number;
-  actualTransferDate!: string| IMyDateModel;
+  actualTransferDate!: string | IMyDateModel;
   transferringEntityId!: string;
   transferNumber!: string;
   receiverType!: number;
@@ -63,7 +63,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
   transferTypeInfo!: AdminResult;
   countryInfo!: AdminResult;
   currencyInfo!: AdminResult;
-  licenseStatusInfo!:AdminResult
+  licenseStatusInfo!: AdminResult
 
   service: FinancialTransferLicensingService;
   employeeService: EmployeeService;
@@ -89,7 +89,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
     this._setDefaultValues();
   }
 
-  private _setDefaultValues(){
+  private _setDefaultValues() {
     this.organizationId = this.employeeService.getCurrentUser().getProfileId()!;
   }
   finalizeSearchFields(): void {
@@ -130,15 +130,15 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         if (!CommonUtils.isValidValue(value) || typeof value === 'object') {
           value = '';
         }
-        adminResultValue = AdminResult.createInstance({arName: value as string, enName: value as string});
+        adminResultValue = AdminResult.createInstance({ arName: value as string, enName: value as string });
     }
     return adminResultValue ?? new AdminResult();
   }
   auditOperation: AuditOperationTypes = AuditOperationTypes.NO_CHANGE;
   getBasicInfoValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      requestType: {langKey: 'request_type', value: this.requestType},
-      oldLicenseFullSerial:{langKey: 'serial_number', value: this.oldLicenseFullSerial},
+      requestType: { langKey: 'request_type', value: this.requestType },
+      oldLicenseFullSerial: { langKey: 'serial_number', value: this.oldLicenseFullSerial },
     };
   }
   getBasicInfoFields(control = false): any {
@@ -162,12 +162,12 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
   }
   getTransferOperationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      transferType:{langKey: 'transfer_type', value: this.transferType},
-      subject:{langKey: 'subject', value: this.subject},
-      transferDescription:{langKey: 'lbl_description', value: this.transferDescription},
-      transferCountry:{langKey: 'transfer_to_country', value: this.transferCountry},
-      country:{langKey: 'execution_country', value: this.country},
-      qatariTransactionAmount:{langKey: 'transaction_amount_in_transfer_currency', value: this.qatariTransactionAmount},
+      transferType: { langKey: 'transfer_type', value: this.transferType },
+      subject: { langKey: 'subject', value: this.subject },
+      transferDescription: { langKey: 'lbl_description', value: this.transferDescription },
+      transferCountry: { langKey: 'transfer_to_country', value: this.transferCountry },
+      country: { langKey: 'execution_country', value: this.country },
+      qatariTransactionAmount: { langKey: 'transaction_amount_in_transfer_currency', value: this.qatariTransactionAmount },
     };
   }
   getTransferOperationFields(control = false): any {
@@ -185,25 +185,25 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         : transferType,
       subject: control
         ? [
-            subject,
-            [
-              CustomValidators.required,
-              CustomValidators.pattern('HAS_LETTERS'),
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-            ],
-          ]
+          subject,
+          [
+            CustomValidators.required,
+            CustomValidators.pattern('HAS_LETTERS'),
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
         : subject,
       transferDescription: control
         ? [
-            transferDescription,
-            [
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-            ],
-          ]
+          transferDescription,
+          [
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
         : transferDescription,
       transferCountry: control
         ? [transferCountry, [CustomValidators.required]]
@@ -211,28 +211,29 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
       country: control ? [country, [CustomValidators.required]] : country,
       qatariTransactionAmount: control
         ? [
-            qatariTransactionAmount,
-            [
-              CustomValidators.required,
-              CustomValidators.decimal(
-                CustomValidators.defaultLengths.DECIMAL_PLACES
-              ),
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
-              )
-            ],
-          ]
+          qatariTransactionAmount,
+          [
+            CustomValidators.required,
+            CustomValidators.decimal(
+              CustomValidators.defaultLengths.DECIMAL_PLACES
+            ),
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
+            )
+          ],
+        ]
         : qatariTransactionAmount,
     };
   }
   getTransfereeBankAccountValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      transfereeType:{langKey: 'transferee_type', value: this.transfereeType},
-      receiverType:{langKey: 'entity_type', value: this.receiverType},
-      transferringEntityName:{langKey: 'entity_name', value: this.transferringEntityName},
-      transferAccountNumber:{langKey: 'account_number', value: this.transferAccountNumber},
-      transfereeBankName:{langKey: 'transferee_bank_name', value: this.transfereeBankName},
-      transfereeIBAN:{langKey: 'transferee_iban', value: this.transfereeIBAN}, };
+      transfereeType: { langKey: 'transferee_type', value: this.transfereeType },
+      receiverType: { langKey: 'entity_type', value: this.receiverType },
+      transferringEntityName: { langKey: 'entity_name', value: this.transferringEntityName },
+      transferAccountNumber: { langKey: 'account_number', value: this.transferAccountNumber },
+      transfereeBankName: { langKey: 'transferee_bank_name', value: this.transfereeBankName },
+      transfereeIBAN: { langKey: 'transferee_iban', value: this.transfereeIBAN },
+    };
   }
   getTransfereeBankAccountFields(control = false): any {
     const {
@@ -252,44 +253,44 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         : receiverType,
       transferringEntityName: control
         ? [
-            transferringEntityName,
-            [
-              CustomValidators.required,
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-            ],
-          ]
+          transferringEntityName,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
         : transferringEntityName,
       transferAccountNumber: control
         ? [transferAccountNumber, [CustomValidators.required]]
         : transferAccountNumber,
       transfereeBankName: control
         ? [
-            transfereeBankName,
-            [
-              CustomValidators.required,
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-            ],
-          ]
+          transfereeBankName,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
         : transfereeBankName,
       transfereeIBAN: control
         ? [
-            transfereeIBAN,
-            [
-              CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH),
-            ],
-          ]
+          transfereeIBAN,
+          [
+            CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH),
+          ],
+        ]
         : transfereeIBAN,
     };
   }
   getTransferBankAccountValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      bankName:{langKey: 'bank_name', value: this.bankName},
-      transferFromIBAN:{langKey: 'transfer_from_iban', value: this.transferFromIBAN},
-      accountNumber:{langKey: 'account_number', value: this.accountNumber},
+      bankName: { langKey: 'bank_name', value: this.bankName },
+      transferFromIBAN: { langKey: 'transfer_from_iban', value: this.transferFromIBAN },
+      accountNumber: { langKey: 'account_number', value: this.accountNumber },
     }
   }
   getTransferBankAccountFields(control = false): any {
@@ -297,39 +298,40 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
     return {
       bankName: control
         ? [
-            bankName,
-            [
-              CustomValidators.required,
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-            ],
-          ]
+          bankName,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
         : bankName,
       transferFromIBAN: control
         ? [
-            transferFromIBAN,
-            [
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-            ],
-          ]
+          transferFromIBAN,
+          [
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
         : transferFromIBAN,
       accountNumber: control
         ? [
-            accountNumber,
-            [CustomValidators.required],
-          ]
+          accountNumber,
+          [CustomValidators.required],
+        ]
         : accountNumber,
     };
   }
   getAffidavitOfCompletionValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      currency:{langKey: 'currency', value: this.currency},
-      currencyTransferTransactionAmount:{langKey: 'transaction_amount_in_transfer_currency', value: this.currencyTransferTransactionAmount},
-      actualTransferDate:{langKey: 'lbl_transfer_operation_date', value: this.actualTransferDate},
-      transferNumber:{langKey: 'transfer_number', value: this.transferNumber},  }
+      currency: { langKey: 'currency', value: this.currency },
+      currencyTransferTransactionAmount: { langKey: 'transaction_amount_in_transfer_currency', value: this.currencyTransferTransactionAmount },
+      actualTransferDate: { langKey: 'lbl_transfer_operation_date', value: this.actualTransferDate },
+      transferNumber: { langKey: 'transfer_number', value: this.transferNumber },
+    }
   }
   getAffidavitOfCompletionFields(control = false): any {
     const {
@@ -343,30 +345,30 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
       currency: control ? [currency, []] : currency,
       currencyTransferTransactionAmount: control
         ? [
-            currencyTransferTransactionAmount,
-            [
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
-              ),
-              CustomValidators.decimal(
-                CustomValidators.defaultLengths.DECIMAL_PLACES
-              )
+          currencyTransferTransactionAmount,
+          [
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
+            ),
+            CustomValidators.decimal(
+              CustomValidators.defaultLengths.DECIMAL_PLACES
+            )
 
-            ],
-          ]
+          ],
+        ]
         : currencyTransferTransactionAmount,
       actualTransferDate: control
         ? [actualTransferDate, []]
         : actualTransferDate,
       transferNumber: control
         ? [
-            transferNumber,
-            [
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-            ],
-          ]
+          transferNumber,
+          [
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
         : transferNumber,
     };
   }
@@ -409,14 +411,16 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
     return this.service.approve(this, WFResponseType.APPROVE)
   }
   finalApprove(): DialogRef {
-    return this.service.finalApprove(this, WFResponseType.FINAL_APPROVE)
+    return this.employeeService.hasNotificationProfile() ?
+      super.finalApprove() :
+      this.service.finalApprove(this, WFResponseType.FINAL_APPROVE)
   }
   returnToOrganization(): DialogRef {
-    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.RETURN_TO_ORG, false, this,'comment',true);
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.RETURN_TO_ORG, false, this, 'comment', true);
   }
   getSpecialExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
-      description: {langKey: 'special_explanations', value: this.description},
+      description: { langKey: 'special_explanations', value: this.description },
     }
   }
 }
