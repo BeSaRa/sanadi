@@ -26,6 +26,7 @@ import { OperationTypes } from '@app/enums/operation-types.enum';
 import { UserRoleManageUserContract } from '@contracts/user-role-manage-user-contract';
 import { InternalUserInterceptor } from '@model-interceptors/internal-user-interceptor';
 import { ExternalUserInterceptor } from '@model-interceptors/external-user-interceptor';
+import { SubmissionMechanisms } from '@app/enums/submission-mechanisms.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -522,5 +523,15 @@ export class EmployeeService {
 
   private _manageUserApprovalAdmin(): boolean {
     return this.isExternalUser() && this.checkPermissions(PermissionsEnum.APPROVAL_ADMIN);
+  }
+
+  hasRegistrationProfile(): boolean {
+    return this.profile?.submissionMechanism === SubmissionMechanisms.REGISTRATION
+  }
+  hasNotificationProfile(): boolean {
+    return this.profile?.submissionMechanism === SubmissionMechanisms.NOTIFICATION
+  }
+  hasSubmissionProfile(): boolean {
+    return this.profile?.submissionMechanism === SubmissionMechanisms.SUBMISSION
   }
 }
