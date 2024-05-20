@@ -144,7 +144,7 @@ export class LicenseActivityComponent implements OnInit, OnDestroy {
     this.searchState = this.normalizeSearchCriteria(criteria);
     this.selectedService
       .paginateLicensesSearch(criteria)
-      .subscribe((pagination: Pagination<CaseModel<any, any>[]>) => {
+      .subscribe((pagination: Pagination<LicenseApprovalModel<any, any>[]>) => {
         pagination.rs.forEach(item => {
           item.searchFields = { ...item.searchFields, arName: 'arName', enName: 'enName' }
         })
@@ -202,7 +202,7 @@ export class LicenseActivityComponent implements OnInit, OnDestroy {
   }
 
   actionExportLicense(item: LicenseApprovalModel<any, any>) {
-    this.licenseService.showLicenseContent({ id: item.id }, item.caseType)
+    this.licenseService.showLicenseContent({ id: item.id }, item.licenseType)
       .subscribe((blob) => {
         window.open(blob.url);
         this.search$.next(null);
@@ -263,7 +263,7 @@ export class LicenseActivityComponent implements OnInit, OnDestroy {
   }
 
   private prepareCriteriaModel() {
-    const caseModel = (this.selectedService.getSearchCriteriaModel().clone(this.form.value)) as CaseModel<any, any>;
+    const caseModel = (this.selectedService.getSearchCriteriaModel().clone(this.form.value)) as LicenseApprovalModel<any, any>;
     caseModel.pageSize = this.pageEvent.pageSize;
     caseModel.pageNumber = this.pageEvent.pageIndex
 
