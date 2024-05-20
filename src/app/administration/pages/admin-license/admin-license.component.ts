@@ -15,7 +15,7 @@ import { IServiceConstructor } from '@app/interfaces/iservice-constructor';
 import { PageEvent } from '@app/interfaces/page-event';
 import { GeneralInterceptor } from '@app/model-interceptors/general-interceptor';
 import { GeneralSearchCriteriaInterceptor } from '@app/model-interceptors/general-search-criteria-interceptor';
-import { CaseModel } from '@app/models/case-model';
+import { LicenseApprovalModel } from '@app/models/license-approval-model';
 import { Pagination } from '@app/models/pagination';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { DialogService } from '@app/services/dialog.service';
@@ -42,8 +42,8 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   headerColumn: string[] = ['extra-header'];
   form!: UntypedFormGroup;
   fields: FormlyFieldConfig[] = [];
-  results: CaseModel<any, any>[] = [];
-  actions: IMenuItem<CaseModel<any, any>>[] = [];
+  results: LicenseApprovalModel<any, any>[] = [];
+  actions: IMenuItem<LicenseApprovalModel<any, any>>[] = [];
   search$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   tabIndex$: Subject<number> = new Subject<number>();
   defaultDates: string = '';
@@ -118,7 +118,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     return !this.servicesWithoutLicense.includes(caseType) && this.employeeService.userCanManage(caseType);
   }
 
-  private search(value: Partial<CaseModel<any, any>>) {
+  private search(value: Partial<LicenseApprovalModel<any, any>>) {
     const caseType = (this.selectedService.getSearchCriteriaModel()).caseType;
     let criteria = this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames);
     criteria.caseType = caseType;
@@ -127,7 +127,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     this.searchState = this.normalizeSearchCriteria(criteria);
     this.selectedService
       .paginateLicensesSearch(criteria)
-      .subscribe((pagination: Pagination<CaseModel<any, any>[]>) => {
+      .subscribe((pagination: Pagination<LicenseApprovalModel<any, any>[]>) => {
         pagination.rs.forEach(item => {
           item.searchFields = { ...item.searchFields, arName: 'arName', enName: 'enName' }
         })
@@ -193,8 +193,8 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       });;
   }
 
-  actionExportLicense(item: CaseModel<any, any>) {
-    this.licenseService.showLicenseContent({ id: item.id }, item.caseType)
+  actionExportLicense(item: LicenseApprovalModel<any, any>) {
+    this.licenseService.showLicenseContent({ id: item.id }, item.licenseType)
       .subscribe((blob) => {
         window.open(blob.url);
         this.search$.next(null);
@@ -208,7 +208,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       //   icon: 'mdi-eye',
       //   label: 'open_task',
       //   data: {hideFromViewer: true},
-      //   onClick: (item: CaseModel<any, any>) => this.actionExportLicense(item)
+      //   onClick: (item: LicenseApprovalModel<any, any>) => this.actionExportLicense(item)
       // },
       // regenerate
       {
@@ -216,7 +216,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
         icon: ActionIconsEnum.RELOAD,
         label: 'btn_regenerate_license',
         show: () => this.employeeService.hasPermissionTo(PermissionsEnum.REGENERATE_LICENSE),
-        onClick: (item: CaseModel<any, any>) => this.regenerateLicense(item)
+        onClick: (item: LicenseApprovalModel<any, any>) => this.regenerateLicense(item)
       },
     ];
   }
@@ -230,11 +230,11 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
 
   private prepareCriteriaModel() {
-    const caseModel = (this.selectedService.getSearchCriteriaModel().clone(this.form.value)) as CaseModel<any, any>;
-    caseModel.pageSize = this.pageEvent.pageSize;
-    caseModel.pageNumber = this.pageEvent.pageIndex 
+    const LicenseApprovalModel = (this.selectedService.getSearchCriteriaModel().clone(this.form.value)) as LicenseApprovalModel<any, any>;
+    LicenseApprovalModel.pageSize = this.pageEvent.pageSize;
+    LicenseApprovalModel.pageNumber = this.pageEvent.pageIndex 
   
-  return caseModel;
+  return LicenseApprovalModel;
   }
 
   private listenToSearch() {
@@ -351,7 +351,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       this.oldValuesAssigned = true;
     });
   }
-  private regenerateLicense(item: CaseModel<any, any>) {
+  private regenerateLicense(item: LicenseApprovalModel<any, any>) {
     this.dialog.confirm(this.lang.map.msg_confirm_regenerate_license)
       .onAfterClose$
       .pipe(
