@@ -647,6 +647,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
           this.setFieldsToNull(outsideFields)
           this.beneficiaryCountry.disable()
           this.markFieldsOptional([this.implementingAgencyType],true)
+          this.implementingAgencyList.removeValidators(this.customValidators.requiredArray)
+          this.implementingAgencyList.updateValueAndValidity()
         } else {
           this.displayDomain = true;
           this.displayInternal = false
@@ -654,7 +656,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
           this.beneficiaryCountry.enable()
           this.setFieldsToNull(insideFields.concat(this.beneficiaryCountry))
           this.markFieldsRequired([this.implementingAgencyType],true)
-        }
+          this.implementingAgencyList.addValidators(this.customValidators.requiredArray)
+          this.implementingAgencyList.updateValueAndValidity()        }
 
         this.model && (this.model.projectWorkArea = value)
 

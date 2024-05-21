@@ -203,7 +203,7 @@ export class ProjectImplementation
       projectEvaluationSLA: controls ? [values.projectEvaluationSLA, [ CustomValidators.number, CustomValidators.maxLength(3)]] : values.projectEvaluationSLA,
       implementingAgencyType: controls ? [values.implementingAgencyType] : values.implementingAgencyType,
       implementationTemplate: controls ? [values.implementationTemplate, CustomValidators.requiredArray] : values.implementationTemplate,
-      implementingAgencyList: controls ? [values.implementingAgencyList, CustomValidators.requiredArray] : values.implementingAgencyList,
+      implementingAgencyList: controls ? [values.implementingAgencyList] : values.implementingAgencyList,
       projectTotalCost: controls ? [values.projectTotalCost, [CustomValidators.required, Validators.min(1)]] : values.projectTotalCost
     }
   }
