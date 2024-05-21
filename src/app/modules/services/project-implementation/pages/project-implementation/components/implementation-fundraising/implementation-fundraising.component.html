@@ -97,7 +97,7 @@
         </td>
       </ng-container>
       <ng-container cdkColumnDef="Total">
-        <th colspan="7" cdk-header-cell *cdkFooterCellDef>
+        <th  [attr.colspan]="this.disabled ? 4:8" cdk-header-cell *cdkFooterCellDef>
           <div class="d-flex align-items-center justify-content-end h6 mb-0">{{lang.map.total}}</div>
         </th>
       </ng-container>
@@ -110,7 +110,7 @@
         </th>
       </ng-container>
       <ng-container cdkColumnDef="ProjectCost">
-        <th colspan="7" cdk-header-cell *cdkFooterCellDef>
+        <th [attr.colspan]="this.disabled ? 4:8" cdk-header-cell *cdkFooterCellDef>
           <div class="d-flex align-items-center justify-content-end h6 mb-0">{{lang.map.project_total_cost}}</div>
         </th>
       </ng-container>
@@ -123,7 +123,7 @@
         </th>
       </ng-container>
       <ng-container cdkColumnDef="Remaining">
-        <th colspan="7" cdk-header-cell *cdkFooterCellDef>
+        <th [attr.colspan]="this.disabled ? 4:8" cdk-header-cell *cdkFooterCellDef>
           <div class="d-flex align-items-center justify-content-end h6 mb-0">{{lang.map.remaining_amount}}</div>
         </th>
       </ng-container>

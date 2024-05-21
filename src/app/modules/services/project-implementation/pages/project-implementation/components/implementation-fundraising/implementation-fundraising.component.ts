@@ -58,18 +58,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   @Output()
   amountConsumed: EventEmitter<boolean> = new EventEmitter<boolean>()
   addFundraisingLicense$: Subject<any> = new Subject<any>();
-  displayedColumns: string[] = [
-    'projectLicenseFullSerial',
-    'permitType',
-    'arName',
-    'enName',
-    'projectTotalCost',
-    'consumedAmount',
-    'remainingAmount',
-    'collected',
-    'totalCost',
-    'actions'
-  ];
+  displayedColumns: string[] = []
 
   private _currentTemplate?: string
 
@@ -91,6 +80,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     private service: ProjectImplementationService,
     private dialog: DialogService,
     public lang: LangService) {
+   
   }
 
   get inputs(): UntypedFormArray {
@@ -105,6 +95,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       this.control = ctrl?.control as FormControl || undefined
     })
     this.listenToAdd()
+ 
   }
 
   ngOnDestroy(): void {
@@ -154,6 +145,24 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
 
   setDisabledState?(isDisabled: boolean): void {
     this.disabled = isDisabled
+    this.displayedColumns =  this.disabled ?[
+      'projectLicenseFullSerial',
+      'permitType',
+      'arName',
+      'enName',     
+      'actions'
+    ]:[
+      'projectLicenseFullSerial',
+      'permitType',
+      'arName',
+      'enName',
+      'projectTotalCost',
+      'consumedAmount',
+      'remainingAmount',
+      'collected',
+      'totalCost',
+      'actions'
+    ];
   }
 
 
