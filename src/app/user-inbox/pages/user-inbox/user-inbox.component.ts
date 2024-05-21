@@ -47,7 +47,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   tableOptions: ITableOptions = {
     ready: false,
     // columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'BD_SUBJECT', 'fromUserInfo', 'actions'], //'BD_SUBJECT', 'orgInfo',
-    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_SUBJECT', 'BD_CASE_TYPE', 'action', 'PI_CREATE', 'ACTIVATED', 'PI_DUE', 'fromUserInfo', 'actions'],//'BD_SUBJECT', 'orgInfo'
+    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_SUBJECT', 'BD_CASE_TYPE', 'action', 'PI_CREATE', 'ACTIVATED', 'PI_DUE', 'fromUserInfo','orgInfo', 'actions'],//'BD_SUBJECT', 'orgInfo'
     searchText: '',
     isSelectedRecords: () => {
       if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
@@ -98,9 +98,9 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private inboxService: InboxService,
     private globalSettingsService: GlobalSettingsService) {
-    if (this.employeeService.isExternalUser()) {
-      this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'orgInfo');
-    }
+    // if (this.employeeService.isExternalUser()) {
+    //   this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'orgInfo');
+    // }
   }
 
 
