@@ -200,7 +200,7 @@ export class ProjectImplementation
     return {
       licenseStartDate: controls ? [values.licenseStartDate, CustomValidators.required] : values.licenseStartDate,
       licenseDuration: controls ? [values.licenseDuration, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(3)]] : values.licenseDuration,
-      projectEvaluationSLA: controls ? [values.projectEvaluationSLA, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(3)]] : values.projectEvaluationSLA,
+      projectEvaluationSLA: controls ? [values.projectEvaluationSLA, [ CustomValidators.number, CustomValidators.maxLength(3)]] : values.projectEvaluationSLA,
       implementingAgencyType: controls ? [values.implementingAgencyType, CustomValidators.required] : values.implementingAgencyType,
       implementationTemplate: controls ? [values.implementationTemplate, CustomValidators.requiredArray] : values.implementationTemplate,
       implementingAgencyList: controls ? [values.implementingAgencyList, CustomValidators.requiredArray] : values.implementingAgencyList,
