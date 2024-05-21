@@ -646,12 +646,14 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
           this.internalProjectClassification.setValue(this.internalProjectClassifications[0].lookupKey)
           this.setFieldsToNull(outsideFields)
           this.beneficiaryCountry.disable()
+          this.markFieldsOptional([this.implementingAgencyType],true)
         } else {
           this.displayDomain = true;
           this.displayInternal = false
           this.domain.setValue(DomainTypes.HUMANITARIAN)
           this.beneficiaryCountry.enable()
           this.setFieldsToNull(insideFields.concat(this.beneficiaryCountry))
+          this.markFieldsRequired([this.implementingAgencyType],true)
         }
 
         this.model && (this.model.projectWorkArea = value)
