@@ -81,7 +81,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   serviceControl: UntypedFormControl = new UntypedFormControl(this.serviceNumbers[0]);
 
   get criteriaTitle(): string {
-    return this.lang.map.search_result + (this.results.length ? ' (' + this.results.length + ')' : '');
+    return this.lang.map.search_result + (this.count > 0 ? ' (' + this.count + ')' : '');
   };
 
 
