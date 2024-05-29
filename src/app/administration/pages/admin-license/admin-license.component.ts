@@ -75,6 +75,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     CaseTypes.PROJECT_IMPLEMENTATION,
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.PARTNER_APPROVAL,
+    CaseTypes.PROJECT_FUNDRAISING
   ] :
     [CaseTypes.PROJECT_IMPLEMENTATION]
   serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.hasSearchPermission(caseType));
