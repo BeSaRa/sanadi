@@ -26,10 +26,11 @@ export abstract class CrudWithDialogGenericService<T extends { id: number }> ext
    * @param operation
    * @private
    */
-  private getDialog(model: T, operation: OperationTypes): DialogRef {
+  private getDialog(model: T, operation: OperationTypes,extraData?:any): DialogRef {
     return this.dialog.show<IDialogData<T>>(this._getDialogComponent(), {
       operation,
-      model
+      model,
+      extraData
     })
   }
 
@@ -37,8 +38,8 @@ export abstract class CrudWithDialogGenericService<T extends { id: number }> ext
    * @description open add dialog you can override it in your service class
    * @returns DialogRef reference for the opened dialog
    */
-  addDialog(): DialogRef | Observable<DialogRef> {
-    return this.getDialog(new (this._getModel()), OperationTypes.CREATE);
+  addDialog(extraData?:any): DialogRef | Observable<DialogRef> {
+    return this.getDialog(new (this._getModel()), OperationTypes.CREATE,extraData);
   }
   /**
    * @description open add dialog you can override it in your service class
@@ -54,9 +55,9 @@ export abstract class CrudWithDialogGenericService<T extends { id: number }> ext
    * @param getById
    * @returns Observable<DialogRef> Observable of reference for opened dialog
    */
-  editDialog(model: T, getById: boolean = true): Observable<DialogRef> {
+  editDialog(model: T, getById: boolean = true,extraData?:any): Observable<DialogRef> {
     return (getById ? this.getById(model.id) : of(model))
-      .pipe(exhaustMap((model) => of(this.getDialog(model, OperationTypes.UPDATE))));
+      .pipe(exhaustMap((model) => of(this.getDialog(model, OperationTypes.UPDATE,extraData))));
   }
 
   /**
@@ -69,17 +70,17 @@ export abstract class CrudWithDialogGenericService<T extends { id: number }> ext
       .pipe(exhaustMap((model) => of(this.getDialog(model, OperationTypes.UPDATE))));
   }
 
- /* /!**
+  /**
    * @description open view dialog for the given model
    * @param model
    * @param getById
    * @returns Observable<DialogRef> Observable of reference for opened dialog
-   *!/
-  viewDialog(model: T, getById: boolean = true): Observable<DialogRef> {
+   */
+  viewDialog(model: T, getById: boolean = true,extraData?:any): Observable<DialogRef> {
     return (getById ? this.getById(model.id) : of(model))
-      .pipe(exhaustMap((model) => of(this.getDialog(model, OperationTypes.VIEW))));
+      .pipe(exhaustMap((model) => of(this.getDialog(model, OperationTypes.VIEW,extraData))));
   }
-
+ /*
   /!**
    * @description open view dialog for the given model composite
    * @param model

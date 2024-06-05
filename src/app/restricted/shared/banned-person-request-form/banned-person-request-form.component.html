@@ -1,0 +1,264 @@
+<ng-container [formGroup]="form">
+    <div class="row">
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="registrationNo" for="registrationNo" class="form-label">{{
+                lang.map.registration_number }}</label>
+            <input formControlName="registrationNo" type="text" [readOnly]="readonly" validationClasses="registrationNo"
+                class="form-control" trimInput id="registrationNo" />
+            <app-field-error-message controlName="registrationNo"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label for="sourceType" asteriskIfRequired="sourceType" class="form-label">
+                {{ lang.map.lbl_source_type}}
+            </label>
+            <ng-select [selectOnTab]="true" labelForId="sourceType" [clearable]="true"
+                placeholder="{{ lang.map.select }}" id="sourceType" [notFoundText]="lang.map.msg_not_found"
+                [readonly]="readonly" appendTo="body" formControlName="sourceType" validationClasses="sourceType">
+                <ng-option *ngFor="let option of sourceTypes" [value]="option.lookupKey">
+                    {{ option.getName() }}
+                </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="sourceType"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label for="sourceClassification" asteriskIfRequired="sourceClassification" class="form-label">
+                {{ lang.map.lbl_source_classification }}
+            </label>
+            <ng-select [selectOnTab]="true" labelForId="sourceClassification" [clearable]="true"
+                placeholder="{{ lang.map.select }}" id="sourceClassification" [notFoundText]="lang.map.msg_not_found"
+                [readonly]="readonly" appendTo="body" formControlName="sourceClassification"
+                validationClasses="sourceClassification">
+                <ng-option *ngFor="let option of sourceClassifications" [value]="option.lookupKey">
+                    {{ option.getName() }}
+                </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="sourceClassification"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label for="legalNature" asteriskIfRequired="legalNature" class="form-label">
+                {{ lang.map.lbl_legal_nature }}
+            </label>
+            <ng-select [selectOnTab]="true" labelForId="legalNature" [clearable]="true"
+                placeholder="{{ lang.map.select }}" id="legalNature" [notFoundText]="lang.map.msg_not_found"
+                [readonly]="readonly" appendTo="body" formControlName="legalNature" validationClasses="legalNature">
+                <ng-option *ngFor="let option of legalNatures" [value]="option.lookupKey">
+                    {{ option.getName() }}
+                </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="legalNature"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="sourceLink" for="sourceLink" class="form-label">{{
+                lang.map.lbl_source_link }}</label>
+            <input formControlName="sourceLink" type="text" [readOnly]="readonly" validationClasses="sourceLink"
+                class="form-control" trimInput id="sourceLink" />
+            <app-field-error-message controlName="sourceLink"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label for="documentType" asteriskIfRequired="documentType" class="form-label">
+                {{ lang.map.lbl_document_type}}
+            </label>
+            <ng-select [selectOnTab]="true" labelForId="documentType" [clearable]="true"
+                placeholder="{{ lang.map.select }}" id="documentType" [notFoundText]="lang.map.msg_not_found"
+                [readonly]="readonly" appendTo="body" formControlName="documentType" validationClasses="documentType">
+                <ng-option *ngFor="let option of documentTypes" [value]="option.lookupKey">
+                    {{ option.getName() }}
+                </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="documentType"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="documentNumber" for="documentNumber" class="form-label">{{
+                lang.map.lbl_document_number }}</label>
+            <input formControlName="documentNumber" type="text" [readOnly]="readonly" validationClasses="documentNumber"
+                class="form-control" trimInput id="documentNumber" />
+            <app-field-error-message controlName="documentNumber"></app-field-error-message>
+        </div>
+        <div class="col-12 col-md-4 mb-3 position-relative">
+            <label for="documentIssuanceDate" asteriskIfRequired="documentIssuanceDate"
+                class="form-label">{{lang.map.lbl_document_issuance_date}}</label>
+            <div class="input-group">
+                <i class="input-group-text mdi mdi-calendar"></i>
+                <div class="form-control" formControlName="documentIssuanceDate" id="documentIssuanceDate"
+                    [options]="datepickerOptionsMap.documentIssuanceDate" [ngClass]="{'input-disabled': readonly}"
+                    (click)="!readonly && dpDocumentIssuanceDate.toggleCalendar()"
+                    #dpDocumentIssuanceDate="angular-mydatepicker" angular-mydatepicker
+                    validationClasses="documentIssuanceDate">
+                </div>
+                <app-field-error-message controlName="documentIssuanceDate"></app-field-error-message>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label for="countryId" asteriskIfRequired="countryId" class="form-label">
+                {{ lang.map.lbl_issuance_country}}
+            </label>
+            <ng-select [selectOnTab]="true" labelForId="countryId" [clearable]="true"
+                placeholder="{{ lang.map.select }}" id="countryId" [notFoundText]="lang.map.msg_not_found"
+                [readonly]="readonly" appendTo="body" formControlName="countryId" validationClasses="countryId">
+                <ng-option *ngFor="let option of (countries$|async)" [value]="option.id">
+                    {{ option.getName() }}
+                </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="countryId"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="otherIssuingCountry" for="otherIssuingCountry" class="form-label">{{
+                lang.map.lbl_issuance_country_other }}</label>
+            <input formControlName="otherIssuingCountry" type="text" [readOnly]="readonly"
+                validationClasses="otherIssuingCountry" class="form-control" trimInput id="otherIssuingCountry" />
+            <app-field-error-message controlName="otherIssuingCountry"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="issuingCity" for="issuingCity" class="form-label">{{
+                lang.map.lbl_issuance_city }}</label>
+            <input formControlName="issuingCity" type="text" [readOnly]="readonly" validationClasses="issuingCity"
+                class="form-control" trimInput id="issuingCity" />
+            <app-field-error-message controlName="issuingCity"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="arName" for="arName" class="form-label">{{
+                lang.map.arabic_name }}</label>
+            <input formControlName="arName" type="text" [readOnly]="readonly" validationClasses="arName"
+                class="form-control" trimInput id="arName" />
+            <app-field-error-message controlName="arName"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="enName" for="enName" class="form-label">{{
+                lang.map.english_name }}</label>
+            <input formControlName="enName" type="text" [readOnly]="readonly" validationClasses="enName"
+                class="form-control" trimInput id="enName" />
+            <app-field-error-message controlName="enName"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="otherName" for="otherName" class="form-label">{{
+                lang.map.lbl_other_name }}</label>
+            <input formControlName="otherName" type="text" [readOnly]="readonly" validationClasses="otherName"
+                class="form-control" trimInput id="otherName" />
+            <app-field-error-message controlName="otherName"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="surName" for="surName" class="form-label">{{
+                lang.map.lbl_sur_name }}</label>
+            <input formControlName="surName" type="text" [readOnly]="readonly" validationClasses="surName"
+                class="form-control" trimInput id="surName" />
+            <app-field-error-message controlName="surName"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label for="placeOfResidence" asteriskIfRequired="placeOfResidence" class="form-label">
+                {{ lang.map.lbl_place_of_residence }}
+            </label>
+            <ng-select [selectOnTab]="true" labelForId="placeOfResidence" [clearable]="true"
+                placeholder="{{ lang.map.select }}" id="placeOfResidence" [notFoundText]="lang.map.msg_not_found"
+                [readonly]="readonly" appendTo="body" formControlName="placeOfResidence"
+                validationClasses="placeOfResidence">
+                <ng-option *ngFor="let option of (countries$|async)" [value]="option.id">
+                    {{ option.getName() }}
+                </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="placeOfResidence"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label for="placeOfBirth" asteriskIfRequired="placeOfBirth" class="form-label">
+                {{ lang.map.lbl_place_of_birth}}
+            </label>
+            <ng-select [selectOnTab]="true" labelForId="placeOfBirth" [clearable]="true"
+                placeholder="{{ lang.map.select }}" id="placeOfBirth" [notFoundText]="lang.map.msg_not_found"
+                [readonly]="readonly" appendTo="body" formControlName="placeOfBirth" validationClasses="placeOfBirth">
+                <ng-option *ngFor="let option of (countries$|async)" [value]="option.id">
+                    {{ option.getName() }}
+                </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="placeOfBirth"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label for="gender" asteriskIfRequired="gender" class="form-label">
+                {{ lang.map.gender}}
+            </label>
+            <ng-select [selectOnTab]="true" labelForId="gender" [clearable]="true" placeholder="{{ lang.map.select }}"
+                id="gender" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+                formControlName="gender" validationClasses="gender">
+                <ng-option *ngFor="let option of genders" [value]="option.lookupKey">
+                    {{ option.getName() }}
+                </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="gender"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label for="nationality" asteriskIfRequired="nationality" class="form-label">
+                {{ lang.map.lbl_nationality}}
+            </label>
+            <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="true"
+                placeholder="{{ lang.map.select }}" id="nationality" [notFoundText]="lang.map.msg_not_found"
+                [readonly]="readonly" appendTo="body" formControlName="nationality" validationClasses="nationality">
+                <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
+                    {{ option.getName() }}
+                </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="nationality"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="otherNationality" for="otherNationality" class="form-label">{{
+                lang.map.lbl_other_nationality }}</label>
+            <input formControlName="otherNationality" type="text" [readOnly]="readonly"
+                validationClasses="otherNationality" class="form-control" trimInput id="otherNationality" />
+            <app-field-error-message controlName="otherNationality"></app-field-error-message>
+        </div>
+        <div class="col-12 col-md-4 mb-3 position-relative">
+            <label for="dateOfBirth" asteriskIfRequired="dateOfBirth"
+                class="form-label">{{lang.map.date_of_birth}}</label>
+            <div class="input-group">
+                <i class="input-group-text mdi mdi-calendar"></i>
+                <div class="form-control" formControlName="dateOfBirth" id="dateOfBirth"
+                    [options]="datepickerOptionsMap.dateOfBirth" [ngClass]="{'input-disabled': readonly}"
+                    (click)="!readonly && dpDateOfBirth.toggleCalendar()" #dpDateOfBirth="angular-mydatepicker"
+                    angular-mydatepicker validationClasses="dateOfBirth">
+                </div>
+                <app-field-error-message controlName="dateOfBirth"></app-field-error-message>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="otherDateOfBirth" for="otherDateOfBirth" class="form-label">{{
+                lang.map.lbl_other_date_of_birth }}</label>
+            <input formControlName="otherDateOfBirth" type="text" [readOnly]="readonly"
+                validationClasses="otherDateOfBirth" class="form-control" trimInput id="otherDateOfBirth" />
+            <app-field-error-message controlName="otherDateOfBirth"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label for="additionStatus" asteriskIfRequired="additionStatus" class="form-label">
+                {{ lang.map.lbl_addition_status}}
+            </label>
+            <ng-select [selectOnTab]="true" labelForId="additionStatus" [clearable]="true"
+                placeholder="{{ lang.map.select }}" id="additionStatus" [notFoundText]="lang.map.msg_not_found"
+                [readonly]="readonly" appendTo="body" formControlName="additionStatus" validationClasses="additionStatus">
+                <ng-option *ngFor="let option of additionStatuses" [value]="option.lookupKey">
+                    {{ option.getName() }}
+                </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="additionStatus"></app-field-error-message>
+        </div>
+
+
+        <div class="col-12 col-md-4 mb-3 position-relative">
+            <label for="dateOfAdding" asteriskIfRequired="dateOfAdding"
+                class="form-label">{{lang.map.lbl_date_of_adding}}</label>
+            <div class="input-group">
+                <i class="input-group-text mdi mdi-calendar"></i>
+                <div class="form-control" formControlName="dateOfAdding" id="dateOfAdding"
+                    [options]="datepickerOptionsMap.dateOfAdding" [ngClass]="{'input-disabled': readonly}"
+                    (click)="!readonly && dpDateOfAdding.toggleCalendar()" #dpDateOfAdding="angular-mydatepicker"
+                    angular-mydatepicker validationClasses="dateOfAdding">
+                </div>
+                <app-field-error-message controlName="dateOfAdding"></app-field-error-message>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="reasonsforAddition" for="reasonsforAddition" class="form-label">{{
+                lang.map.lbl_reasons_of_addition }}</label>
+            <input formControlName="reasonsforAddition" type="text" [readOnly]="readonly"
+                validationClasses="reasonsforAddition" class="form-control" trimInput id="reasonsforAddition" />
+            <app-field-error-message controlName="reasonsforAddition"></app-field-error-message>
+        </div>
+
+    </div>
+</ng-container>

@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col-sm-12 col-md-4 mb-4 position-relative">
+        <label for="requestTypeControl" asteriskIfRequired [control]="requestTypeControl" class="form-label">
+            {{ lang.map.request_type }}
+        </label>
+        <ng-select [selectOnTab]="true" labelForId="requestTypeControl" [clearable]="true"
+            placeholder="{{ lang.map.select }}" id="requestTypeControl" [notFoundText]="lang.map.msg_not_found"
+            appendTo="body" [formControl]="requestTypeControl" [control]="requestTypeControl "
+            validationClasses="requestTypeControl"
+            >
+            <ng-option *ngFor="let option of requestTypes " [value]="option.lookupKey">
+                {{ option.getName() }}
+            </ng-option>
+        </ng-select>
+        <app-field-error-message [control]="requestTypeControl"></app-field-error-message>
+
+    </div>
+
+</div>
+<banned-person-search-form [form]="form" [readonly]="false"
+    (inquired)="search$.next($event)"
+    [isRACAInquiry]="!(showMOI$|async)"
+    [readonly]="requestTypeControl.invalid"></banned-person-search-form>
+
+<ng-container *ngIf="!(showMOI$|async)">
+    <banned-person-table [list$]="bannedPersonList$" [actions]="actions"></banned-person-table>
+</ng-container>
+<ng-container *ngIf="(showMOI$|async)">
+
+    <banned-person-terrorism-table [list$]="bannedPersonTerrorismList$"></banned-person-terrorism-table>
+</ng-container>

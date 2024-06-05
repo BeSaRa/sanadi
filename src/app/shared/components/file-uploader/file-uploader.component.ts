@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { LangService } from '@app/services/lang.service';
 import { DialogService } from '@app/services/dialog.service';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
@@ -13,7 +13,7 @@ import { SafeResourceUrl } from '@angular/platform-browser';
   templateUrl: './file-uploader.component.html',
   styleUrls: ['./file-uploader.component.scss']
 })
-export class FileUploaderComponent implements OnInit {
+export class FileUploaderComponent implements OnInit, OnDestroy {
   @Output() fileUploadEvent = new EventEmitter<File | File[] | undefined>();
   @ViewChild('fileUploader') fileUploader!: ElementRef;
   uploadedFile: any;
@@ -32,6 +32,8 @@ export class FileUploaderComponent implements OnInit {
   @Input() allowRemoveLoadedFile: boolean = false;
   @Input() readonly = false;
   @Input() allowedFileSize?: number;
+  @Input() reset$ = new Subject();
+  destroy$ = new Subject();
 
   /**
    * @description shows the uploaded file name if single file
@@ -71,6 +73,11 @@ export class FileUploaderComponent implements OnInit {
   constructor(public lang: LangService,
     private dialogService: DialogService) {
   }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
+  }
 
   ngOnInit(): void {
     if (this.allowMultiple) {
@@ -79,6 +86,7 @@ export class FileUploaderComponent implements OnInit {
     } else {
       this.showFileName = !this.showFilePreview;
     }
+    this._listenToReset();
   }
 
   getCurrentFileList(): FileList | null {
@@ -96,7 +104,7 @@ export class FileUploaderComponent implements OnInit {
       invalidMessage = this.lang.map.msg_invalid_file_format + '<br/>' + this.lang.map.msg_allowed_formats.change({ formats: this.allowedExtensions.join(', ') });
 
     if (this.allowedFileSize && !this._checkFileSize(file)) {
-      this.dialogService.error(this.lang.map.msg_only_this_file_size_or_less_allowed_to_upload.change({ size: this.allowedFileSize/1000/1024 }));
+      this.dialogService.error(this.lang.map.msg_only_this_file_size_or_less_allowed_to_upload.change({ size: this.allowedFileSize / 1000 / 1024 }));
       this._clearFileUploader();
       this._emitFileChangeEvent(undefined);
       return;
@@ -236,5 +244,11 @@ export class FileUploaderComponent implements OnInit {
       return false;
     }
     return !this.isLoadedFileAvailable() && !this.uploadedFile && this.uploadedFiles.length === 0;
+  }
+  private _listenToReset() {
+    this.reset$.pipe(
+      tap(_ => { this.removeLoadedFile() }),
+      takeUntil(this.destroy$)
+    ).subscribe();
   }
 }

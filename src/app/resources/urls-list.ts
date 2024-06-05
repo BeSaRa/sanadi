@@ -154,4 +154,5 @@ export const urlsList: Partial<IAppUrls> = {
   WORLD_CHECK: '/restricted/screening/world-check',
   INSPECTION_OPERATION: '/admin/inspection-operation',
   License_Activity: '/license-activity',
+  BANNED_PERSON: '/banned/person',
 };

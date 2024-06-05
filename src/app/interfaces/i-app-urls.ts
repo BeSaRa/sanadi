@@ -148,5 +148,6 @@ export interface IAppUrls {
   SECTOR:string;
   WORLD_CHECK:string;
   License_Activity:string;
+  BANNED_PERSON:string;
   [index: string]: string;
 }

@@ -188,4 +188,11 @@ export interface ILookupMap {
   InspectionActivityStatus: Lookup[];
   ActualInspectionTaskStatus: Lookup[];
   ProposedInspectionTaskStatus: Lookup[];
+  BannedPersonRequestStatus: Lookup[];
+  SourceType: Lookup[];
+  SourceClassification: Lookup[];
+  LegalNature: Lookup[];
+  DocumentType: Lookup[];
+  AdditionStatus: Lookup[];
+  BannedSearch: Lookup[];
 }

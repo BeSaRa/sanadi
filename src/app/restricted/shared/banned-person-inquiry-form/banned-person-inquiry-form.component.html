@@ -1,0 +1,60 @@
+<ng-container [formGroup]="form">
+    <div class="row">
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="arName" for="arName" class="form-label">{{
+                lang.map.arabic_name }}</label>
+            <input formControlName="arName" type="text" [readOnly]="readonly" validationClasses="arName"
+                class="form-control" trimInput id="arName" />
+            <app-field-error-message controlName="arName"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="enName" for="enName" class="form-label">{{
+                lang.map.english_name }}</label>
+            <input formControlName="enName" type="text" [readOnly]="readonly" validationClasses="enName"
+                class="form-control" trimInput id="enName" />
+            <app-field-error-message controlName="enName"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label for="documentType" asteriskIfRequired="documentType" class="form-label">
+                {{ lang.map.lbl_document_type}}
+            </label>
+            <ng-select [selectOnTab]="true" labelForId="documentType" [clearable]="true"
+                placeholder="{{ lang.map.select }}" id="documentType" [notFoundText]="lang.map.msg_not_found"
+                [readonly]="readonly" appendTo="body" formControlName="documentType" validationClasses="documentType">
+                <ng-option *ngFor="let option of documentTypes" [value]="option.id">
+                    {{ option.getName() }}
+                </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="documentType"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label asteriskIfRequired="documentNumber" for="documentNumber" class="form-label">{{
+                lang.map.lbl_document_number }}</label>
+            <input formControlName="documentNumber" type="text" [readOnly]="readonly" validationClasses="documentNumber"
+                class="form-control" trimInput id="documentNumber" />
+            <app-field-error-message controlName="documentNumber"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-3 position-relative">
+            <label for="nationality" asteriskIfRequired="nationality" class="form-label">
+                {{ lang.map.lbl_nationality}}
+            </label>
+            <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="true"
+                placeholder="{{ lang.map.select }}" id="nationality" [notFoundText]="lang.map.msg_not_found"
+                [readonly]="readonly" appendTo="body" formControlName="nationality" validationClasses="nationality">
+                <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
+                    {{ option.getName() }}
+                </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="nationality"></app-field-error-message>
+        </div>
+    </div>
+</ng-container>
+
+<div class="dialog-actions">
+    <span class="flex-grow-1"></span>
+
+    <button [disabled]="form.invalid || form.disabled || readonly" (click)="inquiry$.next(null)"
+        class="btn btn-primary">
+        {{ lang.map.btn_inquire }}
+    </button>
+</div>
