@@ -1,0 +1,41 @@
+<legend><span class="h6 text-primary text-capitalize">{{lang.map.menu_commission_database}}</span></legend>
+<div class="row">
+    <div class="col-sm-12 col-md-4 mb-4 position-relative">
+        <label for="requestTypeControl" asteriskIfRequired [control]="requestTypeControl" class="form-label">
+            {{ lang.map.request_type }}
+        </label>
+        <ng-select [selectOnTab]="true" labelForId="requestTypeControl" [clearable]="true"
+            placeholder="{{ lang.map.select }}" id="requestTypeControl" [notFoundText]="lang.map.msg_not_found"
+            appendTo="body" [formControl]="requestTypeControl" [control]="requestTypeControl "
+            validationClasses="requestTypeControl">
+            <ng-option *ngFor="let option of requestTypes " [value]="option.lookupKey">
+                {{ option.getName() }}
+            </ng-option>
+        </ng-select>
+        <app-field-error-message [control]="requestTypeControl"></app-field-error-message>
+
+    </div>
+   
+</div>
+<banned-person-inquiry-form [form]="inquiryForm" [readonly]="readonly" (inquired)="inquire($event)">
+
+</banned-person-inquiry-form>
+
+<hr class="mt-0 mb-2 mx-2">
+<banned-person-request-form [form]="form" [readonly]="readonly"></banned-person-request-form>
+
+
+<div class="dialog-actions">
+    <button tabindex="-1" (click)="form.markAllAsTouched(); requestTypeControl.markAsTouched()"
+        tooltip="{{ lang.map.validate_fields }}" class="btn btn-link">
+        <i class="mdi mdi-information-outline text-info"></i>
+    </button>
+    <span class="flex-grow-1"></span>
+    <button [disabled]="!isFormValid" (click)="save$.next(null)" class="btn btn-primary">
+        {{ lang.map.btn_save }}
+    </button>
+    <button class="btn btn-secondary" (click)="resetForm()">
+        {{ lang.map.btn_reset }}
+    </button>
+
+</div>

@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Country } from '../models/country';
 import { FactoryService } from './factory.service';
 import { UrlService } from './url.service';
-import { forkJoin, Observable, of } from 'rxjs';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { DialogRef } from '../shared/models/dialog-ref';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { IDialogData } from '@contracts/i-dialog-data';
 import { OperationTypes } from '../enums/operation-types.enum';
 import { DialogService } from './dialog.service';
@@ -40,6 +40,7 @@ export class CountryService extends CrudWithDialogGenericService<Country> {
 
   list: Country[] = [];
 
+
   _getModel() {
     return Country;
   }
@@ -49,6 +50,20 @@ export class CountryService extends CrudWithDialogGenericService<Country> {
     return this.urlService.URLS.COUNTRY;
   }
 
+  private _activeCountries: Country[] = [];
+  get activeCountries$(): Observable<Country[]> {
+
+    if (this._activeCountries.length) {
+      return of(this._activeCountries)
+    }
+   return this.loadActive()
+      .pipe(
+        map(list => list.sort((a, b) => a.getName() > b.getName() ? 1 : -1)),
+        tap(list => this._activeCountries = list),
+        take(1)
+      )
+
+  }
 
   constructor(public http: HttpClient,
     private urlService: UrlService,

@@ -1,0 +1,21 @@
+<legend><span class="h6 text-primary text-capitalize">{{lang.map.menu_terrorism_moi}}</span></legend>
+
+
+<file-uploader 
+[labelKey]="'lbl_terrorism_documents'"
+[allowMultiple]="true" [allowedExtensions]="allowedExtensions"
+(fileUploadEvent)="fileChange($event)"
+[readonly]="!!(list$|async)!.length"
+[reset$]="resetUploader$"
+
+></file-uploader>
+
+<ng-container >
+    <banned-person-terrorism-table 
+    [reloadFn]="reloadFn"
+    [reload$]="reload$"
+    [title]="title"
+    [list$]="list$"
+    (approved)="approveAll($event)"
+    ></banned-person-terrorism-table>
+</ng-container>
