@@ -68,7 +68,7 @@
           <ng-select [readonly]="readonly" validationClasses="beneficiaryCountry" appendTo="body" [clearable]="true"
                      id="beneficiaryCountry"
                      formControlName="beneficiaryCountry">
-            <ng-option [disabled]="isDisabledCountry(option)" [value]="option.id"
+            <ng-option  [value]="option.id"
                        *ngFor="let option of countries">{{option.getName()}}</ng-option>
           </ng-select>
           <app-field-error-message controlName="beneficiaryCountry"></app-field-error-message>
