@@ -684,9 +684,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       })
   }
 
-  isDisabledCountry(country: Country): boolean {
-    return this.projectWorkArea.value === ProjectWorkArea.OUTSIDE_QATAR && country.id === this.qatarCountry.id
-  }
+  // isDisabledCountry(country: Country): boolean {
+  //   return this.projectWorkArea.value === ProjectWorkArea.OUTSIDE_QATAR && country.id === this.qatarCountry.id
+  // }
 
   handleDisplayFields(model: Partial<ProjectImplementation>): void {
     this.displayDomain = model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR;

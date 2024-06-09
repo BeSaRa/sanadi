@@ -811,7 +811,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.subClassificationRef?.clearModel();
       this.domain.setValidators([]);
       if (this.isOutsideQatarProject()) {
-        this.removeQatarFromCountries();
+        //this.removeQatarFromCountries();
         this.isOutsideQatarWorkArea = true;
         this.domain.setValidators([CustomValidators.required]);
         this.emptyFieldsAndValidation(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
