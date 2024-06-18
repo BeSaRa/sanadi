@@ -52,6 +52,7 @@ export class BannedPersonDraftComponent extends BaseBannedPersonRequestPage {
         this.bannedPersonService.editDialog(model, false)
             .pipe(
                 switchMap(dialogRef => dialogRef.onAfterClose$),
+                tap(_ => { this.reload$.next(null) }),
                 take(1)
             )
             .subscribe();
