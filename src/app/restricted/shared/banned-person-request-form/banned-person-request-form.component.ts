@@ -1,14 +1,12 @@
-import { Component, Input, OnInit, forwardRef, inject } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { DateUtils } from '@app/helpers/date-utils';
-import { BannedPerson } from '@app/models/banned-person';
 import { Country } from '@app/models/country';
 import { CountryService } from '@app/services/country.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { DatepickerControlsMap, DatepickerOptionsMap } from '@app/types/types';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
     selector: 'banned-person-request-form',
