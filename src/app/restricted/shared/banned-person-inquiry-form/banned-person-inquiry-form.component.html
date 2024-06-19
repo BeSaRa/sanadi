@@ -21,7 +21,7 @@
             <ng-select [selectOnTab]="true" labelForId="documentType" [clearable]="true"
                 placeholder="{{ lang.map.select }}" id="documentType" [notFoundText]="lang.map.msg_not_found"
                 [readonly]="readonly" appendTo="body" formControlName="documentType" validationClasses="documentType">
-                <ng-option *ngFor="let option of documentTypes" [value]="option.id">
+                <ng-option *ngFor="let option of documentTypes" [value]="option.lookupKey">
                     {{ option.getName() }}
                 </ng-option>
             </ng-select>
