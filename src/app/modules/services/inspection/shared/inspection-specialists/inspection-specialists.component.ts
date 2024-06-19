@@ -14,6 +14,7 @@ import { InternalUser } from '@app/models/internal-user';
 import { ExternalSpecialistPopupComponent } from '../../popups/external-specialist-popup/external-specialist-popup.component';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ToastService } from '@app/services/toast.service';
 
 @Component({
     selector: 'inspection-specialists',
@@ -44,61 +45,62 @@ export class InspectionSpecialistsComponent implements ControlValueAccessor, OnI
 
     constructor(public lang: LangService,
         private dialog: DialogService,
-        private internalUserService: InternalUserService) {
+        private internalUserService: InternalUserService,
+        private toast: ToastService) {
 
 
     }
 
     internalActions: IMenuItem<InternalUser>[] = [
-          
+
         // delete
         {
-          type: 'action',
-          label: 'btn_delete',
-          icon: ActionIconsEnum.DELETE,
-          onClick: (item: InternalUser,index) => this.deleteInternalSpecialist(item,index),
-          show: () => !this.disabled
+            type: 'action',
+            label: 'btn_delete',
+            icon: ActionIconsEnum.DELETE,
+            onClick: (item: InternalUser, index) => this.deleteInternalSpecialist(item, index),
+            show: () => !this.disabled
         },
-        
-      ];
+
+    ];
     externalActions: IMenuItem<InspectionSpecialist>[] = [
         // view
         {
-          type: 'action',
-          label: 'view',
-          icon: ActionIconsEnum.VIEW,
-          onClick: (item: InspectionSpecialist,index) => this.viewItem(item,index),
-          show: () => this.disabled
+            type: 'action',
+            label: 'view',
+            icon: ActionIconsEnum.VIEW,
+            onClick: (item: InspectionSpecialist, index) => this.viewItem(item, index),
+            show: () => this.disabled
         },
         // edit
         {
-          type: 'action',
-          icon: ActionIconsEnum.EDIT,
-          label: 'btn_edit',
-          onClick: (item: InspectionSpecialist,index) => this.editItem(item,index),
-          show: () => !this.disabled
+            type: 'action',
+            icon: ActionIconsEnum.EDIT,
+            label: 'btn_edit',
+            onClick: (item: InspectionSpecialist, index) => this.editItem(item, index),
+            show: () => !this.disabled
         },
         // delete
         {
-          type: 'action',
-          label: 'btn_delete',
-          icon: ActionIconsEnum.DELETE,
-          onClick: (item: InspectionSpecialist,index) => this.deleteExternalSpecialist(item,index),
-          show: () => !this.disabled
+            type: 'action',
+            label: 'btn_delete',
+            icon: ActionIconsEnum.DELETE,
+            onClick: (item: InspectionSpecialist, index) => this.deleteExternalSpecialist(item, index),
+            show: () => !this.disabled
         },
-        
-      ];
+
+    ];
     onChange!: (value: InspectionSpecialist[]) => void
     onTouch!: () => void
     writeValue(value: InspectionSpecialist[]): void {
         this.internalSpecialists = []
         this.externalSpecialists = []
         this.value = value ?? []
-        this.value.forEach(item=>{
-            if(!!item.internalSpecialist){
+        this.value.forEach(item => {
+            if (!!item.internalSpecialist) {
                 this.internalSpecialists = this.internalSpecialists.concat(item.internalSpecialist)
             }
-            else{
+            else {
                 this.externalSpecialists = this.externalSpecialists.concat(item)
             }
         })
@@ -124,7 +126,7 @@ export class InspectionSpecialistsComponent implements ControlValueAccessor, OnI
     }
 
     ngOnInit(): void {
-       
+
         this.listenToAddInternalSpecialist();
         this.listenToAddExternalSpecialist();
     }
@@ -171,6 +173,13 @@ export class InspectionSpecialistsComponent implements ControlValueAccessor, OnI
                 }).onAfterClose$
                     .pipe(takeUntil(this.destroy$))
                     .pipe(filter((value: InspectionSpecialist): value is InspectionSpecialist => !!value))
+                    .pipe(filter((value: InspectionSpecialist) => {
+                        if (this.internalSpecialists.some((item) => item?.id === value.internalSpecialist.id)) {
+                            this.toast.error(this.lang.map.msg_duplicate_record_in_list)
+                            return false
+                        }
+                        return true
+                    }))
             })
         ).subscribe((item) => {
             this.value = this.value.concat(item)
@@ -237,5 +246,5 @@ export class InspectionSpecialistsComponent implements ControlValueAccessor, OnI
             operation: OperationTypes.VIEW,
         })
     }
-    
+
 }
