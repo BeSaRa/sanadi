@@ -111,7 +111,7 @@ export class BannedPersonSearchComponent implements OnInit, OnDestroy {
     }
     private _listenToRACASearch() {
         this.racaSearch$.pipe(
-            switchMap((model) => this.bannedPersonService.getByCriteria(model)),
+            switchMap((model) => this.bannedPersonService.searchByCriteria(model)),
             tap(list => this.bannedPersonList$.next(list)),
             takeUntil(this.destroy$)
         ).subscribe();
