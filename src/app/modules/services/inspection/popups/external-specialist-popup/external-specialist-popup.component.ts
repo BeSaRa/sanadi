@@ -48,8 +48,8 @@ export class ExternalSpecialistPopupComponent implements OnInit, OnDestroy {
 
     save() {
         const item = new InspectionSpecialist().clone({
+            ... this.model,
             ...this.form.getRawValue(),
-            ... this.model
         })
         this.dialogRef.close(item)
     }
