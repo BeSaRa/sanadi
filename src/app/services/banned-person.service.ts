@@ -93,11 +93,25 @@ export class BannedPersonService extends CrudWithDialogGenericService<BannedPers
         fallback: '$default',
         unwrap: 'rs'
     })
-    getMOIByCriteria(@InterceptParam()model: Partial<BannedPersonSearch>): Observable<BannedPersonTerrorism[]> {
+    searchByCriteria(model: Partial<BannedPersonSearch>): Observable<BannedPerson[]> {
         model = this.bannedPersonSearchInterceptor.send(model);
-        return this.http.get<BannedPersonTerrorism[]>(this._getServiceURL() + '/search/criteria/moi', {
+        return this.http.get<BannedPerson[]>(this._getServiceURL() + '/search/criteria/request/raca', {
             params: new HttpParams({
                 fromObject: this._validateCriteria(model)
+            })
+        });
+    }
+    @CastResponse(undefined, {
+        fallback: '$default',
+        unwrap: 'rs'
+    })
+    getMOIByCriteria(@InterceptParam() model: Partial<BannedPersonSearch>): Observable<BannedPersonTerrorism[]> {
+        let criteria = this.bannedPersonSearchInterceptor.send(model) as any;
+        criteria.registrationNumber = model.registrationNo
+        delete criteria.registrationNo;
+        return this.http.get<BannedPersonTerrorism[]>(this._getServiceURL() + '/search/criteria/moi', {
+            params: new HttpParams({
+                fromObject: this._validateCriteria(criteria)
             })
         });
     }
@@ -108,14 +122,14 @@ export class BannedPersonService extends CrudWithDialogGenericService<BannedPers
     getByRequestStatus(requestStatus: number): Observable<BannedPerson[]> {
         return this.http.get<BannedPerson[]>(this._getServiceURL() + `/request/raca/request-status/${requestStatus}`);
     }
-   
-    @CastResponse(()=>BannedPersonTerrorism, {
+
+    @CastResponse(() => BannedPersonTerrorism, {
         fallback: '$default',
         unwrap: 'rs'
     })
     getMOIByRequestStatus(requestStatus: number): Observable<BannedPersonTerrorism[]> {
         return this.http.get<BannedPersonTerrorism[]>(this._getServiceURL() + `/request/moi/request-status/${requestStatus}`)
-        
+
     }
 
     send(id: number) {
@@ -126,12 +140,12 @@ export class BannedPersonService extends CrudWithDialogGenericService<BannedPers
     }
     approveMoi(fullSerialNumber: string) {
         return this.http.put<boolean>(this._getServiceURL() + `/request/moi/approve`, {},
-        {
-            params : new HttpParams({
-                fromObject : {'FullSerialNumber':fullSerialNumber}
-            })
-        }
-    );
+            {
+                params: new HttpParams({
+                    fromObject: { 'FullSerialNumber': fullSerialNumber }
+                })
+            }
+        );
     }
 
     terminate(id: number) {
@@ -186,9 +200,9 @@ export class BannedPersonService extends CrudWithDialogGenericService<BannedPers
         for (let i = 0; i < files.length; i++) {
             formData.append('BannedFiles', files[i]!);
         }
-   
-      
+
+
         return this.http.post(this._getServiceURL() + '/request/moi', formData)
-           
+
     }
 }
