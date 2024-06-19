@@ -165,7 +165,7 @@ export class ManageInspectionSpecialistsComponent implements OnInit, OnDestroy {
                     .pipe(takeUntil(this.destroy$))
                     .pipe(filter((value: InspectionSpecialist) => !!value))
                     .pipe(filter((value: InspectionSpecialist) => {
-                        if(this.list.some((item)=> item.internalSpecialist?.id === value.id)){
+                        if(this.list.some((item)=> item.internalSpecialist?.id === value.internalSpecialist.id)){
                             this.toast.error(this.lang.map.msg_duplicate_record_in_list)
                             return false
                         }
