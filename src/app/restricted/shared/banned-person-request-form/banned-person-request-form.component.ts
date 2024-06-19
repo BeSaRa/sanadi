@@ -52,10 +52,10 @@ export class BannedPersonRequestFormComponent implements OnInit {
                 disablePeriod: 'none',
             }),
             dateOfBirth: DateUtils.getDatepickerOptions({
-                disablePeriod: 'none',
+                disablePeriod: 'future',
             }),
             dateOfAdding: DateUtils.getDatepickerOptions({
-                disablePeriod: 'none',
+                disablePeriod: 'future',
             }),
         };
     }
