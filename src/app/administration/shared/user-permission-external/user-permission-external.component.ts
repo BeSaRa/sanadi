@@ -1,21 +1,21 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {ExternalUserUpdateRequest} from "@models/external-user-update-request";
-import {ExternalUser} from "@models/external-user";
-import {of, Subject} from "rxjs";
-import {LangService} from "@services/lang.service";
-import {LookupService} from "@services/lookup.service";
-import {Permission} from "@models/permission";
-import {CheckGroup} from "@models/check-group";
-import {CheckGroupHandler} from "@models/check-group-handler";
-import {CustomRole} from "@models/custom-role";
-import {delay, map, switchMap, takeUntil, tap, withLatestFrom} from "rxjs/operators";
-import {EmployeeService} from "@services/employee.service";
-import {PermissionService} from "@services/permission.service";
-import {Lookup} from "@models/lookup";
-import {PermissionsEnum} from "@enums/permissions-enum";
-import {UserPermissionGroupsEnum} from "@enums/user-permission-groups.enum";
-import {OperationTypes} from "@enums/operation-types.enum";
-import {ExternalUserPermission} from "@models/external-user-permission";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ExternalUserUpdateRequest } from "@models/external-user-update-request";
+import { ExternalUser } from "@models/external-user";
+import { of, Subject } from "rxjs";
+import { LangService } from "@services/lang.service";
+import { LookupService } from "@services/lookup.service";
+import { Permission } from "@models/permission";
+import { CheckGroup } from "@models/check-group";
+import { CheckGroupHandler } from "@models/check-group-handler";
+import { CustomRole } from "@models/custom-role";
+import { delay, map, switchMap, takeUntil, tap, withLatestFrom } from "rxjs/operators";
+import { EmployeeService } from "@services/employee.service";
+import { PermissionService } from "@services/permission.service";
+import { Lookup } from "@models/lookup";
+import { PermissionsEnum } from "@enums/permissions-enum";
+import { UserPermissionGroupsEnum } from "@enums/user-permission-groups.enum";
+import { OperationTypes } from "@enums/operation-types.enum";
+import { ExternalUserPermission } from "@models/external-user-permission";
 
 @Component({
   selector: 'user-permission-external',
@@ -25,9 +25,9 @@ import {ExternalUserPermission} from "@models/external-user-permission";
 export class UserPermissionExternalComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
-              private lookupService: LookupService,
-              private permissionService: PermissionService,
-              private employeeService: EmployeeService) {
+    private lookupService: LookupService,
+    private permissionService: PermissionService,
+    private employeeService: EmployeeService) {
   }
 
   private _customRoleTrigger$: Subject<boolean> = new Subject<boolean>();
@@ -60,8 +60,12 @@ export class UserPermissionExternalComponent implements OnInit, OnDestroy {
   fixedPermissionsListIds: number[] = [];
   restrictedUserPermissions: Map<number, boolean> = new Map<number, boolean>();
 
-  internalOnlyGroups:UserPermissionGroupsEnum[]=[
-    UserPermissionGroupsEnum.INSPECTION
+  internalOnlyGroups: UserPermissionGroupsEnum[] = [
+    UserPermissionGroupsEnum.INSPECTION,
+  ]
+  private internalOnlyPermissions: string[] = [
+    PermissionsEnum.MANAGE_BANNED_PERSON_RACA,
+    PermissionsEnum.MANAGE_BANNED_PERSON_MOI
   ]
   private loggedInSuperAdminOnlyPermissions: string[] = [
     PermissionsEnum.SUB_ADMIN,
@@ -151,8 +155,8 @@ export class UserPermissionExternalComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         delay(100)
       ).subscribe(() => {
-      this._setDefaultPermissionsByRole();
-    })
+        this._setDefaultPermissionsByRole();
+      })
   }
 
   private _setDefaultPermissionsByRole() {
@@ -166,12 +170,14 @@ export class UserPermissionExternalComponent implements OnInit, OnDestroy {
   private _loadPermissions(): void {
     this.permissionService.loadAsLookups()
       .pipe(map((result) => {
-        return result.filter((permission) => !permission.isInternalPermissionCategory());
+        return result.filter((permission) => !permission.isInternalPermissionCategory()
+          && !this.internalOnlyPermissions.includes(permission.permissionKey)
+        );
       }))
       .pipe(takeUntil(this.destroy$))
       .pipe(tap((allPermissions) => this._setFixedPermissionsList(allPermissions)))
       .pipe(withLatestFrom(of(this.lookupService.listByCategory
-        .ExternalUserPermissionGroup.filter(group=> !this.internalOnlyGroups.includes(group.lookupKey) )
+        .ExternalUserPermissionGroup.filter(group => !this.internalOnlyGroups.includes(group.lookupKey))
       )))
       .pipe(switchMap(([permissions, groups]) => {
         this.buildPermissionGroups(groups, permissions);
@@ -193,10 +199,10 @@ export class UserPermissionExternalComponent implements OnInit, OnDestroy {
     const permissionsByGroup = new Map<number, Permission[]>();
     this.permissionGroups = [];
     permissions
-    .filter(permission=> !this.restrictedServicePermissions.includes(permission.permissionKey))
-    .reduce((record, permission) => {
-      return permissionsByGroup.set(permission.groupId, (permissionsByGroup.get(permission.groupId) || []).concat(permission));
-    }, {} as any);
+      .filter(permission => !this.restrictedServicePermissions.includes(permission.permissionKey))
+      .reduce((record, permission) => {
+        return permissionsByGroup.set(permission.groupId, (permissionsByGroup.get(permission.groupId) || []).concat(permission));
+      }, {} as any);
     groups.forEach(group => this.permissionGroups.push(
       new CheckGroup<Permission>(group, permissionsByGroup.get(group.lookupKey) || [], [], this.chunkSize))
     );
