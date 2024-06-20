@@ -56,23 +56,22 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> im
     const values = ObjectUtils.getControlValues<ImplementationTemplate>(this.getValuesWithLabels())
 
     return {
-      arabicName: controls ? [values.arabicName, [
-        CustomValidators.required,
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('AR_NUM_ONE_AR')
-      ]] : values.arabicName,
+      // arabicName: controls ? [values.arabicName, [
+      //   CustomValidators.required,
+      //   CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+      //   CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+      //   CustomValidators.pattern('AR_NUM_ONE_AR')
+      // ]] : values.arabicName,
       englishName: controls ? [values.englishName, [
-        CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : values.englishName,
-      latitude: controls ? [values.latitude, CustomValidators.required] : values.latitude,
-      longitude: controls ? [values.longitude, CustomValidators.required] : values.longitude,
-      beneficiaryRegion: controls ? [values.beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(300)]] : values.beneficiaryRegion,
+      // latitude: controls ? [values.latitude, CustomValidators.required] : values.latitude,
+      // longitude: controls ? [values.longitude, CustomValidators.required] : values.longitude,
+      // beneficiaryRegion: controls ? [values.beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(300)]] : values.beneficiaryRegion,
       notes: controls ? [values.notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS),]] :values. notes,
-      projectTotalCost: controls ? [values.projectTotalCost, CustomValidators.required] : values.projectTotalCost
+      // projectTotalCost: controls ? [values.projectTotalCost, CustomValidators.required] : values.projectTotalCost
     };
   }
 
