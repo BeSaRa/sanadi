@@ -831,10 +831,13 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       if ((this.model?.isSubmissionMechanismNotification() || this.model?.isSubmissionMechanismRegistration()) && this.employeeService.isInternalUser()) {
         this.readonly = true;
       } else {
-        if (this.employeeService.isCharityManager()) {
+        // if (this.employeeService.isCharityManager()) {
+        //   this.readonly = false;
+        // } else if (this.employeeService.isCharityUser()) {
+        //   this.readonly = !model.isReturned() || !this.isAllowedToUpdateModel();
+        // }
+        if (this.employeeService.isExternalUser()) {
           this.readonly = false;
-        } else if (this.employeeService.isCharityUser()) {
-          this.readonly = !model.isReturned() || !this.isAllowedToUpdateModel();
         }
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
@@ -843,10 +846,13 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       } else {
         // after claim, consider it same as user inbox and use same condition
         if (model.taskDetails.isClaimed()) {
-          if (this.employeeService.isCharityManager()) {
+          // if (this.employeeService.isCharityManager()) {
+          //   this.readonly = false;
+          // } else if (this.employeeService.isCharityUser()) {
+          //   this.readonly = !model.isReturned();
+          // }
+          if (this.employeeService.isExternalUser()) {
             this.readonly = false;
-          } else if (this.employeeService.isCharityUser()) {
-            this.readonly = !model.isReturned();
           }
         }
       }
