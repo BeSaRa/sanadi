@@ -21,17 +21,17 @@
         <input id="executionCountryInfo" readonly [value]="template.executionCountryInfo.getName()"
                class="form-control">
       </div>
-      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+      <!-- <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" for="region">{{lang.map.region_territories}}</label>
         <input id="region" readonly [value]="template.region" class="form-control">
-      </div>
+      </div> -->
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" for="templateCost">{{lang.map.target_amount}}</label>
         <input id="targetAmount"
                [value]="template.targetAmount| mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR"
                readonly class="form-control">
       </div>
-      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+      <!-- <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="latitude"
                for="latitude">{{lang.map.latitude}} / {{lang.map.longitude}}</label>
         <div class="input-group">
@@ -42,13 +42,13 @@
           <input id="longitude" readonly validationClasses="longitude" formControlName="longitude" class="form-control">
         </div>
         <app-field-error-message controlName="latitude"></app-field-error-message>
-      </div>
-      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+      </div> -->
+      <!-- <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="arabicName"
                for="arabicName">{{lang.map.project_ar_name}}</label>
         <input id="arabicName" validationClasses="arabicName" formControlName="arabicName" class="form-control">
         <app-field-error-message controlName="arabicName"></app-field-error-message>
-      </div>
+      </div> -->
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="englishName"
                for="englishName">{{lang.map.project_en_name}}</label>
@@ -62,7 +62,7 @@
                class="form-control">
         <app-field-error-message controlName="beneficiaryRegion"></app-field-error-message>
       </div>
-      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+      <!-- <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="projectTotalCost"
                for="projectTotalCost">{{lang.map.project_impl_total_cost}}</label>
         <input id="projectTotalCost" [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(50)"
@@ -70,7 +70,7 @@
                [dropSpecialCharacters]="[',']"
                validationClasses="projectTotalCost" formControlName="projectTotalCost" class="form-control">
         <app-field-error-message controlName="projectTotalCost"></app-field-error-message>
-      </div>
+      </div> -->
       <div class="col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="notes" for="notes">{{lang.map.notes}}</label>
         <textarea name="notes" formControlName="notes" validationClasses="notes" id="notes" rows="4"
