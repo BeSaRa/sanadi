@@ -32,6 +32,7 @@ import { CustomTermPopupComponent } from '@app/shared/popups/custom-term-popup/c
 import { CaseModel } from '@app/models/case-model';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { AllRequestTypesEnum } from '@app/enums/all-request-types-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -66,7 +67,12 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     licenseStartDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none', appendToBody: true }),
     followUpDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past', appendToBody: true })
   };
-
+  get isRenewPartnerApproval() {
+    return this.action === WFResponseType.APPROVE &&
+      this.loadedLicense?.getCaseType() === CaseTypes.PARTNER_APPROVAL &&
+      this.loadedLicense.requestType === AllRequestTypesEnum.RENEW
+      && this.employeeService.isLicensingUser()
+  }
   constructor(
     @Inject(DIALOG_DATA_TOKEN) private data: {
       service: BaseGenericEService<any>,
@@ -91,9 +97,9 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       this.label = 'ask_for_consultation_task';
     } else if (this.data.actionType === WFResponseType.ORGANIZATION_FINAL_REJECT) {
       this.label = 'organization_final_reject'
-    }else if (this.data.actionType === WFResponseType.KNEW) {
+    } else if (this.data.actionType === WFResponseType.KNEW) {
       this.label = 'approve'
-    }    else {
+    } else {
       this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.actionType) + '_task') as unknown as keyof ILanguageKeys);
     }
     this.action = this.data.actionType;
@@ -176,9 +182,14 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     };
     this.datepickerOptionsMap.licenseStartDate = toFieldDateOptions;
 
-    if (new Date(this.licenseStartDateField.value.singleDate.jsDate).getMonth() < disableDate.getMonth())
-      this.licenseStartDateField.reset()
+    // if (new Date(this.licenseStartDateField.value.singleDate.jsDate).getMonth() < disableDate.getMonth())
+    //   this.licenseStartDateField.reset()
+    if (this.isRenewPartnerApproval) {
+    
+      this.licenseStartDateField.reset();
+    }
   }
+
   updateForm(caseDetails: LicenseApprovalModel<any, any>, serviceData: ServiceData) {
     let data: any = {
       licenseStartDate: DateUtils.changeDateToDatepicker(caseDetails.licenseStartDate),
@@ -220,9 +231,11 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     }
 
     return stream$.pipe(
-      switchMap(_ => this.displayLicenseForm ? this.updateCase() : of(null)),
+     switchMap(_ => this.displayLicenseForm ? this.updateCase() : of(null)),
       // filter(_ => false),
       switchMap(() => {
+        console.log(responseInfo);
+        
         if (this.data.task.getCaseType() === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST && this.displayLicenseForm) {
           return (this.data.task as CaseModel<any, any>).save();
         }
@@ -293,6 +306,9 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
           licenseStartDate = new Date().toString();
         }
       }
+      if(this.isRenewPartnerApproval && !this.licenseStartDateField.value){
+        licenseStartDate = DateUtils.changeDateToDatepicker(new Date().setUTCHours(0,0,0,0));
+      }
       data.licenseStartDate = DateUtils.changeDateFromDatepicker(licenseStartDate);
       if (data.licenseEndDate) {
         data.licenseEndDate = DateUtils.changeDateFromDatepicker(data.licenseEndDate);
@@ -315,7 +331,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   }
 
   private isCommentRequired(): boolean {
-    if(this.data.forceRequiredComment){
+    if (this.data.forceRequiredComment) {
       return true;
     }
     return this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE || this.action === WFResponseType.COMPLETE || this.action === WFResponseType.RETURN || this.action === WFResponseType.CLOSE || this.action === WFResponseType.FINAL_REJECT || this.action === WFResponseType.ORGANIZATION_REJECT || this.action === WFResponseType.VALIDATE_REJECT || this.action === WFResponseType.ORGANIZATION_FINAL_REJECT;
