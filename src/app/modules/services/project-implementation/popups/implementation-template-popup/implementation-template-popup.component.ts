@@ -47,7 +47,7 @@ export class ImplementationTemplatePopupComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildForm()
-    this.listenToCostChanges()
+    //this.listenToCostChanges()
   }
 
   ngOnDestroy(): void {
@@ -87,7 +87,8 @@ export class ImplementationTemplatePopupComponent implements OnInit, OnDestroy {
     }
     this.dialogRef.close(new ImplementationTemplate().clone({
         ...this.template,
-        ...this.form.getRawValue()
+        ...this.form.getRawValue(),
+        projectTotalCost : 25000
       })
     )
   }
