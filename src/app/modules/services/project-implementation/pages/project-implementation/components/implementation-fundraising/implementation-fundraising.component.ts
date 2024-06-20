@@ -176,8 +176,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         const model = this.value[index];
         //mean this is single project permit type
         if (model.isMain) {
-          if (value > model.remainingAmount) {
-            value = model.remainingAmount
+          if (value >this.remainingAmount) {
+            value = value > model.totalCost ? model.totalCost + this.remainingAmount : value
           }
         } else {
           if (model.remainingAmount < this.remainingAmount) {
