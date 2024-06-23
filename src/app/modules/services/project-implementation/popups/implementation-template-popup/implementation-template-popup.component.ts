@@ -2,7 +2,7 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from "@services/lang.service";
 import {ImplementationTemplate} from "@models/implementation-template";
 import {Subject} from "rxjs";
-import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {debounceTime, map, takeUntil} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
@@ -85,23 +85,32 @@ export class ImplementationTemplatePopupComponent implements OnInit, OnDestroy {
       this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)
       return
     }
-    this.dialogRef.close(new ImplementationTemplate().clone({
-        ...this.template,
-        ...this.form.getRawValue(),
-        projectTotalCost : 25000
-      })
-    )
+    const model = new ImplementationTemplate().clone({
+      ...this.template,
+      ...this.form.getRawValue(),
+    })
+    if(!this.englishNameControl.value){
+      model.arabicName = model.templateName;
+      model.englishName = model.templateName;
+    }else{
+      model.arabicName = model.englishName
+    }
+    console.log(model);
+    
+    this.dialogRef.close(model)
   }
-
-  private listenToCostChanges() {
-    this.projectTotalCost
-      .valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .pipe(map(value => Number(value)))
-      .pipe(debounceTime(250))
-      .subscribe((value: number) => {
-        this.template.setProjectTotalCost(value)
-        this.projectTotalCost.patchValue(value, {emitEvent: false})
-      })
-  }
+  get englishNameControl(): UntypedFormControl {
+    return this.form.get('englishName') as UntypedFormControl;
+}
+  // private listenToCostChanges() {
+  //   this.projectTotalCost
+  //     .valueChanges
+  //     .pipe(takeUntil(this.destroy$))
+  //     .pipe(map(value => Number(value)))
+  //     .pipe(debounceTime(250))
+  //     .subscribe((value: number) => {
+  //       this.template.setProjectTotalCost(value)
+  //       this.projectTotalCost.patchValue(value, {emitEvent: false})
+  //     })
+  // }
 }
