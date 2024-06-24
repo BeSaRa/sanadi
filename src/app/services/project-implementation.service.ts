@@ -243,4 +243,14 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
       params: new HttpParams({ fromObject: criteria })
     });
   }
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  checkTemplate(templateId: string): Observable<ProjectImplementation> {
+   
+    return this.http.get<ProjectImplementation>(this._getURLSegment() + '/template/check', {
+      params: new HttpParams({ fromObject: {templateId} })
+    });
+  }
 }
