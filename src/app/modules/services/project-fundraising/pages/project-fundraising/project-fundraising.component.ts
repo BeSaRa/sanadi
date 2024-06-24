@@ -431,7 +431,7 @@ implements AfterViewInit {
   }
 
   checkCountryDisabled(option: Country): boolean {
-    return this.excludeQatar(option) || this.singleCountrySelect(option)
+    return  this.singleCountrySelect(option)
   }
 
 
@@ -882,7 +882,7 @@ implements AfterViewInit {
           this.domain.updateValueAndValidity({ emitEvent: false })
           this.loadDacOuchMain()
           this.emptyFields(aidFields)
-          this.countriesField.setValue(((this.countriesField.value ?? []) as number[]).filter(id => id !== this.qatarCountry.id), { emitEvent: false })
+          this.countriesField.setValue(((this.countriesField.value ?? []) as number[]), { emitEvent: false })
           this.countriesField.enable({ emitEvent: false })
         })()
 
