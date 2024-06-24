@@ -2223,4 +2223,6 @@ export interface ILanguageKeys {
   lbl_terrorism_documents:string;
   msg_confirm_upload_terrorism_moi:string;
   menu_search_requests:string;
+  invalid_template_type_x_serial_y_status_z:string;
+  lbl_valid_template:string;
 }
