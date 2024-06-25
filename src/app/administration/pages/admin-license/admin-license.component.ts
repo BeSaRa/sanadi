@@ -360,7 +360,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
         switchMap(_ => this.selectedService.reGenerateLicense(item.id)),
         take(1),
         tap(success => {
-          success ? this.toast.success(this.lang.map.msg_regenerate_license_success) :
+          success === true ? this.toast.success(this.lang.map.msg_regenerate_license_success) :
             this.toast.error(this.lang.map.msg_regenerate_license_failed)
         })
       )
