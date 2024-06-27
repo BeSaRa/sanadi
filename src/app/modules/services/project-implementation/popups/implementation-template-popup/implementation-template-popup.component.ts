@@ -89,13 +89,12 @@ export class ImplementationTemplatePopupComponent implements OnInit, OnDestroy {
       ...this.template,
       ...this.form.getRawValue(),
     })
-    if(!this.englishNameControl.value){
-      model.arabicName = model.templateName;
-      model.englishName = model.templateName;
-    }else{
-      model.arabicName = model.englishName
-    }
-    console.log(model);
+    // if(!this.englishNameControl.value){
+    //   model.arabicName = model.templateName;
+    //   model.englishName = model.templateName;
+    // }else{
+    //   model.arabicName = model.englishName
+    // }
     
     this.dialogRef.close(model)
   }

@@ -358,13 +358,16 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       .pipe(
         filter(click => click === UserClickOn.YES),
         switchMap(_ => this.selectedService.reGenerateLicense(item.id)),
-        take(1),
-        tap(success => {
-          success === true ? this.toast.success(this.lang.map.msg_regenerate_license_success) :
+             )
+      .subscribe(
+        success => {
+          if(success){
+            this.toast.success(this.lang.map.msg_regenerate_license_success) 
+          }else{
             this.toast.error(this.lang.map.msg_regenerate_license_failed)
-        })
-      )
-      .subscribe();
+  
+          }}
+      );
   }
   pageEvent: PageEvent = {
     pageIndex: 1,
