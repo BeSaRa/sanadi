@@ -104,7 +104,9 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
         }),
         tap(({ project, click }) => {
           if (click === UserClickOn.YES) {
-            this.router.navigateByUrl(project.itemRoute + '?item=' + project.itemDetails);
+            // this.router.navigateByUrl(project.itemRoute + '?item=' + project.itemDetails);
+            project.setItemRoute();
+            this.router.navigate([project.itemRoute], { queryParams: { item: project.itemDetails } }).then()
             this.dialogRef.close() ;
           }
           
