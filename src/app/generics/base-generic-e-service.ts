@@ -174,12 +174,12 @@ export abstract class BaseGenericEService<T extends { id: string }> {
   paginateLicensesSearch(model: Partial<T>): Observable<Pagination<T[]>> {
     return this.searchService.licensesSearch(model);
   }
-  @CastResponse(undefined, {
-    unwrap: 'rs',
-    fallback: '$default'
-  })
+  
   reGenerateLicense(licenseId:string): Observable<boolean> {
-    return this.http.get<boolean>(this._getURLSegment() + '/license/' + licenseId + '/regenerate')
+    return this.http.get<{rs:boolean}>(this._getURLSegment() + '/license/' + licenseId + '/regenerate')
+    .pipe(
+      map(result=>result.rs)
+    )
     
   }
   @CastResponse(undefined, {
