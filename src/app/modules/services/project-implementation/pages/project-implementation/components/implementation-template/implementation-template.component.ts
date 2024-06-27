@@ -44,7 +44,7 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
 
   destroy$: Subject<any> = new Subject<any>()
   addTemplate$: Subject<any> = new Subject();
-  displayedColumns: string[] = ['templateName', 'templateCost', 'executionRegion', 'arabicName', 'englishName', 'region', 'beneficiaryCountry', 'location', 'projectCost', 'actions'];
+  displayedColumns: string[] = ['templateName', 'templateCost', 'executionRegion', 'englishName', 'region', 'beneficiaryCountry', 'location', 'projectCost', 'actions'];
 
   value: ImplementationTemplate[] = [];
   inputMaskPatterns = CustomValidators.inputMaskPatterns
