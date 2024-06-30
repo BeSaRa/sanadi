@@ -20,6 +20,10 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { ProjectImplementation } from '@app/models/project-implementation';
 import { ToastService } from '@app/services/toast.service';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { GeneralInterceptor } from '@app/model-interceptors/general-interceptor';
+import { GeneralSearchCriteriaInterceptor } from '@app/model-interceptors/general-search-criteria-interceptor';
+import { IServiceConstructor } from '@app/interfaces/iservice-constructor';
 
 @Component({
   selector: 'choose-template',
@@ -104,9 +108,10 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
         }),
         tap(({ project, click }) => {
           if (click === UserClickOn.YES) {
+          
+            // project.open(undefined,OpenFrom.SEARCH)
             // this.router.navigateByUrl(project.itemRoute + '?item=' + project.itemDetails);
-            project.setItemRoute();
-            this.router.navigate([project.itemRoute], { queryParams: { item: project.itemDetails } }).then()
+            this.router.navigate([project.itemRoute,{caseType:project.getCaseType()}], { queryParams: { item: project.itemDetails } }).then()
             this.dialogRef.close() ;
           }
           
@@ -116,6 +121,7 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
       .subscribe()
 
   }
+  
   save(): void {
     if (this.isSaveDisabled())
       return;
