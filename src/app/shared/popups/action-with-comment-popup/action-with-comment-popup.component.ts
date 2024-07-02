@@ -173,6 +173,12 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     this._handleDurationChange(event.target?.value);
   }
   _handleDurationChange(value: number) {
+    if (this.isRenewAndEmptyFollowupDate) {
+      this.licenseStartDateField.reset();
+    }
+    if (this.loadedLicense?.getCaseType() === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL) {
+      return;
+    }
     let toFieldDateOptions: IAngularMyDpOptions = JSON.parse(JSON.stringify(this.datepickerOptionsMap.licenseStartDate));
     const disableDate = new Date();
     disableDate.setMonth(disableDate.getMonth() - value);
@@ -185,10 +191,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
 
     // if (new Date(this.licenseStartDateField.value.singleDate.jsDate).getMonth() < disableDate.getMonth())
     //   this.licenseStartDateField.reset()
-    if (this.isRenewAndEmptyFollowupDate) {
 
-      this.licenseStartDateField.reset();
-    }
   }
 
   updateForm(caseDetails: LicenseApprovalModel<any, any>, serviceData: ServiceData) {
@@ -214,8 +217,8 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     if (CommonUtils.isValidValue(serviceData.licenseMaxTime)) {
       licenseDurationValidations.push(Validators.max(serviceData.licenseMaxTime));
     }
-    this.licenseDurationField.setValidators(licenseDurationValidations);
-    this.licenseDurationField.updateValueAndValidity();
+    this.licenseDurationField?.setValidators(licenseDurationValidations);
+    this.licenseDurationField?.updateValueAndValidity();
   }
 
   proceed(): Observable<boolean> {
