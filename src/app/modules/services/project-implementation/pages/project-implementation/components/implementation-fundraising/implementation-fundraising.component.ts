@@ -52,8 +52,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   caseId!: string
   @Input()
   requestType!: number
-  @Input() 
-  disableRemove :boolean = false;
+  @Input()
+  disableRemove: boolean = false;
 
   @Output()
   amountConsumed: EventEmitter<boolean> = new EventEmitter<boolean>()
@@ -80,7 +80,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     private service: ProjectImplementationService,
     private dialog: DialogService,
     public lang: LangService) {
-   
+
   }
 
   get inputs(): UntypedFormArray {
@@ -95,7 +95,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       this.control = ctrl?.control as FormControl || undefined
     })
     this.listenToAdd()
- 
+
   }
 
   ngOnDestroy(): void {
@@ -128,10 +128,10 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         this.createInputList(value)
       })
       .then(() => {
-          this.value = value ?? []
-          this.listenToControls()
-          this.calculateTotal()
-          this.isFullAmountConsumed()
+        this.value = value ?? []
+        this.listenToControls()
+        this.calculateTotal()
+        this.isFullAmountConsumed()
       })
   }
 
@@ -145,13 +145,13 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
 
   setDisabledState?(isDisabled: boolean): void {
     this.disabled = isDisabled
-    this.displayedColumns =  this.disabled ?[
+    this.displayedColumns = this.disabled ? [
       'projectLicenseFullSerial',
       'permitType',
       'arName',
-      'enName',     
+      'enName',
       'actions'
-    ]:[
+    ] : [
       'projectLicenseFullSerial',
       'permitType',
       'arName',
@@ -174,19 +174,24 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       .pipe(filter(_ => this.value && !!this.value[index]))
       .pipe(map(value => {
         const model = this.value[index];
-        //mean this is single project permit type
-        if (model.isMain) {
-          if (value >this.remainingAmount) {
-            value = value > model.totalCost ? model.totalCost + this.remainingAmount : value
-          }
-        } else {
-          if (model.remainingAmount < this.remainingAmount) {
-            value = value > model.remainingAmount ? model.remainingAmount : value;
-          }
-          else {
-            value =  value >  model.totalCost + this.remainingAmount ? model.totalCost + this.remainingAmount : value
-          }
+        const cost = this.remainingAmount + model.totalCost
+        const shouldTake = model.collected >= cost ? cost : model.collected
+        if (value > shouldTake) {
+          return shouldTake;
         }
+        //mean this is single project permit type
+        // if (model.isMain) {
+        //   if (value >this.remainingAmount) {
+        //     value = value > model.totalCost ? model.totalCost + this.remainingAmount : value
+        //   }
+        // } else {
+        //   if (model.remainingAmount < this.remainingAmount) {
+        //     value = value > model.remainingAmount ? model.remainingAmount : value;
+        //   }
+        //   else {
+        //     value =  value >  model.totalCost + this.remainingAmount ? model.totalCost + this.remainingAmount : value
+        //   }
+        // }
 
         return value
       }))
@@ -249,10 +254,10 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   takeRemaining(index: number) {
     const ctrl = this.inputs.at(index)
     const model = this.value[index];
-    const remainingAmount = model.remainingAmount >= model.projectTotalCost - model.collected ?
-      model.projectTotalCost - model.collected :
-      model.remainingAmount;
-    ctrl.setValue(remainingAmount)
+    // const remainingAmount = model.remainingAmount >= model.projectTotalCost - model.collected ?
+    //   model.projectTotalCost - model.collected :
+    //   model.remainingAmount;
+    ctrl.setValue(this.projectTotalCost - model.collected)
   }
 
   noRemainingValue(i: number) {
@@ -271,7 +276,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       this.dialog.alert(this.lang.map.please_add_template_to_proceed)
       return
     }
-    
+
     if (this.remainingAmount === 0) {
       this.dialog.info(this.lang.map.cannot_add_funding_resources_full_amount_have_been_used)
       return;
@@ -285,7 +290,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     }
 
     const criteria = this.service.getCriteria(this.criteria())
-    if(criteria.domain === DomainTypes.HUMANITARIAN){
+    if (criteria.domain === DomainTypes.HUMANITARIAN) {
       delete criteria.mainDAC;
     }
     delete criteria.mainUNOCHA;
@@ -357,7 +362,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         this.onChange(this.value)
       })
   }
-  isItemDisabled(index :number){
+  isItemDisabled(index: number) {
     // if(!this.value[index].isMain) return false;
     // return this.value.length > 1
   }
