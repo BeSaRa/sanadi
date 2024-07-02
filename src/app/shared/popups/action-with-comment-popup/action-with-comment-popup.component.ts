@@ -176,12 +176,11 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     if (this.isRenewAndEmptyFollowupDate) {
       this.licenseStartDateField.reset();
     }
-    if (this.loadedLicense?.getCaseType() === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL) {
-      return;
-    }
+  
     let toFieldDateOptions: IAngularMyDpOptions = JSON.parse(JSON.stringify(this.datepickerOptionsMap.licenseStartDate));
     const disableDate = new Date();
-    disableDate.setMonth(disableDate.getMonth() - value);
+    disableDate.setMonth(disableDate.getMonth() - value)
+    disableDate.setDate(disableDate.getDate()-1);
     toFieldDateOptions.disableUntil = {
       year: disableDate.getFullYear(),
       month: disableDate.getMonth() + 1,
