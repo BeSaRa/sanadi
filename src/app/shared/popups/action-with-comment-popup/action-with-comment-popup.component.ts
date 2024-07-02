@@ -67,10 +67,11 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     licenseStartDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none', appendToBody: true }),
     followUpDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past', appendToBody: true })
   };
-  get isRenewPartnerApproval() {
+  emptyFollowupDateServices = [CaseTypes.PARTNER_APPROVAL, CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]
+  get isRenewAndEmptyFollowupDate() {
     return this.action === WFResponseType.APPROVE &&
-      this.loadedLicense?.getCaseType() === CaseTypes.PARTNER_APPROVAL &&
-      this.loadedLicense.requestType === AllRequestTypesEnum.RENEW
+      this.emptyFollowupDateServices.some(x => x === this.loadedLicense?.getCaseType()) &&
+      this.loadedLicense?.requestType === AllRequestTypesEnum.RENEW
       && this.employeeService.isLicensingUser()
   }
   constructor(
@@ -184,8 +185,8 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
 
     // if (new Date(this.licenseStartDateField.value.singleDate.jsDate).getMonth() < disableDate.getMonth())
     //   this.licenseStartDateField.reset()
-    if (this.isRenewPartnerApproval) {
-    
+    if (this.isRenewAndEmptyFollowupDate) {
+
       this.licenseStartDateField.reset();
     }
   }
@@ -231,11 +232,11 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     }
 
     return stream$.pipe(
-     switchMap(_ => this.displayLicenseForm ? this.updateCase() : of(null)),
+      switchMap(_ => this.displayLicenseForm ? this.updateCase() : of(null)),
       // filter(_ => false),
       switchMap(() => {
         console.log(responseInfo);
-        
+
         if (this.data.task.getCaseType() === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST && this.displayLicenseForm) {
           return (this.data.task as CaseModel<any, any>).save();
         }
@@ -306,8 +307,8 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
           licenseStartDate = new Date().toString();
         }
       }
-      if(this.isRenewPartnerApproval && !this.licenseStartDateField.value){
-        licenseStartDate = DateUtils.changeDateToDatepicker(new Date().setUTCHours(0,0,0,0));
+      if (this.isRenewAndEmptyFollowupDate && !this.licenseStartDateField.value) {
+        licenseStartDate = DateUtils.changeDateToDatepicker(new Date().setUTCHours(0, 0, 0, 0));
       }
       data.licenseStartDate = DateUtils.changeDateFromDatepicker(licenseStartDate);
       if (data.licenseEndDate) {
