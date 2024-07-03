@@ -152,16 +152,16 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       'enName',
       'actions'
     ] : [
-      'projectLicenseFullSerial',
-      'permitType',
-      'arName',
-      'enName',
+      // 'projectLicenseFullSerial',
+      // 'permitType',
+      // 'arName',
+      // 'enName',
       'projectTotalCost',
       'consumedAmount',
       'remainingAmount',
       'collected',
       'totalCost',
-      'actions'
+      // 'actions'
     ];
   }
 
@@ -175,7 +175,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       .pipe(map(value => {
         const model = this.value[index];
         const cost = this.remainingAmount + model.totalCost
-        const shouldTake = model.collected >= cost ? cost : model.collected
+        const availableValue= model.remainingAmount < model.collected ? model.remainingAmount : model.collected  
+        const shouldTake = availableValue >= cost ? cost :availableValue
         if (value > shouldTake) {
           return shouldTake;
         }
@@ -254,10 +255,12 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   takeRemaining(index: number) {
     const ctrl = this.inputs.at(index)
     const model = this.value[index];
+    const availableValue= model.remainingAmount < model.collected ? model.remainingAmount : model.collected  
+
     // const remainingAmount = model.remainingAmount >= model.projectTotalCost - model.collected ?
     //   model.projectTotalCost - model.collected :
     //   model.remainingAmount;
-    ctrl.setValue(this.remainingAmount + model.totalCost)
+    ctrl.setValue(availableValue)
   }
 
   noRemainingValue(i: number) {
