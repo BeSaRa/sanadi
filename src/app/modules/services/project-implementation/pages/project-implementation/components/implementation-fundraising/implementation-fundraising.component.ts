@@ -152,16 +152,16 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       'enName',
       'actions'
     ] : [
-      'projectLicenseFullSerial',
-      'permitType',
-      'arName',
-      'enName',
+      // 'projectLicenseFullSerial',
+      // 'permitType',
+      // 'arName',
+      // 'enName',
       'projectTotalCost',
       'consumedAmount',
       'remainingAmount',
       'collected',
       'totalCost',
-      'actions'
+      // 'actions'
     ];
   }
 
@@ -257,7 +257,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     // const remainingAmount = model.remainingAmount >= model.projectTotalCost - model.collected ?
     //   model.projectTotalCost - model.collected :
     //   model.remainingAmount;
-    ctrl.setValue(this.projectTotalCost - model.collected)
+    ctrl.setValue(this.remainingAmount + model.totalCost)
   }
 
   noRemainingValue(i: number) {
