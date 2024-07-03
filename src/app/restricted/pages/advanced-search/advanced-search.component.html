@@ -1,0 +1,41 @@
+<ng-container *ngFor="let database of databases">
+  <div class="form-check" *ngIf="database.show()">
+    <input type="checkbox" 
+      [checked]="database.checked"
+            id="database-id-{{database.source}}"
+           (change)="toggleDatabase( database)"
+           class="form-check-input cursor-pointer">
+    <label for="database-id-{{database.source}}"
+           class="cursor-pointer">{{lang.map[database.name]}}</label>
+  </div>
+</ng-container>
+<fieldset class="mb-4">
+    <legend><span class="h6 text-primary">{{lang.map.menu_world_check_search}}</span></legend>
+    <form [formGroup]="form" autocomplete="off" action="#">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label for="targetName" asteriskIfRequired="targetName"
+            class="form-label">{{lang.map.name}}</label>
+          <input id="targetName" validationClasses="targetName" formControlName="targetName"
+            class="form-control" trimInput />
+          <app-field-error-message controlName="targetName"></app-field-error-message>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+          <label for="entityType" asteriskIfRequired="entityType"
+            class="form-label">{{lang.map.world_check_entity_type}}</label>
+          <ng-select [selectOnTab]="true" validationClasses="entityType" formControlName="entityType" [clearable]="true" placeholder="{{lang.map.select}}" id="entityType"
+            [notFoundText]="lang.map.msg_not_found" appendTo="body">
+            <ng-option *ngFor="let option of WORLD_CHECK_ENTITY_TYPE" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="entityType"></app-field-error-message>
+        </div>
+        <div class="col-12 pt-3">
+          <button class="btn btn-primary" [disabled]="form.invalid || !isDataBaseSelected" (click)="inquiry$.next()"
+            type="submit">{{lang.map.lbl_search}}</button>
+        </div>
+      </div>
+    </form>
+  </fieldset>
+  

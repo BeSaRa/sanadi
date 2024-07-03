@@ -22,7 +22,7 @@ export class BannedPersonTableComponent implements OnInit, OnDestroy {
     filterControl: UntypedFormControl = new UntypedFormControl('');
     @Input()reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     destroy$: Subject<void> = new Subject();
-    @Input() displayedColumns:(keyof BannedPerson |'actions')[] =['registrationNo','documentType','name','nationality','internalUserId','actions']    ;
+    @Input() displayedColumns:(keyof BannedPerson |'actions')[] =['requestFullSerial','registrationNo','documentType','name','nationality','internalUserId','actions']    ;
     @Input() actions: IMenuItem<BannedPerson>[] = [];
     @Input() reloadFn!:()=> Observable<BannedPerson[]>;
     @Input() allowReload: boolean = true;

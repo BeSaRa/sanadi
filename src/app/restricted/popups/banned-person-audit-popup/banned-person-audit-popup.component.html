@@ -14,10 +14,10 @@
         <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
 
 
-          <ng-container cdkColumnDef="userInfo">
+          <ng-container cdkColumnDef="internalUserId">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
               {{ lang.map.lbl_username }}</th>
-            <td cdk-cell *cdkCellDef="let row">{{ row.userInfo.getName() }}</td>
+            <td cdk-cell *cdkCellDef="let row">{{ row.internalUserInfo.getName() }}</td>
           </ng-container>
           <ng-container cdkColumnDef="operationInfo">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
@@ -25,20 +25,20 @@
             <td cdk-cell *cdkCellDef="let row">{{ row.operationInfo.getName() }}</td>
           </ng-container>
 
-          <ng-container cdkColumnDef="orgInfo">
+          <ng-container cdkColumnDef="departmentInfo">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
               {{ lang.map.department }}</th>
-            <td cdk-cell *cdkCellDef="let row">{{ row.orgInfo?.getName() }}</td>
+            <td cdk-cell *cdkCellDef="let row">{{ row.departmentInfo?.getName() }}</td>
           </ng-container>
           <ng-container cdkColumnDef="statusDateModified">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
               {{ lang.map.lbl_status_date_modified }}</th>
             <td cdk-cell *cdkCellDef="let row">{{ row.statusDateModified |date }}</td>
           </ng-container>
-          <ng-container cdkColumnDef="statusInfo">
+          <ng-container cdkColumnDef="requestStatus">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
-              {{ lang.map.status }}</th>
-            <td cdk-cell *cdkCellDef="let row">{{ row.statusInfo?.getName() }}</td>
+              {{ lang.map.lbl_operation }}</th>
+            <td cdk-cell *cdkCellDef="let row">{{ row.requestStatusInfo?.getName() }}</td>
           </ng-container>
 
 

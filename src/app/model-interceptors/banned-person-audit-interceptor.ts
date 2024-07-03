@@ -9,9 +9,9 @@ export class BannedPersonAuditInterceptor implements IModelInterceptor<BannedPer
     }
     receive(model: BannedPersonAudit): BannedPersonAudit {
         model.operationInfo = AdminResult.createInstance(model.operationInfo);
-        model.orgInfo = AdminResult.createInstance(model.orgInfo);
-        model.userInfo = AdminResult.createInstance(model.userInfo);
-        model.statusInfo = AdminResult.createInstance(model.statusInfo);
+        model.departmentInfo = AdminResult.createInstance(model.departmentInfo);
+        model.internalUserInfo = AdminResult.createInstance(model.internalUserInfo);
+        model.requestStatusInfo = AdminResult.createInstance(model.requestStatusInfo);
         return model;
     }
 }
