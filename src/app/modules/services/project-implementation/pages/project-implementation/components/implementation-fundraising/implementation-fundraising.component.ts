@@ -152,16 +152,16 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       'enName',
       'actions'
     ] : [
-      // 'projectLicenseFullSerial',
-      // 'permitType',
-      // 'arName',
-      // 'enName',
+      'projectLicenseFullSerial',
+      'permitType',
+      'arName',
+      'enName',
       'projectTotalCost',
       'consumedAmount',
       'remainingAmount',
       'collected',
       'totalCost',
-      // 'actions'
+      'actions'
     ];
   }
 
