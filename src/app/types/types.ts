@@ -88,6 +88,7 @@ export type advancedSearchDatabase = {
   source: 'world-check' | 'raca' | 'moi',
   name: keyof ILanguageKeys,
   checked: boolean,
-  fn: () => Observable<any>
+  fn: () => Observable<any>,
+  show:()=>boolean
 
 }

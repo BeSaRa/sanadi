@@ -13,6 +13,7 @@ export class BannedPersonTerrorism {
     createdOn!:string;
     fileName!:  string;
     dateOfBirth!:   string |IMyDateModel;
+    sex!:string;
 
    
 
@@ -21,4 +22,6 @@ export class BannedPersonTerrorism {
 export type BannedPersonTerrorismFile={
     fileName: string;
     fileSize:string;
+    itemCount:number;
+    requestFullSerial:string;
 }

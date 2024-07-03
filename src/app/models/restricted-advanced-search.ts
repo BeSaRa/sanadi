@@ -56,7 +56,7 @@ export class RestrictedAdvancedSearchItemResult extends Cloneable<RestrictedAdva
    MapFromBannedPersonTerrorism(bannedPerson: BannedPersonTerrorism) {
     return new RestrictedAdvancedSearchItemResult().clone({
       primaryName: bannedPerson.name,
-      gender: bannedPerson.gender,
+      gender: bannedPerson.sex,
       source: 'MOI',
       dateOfBirth: DateUtils.changeDateFromDatepicker(bannedPerson.dateOfBirth as IMyDateModel)?.toLocaleDateString('en')
     })

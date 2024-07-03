@@ -40,6 +40,11 @@
             {{ lang.map.file_size }}</th>
             <td cdk-cell *cdkCellDef="let row">{{ row.fileSize }}</td>
           </ng-container>
+          <ng-container cdkColumnDef="itemCount">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
+            {{ lang.map.lbl_total_items }}</th>
+            <td cdk-cell *cdkCellDef="let row">{{ row.itemCount }}</td>
+          </ng-container>
         
         
          

@@ -2230,4 +2230,5 @@ export interface ILanguageKeys {
   lbl_world_check:string;
   lbl_commission:string;
   lbl_moi:string;
+  lbl_total_items:string;
 }

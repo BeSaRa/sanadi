@@ -1,10 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormControl, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
 import { Lookup } from '@app/models/lookup';
 import { RestrictedAdvancedSearchItemResult, RestrictedAdvancedSearchResult } from '@app/models/restricted-advanced-search';
 import { WorldCheckSearchResult } from '@app/models/world-check-search-result';
 import { BannedPersonService } from '@app/services/banned-person.service';
 import { DialogService } from '@app/services/dialog.service';
+import { EmployeeService } from '@app/services/employee.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { WorldCheckService } from '@app/services/world-check.service';
@@ -33,17 +35,42 @@ export class AdvancedSearchComponent implements OnInit {
     private lookupService: LookupService,
     private dialogService: DialogService,
     public worldCheckService: WorldCheckService,
-    private bannedPersonService: BannedPersonService
+    private bannedPersonService: BannedPersonService,
+    private employeeService: EmployeeService
   ) { }
 
   ngOnInit() {
     this.buildSearchForm();
     this.listenToSearchEvent();
   }
+  get worldCheckAllowed(): boolean {
+    return this.employeeService.hasPermissionTo(PermissionsEnum.WORLD_CHECK_SEARCH)
+  }
+  get racaAllowed(): boolean {
+    return this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_BANNED_PERSON_RACA)
+  }
+  get moiAllowed(): boolean {
+    return this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_BANNED_PERSON_MOI)
+  }
   databases: advancedSearchDatabase[] = [
-    { source: 'world-check', name: 'lbl_world_check', checked: true, fn: () => this.getWorldCheckInquiry() },
-    { source: 'raca', name: 'lbl_commission', checked: true, fn: () => this.getRacaInquiry() },
-    { source: 'moi', name: 'lbl_moi', checked: true, fn: () => this.getMOIInquiry() },
+    {
+      source: 'world-check', name: 'lbl_world_check',
+      checked: this.worldCheckAllowed,
+      fn: () => this.getWorldCheckInquiry(),
+      show:()=> this.worldCheckAllowed
+    },
+    {
+      source: 'raca', name: 'lbl_commission',
+      checked: this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_BANNED_PERSON_RACA),
+      fn: () => this.getRacaInquiry(),
+      show:()=> this.racaAllowed
+    },
+    {
+      source: 'moi', name: 'lbl_moi',
+      checked: this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_BANNED_PERSON_MOI),
+      fn: () => this.getMOIInquiry(),
+      show:()=> this.moiAllowed
+    },
   ]
   buildSearchForm() {
     this.form = this.fb.group({
