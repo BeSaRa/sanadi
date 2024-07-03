@@ -8,7 +8,7 @@ import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-gen
 import { CommonUtils } from "@app/helpers/common-utils";
 import { IDialogData } from "@app/interfaces/i-dialog-data";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
-import { BannedPersonTerrorism } from "@app/models/BannedPersonTerrorism";
+import { BannedPersonTerrorism, BannedPersonTerrorismFile } from "@app/models/BannedPersonTerrorism";
 import { BannedPerson } from "@app/models/banned-person";
 import { BannedPersonAudit } from "@app/models/banned-person-audit";
 import { BannedPersonSearch } from "@app/models/banned-person-search";
@@ -132,6 +132,29 @@ export class BannedPersonService extends CrudWithDialogGenericService<BannedPers
 
     }
 
+    @CastResponse(undefined, {
+        fallback: '$default',
+        unwrap: 'rs',
+        
+    })
+    getMOIFiles(): Observable<BannedPersonTerrorismFile[]> {
+        return this.http.get<BannedPersonTerrorismFile[]>
+            (this._getServiceURL() + `/request/moi/file-details`)
+
+    }
+    @CastResponse(() => BannedPersonTerrorism, {
+        fallback: '$default',
+        unwrap: 'rs'
+    })
+    getMOIByFileName(fileName: string): Observable<BannedPersonTerrorism[]> {
+        return this.http.get<BannedPersonTerrorism[]>(this._getServiceURL() + `/request/moi/file-name`, {
+            params: new HttpParams({
+                fromObject: { fileName }
+            })
+        })
+
+    }
+
     send(id: number) {
         return this.http.put<BannedPerson[]>(this._getServiceURL() + `/request/raca/${id}/send`, {});
     }
@@ -140,6 +163,15 @@ export class BannedPersonService extends CrudWithDialogGenericService<BannedPers
     }
     approveMoi(fullSerialNumber: string) {
         return this.http.put<boolean>(this._getServiceURL() + `/request/moi/approve`, {},
+            {
+                params: new HttpParams({
+                    fromObject: { 'FullSerialNumber': fullSerialNumber }
+                })
+            }
+        );
+    }
+    rejectMoi(fullSerialNumber: string) {
+        return this.http.put<boolean>(this._getServiceURL() + `/request/moi/reject`, {},
             {
                 params: new HttpParams({
                     fromObject: { 'FullSerialNumber': fullSerialNumber }
@@ -170,7 +202,7 @@ export class BannedPersonService extends CrudWithDialogGenericService<BannedPers
         unwrap: 'rs'
     })
     _getLogs(id: number): Observable<BannedPersonAudit[]> {
-        return this.http.get<BannedPersonAudit[]>(this._getServiceURL() + `/raca/audit/${id}`)
+        return this.http.get<BannedPersonAudit[]>(this._getServiceURL() + `/request/raca/request-audit/${id}`)
     }
 
 

@@ -9,12 +9,14 @@ export class BannedPersonAudit {
     domainName!: string;
     clientIP!: string;
     id!: number;
+    internalUserId!: number;
     auditId!: number;
     updatedOn!: string;
     statusDateModified!: string;
     operationInfo!: AdminResult;
-    orgInfo!: AdminResult;
-    userInfo!: AdminResult;
-    statusInfo!: AdminResult;
+    internalUserInfo!: AdminResult;
+    requestStatus!: AdminResult;
+    requestStatusInfo!: AdminResult;
+    departmentInfo!: AdminResult;
 
 }

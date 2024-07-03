@@ -8,6 +8,7 @@ import {CharityOrganizationUpdate} from '@app/models/charity-organization-update
 import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
+import { Observable } from 'rxjs';
 
 export type LangType = Record<keyof ILanguageKeys, string>;
 export type LocalizationMap = Record<keyof ILanguageKeys, Localization>;
@@ -83,3 +84,10 @@ export type ControlValueLabelLangKey = {
   skipAuditComparison?: boolean
 };
 export type LabelTextLangKey = { langKey: keyof ILanguageKeys, labelText?: string };
+export type advancedSearchDatabase = {
+  source: 'world-check' | 'raca' | 'moi',
+  name: keyof ILanguageKeys,
+  checked: boolean,
+  fn: () => Observable<any>
+
+}

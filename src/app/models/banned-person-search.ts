@@ -12,6 +12,7 @@ export class BannedPersonSearch {
     nationality!: number;
     arName!: string;
     enName!: string;
+    name!:string;
 
 
     buildForm() {

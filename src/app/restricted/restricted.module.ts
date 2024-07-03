@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared/shared.module';
+import { AdvancedSearchComponent } from './pages/advanced-search/advanced-search.component';
 import { BannedPersonApproveRequestsComponent } from './pages/banned-person-approve-requests/banned-person-approve-requests.component';
 import { BannedPersonDraftComponent } from './pages/banned-person-draft/banned-person-draft.component';
 import { BannedPersonReturnedRequestsComponent } from './pages/banned-person-returned-requests/banned-person-returned-requests.component';
@@ -10,6 +11,7 @@ import { CommissionDatabaseComponent } from './pages/commission-database/commiss
 import { ScreeningSearchAuditComponent } from './pages/screening-search-audit/screening-search-audit.component';
 import { TerrorismMoiComponent } from './pages/terrorism-moi/terrorism-moi.component';
 import { WorldCheckSerachComponent } from './pages/world-check-search/world-check-search.component';
+import { AdvancedSearchResultsPopupComponent } from './popups/advanced-search-results-popup/advanced-search-results-popup.component';
 import { BannedPersonAuditPopupComponent } from './popups/banned-person-audit-popup/banned-person-audit-popup.component';
 import { BannedPersonPopupComponent } from './popups/banned-person-popup/banned-person-popup.component';
 import { MakeDecisionComponent } from './popups/make-decision/make-decision.component';
@@ -22,6 +24,7 @@ import { BannedPersonRequestFormComponent } from './shared/banned-person-request
 import { BannedPersonSearchFormComponent } from './shared/banned-person-search-form/banned-person-search-form.component';
 import { BannedPersonTableComponent } from './shared/banned-person-table/banned-person-table.component';
 import { BannedPersonTerrorismTableComponent } from './shared/banned-person-terrorism-table/banned-person-terrorism-table.component';
+import { MoiFileDetailsPopupComponent } from './popups/moi-file-details-popup/moi-file-details-popup.component';
 
 @NgModule({
   imports: [
@@ -50,7 +53,10 @@ import { BannedPersonTerrorismTableComponent } from './shared/banned-person-terr
     BannedPersonTerrorismTableComponent,
     BannedPersonInquiryFormComponent,
     BannedPersonSearchFormComponent,
-    BannedPersonSearchComponent
+    BannedPersonSearchComponent,
+    MoiFileDetailsPopupComponent,
+    AdvancedSearchComponent,
+    AdvancedSearchResultsPopupComponent
   ]
 })
 export class RestrictedModule { }
