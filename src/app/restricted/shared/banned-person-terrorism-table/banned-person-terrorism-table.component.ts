@@ -13,13 +13,7 @@ import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
     styleUrls: ['banned-person-terrorism-table.component.scss']
 })
 export class BannedPersonTerrorismTableComponent implements OnInit, OnDestroy {
-    approveAll() {
-        this.list$.pipe(
-            tap(list=>this.approved.emit(list[0].requestFullSerial)),
-            take(1)
-        )
-        .subscribe();
-    }
+   
     @Input() title: keyof ILanguageKeys = 'menu_restricted'
     @Input() list$: BehaviorSubject<BannedPersonTerrorism[]> = new BehaviorSubject<BannedPersonTerrorism[]>([]);
     filterControl: UntypedFormControl = new UntypedFormControl('');

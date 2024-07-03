@@ -3220,4 +3220,17 @@ export const newNavigationMenuList = [
     itemOrder: 7,
     svg: null
   },
+  {
+    id: 4008,
+    langKey: 'menu_restricted_advanced_search',
+    path: '/home/restricted/advanced-search',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_BANNED_PERSON_RACA || PermissionsEnum.MANAGE_BANNED_PERSON_MOI || PermissionsEnum.WORLD_CHECK_SEARCH,
+    permissionGroup: null,
+    parent: 4000,
+    group: GroupNames.RESTRICTED,
+    itemOrder: 8,
+    svg: null
+  },
 ];

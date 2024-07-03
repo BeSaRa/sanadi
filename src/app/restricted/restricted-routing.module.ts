@@ -11,6 +11,7 @@ import { BannedPersonDraftComponent } from './pages/banned-person-draft/banned-p
 import { BannedPersonReturnedRequestsComponent } from './pages/banned-person-returned-requests/banned-person-returned-requests.component';
 import { BannedPersonApproveRequestsComponent } from './pages/banned-person-approve-requests/banned-person-approve-requests.component';
 import { BannedPersonSearchComponent } from './pages/banned-person-search/banned-person-search.component';
+import { AdvancedSearchComponent } from './pages/advanced-search/advanced-search.component';
 
 
 
@@ -84,6 +85,15 @@ const routes: Routes = [
     canActivate: [PermissionGuard.canActivate],
     data: {
       permissionKey: PermissionsEnum.MANAGE_BANNED_PERSON_RACA ||PermissionsEnum.MANAGE_BANNED_PERSON_MOI ,
+      configPermissionGroup: null,
+      checkAnyPermission: false
+    },
+  },
+  {
+    path: 'advanced-search', component: AdvancedSearchComponent,
+    canActivate: [PermissionGuard.canActivate],
+    data: {
+      permissionKey: PermissionsEnum.MANAGE_BANNED_PERSON_RACA ||PermissionsEnum.MANAGE_BANNED_PERSON_MOI || PermissionsEnum.WORLD_CHECK_SEARCH,
       configPermissionGroup: null,
       checkAnyPermission: false
     },

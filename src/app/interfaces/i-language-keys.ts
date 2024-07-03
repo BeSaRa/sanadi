@@ -2225,4 +2225,9 @@ export interface ILanguageKeys {
   menu_search_requests:string;
   invalid_template_type_x_serial_y_status_z:string;
   lbl_valid_template:string;
+  menu_restricted_advanced_search:string;
+  restricted_advanced_search_results:string;
+  lbl_world_check:string;
+  lbl_commission:string;
+  lbl_moi:string;
 }

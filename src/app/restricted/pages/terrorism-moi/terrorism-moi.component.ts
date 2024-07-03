@@ -3,10 +3,13 @@ import { UntypedFormControl } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { BannedPersonRequestStatus } from '@app/enums/banned-person-request-status.enum';
 import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { OperationTypes } from '@app/enums/operation-types.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { BannedPersonTerrorism } from '@app/models/BannedPersonTerrorism';
+import { BannedPersonTerrorism, BannedPersonTerrorismFile } from '@app/models/BannedPersonTerrorism';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { MoiFileDetailsPopupComponent } from '@app/restricted/popups/moi-file-details-popup/moi-file-details-popup.component';
 import { BannedPersonService } from '@app/services/banned-person.service';
 import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
@@ -19,26 +22,38 @@ import { concatMap, filter, switchMap, take, takeUntil, tap } from 'rxjs/operato
     templateUrl: 'terrorism-moi.component.html',
     styleUrls: ['terrorism-moi.component.scss']
 })
-export class TerrorismMoiComponent {
-
-
+export class TerrorismMoiComponent implements OnInit, OnDestroy {
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+        this.destroy$.unsubscribe();
+    }
+    ngOnInit(): void {
+        this.reload$
+            .pipe(switchMap(_ => this.bannedPersonService.getMOIFiles()))
+            .pipe(tap(list => { this.list$.next(list) }))
+            .pipe(takeUntil(this.destroy$))
+            .subscribe();
+    }
 
     title: keyof ILanguageKeys = 'lbl_approval_requests';
+    filterControl: UntypedFormControl = new UntypedFormControl('');
 
     get reloadFn() {
-        return () => this.bannedPersonService.getMOIByRequestStatus(BannedPersonRequestStatus.IN_PROGRESS);
+        return () => this.bannedPersonService.getMOIFiles();
     }
     bannedPersonService = inject(BannedPersonService);
     dialog = inject(DialogService);
     toast = inject(ToastService);
     lang = inject(LangService);
-    
-    list$: BehaviorSubject<BannedPersonTerrorism[]> = new BehaviorSubject<BannedPersonTerrorism[]>([]);
+
+    list$: BehaviorSubject<BannedPersonTerrorismFile[]> = new BehaviorSubject<BannedPersonTerrorismFile[]>([]);
     resetUploader$ = new Subject();
 
     reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-    displayedColumns: (keyof BannedPersonTerrorism)[] = ['requestFullSerial', 'registrationNo', 'documentType', 'documentNumber', 'name', 'nationality']
-    
+    destroy$ = new Subject();
+    displayedColumns: (keyof BannedPersonTerrorismFile | 'actions')[] = ['fileName', 'fileSize', 'actions']
+
     allowedExtensions = [FileExtensionsEnum.CSV, FileExtensionsEnum.XLSX, FileExtensionsEnum.XLS];
 
 
@@ -49,14 +64,13 @@ export class TerrorismMoiComponent {
         this.dialog.confirm(this.lang.map.msg_confirm_upload_terrorism_moi)
             .onAfterClose$
             .pipe(
-                tap(_=>{this.resetUploader$.next()}),
+                tap(_ => { this.resetUploader$.next() }),
                 filter(click => click === UserClickOn.YES),
                 switchMap(_ => this.bannedPersonService.UploadMoiFiles(files)),
                 tap(_ => { this.reload$.next(null) }),
                 tap(_ => this.toast.success(this.lang.map.upload_files_success)),
                 take(1)
             ).subscribe();
-
     }
     private _approve(requestFullSerial: string): void {
         this.bannedPersonService.approveMoi(requestFullSerial)
@@ -68,7 +82,37 @@ export class TerrorismMoiComponent {
             .subscribe();
     }
 
-    approveAll(requestFullSerial: string) {
-        this._approve(requestFullSerial)
+
+
+    actions: IMenuItem<BannedPersonTerrorismFile>[] = [
+
+        // view
+        {
+            type: 'action',
+            icon: ActionIconsEnum.VIEW,
+            label: 'btn_edit',
+            onClick: (item: BannedPersonTerrorismFile) => this._view(item),
+        },
+
+    ]
+
+    private _view(item: BannedPersonTerrorismFile) {
+        this.bannedPersonService.getMOIByFileName(item.fileName)
+            .pipe(
+                switchMap(list => this.dialog.show<IDialogData<BannedPersonTerrorism[]>>(
+                    MoiFileDetailsPopupComponent, {
+                    model: list,
+                    operation: OperationTypes.VIEW
+                }
+                ).onAfterClose$),
+                take(1)
+            )
+            .subscribe()
+    }
+    approveAll() {
+        // this.list$.value[0].
+    }
+    rejectAll() {
+
     }
 }

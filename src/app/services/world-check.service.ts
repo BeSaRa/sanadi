@@ -1,18 +1,20 @@
-import { WorldCheckSearchCriteria } from './../models/world-check-search-criteria';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { CrudGenericService } from '@app/generics/crud-generic-service';
+import { RestrictedAdvancedSearchResult } from '@app/models/restricted-advanced-search';
+import { WorldCheckSearch } from '@app/models/world-check-search';
+import { WorldCheckSearchResult } from '@app/models/world-check-search-result';
+import { WorldCheckSearchResultPopupComponent } from '@app/restricted/popups/world-check-search-result-popup/world-check-search-result-popup.component';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { UrlService } from './url.service';
-import { FactoryService } from './factory.service';
-import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
-import { WorldCheckSearch } from '@app/models/world-check-search';
-import { CrudGenericService } from '@app/generics/crud-generic-service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
+import { WorldCheckSearchCriteria } from './../models/world-check-search-criteria';
 import { DialogService } from './dialog.service';
-import { WorldCheckSearchResultPopupComponent } from '@app/restricted/popups/world-check-search-result-popup/world-check-search-result-popup.component';
-import { WorldCheckSearchResult } from '@app/models/world-check-search-result';
-import { OperationTypes } from '@app/enums/operation-types.enum';
+import { FactoryService } from './factory.service';
+import { UrlService } from './url.service';
+import { AdvancedSearchResultsPopupComponent } from '@app/restricted/popups/advanced-search-results-popup/advanced-search-results-popup.component';
 
 @CastResponseContainer({
   $default: {
@@ -86,6 +88,12 @@ export class WorldCheckService extends CrudGenericService<WorldCheckSearch> {
   }
   openViewWorldCheckSearchResult(result: WorldCheckSearchResult, operation?: OperationTypes): DialogRef {
     return this.dialog.show(WorldCheckSearchResultPopupComponent, {
+      result,
+      operation
+    });
+  }
+  openAdvancedSearchResult(result: RestrictedAdvancedSearchResult, operation?: OperationTypes): DialogRef {
+    return this.dialog.show(AdvancedSearchResultsPopupComponent, {
       result,
       operation
     });
