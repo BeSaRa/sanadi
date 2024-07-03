@@ -52,7 +52,7 @@ export class TerrorismMoiComponent implements OnInit, OnDestroy {
 
     reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     destroy$ = new Subject();
-    displayedColumns: (keyof BannedPersonTerrorismFile | 'actions')[] = ['fileName', 'fileSize', 'actions']
+    displayedColumns: (keyof BannedPersonTerrorismFile | 'actions')[] = ['fileName', 'fileSize', 'itemCount','actions']
 
     allowedExtensions = [FileExtensionsEnum.CSV, FileExtensionsEnum.XLSX, FileExtensionsEnum.XLS];
 
@@ -73,13 +73,7 @@ export class TerrorismMoiComponent implements OnInit, OnDestroy {
             ).subscribe();
     }
     private _approve(requestFullSerial: string): void {
-        this.bannedPersonService.approveMoi(requestFullSerial)
-            .pipe(
-                take(1),
-                tap(_ => { this.reload$.next(null) }),
-                tap(_ => { this.toast.success(this.lang.map.msg_approved_success) })
-            )
-            .subscribe();
+        
     }
 
 
@@ -111,8 +105,21 @@ export class TerrorismMoiComponent implements OnInit, OnDestroy {
     }
     approveAll() {
         // this.list$.value[0].
+        this.bannedPersonService.approveMoi(this.list$.value[0].requestFullSerial)
+            .pipe(
+                take(1),
+                tap(_ => { this.reload$.next(null) }),
+                tap(_ => { this.toast.success(this.lang.map.msg_approved_success) })
+            )
+            .subscribe();
     }
     rejectAll() {
-
+        this.bannedPersonService.rejectMoi(this.list$.value[0].requestFullSerial)
+        .pipe(
+            take(1),
+            tap(_ => { this.reload$.next(null) }),
+            tap(_ => { this.toast.success(this.lang.map.msg_reject_success) })
+        )
+        .subscribe();
     }
 }
