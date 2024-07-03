@@ -10,7 +10,11 @@
               </table-header>
             </th>
           </ng-container>
-  
+          <ng-container cdkColumnDef="requestFullSerial">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
+              {{ lang.map.serial_number }}</th>
+            <td cdk-cell *cdkCellDef="let row">{{ row.requestFullSerial }}</td>
+          </ng-container>
           <ng-container cdkColumnDef="registrationNo">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
             {{ lang.map.registration_number }}</th>
