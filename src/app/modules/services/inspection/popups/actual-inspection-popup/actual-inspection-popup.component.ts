@@ -1,25 +1,20 @@
-import { AfterViewInit, Component, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { ActualInspectionCreationSource } from '@app/enums/actual-inspection-creation-source.enum';
 import { LinkedProjectTypes } from '@app/enums/linked-project-type.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { TaskAreas } from '@app/enums/task-areas.enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { DateUtils } from '@app/helpers/date-utils';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { ActualInspection } from '@app/models/actual-inspection';
-import { BaseModel } from '@app/models/base-model';
 import { Country } from '@app/models/country';
-import { ExternalUser } from '@app/models/external-user';
 import { InspectionOperation } from '@app/models/inspection-operation';
 import { InspectionSpecialist } from '@app/models/inspection-specialist';
 import { InternalDepartment } from '@app/models/internal-department';
 import { InternalUser } from '@app/models/internal-user';
 import { Lookup } from '@app/models/lookup';
 import { Profile } from '@app/models/profile';
-import { InspectionDocumentService } from '@app/services/Inspection-document.service';
 import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { CountryService } from '@app/services/country.service';
 import { DialogService } from '@app/services/dialog.service';
@@ -31,14 +26,15 @@ import { LangService } from '@app/services/lang.service';
 import { LicenseActivityService } from '@app/services/license-activity.service';
 import { LookupService } from '@app/services/lookup.service';
 import { ProfileService } from '@app/services/profile.service';
+import { ProposedInspectionService } from '@app/services/proposed-inspection.service';
 import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { DatepickerControlsMap, DatepickerOptionsMap, TabMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
-import { Observable, Subject, of } from 'rxjs';
-import { filter, map, scan, startWith, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter, map, scan, startWith, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'actual-inspection-popup',
@@ -88,6 +84,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         private countryService: CountryService,
         private internalUserService: InternalUserService,
         private actualInspectionService: ActualInspectionService,
+        private proposedInspectionService: ProposedInspectionService,
         private dialog:DialogService,
         // don't remove this because its required for DI registration
         private licenseActivityService: LicenseActivityService) {
@@ -425,6 +422,12 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         },
     
       };
+
+      openProposedInspectionTask(){
+        this.proposedInspectionService.openViewDialog(this.model.proposedInspectionTask.id)
+        .pipe(take(1))
+        .subscribe();
+      }
 }
 
 

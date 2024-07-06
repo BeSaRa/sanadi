@@ -17,14 +17,22 @@
   </div>
   <ng-template #basicInfoTabTemplate>
 
-    <form  novalidate autocomplete="off" [formGroup]="form">
+    <form novalidate autocomplete="off" [formGroup]="form">
       <div class="row" *ngIf="model.proposedInspectionTask">
         <div class="col-sm-6 mb-4 position-relative">
           <label for="proposedTaskType" class="form-label">
             {{lang.map.lbl_proposed_task}}
           </label>
-          <span id="proposedTaskType" class="form-control input-disabled"
-            [innerHTML]="  model.proposedInspectionTask?.proposedTaskTypeInfo?.getName() || '&nbsp;'"></span>
+          <span id="proposedTaskType"
+            class="form-control input-disabled d-flex justify-content-between align-items-center">
+            {{ model.proposedInspectionTask?.proposedTaskTypeInfo?.getName() || '&nbsp;'}}
+
+            <button class="btn icon-btn text-primary p-0 grid-action bg-transparent" [tooltip]="lang.map.view"
+              (click)="openProposedInspectionTask()">
+              <i class="mdi mdi-eye"></i>
+            </button>
+
+          </span>
         </div>
       </div>
       <div class="row">
@@ -306,9 +314,9 @@
   </ng-template>
   <ng-template #attachmentsTabTemplate>
     <attachments [caseId]="model?.id?.toString()" [model]="model" [service]="model.service.documentService"
-    [disabled]="readonly"></attachments>
-</ng-template>
- 
+      [disabled]="readonly"></attachments>
+  </ng-template>
+
 
 </div>
 <div class="dialog-actions">
