@@ -134,6 +134,7 @@ export class ApprovalFormMonthlyComponent implements OnInit, OnDestroy {
       .loadByCaseType(this.model.caseType)
       .pipe(tap(service => {
         this.servicePublicTerms = service.serviceTerms
+        this.publicTerms.setValue(this.servicePublicTerms);
       }))
       .pipe(switchMap(_ => {
         return this.loadUserCustomTerms()

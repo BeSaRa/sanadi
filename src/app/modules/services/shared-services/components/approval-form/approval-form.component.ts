@@ -141,6 +141,8 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
       .pipe(tap(service => {
         this.servicePublicTerms = service.serviceTerms
         this.model.publicTerms = service.serviceTerms
+        this.publicTerms.setValue(this.servicePublicTerms);
+
       }))
       .pipe(switchMap(_ => {
         return this.loadUserCustomTerms()
