@@ -710,9 +710,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     if (this.displayInternal) {
       this.markFieldsOptional(outsideFields)
       this.markFieldsRequired(insideFields)
+      
     } else {
       this.markFieldsOptional(insideFields)
-      this.markFieldsRequired([this.domain])
+      this.markFieldsRequired([this.domain,this.implementingAgencyType])
+
       this.displayDac ? (() => {
         this.markFieldsOptional(ochaFields)
         this.markFieldsRequired(dacFields)
