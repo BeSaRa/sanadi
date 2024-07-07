@@ -9,7 +9,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {FollowupService} from '@app/services/followup.service';
 import {LangService} from '@app/services/lang.service';
-import {IAngularMyDpOptions} from 'angular-mydatepicker';
+import {IAngularMyDpOptions} from '@nodro7/angular-mydatepicker';
 import {DateUtils} from '@app/helpers/date-utils';
 import {CaseModel} from "@app/models/case-model";
 import {EmployeeService} from "@services/employee.service";

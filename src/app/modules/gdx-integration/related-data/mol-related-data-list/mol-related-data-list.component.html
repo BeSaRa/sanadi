@@ -41,13 +41,13 @@
         <ng-container cdkColumnDef="basicSalary">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.basic_salary}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.basicSalary ? row.basicSalary + '' : '0') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+            <span>{{(row.basicSalary ? row.basicSalary + '' : '0') | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="netSalary">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.net_salary}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.netSalary ? row.netSalary + '' : '0') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+            <span>{{(row.netSalary ? row.netSalary + '' : '0') | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>

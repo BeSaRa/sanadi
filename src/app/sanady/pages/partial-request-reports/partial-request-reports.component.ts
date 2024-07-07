@@ -7,7 +7,7 @@ import {BehaviorSubject, forkJoin, Observable, of, Subject, Subscription} from '
 import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {SubventionRequestPartialLog} from '@app/models/subvention-request-partial-log';
 import {SubventionRequestPartialLogService} from '@app/services/subvention-request-partial-log.service';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IMyInputFieldChanged} from '@nodro7/angular-mydatepicker';
 import {isEmptyObject, printBlobData} from '@app/helpers/utils';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DialogService} from '@app/services/dialog.service';

@@ -1,4 +1,4 @@
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 
 import { FactoryService } from '@services/factory.service';
 import { InterceptModel } from "@decorators/intercept-model";

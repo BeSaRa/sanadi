@@ -8,7 +8,7 @@ import {DialogService} from '@app/services/dialog.service';
 import {isEmptyObject, objectHasValue} from '@app/helpers/utils';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {DateUtils} from '@app/helpers/date-utils';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IMyInputFieldChanged} from '@nodro7/angular-mydatepicker';
 import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
 

@@ -29,7 +29,7 @@
         <ng-container cdkColumnDef="amount">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.amount}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.amount ? row.amount + '' : '0') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+            <span>{{(row.amount ? row.amount + '' : '0') | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="lastInvoiceDate">
@@ -64,13 +64,13 @@
         <ng-container cdkColumnDef="fees">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.fees}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.fees ? row.fees + '' : '0') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+            <span>{{(row.fees ? row.fees + '' : '0') | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="fine">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.fine}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.fine ? row.fine + '' : '0') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+            <span>{{(row.fine ? row.fine + '' : '0') | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>

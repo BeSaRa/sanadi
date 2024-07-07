@@ -7,7 +7,7 @@ import { PartnerApproval } from '@models/partner-approval';
 import { FactoryService } from '@app/services/factory.service';
 import { PartnerApprovalService } from '@app/services/partner-approval.service';
 import { DateUtils } from '@app/helpers/date-utils';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { BankAccount } from '@app/models/bank-account';
 import { ExecutiveManagement } from '@app/models/executive-management';
 import { Goal } from '@app/models/goal';

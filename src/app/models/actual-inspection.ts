@@ -16,7 +16,7 @@ import { ProposedInspection } from "./proposed-inspection";
 import { Lookup } from "./lookup";
 import { AdminResult } from "./admin-result";
 import { InspectionLog } from "./inspection-log";
-import { IMyDateModel } from "angular-mydatepicker";
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { normalSearchFields } from "@app/helpers/normal-search-fields";
 import { infoSearchFields } from "@app/helpers/info-search-fields";
 import { InternalUser } from "./internal-user";

@@ -20,7 +20,7 @@ import {ToastService} from '@app/services/toast.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
 import {ReadModeService} from '@app/services/read-mode.service';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IMyInputFieldChanged} from '@nodro7/angular-mydatepicker';
 import {AidTypes} from '@app/enums/aid-types.enum';
 import {AidLookupStatusEnum} from '@app/enums/status.enum';
 import {AidLookup} from '@app/models/aid-lookup';

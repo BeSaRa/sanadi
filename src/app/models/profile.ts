@@ -8,7 +8,7 @@ import {LangService} from '@app/services/lang.service';
 import {ProfileService} from '@app/services/profile.service';
 import {ISearchFieldsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {AdminResult} from './admin-result';
 import {BaseModel} from './base-model';
 import {ProfileDetails} from './profile-details';

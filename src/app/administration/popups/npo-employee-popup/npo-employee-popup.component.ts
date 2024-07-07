@@ -14,7 +14,7 @@ import { UserTypes } from '@app/enums/user-types.enum';
 import { NpoEmployee } from '@app/models/npo-employee';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { DateUtils } from '@app/helpers/date-utils';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
 import { ContractStatus } from '@app/enums/contract-status.enum';
 import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
 import { CharityBranch } from '@app/models/charity-branch';

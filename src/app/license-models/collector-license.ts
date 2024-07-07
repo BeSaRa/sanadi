@@ -1,5 +1,5 @@
 import { AdminResult } from '@app/models/admin-result';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { CollectorItem } from '@app/models/collector-item';
 import { CollectorLicenseInterceptor } from "@app/license-interceptors/collector-license-interceptor";
 import { InterceptModel } from "@decorators/intercept-model";

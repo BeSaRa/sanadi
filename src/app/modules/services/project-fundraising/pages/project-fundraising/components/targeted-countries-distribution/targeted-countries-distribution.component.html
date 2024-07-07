@@ -72,7 +72,7 @@
       <ng-container cdkColumnDef="totalValue">
         <th cdk-header-cell colspan="1" *cdkFooterCellDef>
           <div
-            class="d-flex align-items-center h6 mb-0">{{totalValue| mask:maskPattern.SEPARATOR:maskPattern.THOUSAND_SEPARATOR}}</div>
+            class="d-flex align-items-center h6 mb-0">{{totalValue| mask:maskPattern.SEPARATOR:{thousandSeparator:maskPattern.THOUSAND_SEPARATOR} }}</div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="targetAmount">
@@ -83,7 +83,7 @@
       <ng-container cdkColumnDef="targetValue">
         <th cdk-header-cell colspan="1" *cdkFooterCellDef>
           <div
-            class="d-flex align-items-center h6 mb-0">{{_model.targetAmount| mask:maskPattern.SEPARATOR:maskPattern.THOUSAND_SEPARATOR}}</div>
+            class="d-flex align-items-center h6 mb-0">{{_model.targetAmount| mask:maskPattern.SEPARATOR:{thousandSeparator:maskPattern.THOUSAND_SEPARATOR} }}</div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="remain">
@@ -94,7 +94,7 @@
       <ng-container cdkColumnDef="remainValue">
         <th cdk-header-cell colspan="1" [ngClass]="{remain:remain!==0}" *cdkFooterCellDef>
           <div class="d-flex align-items-center">
-            <span class="h6 mb-0">{{remain| mask:maskPattern.SEPARATOR:maskPattern.THOUSAND_SEPARATOR}}</span>
+            <span class="h6 mb-0">{{remain| mask:maskPattern.SEPARATOR:{thousandSeparator:maskPattern.THOUSAND_SEPARATOR} }}</span>
             <div [tooltip]="lang.map.distribute_evenly">
               <button [disabled]="readonly || !remain" (click)="remain && distributeRemaining()"
                       class="btn icon-btn p-0">

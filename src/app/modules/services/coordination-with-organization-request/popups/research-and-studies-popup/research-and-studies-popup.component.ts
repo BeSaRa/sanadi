@@ -6,7 +6,7 @@ import { LangService } from '@app/services/lang.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { DatepickerOptionsMap } from '@app/types/types';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
 
 @Component({
   selector: 'app-research-and-studies-popup',

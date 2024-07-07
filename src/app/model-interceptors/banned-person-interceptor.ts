@@ -2,7 +2,7 @@ import { DateUtils } from "@app/helpers/date-utils";
 import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { AdminResult } from "@app/models/admin-result";
 import { BannedPerson } from "@app/models/banned-person";
-import { IMyDateModel } from "angular-mydatepicker";
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 
 export class BannedPersonInterceptor implements IModelInterceptor<BannedPerson> {
     send(model: Partial<BannedPerson>): Partial<BannedPerson> {

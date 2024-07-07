@@ -28,7 +28,7 @@
         <ng-container cdkColumnDef="payValue">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.amount}}</th>
           <td cdk-cell *cdkCellDef="let row">
-            <span>{{(row.payValue ? row.payValue + '' : '') | mask: inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+            <span>{{(row.payValue ? row.payValue + '' : '') | mask: inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
           </td>
         </ng-container>
 

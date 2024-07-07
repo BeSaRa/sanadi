@@ -14,7 +14,6 @@ import {DocumentService} from '@services/document.service';
 import {ActionLogService} from '@services/action-log.service';
 import {SearchService} from '@services/search.service';
 import {CaseComment} from '../models/case-comment';
-import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
 import {IFormRowGroup} from '@contracts/iform-row-group';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {FBuilder} from '@helpers/FBuilder';
@@ -35,6 +34,7 @@ import {FollowupComponent} from '@app/shared/popups/followup/followup.component'
 import {QueryResult} from '@app/models/query-result';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import { Pagination } from '@app/models/pagination';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 
 export abstract class BaseGenericEService<T extends { id: string }> {
   protected constructor() {

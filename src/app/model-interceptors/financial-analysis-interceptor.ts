@@ -2,7 +2,7 @@ import { DateUtils } from '@app/helpers/date-utils';
 import { AdminResult } from '@app/models/admin-result';
 import { FinancialAnalysis } from '@app/models/financial-analysis';
 import { IModelInterceptor } from '@contracts/i-model-interceptor';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 
 export class FinancialAnalysisInterceptor
   implements IModelInterceptor<FinancialAnalysis>

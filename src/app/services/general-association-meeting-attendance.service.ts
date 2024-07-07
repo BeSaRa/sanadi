@@ -45,7 +45,7 @@ import {
 import {BlobModel} from '@app/models/blob-model';
 import {map} from 'rxjs/operators';
 import {CommonUtils} from '@helpers/common-utils';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {
   SpecificMemberCommentsAndNotesComponent
 } from '@app/modules/services/general-association-meeting-attendance/popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';

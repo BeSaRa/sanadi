@@ -10,7 +10,7 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { UntypedFormGroup, Validators } from '@angular/forms';
 import { TransferFundsCharityPurpose } from '@app/models/transfer-funds-charity-purpose';
 import { FactoryService } from '@services/factory.service';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { mixinRequestType } from '@app/mixins/mixin-request-type';

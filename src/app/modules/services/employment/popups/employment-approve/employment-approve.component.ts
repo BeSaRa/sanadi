@@ -1,4 +1,4 @@
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { DateUtils } from '@helpers/date-utils';
 import { Subject } from 'rxjs';

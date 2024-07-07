@@ -12,7 +12,7 @@ import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { DatepickerControlsMap } from '@app/types/types';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
 import { isObservable, Observable, of } from 'rxjs';
 import { catchError, exhaustMap, filter, switchMap } from 'rxjs/operators';
 

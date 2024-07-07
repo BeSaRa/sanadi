@@ -5,7 +5,7 @@ import { BannedPersonSearch } from '@app/models/banned-person-search';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { DatepickerOptionsMap, DatepickerControlsMap } from '@app/types/types';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 

@@ -5,7 +5,7 @@ import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { ByLawInterceptor } from '@app/model-interceptors/bylaw-interceptor';
 import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';

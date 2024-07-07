@@ -12,14 +12,14 @@ import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CustomValidators} from "@app/validators/custom-validators";
 import currency from "currency.js";
-import {MaskPipe} from "ngx-mask";
+import { NgxMaskPipe} from "ngx-mask";
 import {AvailableLanguagesNames} from '@app/enums/available-languages-names-enum';
 
 @Component({
   selector: 'targeted-countries-distribution',
   templateUrl: './targeted-countries-distribution.component.html',
   styleUrls: ['./targeted-countries-distribution.component.scss'],
-  providers: [MaskPipe]
+  providers: [NgxMaskPipe]
 })
 export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy {
   private modelChange$: ReplaySubject<ProjectFundraising> = new ReplaySubject<ProjectFundraising>(1)
@@ -86,7 +86,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
   constructor(private service: ProjectFundraisingService,
               private dialog: DialogService,
-              private maskPipe: MaskPipe,
+              private maskPipe: NgxMaskPipe,
               public lang: LangService) {
 
   }
@@ -208,7 +208,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
         const amountChanged = amount + this._model.calculateAllCountriesExcept(countryId)
         const correctedAmount = currency(amountChanged).value > currency(targetAmount).value ? (currency(amount).subtract(currency(amountChanged).subtract(targetAmount).value)).value : amount
         if (currency(amountChanged).value > currency(targetAmount).value) {
-          control.setValue(this.maskPipe.transform(correctedAmount, this.maskPattern.SEPARATOR, this.maskPattern.THOUSAND_SEPARATOR), {emitEvent: false})
+          control.setValue(this.maskPipe.transform(correctedAmount, this.maskPattern.SEPARATOR, {thousandSeparator:this.maskPattern.THOUSAND_SEPARATOR}), {emitEvent: false})
         }
         if (this.readonly)
           return;

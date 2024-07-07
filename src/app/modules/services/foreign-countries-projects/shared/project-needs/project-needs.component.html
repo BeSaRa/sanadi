@@ -35,7 +35,7 @@
         <ng-container cdkColumnDef="totalCost">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{ lang.map.total_cost }}</th>
           <td cdk-cell class="text-end" *cdkCellDef="let row">{{ (row.totalCost ?? 0) |
-            mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
+            mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</td>
         </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
@@ -50,7 +50,7 @@
         </ng-container>
         <ng-container cdkColumnDef="totalCostFooter">
           <td cdk-footer-cell class="text-end" *cdkFooterCellDef="let row">
-            <span><b>{{calculateTotalCost() | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</b></span>
+            <span><b>{{calculateTotalCost() | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</b></span>
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>

@@ -4,7 +4,7 @@ import { AdminResult } from './admin-result';
 import { NpoEmployeeInterceptor } from '@app/model-interceptors/npo-employee-interceptor';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { BankAccountExecutiveManagement } from "@models/bank-account-executive-management";
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { NpoEmployeeService } from '@app/services/npo-employee.service';
 import { BaseModel } from './base-model';

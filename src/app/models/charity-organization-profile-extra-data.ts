@@ -9,7 +9,7 @@ import {Branch} from '@app/models/branch';
 import {INames} from '@contracts/i-names';
 import {LangService} from '@services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {BlobModel} from '@app/models/blob-model';

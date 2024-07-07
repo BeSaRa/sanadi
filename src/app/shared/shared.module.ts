@@ -30,14 +30,13 @@ import {GridSearchComponent} from './components/grid-search/grid-search.componen
 import {AsteriskIfRequiredDirective} from './directives/asterisk-if-required.directive';
 import {LoadingComponent} from './components/loading/loading.component';
 import {VersionComponent} from './components/version/version.component';
-import {NgxMaskModule} from 'ngx-mask';
+// import {NgxMaskModule} from 'ngx-mask';
 import {SidebarComponent} from './components/sidebar/sidebar.component';
 import {FlipIconDirective} from './directives/flip-icon.directive';
 import {SidebarMenuItemListComponent} from './components/sidebar-menu-item-list/sidebar-menu-item-list.component';
 import {MenuItemFilterPipe} from './pipes/menu-item-filter.pipe';
 import {HighlightPipe} from './pipes/highlight.pipe';
 import {NgSelectModule} from '@ng-select/ng-select';
-import {AngularMyDatePickerModule} from 'angular-mydatepicker';
 import {DateFixDirective} from './directives/date-fix.directive';
 import {AttachmentListComponent} from './components/attachment-list/attachment-list.component';
 import {TrimInputDirective} from './directives/trim-input.directive';
@@ -153,6 +152,8 @@ import { LangNamePipe } from './pipes/lang-name.pipe';
 import { SendToSingleComponent } from './popups/send-to-single/send-to-single.component';
 import { UploadFilePopupComponent } from './popups/upload-file-popup/upload-file-popup.component';
 import { CommentPopupComponent } from './popups/comment-popup/comment-popup.component';
+import { AngularMyDatePickerModule } from '@nodro7/angular-mydatepicker';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -286,15 +287,17 @@ import { CommentPopupComponent } from './popups/comment-popup/comment-popup.comp
     A11yModule,
     CdkTableModule,
     ReactiveFormsModule,
-    NgxMaskModule.forRoot(),
     NgSelectModule,
+    // NgxMaskModule.forRoot(),
     AngularMyDatePickerModule,
+    NgxMaskDirective,
+    NgxMaskPipe
   ],
   exports: [
     CommonModule,
     ContextMenuModule,
     OverlayModule,
-    NgxMaskModule,
+    // NgxMaskModule,
     PortalModule,
     A11yModule,
     CdkTableModule,
@@ -379,7 +382,9 @@ import { CommentPopupComponent } from './popups/comment-popup/comment-popup.comp
     ValueDifferencesListComponent,
     LangNamePipe,
     UploadFilePopupComponent,
-    CommentPopupComponent
+    CommentPopupComponent,
+    NgxMaskPipe,
+    NgxMaskDirective
   ]
 })
 export class SharedModule {

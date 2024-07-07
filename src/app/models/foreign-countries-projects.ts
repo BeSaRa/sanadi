@@ -12,7 +12,7 @@ import {FactoryService} from '@app/services/factory.service';
 import {ForeignCountriesProjectsService} from '@app/services/foreign-countries-projects.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {AdminResult} from './admin-result';
 import {CaseModel} from './case-model';
 import {ProjectNeed} from './project-needs';

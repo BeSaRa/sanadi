@@ -53,7 +53,7 @@
             "outputPath": "dist/sanadi",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": [
@@ -127,10 +127,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "sanadi:build:production"
+              "buildTarget": "sanadi:build:production"
             },
             "development": {
-              "browserTarget": "sanadi:build:development"
+              "buildTarget": "sanadi:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -138,14 +138,14 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "sanadi:build"
+            "buildTarget": "sanadi:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [

@@ -39,7 +39,7 @@
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" for="remainingAmount">{{lang.map.remaining_amount}}</label>
         <input id="remainingAmount" readonly
-               [value]="remainingAmount|mask:inputMaskPatterns.SEPARATOR: inputMaskPatterns.THOUSAND_SEPARATOR"
+               [value]="remainingAmount|mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR}"
                class="form-control">
       </div>
       <div class="col-sm-12 mb-4 position-relative">

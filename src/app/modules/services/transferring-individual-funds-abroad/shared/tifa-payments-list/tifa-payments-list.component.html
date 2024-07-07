@@ -18,7 +18,7 @@
         <ng-container cdkColumnDef="totalCost">
           <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.amount}}</th>
           <td *cdkCellDef="let row"
-              cdk-cell> {{(row.totalCost ? row.totalCost + '' : '0') | mask: inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+              cdk-cell> {{(row.totalCost ? row.totalCost + '' : '0') | mask: inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }} </td>
         </ng-container>
         <ng-container cdkColumnDef="dueDate">
           <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.due_date}}</th>

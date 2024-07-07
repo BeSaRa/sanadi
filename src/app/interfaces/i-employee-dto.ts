@@ -1,5 +1,5 @@
 import {AdminResult} from '@models/admin-result';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 
 export interface IEmployeeDto {
   id: number | null;

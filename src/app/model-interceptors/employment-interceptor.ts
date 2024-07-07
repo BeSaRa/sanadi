@@ -1,4 +1,4 @@
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { DateUtils } from '@app/helpers/date-utils';
 import { Employment } from '@app/models/employment';
 import { EmployeeInterceptor } from "./employee-interceptor";

@@ -1,6 +1,6 @@
 import { IdentificationType } from '@app/enums/identification-type.enum';
 import { AdminResult } from './../models/admin-result';
-import { IMyDateModel } from "angular-mydatepicker";
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { DateUtils } from "./../helpers/date-utils";
 import { Employee } from "./../models/employee";
 import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";

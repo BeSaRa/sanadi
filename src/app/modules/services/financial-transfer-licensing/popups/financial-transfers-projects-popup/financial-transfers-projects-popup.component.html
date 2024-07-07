@@ -31,7 +31,7 @@
         <label asteriskIfRequired="qatariTransactionAmount" for="qatariTransactionAmount"
           class="form-label">{{lang.map.qatari_riyal_transaction_amount}}</label>
         <input id="qatariTransactionAmount" validationClasses="qatariTransactionAmount"
-        [mask]="inputMask.SEPARATOR"  [thousandSeparator]="inputMask.THOUSAND_SEPARATOR"
+        mask="inputMask.SEPARATOR"  thousandSeparator="inputMask.THOUSAND_SEPARATOR"
           formControlName="qatariTransactionAmount" trimInput class="form-control">
         <app-field-error-message controlName="qatariTransactionAmount"></app-field-error-message>
       </div>
@@ -55,13 +55,13 @@
         <label for="projectTotalCost" asteriskIfRequired="projectTotalCost"
                class="form-label">{{lang.map.project_total_cost}}</label>
         <span id="projectTotalCost" class="form-control input-disabled"
-              [innerHTML]="(selectedProject && selectedProject.projectTotalCost || '0') | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR"></span>
+              [innerHTML]="(selectedProject && selectedProject.projectTotalCost || '0') | mask: inputMaskPatterns.SEPARATOR "></span>
       </div>
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label for="transferAmount" asteriskIfRequired="transferAmount"
                class="form-label">{{lang.map.transferred_amount}}</label>
         <span id="transferAmount" class="form-control input-disabled"
-              [innerHTML]="(selectedProject && selectedProject.transferAmount || '0') | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR "></span>
+              [innerHTML]="(selectedProject && selectedProject.transferAmount || '0') | mask: inputMaskPatterns.SEPARATOR  "></span>
       </div>
     </div>
     <div class="row">
@@ -69,12 +69,12 @@
         <label for="remainingAmount" asteriskIfRequired="remainingAmount"
           class="form-label">{{lang.map.remaining_amount}}</label>
         <span id="remainingAmount" class="form-control input-disabled"
-          [innerHTML]="(selectedProject && selectedProject.remainingAmount || '0') | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR"></span>
+          [innerHTML]="(selectedProject && selectedProject.remainingAmount || '0') | mask: inputMaskPatterns.SEPARATOR "></span>
       </div>
       <div class="col-sm-12 col-md-6 mb-4 position-relative">
         <label for="dueAmount" asteriskIfRequired="dueAmount" class="form-label">{{lang.map.due_amount}}</label>
         <span id="dueAmount" class="form-control input-disabled"
-          [innerHTML]="(selectedProject && selectedProject.dueAmount || '0') | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR"></span>
+          [innerHTML]="(selectedProject && selectedProject.dueAmount || '0') | mask: inputMaskPatterns.SEPARATOR "></span>
       </div>
     </div>
   </div>

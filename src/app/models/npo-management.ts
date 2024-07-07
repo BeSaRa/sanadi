@@ -11,7 +11,7 @@ import { FounderMembers } from '@app/models/founder-members';
 import { RealBeneficiary } from './real-beneficiary';
 import { DateUtils } from './../helpers/date-utils';
 import { Validators } from '@angular/forms';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { CustomValidators } from './../validators/custom-validators';
 import { FactoryService } from './../services/factory.service';
 import { ControlValueLabelLangKey, ISearchFieldsMap } from './../types/types';

@@ -14,7 +14,7 @@ import {IBeneficiarySearchLogCriteria} from '@contracts/i-beneficiary-search-log
 import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {BeneficiaryService} from '@services/beneficiary.service';
 import {CommonUtils} from '@helpers/common-utils';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IMyInputFieldChanged} from '@nodro7/angular-mydatepicker';
 import {SortEvent} from '@contracts/sort-event';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ExternalUser} from '@app/models/external-user';

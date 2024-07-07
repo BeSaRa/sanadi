@@ -7,7 +7,7 @@ import { FactoryService } from '@app/services/factory.service';
 import { LangService } from '@app/services/lang.service';
 import { ISearchFieldsMap } from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {BaseModel} from './base-model';
 import {AuditOperationTypes} from '@enums/audit-operation-types';
 import {AdminResult} from '@models/admin-result';

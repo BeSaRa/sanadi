@@ -81,7 +81,7 @@
         <th cdk-footer-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center">
             <span class="h6 mb-0">{{totalAdminRatio | mask : maskPattern.SEPARATOR:
-              maskPattern.THOUSAND_SEPARATOR}}</span>
+              {thousandSeparator:maskPattern.THOUSAND_SEPARATOR} }}</span>
           </div>
         </th>
       </ng-container>
@@ -96,7 +96,7 @@
         <th cdk-footer-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center">
             <span class="h6 mb-0">{{_model.projectTotalCost | mask : maskPattern.SEPARATOR:
-              maskPattern.THOUSAND_SEPARATOR}}</span>
+              {thousandSeparator:maskPattern.THOUSAND_SEPARATOR} }}</span>
           </div>
         </th>
       </ng-container>
@@ -111,10 +111,10 @@
         <th cdk-footer-cell colspan="1" *cdkFooterCellDef>
           <div class="d-flex align-items-center">
             <!-- <span
-              class="h6 mb-0">{{_model.targetAmount | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}
+              class="h6 mb-0">{{_model.targetAmount | mask : maskPattern.SEPARATOR: {thousandSeparator:maskPattern.THOUSAND_SEPARATOR} }}
             </span> -->
             <span class="h6 mb-0">{{deductionTargetAmount() | mask : maskPattern.SEPARATOR:
-              maskPattern.THOUSAND_SEPARATOR}}
+              {thousandSeparator:maskPattern.THOUSAND_SEPARATOR} }}
             </span>
           </div>
         </th>

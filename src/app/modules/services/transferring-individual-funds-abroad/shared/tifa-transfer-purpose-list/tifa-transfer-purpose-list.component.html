@@ -28,7 +28,7 @@
         <ng-container cdkColumnDef="totalCost">
           <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.total_cost}}</th>
           <td *cdkCellDef="let row" cdk-cell> {{(row.totalCost ?? 0) |
-            mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+            mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }} </td>
         </ng-container>
         <ng-container cdkColumnDef="beneficiaryCountry">
           <th *cdkHeaderCellDef cdk-header-cell sortable-header [sortParamAsFullItem]="true"

@@ -3,7 +3,7 @@
     <label for="totalQatariRiyalTransactions"
            class="form-label">{{lang.map.total_qatari_riyal_transaction_amount}}</label>
     <span id="totalQatariRiyalTransactions" class="form-control input-disabled">
-        {{(totalQatariRiyalTransactions || '0') | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}}
+        {{(totalQatariRiyalTransactions || '0') | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}
       </span>
   </div>
 </div>
@@ -28,7 +28,7 @@
         <ng-container cdkColumnDef="qatariTransactionAmount">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.qatari_riyal_transaction_amount}}</th>
           <td cdk-cell *cdkCellDef="let row">
-            {{row.qatariTransactionAmount | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+            {{row.qatariTransactionAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }} </td>
         </ng-container>
         <ng-container cdkColumnDef="notes">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.notes}}</th>

@@ -10,15 +10,15 @@ import {DialogService} from "@services/dialog.service";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {AmountOverYear} from "@app/models/amount-over-year";
 import currency from "currency.js";
-import {MaskPipe} from "ngx-mask";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import { ServiceData } from '@app/models/service-data';
+import { NgxMaskPipe } from 'ngx-mask';
 
 @Component({
   selector: 'targeted-years-distribution',
   templateUrl: './targeted-years-distribution.component.html',
   styleUrls: ['./targeted-years-distribution.component.scss'],
-  providers: [MaskPipe]
+  providers: [NgxMaskPipe]
 })
 export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
   private modelChange$: ReplaySubject<ProjectFundraising> = new ReplaySubject<ProjectFundraising>(1)
@@ -90,7 +90,7 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
 
   constructor(private service: ProjectFundraisingService,
               public lang: LangService,
-              private maskPipe: MaskPipe,
+              private maskPipe: NgxMaskPipe,
               private dialog: DialogService) {
   }
 
@@ -204,7 +204,7 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
         if (currentValue > this._model.targetAmount) {
           const toBeRemoved = currency(currentValue).subtract(this._model.targetAmount).value;
           const correctedValue = currency(value).subtract(toBeRemoved).value
-          input.setValue(this.maskPipe.transform(correctedValue, this.maskPattern.SEPARATOR, this.maskPattern.THOUSAND_SEPARATOR), {emitEvent: false})
+          input.setValue(this.maskPipe.transform(correctedValue, this.maskPattern.SEPARATOR, {thousandSeparator:this.maskPattern.THOUSAND_SEPARATOR}), {emitEvent: false})
           !this.readonly && this._model.updateYear(correctedValue, index)
         } else {
           !this.readonly && this._model.updateYear(value, index)

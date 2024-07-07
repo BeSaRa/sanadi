@@ -59,7 +59,7 @@
         <div class="col-sm-6 mb-4">
           <label class="form-label">{{lang.map.request_aid_amount}}</label>
           <span
-            class="form-control">{{(auditSubventionRequest.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+            class="form-control">{{(auditSubventionRequest.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR}) || '&nbsp;'}}</span>
         </div>
       </div>
       <div class="row">
@@ -138,14 +138,14 @@
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{lang.map.estimated_amount}}</label>
         <span
-          class="form-control">{{(auditSubventionAid.aidSuggestedAmount! | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+          class="form-control">{{(auditSubventionAid.aidSuggestedAmount! | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR}) || '&nbsp;'}}</span>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{lang.map.given_amount}}</label>
         <span
-          class="form-control">{{(auditSubventionAid.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;' }}</span>
+          class="form-control">{{(auditSubventionAid.aidAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR}) || '&nbsp;' }}</span>
       </div>
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{lang.map.number_of_installments}}</label>

@@ -1,5 +1,5 @@
 import { InterceptModel } from "@decorators/intercept-model";
-import { IMyDateModel } from "angular-mydatepicker";
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { WorldCheckSearchResultItem } from "./world-check-search-result-item";
 import { WorldCheckSearchResultInterceptor } from "@app/model-interceptors/world-check-search-result-interceptor";
 

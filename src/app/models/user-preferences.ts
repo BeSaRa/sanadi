@@ -6,7 +6,7 @@ import {InterceptModel} from '@decorators/intercept-model';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable} from 'rxjs';
 import {Cloneable} from '@models/cloneable';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { IHasVacation } from '@app/interfaces/i-has-vacation';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { InternalUser } from './internal-user';

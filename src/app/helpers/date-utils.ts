@@ -1,4 +1,4 @@
-import {IAngularMyDpOptions, IMyDate, IMyDateModel} from 'angular-mydatepicker';
+import {IAngularMyDpOptions, IMyDate, IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {IAppConfig} from '@contracts/i-app-config';
 import {FactoryService} from '@services/factory.service';
 import {ConfigurationService} from '@services/configuration.service';

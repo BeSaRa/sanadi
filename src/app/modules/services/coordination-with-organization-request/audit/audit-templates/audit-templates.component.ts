@@ -19,7 +19,7 @@ import { DynamicModelService } from '@app/services/dynamic-models.service';
 import { LangService } from '@app/services/lang.service';
 import { ControlValueLabelLangKey } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { M } from 'angular-mydatepicker';
+import { M } from '@nodro7/angular-mydatepicker';
 
 @Component({
   selector: 'audit-templates',

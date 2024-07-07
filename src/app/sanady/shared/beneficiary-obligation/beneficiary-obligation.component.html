@@ -98,7 +98,7 @@
             <ng-container cdkColumnDef="amount">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.amount}}</th>
               <td cdk-cell *cdkCellDef="let row"
-                  class="text-end"> {{row.amount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+                  class="text-end"> {{row.amount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }} </td>
             </ng-container>
             <ng-container cdkColumnDef="installmentsCount">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.number_of_installments}}</th>
@@ -118,7 +118,7 @@
             </ng-container>
             <ng-container cdkColumnDef="totalDebts">
               <td cdk-footer-cell class="text-end" *cdkFooterCellDef="let row">
-                <span><b>{{calculateTotalDebts()| mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</b></span>
+                <span><b>{{calculateTotalDebts()| mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</b></span>
               </td>
             </ng-container>
 

@@ -1,6 +1,6 @@
 import {DateUtils} from '@app/helpers/date-utils';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {mixinApprovalLicenseWithDuration} from '@app/mixins/mixin-approval-license-with-duration';
 import {HasLicenseApproval} from '@app/interfaces/has-license-approval';
 

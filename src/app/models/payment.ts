@@ -2,7 +2,7 @@ import { ControlValueLabelLangKey, ISearchFieldsMap } from './../types/types';
 import {AuditOperationTypes} from '@app/enums/audit-operation-types';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {AdminResult} from './admin-result';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {ObjectUtils} from '@app/helpers/object-utils';

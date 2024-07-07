@@ -82,7 +82,7 @@ import { SharedService } from '@services/shared.service';
 import { BeneficiaryRequesterRelationTypes } from '@app/enums/beneficiary-requester-relation-types';
 import { CanComponentDeactivateContract } from "@contracts/can-component-deactivate-contract";
 import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 
 @Component({
   selector: 'app-user-request',

@@ -1,6 +1,6 @@
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
 import { CoordinationWithOrganizationsRequestService } from '@services/coordination-with-organizations-request.service';
-import { IAngularMyDpOptions } from 'angular-mydatepicker';
+import { IAngularMyDpOptions } from '@nodro7/angular-mydatepicker';
 import { FinalExternalOfficeApproval } from '@app/models/final-external-office-approval';
 import { LicenseDurationType } from '@app/enums/license-duration-type';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';

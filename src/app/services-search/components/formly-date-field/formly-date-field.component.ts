@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FieldType} from '@ngx-formly/core';
 import {UntypedFormControl} from '@angular/forms';
-import {IAngularMyDpOptions} from 'angular-mydatepicker';
+import {IAngularMyDpOptions} from '@nodro7/angular-mydatepicker';
 import {DateUtils} from '@helpers/date-utils';
 import {CustomFormlyFieldConfig} from '@contracts/custom-formly-field-config';
 

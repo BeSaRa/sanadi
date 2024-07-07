@@ -8,7 +8,7 @@ import { NpoContactOfficer } from '@app/models/npo-contact-officer';
 import { RealBeneficiaryInterceptor } from '@app/model-interceptors/real-beneficiary-interceptors';
 import { AdminResult } from '@models/admin-result';
 import { DateUtils } from '@helpers/date-utils';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { NpoManagement } from '@models/npo-management';
 import { IModelInterceptor } from '@contracts/i-model-interceptor';
 import { FounderMemberInterceptor } from './founder-member-interceptor';

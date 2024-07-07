@@ -16,7 +16,7 @@
           <ng-container cdkColumnDef="qatariTransactionAmount">
             <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.qatari_riyal_transaction_amount}}</th>
             <td cdk-cell *cdkCellDef="let row">
-              {{row.qatariTransactionAmount | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+              {{row.qatariTransactionAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }} </td>
           </ng-container>
           <ng-container cdkColumnDef="notes">
             <th cdk-header-cell *cdkHeaderCellDef > {{lang.map.notes}}</th>

@@ -1,7 +1,7 @@
 import { EffectiveCoordinationCapabilities } from '@app/models/effective-coordination-capabilities';
 import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
 import { DateUtils } from '@app/helpers/date-utils';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { AdminResult } from '@app/models/admin-result';
 import { isValidAdminResult } from '@app/helpers/utils';
 

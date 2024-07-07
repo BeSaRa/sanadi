@@ -6,7 +6,7 @@ import { FactoryService } from './../services/factory.service';
 import { INames } from './../interfaces/i-names';
 import { LangService } from '@app/services/lang.service';
 import { InterceptModel } from "@decorators/intercept-model";
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { FounderMembers } from './founder-members';
 import { NpoBankAccount } from './npo-bank-account';

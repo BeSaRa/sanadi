@@ -119,12 +119,12 @@ export function InterceptParam(
     }
     const ref = target[$$_PARAMS_INTERCEPTORS] as InterceptMap
 
-    if (!ref.has(propertyKey)) {
-      ref.set(propertyKey, {})
+    if (!ref.has(propertyKey!)) {
+      ref.set(propertyKey!, {})
     }
-    const oldPrams = ref.get(propertyKey)
+    const oldPrams = ref.get(propertyKey!)
 
-    ref.set(propertyKey, {
+    ref.set(propertyKey!, {
       ...oldPrams,
       [parameterIndex]: interceptor!,
     })

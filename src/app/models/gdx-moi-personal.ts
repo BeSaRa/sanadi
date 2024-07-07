@@ -3,7 +3,7 @@ import { normalSearchFields } from "@app/helpers/normal-search-fields";
 import { GdxMoiPersonalInterceptor } from "@app/model-interceptors/gdx-moi-personal-interceptor";
 import { ISearchFieldsMap } from "@app/types/types";
 import { SearchableCloneable } from "./searchable-cloneable";
-import { IMyDateModel } from "angular-mydatepicker";
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 
 const {receive} = new GdxMoiPersonalInterceptor();
 @InterceptModel({

@@ -2,7 +2,7 @@ import { ValidatorFn } from '@angular/forms';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { RealBeneficiaryInterceptor } from '@app/model-interceptors/real-beneficiary-interceptors';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';
 import { AuditOperationTypes } from '@enums/audit-operation-types';

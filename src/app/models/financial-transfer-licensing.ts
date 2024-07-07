@@ -17,7 +17,7 @@ import { LicenseApprovalModel } from './license-approval-model';
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';
 import { CommonUtils } from '@app/helpers/common-utils';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 
 const { send, receive } = new FinancialTransferLicensingInterceptor();
 

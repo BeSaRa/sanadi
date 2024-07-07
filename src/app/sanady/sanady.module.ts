@@ -22,6 +22,7 @@ import {BeneficiaryIncomeComponent} from './shared/beneficiary-income/beneficiar
 import {InquiryLogsComponent} from './pages/inquiry-logs/inquiry-logs.component';
 import {AidListComponent} from './shared/aid-list/aid-list.component';
 import {GdxIntegrationModule} from '@app/modules/gdx-integration/gdx-integration.module';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 
 @NgModule({
@@ -49,7 +50,9 @@ import {GdxIntegrationModule} from '@app/modules/gdx-integration/gdx-integration
     CommonModule,
     SanadyRoutingModule,
     SharedModule,
-    GdxIntegrationModule
+    GdxIntegrationModule,
+    NgxMaskDirective,
+    NgxMaskPipe
   ]
 })
 export class SanadyModule {

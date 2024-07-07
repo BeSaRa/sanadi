@@ -30,7 +30,7 @@
       <ng-container cdkColumnDef="projectTotalCost">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.target_amount}}</th>
         <td cdk-cell
-            *cdkCellDef="let row"> {{row.projectTotalCost | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+            *cdkCellDef="let row"> {{row.projectTotalCost | mask: inputMaskPatterns.SEPARATOR : {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }} </td>
       </ng-container>
       <ng-container cdkColumnDef="permitType">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.permit_type}}</th>
@@ -39,19 +39,19 @@
       <ng-container cdkColumnDef="consumedAmount">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.consumed_amount}}</th>
         <td cdk-cell
-            *cdkCellDef="let row"> {{row.consumedAmount | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+            *cdkCellDef="let row"> {{row.consumedAmount | mask: inputMaskPatterns.SEPARATOR : {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }} </td>
       </ng-container>
       <ng-container cdkColumnDef="collected">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.collected_amount}}</th>
         <td cdk-cell
-            *cdkCellDef="let row"> {{row.collected | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+            *cdkCellDef="let row"> {{row.collected | mask: inputMaskPatterns.SEPARATOR : {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }} </td>
       </ng-container>
       <ng-container cdkColumnDef="remainingAmount">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.remaining_amount}}</th>
         <td cdk-cell
             *cdkCellDef="let row; let i = index">
           <div class="d-flex">
-            <span>{{row.remainingAmount | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+            <span>{{row.remainingAmount | mask: inputMaskPatterns.SEPARATOR : {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
           </div>
         </td>
       </ng-container>
@@ -62,7 +62,7 @@
             <div class="d-flex">
               <input [readonly]="disabled || isItemDisabled(i)" [id]="'fundraising-'+i" class="form-control form-control-sm" [formControlName]="i"
                      [mask]="inputMaskPatterns.SEPARATOR"
-                     [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                     [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR "
                      [dropSpecialCharacters]="[',']">
               <div [tooltip]="lang.map.take_the_remaining">
                 <!-- <button [disabled]="disabled || noRemainingValue(i)" (click)="takeRemaining(i)"
@@ -105,7 +105,7 @@
         <th colspan="2" cdk-header-cell
             *cdkFooterCellDef>
           <div class="d-flex align-items-center h6 mb-0">
-            {{totalValue | mask: inputMaskPatterns.SEPARATOR: inputMaskPatterns.THOUSAND_SEPARATOR}}
+            {{totalValue | mask: inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}
           </div>
         </th>
       </ng-container>
@@ -118,7 +118,7 @@
         <th colspan="2" cdk-header-cell
             *cdkFooterCellDef>
           <div class="d-flex align-items-center h6 mb-0">
-            {{projectTotalCost | mask: inputMaskPatterns.SEPARATOR: inputMaskPatterns.THOUSAND_SEPARATOR}}
+            {{projectTotalCost | mask: inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}
           </div>
         </th>
       </ng-container>
@@ -131,7 +131,7 @@
         <th colspan="2" [ngClass]="{remain:remainingAmount!==0, collectZero:remainingAmount==projectTotalCost}" cdk-header-cell
             *cdkFooterCellDef>
           <div class="d-flex align-items-center h6 mb-0">
-            {{remainingAmount | mask: inputMaskPatterns.SEPARATOR: inputMaskPatterns.THOUSAND_SEPARATOR}}
+            {{remainingAmount | mask: inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}
           </div>
         </th>
       </ng-container>

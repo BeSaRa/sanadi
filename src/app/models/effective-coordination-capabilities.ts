@@ -7,7 +7,7 @@ import { FactoryService } from '@app/services/factory.service';
 import { LangService } from '@app/services/lang.service';
 import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { EffectiveCoordinationInterceptor } from './../model-interceptors/effective-coordination-interceptor';
 import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';

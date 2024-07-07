@@ -5,7 +5,7 @@ import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {OrgMemberInterceptor} from '@app/model-interceptors/org-member-interceptor';
 import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {AdminResult} from './admin-result';
 import {SearchableCloneable} from './searchable-cloneable';
 import {AuditOperationTypes} from '@enums/audit-operation-types';

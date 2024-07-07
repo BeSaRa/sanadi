@@ -1,6 +1,5 @@
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {Localization} from '@models/localization';
-import {IAngularMyDpOptions} from 'angular-mydatepicker';
 import {AbstractControl} from '@angular/forms';
 import {ITabData} from '@app/interfaces/i-tab-data';
 import {ForeignCountriesProjects} from '@app/models/foreign-countries-projects';
@@ -9,6 +8,7 @@ import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 import { Observable } from 'rxjs';
+import { IAngularMyDpOptions } from '@nodro7/angular-mydatepicker';
 
 export type LangType = Record<keyof ILanguageKeys, string>;
 export type LocalizationMap = Record<keyof ILanguageKeys, Localization>;

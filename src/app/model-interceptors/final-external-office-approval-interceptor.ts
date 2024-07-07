@@ -6,7 +6,7 @@ import { BankBranch } from '@app/models/bank-branch';
 import { ExecutiveManagement } from '@app/models/executive-management';
 import { FactoryService } from '@app/services/factory.service';
 import { FinalExternalOfficeApprovalService } from '@app/services/final-external-office-approval.service';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { IModelInterceptor } from '../interfaces/i-model-interceptor';
 import { AdminResult } from '../models/admin-result';
 import { FinalExternalOfficeApproval } from '../models/final-external-office-approval';

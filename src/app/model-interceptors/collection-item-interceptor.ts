@@ -3,7 +3,7 @@ import {CollectionItem} from "@app/models/collection-item";
 import {AdminResult} from "@app/models/admin-result";
 import {LicenseDurationType} from '@app/enums/license-duration-type';
 import {DateUtils} from '@app/helpers/date-utils';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 
 export class CollectionItemInterceptor implements IModelInterceptor<CollectionItem> {
   send(model: Partial<CollectionItem>): Partial<CollectionItem> {

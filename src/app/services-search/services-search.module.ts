@@ -10,6 +10,7 @@ import { FormlySelectFieldComponent } from './components/formly-select-field/for
 import { FormlyMaskInputFieldComponent } from './components/formly-mask-input-field/formly-mask-input-field.component';
 import { FormlyFieldWrapperComponent } from './components/formly-field-wrapper/formly-field-wrapper.component';
 import { FormlyFieldFullWrapperComponent } from './components/formly-field-full-wrapper/formly-field-full-wrapper.component';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 
 
@@ -20,13 +21,16 @@ import { FormlyFieldFullWrapperComponent } from './components/formly-field-full-
     FormlyFieldFullWrapperComponent,
     FormlyDateFieldComponent,
     FormlySelectFieldComponent,
-    FormlyMaskInputFieldComponent
+    FormlyMaskInputFieldComponent,
+ 
 
   ],
   imports: [
     CommonModule,
     SharedModule,
     ServicesSearchRoutingModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
     FormlyModule.forChild({
       types: [
         {name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['col-md-4-8']},

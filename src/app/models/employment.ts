@@ -5,7 +5,7 @@ import { ControlValueLabelLangKey, ISearchFieldsMap } from './../types/types';
 import { ContractTypes } from '@app/enums/contract-types.enum';
 import { EmploymentCategory } from '@app/enums/employment-category.enum';
 import { EmploymentRequestType } from '@app/enums/service-request-types';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { WFResponseType } from '@enums/wfresponse-type.enum';
 import { Employee } from './employee';
 import { HasLicenseDurationType } from '@contracts/has-license-duration-type';

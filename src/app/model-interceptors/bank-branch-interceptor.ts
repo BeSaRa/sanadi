@@ -1,7 +1,7 @@
 import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
 import {BankBranch} from '@app/models/bank-branch';
 import {DateUtils} from '@app/helpers/date-utils';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 
 export class BankBranchInterceptor implements IModelInterceptor<BankBranch> {
   send(model: Partial<BankBranch>): Partial<BankBranch> {

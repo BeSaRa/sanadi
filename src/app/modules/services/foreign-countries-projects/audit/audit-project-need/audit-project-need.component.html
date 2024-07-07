@@ -34,7 +34,7 @@
           <ng-container cdkColumnDef="totalCost">
             <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.total_cost }}</th>
             <td cdk-cell class="text-end"
-                *cdkCellDef="let row">{{ (row.totalCost ?? 0) | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
+                *cdkCellDef="let row">{{ (row.totalCost ?? 0) | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.view_changes}}</th>

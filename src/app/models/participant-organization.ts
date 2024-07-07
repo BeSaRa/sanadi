@@ -1,6 +1,6 @@
 import { ControlValueLabelLangKey } from './../types/types';
 import { SearchableCloneable } from '@app/models/searchable-cloneable';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { LangService } from '@services/lang.service';
 import { FactoryService } from '@services/factory.service';
 import { Lookup } from '@app/models/lookup';

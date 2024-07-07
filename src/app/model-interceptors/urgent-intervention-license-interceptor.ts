@@ -3,7 +3,7 @@ import {UrgentInterventionLicense} from '@app/models/urgent-intervention-license
 import {AdminResult} from '@app/models/admin-result';
 import {DomainTypes} from '@app/enums/domain-types';
 import {DateUtils} from '@app/helpers/date-utils';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 
 export class UrgentInterventionLicenseInterceptor implements IModelInterceptor<UrgentInterventionLicense> {
   receive(model: UrgentInterventionLicense): UrgentInterventionLicense {

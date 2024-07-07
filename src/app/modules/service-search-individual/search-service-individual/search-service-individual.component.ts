@@ -10,7 +10,7 @@ import { DialogService } from '@services/dialog.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { CaseModel } from '@models/case-model';
 import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
 import { CaseTypes } from '@app/enums/case-types.enum';

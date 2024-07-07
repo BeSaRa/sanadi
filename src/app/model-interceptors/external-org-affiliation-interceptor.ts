@@ -1,4 +1,4 @@
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {DateUtils} from '@app/helpers/date-utils';
 import {ContactOfficer} from './../models/contact-officer';
 import {BankAccount} from './../models/bank-account';

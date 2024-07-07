@@ -16,7 +16,7 @@ import {InboxService} from '@services/inbox.service';
 import {IWFResponse} from '@contracts/i-w-f-response';
 import {filter, map, switchMap, tap} from 'rxjs/operators';
 import {GeneralAssociationInternalMember} from '@models/general-association-internal-member';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 
 @Component({
   selector: 'general-association-meeting-approve-task-popup',

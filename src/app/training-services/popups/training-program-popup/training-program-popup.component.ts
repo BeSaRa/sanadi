@@ -18,7 +18,7 @@ import {DialogService} from '@app/services/dialog.service';
 import {Lookup} from '@app/models/lookup';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DateUtils} from '@app/helpers/date-utils';
-import {IMyDateModel, IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IMyDateModel, IMyInputFieldChanged} from '@nodro7/angular-mydatepicker';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Trainer} from '@app/models/trainer';
 import {TrainerService} from '@app/services/trainer.service';

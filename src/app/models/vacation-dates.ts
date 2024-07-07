@@ -7,7 +7,7 @@ import { LangService } from '@app/services/lang.service';
 import { VacationDatesService } from '@app/services/vacation-dates.service';
 import { searchFunctionType } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { BaseModel } from './base-model';
 
 

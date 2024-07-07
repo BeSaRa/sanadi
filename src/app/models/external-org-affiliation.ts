@@ -1,7 +1,7 @@
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { dateSearchFields } from '@app/helpers/date-search-fields';
 import { ControlValueLabelLangKey, ISearchFieldsMap } from './../types/types';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { Validators } from '@angular/forms';
 import { CustomValidators } from '@app/validators/custom-validators';

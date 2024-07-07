@@ -2,7 +2,7 @@ import { LinkedProjectTypes } from "@app/enums/linked-project-type.enum";
 import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { LicenseActivity } from "@app/models/license-activity";
 import { LicenseActivityInterceptor } from "./license-activity-interceptor";
-import { IMyDateModel } from "angular-mydatepicker";
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { DateUtils } from "@app/helpers/date-utils";
 import { InternalUserInterceptor } from "./internal-user-interceptor";
 import { InternalUser } from "@app/models/internal-user";

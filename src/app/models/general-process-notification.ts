@@ -9,7 +9,7 @@ import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties'
 import { mixinLicenseDurationType } from '@app/mixins/mixin-license-duration';
 import { mixinRequestType } from '@app/mixins/mixin-request-type';
 import { CaseModel } from '@app/models/case-model';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { CaseModelContract } from './../contracts/case-model-contract';
 import { WFResponseType } from './../enums/wfresponse-type.enum';
 import { HasLicenseDurationType } from './../interfaces/has-license-duration-type';

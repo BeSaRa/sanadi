@@ -4,7 +4,7 @@ import {AdminResult} from '@app/models/admin-result';
 import {isValidAdminResult} from '@app/helpers/utils';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {DateUtils} from '@app/helpers/date-utils';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {FactoryService} from '@app/services/factory.service';
 import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
 import {ProjectComponent} from '@app/models/project-component';

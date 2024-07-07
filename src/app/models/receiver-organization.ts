@@ -1,5 +1,5 @@
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 
 export class ReceiverOrganization extends SearchableCloneable<ReceiverOrganization>{
   id!: number;

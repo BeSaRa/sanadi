@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
 import {LangService} from '@services/lang.service';
 import {InboxService} from '@services/inbox.service';
 import {BehaviorSubject, Subject} from 'rxjs';
@@ -25,6 +24,7 @@ import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 import {CommonUtils} from '@helpers/common-utils';
 import { PageEvent } from '@app/interfaces/page-event';
 import { Pagination } from '@app/models/pagination';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 
 @Component({
   selector: 'services-search',

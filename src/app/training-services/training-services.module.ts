@@ -23,6 +23,7 @@ import { TraineeListComponent } from './popups/trainee-list/trainee-list.compone
 import { SelectCertificateTemplatePopupComponent } from './popups/select-certificate-template-popup/select-certificate-template-popup.component';
 import { TrainingProgramViewAttendanceComponent } from './popups/training-program-view-attendance/training-program-view-attendance.component';
 import { SelectProgramSurveyPopupComponent } from './popups/select-program-survey-popup/select-program-survey-popup.component';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 
 
@@ -53,7 +54,9 @@ import { SelectProgramSurveyPopupComponent } from './popups/select-program-surve
     CommonModule,
     SharedModule,
     TrainingServicesRoutingModule,
-    FormsModule
+    FormsModule,
+    NgxMaskDirective,
+    NgxMaskPipe
   ]
 })
 export class TrainingServicesModule { }

@@ -47,7 +47,7 @@ import { NpoEmployeeService } from '@services/npo-employee.service';
 import { RealBeneficiaryService } from '@services/real-beneficiary.service';
 import { ToastService } from '@services/toast.service';
 import { DatepickerOptionsMap } from '@app/types/types';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, takeUntil } from 'rxjs/operators';
 import { ITabData } from "@contracts/i-tab-data";

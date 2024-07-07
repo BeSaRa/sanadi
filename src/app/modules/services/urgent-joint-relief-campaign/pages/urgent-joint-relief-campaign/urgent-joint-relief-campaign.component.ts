@@ -19,7 +19,7 @@ import { Lookup } from '@models/lookup';
 import { Country } from '@models/country';
 import { CountryService } from '@services/country.service';
 import { CaseStepName } from '@enums/case-step-name';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
 import { ParticipantOrganization } from '@models/participant-organization';
 import { CommonCaseStatus } from '@enums/common-case-status.enum';
 import { OpenFrom } from '@enums/open-from.enum';

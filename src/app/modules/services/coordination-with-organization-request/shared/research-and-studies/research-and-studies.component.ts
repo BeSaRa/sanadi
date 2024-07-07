@@ -16,7 +16,7 @@ import { DialogService } from '@services/dialog.service';
 import { LangService } from '@services/lang.service';
 import { ToastService } from '@services/toast.service';
 import { DatepickerOptionsMap } from '@app/types/types';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
 import { ResearchAndStudiesPopupComponent } from '../../popups/research-and-studies-popup/research-and-studies-popup.component';

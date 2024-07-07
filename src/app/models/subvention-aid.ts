@@ -5,7 +5,7 @@ import { FactoryService } from '@services/factory.service';
 import { BaseModel } from './base-model';
 import { Observable } from 'rxjs';
 import { Validators } from '@angular/forms';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { isValidValue } from '@helpers/utils';
 import { ISearchFieldsMap } from '@app/types/types';
 import { infoSearchFields } from '@app/helpers/info-search-fields';

@@ -67,6 +67,7 @@ import { LessonsLearntListComponent } from './components/lessons-learnt-list/les
 import { LessonsLearntPopupComponent } from './popups/lessons-learnt-popup/lessons-learnt-popup.component';
 import { SelectByColorComponent } from '@app/shared/components/select-by-color/select-by-color.component';
 import { SelectMemberPopupComponent } from './popups/select-member-popup-component/select-member-popup.component';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 
 @NgModule({
@@ -110,7 +111,9 @@ import { SelectMemberPopupComponent } from './popups/select-member-popup-compone
   ],
   imports: [
     CommonModule,
-    EServicesMainModule
+    EServicesMainModule,
+    NgxMaskDirective,
+    NgxMaskPipe
   ],
   exports: [
     ChooseTemplatePopupComponent,
@@ -142,7 +145,9 @@ import { SelectMemberPopupComponent } from './popups/select-member-popup-compone
     AuditLessonsLearntListComponent,
     LessonsLearntListComponent,
     LessonsLearntPopupComponent,
-    SelectByColorComponent
+    SelectByColorComponent,
+    NgxMaskDirective,
+    NgxMaskPipe
   ]
 })
 export class SharedServicesModule { }

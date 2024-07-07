@@ -2,7 +2,7 @@ import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
 import { CustomFormlyFieldConfig, ISelectOption } from '@contracts/custom-formly-field-config';
 import { FieldMode } from '../interfaces/custom-formly-field-config';
 import { of } from 'rxjs';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { IKeyValue } from '../interfaces/i-key-value';
 import { Cloneable } from '@app/models/cloneable';
 import { CustomValidators } from '../validators/custom-validators';

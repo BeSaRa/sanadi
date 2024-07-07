@@ -3,7 +3,7 @@ import { TrainingProgramService } from '@app/services/training-program.service';
 import { FactoryService } from '@app/services/factory.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { AdminResult } from '@app/models/admin-result';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { ISearchFieldsMap } from '@app/types/types';
 import { TraineeData } from '@app/models/trainee-data';
 import { TrainingProgramBriefcase } from '@app/models/training-program-briefcase';

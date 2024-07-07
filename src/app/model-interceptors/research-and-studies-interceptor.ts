@@ -1,7 +1,7 @@
 import { ResearchAndStudies } from './../models/research-and-studies';
 import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
 import { DateUtils } from '@app/helpers/date-utils';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 
 export class ResearchAndStudiesInterceptor
   implements IModelInterceptor<ResearchAndStudies>

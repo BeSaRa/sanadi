@@ -1,7 +1,7 @@
 import {Inject, LOCALE_ID, Pipe, PipeTransform} from '@angular/core';
 import {formatDate} from '@angular/common';
 import {DateUtils} from '@helpers/date-utils';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {CommonUtils} from '@helpers/common-utils';
 
 @Pipe({

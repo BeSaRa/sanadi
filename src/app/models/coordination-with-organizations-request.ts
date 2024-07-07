@@ -16,7 +16,7 @@ import { FactoryService } from '@app/services/factory.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { CoordinationTypes } from './../enums/coordination-types-enum';
 import { CoordinationWithOrganizationsRequestInterceptor } from './../model-interceptors/coordination-with-organizations-request-interceptor';
 import { AdminResult } from './admin-result';

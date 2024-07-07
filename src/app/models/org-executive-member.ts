@@ -4,7 +4,7 @@ import {infoSearchFields} from '@app/helpers/info-search-fields';
 import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {ControlValueLabelLangKey, ISearchFieldsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {AdminResult} from './admin-result';
 import {SearchableCloneable} from './searchable-cloneable';
 import {AuditOperationTypes} from '@enums/audit-operation-types';

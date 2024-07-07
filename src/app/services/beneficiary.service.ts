@@ -56,7 +56,7 @@ import { GdxMoiAddress } from '@app/models/gdx-moi-address';
 import { GdxMoiPersonal } from '@app/models/gdx-moi-personal';
 import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
 import { DateUtils } from '@app/helpers/date-utils';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { LookupService } from './lookup.service';
 
 const beneficiarySearchLogCriteriaInterceptor = new BeneficiarySearchLogCriteriaInterceptor();

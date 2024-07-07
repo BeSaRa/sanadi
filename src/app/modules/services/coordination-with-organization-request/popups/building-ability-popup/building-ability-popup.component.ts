@@ -8,7 +8,7 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { RecommendedWay } from '@app/enums/recommended-way.enum';
 import { TrainingWay } from '@app/enums/training-way.enum';
 import { TrainingLanguage } from '@app/enums/training-language-enum';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
 import { DateUtils } from '@app/helpers/date-utils';
 import { DatepickerOptionsMap } from '@app/types/types';
 

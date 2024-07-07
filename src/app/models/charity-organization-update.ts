@@ -11,7 +11,7 @@ import { FactoryService } from '@app/services/factory.service';
 import { FollowupDateService } from '@app/services/follow-up-date.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDate, IMyDateModel } from 'angular-mydatepicker';
+import { IMyDate, IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { Bylaw } from './bylaw';
 import { CaseModel } from './case-model';

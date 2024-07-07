@@ -7,7 +7,7 @@ import { InterceptModel } from '@decorators/intercept-model';
 import { AdminResult } from '@app/models/admin-result';
 import { FactoryService } from '@services/factory.service';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { ParticipantOrganization } from '@app/models/participant-organization';
 import { EmployeeService } from '@services/employee.service';
 import { OrganizationOfficer } from '@app/models/organization-officer';

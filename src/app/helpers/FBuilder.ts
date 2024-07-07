@@ -1,5 +1,4 @@
 import {IFormRowGroup} from "../interfaces/iform-row-group";
-import {FormlyFieldConfig} from "@ngx-formly/core/lib/components/formly.field.config";
 import {IFormFieldOptions} from "../interfaces/i-form-field-options";
 import {CustomFormlyFieldConfig} from "../interfaces/custom-formly-field-config";
 import {DateUtils} from "./date-utils";
@@ -7,6 +6,7 @@ import {DynamicOptionsService} from "../services/dynamic-options.service";
 import {FactoryService} from "../services/factory.service";
 import {isObservable, Observable, of} from "rxjs";
 import {ILanguageKeys} from "../interfaces/i-language-keys";
+import { FormlyFieldConfig } from "@ngx-formly/core";
 
 
 const ROWS_SYMBOL = Symbol('ROWS');

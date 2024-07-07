@@ -54,7 +54,7 @@
         <ng-container cdkColumnDef="totalPensionDeserved">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.deserved_amount}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.totalPensionDeserved ? row.totalPensionDeserved + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+            <span>{{(row.totalPensionDeserved ? row.totalPensionDeserved + '' : '') | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="actions">

@@ -1,6 +1,6 @@
 import { AdminResult } from './admin-result';
 import { Cloneable } from "@app/models/cloneable";
-import { IMyDateModel } from "angular-mydatepicker";
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { IEmployeeDto } from "@contracts/i-employee-dto";
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';
 import { AuditOperationTypes } from '@app/enums/audit-operation-types';

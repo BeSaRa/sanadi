@@ -3,7 +3,7 @@ import { AdminResult } from '@app/models/admin-result';
 import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
 import { FinancialTransfersProject } from '@app/models/financial-transfers-project';
 import { IModelInterceptor } from '@contracts/i-model-interceptor';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { FinancialTransferProjectsInterceptor } from './financial-transfer-projects-interceptor';
 const financialTransferProjectInterceptor = new FinancialTransferProjectsInterceptor()
 export class FinancialTransferLicensingInterceptor

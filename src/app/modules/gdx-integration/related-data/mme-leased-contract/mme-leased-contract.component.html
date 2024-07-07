@@ -121,7 +121,7 @@
         <ng-container cdkColumnDef="rentPaymentAmount">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.rent_payment_amount}}</th>
           <td cdk-cell *cdkCellDef="let row">
-            <span>{{(row.rentPaymentAmount ?? 0) | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+            <span>{{(row.rentPaymentAmount ?? 0) | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="rentPaymentDueDay">

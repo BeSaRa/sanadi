@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { LangService } from "@services/lang.service";
 import { DIALOG_DATA_TOKEN } from "@app/shared/tokens/tokens";
 import { Followup } from "@app/models/followup";
-import { IAngularMyDpOptions } from "angular-mydatepicker";
+import { IAngularMyDpOptions } from "@nodro7/angular-mydatepicker";
 import { DateUtils } from "@helpers/date-utils";
 import { UntypedFormControl } from "@angular/forms";
 import { UserClickOn } from "@app/enums/user-click-on.enum";

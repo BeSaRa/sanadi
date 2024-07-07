@@ -1,6 +1,6 @@
 import { InterceptModel } from "@decorators/intercept-model";
 import { WorldCheckInterceptor } from '@app/model-interceptors/world-check-interceptor';
-import { IMyDateModel } from "angular-mydatepicker";
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 
 const { send, receive } = new WorldCheckInterceptor();
 

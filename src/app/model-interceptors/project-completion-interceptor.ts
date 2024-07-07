@@ -4,7 +4,7 @@ import { AdminResult } from '@app/models/admin-result';
 import { BestPractices } from '@app/models/best-practices';
 import { LessonsLearned } from '@app/models/lessons-learned';
 import { ProjectCompletion } from '@app/models/project-completion';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { BestPracticesInterceptor } from './best-practices-interceptor';
 import { LessonsLearnedInterceptor } from './lessons-learned-interceptor';
 

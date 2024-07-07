@@ -21,7 +21,7 @@ import {Validators} from "@angular/forms";
 import {ImplementationTemplateInterceptor} from "@model-interceptors/implementation-template-interceptor";
 import {ImplementingAgencyInterceptor} from "@model-interceptors/implementing-agency-interceptor";
 import {DateUtils} from "@helpers/date-utils";
-import {IMyDateModel} from "angular-mydatepicker";
+import {IMyDateModel} from "@nodro7/angular-mydatepicker";
 import {ImplementationFundraisingInterceptor} from "@model-interceptors/implementation-fundraising-interceptor";
 import {ISearchFieldsMap} from '@app/types/types';
 import {dateSearchFields} from '@helpers/date-search-fields';

@@ -13,7 +13,7 @@ import { DateUtils } from '@app/helpers/date-utils';
 import { DatepickerControlsMap } from '@app/types/types';
 import { WorldCheckService } from '@app/services/world-check.service';
 import { IKeyValue } from '@app/interfaces/i-key-value';
-import { IMyDateModel, IMyInputFieldChanged } from 'angular-mydatepicker';
+import { IMyDateModel, IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { AdminLookup } from '@app/models/admin-lookup';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';

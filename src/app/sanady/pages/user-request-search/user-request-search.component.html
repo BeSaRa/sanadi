@@ -442,20 +442,20 @@
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                   [sortCallback]="sortingCallbacks.estimatedAmount"> {{langService.map.estimated_amount}}</th>
               <td cdk-cell *cdkCellDef="let row">
-                <span>{{row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+                <span>{{row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
               </td>
             </ng-container>
             <ng-container cdkColumnDef="requestedAidAmount">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.request_aid_amount}}</th>
               <td cdk-cell *cdkCellDef="let row">
-                <span>{{row.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+                <span>{{row.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
               </td>
             </ng-container>
             <ng-container cdkColumnDef="totalApprovedAmount">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                   [sortCallback]="sortingCallbacks.totalApprovedAmount"> {{langService.map.total_approved_amount}}</th>
               <td cdk-cell *cdkCellDef="let row">
-                <span>{{row.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+                <span>{{row.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
               </td>
             </ng-container>
             <ng-container cdkColumnDef="statusDateModified">

@@ -45,7 +45,7 @@ import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
 import {ExternalUserService} from '@services/external-user.service';
 import {ProfileService} from '@services/profile.service';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IMyInputFieldChanged} from '@nodro7/angular-mydatepicker';
 import {Observable, of} from 'rxjs';
 import {
   OrganizationOfficerComponent

@@ -40,7 +40,7 @@
         <ng-container cdkColumnDef="firstPayment">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.first_payment}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.firstPayment ? row.firstPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+            <span>{{(row.firstPayment ? row.firstPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="secondMonth">
@@ -50,7 +50,7 @@
         <ng-container cdkColumnDef="secondPayment">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.second_payment}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.secondPayment ? row.secondPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+            <span>{{(row.secondPayment ? row.secondPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="thirdMonth">
@@ -60,7 +60,7 @@
         <ng-container cdkColumnDef="thirdPayment">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.third_payment}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.thirdPayment ? row.thirdPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+            <span>{{(row.thirdPayment ? row.thirdPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
           </td>
         </ng-container>
 

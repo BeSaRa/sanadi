@@ -1,5 +1,5 @@
 import { ILabel } from '../models/template-field';
-import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Observable } from 'rxjs';
 
 export type FieldMode = 'init' | 'use' | 'view';

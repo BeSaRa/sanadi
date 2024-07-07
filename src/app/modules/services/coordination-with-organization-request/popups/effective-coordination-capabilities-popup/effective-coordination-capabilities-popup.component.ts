@@ -8,7 +8,7 @@ import { Profile } from '@app/models/profile';
 import { Lookup } from '@app/models/lookup';
 import { DateUtils } from '@app/helpers/date-utils';
 import { DatepickerOptionsMap } from '@app/types/types';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
 
 @Component({
   selector: 'app-effective-coordination-capabilities-popup',

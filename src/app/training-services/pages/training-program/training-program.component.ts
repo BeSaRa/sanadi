@@ -19,7 +19,7 @@ import {DateUtils} from '@app/helpers/date-utils';
 import {of, Subject} from 'rxjs';
 import {TrainingStatus} from '@app/enums/training-status';
 import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {EmployeeService} from "@app/services/employee.service";
 import {PermissionsEnum} from "@app/enums/permissions-enum";

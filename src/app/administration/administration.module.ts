@@ -155,6 +155,7 @@ import { UserSecurityComponent } from './shared/user-security/user-security.comp
 import { UserSubTeamComponent } from './shared/user-sub-team/user-sub-team.component';
 import { UserTeamComponent } from './shared/user-team/user-team.component';
 import { VerificationTemplatesComponent } from './shared/verification-templates/verification-templates.component';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -276,6 +277,8 @@ import { VerificationTemplatesComponent } from './shared/verification-templates/
     AdminRoutingModule,
     DragDropModule,
     FormlyBootstrapModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
     FormlyModule.forChild({
       types: [
         {name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['custom-wrapper','col-md-4-8']},

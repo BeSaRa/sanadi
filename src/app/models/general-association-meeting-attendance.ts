@@ -7,7 +7,7 @@ import {InterceptModel} from '@decorators/intercept-model';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
 import {HasRequestType} from '@contracts/has-request-type';
 import {FactoryService} from '@services/factory.service';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {AdminResult} from '@app/models/admin-result';
 import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
 import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';

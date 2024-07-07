@@ -5,7 +5,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IMyInputFieldChanged} from '@nodro7/angular-mydatepicker';
 import {DateUtils} from '@app/helpers/date-utils';
 import {isEmptyObject, objectHasValue} from '@app/helpers/utils';
 import {Lookup} from '@app/models/lookup';

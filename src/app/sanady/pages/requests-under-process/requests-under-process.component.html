@@ -42,7 +42,7 @@
           <ng-container cdkColumnDef="requestedAidAmount">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.request_aid_amount}}</th>
             <td cdk-cell *cdkCellDef="let row">
-              <span>{{row.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+              <span>{{row.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
             </td>
           </ng-container>
           <ng-container cdkColumnDef="actions">

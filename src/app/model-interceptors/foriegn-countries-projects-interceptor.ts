@@ -1,4 +1,4 @@
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {DateUtils} from './../helpers/date-utils';
 import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
 import {AdminResult} from '@app/models/admin-result';

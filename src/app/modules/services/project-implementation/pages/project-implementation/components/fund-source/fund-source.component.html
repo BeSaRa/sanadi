@@ -60,7 +60,7 @@
           <th colspan="2" cdk-header-cell
               *cdkFooterCellDef>
             <div class="d-flex align-items-center h6 mb-0">
-              {{totalValue | mask: inputMask.SEPARATOR: inputMask.THOUSAND_SEPARATOR}}
+              {{totalValue | mask: inputMask.SEPARATOR: {thousandSeparator:inputMask.THOUSAND_SEPARATOR} }}
             </div>
           </th>
         </ng-container>
@@ -73,7 +73,7 @@
           <th colspan="2" cdk-header-cell
               *cdkFooterCellDef>
             <div class="d-flex align-items-center h6 mb-0">
-              {{projectTotalCost | mask: inputMask.SEPARATOR: inputMask.THOUSAND_SEPARATOR}}
+              {{projectTotalCost | mask: inputMask.SEPARATOR: {thousandSeparator:inputMask.THOUSAND_SEPARATOR} }}
             </div>
           </th>
         </ng-container>
@@ -85,7 +85,7 @@
         <ng-container cdkColumnDef="RemainingValue">
           <th cdk-header-cell colspan="2" [ngClass]="{remain:remainingAmount!==0, collectZero:remainingAmount==projectTotalCost}" *cdkFooterCellDef>
             <div class="d-flex align-items-center">
-              <span class="h6 mb-0">{{remainingAmount| mask:inputMask.SEPARATOR:inputMask.THOUSAND_SEPARATOR}}</span>
+              <span class="h6 mb-0">{{remainingAmount| mask:inputMask.SEPARATOR:{thousandSeparator:inputMask.THOUSAND_SEPARATOR} }}</span>
               <div [tooltip]="lang.map.distribute_evenly">
                 <button [disabled]="!remainingAmount" (click)="remainingAmount && distributeRemaining()"
                         class="btn icon-btn p-0">

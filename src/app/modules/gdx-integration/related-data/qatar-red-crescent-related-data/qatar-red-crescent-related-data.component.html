@@ -27,22 +27,22 @@
         <ng-container cdkColumnDef="aidAmount">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.given_amount}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.aidAmount ? row.aidAmount + '' :  '0') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+            <span>{{(row.aidAmount ? row.aidAmount + '' :  '0') | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span></td>
         </ng-container>
         <ng-container cdkColumnDef="aidSuggestedAmount">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.estimated_amount}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.aidSuggestedAmount ? row.aidSuggestedAmount + '' : '0') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+            <span>{{(row.aidSuggestedAmount ? row.aidSuggestedAmount + '' : '0') | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span></td>
         </ng-container>
         <ng-container cdkColumnDef="aidTotalPayedAmount">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.total_approved_amount}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.aidTotalPayedAmount ? row.aidTotalPayedAmount + '' : '0') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+            <span>{{(row.aidTotalPayedAmount ? row.aidTotalPayedAmount + '' : '0') | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span></td>
         </ng-container>
         <ng-container cdkColumnDef="aidRemainingAmount">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.remaining_amount}}</th>
           <td cdk-cell *cdkCellDef="let row" class="text-end">
-            <span>{{(row.aidRemainingAmount ? row.aidRemainingAmount + '' : '0')  | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+            <span>{{(row.aidRemainingAmount ? row.aidRemainingAmount + '' : '0')  | mask:inputMaskPatterns.SEPARATOR: {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span></td>
         </ng-container>
         <ng-container cdkColumnDef="aidDescription">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_description}}</th>

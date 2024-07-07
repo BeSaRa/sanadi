@@ -1,4 +1,4 @@
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import {IValueOperator} from './i-value-operator';
 
 export interface IBeneficiaryCriteria {

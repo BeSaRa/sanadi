@@ -14,7 +14,7 @@
     <div [ngClass]="{'col-md-6': isGrant()}" class="col-sm-12 mb-4 position-relative">
       <label class="form-label" for="field_name">{{lang.map.project_total_cost}}</label>
       <input tabindex="-1" id="field_name" readonly
-             [value]="projectTotalCost| mask: maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR"
+             [value]="projectTotalCost| mask: maskPattern.SEPARATOR: {thousandSeparator:maskPattern.THOUSAND_SEPARATOR}"
              class="form-control">
     </div>
     <div class="col-md-6 col-sm-12 mb-4 position-relative">
@@ -28,7 +28,7 @@
     <div class="col-md-6 col-sm-12 mb-4 position-relative">
       <label class="form-label" for="remaining">{{lang.map.remaining_amount}}</label>
       <input tabindex="-1" id="remaining" readonly
-             [value]="remainingCost| mask: maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR" class="form-control">
+             [value]="remainingCost| mask: maskPattern.SEPARATOR: {thousandSeparator:maskPattern.THOUSAND_SEPARATOR}" class="form-control">
     </div>
     <div class="col-sm-12 mb-4 position-relative">
       <label class="form-label" asteriskIfRequired="notes" for="notes">{{lang.map.notes}}</label>

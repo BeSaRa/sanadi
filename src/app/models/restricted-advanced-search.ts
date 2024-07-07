@@ -1,4 +1,4 @@
-import { IMyDateModel } from "angular-mydatepicker";
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { Cloneable } from "./cloneable";
 import { WorldCheckSearchResult } from "./world-check-search-result";
 import { BannedPerson } from "./banned-person";

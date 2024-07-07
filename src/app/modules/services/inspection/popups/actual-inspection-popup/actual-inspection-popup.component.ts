@@ -36,7 +36,7 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { DatepickerControlsMap, DatepickerOptionsMap, TabMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
 import { Observable, Subject, of } from 'rxjs';
 import { filter, map, scan, startWith, takeUntil, tap } from 'rxjs/operators';
 

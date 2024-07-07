@@ -14,7 +14,7 @@ import { UserClickOn } from '../enums/user-click-on.enum';
 import { take } from 'rxjs/operators';
 import { SubventionRequestStatus } from '@app/enums/status.enum';
 import { ConfigurationService } from '@services/configuration.service';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { DateUtils } from '@helpers/date-utils';
 import { SubventionRequestInterceptor } from "@app/model-interceptors/subvention-request-interceptor";
 import { InterceptModel } from "@decorators/intercept-model";

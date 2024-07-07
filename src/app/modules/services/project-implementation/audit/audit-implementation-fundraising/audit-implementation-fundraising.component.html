@@ -23,7 +23,7 @@
           <ng-container cdkColumnDef="projectTotalCost">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.target_amount}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.projectTotalCost | mask: inputMaskPatterns.SEPARATOR :
-              inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+              {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }} </td>
           </ng-container>
           <ng-container cdkColumnDef="permitType">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.permit_type}}</th>
@@ -32,14 +32,14 @@
           <ng-container cdkColumnDef="consumedAmount">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.consumed_amount}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.consumedAmount | mask: inputMaskPatterns.SEPARATOR :
-              inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+              {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }} </td>
           </ng-container>
           <ng-container cdkColumnDef="remainingAmount">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.remaining_amount}}</th>
             <td cdk-cell *cdkCellDef="let row; let i = index">
               <div class="d-flex">
                 <span>{{row.remainingAmount | mask: inputMaskPatterns.SEPARATOR :
-                  inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+                  {thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
               </div>
             </td>
           </ng-container>

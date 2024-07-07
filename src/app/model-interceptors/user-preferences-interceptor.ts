@@ -1,7 +1,7 @@
 import {IModelInterceptor} from '@contracts/i-model-interceptor';
 import {UserPreferences} from '@models/user-preferences';
 import {CommonUtils} from '@helpers/common-utils';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { DateUtils } from '@app/helpers/date-utils';
 
 export class UserPreferencesInterceptor implements IModelInterceptor<UserPreferences> {

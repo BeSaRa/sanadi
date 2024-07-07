@@ -1,7 +1,7 @@
 import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
 import { InquirySearchCriteria } from '@models/inquiry-search-criteria';
 import { DateUtils } from '@app/helpers/date-utils';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { identity } from 'rxjs';
 import { ICaseSearchCriteria } from '@contracts/icase-search-criteria';
 import { InquirySearchCriteriaInterceptor } from '../search-criteria-interceptors/inquiry-search-criteria-interceptor';

@@ -19,7 +19,7 @@ import {
 import {NpoBankAccountComponent} from './npo-bank-account/npo-bank-account.component';
 import {FounderMembersComponent} from './founder-members/founder-members.component';
 import {NpoContactOfficerComponent} from './npo-contact-officer/npo-contact-officer.component';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IMyInputFieldChanged} from '@nodro7/angular-mydatepicker';
 import {DateUtils} from '@helpers/date-utils';
 import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
 import {ILanguageKeys} from '@contracts/i-language-keys';

@@ -9,7 +9,7 @@ import { EffectiveCoordinationCapabilities } from '@app/models/effective-coordin
 import { ParticipantOrg } from '@app/models/participant-org';
 import { ResearchAndStudies } from '@app/models/research-and-studies';
 import { TaskDetails } from '@app/models/task-details';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { BuildingAbility } from './../models/building-ability';
 import { BuildingAbilityInterceptor } from './building-ability-interceptor';
 import { EffectiveCoordinationInterceptor } from './effective-coordination-interceptor';

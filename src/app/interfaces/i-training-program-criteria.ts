@@ -1,4 +1,4 @@
-import {IMyDateModel} from 'angular-mydatepicker';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 
 export interface ITrainingProgramCriteria {
   activityName?: string;

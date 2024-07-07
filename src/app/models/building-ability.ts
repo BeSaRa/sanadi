@@ -7,7 +7,7 @@ import { EmployeeService } from '@app/services/employee.service';
 import { FactoryService } from '@app/services/factory.service';
 import { ControlValueLabelLangKey, ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { BuildingAbilityInterceptor } from './../model-interceptors/building-ability-interceptor';
 import { SearchableCloneable } from './searchable-cloneable';
 import { IAuditModelProperties } from '@app/interfaces/i-audit-model-properties';

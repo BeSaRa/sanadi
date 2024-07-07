@@ -2,7 +2,7 @@ import { DateUtils } from '@app/helpers/date-utils';
 import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { AdminResult } from '@app/models/admin-result';
 import { isValidAdminResult } from '@helpers/utils';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { BuildingAbility } from './../models/building-ability';
 
 export class BuildingAbilityInterceptor implements IModelInterceptor<BuildingAbility> {

@@ -9,7 +9,7 @@ import { CommonService } from '@services/common.service';
 import { EmployeeService } from '@services/employee.service';
 import { Employment } from '@models/employment';
 import { EmploymentService } from '@services/employment.service';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
 import { OperationTypes } from '@enums/operation-types.enum';
 import { EmploymentRequestType } from '@enums/service-request-types';
 import { DialogService } from "@services/dialog.service";
