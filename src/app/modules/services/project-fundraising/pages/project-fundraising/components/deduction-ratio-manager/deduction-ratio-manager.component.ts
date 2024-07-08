@@ -37,7 +37,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>()
   private itemsIds: number[] = []
   private deductionRatioItemsMap: Record<number, DeductionRatioItem> = {}
-  private destroyInputsListeners: Subject<any> = new Subject<any>()
+  private destroyInputsListeners: Subject<void> = new Subject<void>()
   deductionRatioItems: DeductionRatioItem[] = [];
   allDeductionRationItems: DeductionRatioItem[] = []
   item: UntypedFormControl = new UntypedFormControl();
@@ -291,7 +291,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this._model && this._model.clearDeductionItems()
         this.updateItemIds()
-        this.destroyInputsListeners.next(true)
+        this.destroyInputsListeners.next()
         this.list.clear()
         this.deductionList =[];
         this.calculateDeductionRatio()

@@ -27,7 +27,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   @ViewChild('template', {read: ViewContainerRef, static: true})
   container!: ViewContainerRef;
 
-  viewInit: Subject<any> = new Subject<any>();
+  viewInit: Subject<void> = new Subject<void>();
   _component!: IESComponent<CaseModel<any, any>>;
   openedFrom!: OpenFrom;
 

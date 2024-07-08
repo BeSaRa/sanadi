@@ -22,7 +22,7 @@ import { DateUtils } from '@helpers/date-utils';
   styleUrls: ['./internal-bank-approval-approve-task-popup.component.scss']
 })
 export class InternalBankApprovalApproveTaskPopupComponent implements OnInit {
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   label: keyof ILanguageKeys;
 
   selectedLicense!: InternalBankAccountApproval | null;

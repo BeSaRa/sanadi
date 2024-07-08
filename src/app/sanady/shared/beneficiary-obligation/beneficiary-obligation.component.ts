@@ -85,10 +85,10 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
 
   add$: Subject<any> = new Subject<any>();
   editItem?: BeneficiaryObligation;
-  private save$: Subject<any> = new Subject<any>();
+  private save$: Subject<void> = new Subject<void>();
   private recordChanged$: Subject<BeneficiaryObligation | null> = new Subject<BeneficiaryObligation | null>();
   private currentRecord?: BeneficiaryObligation;
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   showForm: boolean = false;
 

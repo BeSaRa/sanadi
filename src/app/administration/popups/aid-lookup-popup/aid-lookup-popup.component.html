@@ -48,7 +48,7 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button *ngIf="saveVisible && !readonly" [disabled]="form.invalid" (click)="save$.next(null)"
+  <button *ngIf="saveVisible && !readonly" [disabled]="form.invalid" (click)="save$.next()"
           class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>

@@ -35,7 +35,7 @@ import { filter, map, skip, startWith, switchMap, take, takeUntil, tap } from 'r
   encapsulation: ViewEncapsulation.None
 })
 export class AdminLicenseComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
   private selectedService!: BaseGenericEService<any>;
 
   searchColumns: string[] = ['fullSerial', 'arName', 'enName', 'subject', 'creatorInfo', 'ouInfo', 'licenseStartDate', 'licenseEndDate'];

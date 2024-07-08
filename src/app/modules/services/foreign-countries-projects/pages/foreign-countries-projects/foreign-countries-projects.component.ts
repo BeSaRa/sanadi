@@ -333,7 +333,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
       ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
-          this.resetForm$.next();
+          this.resetForm$.next(false);
           this.requestTypeField.setValue(requestTypeValue);
           this.handleReadonly();
           if (this.operation == OperationTypes.CREATE)
@@ -404,7 +404,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
+    this.resetForm$.next(false);
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 

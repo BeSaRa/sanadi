@@ -60,7 +60,7 @@ export class CustomServiceTemplateComponent implements OnInit {
   private changed$: Subject<CustomServiceTemplate | null> =
     new Subject<CustomServiceTemplate | null>();
   private current?: CustomServiceTemplate;
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   form!: UntypedFormGroup;
 
@@ -201,7 +201,7 @@ export class CustomServiceTemplateComponent implements OnInit {
           return !isDuplicate;
         })
       )
-      .pipe(switchMap((data) => {
+      .pipe(switchMap((data:any) => {
         if(this.current?.id) {
           if(data.file) {
             return this.customServiceTemplate.updateContent(this.caseType, data.model, data.file)

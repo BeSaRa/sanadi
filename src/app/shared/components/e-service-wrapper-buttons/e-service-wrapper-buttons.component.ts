@@ -17,7 +17,7 @@ import {ActionIconsEnum} from "@enums/action-icons-enum";
   styleUrls: ['./e-service-wrapper-buttons.component.scss']
 })
 export class EServiceWrapperButtonsComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(public lang: LangService) {
   }
@@ -180,7 +180,7 @@ export class EServiceWrapperButtonsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next('Destroy');
+    this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }

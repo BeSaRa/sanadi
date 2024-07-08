@@ -38,7 +38,7 @@ export class ChecklistPopupComponent implements OnInit {
   add$: Subject<any> = new Subject<any>();
   edit$: Subject<ChecklistItem> = new Subject<ChecklistItem>();
   view$: Subject<ChecklistItem> = new Subject<ChecklistItem>();
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
   models: ChecklistItem[] = [];
   filterControl: UntypedFormControl = new UntypedFormControl('');

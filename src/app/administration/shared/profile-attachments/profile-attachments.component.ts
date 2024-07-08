@@ -43,7 +43,7 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
   }
 
   addOtherAttachments: Subject<null> = new Subject<null>();
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   private loadingStatus: BehaviorSubject<any> = new BehaviorSubject(false);
   loadedStatus$: BehaviorSubject<boolean | null> = new BehaviorSubject<boolean | null>(null);
 

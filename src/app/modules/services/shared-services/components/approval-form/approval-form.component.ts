@@ -33,7 +33,7 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
   model!: HasRequestType & HasLicenseDurationType & CaseModel<any, any> & {publicTerms:string};
   @Input()
   service!: BaseGenericEService<any>
-  destroy$: Subject<any> = new Subject();
+  destroy$: Subject<void> = new Subject();
   form!: UntypedFormGroup
 
   customTerms: CustomTerm[] = [];

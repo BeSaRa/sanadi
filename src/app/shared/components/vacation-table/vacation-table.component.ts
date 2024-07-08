@@ -41,7 +41,7 @@ export class VacationTableComponent implements OnInit, OnDestroy {
   @Input() canEditPreferences!: boolean;
 
   add$: Subject<any> = new Subject<any>();
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   list: IHasVacation[] = [];
 

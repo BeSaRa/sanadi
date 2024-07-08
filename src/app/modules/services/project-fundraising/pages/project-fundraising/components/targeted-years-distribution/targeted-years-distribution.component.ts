@@ -39,8 +39,8 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
   @Input()
   requestType!: number
   @Input() configs!: ServiceData;
-  private destroy$: Subject<any> = new Subject<any>();
-  private destroyListener$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
+  private destroyListener$: Subject<void> = new Subject<void>();
   private numberOfMonths$: BehaviorSubject<number | undefined> = new BehaviorSubject<number | undefined>(undefined);
   years: number = 0;
 

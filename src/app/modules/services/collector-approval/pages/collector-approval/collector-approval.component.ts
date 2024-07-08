@@ -156,7 +156,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
+    this.resetForm$.next(false);
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -222,7 +222,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
-          this.resetForm$.next();
+          this.resetForm$.next(false);
           this.requestType.setValue(requestTypeValue);
         }
 

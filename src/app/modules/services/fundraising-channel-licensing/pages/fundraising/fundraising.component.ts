@@ -230,7 +230,7 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
-          this.resetForm$.next();
+          this.resetForm$.next(false);
           this.requestType.setValue(requestTypeValue);
         }
         this.requestType$.next(requestTypeValue);
@@ -304,7 +304,7 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
+    this.resetForm$.next(false);
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 

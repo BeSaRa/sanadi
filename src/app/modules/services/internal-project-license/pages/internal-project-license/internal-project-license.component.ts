@@ -82,8 +82,8 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
 
   private projectComponentChanged$: Subject<ProjectComponent | null> = new Subject<ProjectComponent | null>();
   private currentProjectComponentRecord?: ProjectComponent;
-  addProjectComponent$: Subject<any> = new Subject<any>();
-  private saveProjectComponent$: Subject<any> = new Subject<any>();
+  addProjectComponent$: Subject<void> = new Subject<void>();
+  private saveProjectComponent$: Subject<void> = new Subject<void>();
   editProjectComponentIndex: number = -1;
   projectListColumns: string[] = ['componentName', 'details', 'totalCost', 'actions'];
   projectListTotalCostFooterColumns: string[] = ['totalComponentCostLabel', 'totalComponentCost'];
@@ -326,7 +326,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
+    this.resetForm$.next(false);
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -661,7 +661,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
-          this.resetForm$.next();
+          this.resetForm$.next(false);
           this.requestTypeField.setValue(requestTypeValue);
         }
         this.requestType$.next(requestTypeValue);

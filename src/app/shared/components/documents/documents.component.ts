@@ -38,7 +38,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   @Input() readonly: boolean = false;
   @Input() service!: DocumentService;
   selectedDocuments: FileNetDocument[] = [];
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
 
   @ViewChild('selectAllToggle') selectAllToggle!: ElementRef<HTMLInputElement>;
 
@@ -223,7 +223,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     if (!files.length || !this.caseId) {
       return;
     }
-    const valueDone: Subject<any> = new Subject();
+    const valueDone: Subject<void> = new Subject();
 
     interval()
       .pipe(

@@ -31,7 +31,7 @@ export class BannedPersonSearchComponent implements OnInit, OnDestroy {
 
     bannedPersonList$ = new BehaviorSubject<BannedPerson[]>([]);
     bannedPersonTerrorismList$ = new BehaviorSubject<BannedPersonTerrorism[]>([]);
-    destroy$ = new Subject();
+    destroy$:Subject<void> = new Subject<void>();
     requestType$ = new BehaviorSubject<number|null>(null);
     search$ = new Subject<Partial<BannedPersonSearch>>();
     racaSearch$ = new Subject<Partial<BannedPersonSearch>>();

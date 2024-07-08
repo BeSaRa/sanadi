@@ -36,8 +36,8 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   saveVisible = true;
   services: ServiceData[] = [];
   attachmentTypeUsersList: Lookup[];
-  private save$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
+  private save$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject();
   existingList: AttachmentTypeServiceData[] = [];
   savedRequestTypesForService: number[] = [];
   customProperties$: Subject<CustomProperty[]> = new Subject<CustomProperty[]>();

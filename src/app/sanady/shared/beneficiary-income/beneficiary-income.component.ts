@@ -86,10 +86,10 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
 
   add$: Subject<any> = new Subject<any>();
   editItem?: BeneficiaryIncome;
-  private save$: Subject<any> = new Subject<any>();
+  private save$: Subject<void> = new Subject<void>();
   private recordChanged$: Subject<BeneficiaryIncome | null> = new Subject<BeneficiaryIncome | null>();
   private currentRecord?: BeneficiaryIncome;
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   showForm: boolean = false;
 

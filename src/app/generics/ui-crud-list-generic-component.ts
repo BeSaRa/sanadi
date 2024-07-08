@@ -47,7 +47,7 @@ export abstract class UiCrudListGenericComponent<M> implements OnInit, AfterView
   view$: Subject<M> = new Subject<M>();
   confirmDelete$: Subject<M> = new Subject<M>();
   // using this subject later to unsubscribe from any subscription
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   filterControl: UntypedFormControl = new UntypedFormControl('');
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   sortingCallbacks = {};

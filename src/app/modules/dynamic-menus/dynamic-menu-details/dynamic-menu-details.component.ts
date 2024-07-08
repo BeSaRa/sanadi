@@ -18,7 +18,7 @@ import {MenuItem} from '@app/models/menu-item';
 export class DynamicMenuDetailsComponent implements OnInit {
   safeUrl!: SafeUrl;
   dynamicMenu!: MenuItem;
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(private domSanitizer: DomSanitizer,
               private activeRoute: ActivatedRoute,

@@ -33,5 +33,5 @@
     <app-field-error-message controlName="comment"></app-field-error-message>
   </div>
   <button [disabled]="form.invalid"
-          (click)="save$.next(null)" class="btn btn-primary bottom">{{lang.map.send}}</button>
+          (click)="save$.next()" class="btn btn-primary bottom">{{lang.map.send}}</button>
 </div>

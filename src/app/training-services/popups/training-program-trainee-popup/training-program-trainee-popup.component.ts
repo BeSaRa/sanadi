@@ -39,7 +39,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   selectAuthorityUser$: Subject<void> = new Subject<void>();
   selectOrganizationUser$: Subject<void> = new Subject<void>();
   saveCandidate$: Subject<boolean> = new Subject<boolean>();
-  acceptCandidate$: Subject<any> = new Subject<any>();
+  acceptCandidate$: Subject<void> = new Subject();
   employeeType: string = 'organization';
   authorityUsers: InternalUser[] = [];
   selectedAuthorityUserId?: number;
@@ -260,7 +260,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
 
   saveCandidate() {
     this.forceClose = false;
-    this.saveCandidate$.next();
+    this.saveCandidate$.next(false);
   }
 
   saveCandidateAndClose(isDraft: boolean) {

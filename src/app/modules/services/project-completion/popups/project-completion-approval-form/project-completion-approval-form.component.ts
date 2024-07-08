@@ -33,7 +33,7 @@ export class ProjectCompletionApprovalFormComponent implements OnInit, OnDestroy
   datepickerOptionsMap: DatepickerOptionsMap = {
     followUpDate: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
   };
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   customTerms: CustomTerm[] = [];
   servicePublicTerms: string = '';
 

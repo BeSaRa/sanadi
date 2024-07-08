@@ -48,10 +48,10 @@ export class TerrorismMoiComponent implements OnInit, OnDestroy {
     lang = inject(LangService);
 
     list$: BehaviorSubject<BannedPersonTerrorismFile[]> = new BehaviorSubject<BannedPersonTerrorismFile[]>([]);
-    resetUploader$ = new Subject();
+    resetUploader$:Subject<void> = new Subject<void>();
 
     reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-    destroy$ = new Subject();
+    destroy$:Subject<void> = new Subject<void>();
     displayedColumns: (keyof BannedPersonTerrorismFile | 'actions')[] = ['fileName', 'fileSize', 'itemCount','actions']
 
     allowedExtensions = [FileExtensionsEnum.CSV, FileExtensionsEnum.XLSX, FileExtensionsEnum.XLS];

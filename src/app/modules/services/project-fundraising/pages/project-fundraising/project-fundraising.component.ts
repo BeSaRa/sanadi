@@ -775,13 +775,13 @@ implements AfterViewInit {
 
   private listenToMainFieldsChanges() {
     combineLatest([
-      this.permitType.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.permitType.value)),
-      this.projectWorkArea.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.projectWorkArea.value)),
-      this.projectType.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.projectType.value)),
-      this.domain.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.domain.value))
+      this.permitType.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number>(this.permitType.value)),
+      this.projectWorkArea.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number>(this.projectWorkArea.value)),
+      this.projectType.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number>(this.projectType.value)),
+      this.domain.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number>(this.domain.value))
     ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([permitType, projectWorkArea, projectType, domain]: [ProjectPermitTypes, ProjectWorkArea, FundraisingProjectTypes, DomainTypes]) => {
+      .subscribe(([permitType, projectWorkArea, projectType, domain]: [any, any, any, any]) => {
         this.handleFieldsDisplay({
           permitType,
           projectWorkArea,
@@ -1002,7 +1002,7 @@ implements AfterViewInit {
     this.getOldValues()
   }
 
-  private createFieldObservable({ ctrl, key }: { ctrl: AbstractControl, key: string }): Observable<{
+  private createFieldObservable({ ctrl, key }: { ctrl: AbstractControl<number>, key: string }): Observable<{
     oldValue: number,
     newValue: number,
     field: AbstractControl,
@@ -1011,8 +1011,8 @@ implements AfterViewInit {
     // dirty way to handle first emit from workArea
     let count = 0;
     return ctrl.valueChanges.pipe(
-      startWith<number, number>(ctrl.value),
-      pairwise(),
+      startWith<number>(ctrl.value),
+      pairwise<number>(),
       map(([oldValue, newValue]: [number, number]) => {
         return {
           oldValue,

@@ -29,7 +29,7 @@ export class ApprovalFormMonthlyComponent implements OnInit, OnDestroy {
   model!: HasLicenseDurationMonthly & CaseModel<any, any>;
   @Input()
   service!: BaseGenericEService<any>
-  destroy$: Subject<any> = new Subject();
+  destroy$: Subject<void> = new Subject();
   form!: UntypedFormGroup
 
   customTerms: CustomTerm[] = [];

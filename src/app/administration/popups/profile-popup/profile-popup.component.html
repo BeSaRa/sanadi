@@ -248,7 +248,7 @@
           tooltip="{{ lang.map.validate_fields }}" class="btn btn-link"><i
     class="mdi mdi-information-outline text-info"></i></button>
   <div class="flex-grow-1"></div>
-  <button *ngIf="saveVisible" [disabled]="form.invalid || form.pending" (click)="save$.next(null)"
+  <button *ngIf="saveVisible" [disabled]="form.invalid || form.pending" (click)="save$.next()"
           class="btn btn-primary">{{ lang.map.btn_save }}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
 </div>

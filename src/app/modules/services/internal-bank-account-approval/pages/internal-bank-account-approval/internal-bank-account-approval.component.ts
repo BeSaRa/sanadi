@@ -293,7 +293,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
+    this.resetForm$.next(false);
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -479,7 +479,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
-          this.resetForm$.next();
+          this.resetForm$.next(false);
           this.requestType.setValue(requestTypeValue);
         }
         if (!requestTypeValue) {

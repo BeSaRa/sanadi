@@ -81,8 +81,8 @@ export class ProcessFieldBuilder {
   }
   generateFromString(template?: string) {
     of<TemplateField[]>(JSON.parse(template || '[]')).pipe(
-      map((fields: TemplateField[]) => {
-        return fields.map(f => new TemplateField().clone(f))
+      map((fields: any) => {
+        return fields.map((f:TemplateField) => new TemplateField().clone(f))
       })
     ).subscribe((templateFields: TemplateField[]) => {
       this._fields = templateFields;

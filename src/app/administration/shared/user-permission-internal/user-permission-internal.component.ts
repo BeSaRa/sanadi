@@ -27,7 +27,7 @@ export class UserPermissionInternalComponent implements OnInit, OnDestroy {
   }
 
   private _customRoleTrigger$: Subject<boolean> = new Subject<boolean>();
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   @Input() user!: InternalUser;
   @Input() operation!: OperationTypes;

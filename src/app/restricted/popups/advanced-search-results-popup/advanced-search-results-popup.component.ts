@@ -23,7 +23,7 @@ export class AdvancedSearchResultsPopupComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = [ 'primaryName', 'dateOfBirth', 'gender' ,'source'];
     $makeDecision = new Subject<number>();
 
-    destroy$: Subject<any> = new Subject<any>();
+    destroy$: Subject<void> = new Subject();
 
     constructor( @Inject(DIALOG_DATA_TOKEN) public data: {
         result: RestrictedAdvancedSearchResult,

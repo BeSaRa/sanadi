@@ -19,7 +19,7 @@ import {ActionIconsEnum} from '@enums/action-icons-enum';
   styleUrls: ['./user-followup-permission-new.component.scss']
 })
 export class UserFollowupPermissionNewComponent implements OnInit, OnDestroy {
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   actionIconsEnum = ActionIconsEnum;
 
   constructor(public lang: LangService,

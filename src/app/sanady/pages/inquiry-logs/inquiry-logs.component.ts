@@ -31,7 +31,7 @@ import {Profile} from '@app/models/profile';
   styleUrls: ['./inquiry-logs.component.scss']
 })
 export class InquiryLogsComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(public langService: LangService,
               private fb: UntypedFormBuilder,

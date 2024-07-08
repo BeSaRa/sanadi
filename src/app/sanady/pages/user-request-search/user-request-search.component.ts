@@ -40,7 +40,7 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   styleUrls: ['./user-request-search.component.scss']
 })
 export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
 
   constructor(public langService: LangService,

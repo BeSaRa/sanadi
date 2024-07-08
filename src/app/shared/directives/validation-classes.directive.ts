@@ -26,7 +26,7 @@ export class ValidationClassesDirective implements OnInit {
   };
 
   @Input() validationClasses!: string;
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   get formControl(): AbstractControl {
     return (this.control ? this.control : this.parent.control?.get(this.validationClasses)) as AbstractControl;

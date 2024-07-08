@@ -32,8 +32,8 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   @Input() allowRemoveLoadedFile: boolean = false;
   @Input() readonly = false;
   @Input() allowedFileSize?: number;
-  @Input() reset$ = new Subject();
-  destroy$ = new Subject();
+  @Input() reset$:Subject<void> = new Subject();
+  destroy$:Subject<void> = new Subject<void>();
 
   /**
    * @description shows the uploaded file name if single file
@@ -134,7 +134,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
 
   private _verifyFiles(fileList: FileList): void {
     let failedFilesCount: number = 0;
-    const finish: Subject<any> = new Subject();
+    const finish: Subject<void> = new Subject();
     interval()
       .pipe(
         tap(index => {

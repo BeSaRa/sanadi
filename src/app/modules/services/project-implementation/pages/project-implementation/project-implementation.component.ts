@@ -335,7 +335,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   _afterLaunch(): void {
     this.implementationTemplate.setValue([])
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
-    this.resetForm$.next()
+    this.resetForm$.next(false)
   }
 
   _prepareModel(): ProjectImplementation | Observable<ProjectImplementation> {
@@ -956,7 +956,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     const value = (ctrl.value) as number
     return ctrl.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .pipe(startWith<number, number>(value))
+      .pipe(startWith<number>(value))
       .pipe(pairwise())
       .pipe(map(value => {
         return {
@@ -965,7 +965,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
           field: key
         }
       }))
-      .pipe(filter(() => this.hasSelectedTemplate()))
+      .pipe(filter((_) => this.hasSelectedTemplate()))
   }
 
   private holdToGetUserResponse() {

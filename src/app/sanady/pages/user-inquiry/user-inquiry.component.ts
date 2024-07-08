@@ -44,7 +44,7 @@ import {
   styleUrls: ['./user-inquiry.component.scss']
 })
 export class UserInquiryComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
   private search$: Subject<any> = new Subject<any>();
 
 

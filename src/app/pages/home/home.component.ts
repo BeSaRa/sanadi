@@ -12,7 +12,7 @@ import {RequestTypeFollowupService} from "@services/request-type-followup.servic
 })
 export class HomeComponent implements OnInit, OnDestroy {
   scrollDirection: Direction = 'rtl';
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(private langService: LangService,
               private _requestTypeService: RequestTypeFollowupService) {

@@ -28,7 +28,7 @@ import { OperationTypes } from '@app/enums/operation-types.enum';
 export class ScreeningSearchAuditComponent implements OnInit {
   form!: UntypedFormGroup;
   fb = inject(FormBuilder);
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   search$: Subject<void> = new Subject<void>();
   view$: Subject<number> = new Subject<number>();

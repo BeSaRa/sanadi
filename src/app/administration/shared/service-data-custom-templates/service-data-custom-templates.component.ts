@@ -21,7 +21,7 @@ import {CommonStatusEnum} from "@enums/common-status.enum";
   styleUrls: ['./service-data-custom-templates.component.scss']
 })
 export class ServiceDataCustomTemplatesComponent implements OnInit, OnDestroy{
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(public lang: LangService,
               private toast: ToastService,

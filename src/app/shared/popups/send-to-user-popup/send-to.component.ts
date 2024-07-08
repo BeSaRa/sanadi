@@ -36,8 +36,8 @@ export class SendToComponent implements OnInit, OnDestroy {
   users: InternalUser[] = [];
   departments: InternalDepartment[] = [];
   group!: UntypedFormGroup;
-  done$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
+  done$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject();
   WFResponse: typeof WFResponseType = WFResponseType;
   controlName: string = '';
   title: keyof ILanguageKeys = 'send_to_user';

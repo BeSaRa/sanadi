@@ -123,7 +123,7 @@ export class UploadDocumentPopupComponent implements OnInit {
   }
 
   private saveUploadedDocuments(): void {
-    const valueDone: Subject<any> = new Subject();
+    const valueDone: Subject<void> = new Subject();
     interval()
       .pipe(
         tap(index => {

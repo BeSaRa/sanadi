@@ -40,7 +40,7 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   onSelectFilter: EventEmitter<Lookup | undefined> = new EventEmitter<Lookup | undefined>();
 
   hasSort: boolean = false;
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
   riskStatus: Lookup[] = this.lookupService.listByCategory.RiskStatus.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   @Input()
   useReloadValue: boolean = false;

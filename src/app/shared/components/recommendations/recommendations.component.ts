@@ -54,7 +54,7 @@ export class RecommendationsComponent implements OnInit, OnDestroy {
     return this._caseId;
   }
 
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   customValidators = CustomValidators;
 
   constructor(public lang: LangService,
@@ -116,7 +116,7 @@ export class RecommendationsComponent implements OnInit, OnDestroy {
     if (!recommendations.length || !this.caseId) {
       return;
     }
-    const valueDone: Subject<any> = new Subject();
+    const valueDone: Subject<void> = new Subject();
     interval()
       .pipe(
         tap(index => {

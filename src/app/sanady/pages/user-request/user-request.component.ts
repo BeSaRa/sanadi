@@ -155,10 +155,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     }
   }
 
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
   private save$: Subject<any> = new Subject<any>();
   private savePartial$: Subject<any> = new Subject<any>();
-  private saveAid$: Subject<any> = new Subject<any>();
+  private saveAid$: Subject<void> = new Subject<void>();
   private beneficiaryChanged$: Subject<Beneficiary | null> = new Subject<Beneficiary | null>();
   private requestChanged$: Subject<SubventionRequest | null> = new Subject<SubventionRequest | null>();
   private aidChanged$: Subject<SubventionAid | null> = new Subject<SubventionAid | null>();

@@ -129,7 +129,7 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
     this.workArea.valueChanges
       .pipe(takeUntil(this.destroy$))
       .pipe(distinctUntilChanged())
-      .pipe(startWith<number, number>(this.workArea.value))
+      .pipe(startWith<any>(this.workArea.value))
       .pipe(pairwise())
       .pipe(map(([oldValue, newValue]: [ProjectWorkArea, ProjectWorkArea]) => {
         return {
@@ -144,7 +144,7 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
     this.permitType.valueChanges
       .pipe(takeUntil(this.destroy$))
       .pipe(distinctUntilChanged())
-      .pipe(startWith<number, number>(this.permitType.value))
+      .pipe(startWith<any>(this.permitType.value))
       .pipe(pairwise())
       .pipe(map(([oldValue, newValue]: [ProjectPermitTypes, ProjectPermitTypes]) => {
         return {

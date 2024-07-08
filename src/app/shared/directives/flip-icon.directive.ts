@@ -7,7 +7,7 @@ import {takeUntil} from 'rxjs/operators';
   selector: '[flipIcon]'
 })
 export class FlipIconDirective implements OnDestroy, OnInit {
-  takeUntil$: Subject<any> = new Subject<any>();
+  takeUntil$: Subject<void> = new Subject<void>();
   flipClass: string = 'mdi-flip-h';
   @Input()
   flipWhen: string = 'ar';

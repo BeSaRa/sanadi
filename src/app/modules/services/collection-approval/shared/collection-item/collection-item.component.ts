@@ -59,7 +59,7 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
   edit$: Subject<CollectionItem> = new Subject<CollectionItem>();
   view$: Subject<CollectionItem> = new Subject<CollectionItem>();
   confirmDelete$: Subject<CollectionItem> = new Subject<CollectionItem>();
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   itemInOperationListIndex?: number;
   itemInOperationIndex?: number;

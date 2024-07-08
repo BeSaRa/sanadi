@@ -30,8 +30,8 @@ export class ReturnToOrganizationWithCommentPopupComponent implements OnInit {
     CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS),
   ]);
   form!: UntypedFormGroup;
-  done$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
+  done$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject();
   controlName: string = '';
   title: keyof ILanguageKeys = 'return_to_org_task';
   countOfOrganizations!: number;

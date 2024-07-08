@@ -15,7 +15,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 })
 export class TableComponent implements OnInit, OnDestroy {
   private datasourceAssigned$: BehaviorSubject<TableDataSource> = new BehaviorSubject<TableDataSource>(this.service.createDataSource([]));
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   private dataChange: BehaviorSubject<any> = new BehaviorSubject<any>([]);
 
   dataSource!: TableDataSource;

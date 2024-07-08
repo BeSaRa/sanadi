@@ -6,7 +6,7 @@ import {Subject} from 'rxjs';
   selector: '[validationGroupClasses]'
 })
 export class ValidationGroupClassesDirective implements OnInit {
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   private invalidOnly: boolean = true;
 

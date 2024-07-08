@@ -105,16 +105,16 @@ export class AppModule {
         urls: urlService.loadUrls(),
       })
         .toPromise().then((latest) => {
-          let finalConfig: IAppConfig = configurationService.mergeConfigurations(latest.configFile);
+          let finalConfig: IAppConfig = configurationService.mergeConfigurations(latest!.configFile);
           configurationService.setConfigurations(finalConfig);
-          urlService.prepareUrls(latest.urls);
+          urlService.prepareUrls(latest!.urls);
           langService.setLanguageChangeUrls();
-          return infoService.load().toPromise().then((infoResult: ILoginInfo) => {
-            infoService.setInfoData(infoResult);
-            langService.list = infoResult.localizationSet;
+          return infoService.load().toPromise().then((infoResult: ILoginInfo|undefined) => {
+            infoService.setInfoData(infoResult!);
+            langService.list = infoResult!.localizationSet;
             langService.readLanguageFromCookie();
             langService._loadDone$.next(langService.list);
-            lookupService.setLookupsMap(infoResult.lookupMap);
+            lookupService.setLookupsMap(infoResult!.lookupMap);
             return tokenService.setAuthService(authService)
               .validateToken().toPromise()
           });

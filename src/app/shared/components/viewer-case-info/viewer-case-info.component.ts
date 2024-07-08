@@ -35,7 +35,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   finalExternalOfficeGeneratedLicense?: FinalExternalOfficeApprovalResult;
   internalProjectGeneratedLicense?: InternalProjectLicenseResult;
 
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   constructor(public lang: LangService,
               private licenseService: LicenseService,
@@ -47,7 +47,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next(null);
+    this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }

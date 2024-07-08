@@ -27,7 +27,7 @@ import { ServiceDataService } from '@services/service-data.service';
 })
 export class UrgentJointReliefCampaignFinalApproveTaskPopupComponent implements OnInit {
   form!: UntypedFormGroup;
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   label: keyof ILanguageKeys;
   customTerms: CustomTerm[] = [];
   selectedLicense!: UrgentJointReliefCampaign | null;

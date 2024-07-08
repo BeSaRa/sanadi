@@ -132,7 +132,7 @@ export class InternationalCooperationComponent extends EServicesGenericComponent
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
+    this.resetForm$.next(false);
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 

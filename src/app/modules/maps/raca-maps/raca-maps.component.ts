@@ -34,7 +34,7 @@ export class RacaMapsComponent implements OnDestroy, OnInit {
   zoom: number = 18;
 
   loaded: boolean = false;
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   markerOptions: google.maps.MarkerOptions = {draggable: true};
 

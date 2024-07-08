@@ -25,7 +25,7 @@ import {ProjectFundraising} from "@models/project-fundraising";
   styleUrls: ['./project-fundraising-approve-task-popup.component.scss']
 })
 export class ProjectFundraisingApproveTaskPopupComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   label: keyof ILanguageKeys;
   action$: Subject<any> = new Subject<any>();
 

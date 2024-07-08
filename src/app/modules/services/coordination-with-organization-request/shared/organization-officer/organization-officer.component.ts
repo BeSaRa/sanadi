@@ -37,7 +37,7 @@ export class OrganizationOfficerComponent implements OnInit {
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   private readonly: boolean = false;
-  private save$: Subject<any> = new Subject<any>();
+  private save$: Subject<void> = new Subject<void>();
 
   private recordChanged$: Subject<OrganizationOfficer | null> =
     new Subject<OrganizationOfficer | null>();
@@ -73,7 +73,7 @@ export class OrganizationOfficerComponent implements OnInit {
     'actions',
   ];
 
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   form!: FormGroup;
   @Input() organizationUsers: OrganizationOfficer[] = [];

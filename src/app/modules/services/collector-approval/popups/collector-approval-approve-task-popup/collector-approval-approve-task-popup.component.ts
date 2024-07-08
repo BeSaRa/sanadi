@@ -27,7 +27,7 @@ import {DateUtils} from '@helpers/date-utils';
   styleUrls: ['./collector-approval-approve-task-popup.component.scss']
 })
 export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   label: keyof ILanguageKeys;
 
   selectedLicense: HasLicenseApproval | null = null;

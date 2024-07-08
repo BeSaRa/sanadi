@@ -24,7 +24,7 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
   styleUrls: ['./user-security.component.scss']
 })
 export class UserSecurityComponent implements OnInit, OnDestroy {
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   selectedUserTeam: UntypedFormControl = new UntypedFormControl();
   commonStatusEnum = CommonStatusEnum;
   private _userTeams: UserTeam[] = [];

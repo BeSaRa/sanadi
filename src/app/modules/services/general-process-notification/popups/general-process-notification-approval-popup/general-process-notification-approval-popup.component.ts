@@ -31,7 +31,7 @@ export class GeneralProcessNotificationApprovalPopupComponent implements OnInit 
   datepickerOptionsMap: DatepickerOptionsMap = {
     followUpDate: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
   };
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   constructor(
     @Inject(DIALOG_DATA_TOKEN) public data: {
       model: GeneralProcessNotification,

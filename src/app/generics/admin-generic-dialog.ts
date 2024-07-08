@@ -18,8 +18,8 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any> | BaseMod
   abstract form: UntypedFormGroup;
   abstract operation: OperationTypes;
   abstract dialogRef: DialogRef;
-  destroy$: Subject<any> = new Subject<any>();
-  save$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
+  save$: Subject<void> = new Subject();
   validateFieldsVisible: boolean = true;
   operationTypes: typeof OperationTypes = OperationTypes;
   customValidators = CustomValidators;

@@ -22,7 +22,7 @@ import {TabMap} from '@app/types/types';
   styleUrls: ['./custom-menu-permission.component.scss']
 })
 export class CustomMenuPermissionComponent implements OnInit {
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   chunkSize: number = 3;
 
   private oldSelection$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);

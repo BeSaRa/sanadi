@@ -200,6 +200,6 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <div class="flex-grow-1"></div>
-  <button *ngIf="displaySaveBtn" (click)="save$.next(null)" class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button *ngIf="displaySaveBtn" (click)="save$.next()" class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

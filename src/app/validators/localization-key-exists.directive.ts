@@ -25,7 +25,7 @@ export class LocalizationKeyExistsDirective implements AsyncValidator {
   validate(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
     return control.valueChanges.pipe(
       debounceTime(500),
-      (this.firstTime ? startWith<string, string>(control.value) : tap(_ => undefined)),
+      (this.firstTime ? startWith(control.value) : tap(_ => undefined)),
       switchMap((val: string) => {
         this.firstTime = false;
         if (this.operation === OperationTypes.UPDATE) {

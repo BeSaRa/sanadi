@@ -42,10 +42,10 @@ import {TeamService} from '@app/services/team.service';
   styleUrls: ['./training-program-popup.component.scss']
 })
 export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingProgram> implements AfterViewInit {
-  approve$ = new Subject<any>();
+  approve$ = new Subject<void>();
   saveAndApproveClicked = false;
   saveAndPublishClicked = false;
-  publish$ = new Subject<any>();
+  publish$ = new Subject<void>();
   loadTrainers$ = new BehaviorSubject<any>(null);
   loadSelectedTrainers$ = new BehaviorSubject<any>(null);
   form!: UntypedFormGroup;

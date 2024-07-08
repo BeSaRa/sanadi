@@ -58,7 +58,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
 
   totalValue: number = 0;
 
-  listeners$ = new Subject()
+  listeners$:Subject<void> = new Subject<void>()
   addFundSourceDialog$: Subject<any> = new Subject<any>();
   constructor(public lang: LangService, private dialog: DialogService) {
 

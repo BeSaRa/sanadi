@@ -19,7 +19,7 @@ export class AsteriskIfRequiredDirective implements OnInit, OnDestroy {
   control!: AbstractControl;
   private _controlName!: string;
   readonly _parentControl!: ControlContainer;
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   private requiredElement: HTMLSpanElement = this.document.createElement('span') as HTMLSpanElement;
   readonly requiredArray = [
     CustomValidators.required,

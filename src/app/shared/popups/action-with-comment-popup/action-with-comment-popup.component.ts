@@ -43,10 +43,10 @@ import { AllRequestTypesEnum } from '@app/enums/all-request-types-enum';
 export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   label: keyof ILanguageKeys;
   comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
-  done$: Subject<any> = new Subject<any>();
+  done$: Subject<void> = new Subject<void>();
   displayLicenseForm: boolean = false;
   licenseFormReadonly: boolean = false;
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   customValidators = CustomValidators;
   commentLabel: keyof ILanguageKeys = 'comment';

@@ -44,7 +44,7 @@ export class StepCheckListComponent implements OnDestroy, OnInit {
   @Output()
   checkListChanges: EventEmitter<StepCheckListComponent> = new EventEmitter<StepCheckListComponent>();
 
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   afterMarkAllCallback?: () => void
 

@@ -24,8 +24,8 @@ import {OrganizationOfficer} from '@models/organization-officer';
 })
 export class UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent implements OnInit {
   comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
-  done$: Subject<any> = new Subject<any>();
-  destroy$: Subject<any> = new Subject<any>();
+  done$: Subject<void> = new Subject<void>();
+  destroy$: Subject<void> = new Subject();
   customValidators = CustomValidators;
 
   private readonly action: WFResponseType;

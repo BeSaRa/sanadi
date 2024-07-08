@@ -30,7 +30,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 export class ContextMenuItemComponent implements OnInit, OnDestroy {
   @ViewChild(TemplateRef) private template!: TemplateRef<any>;
   overlayRef!: OverlayRef;
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   private itemsChange: BehaviorSubject<IMenuItem<any>[]> = new BehaviorSubject<IMenuItem<any>[]>([]);
 

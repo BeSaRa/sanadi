@@ -35,7 +35,7 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit, AfterVie
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   add$: Subject<any> = new Subject<any>();
   reviewCandidate$: Subject<number> = new Subject<number>();
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   searchText = '';
   actions: IMenuItem<TrainingProgram>[] = [
     {
@@ -54,7 +54,7 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit, AfterVie
   candidatesListTypeEnum = CandidatesListTypeEnum;
   traineeStatusEnum = TraineeStatus;
   isInternalUser!: boolean;
-  acceptCandidate$: Subject<any> = new Subject<any>();
+  acceptCandidate$: Subject<void> = new Subject<void>();
   rejectionComment: string = '';
   bulkActions: IGridAction[] = [
     {

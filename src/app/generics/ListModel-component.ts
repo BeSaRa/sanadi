@@ -26,7 +26,7 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
   save$: Subject<T> = new Subject<T>();
   show$: Subject<T> = new Subject<T>();
   customData: {} = {};
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
   actions: IMenuItem<T>[] = [
     {
       type: 'action',

@@ -35,7 +35,7 @@ import { PageEvent } from '@app/interfaces/page-event';
   encapsulation: ViewEncapsulation.None
 })
 export class SearchServiceIndividualComponent {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
   private selectedService!: BaseGenericEService<any>;
 
   private defaultCaseTypeParamKey: string = 'defaultCaseType';

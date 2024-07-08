@@ -22,8 +22,8 @@ import { GeneralAssociationAgenda } from '@app/models/general-association-meetin
 })
 export class GeneralAssociationMeetingCompleteTaskPopupComponent implements OnInit {
   comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS), CustomValidators.required]);
-  done$: Subject<any> = new Subject<any>();
-  destroy$: Subject<any> = new Subject<any>();
+  done$: Subject<void> = new Subject<void>();
+  destroy$: Subject<void> = new Subject();
   customValidators = CustomValidators;
   model!: GeneralAssociationMeetingAttendance;
 

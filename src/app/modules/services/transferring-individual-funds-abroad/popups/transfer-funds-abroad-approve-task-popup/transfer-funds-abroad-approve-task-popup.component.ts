@@ -27,7 +27,7 @@ import {CustomTermPopupComponent} from '@app/shared/popups/custom-term-popup/cus
 })
 export class TransferFundsAbroadApproveTaskPopupComponent implements OnInit, OnDestroy {
   form!: UntypedFormGroup;
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   label: keyof ILanguageKeys;
   customTerms: CustomTerm[] = [];
   selectedLicense!: TransferringIndividualFundsAbroad | null;

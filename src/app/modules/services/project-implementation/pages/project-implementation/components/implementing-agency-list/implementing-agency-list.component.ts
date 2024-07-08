@@ -23,7 +23,7 @@ import {UserClickOn} from "@enums/user-click-on.enum";
   ]
 })
 export class ImplementingAgencyListComponent implements ControlValueAccessor, OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject<any>()
+  private destroy$: Subject<void> = new Subject<void>()
   public value: ImplementingAgency[] = [];
   private type$: Subject<ImplementingAgencyTypes> = new Subject<ImplementingAgencyTypes>()
   private country$: Subject<number> = new Subject()

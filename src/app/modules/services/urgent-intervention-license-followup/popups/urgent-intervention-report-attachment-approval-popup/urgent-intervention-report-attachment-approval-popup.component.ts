@@ -55,8 +55,8 @@ export class UrgentInterventionReportAttachmentApprovalPopupComponent implements
   }
 
   comment: UntypedFormControl = new UntypedFormControl('');
-  done$: Subject<any> = new Subject<any>();
-  destroy$: Subject<any> = new Subject<any>();
+  done$: Subject<void> = new Subject<void>();
+  destroy$: Subject<void> = new Subject();
   customValidators = CustomValidators;
 
   private listenToTakeAction() {

@@ -51,7 +51,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit, A
   }
 
   static aliveTabsCount: number = 0;
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   @HostBinding('class')
   paddingClass: string = '';

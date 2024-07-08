@@ -29,7 +29,7 @@ import {ServiceData} from '@models/service-data';
 })
 export class UrgentInterventionClosureApproveTaskPopupComponent implements OnInit, OnDestroy {
 
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(private dialog: DialogService,
               private toast: ToastService,

@@ -19,7 +19,7 @@ export class WorldCheckSearchResultPopupComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['matchStrength', 'matchedTerm', 'primaryName', 'dateOfBirth', 'dead', 'category', 'gender', 'countryLinks'];
   $makeDecision = new Subject<number>();
   operationTypes = OperationTypes;
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   constructor(
     private dialog: DialogService,
     public lang: LangService,

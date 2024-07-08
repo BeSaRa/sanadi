@@ -25,7 +25,7 @@ import {ServiceRequestTypes} from '@enums/service-request-types';
   styleUrls: ['./urgent-intervention-approve-task-popup.component.scss']
 })
 export class UrgentInterventionApproveTaskPopupComponent implements OnInit, AfterViewInit {
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   label: keyof ILanguageKeys;
   action$: Subject<any> = new Subject<any>();
 

@@ -38,7 +38,7 @@ import { DateUtils } from '@app/helpers/date-utils';
 export class UserInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
   reloadInbox$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
   actions: IMenuItem<QueryResult>[] = [];
   //filterControl: FormControl = new FormControl('');
   @ViewChild('table') table!: TableComponent;

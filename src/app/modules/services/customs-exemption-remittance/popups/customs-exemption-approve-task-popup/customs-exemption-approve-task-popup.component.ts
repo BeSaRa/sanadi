@@ -24,7 +24,7 @@ import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators
   styleUrls: ["./customs-exemption-approve-task-popup.component.scss"],
 })
 export class CustomsExemptionApproveTaskPopupComponent implements OnInit {
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   label: keyof ILanguageKeys;
   action$: Subject<any> = new Subject<any>();
 

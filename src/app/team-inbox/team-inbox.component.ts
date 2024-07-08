@@ -44,7 +44,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
   queryResultSet?: QueryResultSet;
   inboxChange$: BehaviorSubject<Team | null> = new BehaviorSubject<Team | null>(null);
   teams: Team[] = [];
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   selectControl: UntypedFormControl = new UntypedFormControl();
   actions: IMenuItem<QueryResult>[] = [];
 

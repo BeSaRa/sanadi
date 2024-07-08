@@ -539,7 +539,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
+    this.resetForm$.next(false);
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -562,7 +562,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
-          this.resetForm$.next();
+          this.resetForm$.next(false);
           this.requestTypeField.setValue(requestTypeValue);
         }
         if (!requestTypeValue || requestTypeValue === GeneralAssociationMeetingRequestTypeEnum.NEW) {

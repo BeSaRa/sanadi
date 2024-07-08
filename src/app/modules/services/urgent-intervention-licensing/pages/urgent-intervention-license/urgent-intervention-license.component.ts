@@ -183,7 +183,7 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
+    this.resetForm$.next(false);
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -398,7 +398,7 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
-          this.resetForm$.next();
+          this.resetForm$.next(false);
           this.requestTypeField.setValue(requestTypeValue);
         }
         this.requestType$.next(requestTypeValue);

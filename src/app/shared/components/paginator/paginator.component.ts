@@ -36,7 +36,7 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   pageIndex: number = 0;
   private previousPageIndex: number | null = null;
   private _length: number = 0;
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   @Output()
   pageChange: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();

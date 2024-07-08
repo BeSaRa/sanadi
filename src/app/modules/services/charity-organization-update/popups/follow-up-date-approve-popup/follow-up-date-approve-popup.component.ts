@@ -24,7 +24,7 @@ import {exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
 })
 export class FollowupDateApprovePopupComponent implements OnInit {
 
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   label: keyof ILanguageKeys;
   selectedLicense!: FollowUpDateModels | null;
 

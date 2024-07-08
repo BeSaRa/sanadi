@@ -7,7 +7,7 @@ import {takeUntil} from 'rxjs/operators';
 })
 export class IndeterminateDirective implements OnInit, OnDestroy {
   private _indeterminate: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   @Input()
   set indeterminate(val: boolean) {

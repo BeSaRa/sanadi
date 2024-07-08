@@ -14,7 +14,7 @@ import { ProcessFieldBuilder } from '@app/administration/popups/general-process-
   encapsulation: ViewEncapsulation.None
 })
 export class ProcessFieldWrapperComponent extends FieldWrapper<CustomFormlyFieldConfig> implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(
     public lang: LangService,

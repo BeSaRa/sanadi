@@ -30,7 +30,7 @@ export class CoordinationWithOrgPopupComponent implements OnInit {
   currentOrganization!: ParticipantOrg;
   approvalForm!: UntypedFormGroup;
 
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(
     @Inject(DIALOG_DATA_TOKEN) public data: {

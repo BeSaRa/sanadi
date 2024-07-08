@@ -222,7 +222,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
+    this.resetForm$.next(false);
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -389,7 +389,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
-          this.resetForm$.next();
+          this.resetForm$.next(false);
           this.requestTypeField.setValue(requestTypeValue);
         }
 

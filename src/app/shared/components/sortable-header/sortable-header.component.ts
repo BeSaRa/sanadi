@@ -25,7 +25,7 @@ export class SortableHeaderComponent implements OnInit, OnDestroy {
     asc: 'mdi-arrow-up',
     desc: 'mdi-arrow-down'
   };
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(
     private cd: ChangeDetectorRef,

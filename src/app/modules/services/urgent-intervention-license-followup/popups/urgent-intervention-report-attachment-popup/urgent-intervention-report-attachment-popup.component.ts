@@ -64,8 +64,8 @@ export class UrgentInterventionReportAttachmentPopupComponent implements OnInit 
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
   add$: Subject<any> = new Subject<any>();
   edit$: Subject<UrgentInterventionAttachment> = new Subject<UrgentInterventionAttachment>();
-  destroy$: Subject<any> = new Subject<any>();
-  private save$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
+  private save$: Subject<void> = new Subject<void>();
   filterControl: UntypedFormControl = new UntypedFormControl('');
   displayedColumns: string[] = ['status', 'documentTitle','justification', 'createdOn', 'actions'];
 

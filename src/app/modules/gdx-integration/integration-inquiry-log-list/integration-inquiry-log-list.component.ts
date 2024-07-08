@@ -22,7 +22,7 @@ import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
   styleUrls: ['./integration-inquiry-log-list.component.scss']
 })
 export class IntegrationInquiryLogListComponent {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(public lang: LangService,
               private beneficiaryService: BeneficiaryService,

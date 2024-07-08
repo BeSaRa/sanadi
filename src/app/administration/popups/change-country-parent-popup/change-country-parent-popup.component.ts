@@ -22,8 +22,8 @@ export class ChangeCountryParentPopupComponent implements OnInit {
 
   parentId: UntypedFormControl = new UntypedFormControl(null, [CustomValidators.required]);
 
-  private save$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
+  private save$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Country[]>,
               public langService: LangService,

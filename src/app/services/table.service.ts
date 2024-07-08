@@ -8,7 +8,7 @@ import {TableDataSource} from '../shared/models/table-data-source';
 export class TableService implements OnDestroy {
   private _dataSource?: TableDataSource;
   private _dataSourceChange: Subject<TableDataSource> = new Subject<TableDataSource>();
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
   dataSourceChanges$: Observable<TableDataSource> = this._dataSourceChange.asObservable();
 
   constructor() {

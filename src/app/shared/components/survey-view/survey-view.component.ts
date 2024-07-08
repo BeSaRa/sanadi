@@ -53,7 +53,7 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
 
   private questionsMap: Map<number, SurveyQuestion> = new Map<number, SurveyQuestion>();
   private controlsMap: Map<number, UntypedFormControl> = new Map<number, UntypedFormControl>();
-  private destroy$ = new Subject();
+  private destroy$:Subject<void> = new Subject<void>();
 
 
   constructor(public lang: LangService,

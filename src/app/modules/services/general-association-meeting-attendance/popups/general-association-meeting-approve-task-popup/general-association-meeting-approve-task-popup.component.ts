@@ -25,8 +25,8 @@ import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 })
 export class GeneralAssociationMeetingApproveTaskPopupComponent implements OnInit {
   comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
-  done$: Subject<any> = new Subject<any>();
-  destroy$: Subject<any> = new Subject<any>();
+  done$: Subject<void> = new Subject<void>();
+  destroy$: Subject<void> = new Subject();
   customValidators = CustomValidators;
   model!: GeneralAssociationMeetingAttendance;
 

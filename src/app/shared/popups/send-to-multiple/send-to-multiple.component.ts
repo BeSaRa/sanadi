@@ -59,8 +59,8 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
   users: InternalUser[] = [];
   departments: InternalDepartment[] = [];
   form!: UntypedFormGroup;
-  done$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
+  done$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject();
   title: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   maxSelectionCount!: number;
   multiSendToDepartmentWFResponseList = [

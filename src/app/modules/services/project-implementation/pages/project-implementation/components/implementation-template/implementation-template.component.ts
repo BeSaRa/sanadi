@@ -42,7 +42,7 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
   @Output()
   change: EventEmitter<ImplementationTemplate[]> = new EventEmitter<ImplementationTemplate[]>()
 
-  destroy$: Subject<any> = new Subject<any>()
+  destroy$: Subject<void> = new Subject<void>()
   addTemplate$: Subject<any> = new Subject();
   displayedColumns: string[] = ['templateName', 'templateCost', 'executionRegion', 'englishName', 'region', 'beneficiaryCountry', 'location', 'projectCost', 'actions'];
 

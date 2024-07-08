@@ -60,7 +60,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   displayedColumns: string[] = ['icon', 'documentTitle', 'actions'];
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   @ViewChild('fileUploader') fileUploader!: ElementRef;
   uploadedFilePath: string = '';

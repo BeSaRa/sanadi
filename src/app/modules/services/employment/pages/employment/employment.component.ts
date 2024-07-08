@@ -210,7 +210,7 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
+    this.resetForm$.next(false);
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -347,7 +347,7 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
         if (userInteraction) {
           let cat = this.category.value;
 
-          this.resetForm$.next();
+          this.resetForm$.next(false);
           this.category.setValue(cat);
           this.requestTypeField.setValue(requestTypeValue);
           this.model!.employeeInfoDTOs = [];

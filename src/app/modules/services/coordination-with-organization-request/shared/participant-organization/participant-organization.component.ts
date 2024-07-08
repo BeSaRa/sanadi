@@ -76,13 +76,13 @@ export class ParticipantOrganizationComponent implements OnInit {
   @Input() locations:TaskAdminResult[] = [];
 
   private readonly: boolean = true;
-  private save$: Subject<any> = new Subject<any>();
+  private save$: Subject<void> = new Subject<void>();
 
   private recordChanged$: Subject<Profile | null> =
     new Subject<Profile | null>();
   private currentRecord?: ParticipantOrg;
 
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   form!: FormGroup;
   @Input() organizationUnits: Profile[] = [];

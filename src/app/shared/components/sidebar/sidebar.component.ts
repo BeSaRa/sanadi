@@ -48,7 +48,7 @@ export class SidebarComponent implements OnInit {
   bottomImage: string = 'url(assets/images/bottom-pattern.png)';
   items: MenuItem[] = this.menuItemService.parents;
   scrollDirection: Direction = 'ltr';
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   searchInput: UntypedFormControl = new UntypedFormControl('');
   isExternalUser: boolean = this.employeeService.isExternalUser();
 

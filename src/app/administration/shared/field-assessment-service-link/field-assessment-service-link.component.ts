@@ -45,7 +45,7 @@ export class FieldAssessmentServiceLinkComponent implements OnInit, OnDestroy {
   model!: FieldAssessment;
   @ViewChild(TableComponent)
   filedTable!: TableComponent;
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   actions: IGridAction[] = [
     {

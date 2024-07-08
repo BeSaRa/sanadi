@@ -90,7 +90,7 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
   add$: Subject<any> = new Subject<any>();
   edit$: Subject<AdminLookup> = new Subject<AdminLookup>();
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   columnFilter$: Subject<SearchColumnEventType> = new Subject<any>();
   searchColumns: string[] = ['search_arName', 'search_enName', 'search_status', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {

@@ -23,7 +23,7 @@ import {UrgentJointReliefCampaign} from '@models/urgent-joint-relief-campaign';
   styleUrls: ['./urgent-joint-relief-campaign-initial-approve-task-popup.component.scss']
 })
 export class UrgentJointReliefCampaignInitialApproveTaskPopupComponent implements OnInit {
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   label: keyof ILanguageKeys;
 
   selectedLicense!: UrgentJointReliefCampaign | null;

@@ -32,7 +32,7 @@ import {ProfileService} from '@services/profile.service';
   styleUrls: ['./partial-request-reports.component.scss']
 })
 export class PartialRequestReportsComponent implements OnInit {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(public langService: LangService,
               private toastService: ToastService,

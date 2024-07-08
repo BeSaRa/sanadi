@@ -27,7 +27,7 @@ import {DateUtils} from '@helpers/date-utils';
   styleUrls: ["./fundraising-approve-task-popup.component.scss"],
 })
 export class FundraisingApproveTaskPopupComponent implements OnInit, AfterViewInit {
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   label: keyof ILanguageKeys;
   action$: Subject<any> = new Subject<any>();
 

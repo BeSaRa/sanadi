@@ -13,7 +13,7 @@ import { LangService } from "@services/lang.service";
 })
 export class ReportDetailsComponent implements OnInit, OnDestroy {
   safeUrl!: SafeUrl
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(private domSanitizer: DomSanitizer,
               private activeRoute: ActivatedRoute,

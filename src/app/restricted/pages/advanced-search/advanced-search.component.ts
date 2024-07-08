@@ -28,7 +28,7 @@ export class AdvancedSearchComponent implements OnInit {
   WORLD_CHECK_ENTITY_TYPE: Lookup[] = this.lookupService.listByCategory.WORLD_CHECK_ENTITY_TYPE;
   WORLD_CHECK_SEARCH_DECISION: Lookup[] = this.lookupService.listByCategory.WORLD_CHECK_SEARCH_DECISION
 
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   constructor(
     public lang: LangService,

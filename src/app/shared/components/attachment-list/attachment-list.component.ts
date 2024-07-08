@@ -49,7 +49,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   }
 
   _request!: SubventionRequest;
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   @Input()
   set request(val: SubventionRequest | undefined) {

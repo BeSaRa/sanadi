@@ -69,7 +69,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
 
   locations: AssignedTask[] = [];
   displayPrintBtn: boolean = true;
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   ngOnInit(): void {
     this.load();

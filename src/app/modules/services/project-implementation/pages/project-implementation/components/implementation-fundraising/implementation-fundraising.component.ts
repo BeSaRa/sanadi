@@ -40,10 +40,10 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   value: ImplementationFundraising[] = []
   disabled: boolean = false;
   control: FormControl | undefined
-  private destroy$: Subject<any> = new Subject<any>()
+  private destroy$: Subject<void> = new Subject<void>()
   onChange!: (value: ImplementationFundraising[]) => void
   onTouch!: () => void
-  destroyListeners$: Subject<any> = new Subject()
+  destroyListeners$: Subject<boolean> = new Subject()
   @Input()
   criteria?: () => ImplementationCriteriaContract
   @Input()
@@ -102,7 +102,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     this.destroy$.next()
     this.destroy$.complete()
     this.destroy$.unsubscribe()
-    this.destroyListeners$.next()
+    this.destroyListeners$.next(false)
     this.destroyListeners$.complete()
     this.destroyListeners$.unsubscribe()
   }

@@ -33,7 +33,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
   encapsulation: ViewEncapsulation.None
 })
 export class ServicesSearchComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
   private selectedService!: BaseGenericEService<any>;
 
   searchColumns: string[] = [];

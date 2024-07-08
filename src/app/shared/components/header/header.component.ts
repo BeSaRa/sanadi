@@ -15,7 +15,7 @@ import {UserPreferencesService} from '@services/user-preferences.service';
 export class HeaderComponent implements OnInit {
   @Input()
   sidebar!: SidebarComponent;
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   constructor(public langService: LangService,
               public employeeService: EmployeeService,

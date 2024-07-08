@@ -20,7 +20,7 @@ import { TraineeService } from '@app/services/trainee.service';
 export class RejectTraineePopupComponent implements OnInit, OnDestroy {
   comment?: string;
   form!: UntypedFormGroup;
-  rejectCandidate$ = new Subject<any>();
+  rejectCandidate$ = new Subject<void>();
   destroy$: Subject<void> = new Subject();
   ids: number[] = [];
   trainingProgramId!: number;

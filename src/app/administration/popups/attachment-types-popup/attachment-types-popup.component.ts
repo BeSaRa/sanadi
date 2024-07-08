@@ -39,8 +39,8 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   validateFieldsVisible = true;
   saveVisible = true;
   filterControl: UntypedFormControl = new UntypedFormControl('');
-  private save$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
+  private save$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject();
   private makeAttachmentTypeGlobal$: Subject<number> = new Subject<number>();
   tabsData: IKeyValue = {
     basic: {name: 'basic'},

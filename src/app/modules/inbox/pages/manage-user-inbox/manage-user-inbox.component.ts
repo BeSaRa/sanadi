@@ -40,8 +40,8 @@ import { Team } from '@app/models/team';
 export class ManageUserInboxComponent implements OnInit, OnDestroy {
 
   users: (ExternalUser | InternalUser)[] = [];
-  destroy$: Subject<any> = new Subject<any>();
-  reload$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
+  reload$: Subject<void> = new Subject<void>();
   userControl: UntypedFormControl = new UntypedFormControl();
   teamsControl: UntypedFormControl = new UntypedFormControl();
   profileControl: UntypedFormControl = new UntypedFormControl();

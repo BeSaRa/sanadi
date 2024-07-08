@@ -21,7 +21,7 @@ import {TraineeStatus} from '@app/enums/trainee-status';
   styleUrls: ['./training-program-attendance-popup.component.scss']
 })
 export class TrainingProgramAttendancePopupComponent implements OnInit {
-  saveAttendance$: Subject<null> = new Subject();
+  saveAttendance$: Subject<void> = new Subject();
   model!: TrainingProgram;
   operation!: OperationTypes;
   displayedColumns: string[] = ['arName', 'enName', 'department', 'phoneNumber', 'currentJob', 'externalOrgId', 'status', 'nationality', 'actions'];

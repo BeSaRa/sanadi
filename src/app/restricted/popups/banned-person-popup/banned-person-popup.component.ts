@@ -30,8 +30,8 @@ export class BannedPersonPopupComponent implements OnInit , OnDestroy{
     readonly = false;
     validateFieldsVisible= true;
     saveVisible=true;
-    save$ = new Subject();
-    destroy$ = new Subject();
+    save$:Subject<void> = new Subject<void>();
+    destroy$:Subject<void> = new Subject<void>();
 
     get popupTitle(): string {
         return this.lang.map.view

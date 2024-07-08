@@ -14,7 +14,7 @@ import {takeUntil} from 'rxjs/operators';
 })
 export class FormlyFieldWrapperComponent extends FieldWrapper implements OnInit, OnDestroy {
   labelKey!: keyof ILanguageKeys;
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(public lang: LangService, private cd: ChangeDetectorRef) {
     super();

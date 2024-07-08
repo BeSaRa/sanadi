@@ -23,8 +23,8 @@ export class CommissionDatabaseComponent implements OnInit, OnDestroy {
     bannedPersonService = inject(BannedPersonService);
     toastService = inject(ToastService);
 
-    save$ = new Subject();
-    destroy$ = new Subject();
+    save$:Subject<void> = new Subject<void>();
+    destroy$:Subject<void> = new Subject<void>();
     form!: UntypedFormGroup;
     inquiryForm!: UntypedFormGroup;
     requestTypeControl = new UntypedFormControl(null, [CustomValidators.required]);

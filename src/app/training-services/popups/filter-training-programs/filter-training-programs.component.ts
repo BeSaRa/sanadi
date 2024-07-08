@@ -27,7 +27,7 @@ import { TeamService } from '@app/services/team.service';
   styleUrls: ['./filter-training-programs.component.scss']
 })
 export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   userClick: typeof UserClickOn = UserClickOn;
   criteria: ITrainingProgramCriteria;
   form: UntypedFormGroup = {} as UntypedFormGroup;

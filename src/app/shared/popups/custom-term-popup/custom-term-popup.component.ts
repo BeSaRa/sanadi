@@ -17,8 +17,8 @@ import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
   styleUrls: ['./custom-term-popup.component.scss']
 })
 export class CustomTermPopupComponent implements OnInit, OnDestroy {
-  private save$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
+  private save$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject();
   form!: UntypedFormGroup;
   model!: CustomTerm;
   fm!: FormManager;

@@ -7,7 +7,7 @@ export class TabListService implements OnDestroy {
   static id: number = 0;
   containerId: number = 0;
   tabs!: QueryList<TabComponent>;
-  destroy$: Subject<any> = new Subject();
+  destroy$: Subject<void> = new Subject();
   hasTabs: boolean = false;
   changeSelectedTabTo$: Subject<TabComponent> = new Subject();
   activeTabIndex: number = 0;
@@ -57,7 +57,7 @@ export class TabListService implements OnDestroy {
   selectTabByIndex(index: number): void {
     const tab = this.findTabByIndex(index);
     tab && !tab.disabled && (tab.expansionState = 'open');
-    this.changeSelectedTabTo$.next(tab);
+    this.changeSelectedTabTo$.next(tab!);
     this.onTabChangeEvent.emit(tab);
   }
 

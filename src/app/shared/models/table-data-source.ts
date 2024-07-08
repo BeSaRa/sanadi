@@ -14,7 +14,7 @@ export class TableDataSource extends DataSource<any> {
 
   filteredData: any[] = [];
 
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   _filter: BehaviorSubject<string> = new BehaviorSubject<string>('');
 

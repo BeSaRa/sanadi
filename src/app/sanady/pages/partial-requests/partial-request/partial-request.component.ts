@@ -28,7 +28,7 @@ import {CommonUtils} from '@app/helpers/common-utils';
   styleUrls: ['./partial-request.component.scss']
 })
 export class PartialRequestComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(public langService: LangService,
               private dialogService: DialogService,

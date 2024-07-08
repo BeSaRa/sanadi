@@ -712,7 +712,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
-          this.resetForm$.next();
+          this.resetForm$.next(false);
           this.requestType.setValue(requestTypeValue);
         }
         if (!requestTypeValue) {

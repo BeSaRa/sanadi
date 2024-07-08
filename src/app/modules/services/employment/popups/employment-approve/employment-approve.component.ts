@@ -30,7 +30,7 @@ export class EmploymentApproveComponent implements OnInit, OnDestroy {
   comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   response: WFResponseType = WFResponseType.APPROVE;
   action$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   form!: UntypedFormGroup;
   datepickerOptionsMap: DatepickerOptionsMap = {
     licenseStartDate: DateUtils.getDatepickerOptions({

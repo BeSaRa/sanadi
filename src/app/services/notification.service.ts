@@ -25,7 +25,7 @@ export class NotificationService implements OnDestroy {
     unreadCount: number = 0;
     maxUnreadToShow: number = 10;
     private notificationsSource?: EventSource;
-    private destroy$: Subject<any> = new Subject();
+    private destroy$: Subject<void> = new Subject();
     private notificationStream: Subject<any> = new Subject();
     private notifications$ = this.notificationStream.asObservable().pipe(share());
     private cd?: ChangeDetectorRef

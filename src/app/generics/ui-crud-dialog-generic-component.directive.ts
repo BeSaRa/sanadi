@@ -41,8 +41,8 @@ export abstract class UiCrudDialogGenericComponent<M> implements OnInit, AfterVi
   form!: UntypedFormGroup;
   operation!: OperationTypes;
 
-  destroy$: Subject<any> = new Subject<any>();
-  save$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
+  save$: Subject<void> = new Subject<void>();
   validateFieldsVisible: boolean = true;
   saveVisible: boolean = true;
   operationTypes: typeof OperationTypes = OperationTypes;

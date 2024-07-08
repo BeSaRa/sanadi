@@ -21,8 +21,8 @@ import { Sector } from '@app/models/sector';
   styleUrls: ['./team-popup.component.scss']
 })
 export class TeamPopupComponent implements OnInit {
-  private save$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
+  private save$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject();
   form!: UntypedFormGroup;
   model: Team;
   operation: OperationTypes;

@@ -28,7 +28,7 @@ export class BannedPersonInquiryFormComponent implements OnInit, OnDestroy {
     nationalities = this.lookupService.listByCategory.Nationality;
 
     inquiry$ = new Subject();
-    destroy$ = new Subject();
+    destroy$:Subject<void> = new Subject<void>();
 
     ngOnInit(): void {
         this._listenToInquiry();

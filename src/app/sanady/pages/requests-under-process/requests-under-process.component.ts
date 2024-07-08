@@ -23,7 +23,7 @@ import {BeneficiaryService} from '@services/beneficiary.service';
   styleUrls: ['./requests-under-process.component.scss']
 })
 export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(private subventionRequestService: SubventionRequestService,
               private router: Router,

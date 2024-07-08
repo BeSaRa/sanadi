@@ -21,7 +21,7 @@ export class SelectProgramSurveyPopupComponent implements OnInit {
   control: UntypedFormControl = new UntypedFormControl();
   program!: TrainingProgram;
   selectedTemplate: SurveyTemplate | undefined;
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(public lang: LangService,
               private surveyService: SurveyService,

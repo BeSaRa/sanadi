@@ -260,7 +260,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
+    this.resetForm$.next(false);
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
 

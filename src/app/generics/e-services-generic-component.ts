@@ -55,7 +55,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   operationTypes: typeof OperationTypes = OperationTypes;
   operation: OperationTypes = OperationTypes.CREATE;
   modelChange$: BehaviorSubject<M | undefined> = new BehaviorSubject<M | undefined>(this._getNewInstance());
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   model?: M;
   customValidators = CustomValidators;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
@@ -84,7 +84,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   @ViewChild(TabsListComponent, {static: true}) componentTabsListRef!: TabsListComponent;
 
   ngOnDestroy(): void {
-    this.destroy$.next(null);
+    this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
     this._destroyComponent();

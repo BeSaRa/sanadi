@@ -24,7 +24,7 @@ export class SelectCertificateTemplatePopupComponent implements OnInit, OnDestro
   selectedCertificateVsId!: string;
   viewTemplate$: Subject<void> = new Subject<void>();
   certifyTrainees$: Subject<void> = new Subject<void>();
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<number>,
               public lang: LangService,
@@ -52,7 +52,7 @@ export class SelectCertificateTemplatePopupComponent implements OnInit, OnDestro
   }
 
   viewTemplate(vsId: string) {
-    let sub = this.models.find(x => x.vsId == vsId)!.viewTemplate()
+    let sub:any = this.models.find(x => x.vsId == vsId)!.viewTemplate()
       .pipe(takeUntil(this.destroy$)).subscribe(() => sub.unsubscribe());
   }
 

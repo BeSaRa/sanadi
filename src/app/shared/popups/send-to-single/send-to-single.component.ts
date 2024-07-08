@@ -41,8 +41,8 @@ export class SendToSingleComponent implements OnInit, OnDestroy {
   }
 
   form!: UntypedFormGroup;
-  done$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
+  done$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject();
   title: keyof ILanguageKeys = 'send_to_department';
 
 

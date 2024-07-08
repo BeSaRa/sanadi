@@ -177,7 +177,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     return !!this.model && this.form.valid && this.model.canStart();
   }
   _afterLaunch(): void {
-    this.resetForm$.next();
+    this.resetForm$.next(false);
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel(): ProjectCompletion | Observable<ProjectCompletion> {

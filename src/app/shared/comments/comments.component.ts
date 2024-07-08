@@ -35,7 +35,7 @@ export class CommentsComponent implements OnInit {
     return this._caseId;
   }
 
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(public lang: LangService,
               private employeeService: EmployeeService,
@@ -83,7 +83,7 @@ export class CommentsComponent implements OnInit {
     if (!comments.length || !this.caseId) {
       return;
     }
-    const valueDone: Subject<any> = new Subject();
+    const valueDone: Subject<void> = new Subject();
     interval()
       .pipe(
         tap(index => {

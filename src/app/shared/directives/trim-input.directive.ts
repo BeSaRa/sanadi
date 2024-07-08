@@ -14,7 +14,7 @@ export class TrimInputDirective implements OnInit, OnDestroy {
   @Input() trimOn: 'blur' | 'inline' = 'blur';
 
   _parentControl!: ControlContainer;
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   private trim$: Subject<any> = new Subject();
   trimSubscription!: Subscription;
 

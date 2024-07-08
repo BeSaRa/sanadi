@@ -119,7 +119,7 @@
   <button
     [disabled]="form.invalid"
     *ngIf="saveVisible"
-    (click)="save$.next(null)"
+    (click)="save$.next()"
     class="btn btn-primary"
   >
     {{ lang.map.btn_save }}

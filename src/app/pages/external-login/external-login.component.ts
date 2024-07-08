@@ -19,8 +19,8 @@ import {GlobalSettingsService} from '@services/global-settings.service';
 export class ExternalLoginComponent implements OnInit {
   icon = 'mdi-eye';
   passwordFieldType = 'password';
-  private destroy$: Subject<any> = new Subject<any>();
-  private login$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
+  private login$: Subject<void> = new Subject<void>();
   loginFromExternal: UntypedFormGroup = {} as UntypedFormGroup;
 
   background: string = 'url(assets/images/' + this.configService.CONFIG.LOGIN_BACKGROUND_FALLBACK + ')';

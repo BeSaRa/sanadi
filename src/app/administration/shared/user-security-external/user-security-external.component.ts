@@ -23,7 +23,7 @@ import {TeamSecurityConfiguration} from '@app/models/team-security-configuration
   styleUrls: ['./user-security-external.component.scss']
 })
 export class UserSecurityExternalComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
   private oldExternalUserSecurity$: BehaviorSubject<UserSecurityConfiguration[]> = new BehaviorSubject<UserSecurityConfiguration[]>([]);
   userSecurityColumns: string[] = ['serviceName', 'add', 'search', 'teamInbox', 'approval', 'followUp'];
   private teams: Team[] = [];

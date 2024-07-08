@@ -24,7 +24,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   // subject for emit clicking on view button
   // view$: Subject<M> = new Subject<M>();
   // using this subject later to unsubscribe from any subscription
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   // list fo models related to the entity
   models: M[] = [];
   // to filter grid models based on what the user type here

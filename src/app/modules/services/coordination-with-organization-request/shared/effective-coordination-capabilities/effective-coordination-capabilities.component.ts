@@ -56,14 +56,14 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
 
   editIndex: number = -1;
   viewOnly: boolean = false;
-  private save$: Subject<any> = new Subject<any>();
+  private save$: Subject<void> = new Subject<void>();
   formOpened = false;
   add$: Subject<any> = new Subject<any>();
   private recordChanged$: Subject<EffectiveCoordinationCapabilities | null> =
     new Subject<EffectiveCoordinationCapabilities | null>();
   private currentRecord?: EffectiveCoordinationCapabilities;
 
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   form!: FormGroup;
   @Input() organizationWays: Lookup[] = [];

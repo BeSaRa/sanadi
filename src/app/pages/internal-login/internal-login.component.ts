@@ -20,8 +20,8 @@ export class InternalLoginComponent implements OnInit {
   icon = 'mdi-eye';
   passwordFieldType = 'password';
   loginFormInternal: UntypedFormGroup = {} as UntypedFormGroup;
-  private destroy$: Subject<any> = new Subject<any>();
-  private login$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
+  private login$: Subject<void> = new Subject<void>();
 
   background: string = 'url(assets/images/' + this.configService.CONFIG.LOGIN_BACKGROUND_FALLBACK + ')';
   loginBackground: string = 'url(assets/images/' + this.configService.CONFIG.LOGIN_BACKGROUND_INTERNAL + ')';

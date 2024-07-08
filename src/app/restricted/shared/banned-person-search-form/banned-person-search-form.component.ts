@@ -29,7 +29,7 @@ export class BannedPersonSearchFormComponent implements OnInit, OnDestroy {
     nationalities = this.lookupService.listByCategory.Nationality;
 
     inquiry$ = new Subject();
-    destroy$ = new Subject();
+    destroy$:Subject<void> = new Subject<void>();
 
     datepickerOptionsMap: DatepickerOptionsMap = {};
     datepickerControlsMap: DatepickerControlsMap = {};

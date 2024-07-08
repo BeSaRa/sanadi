@@ -12,7 +12,7 @@ import {Observable, Subject} from 'rxjs';
 })
 export class FormlySelectFieldComponent extends FieldType<CustomFormlyFieldConfig> implements OnInit, OnDestroy {
   bindValue!: string;
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   get bindLabel(): string {
     return this.field.selectOptions?.bindLabel === 'basedOnLanguage' ? (this.lang.map.lang + 'Name') : this.field.selectOptions?.bindLabel!;

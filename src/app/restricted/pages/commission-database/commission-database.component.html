@@ -31,7 +31,7 @@
         <i class="mdi mdi-information-outline text-info"></i>
     </button>
     <span class="flex-grow-1"></span>
-    <button [disabled]="!isFormValid" (click)="save$.next(null)" class="btn btn-primary">
+    <button [disabled]="!isFormValid" (click)="save$.next()" class="btn btn-primary">
         {{ lang.map.btn_save }}
     </button>
     <button class="btn btn-secondary" (click)="resetForm()">

@@ -48,7 +48,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
   model!: InternalUser | ExternalUser;
   @ViewChild(TableComponent)
   teamsTable!: TableComponent;
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
 
   actions: IGridAction[] = [
     {

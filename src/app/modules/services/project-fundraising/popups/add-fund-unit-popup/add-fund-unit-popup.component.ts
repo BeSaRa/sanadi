@@ -16,7 +16,7 @@ import { ToastService } from '@app/services/toast.service';
   styleUrls: ['./add-fund-unit-popup.component.scss']
 })
 export class AddFundUnitPopupComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   save$: Subject<void> = new Subject();
   form!: FormGroup;
   constructor(

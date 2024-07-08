@@ -60,14 +60,14 @@ export class ResearchAndStudiesComponent implements OnInit {
 
   editIndex: number = -1;
   viewOnly: boolean = false;
-  private save$: Subject<any> = new Subject<any>();
+  private save$: Subject<void> = new Subject<void>();
 
   add$: Subject<any> = new Subject<any>();
   private recordChanged$: Subject<ResearchAndStudies | null> =
     new Subject<ResearchAndStudies | null>();
   private currentRecord?: ResearchAndStudies;
 
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
   formOpend = false;
   form!: FormGroup;
 

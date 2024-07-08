@@ -46,7 +46,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
   item: UntypedFormControl = new UntypedFormControl()
 
-  private destroy$: Subject<any> = new Subject<any>()
+  private destroy$: Subject<void> = new Subject<void>()
 
   private countriesChange$: BehaviorSubject<number[] | undefined> = new BehaviorSubject<number[] | undefined>(undefined)
 
@@ -60,7 +60,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     items: new UntypedFormArray([])
   })
 
-  private destroyInputListeners$: Subject<any> = new Subject<any>();
+  private destroyInputListeners$: Subject<void> = new Subject<void>();
   totalValue: number = 0;
   remain: number = 0;
 

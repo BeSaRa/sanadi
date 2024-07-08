@@ -19,7 +19,7 @@ export class MakeDecisionComponent implements OnInit {
   control = new FormControl('', [CustomValidators.required]);
   comment = new FormControl('');
   WORLD_CHECK_SEARCH_DECISION: Lookup[] = this.lookupService.listByCategory.WORLD_CHECK_SEARCH_DECISION;
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   save$: Subject<void> = new Subject<void>();
   constructor(
     public lang: LangService,

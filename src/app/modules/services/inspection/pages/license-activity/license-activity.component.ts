@@ -46,7 +46,7 @@ import { ActualInspection } from '@app/models/actual-inspection';
 
 })
 export class LicenseActivityComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
   private selectedService!: BaseGenericEService<any>;
 
   searchColumns: string[] = ['fullSerial', 'licenseType', 'hasInspected', 'inspectionStatus', 'lastInspectionDate', 'inspectorId', 'actions'];

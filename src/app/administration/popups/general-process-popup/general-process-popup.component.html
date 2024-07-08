@@ -216,7 +216,7 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button class="btn btn-primary" [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)" dialogClose>
+  <button class="btn btn-primary" [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next()" dialogClose>
     {{ lang.map.btn_save }}
   </button>
   <button dialogClose class="btn btn-secondary">

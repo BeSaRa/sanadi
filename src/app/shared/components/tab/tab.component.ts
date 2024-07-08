@@ -30,7 +30,7 @@ export class TabComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() tabAccordionButtonClasses: string = '';
   @Input() isHidden: boolean = false;
 
-  private destroy$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject();
 
   accordionView: boolean = false;
   hasForm: boolean = false;

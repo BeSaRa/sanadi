@@ -99,7 +99,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   @Input()
   formProperties: Record<string, () => Observable<any>> = {};
 
-  destroy$: Subject<any> = new Subject<any>();
+  destroy$: Subject<void> = new Subject();
   displayedColumns: string[] = [/*'rowSelection',*/ 'icon', 'type', 'description', 'mandatory', 'isPublished', 'date', 'actions'];
 
   filter: UntypedFormControl = new UntypedFormControl();
