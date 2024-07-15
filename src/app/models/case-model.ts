@@ -126,7 +126,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
 
   filterSearchFields(fields?: string[]): Partial<CaseModel<any, any>> {
     const self = this as unknown as any;
-    return Object.keys(this).filter((key) => (self[key] !== '' && self[key] !== null))
+    return Object.keys(this).filter((key) => (self[key] !== '' && self[key] !== null && self[key] !== undefined))
       .filter(field => fields ? fields.indexOf(field) !== -1 : field)
       .reduce((acc, current) => {
         return (current === 'service') ? acc : { ...acc, [current]: self[current] };
