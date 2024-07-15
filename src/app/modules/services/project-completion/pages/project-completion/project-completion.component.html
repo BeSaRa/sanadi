@@ -51,7 +51,7 @@
             <ng-select validationClasses="beneficiaryCountry" appendTo="body" [clearable]="true" id="beneficiaryCountry"
               formControlName="beneficiaryCountry" labelForId="beneficiaryCountry" placeholder="{{lang.map.select}}"
               [notFoundText]="lang.map.msg_not_found" [readonly]="(this.isDisplayInsideQatar || readonly)">
-              <ng-option [value]="option.id" [disabled]="checkCountryDisabled(option)" *ngFor="let option of countries">
+              <ng-option [value]="option.id" *ngFor="let option of countries">
                 {{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="beneficiaryCountry"></app-field-error-message>
