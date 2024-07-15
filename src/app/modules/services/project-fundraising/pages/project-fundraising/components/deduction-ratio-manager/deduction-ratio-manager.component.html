@@ -1,6 +1,5 @@
 <div class="row mb-2">
-  <app-page-header [pageTitle]="'deduction_ratio_items'"
-  [removeContainerClasses]="true"></app-page-header>
+  <app-page-header [pageTitle]="'deduction_ratio_items'" [removeContainerClasses]="true"></app-page-header>
 </div>
 <!-- <div class="row">
   <div class="col-sm-12 mb-4 position-relative">
@@ -36,14 +35,16 @@
         <td cdk-cell *cdkCellDef="let row ; let i = index">
           <ng-container [formGroupName]="i">
             <div class="d-flex align-items-center" style="gap: .5rem;">
-              <input [mask]="maskPattern.PERCENT" suffix="%" [dropSpecialCharacters]="false" id="field_name_{{i}}"
-                [readonly]="readonly || !isDeductionSelected(row)" formControlName="value"
-                style="width:120px"
-                class="form-control form-control-sm">
-              <input type="checkbox" [checked]=" isDeductionSelected(row)"
-                [disabled]="readonly"
-                (change)="toggleDeduct(row,i) "
-                class="form-check-input">
+              <div class="input-group" style="width:120px">
+                <input type="number" id="field_name_{{i}}" [readonly]="readonly || !isDeductionSelected(row)"
+                  formControlName="value" class="form-control form-control-sm">
+                <div class="input-group-append">
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+
+              <input type="checkbox" [checked]=" isDeductionSelected(row)" [disabled]="readonly"
+                (change)="toggleDeduct(row,i) " class="form-check-input">
             </div>
           </ng-container>
 

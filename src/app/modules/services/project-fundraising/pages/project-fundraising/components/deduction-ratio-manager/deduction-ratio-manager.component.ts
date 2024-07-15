@@ -12,7 +12,7 @@ import { LangService } from "@services/lang.service";
 import { ProjectFundraisingService } from "@services/project-fundraising.service";
 import currency from "currency.js";
 import { BehaviorSubject, ReplaySubject, Subject, combineLatest } from "rxjs";
-import { debounceTime, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
+import { debounceTime, filter, map, startWith, switchMap, takeUntil } from "rxjs/operators";
 
 @Component({
   selector: 'deduction-ratio-manager',
@@ -219,30 +219,22 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
         newValue = Number(newValue);
         const item = this.deductionRatioItemsMap[id];
         if (item) {
-          if (isReset) input.setValue(0, {
-            emitEvent: false
-          })
-          else {
-            if (newValue > item.maxLimit) {
-              input.setValue(item.maxLimit, {
-                emitEvent: false
-              })
-            } else if (newValue < item.minLimit) {
-              input.setValue(item.minLimit, {
-                emitEvent: false
-              })
-            } else {
-              input.setValue(newValue, {
-                emitEvent: false
-              })
-            }
+          if (newValue > item.maxLimit) {
+            input.setValue(item.maxLimit, {
+              emitEvent: false
+            })
+          }  if (newValue < item.minLimit) {
+            input.setValue(item.minLimit, {
+              emitEvent: false
+            })
           }
-
+         
         }
         this._model.updateDeductionRatioItem(Number(id), Number(input.getRawValue()))
         this.deductionAmountHasChanges$.next(input.getRawValue())
         this.onItemChange.emit()
       })
+      // input.setValue(0, { emitEvent:false })
   }
 
   private createInputListeners(): void {
@@ -319,7 +311,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
         if(this.deductionList.length === 0){
           this.list.clear()
           this.generateFromModel(model)
-          this.createInputListeners()
+         // this.createInputListeners()
         }
 
         this._model = model;
@@ -344,15 +336,25 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   }
   private addDeductItem(item: DeductedPercentage, index: number) {
     this._model.addDeductionRatioItem(item)
-    const control = this.list.controls[index]
-    control.patchValue(item.deductionPercent)
-    this.listenToControl(control)
+    const control = this.list.controls[index] as UntypedFormGroup
+    const input = control.controls.value;
+    input.patchValue(item.deductionPercent,{emitEvent: false})
+    this._model.updateDeductionRatioItem(Number(control.controls.id), Number(input.getRawValue()))
+    this.deductionAmountHasChanges$.next(input.getRawValue())
+    this.onItemChange.emit()
+    // control.patchValue()
+    // this.listenToControl(control)
     this.onAddItem.emit()
   }
   private removeDeductItem(item: DeductedPercentage, index: number) {
     this._model.removeDeductionRatioItem(item)
-    const control = this.list.controls[index]
-    this.listenToControl(control, true)
+    const control = this.list.controls[index] as UntypedFormGroup
+    const input = control.controls.value;
+    input.patchValue(0,{emitEvent: false})
+    this._model.updateDeductionRatioItem(Number(control.controls.id), Number(input.getRawValue()))
+    this.deductionAmountHasChanges$.next(input.getRawValue())
+    this.onItemChange.emit()
+  //  this.listenToControl(control, true)
     this.onItemRemoved.emit()
   }
 
