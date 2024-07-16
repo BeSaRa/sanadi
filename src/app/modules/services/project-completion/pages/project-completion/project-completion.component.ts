@@ -302,14 +302,14 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if (this.employeeService.isExternalUser() && this.model.isReturned()) {
+      if (this.employeeService.isExternalUser()) {
         this.readonly = false;
       }
 
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       // after claim, consider it same as user inbox and use same condition
       if (this.model.taskDetails.isClaimed()) {
-        if (this.employeeService.isExternalUser() && this.model.isReturned()) {
+        if (this.employeeService.isExternalUser()) {
           this.readonly = false;
         }
 
