@@ -188,8 +188,8 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       ...this.beneficiaryAnalyticsByLicense.getRawValue(),
       ...this.evaluation.getRawValue(),
       ...this.specialExplanation.getRawValue(),
-      bestPracticesList: this.bestPracticesListComponentRef.list,
-      lessonsLearnedList: this.lessonsLearntListComponentRef.list,
+      // bestPracticesList: this.bestPracticesListComponentRef.list,
+      // lessonsLearnedList: this.lessonsLearntListComponentRef.list,
     })
   }
   private _updateModelAfterSave(model: ProjectCompletion): void {

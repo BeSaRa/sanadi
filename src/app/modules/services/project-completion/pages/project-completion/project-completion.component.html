@@ -9,9 +9,9 @@
     <tab name="beneficiary_analytics_by_license" [hasError]="beneficiaryAnalyticsByLicense.invalid"
       [template]="beneficiaryAnalyticsByLicenseTemplate" [title]="lang.map.beneficiary_analytics">
     </tab>
-    <tab name="best_practices_and_lessons_learnt" [hasError]="!isHasErrorLessonsLearnt_BestPracticesTab"
+    <!-- <tab name="best_practices_and_lessons_learnt" [hasError]="!isHasErrorLessonsLearnt_BestPracticesTab"
       [template]="bestPracticesAndLessonsLearnt" [title]="lang.map.best_practices + ' & ' + lang.map.lessons_learnt">
-    </tab>
+    </tab> -->
     <tab [hasError]="evaluation.invalid" name="evaluation_impact_cost_effort" [template]="evaluation_impact_cost_effort"
       [title]="lang.map.evaluation_impact_cost_effort"></tab>
     <tab [hasError]="specialExplanation.invalid" name="special_explanations" [template]="specialExplanations"
@@ -277,13 +277,13 @@
         </div>
       </div>
     </ng-template>
-    <ng-template #bestPracticesAndLessonsLearnt>
+    <!-- <ng-template #bestPracticesAndLessonsLearnt>
       <best-practices-list #bestPracticesListComponent [list]="(!model ? [] : model.bestPracticesList)"
         [readonly]="readonly"></best-practices-list>
       <hr>
       <lessons-learnt-list #lessonsLearntListComponent [list]="(!model ? [] : model.lessonsLearnedList)"
         [readonly]="readonly"></lessons-learnt-list>
-    </ng-template>
+    </ng-template> -->
     <ng-template #evaluation_impact_cost_effort>
       <div class="row">
         <p>1) {{ lang.map.effort_impact_description_step_1}}</p>

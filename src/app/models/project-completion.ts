@@ -53,12 +53,12 @@ export class ProjectCompletion
   internalProjectClassification!: number;
   beneficiaryCountry!: number;
   actualTotalCost!: number;
-  beneficiaries0to5!: number;
-  beneficiaries5to18!: number;
-  beneficiaries19to60!: number;
-  beneficiariesOver60!: number;
-  directBeneficiaryNumber!: number;
-  indirectBeneficiaryNumber!: number;
+  beneficiaries0to5: number = 0;
+  beneficiaries5to18: number = 0;
+  beneficiaries19to60: number = 0;
+  beneficiariesOver60: number = 0;
+  directBeneficiaryNumber: number = 0;
+  indirectBeneficiaryNumber: number = 0;
   customTerms!: string;
   publicTerms!: string;
   followUpDate!: string | IMyDateModel;
