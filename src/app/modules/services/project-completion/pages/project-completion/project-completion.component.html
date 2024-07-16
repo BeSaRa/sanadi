@@ -243,7 +243,7 @@
                 <label class="form-label" asteriskIfRequired="beneficiaries0to5"
                   for="beneficiaries0to5">{{lang.map.number_of_0_to_5}}</label>
                 <input id="beneficiaries0to5" validationClasses="beneficiaries0to5" formControlName="beneficiaries0to5"
-                  [mask]="inputMaskPatterns.PERCENT" [readonly]="readonly" [dropSpecialCharacters]="false"
+                  [mask]="inputMaskPatterns.NUMBER_ONLY" [readonly]="readonly" [dropSpecialCharacters]="false"
                   class="form-control">
                 <app-field-error-message controlName="beneficiaries0to5"></app-field-error-message>
               </div>
@@ -251,7 +251,7 @@
                 <label class="form-label" asteriskIfRequired="beneficiaries5to18"
                   for="beneficiaries5to18">{{lang.map.number_of_5_to_18}}</label>
                 <input id="beneficiaries5to18" [readonly]="readonly" validationClasses="beneficiaries5to18"
-                  formControlName="beneficiaries5to18" [mask]="inputMaskPatterns.PERCENT"
+                  formControlName="beneficiaries5to18" [mask]="inputMaskPatterns.NUMBER_ONLY"
                   [dropSpecialCharacters]="false" class="form-control">
                 <app-field-error-message controlName="beneficiaries5to18"></app-field-error-message>
               </div>
@@ -259,7 +259,7 @@
                 <label class="form-label" asteriskIfRequired="beneficiaries19to60"
                   for="beneficiaries19to60">{{lang.map.number_of_19_to_60}}</label>
                 <input id="beneficiaries19to60" [readonly]="readonly" validationClasses="beneficiaries19to60"
-                  [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false"
+                  [mask]="inputMaskPatterns.NUMBER_ONLY" [dropSpecialCharacters]="false"
                   formControlName="beneficiaries19to60" class="form-control">
                 <app-field-error-message controlName="beneficiaries19to60"></app-field-error-message>
               </div>
@@ -267,7 +267,7 @@
                 <label class="form-label" asteriskIfRequired="beneficiariesOver60"
                   for="beneficiariesOver60">{{lang.map.number_of_above_60}}</label>
                 <input id="beneficiariesOver60" [readonly]="readonly" validationClasses="beneficiariesOver60"
-                  [mask]="inputMaskPatterns.PERCENT" [dropSpecialCharacters]="false"
+                  [mask]="inputMaskPatterns.NUMBER_ONLY" [dropSpecialCharacters]="false"
                   formControlName="beneficiariesOver60" class="form-control">
                 <app-field-error-message controlName="beneficiariesOver60"></app-field-error-message>
               </div>
