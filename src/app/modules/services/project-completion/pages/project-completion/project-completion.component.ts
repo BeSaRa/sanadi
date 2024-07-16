@@ -57,8 +57,8 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   @ViewChild('bestPracticesListComponent') bestPracticesListComponentRef!: BestPracticesListComponent;
   @ViewChild('lessonsLearntListComponent') lessonsLearntListComponentRef!: LessonsLearntListComponent;
   datepickerOptionsMap: IKeyValue = {
-    projectEvaluationSLADate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
-    actualEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
+    projectEvaluationSLADate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
+    actualEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
   };
   formProperties = {
     requestType: () => {
