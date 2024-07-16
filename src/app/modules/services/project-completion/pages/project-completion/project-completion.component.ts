@@ -228,20 +228,20 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       projectLicenseInfo: this.fb.group(model.formBuilder(true).projectLicenseInfo),
       projectBasicInfo: this.fb.group(model.formBuilder(true).projectBasicInfo),
       beneficiaryAnalyticsByLicense: this.fb.group(model.formBuilder(true).beneficiaryAnalyticsByLicense, {
-        validators: CustomValidators.validateSum(100, 2,
-          [
-            'beneficiaries0to5',
-            'beneficiaries5to18',
-            'beneficiaries19to60',
-            'beneficiariesOver60'
-          ],
-          [
-            this.lang.getLocalByKey('number_of_0_to_5'),
-            this.lang.getLocalByKey('number_of_5_to_18'),
-            this.lang.getLocalByKey('number_of_19_to_60'),
-            this.lang.getLocalByKey('number_of_above_60')
-          ]
-        )
+        // validators: CustomValidators.validateSum(100, 2,
+        //   [
+        //     'beneficiaries0to5',
+        //     'beneficiaries5to18',
+        //     'beneficiaries19to60',
+        //     'beneficiariesOver60'
+        //   ],
+        //   [
+        //     this.lang.getLocalByKey('number_of_0_to_5'),
+        //     this.lang.getLocalByKey('number_of_5_to_18'),
+        //     this.lang.getLocalByKey('number_of_19_to_60'),
+        //     this.lang.getLocalByKey('number_of_above_60')
+        //   ]
+        // )
       }),
       evaluation: this.fb.group(model.formBuilder(true).evaluation),
       explanation: this.fb.group(model.formBuilder(true).explanation)
