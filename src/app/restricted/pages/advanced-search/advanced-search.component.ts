@@ -12,8 +12,8 @@ import { LookupService } from '@app/services/lookup.service';
 import { WorldCheckService } from '@app/services/world-check.service';
 import { advancedSearchDatabase } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { Observable, Subject, combineLatest } from 'rxjs';
-import { exhaustMap, filter, map, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject, combineLatest, of } from 'rxjs';
+import { catchError, exhaustMap, filter, map, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'advanced-search',
@@ -129,6 +129,7 @@ export class AdvancedSearchComponent implements OnInit {
         filter(() => this.form.valid && this.isDataBaseSelected),
         exhaustMap(() => {
           return combineLatest(this.generateSearchArray())
+          .pipe(catchError(err=>of(  [])))      
 
         }),
       )
@@ -146,6 +147,7 @@ export class AdvancedSearchComponent implements OnInit {
         return this.openAdvancedSearchResult(result);
       }))
       .pipe(takeUntil(this.destroy$))
+     
       .subscribe(
 
 
