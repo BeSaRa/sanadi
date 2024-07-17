@@ -112,6 +112,9 @@ export class BannedPersonSearchComponent implements OnInit, OnDestroy {
     private _listenToRACASearch() {
         this.racaSearch$.pipe(
             switchMap((model) => this.bannedPersonService.searchByCriteria(model)),
+            tap(list => {
+                if (!list.length) {this.dialog.info(this.lang.map.no_result_for_your_search_criteria)}
+              }),
             tap(list => this.bannedPersonList$.next(list)),
             takeUntil(this.destroy$)
         ).subscribe();
@@ -120,6 +123,9 @@ export class BannedPersonSearchComponent implements OnInit, OnDestroy {
     private _listenToMOISearch() {
         this.moiSearch$.pipe(
             switchMap((model) => this.bannedPersonService.getMOIByCriteria(model)),
+            tap(list => {
+                if (!list.length) {this.dialog.info(this.lang.map.no_result_for_your_search_criteria)}
+              }),
             tap(list => this.bannedPersonTerrorismList$.next(list)),
             takeUntil(this.destroy$)
         ).subscribe();
