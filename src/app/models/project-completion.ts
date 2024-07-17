@@ -74,6 +74,7 @@ export class ProjectCompletion
   description!: string;
   effort!: number;
   impact!: number;
+  nationalities:number[] =[];
 
   // For view only
   projectTotalCost!: number;
@@ -209,7 +210,8 @@ export class ProjectCompletion
       beneficiaries0to5: { langKey: 'number_of_0_to_5', value: this.beneficiaries0to5 },
       beneficiaries5to18: { langKey: 'number_of_5_to_18', value: this.beneficiaries5to18 },
       beneficiaries19to60: { langKey: 'number_of_19_to_60', value: this.beneficiaries19to60 },
-      beneficiariesOver60: { langKey: 'number_of_above_60', value: this.beneficiariesOver60 }
+      beneficiariesOver60: { langKey: 'number_of_above_60', value: this.beneficiariesOver60 },
+      nationalities: { langKey: 'lbl_analysis_beneficiaries_nationalities', value: this.nationalities }
     }
   }
   getEvaluationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
@@ -248,7 +250,8 @@ export class ProjectCompletion
       beneficiaries0to5,
       beneficiaries5to18,
       beneficiaries19to60,
-      beneficiariesOver60
+      beneficiariesOver60,
+      nationalities
     } = ObjectUtils.getControlValues<ProjectCompletion>(this.getBeneficiaryAnalyticsByLicenseFormValuesWithLabels());
     const { description } = ObjectUtils.getControlValues<ProjectCompletion>(this.getSpecialExplanationValuesWithLabels());
     const { impact, effort } = ObjectUtils.getControlValues<ProjectCompletion>(this.getEvaluationValuesWithLabels());
@@ -277,7 +280,8 @@ export class ProjectCompletion
         beneficiaries0to5: controls ? [beneficiaries0to5, [CustomValidators.required, CustomValidators.decimal(2)]] : beneficiaries0to5,
         beneficiaries5to18: controls ? [beneficiaries5to18, [CustomValidators.required, CustomValidators.decimal(2)]] : beneficiaries5to18,
         beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.decimal(2)]] : beneficiaries19to60,
-        beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.decimal(2)]] : beneficiariesOver60
+        beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.decimal(2)]] : beneficiariesOver60,
+        nationalities: controls?[nationalities]:nationalities
       },
       evaluation: {
         impact: controls ? [impact, [CustomValidators.required]] : impact,

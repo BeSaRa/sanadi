@@ -51,6 +51,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   subUNOCHACategories: AdminLookup[] = [];
   internalProjectClassificationList: Lookup[] = this.lookupService.listByCategory.InternalProjectClassification;
   displayedColumns: string[] = [];
+  nationalities: Lookup[]= this.lookupService.listByCategory.Nationality;
   private loadedDacOchaBefore: boolean = false;
   projectImplementationLicenses: ProjectImplementation[] = [];
   selectedLicense?: ProjectImplementation;
