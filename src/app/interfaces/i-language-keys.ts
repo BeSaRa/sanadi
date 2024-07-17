@@ -2231,4 +2231,5 @@ export interface ILanguageKeys {
   lbl_commission:string;
   lbl_moi:string;
   lbl_total_items:string;
+  lbl_analysis_beneficiaries_nationalities:string;
 }
