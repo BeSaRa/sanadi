@@ -44,7 +44,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   countries: Country[] = [];
   workAreas: Lookup[] = this.lookupService.listByCategory.ProjectWorkArea.slice().sort((a, b) => a.lookupKey - b.lookupKey)
   domains: Lookup[] = this.lookupService.listByCategory.Domain;
-  requestTypesList: Lookup[] = this.lookupService.listByCategory.RequestTypeNewOnly;
+  requestTypesList: Lookup[] = this.lookupService.listByCategory.RequestTypeNewUpdate;
   mainDacCategories: AdminLookup[] = [];
   subDacCategories: AdminLookup[] = [];
   mainUNOCHACategories: AdminLookup[] = [];
