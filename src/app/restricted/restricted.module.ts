@@ -25,6 +25,7 @@ import { BannedPersonSearchFormComponent } from './shared/banned-person-search-f
 import { BannedPersonTableComponent } from './shared/banned-person-table/banned-person-table.component';
 import { BannedPersonTerrorismTableComponent } from './shared/banned-person-terrorism-table/banned-person-terrorism-table.component';
 import { MoiFileDetailsPopupComponent } from './popups/moi-file-details-popup/moi-file-details-popup.component';
+import { RestrictedAdvancedSearchPopupComponent } from './popups/restricted-advanced-search-popup/restricted-advanced-search-popup.component';
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import { MoiFileDetailsPopupComponent } from './popups/moi-file-details-popup/mo
     BannedPersonSearchComponent,
     MoiFileDetailsPopupComponent,
     AdvancedSearchComponent,
-    AdvancedSearchResultsPopupComponent
+    AdvancedSearchResultsPopupComponent,
+    RestrictedAdvancedSearchPopupComponent
   ]
 })
 export class RestrictedModule { }

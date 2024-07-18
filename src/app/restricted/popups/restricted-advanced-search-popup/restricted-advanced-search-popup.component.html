@@ -1,0 +1,18 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+    <h1 class="h6 text-white">{{popupTitle}}</h1>
+    <div>
+      <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
+        fullscreenBtn></button>
+      <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose
+        aria-label="Close"></button>
+    </div>
+  </div>
+  <div class="dialog-content w800px" #dialogContent>
+   <advanced-search></advanced-search>
+  </div>
+  <div class="dialog-actions">
+  
+    <span class="flex-grow-1"></span>
+   
+    <button dialogClose class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+  </div>

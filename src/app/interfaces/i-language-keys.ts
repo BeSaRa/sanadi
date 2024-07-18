@@ -2232,4 +2232,5 @@ export interface ILanguageKeys {
   lbl_moi:string;
   lbl_total_items:string;
   lbl_analysis_beneficiaries_nationalities:string;
+  lbl_restricted_advanced_search:string;
 }

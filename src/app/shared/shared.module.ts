@@ -154,6 +154,8 @@ import { UploadFilePopupComponent } from './popups/upload-file-popup/upload-file
 import { CommentPopupComponent } from './popups/comment-popup/comment-popup.component';
 import { AngularMyDatePickerModule } from '@nodro7/angular-mydatepicker';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { HasAnyPermissionDirective } from './directives/has-any-permission.directive';
+import { RestrictedAdvancedSearchButtonComponent } from './components/restricted-advanced-search-button/restricted-advanced-search-button.component';
 
 @NgModule({
   declarations: [
@@ -276,7 +278,9 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
     SetVacationPopupComponent,
     LangNamePipe,
     UploadFilePopupComponent,
-    CommentPopupComponent
+    CommentPopupComponent,
+    HasAnyPermissionDirective,
+    RestrictedAdvancedSearchButtonComponent
   ],
   imports: [
     CommonModule,
@@ -384,7 +388,9 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
     UploadFilePopupComponent,
     CommentPopupComponent,
     NgxMaskPipe,
-    NgxMaskDirective
+    NgxMaskDirective,
+    HasAnyPermissionDirective,
+    RestrictedAdvancedSearchButtonComponent
   ]
 })
 export class SharedModule {
