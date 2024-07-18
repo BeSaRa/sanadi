@@ -4,6 +4,7 @@ import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { BannedPersonRequestStatus } from '@app/enums/banned-person-request-status.enum';
 import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
@@ -12,6 +13,7 @@ import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { MoiFileDetailsPopupComponent } from '@app/restricted/popups/moi-file-details-popup/moi-file-details-popup.component';
 import { BannedPersonService } from '@app/services/banned-person.service';
 import { DialogService } from '@app/services/dialog.service';
+import { EmployeeService } from '@app/services/employee.service';
 import { LangService } from '@app/services/lang.service';
 import { ToastService } from '@app/services/toast.service';
 import { BehaviorSubject, Subject, of } from 'rxjs';
@@ -46,6 +48,7 @@ export class TerrorismMoiComponent implements OnInit, OnDestroy {
     dialog = inject(DialogService);
     toast = inject(ToastService);
     lang = inject(LangService);
+    employeeService = inject(EmployeeService);
 
     list$: BehaviorSubject<BannedPersonTerrorismFile[]> = new BehaviorSubject<BannedPersonTerrorismFile[]>([]);
     resetUploader$:Subject<void> = new Subject<void>();
@@ -121,5 +124,9 @@ export class TerrorismMoiComponent implements OnInit, OnDestroy {
             tap(_ => { this.toast.success(this.lang.map.msg_reject_success) })
         )
         .subscribe();
+    }
+
+    get canMakeDecision(): boolean {
+        return this.employeeService.hasPermissionTo(PermissionsEnum.DECISION_BANNED_PERSON_MOI)
     }
 }
