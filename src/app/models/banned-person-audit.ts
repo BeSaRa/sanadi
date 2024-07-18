@@ -18,5 +18,6 @@ export class BannedPersonAudit {
     requestStatus!: AdminResult;
     requestStatusInfo!: AdminResult;
     departmentInfo!: AdminResult;
+    auditOperationInfo!: AdminResult;
 
 }

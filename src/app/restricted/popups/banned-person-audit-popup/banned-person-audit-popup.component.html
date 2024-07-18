@@ -35,10 +35,10 @@
               {{ lang.map.lbl_status_date_modified }}</th>
             <td cdk-cell *cdkCellDef="let row">{{ row.statusDateModified |date }}</td>
           </ng-container>
-          <ng-container cdkColumnDef="requestStatus">
+          <ng-container cdkColumnDef="auditOperationInfo">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
               {{ lang.map.lbl_operation }}</th>
-            <td cdk-cell *cdkCellDef="let row">{{ row.requestStatusInfo?.getName() }}</td>
+            <td cdk-cell *cdkCellDef="let row">{{ row.auditOperationInfo?.getName() }}</td>
           </ng-container>
 
 

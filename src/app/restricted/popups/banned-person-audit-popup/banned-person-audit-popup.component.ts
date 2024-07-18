@@ -18,7 +18,7 @@ export class BannedPersonAuditPopupComponent {
     list: BannedPersonAudit[] = []
     filterControl: UntypedFormControl = new UntypedFormControl('');
     destroy$: Subject<void> = new Subject();
-    displayedColumns:(keyof BannedPersonAudit )[] =['internalUserId','departmentInfo','statusDateModified','requestStatus']    ;
+    displayedColumns:(keyof BannedPersonAudit )[] =['internalUserId','departmentInfo','statusDateModified','auditOperationInfo']    ;
     allowReload: boolean = false;
     lang = inject(LangService);
     constructor(
