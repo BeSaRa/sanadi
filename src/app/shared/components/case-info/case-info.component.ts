@@ -200,6 +200,19 @@ export class CaseInfoComponent implements OnInit {
     return this.model.getCaseType() == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE && this.employeeService.isInternalUser();
   }
 
+  isRestrictedAdvancedSearchCase(){
+    return [
+      CaseTypes.EMPLOYMENT,
+      CaseTypes.PARTNER_APPROVAL,
+      CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+      CaseTypes.CHARITY_ORGANIZATION_UPDATE,
+      CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+      CaseTypes.NPO_MANAGEMENT,
+      CaseTypes.COLLECTION_APPROVAL,
+      CaseTypes.COLLECTOR_LICENSING,
+    ].includes(this.model.caseType)
+  }
+
   viewGeneralAssociationMeetingAttendanceInitApproveDocument(): void {
     (this.generalAssociationMeetingAttendanceService)
       .generateInitDocument(this.model.getCaseId())

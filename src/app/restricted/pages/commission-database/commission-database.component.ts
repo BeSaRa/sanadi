@@ -3,12 +3,17 @@ import { FormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/form
 import { AllRequestTypesEnum } from '@app/enums/all-request-types-enum';
 import { BannedPerson, BannedPersonInquiry } from '@app/models/banned-person';
 import { BannedPersonService } from '@app/services/banned-person.service';
+import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { ToastService } from '@app/services/toast.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { Subject } from 'rxjs';
 import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { AdvancedSearchComponent } from '../advanced-search/advanced-search.component';
+import { RestrictedAdvancedSearchPopupComponent } from '@app/restricted/popups/restricted-advanced-search-popup/restricted-advanced-search-popup.component';
+import { HasAnyPermissionDirective } from '@app/shared/directives/has-any-permission.directive';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
 
 @Component({
     selector: 'commission-database',
@@ -22,6 +27,7 @@ export class CommissionDatabaseComponent implements OnInit, OnDestroy {
     lang = inject(LangService);
     bannedPersonService = inject(BannedPersonService);
     toastService = inject(ToastService);
+    dialog = inject(DialogService);
 
     save$:Subject<void> = new Subject<void>();
     destroy$:Subject<void> = new Subject<void>();
@@ -32,7 +38,6 @@ export class CommissionDatabaseComponent implements OnInit, OnDestroy {
     model: BannedPerson = new BannedPerson();
 
     requestTypes = this.lookupService.listByCategory.RequestTypeNewUpdate;
-
 
 
 
@@ -145,4 +150,6 @@ export class CommissionDatabaseComponent implements OnInit, OnDestroy {
                 take(1)
             ).subscribe()
     }
+
+    
 }
