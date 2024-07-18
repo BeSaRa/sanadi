@@ -12,6 +12,7 @@ export class BannedPersonAuditInterceptor implements IModelInterceptor<BannedPer
         model.departmentInfo = AdminResult.createInstance(model.departmentInfo);
         model.internalUserInfo = AdminResult.createInstance(model.internalUserInfo);
         model.requestStatusInfo = AdminResult.createInstance(model.requestStatusInfo);
+        model.auditOperationInfo = AdminResult.createInstance(model.auditOperationInfo);
         return model;
     }
 }
