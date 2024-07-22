@@ -69,7 +69,14 @@ export class BannedPersonSearchComponent implements OnInit, OnDestroy {
                 icon: ActionIconsEnum.VIEW,
                 label: 'view',
                 onClick: (item: BannedPerson) => this._view(item),
-            }
+            },
+               // logs
+          {
+            type: 'action',
+            icon: ActionIconsEnum.LOGS,
+            label: 'logs',
+            onClick: (item: BannedPerson) => this._showLogs(item),
+        },
         ]
 
     private _view(model: BannedPerson) {
@@ -133,5 +140,11 @@ export class BannedPersonSearchComponent implements OnInit, OnDestroy {
     }
 
 
-
+     _showLogs(model: BannedPerson) {
+        this.bannedPersonService.showLogs(model.id)
+            .pipe(
+                take(1),
+            )
+            .subscribe();
+    }
 }
