@@ -281,8 +281,8 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     this.operation = this.operationTypes.CREATE;
     this.selectProject(undefined);
     this._setDefaultValues();
-    this.bestPracticesListComponentRef.forceClearComponent();
-    this.lessonsLearntListComponentRef.forceClearComponent();
+    this.bestPracticesListComponentRef?.forceClearComponent();
+    this.lessonsLearntListComponentRef?.forceClearComponent();
   }
   _setDefaultValues(): void {
     this.requestType.setValue(ServiceRequestTypes.NEW);
