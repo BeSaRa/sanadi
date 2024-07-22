@@ -226,7 +226,7 @@
             <ng-select validationClasses="nationalities" appendTo="body" [clearable]="false" id="nationalities"
               formControlName="nationalities" labelForId="nationalities" placeholder="{{lang.map.select}}"
               [multiple]="true"
-              [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" (change)="handleWorkAreaChanges($event)">
+              [notFoundText]="lang.map.msg_not_found" [readonly]="readonly">
               <ng-option [value]="option.lookupKey" *ngFor="let option of nationalities">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="nationalities"></app-field-error-message>
