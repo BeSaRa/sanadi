@@ -24,7 +24,7 @@ export class CommentPopupComponent implements OnDestroy {
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA_TOKEN) public data: { title?: keyof ILanguageKeys }
     ) {
-        data.title && (this.popupTitle = data.title);
+        data?.title && (this.popupTitle = data.title);
         this._listenToSave()
     }
     ngOnDestroy(): void {
