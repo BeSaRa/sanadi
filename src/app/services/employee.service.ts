@@ -534,4 +534,8 @@ export class EmployeeService {
   hasSubmissionProfile(): boolean {
     return this.profile?.submissionMechanism === SubmissionMechanisms.SUBMISSION
   }
+
+  get canSeeTeamInbox() {
+    return Object.values(this.userSecConfig??[]).reduce(x=>x).some(x=>x.canView)
+  }
 }
