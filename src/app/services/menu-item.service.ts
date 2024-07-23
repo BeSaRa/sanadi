@@ -1,14 +1,15 @@
-import {Injectable} from '@angular/core';
-import {MenuItem} from '@models/menu-item';
-import {HttpClient} from '@angular/common/http';
-import {Observable, Subject} from 'rxjs';
-import {switchMap, tap} from 'rxjs/operators';
-import {DomSanitizer} from '@angular/platform-browser';
-import {FactoryService} from './factory.service';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {CastResponse} from '@decorators/cast-response';
-import {StaticAppResourcesService} from '@services/static-app-resources.service';
-import {CustomMenuService} from '@services/custom-menu.service';
+import { Injectable } from '@angular/core';
+import { MenuItem } from '@models/menu-item';
+import { HttpClient } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { DomSanitizer } from '@angular/platform-browser';
+import { FactoryService } from './factory.service';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { CastResponse } from '@decorators/cast-response';
+import { StaticAppResourcesService } from '@services/static-app-resources.service';
+import { CustomMenuService } from '@services/custom-menu.service';
+import { EmployeeService } from './employee.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class MenuItemService {
   private children: Map<number, MenuItem[]> = new Map<number, MenuItem[]>();
 
   constructor(public http: HttpClient, private domSanitizer: DomSanitizer,
-              private staticResourcesService: StaticAppResourcesService) {
+    private staticResourcesService: StaticAppResourcesService,
+    private employeeService: EmployeeService) {
     FactoryService.registerService('MenuItemService', this);
     FactoryService.registerService('DomSanitizer', domSanitizer);
   }
@@ -39,13 +41,14 @@ export class MenuItemService {
       .pipe(tap(() => this.resetMenuItems$.next(true)));
   }
 
-  @CastResponse(() => MenuItem, {unwrap: '', fallback: '$default'})
+  @CastResponse(() => MenuItem, { unwrap: '', fallback: '$default' })
   private _load(): Observable<MenuItem[]> {
     return this.staticResourcesService.getMenuList();
   }
 
   load(prepare: boolean = true): Observable<MenuItem[]> {
     return this._load().pipe(
+      map((menuItems) => !this.employeeService.canSeeTeamInbox ? menuItems.filter(x => x.id !== 16) : menuItems),
       tap((menuItems) => this.menuItems = menuItems),
       tap(_ => prepare ? this.prepareMenuItems() : null)
     );
