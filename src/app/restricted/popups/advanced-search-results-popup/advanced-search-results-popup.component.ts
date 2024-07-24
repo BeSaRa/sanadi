@@ -9,6 +9,8 @@ import { MakeDecisionComponent } from '../make-decision/make-decision.component'
 import { DialogService } from '@app/services/dialog.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { RestrictedAdvancedSearchResult } from '@app/models/restricted-advanced-search';
+import { EmployeeService } from '@app/services/employee.service';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
 
 @Component({
     selector: 'advanced-search-results-popup',
@@ -20,6 +22,7 @@ export class AdvancedSearchResultsPopupComponent implements OnInit, OnDestroy {
     lang= inject(LangService);
     dialog = inject(DialogService);
     dialogRef = inject(DialogRef);
+    employeeService = inject(EmployeeService);
     displayedColumns: string[] = [ 'primaryName', 'dateOfBirth', 'gender' ,'source'];
     $makeDecision = new Subject<number>();
 
@@ -49,5 +52,9 @@ export class AdvancedSearchResultsPopupComponent implements OnInit, OnDestroy {
         this.destroy$.next();
         this.destroy$.complete();
         this.destroy$.unsubscribe();
+      }
+
+      get showWarning(){
+        return !this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_BANNED_PERSON_RACA)
       }
 }

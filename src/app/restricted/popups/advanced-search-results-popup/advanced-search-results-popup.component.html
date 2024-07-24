@@ -14,8 +14,9 @@
       <div class="col-12 col-md-4 mb-3">
         <strong class="text-primary">{{lang.map.total_result}}:</strong> {{data.result.results.length}}
       </div>
-     
-    
+    </div>
+    <div class="row mb-3" *ngIf="showWarning">
+      <strong class="text-danger">{{lang.map.msg_possible_match_review_risk_management}}</strong>
     </div>
     <app-table #table [data]="data.result.results" [columns]="displayedColumns">
       <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
