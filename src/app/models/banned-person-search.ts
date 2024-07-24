@@ -6,6 +6,7 @@ const { send, receive } = new BannedPersonSearchInterceptor();
 @InterceptModel({send,receive})
 export class BannedPersonSearch {
     registrationNo!: string;
+    requestFullSerial!: string;
     dateFrom!: string;
     dateTo!: string;
     requestStatus!: number;
@@ -16,10 +17,10 @@ export class BannedPersonSearch {
 
 
     buildForm() {
-        const { registrationNo, dateFrom, dateTo, requestStatus, nationality, arName, enName } = this;
+        const { requestFullSerial, dateFrom, dateTo, requestStatus, nationality, arName, enName } = this;
 
         return {
-            registrationNo: [registrationNo, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+            requestFullSerial: [requestFullSerial, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
             arName: [arName,
                 [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
                 CustomValidators.pattern('AR_ONLY')]],

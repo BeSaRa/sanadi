@@ -1,11 +1,11 @@
 <ng-container [formGroup]="form">
     <div class="row">
       <div class="col-sm-12 col-md-4 mb-3 position-relative">
-        <label asteriskIfRequired="registrationNo" for="registrationNo" class="form-label">{{lang.map.registration_number
+        <label asteriskIfRequired="requestFullSerial" for="requestFullSerial" class="form-label">{{lang.map.serial_number
           }}</label>
-        <input formControlName="registrationNo" type="text" [readOnly]="readonly" validationClasses="registrationNo"
-          class="form-control" trimInput id="registrationNo" />
-        <app-field-error-message controlName="registrationNo"></app-field-error-message>
+        <input formControlName="requestFullSerial" type="text" [readOnly]="readonly" validationClasses="requestFullSerial"
+          class="form-control" trimInput id="requestFullSerial" />
+        <app-field-error-message controlName="requestFullSerial"></app-field-error-message>
       </div>
   
       <div class="col-12 col-md-4 mb-3 position-relative">
