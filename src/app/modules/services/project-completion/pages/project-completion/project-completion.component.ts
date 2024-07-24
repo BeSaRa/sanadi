@@ -21,7 +21,7 @@ import { LookupService } from '@app/services/lookup.service';
 import { AdminLookup } from '@app/models/admin-lookup';
 import { ProjectWorkArea } from "@app/enums/project-work-area";
 import { DomainTypes } from '@app/enums/domain-types';
-import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { OpenFrom } from '@app/enums/open-from.enum';
@@ -33,6 +33,10 @@ import { ServiceRequestTypes } from '@app/enums/service-request-types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { DateUtils } from '@app/helpers/date-utils';
 import { IKeyValue } from '@app/interfaces/i-key-value';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { SelectProjectCompletionPopupComponent } from '../../popups/select-project-completion-popup/select-project-completion-popup.component';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 
 @Component({
   selector: 'app-project-completion',
@@ -51,7 +55,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   subUNOCHACategories: AdminLookup[] = [];
   internalProjectClassificationList: Lookup[] = this.lookupService.listByCategory.InternalProjectClassification;
   displayedColumns: string[] = [];
-  nationalities: Lookup[]= this.lookupService.listByCategory.Nationality;
+  nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   private loadedDacOchaBefore: boolean = false;
   projectImplementationLicenses: ProjectImplementation[] = [];
   selectedLicense?: ProjectImplementation;
@@ -261,11 +265,11 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       explanation: model.formBuilder(false).explanation
     });
     this.handleRequestTypeChange(model.requestType, false);
-    if(!this.model.projectLicenseFullSerial){
+    if (!this.model.projectLicenseFullSerial) {
       this._lestenToExternalProjectImplementation();
       this._lestenToInternalProjectImplementation();
     }
-    
+
     this.cd.detectChanges();
   }
   _afterBuildForm(): void {
@@ -320,7 +324,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       if (this.model?.canCommit()) {
         this.readonly = false;
       }
-   
+
     }
   }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
@@ -365,7 +369,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     })()
     this.emptyFields(insideFields.concat(outsideFields), false)
     !value && this.emptyFields([this.countryField], true)
-    if(this.isDisplayInsideQatar) {
+    if (this.isDisplayInsideQatar) {
       this._lestenToInternalProjectImplementation();
     } else if (this.isDisplayOutsideQatar) {
       this._lestenToExternalProjectImplementation();
@@ -521,4 +525,37 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   get subUNOCHACategory(): UntypedFormControl {
     return this.projectLicenseInfo.get('subUNOCHACategory') as UntypedFormControl
   }
+  get fullSerial(): UntypedFormControl {
+    return this.projectLicenseInfo.get('fullSerial') as UntypedFormControl
+  }
+
+  isUpdateRequestAllowed(): boolean {
+    // if new or draft record and request type !== new, edit is allowed
+    let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
+    return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== ServiceRequestTypes.NEW;
+  }
+
+  requestSearch($event?: Event) {
+    $event?.preventDefault();
+    this.service.getApprovedRequests(this.fullSerial.value)
+      .pipe(
+        tap(list => !list.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)),
+        filter(list => list.length > 0),
+        switchMap(list=>
+           list.length === 1 ? of(list[0]):
+                               this.dialog.show<IDialogData<ProjectCompletion[]>>(SelectProjectCompletionPopupComponent,{
+                                model:list,
+                                operation:this.operationTypes.VIEW
+                               }).onAfterClose$),
+        filter((projectCompletion?:ProjectCompletion)=> !!projectCompletion),
+        map(projectCompletion=> new ProjectCompletion().clone({
+          ...projectCompletion,
+          requestType: this.requestType.value,
+          id:undefined
+        })),
+        tap(projectCompletion=>{ this._updateForm(projectCompletion)})
+      )
+      .subscribe()
+  }
+
 }

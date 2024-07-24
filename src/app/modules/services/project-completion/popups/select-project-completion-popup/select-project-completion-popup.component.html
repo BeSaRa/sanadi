@@ -1,0 +1,72 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{ lang.map.select_item }}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+  </div>
+  <div class="dialog-content w800px">
+    <div class="row">
+        <div class="col-12">
+          <app-table #table  [useSearchToFilter]="false" [selectable]="true" [data]="list"
+            [columns]="displayedColumns" sortableTable >
+            <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+              <ng-container cdkColumnDef="extra-header">
+                <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                  <table-header [tableTitle]="'menu_project_completion'" [allowReload]="false"  [sort]="table.dataSource.sort">
+                  </table-header>
+                </th>
+              </ng-container>
+              <ng-container cdkColumnDef="fullSerial">
+                <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
+                  {{ lang.map.serial_number }}</th>
+                <td cdk-cell *cdkCellDef="let row">{{ row.fullSerial }}</td>
+              </ng-container>
+              <ng-container cdkColumnDef="workAreaInfo">
+                <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
+                {{ lang.map.work_area }}</th>
+                <td cdk-cell *cdkCellDef="let row">{{ row.workAreaInfo.getName() }}</td>
+              </ng-container>
+              <ng-container cdkColumnDef="beneficiaryCountryInfo">
+                <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
+                {{ lang.map.beneficiary_country }}</th>
+                <td cdk-cell *cdkCellDef="let row">{{ row.beneficiaryCountryInfo.getName() }}</td>
+              </ng-container>
+            
+              <ng-container cdkColumnDef="projectLicenseSerial">
+                <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
+                {{ lang.map.project_license_serial }}</th>
+                <td cdk-cell *cdkCellDef="let row">{{ row.projectLicenseFullSerial }}</td>
+              </ng-container>
+              <ng-container cdkColumnDef="projectName">
+                <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true">
+                {{ lang.map.project_name }}</th>
+                <td cdk-cell *cdkCellDef="let row">{{ row.projectName }}</td>
+              </ng-container>
+             
+             
+              <ng-container cdkColumnDef="actions">
+                <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
+                <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+                  <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+      
+                  </grid-actions>
+                </td>
+              </ng-container>
+              <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+              <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
+              <tr cdk-row (contextmenu)="menu.open($event, row)" *cdkRowDef="let row; columns: displayedColumns"></tr>
+              <tr *cdkNoDataRow>
+                <td colspan="100" class="text-center">{{ lang.map.no_records_to_display }}</td>
+              </tr>
+            </table>
+          </app-table>
+          <app-paginator #paginator [length]="(list).length"></app-paginator>
+          <context-menu-item #menu [actions]="actions"></context-menu-item>
+        </div>
+      </div>
+  </div>
+  <div class="dialog-actions">
+   
+    <button dialogClose class="btn btn-secondary">
+      {{ lang.map.btn_close }}
+    </button>
+  </div>
+  

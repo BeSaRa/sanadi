@@ -176,6 +176,7 @@ export class ProjectCompletion
   getprojectLicenseInfoFormValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       requestType: { langKey: 'request_type', value: this.requestType },
+      fullSerial: { langKey: 'serial_number', value: this.fullSerial },
       projectWorkArea: { langKey: 'project_work_area', value: this.projectWorkArea },
       domain: { langKey: 'domain', value: this.domain },
       beneficiaryCountry: { langKey: 'beneficiary_country', value: this.beneficiaryCountry },
@@ -229,6 +230,7 @@ export class ProjectCompletion
   formBuilder(controls?: boolean) {
     const {
       requestType,
+      fullSerial,
       projectWorkArea,
       beneficiaryCountry,
       domain,
@@ -259,6 +261,7 @@ export class ProjectCompletion
     return {
       projectLicenseInfo: {
         requestType: controls ? [requestType, CustomValidators.required] : requestType,
+        fullSerial: controls ? [fullSerial ,CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)] : fullSerial,
         projectWorkArea: controls ? [projectWorkArea, CustomValidators.required] : projectWorkArea,
         beneficiaryCountry: controls ? [beneficiaryCountry, CustomValidators.required] : beneficiaryCountry,
         domain: controls ? [domain] : domain,
