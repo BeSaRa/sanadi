@@ -3200,7 +3200,7 @@ export const newNavigationMenuList = [
     path: '/home/restricted/banned-person-approve-requests',
     icon: 'mdi-badge-account-horizontal-outline',
     isSvg: false,
-    permission: PermissionsEnum.MANAGE_BANNED_PERSON_RACA,
+    permission: PermissionsEnum.DECISION_BANNED_PERSON_RACA,
     permissionGroup: null,
     parent: 4000,
     group: GroupNames.RESTRICTED,
