@@ -9,7 +9,7 @@ import { DynamicOptionsService } from './dynamic-options.service';
 import { FactoryService } from "@app/services/factory.service";
 import { UrlService } from "@app/services/url.service";
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
-import { CastResponseContainer } from "@decorators/cast-response";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 import { ProjectCompletion } from '@app/models/project-completion';
 import { ProjectCompletionInterceptor } from '@app/model-interceptors/project-completion-interceptor';
 import { ProjectCompletionSearchCriteria } from '@app/models/project-completion-search-criteria';
@@ -70,5 +70,14 @@ export class ProjectCompletionService extends BaseGenericEService<ProjectComplet
       model,
       action
     });
+  }
+
+  @CastResponse(()=>ProjectCompletion, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  getApprovedRequests(fullSerial?:string){
+    const criteria = !!fullSerial ? {fullSerial} :{}
+    return this.http.post<ProjectCompletion[]>(this._getURLSegment() + `/search/approved`, criteria);
   }
 }
