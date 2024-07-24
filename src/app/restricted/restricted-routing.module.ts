@@ -75,7 +75,7 @@ const routes: Routes = [
     path: 'banned-person-approve-requests', component: BannedPersonApproveRequestsComponent,
     canActivate: [PermissionGuard.canActivate],
     data: {
-      permissionKey: PermissionsEnum.MANAGE_BANNED_PERSON_RACA,
+      permissionKey: PermissionsEnum.DECISION_BANNED_PERSON_RACA,
       configPermissionGroup: null,
       checkAnyPermission: false
     },
