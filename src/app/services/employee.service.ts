@@ -536,6 +536,6 @@ export class EmployeeService {
   }
 
   get canSeeTeamInbox() {
-    return Object.values(this.userSecConfig??[]).reduce(x=>x).some(x=>x.canView)
+    return Object.values(this.userSecConfig??[]).reduce((acc,x)=>acc.concat(x),[]).some(x=>x.canView)
   }
 }
