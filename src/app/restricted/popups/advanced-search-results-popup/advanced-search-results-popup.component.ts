@@ -54,7 +54,5 @@ export class AdvancedSearchResultsPopupComponent implements OnInit, OnDestroy {
         this.destroy$.unsubscribe();
       }
 
-      get showWarning(){
-        return !this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_BANNED_PERSON_RACA)
-      }
+     
 }

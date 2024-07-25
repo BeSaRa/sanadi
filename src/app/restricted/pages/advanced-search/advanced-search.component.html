@@ -9,6 +9,9 @@
            class="cursor-pointer">{{lang.map[database.name]}}</label>
   </div>
 </ng-container>
+<div class="row mb-3" *ngIf="showWarning">
+  <strong class="text-danger">{{lang.map.msg_possible_match_review_risk_management}}</strong>
+</div>
 <fieldset class="mb-4">
     <legend><span class="h6 text-primary">{{lang.map.menu_world_check_search}}</span></legend>
     <form [formGroup]="form" autocomplete="off" action="#">

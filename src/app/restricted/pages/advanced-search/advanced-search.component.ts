@@ -168,4 +168,7 @@ export class AdvancedSearchComponent implements OnInit {
   toggleDatabase(value: advancedSearchDatabase) {
     value.checked = !value.checked
   }
+  get showWarning(){
+    return !this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_BANNED_PERSON_RACA)
+  }
 }
