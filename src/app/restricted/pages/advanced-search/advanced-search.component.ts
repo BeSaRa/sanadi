@@ -47,10 +47,10 @@ export class AdvancedSearchComponent implements OnInit {
     return this.employeeService.hasPermissionTo(PermissionsEnum.WORLD_CHECK_SEARCH)
   }
   get racaAllowed(): boolean {
-    return this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_BANNED_PERSON_RACA)
+    return this.employeeService.hasPermissionTo(PermissionsEnum.SEARCH_BANNED_PERSON_RACA)
   }
   get moiAllowed(): boolean {
-    return this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_BANNED_PERSON_MOI)
+    return this.employeeService.hasPermissionTo(PermissionsEnum.SEARCH_BANNED_PERSON_MOI)
   }
   databases: advancedSearchDatabase[] = [
     {

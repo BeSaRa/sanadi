@@ -17,8 +17,8 @@ export class RestrictedAdvancedSearchButtonComponent {
 
   get allowedPermissions(): PermissionsEnum[] {
     return [
-      PermissionsEnum.MANAGE_BANNED_PERSON_MOI,
-      PermissionsEnum.MANAGE_BANNED_PERSON_RACA,
+      PermissionsEnum.SEARCH_BANNED_PERSON_MOI,
+      PermissionsEnum.SEARCH_BANNED_PERSON_RACA,
       PermissionsEnum.WORLD_CHECK_SEARCH,
     ]
   }

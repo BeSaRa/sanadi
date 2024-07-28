@@ -2,12 +2,14 @@ import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { BannedSearch } from '@app/enums/banned-search-enum';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
 import { BannedPersonTerrorism } from '@app/models/BannedPersonTerrorism';
 import { BannedPerson } from '@app/models/banned-person';
 import { BannedPersonSearch } from "@app/models/banned-person-search";
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { BannedPersonService } from '@app/services/banned-person.service';
 import { DialogService } from '@app/services/dialog.service';
+import { EmployeeService } from '@app/services/employee.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { CustomValidators } from '@app/validators/custom-validators';
@@ -28,6 +30,7 @@ export class BannedPersonSearchComponent implements OnInit, OnDestroy {
     bannedPersonService = inject(BannedPersonService);
     lookupService = inject(LookupService);
     dialog = inject(DialogService);
+    employeeService=inject(EmployeeService);
 
     bannedPersonList$ = new BehaviorSubject<BannedPerson[]>([]);
     bannedPersonTerrorismList$ = new BehaviorSubject<BannedPersonTerrorism[]>([]);
@@ -54,6 +57,7 @@ export class BannedPersonSearchComponent implements OnInit, OnDestroy {
         this._listenToSearch();
         this._listenToRACASearch();
         this._listenToMOISearch();
+        this._handleSearchPermissions();
     }
     ngOnDestroy(): void {
         this.destroy$.next();
@@ -146,5 +150,15 @@ export class BannedPersonSearchComponent implements OnInit, OnDestroy {
                 take(1),
             )
             .subscribe();
+    }
+    private _handleSearchPermissions (){
+        if(!this.employeeService.hasPermissionTo(PermissionsEnum.SEARCH_BANNED_PERSON_RACA)){
+            this.requestTypeControl.setValue(BannedSearch.TERRORISM_MOI)
+            this.requestTypeControl.disable()
+        }
+        if(!this.employeeService.hasPermissionTo(PermissionsEnum.SEARCH_BANNED_PERSON_MOI)){
+            this.requestTypeControl.setValue(BannedSearch.COMMISSION_DATABASE)
+            this.requestTypeControl.disable()
+        }
     }
 }

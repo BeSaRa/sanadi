@@ -84,18 +84,18 @@ const routes: Routes = [
     path: 'banned-person-search', component: BannedPersonSearchComponent,
     canActivate: [PermissionGuard.canActivate],
     data: {
-      permissionKey: PermissionsEnum.MANAGE_BANNED_PERSON_RACA ||PermissionsEnum.MANAGE_BANNED_PERSON_MOI ,
+      permissionKey: [PermissionsEnum.SEARCH_BANNED_PERSON_RACA , PermissionsEnum.SEARCH_BANNED_PERSON_MOI] ,
       configPermissionGroup: null,
-      checkAnyPermission: false
+      checkAnyPermission: true
     },
   },
   {
     path: 'advanced-search', component: AdvancedSearchComponent,
     canActivate: [PermissionGuard.canActivate],
     data: {
-      permissionKey: PermissionsEnum.MANAGE_BANNED_PERSON_RACA ||PermissionsEnum.MANAGE_BANNED_PERSON_MOI || PermissionsEnum.WORLD_CHECK_SEARCH,
+      permissionKey: [PermissionsEnum.SEARCH_BANNED_PERSON_RACA , PermissionsEnum.SEARCH_BANNED_PERSON_MOI, PermissionsEnum.WORLD_CHECK_SEARCH],
       configPermissionGroup: null,
-      checkAnyPermission: false
+      checkAnyPermission: true
     },
   },
 ];
