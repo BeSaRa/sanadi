@@ -81,7 +81,7 @@ export class BannedPersonService extends CrudWithDialogGenericService<BannedPers
         fallback: '$default',
         unwrap: 'rs'
     })
-    getByCriteria(model: Partial<BannedPersonSearch>): Observable<BannedPerson[]> {
+    getApprovedRACAByCriteria(model: Partial<BannedPersonSearch>): Observable<BannedPerson[]> {
         model = this.bannedPersonSearchInterceptor.send(model);
         return this.http.get<BannedPerson[]>(this._getServiceURL() + '/search/criteria/raca', {
             params: new HttpParams({
@@ -93,7 +93,7 @@ export class BannedPersonService extends CrudWithDialogGenericService<BannedPers
         fallback: '$default',
         unwrap: 'rs'
     })
-    searchByCriteria(model: Partial<BannedPersonSearch>): Observable<BannedPerson[]> {
+    getAllRacaByCriteria(model: Partial<BannedPersonSearch>): Observable<BannedPerson[]> {
         model = this.bannedPersonSearchInterceptor.send(model);
         return this.http.get<BannedPerson[]>(this._getServiceURL() + '/search/criteria/request/raca', {
             params: new HttpParams({
@@ -105,11 +105,25 @@ export class BannedPersonService extends CrudWithDialogGenericService<BannedPers
         fallback: '$default',
         unwrap: 'rs'
     })
-    getMOIByCriteria(@InterceptParam() model: Partial<BannedPersonSearch>): Observable<BannedPersonTerrorism[]> {
+    getApprovedMOIByCriteria(@InterceptParam() model: Partial<BannedPersonSearch>): Observable<BannedPersonTerrorism[]> {
         let criteria = this.bannedPersonSearchInterceptor.send(model) as any;
         criteria.registrationNumber = model.registrationNo
         delete criteria.registrationNo;
         return this.http.get<BannedPersonTerrorism[]>(this._getServiceURL() + '/search/criteria/moi', {
+            params: new HttpParams({
+                fromObject: this._validateCriteria(criteria)
+            })
+        });
+    }
+    @CastResponse(undefined, {
+        fallback: '$default',
+        unwrap: 'rs'
+    })
+    getALL_MOIByCriteria(@InterceptParam() model: Partial<BannedPersonSearch>): Observable<BannedPersonTerrorism[]> {
+        let criteria = this.bannedPersonSearchInterceptor.send(model) as any;
+        criteria.registrationNumber = model.registrationNo
+        delete criteria.registrationNo;
+        return this.http.get<BannedPersonTerrorism[]>(this._getServiceURL() + '/search/criteria/request/moi', {
             params: new HttpParams({
                 fromObject: this._validateCriteria(criteria)
             })

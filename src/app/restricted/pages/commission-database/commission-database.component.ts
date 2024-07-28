@@ -135,7 +135,7 @@ export class CommissionDatabaseComponent implements OnInit, OnDestroy {
 
 
     inquire(model: Partial<BannedPersonInquiry>) {
-        this.bannedPersonService.searchByCriteria(model)
+        this.bannedPersonService.getApprovedRACAByCriteria(model)
             .pipe(
                 filter(list => list.length > 0),
                 switchMap(list => this.bannedPersonService.showSelectBannedPersonPopup(list).onAfterClose$),

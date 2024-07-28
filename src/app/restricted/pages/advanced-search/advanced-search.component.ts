@@ -100,13 +100,13 @@ export class AdvancedSearchComponent implements OnInit {
 
   }
   getRacaInquiry() {
-    return this.bannedPersonService.searchByCriteria({ name: this.targetNameControl.value })
+    return this.bannedPersonService.getApprovedRACAByCriteria({ name: this.targetNameControl.value })
       .pipe(map(items => items.map(item => new RestrictedAdvancedSearchItemResult().MapFromBannedPerson(item))))
 
 
   }
   getMOIInquiry() {
-    return this.bannedPersonService.getMOIByCriteria({ name: this.targetNameControl.value })
+    return this.bannedPersonService.getApprovedMOIByCriteria({ name: this.targetNameControl.value })
       .pipe(map(items => items.map(item => new RestrictedAdvancedSearchItemResult().MapFromBannedPersonTerrorism(item))))
 
 
