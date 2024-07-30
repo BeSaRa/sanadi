@@ -57,19 +57,19 @@ export class AdvancedSearchComponent implements OnInit {
       source: 'world-check', name: 'lbl_world_check',
       checked: this.worldCheckAllowed,
       fn: () => this.getWorldCheckInquiry(),
-      show:()=> this.worldCheckAllowed
+      show: () => this.worldCheckAllowed
     },
     {
       source: 'raca', name: 'lbl_commission',
       checked: this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_BANNED_PERSON_RACA),
       fn: () => this.getRacaInquiry(),
-      show:()=> this.racaAllowed
+      show: () => this.racaAllowed
     },
     {
       source: 'moi', name: 'lbl_moi',
       checked: this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_BANNED_PERSON_MOI),
       fn: () => this.getMOIInquiry(),
-      show:()=> this.moiAllowed
+      show: () => this.moiAllowed
     },
   ]
   buildSearchForm() {
@@ -100,14 +100,16 @@ export class AdvancedSearchComponent implements OnInit {
 
   }
   getRacaInquiry() {
-    return this.bannedPersonService.getApprovedRACAByCriteria({ name: this.targetNameControl.value })
-      .pipe(map(items => items.map(item => new RestrictedAdvancedSearchItemResult().MapFromBannedPerson(item))))
+    return this.bannedPersonService.getRACAScreeningByCriteria({ name: this.targetNameControl.value })
+      .pipe(tap(result => this.worldCheckId = result.id))
+      .pipe(map(result => result.response.map(item => new RestrictedAdvancedSearchItemResult().MapFromBannedPerson(item))))
 
 
   }
   getMOIInquiry() {
-    return this.bannedPersonService.getApprovedMOIByCriteria({ name: this.targetNameControl.value })
-      .pipe(map(items => items.map(item => new RestrictedAdvancedSearchItemResult().MapFromBannedPersonTerrorism(item))))
+    return this.bannedPersonService.getMOIScreeningByCriteria({ name: this.targetNameControl.value })
+      .pipe(tap(result => this.worldCheckId = result.id))
+      .pipe(map(result => result.response.map(item => new RestrictedAdvancedSearchItemResult().MapFromBannedPersonTerrorism(item))))
 
 
   }
@@ -129,7 +131,7 @@ export class AdvancedSearchComponent implements OnInit {
         filter(() => this.form.valid && this.isDataBaseSelected),
         exhaustMap(() => {
           return combineLatest(this.generateSearchArray())
-          .pipe(catchError(err=>of(  [])))      
+            .pipe(catchError(err => of([])))
 
         }),
       )
@@ -147,7 +149,7 @@ export class AdvancedSearchComponent implements OnInit {
         return this.openAdvancedSearchResult(result);
       }))
       .pipe(takeUntil(this.destroy$))
-     
+
       .subscribe(
 
 
@@ -168,7 +170,7 @@ export class AdvancedSearchComponent implements OnInit {
   toggleDatabase(value: advancedSearchDatabase) {
     value.checked = !value.checked
   }
-  get showWarning(){
+  get showWarning() {
     return !this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_BANNED_PERSON_RACA)
   }
 }

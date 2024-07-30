@@ -8,13 +8,15 @@ import { WorldCheckSearch } from '@app/models/world-check-search';
 import { WorldCheckSearchResult } from '@app/models/world-check-search-result';
 import { WorldCheckSearchResultPopupComponent } from '@app/restricted/popups/world-check-search-result-popup/world-check-search-result-popup.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { WorldCheckSearchCriteria } from './../models/world-check-search-criteria';
 import { DialogService } from './dialog.service';
 import { FactoryService } from './factory.service';
 import { UrlService } from './url.service';
 import { AdvancedSearchResultsPopupComponent } from '@app/restricted/popups/advanced-search-results-popup/advanced-search-results-popup.component';
+import { BannedPerson } from '@app/models/banned-person';
+import { BannedPersonTerrorism } from '@app/models/BannedPersonTerrorism';
 
 @CastResponseContainer({
   $default: {
@@ -39,13 +41,16 @@ export class WorldCheckService extends CrudGenericService<WorldCheckSearch> {
   _getServiceURL(): string {
     return this.urlService.URLS.WORLD_CHECK;
   }
+  _getScreeningURL(): string {
+    return this.urlService.URLS.SCREENING;
+  }
 
   @CastResponse(undefined)
-  private _loadByCriteria(criteria: { }): Observable<WorldCheckSearchCriteria[]> {
+  private _loadByCriteria(criteria: {}): Observable<WorldCheckSearchCriteria[]> {
     return this.http.post<WorldCheckSearchCriteria[]>(this._getServiceURL() + '/criteria', criteria);
   }
 
-  loadByCriteria(criteria: { }): Observable<WorldCheckSearchCriteria[]> {
+  loadByCriteria(criteria: {}): Observable<WorldCheckSearchCriteria[]> {
     return this._loadByCriteria(criteria);
   }
 
@@ -54,10 +59,10 @@ export class WorldCheckService extends CrudGenericService<WorldCheckSearch> {
     fallback: '$default',
     unwrap: 'rs'
   })
-  private _loadByInquire(inquire: { }): Observable<WorldCheckSearchResult> {
+  private _loadByInquire(inquire: {}): Observable<WorldCheckSearchResult> {
     return this.http.post<WorldCheckSearchResult>(this._getServiceURL() + '/inquiry', inquire);
   }
-  loadByInquire(inquire: { }): Observable<WorldCheckSearchResult> {
+  loadByInquire(inquire: {}): Observable<WorldCheckSearchResult> {
     return this._loadByInquire(inquire).pipe(map((rs: any) => {
       return { id: rs.id, ...rs.response };
     }))
@@ -70,12 +75,41 @@ export class WorldCheckService extends CrudGenericService<WorldCheckSearch> {
   private _getInquiryById(id: number): Observable<WorldCheckSearchResult> {
     return this.http.get<WorldCheckSearchResult>(this._getServiceURL() + '/inquiry/' + id);
   }
+
   getInquiryById(id: number): Observable<WorldCheckSearchResult> {
     return this._getInquiryById(id).pipe(map((rs: any) => {
       return {
         id, ...rs.response
       }
-    } ))
+    }))
+      .pipe(catchError(_ => of(new WorldCheckSearchResult())))
+  }
+
+  getInquiryRacaById(id: number): Observable<{ id?: number, response: BannedPerson[] }> {
+    return this.http.get<{ id: number, response: BannedPerson[] }>(this._getScreeningURL() + 'banned-person/raca/inquiry/' + id)
+      .pipe(
+        map((result: any) => result.rs),
+        map((rs: any) => {
+           rs.response = rs.response.map((item: any) => new BannedPerson().clone(item))
+          return rs
+        }),
+        catchError(_ => of({ response: [] }))
+      )
+  }
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  getInquiryMOIById(id: number): Observable<{ id?: number, response: BannedPersonTerrorism[] }> {
+    return this.http.get<{ id?: number, response: BannedPersonTerrorism[] }>(this._getScreeningURL() + 'banned-person/moi/inquiry/' + id)
+    .pipe(
+      map((result: any) => result.rs),
+      map((rs: any) => {
+         rs.response = rs.response.map((item: any) => new BannedPersonTerrorism().clone(item))
+        return rs
+      }),
+      catchError(_ => of({ response: [] }))
+    )
   }
   @CastResponse(undefined, {
     fallback: '$default',
@@ -83,7 +117,7 @@ export class WorldCheckService extends CrudGenericService<WorldCheckSearch> {
   })
   // first ==> id
   // second ==> decision
-  worlddCheckInquire(inquire: {id: number, actionType: string, comment: string}): Observable<boolean> {
+  worlddCheckInquire(inquire: { id: number, actionType: string, comment: string }): Observable<boolean> {
     return this.http.put<boolean>(this._getServiceURL() + '/inquiry/status', inquire);
   }
   openViewWorldCheckSearchResult(result: WorldCheckSearchResult, operation?: OperationTypes): DialogRef {

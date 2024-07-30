@@ -2,6 +2,8 @@ import { InterceptModel } from "@decorators/intercept-model";
 import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { WorldCheckSearchResultItem } from "./world-check-search-result-item";
 import { WorldCheckSearchResultInterceptor } from "@app/model-interceptors/world-check-search-result-interceptor";
+import { BannedPerson } from "./banned-person";
+import { BannedPersonTerrorism } from "./BannedPersonTerrorism";
 
 const { send, receive } = new WorldCheckSearchResultInterceptor();
 

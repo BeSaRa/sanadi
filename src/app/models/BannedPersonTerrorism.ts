@@ -1,6 +1,7 @@
 import { IMyDateModel } from '@nodro7/angular-mydatepicker';
+import { Cloneable } from './cloneable';
 
-export class BannedPersonTerrorism {
+export class BannedPersonTerrorism extends Cloneable<BannedPersonTerrorism> {
     registrationNo!: string;
     nationality!: string;
     name!: string;

@@ -93,6 +93,18 @@ export class BannedPersonService extends CrudWithDialogGenericService<BannedPers
         fallback: '$default',
         unwrap: 'rs'
     })
+    getRACAScreeningByCriteria(model: Partial<BannedPersonSearch>): Observable<{id:number,response:BannedPerson[]}> {
+        model = this.bannedPersonSearchInterceptor.send(model);
+        return this.http.get<{id:number,response:BannedPerson[]}>(this._getServiceURL() + '/search/criteria/raca/screening', {
+            params: new HttpParams({
+                fromObject: this._validateCriteria(model)
+            })
+        });
+    }
+    @CastResponse(undefined, {
+        fallback: '$default',
+        unwrap: 'rs'
+    })
     getAllRacaByCriteria(model: Partial<BannedPersonSearch>): Observable<BannedPerson[]> {
         model = this.bannedPersonSearchInterceptor.send(model);
         return this.http.get<BannedPerson[]>(this._getServiceURL() + '/search/criteria/request/raca', {
@@ -110,6 +122,20 @@ export class BannedPersonService extends CrudWithDialogGenericService<BannedPers
         criteria.registrationNumber = model.registrationNo
         delete criteria.registrationNo;
         return this.http.get<BannedPersonTerrorism[]>(this._getServiceURL() + '/search/criteria/moi', {
+            params: new HttpParams({
+                fromObject: this._validateCriteria(criteria)
+            })
+        });
+    }
+    @CastResponse(undefined, {
+        fallback: '$default',
+        unwrap: 'rs'
+    })
+    getMOIScreeningByCriteria(@InterceptParam() model: Partial<BannedPersonSearch>): Observable<{id:number,response:BannedPersonTerrorism[]}> {
+        let criteria = this.bannedPersonSearchInterceptor.send(model) as any;
+        criteria.registrationNumber = model.registrationNo
+        delete criteria.registrationNo;
+        return this.http.get<{id:number,response:BannedPersonTerrorism[]}>(this._getServiceURL() + '/search/criteria/moi/screening', {
             params: new HttpParams({
                 fromObject: this._validateCriteria(criteria)
             })

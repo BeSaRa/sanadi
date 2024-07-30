@@ -155,4 +155,5 @@ export const urlsList: Partial<IAppUrls> = {
   INSPECTION_OPERATION: '/admin/inspection-operation',
   License_Activity: '/license-activity',
   BANNED_PERSON: '/banned/person',
+  SCREENING: '/restricted/screening/',
 };

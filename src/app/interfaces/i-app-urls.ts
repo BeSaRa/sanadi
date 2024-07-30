@@ -149,5 +149,6 @@ export interface IAppUrls {
   WORLD_CHECK:string;
   License_Activity:string;
   BANNED_PERSON:string;
+  SCREENING:string;
   [index: string]: string;
 }

@@ -24,6 +24,7 @@ export class WorldCheckSearch extends BaseModel<WorldCheckSearch, WorldCheckServ
   entityType!: number;
   actionType!: number;
   searchType!: number;
+  searchSource!: number;
 
   actionDate!: string | IMyDateModel;
   internalUserDeptId!: number;
