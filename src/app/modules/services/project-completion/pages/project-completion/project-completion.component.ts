@@ -277,7 +277,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     this.listenToMainDacOchaChanges();
     this.listenToChangeExternalFields();
     this.listenToChangeInternalFields();
-    this._setDefaultValues();
+    // this._setDefaultValues();
   }
   _resetForm(): void {
     this.model = this._getNewInstance();
@@ -553,9 +553,16 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
           requestType: this.requestType.value,
           id:undefined
         })),
-        tap(projectCompletion=>{ this._updateForm(projectCompletion)})
+        tap(projectCompletion=>{ 
+          this._updateForm(projectCompletion)
+          this.handleDomainChange(projectCompletion.domain)
+        })
       )
       .subscribe()
   }
 
+  isEditRequestTypeAllowed(): boolean {
+    // allow edit if new record or saved as draft
+    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+  }
 }
