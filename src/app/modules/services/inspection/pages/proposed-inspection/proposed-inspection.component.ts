@@ -155,8 +155,8 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
       ).subscribe()
     this.listenToView();
     this.displayedColumns = this.isApproval ?
-      ['proposedTaskType', 'priority', 'departmentId', 'status', 'actions'] :
-      ['rowSelection', 'proposedTaskType', 'priority', 'departmentId', 'status', 'actions'];
+      ['taskSerialNumber','proposedTaskType', 'priority', 'departmentId', 'status', 'actions'] :
+      ['rowSelection','taskSerialNumber', 'proposedTaskType', 'priority', 'departmentId', 'status', 'actions'];
     this.searchColumns = this.isApproval ?
       ['search_proposedTaskType', 'search_priority', 'search_departments', 'search_status', 'search_actions'] :
       ['_', 'search_proposedTaskType', 'search_priority', '__', 'search_status', 'search_actions'];
