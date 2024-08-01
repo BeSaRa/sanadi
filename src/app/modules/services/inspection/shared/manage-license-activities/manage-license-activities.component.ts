@@ -257,6 +257,9 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         switchMap(_ => {
+          if(this.selectedLicense?.uploadedDocId){
+            return this._updateAttachmentFile(input.files!)
+          }
           return this._createAttachmentFile(input.files!);
         })
       ).subscribe((attachment) => {
@@ -270,12 +273,26 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
     const document = new FileNetDocument().clone({
       documentTitle: this.lang.map.lbl_final_report,
       description: this.lang.map.lbl_final_report,
-      attachmentTypeId: -1,
+      attachmentTypeId: 1,
       required: false,
       isPublished: false,
+      isInternal:true,
       files: filesList
     })
     return this.licenseActivityService.saveDocument(this.selectedLicense!.activityFolderId, this.actualInspection.id, document);
+  }
+  private _updateAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
+    const document = (new FileNetDocument()).clone({
+      documentTitle: this.lang.map.lbl_final_report,
+      description: this.lang.map.lbl_final_report,
+      attachmentTypeId: 1,
+      required: false,
+      isPublished: false,
+      isInternal:true,
+      files: filesList
+    })
+
+    return this.licenseActivityService.updateDocument(this.selectedLicense!.activityFolderId, this.actualInspection.id, document);
   }
   private _afterSaveAttachmentFile(attachment: FileNetDocument) {
     this.selectedLicense!.uploadedDocId = attachment.id;

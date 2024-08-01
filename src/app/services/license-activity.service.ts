@@ -79,10 +79,10 @@ export class LicenseActivityService extends CrudWithDialogGenericService<License
   }
   @HasInterception
   @CastResponse(undefined)
-  save(@InterceptParam() model: LicenseActivity, actualTask:number): Observable<LicenseActivity> {
-    return this.http.post<LicenseActivity>(this._getServiceURL()+'/save', model,{
+  save(@InterceptParam() model: LicenseActivity, actualTask: number): Observable<LicenseActivity> {
+    return this.http.post<LicenseActivity>(this._getServiceURL() + '/save', model, {
       params: new HttpParams({
-        fromObject:{
+        fromObject: {
           actualTask
         }
       })
@@ -91,16 +91,16 @@ export class LicenseActivityService extends CrudWithDialogGenericService<License
   @HasInterception
   @CastResponse(undefined)
   updateLicense
-  (@InterceptParam() model: LicenseActivity, actualTask:number): Observable<LicenseActivity> {
-    return this.http.put<LicenseActivity>(this._getServiceURL()+'/update', model,{
+    (@InterceptParam() model: LicenseActivity, actualTask: number): Observable<LicenseActivity> {
+    return this.http.put<LicenseActivity>(this._getServiceURL() + '/update', model, {
       params: new HttpParams({
-        fromObject:{
+        fromObject: {
           actualTask
         }
       })
     });
   }
- 
+
 
 
   private prepareDocument(document: FileNetDocument) {
@@ -127,6 +127,7 @@ export class LicenseActivityService extends CrudWithDialogGenericService<License
     content ? formData.append('content', content) : null;
     return { formData: formData, clonedDocument: clonedDocument }
   }
+
   @CastResponse(() => FileNetDocument, {
     fallback: '$default',
     unwrap: 'rs'
@@ -158,7 +159,39 @@ export class LicenseActivityService extends CrudWithDialogGenericService<License
       })
     );
   }
+  @CastResponse(() => FileNetDocument, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  updateDocument(folderId: string, taskId: number, document: FileNetDocument, progressCallback?: (percentage: number) => void): Observable<FileNetDocument> {
 
+    const { formData, clonedDocument } = this.prepareDocument(document);
+    return this.http.post<FileNetDocument>(this._getServiceURL() + '/update-document', formData, {
+      params: new HttpParams({
+        fromObject: {
+          ...clonedDocument as any,
+          folderId,
+          taskId
+
+        },
+
+      }),
+      reportProgress: true,
+      observe: 'events'
+    }).pipe(
+      filter(event => {
+        if (event.type === HttpEventType.UploadProgress && progressCallback && typeof event.total !== 'undefined') {
+          progressCallback(Math.floor(event.loaded * 100 / event.total));
+        }
+        return event.type === HttpEventType.Response;
+      }),
+      map<any, FileNetDocument>((response: any) => {
+        return document.clone(response.body.rs) as FileNetDocument;
+      })
+    );
+  }
+
+  
   @HasInterception
   @CastResponse(undefined)
   complete(@InterceptParam() model: LicenseActivity): Observable<LicenseActivity> {
@@ -200,6 +233,6 @@ export class LicenseActivityService extends CrudWithDialogGenericService<License
           }
         })
       })
-     
+
   }
 }
