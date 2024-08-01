@@ -212,8 +212,8 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     prepareModel(model: ActualInspection, form: UntypedFormGroup): Observable<ActualInspection> | ActualInspection {
         return (new ActualInspection()).clone({
             ...model, ...form.getRawValue(),
+            creationSource: !model.creationSource ? this.creationSource : model.creationSource,
             createdby: this.employeeService.getCurrentUser().generalUserId,
-            creationSource: this.creationSource
         });
     }
 
