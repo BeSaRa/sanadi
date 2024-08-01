@@ -23,7 +23,7 @@
           <label for="proposedTaskType" class="form-label">
             {{lang.map.lbl_proposed_task}}
           </label>
-          <span id="proposedTaskType" class="form-control input-disabled"
+          <span id="proposedTaskType" class="form-control cursor-pointer text-decoration-underline input-disabled" (click)="showProposedTask()"
             [innerHTML]="  model.proposedInspectionTask?.proposedTaskTypeInfo?.getName() || '&nbsp;'"></span>
         </div>
       </div>
