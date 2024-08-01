@@ -4,7 +4,7 @@
       <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
               tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
       <button type="button" class="btn-close btn-close-white"
-              tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+              tabindex="-1" dialogClose aria-label="Close"></button>
     </div>
   </div>
   <div class="dialog-content no-fixed-height" #dialogContent>
@@ -24,6 +24,6 @@
     <span class="flex-grow-1"></span>
     <button [disabled]="form.invalid"  (click)="save()"
             class="btn btn-primary">{{lang.map.btn_save}}</button>
-    <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+    <button dialogClose class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
   </div>
   
