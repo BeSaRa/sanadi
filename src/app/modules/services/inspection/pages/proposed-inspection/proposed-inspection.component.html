@@ -49,6 +49,11 @@
                    (change)="$event ? table.selection.toggle(row) : null" class="form-check-input">
           </td>
         </ng-container>
+        <ng-container cdkColumnDef="taskSerialNumber">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+          [sortCallback]="sortingCallbacks.department">{{ lang.map.lbl_proposed_task_serial }}</th>
+          <td cdk-cell *cdkCellDef="let row">{{ row.taskSerialNumber }}</td>
+        </ng-container>
         <ng-container cdkColumnDef="departmentId">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
           [sortCallback]="sortingCallbacks.department">{{ lang.map.department }}</th>
