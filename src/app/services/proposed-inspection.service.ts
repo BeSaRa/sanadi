@@ -65,6 +65,12 @@ export class ProposedInspectionService extends CrudWithDialogGenericService<Prop
       })
     );
   }
+  openProposedInspectionDialog(model: ProposedInspection): Observable<DialogRef> {
+    return of(this.dialog.show<IDialogData<ProposedInspection>>(ProposedInspectionPopupComponent, {
+      model: model,
+      operation: OperationTypes.VIEW
+    }));
+  }
   @HasInterception
   @CastResponse(undefined)
   create(@InterceptParam() model: ProposedInspection): Observable<ProposedInspection> {

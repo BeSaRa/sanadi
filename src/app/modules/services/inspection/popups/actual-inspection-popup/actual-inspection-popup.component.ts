@@ -19,6 +19,7 @@ import { InternalDepartment } from '@app/models/internal-department';
 import { InternalUser } from '@app/models/internal-user';
 import { Lookup } from '@app/models/lookup';
 import { Profile } from '@app/models/profile';
+import { ProposedInspection } from '@app/models/proposed-inspection';
 import { InspectionDocumentService } from '@app/services/Inspection-document.service';
 import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { CountryService } from '@app/services/country.service';
@@ -31,6 +32,7 @@ import { LangService } from '@app/services/lang.service';
 import { LicenseActivityService } from '@app/services/license-activity.service';
 import { LookupService } from '@app/services/lookup.service';
 import { ProfileService } from '@app/services/profile.service';
+import { ProposedInspectionService } from '@app/services/proposed-inspection.service';
 import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
@@ -88,6 +90,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         private countryService: CountryService,
         private internalUserService: InternalUserService,
         private actualInspectionService: ActualInspectionService,
+        private proposedInspectionService: ProposedInspectionService,
         private dialog:DialogService,
         // don't remove this because its required for DI registration
         private licenseActivityService: LicenseActivityService) {
@@ -425,6 +428,13 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         },
     
       };
+
+      showProposedTask(){
+        if(!this.model.proposedInspectionTask) return;
+        this.proposedInspectionService.openProposedInspectionDialog(new ProposedInspection().clone(
+            this.model.proposedInspectionTask
+        ))
+      }
 }
 
 
