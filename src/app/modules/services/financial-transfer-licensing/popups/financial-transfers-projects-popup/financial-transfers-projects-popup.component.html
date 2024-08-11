@@ -31,7 +31,7 @@
         <label asteriskIfRequired="qatariTransactionAmount" for="qatariTransactionAmount"
           class="form-label">{{lang.map.qatari_riyal_transaction_amount}}</label>
         <input id="qatariTransactionAmount" validationClasses="qatariTransactionAmount"
-        mask="inputMask.SEPARATOR"  thousandSeparator="inputMask.THOUSAND_SEPARATOR"
+        [mask]="inputMask.SEPARATOR"  [thousandSeparator]="inputMask.THOUSAND_SEPARATOR"
           formControlName="qatariTransactionAmount" trimInput class="form-control">
         <app-field-error-message controlName="qatariTransactionAmount"></app-field-error-message>
       </div>
