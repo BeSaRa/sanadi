@@ -150,5 +150,7 @@ export interface IAppUrls {
   License_Activity:string;
   BANNED_PERSON:string;
   SCREENING:string;
+  RISK_LEVEL:string;
+  RISK_LEVEL_DETERMINATION:string;
   [index: string]: string;
 }

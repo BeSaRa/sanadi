@@ -1,0 +1,41 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+    <h1 class="h6 text-white">{{langService.map.logs}}</h1>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" dialogClose aria-label="Close"></button>
+  </div>
+  <div class="dialog-content w800px">
+    <div class="row pt-3">
+      <div class="col-12">
+        <app-table #table
+                   [data]="logList"
+                   [useSearchToFilter]="false"
+                   [columns]="displayedColumns">
+          <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+            
+            <ng-container cdkColumnDef="applicantId">
+              <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.user}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.applicantInfo ? row.applicantInfo.getName() : ''}} </td>
+            </ng-container>
+            
+            <ng-container cdkColumnDef="operation">
+              <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.action_type}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.operationInfo.getName()}} </td>
+            </ng-container>
+            <ng-container cdkColumnDef="auditDate">
+              <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.action_date}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.auditDate | date}} </td>
+            </ng-container>
+            <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+            <tr *cdkNoDataRow>
+              <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
+            </tr>
+          </table>
+        </app-table>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-actions">
+    <button dialogClose class="btn btn-secondary">{{langService.map.btn_close}}</button>
+  </div>
+  

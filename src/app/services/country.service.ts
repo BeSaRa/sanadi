@@ -19,6 +19,7 @@ import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-gen
 import { ComponentType } from '@angular/cdk/portal';
 import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 import { Pagination } from '@app/models/pagination';
+import { CountryConditionsPopupComponent } from '@app/administration/popups/country-conditions-popup/country-conditions-popup.component';
 
 @CastResponseContainer({
   $default: {
@@ -148,6 +149,17 @@ export class CountryService extends CrudWithDialogGenericService<Country> {
             operation: OperationTypes.VIEW,
             parentCountries: this.list,
             selectedTabName: (CommonUtils.isValidValue(tabName) ? tabName : 'basic')
+          }))
+        })
+      );
+  }
+  openConditionDialog(modelId: number,operation:OperationTypes = OperationTypes.VIEW): Observable<DialogRef> {
+    return this._loadDialogData(modelId)
+      .pipe(
+        switchMap((result) => {
+          return of(this.dialog.show<IDialogData<Country>>(CountryConditionsPopupComponent, {
+            model: result.country,
+            operation
           }))
         })
       );

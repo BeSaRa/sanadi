@@ -156,6 +156,14 @@ import { UserSubTeamComponent } from './shared/user-sub-team/user-sub-team.compo
 import { UserTeamComponent } from './shared/user-team/user-team.component';
 import { VerificationTemplatesComponent } from './shared/verification-templates/verification-templates.component';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { RiskLevelPopupComponent } from './popups/risk-level-popup/risk-level-popup.component';
+import { RiskLevelComponent } from './pages/risk-level/risk-level.component';
+import { RiskLevelDeterminationComponent } from './pages/risk-level-determination/risk-level-determination.component';
+import { RiskLevelDeterminationPopupComponent } from './popups/risk-level-determination-popup/risk-level-determination-popup.component';
+import { CountriesDataComponent } from './pages/risk-level-determination/components/countries-data/countries-data.component';
+import { RiskLevelRequestsComponent } from './pages/risk-level-determination/components/risk-level-requests/risk-level-requests.component';
+import { CountryConditionsPopupComponent } from './popups/country-conditions-popup/country-conditions-popup.component';
+import { RiskLevelDeterminationLogPopupComponent } from './popups/risk-level-determination-log-popup/risk-level-determination-log-popup.component';
 
 @NgModule({
   declarations: [
@@ -270,7 +278,15 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
     InspectionOperationPopupComponent,
     InspectionOperationChildrenPopupComponent,
     VerificationTemplatesComponent,
-    VerificationTemplatePopupComponent
+    VerificationTemplatePopupComponent,
+    RiskLevelPopupComponent,
+    RiskLevelComponent,
+    RiskLevelDeterminationComponent,
+    RiskLevelDeterminationPopupComponent,
+    CountriesDataComponent,
+    RiskLevelRequestsComponent,
+    CountryConditionsPopupComponent,
+    RiskLevelDeterminationLogPopupComponent
   ],
   imports: [
     SharedModule,

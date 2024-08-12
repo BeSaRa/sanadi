@@ -31,8 +31,8 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 export class CountryComponent extends AdminGenericComponent<Country, CountryService> {
   usePagination = true
   actions: IMenuItem<Country>[] = [];
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'riskLevel', 'levelOfDueDiligence', 'status', 'statusDateModified', 'actions'];
-  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_riskLevel', 'search_levelOfDueDiligence', 'search_status', 'search_statusDateModified', 'search_actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'riskLevel', 'requiredAttentionLevel', 'status', 'statusDateModified', 'actions'];
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_riskLevel', 'search_requiredAttentionLevel', 'search_status', 'search_statusDateModified', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {
       key: 'arName',
@@ -59,10 +59,10 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
         optionValueKey: 'lookupKey'
       }
     },
-    search_levelOfDueDiligence: {
-      key: 'levelOfDueDiligence',
+    search_requiredAttentionLevel: {
+      key: 'requiredAttentionLevel',
       controlType: 'select',
-      property: 'levelOfDueDiligence',
+      property: 'requiredAttentionLevel',
       label: 'level_of_due_diligence',
       selectOptions: {
         options: this.lookupService.listByCategory.LevelOfDueDiligence,
@@ -116,9 +116,9 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
         value2 = !CommonUtils.isValidValue(b) ? '' : b.riskLevelInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    levelOfDueDiligence: (a: Country, b: Country, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.levelOfDueDiligenceInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.levelOfDueDiligenceInfo?.getName().toLowerCase();
+    requiredAttentionLevel: (a: Country, b: Country, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.requiredAttentionLevelInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.requiredAttentionLevelInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   }
@@ -314,7 +314,7 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
 
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: [''], enName: [''], riskLevel: [null], levelOfDueDiligence: [null] , status: [null]
+      arName: [''], enName: [''], riskLevel: [null], requiredAttentionLevel: [null] , status: [null]
     })
   }
 }
