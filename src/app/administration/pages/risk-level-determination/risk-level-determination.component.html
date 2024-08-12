@@ -1,0 +1,13 @@
+<ng-container >
+    <tabs-list >
+      <tab *ngIf="canCreateRequest" [name]="tabsData.data.name" [template]="dataTemplate" [title]="lang.map.lbl_data"></tab>
+      <tab *ngIf="canMakeDecision" [name]="tabsData.requests.name" [template]="requestsTemplate" [title]="lang.map.lbl_requests"></tab>
+    </tabs-list>
+  </ng-container>
+
+  <ng-template #dataTemplate>
+    <countries-data [reload$]="reloadCountries$" (riskLevelDeterminationCreated)="onRiskLevelDeterminationCreated()"></countries-data>
+  </ng-template>
+  <ng-template #requestsTemplate>
+    <risk-level-requests [reload$]="reloadRequests$" (decisionMade)="onDecisionMade()"></risk-level-requests>
+  </ng-template>

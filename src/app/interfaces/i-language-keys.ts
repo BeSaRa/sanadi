@@ -2234,4 +2234,19 @@ export interface ILanguageKeys {
   lbl_analysis_beneficiaries_nationalities:string;
   lbl_restricted_advanced_search:string;
   msg_possible_match_review_risk_management:string;
+  menu_risk_level:string;
+  lbl_edit_Risk_level:string;
+  lbl_required_attention_level:string;
+  lbl_public_conditions_en:string;
+  lbl_public_conditions_ar:string;
+  lbl_private_conditions_en:string;
+  lbl_private_conditions_ar:string;
+  menu_risk_level_determination:string;
+  lbl_edit_risk_level_determination:string;
+  lbl_data:string;
+  lbl_requests:string;
+  lbl_risk_level:string;
+  lbl_acknowledge:string;
+  msg_acknowledge_successfully:string;
+  all_request_status_should_be_pending:string;
 }

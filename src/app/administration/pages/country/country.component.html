@@ -52,11 +52,11 @@
               [sortCallback]="sortingCallbacks.riskLevel"> {{langService.map.risk_level}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.riskLevelInfo ? row.riskLevelInfo.getName() : ''}} </td>
         </ng-container>
-        <ng-container cdkColumnDef="levelOfDueDiligence">
+        <ng-container cdkColumnDef="requiredAttentionLevel">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
-              [sortCallback]="sortingCallbacks.levelOfDueDiligence"> {{langService.map.level_of_due_diligence}}</th>
+              [sortCallback]="sortingCallbacks.requiredAttentionLevel"> {{langService.map.level_of_due_diligence}}</th>
           <td cdk-cell
-              *cdkCellDef="let row"> {{row.levelOfDueDiligenceInfo ? row.levelOfDueDiligenceInfo.getName() : ''}} </td>
+              *cdkCellDef="let row"> {{row.requiredAttentionLevelInfo ? row.requiredAttentionLevelInfo.getName() : ''}} </td>
         </ng-container>
         <ng-container cdkColumnDef="status">
           <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"

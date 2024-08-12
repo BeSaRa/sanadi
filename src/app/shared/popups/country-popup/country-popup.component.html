@@ -41,17 +41,17 @@
         <app-field-error-message controlName="riskLevel"></app-field-error-message>
       </div>
       <div class="col-sm-12 col-md-6 mb-4 ng-select-wrapper">
-        <label for="levelOfDueDiligence" asteriskIfRequired="levelOfDueDiligence"
+        <label for="requiredAttentionLevel" asteriskIfRequired="requiredAttentionLevel"
                class="form-label">{{langService.map.level_of_due_diligence}}</label>
-        <ng-select [selectOnTab]="true" labelForId="levelOfDueDiligence" [clearable]="true"
-                   placeholder="{{langService.map.select}}" id="levelOfDueDiligence"
+        <ng-select [selectOnTab]="true" labelForId="requiredAttentionLevel" [clearable]="true"
+                   placeholder="{{langService.map.select}}" id="requiredAttentionLevel"
                    [notFoundText]="langService.map.msg_not_found" appendTo="body"
-                   formControlName="levelOfDueDiligence" validationClasses="levelOfDueDiligence">
+                   formControlName="requiredAttentionLevel" validationClasses="requiredAttentionLevel">
           <ng-option *ngFor="let option of dueDiligenceLevelList" [value]="option.lookupKey">
             {{option.getName()}}
           </ng-option>
         </ng-select>
-        <app-field-error-message controlName="levelOfDueDiligence"></app-field-error-message>
+        <app-field-error-message controlName="requiredAttentionLevel"></app-field-error-message>
       </div>
     </div>
   </form>

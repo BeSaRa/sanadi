@@ -3100,6 +3100,32 @@ export const newNavigationMenuList = [
     svg: null
   },
   {
+    id: 97,
+    langKey: 'menu_risk_level',
+    path: '/home/administration/risk-level',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_RISK_LEVEL,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 29,
+    svg: null
+  },
+  {
+    id: 98,
+    langKey: 'menu_risk_level_determination',
+    path: '/home/administration/risk-level-determination',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: [PermissionsEnum.MANAGE_RISK_LEVEL_DETERMINATION,PermissionsEnum.RISK_LEVEL_DETERMINATION_MANAGER,PermissionsEnum.MANAGE_COUNTRIES],
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 29,
+    svg: null
+  },
+  {
     id: 4000,
     langKey: 'menu_restricted',
     path: '/home/restricted',

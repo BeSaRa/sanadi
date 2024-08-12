@@ -1,0 +1,69 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+    <h1 class="h6 text-white">{{popupTitle}}</h1>
+    <div>
+      <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
+        fullscreenBtn></button>
+      <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+        aria-label="Close"></button>
+    </div>
+  </div>
+  <div class="dialog-content" #dialogContent>
+    <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+      <div class="row">
+      
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label for="riskLevel" asteriskIfRequired="riskLevel" class="form-label">
+            {{ lang.map.lbl_required_attention_level}}
+          </label>
+          <ng-select [selectOnTab]="true" labelForId="riskLevel" [clearable]="true"
+            placeholder="{{ lang.map.select }}" id="riskLevel" [notFoundText]="lang.map.msg_not_found"
+            appendTo="body" formControlName="riskLevel" validationClasses="riskLevel">
+            <ng-option *ngFor="let option of riskLevels" [value]="option.id">
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requiredAttentionLevel"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-12 mb-3 position-relative">
+          <label  for="publicConditionEn"
+            class="form-label">{{lang.map.lbl_public_conditions_en}}</label>
+            <span id="publicConditionEn" class="form-control input-disabled"  
+            [innerHTML]="selectedRiskLevel && selectedRiskLevel.publicConditionEn || '&nbsp;'"></span>
+
+          
+        </div>
+        <div class="col-sm-12 col-md-12 mb-3 position-relative">
+          <label for="publicConditionAr"
+            class="form-label">{{lang.map.lbl_public_conditions_ar}}</label>
+            <span id="publicConditionAr" class="form-control input-disabled" 
+            [innerHTML]="selectedRiskLevel && selectedRiskLevel.publicConditionAr || '&nbsp;'"></span>
+        </div>
+        <div class="col-sm-12 col-md-12 mb-3 position-relative">
+          <label asteriskIfRequired="privateConditionEn" for="privateConditionEn"
+            class="form-label">{{lang.map.lbl_private_conditions_en}}</label>
+          <textarea id="privateConditionEn" validationClasses="privateConditionEn" trimInput rows="5"
+            formControlName="privateConditionEn" class="form-control"></textarea>
+          <app-field-error-message controlName="privateConditionEn"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-12 mb-3 position-relative">
+          <label asteriskIfRequired="privateConditionAr" for="privateConditionAr"
+            class="form-label">{{lang.map.lbl_private_conditions_ar}}</label>
+          <textarea id="privateConditionAr" validationClasses="privateConditionAr" trimInput rows="5"
+            formControlName="privateConditionAr" class="form-control"></textarea>
+          <app-field-error-message controlName="privateConditionAr"></app-field-error-message>
+        </div>
+      </div>
+     
+  
+    </form>
+  </div>
+  <div class="dialog-actions">
+    <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+      tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+      <i class="mdi mdi-information-outline text-info"></i>
+    </button>
+    <span class="flex-grow-1"></span>
+    <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next()"
+      class="btn btn-primary">{{lang.map.btn_save}}</button>
+    <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+  </div>

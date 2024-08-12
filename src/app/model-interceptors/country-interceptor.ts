@@ -15,7 +15,7 @@ export class CountryInterceptor implements IModelInterceptor<Country> {
     model.parentInfo = isValidAdminResult(model.parentInfo) ? AdminResult.createInstance(model.parentInfo) : AdminResult.createInstance({});
     model.statusInfo = isValidAdminResult(model.statusInfo) ? AdminResult.createInstance(model.statusInfo) : AdminResult.createInstance({});
     model.riskLevelInfo = isValidAdminResult(model.riskLevelInfo) ? AdminResult.createInstance(model.riskLevelInfo) : AdminResult.createInstance({});
-    model.levelOfDueDiligenceInfo = isValidAdminResult(model.levelOfDueDiligenceInfo) ? AdminResult.createInstance(model.levelOfDueDiligenceInfo) : AdminResult.createInstance({});
+    model.requiredAttentionLevelInfo = isValidAdminResult(model.requiredAttentionLevelInfo) ? AdminResult.createInstance(model.requiredAttentionLevelInfo) : AdminResult.createInstance({});
 
     return model;
   }
@@ -26,7 +26,7 @@ export class CountryInterceptor implements IModelInterceptor<Country> {
     delete model.parentInfo;
     delete model.statusInfo;
     delete model.riskLevelInfo;
-    delete model.levelOfDueDiligenceInfo;
+    delete model.requiredAttentionLevelInfo;
     delete model.statusDateModifiedString;
   }
 

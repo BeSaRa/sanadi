@@ -156,4 +156,6 @@ export const urlsList: Partial<IAppUrls> = {
   License_Activity: '/license-activity',
   BANNED_PERSON: '/banned/person',
   SCREENING: '/restricted/screening/',
+  RISK_LEVEL: '/admin/risk-level',
+  RISK_LEVEL_DETERMINATION: '/admin/risk-level-determination',
 };
