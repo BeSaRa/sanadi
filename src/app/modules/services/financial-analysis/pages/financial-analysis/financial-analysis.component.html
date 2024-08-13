@@ -129,7 +129,7 @@
   </ng-template>
   <ng-template #attachmentsTab>
     <attachments [caseId]="model?.id" [caseType]="model?.caseType" [model]="model" [formProperties]="formProperties"
-      [service]="service.documentService"[disabled]="readonly"></attachments>
+      [service]="service.documentService"[disabled]="readonly || ! model?.fullSerial"></attachments>
   </ng-template>
 </ng-container>
 
