@@ -269,6 +269,8 @@ export class FinancialAnalysisComponent extends EServicesGenericComponent<
     if (this.openFrom === OpenFrom.USER_INBOX) {
       if(this.employeeService.isExternalUser()){
         this.readonly = false;
+      }else{
+        this.readonly= true;
       }
      
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
@@ -629,6 +631,7 @@ export class FinancialAnalysisComponent extends EServicesGenericComponent<
     this.externalOfficeIdField.updateValueAndValidity();
   }
   //#endregion
+  
 }
 
 
