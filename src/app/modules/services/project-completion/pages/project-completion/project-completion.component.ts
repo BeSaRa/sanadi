@@ -191,10 +191,10 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       ...this.projectLicenseInfo.getRawValue(),
       ...this.projectBasicInfo.getRawValue(),
       ...this.beneficiaryAnalyticsByLicense.getRawValue(),
-      ...this.evaluation.getRawValue(),
+      //...this.evaluation.getRawValue(),
       ...this.specialExplanation.getRawValue(),
-      // bestPracticesList: this.bestPracticesListComponentRef.list,
-      // lessonsLearnedList: this.lessonsLearntListComponentRef.list,
+       bestPracticesList: this.bestPracticesListComponentRef.list,
+       lessonsLearnedList: this.lessonsLearntListComponentRef.list,
     })
   }
   private _updateModelAfterSave(model: ProjectCompletion): void {
@@ -248,7 +248,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
         //   ]
         // )
       }),
-      evaluation: this.fb.group(model.formBuilder(true).evaluation),
+      // evaluation: this.fb.group(model.formBuilder(true).evaluation),
       explanation: this.fb.group(model.formBuilder(true).explanation)
     })
   }
@@ -261,7 +261,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       projectLicenseInfo: model.formBuilder(false).projectLicenseInfo,
       projectBasicInfo: model.formBuilder(false).projectBasicInfo,
       beneficiaryAnalyticsByLicense: model.formBuilder(false).beneficiaryAnalyticsByLicense,
-      evaluation: model.formBuilder(false).evaluation,
+      //evaluation: model.formBuilder(false).evaluation,
       explanation: model.formBuilder(false).explanation
     });
     this.handleRequestTypeChange(model.requestType, false);
