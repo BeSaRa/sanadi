@@ -413,6 +413,9 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   listenToCurrencyChange() {
     this.currency.valueChanges.subscribe(_ => {
+      if(this.mainAccount.valid){
+        return;
+      }
       this.loadBankAccountsBasedOnCurrencyAndBank(this.bankAccountCategory.value, this.bankId.value, this.currency.value);
     });
   }
