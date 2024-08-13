@@ -286,10 +286,10 @@ export class ProjectCompletion
         beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.decimal(2)]] : beneficiariesOver60,
         nationalities: controls?[nationalities]:nationalities
       },
-      evaluation: {
-        impact: controls ? [impact, [CustomValidators.required]] : impact,
-        effort: controls ? [effort, [CustomValidators.required]] : effort
-      },
+      // evaluation: {
+      //   impact: controls ? [impact, [CustomValidators.required]] : impact,
+      //   effort: controls ? [effort, [CustomValidators.required]] : effort
+      // },
       explanation: {
         description: controls ? [description, CustomValidators.required] : description,
       }
