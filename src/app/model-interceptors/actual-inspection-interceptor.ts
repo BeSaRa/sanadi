@@ -9,7 +9,6 @@ import { LicenseActivity } from "@app/models/license-activity";
 import { ProposedInspection } from "@app/models/proposed-inspection";
 import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { InspectionActionLogInterceptor } from "./inspection-action-log-interceptor";
-import { InspectionLogInterceptor } from "./inspection-log-interceptor";
 import { InternalUserInterceptor } from "./internal-user-interceptor";
 import { LicenseActivityInterceptor } from "./license-activity-interceptor";
 import { ProposedInspectionInterceptor } from "./proposed_inspection-interceptor";
