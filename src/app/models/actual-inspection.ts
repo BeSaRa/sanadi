@@ -1,7 +1,7 @@
-import { inject } from "@angular/core";
 import { InterceptModel } from "@app/decorators/decorators/intercept-model";
-import { CaseTypes } from "@app/enums/case-types.enum";
 import { DateUtils } from "@app/helpers/date-utils";
+import { infoSearchFields } from "@app/helpers/info-search-fields";
+import { normalSearchFields } from "@app/helpers/normal-search-fields";
 import { ObjectUtils } from "@app/helpers/object-utils";
 import { ActualInspectionInterceptor } from "@app/model-interceptors/actual-inspection-interceptor";
 import { ActualInspectionService } from "@app/services/actual-inspection.service";
@@ -9,18 +9,13 @@ import { EmployeeService } from "@app/services/employee.service";
 import { FactoryService } from "@app/services/factory.service";
 import { ControlValueLabelLangKey, ISearchFieldsMap } from "@app/types/types";
 import { CustomValidators } from "@app/validators/custom-validators";
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
+import { AdminResult } from "./admin-result";
 import { BaseModel } from "./base-model";
+import { InspectionActionLog } from "./inspection-action-log";
 import { InspectionSpecialist } from "./inspection-specialist";
 import { LicenseActivity } from "./license-activity";
 import { ProposedInspection } from "./proposed-inspection";
-import { Lookup } from "./lookup";
-import { AdminResult } from "./admin-result";
-import { InspectionLog } from "./inspection-log";
-import { IMyDateModel } from '@nodro7/angular-mydatepicker';
-import { normalSearchFields } from "@app/helpers/normal-search-fields";
-import { infoSearchFields } from "@app/helpers/info-search-fields";
-import { InternalUser } from "./internal-user";
-import { InspectionActionLog } from "./inspection-action-log";
 
 const { send, receive } = new ActualInspectionInterceptor()
 @InterceptModel({ send, receive })

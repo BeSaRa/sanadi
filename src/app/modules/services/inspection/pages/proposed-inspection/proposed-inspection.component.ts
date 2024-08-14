@@ -3,13 +3,16 @@ import { FormBuilder } from '@angular/forms';
 import { ProposedInceptionStatus } from '@app/enums/Proposed-inception-status';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { ActualInspectionCreationSource } from '@app/enums/actual-inspection-creation-source.enum';
+import { OperationTypes } from '@app/enums/operation-types.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { IGridAction } from '@app/interfaces/i-grid-action';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { SortEvent } from '@app/interfaces/sort-event';
 import { ActualInspection } from '@app/models/actual-inspection';
+import { InspectionActionLog } from '@app/models/inspection-action-log';
 import { InternalDepartment } from '@app/models/internal-department';
 import { ProposedInspection } from '@app/models/proposed-inspection';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
@@ -25,6 +28,7 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CommentPopupComponent } from '@app/shared/popups/comment-popup/comment-popup.component';
 import { Subject, of } from 'rxjs';
 import { catchError, exhaustMap, filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { InspectionActionLogPopupComponent } from '../../popups/inspection-action-log-popup/inspection-action-log-popup.component';
 
 @Component({
   selector: 'proposed-inspection',
@@ -78,6 +82,13 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
       onClick: (item: ProposedInspection) => this.reject(item),
       show: (item) => this.isApproval && !this.readonlyStatuses.includes(item.status)
     },
+      // history
+      {
+        type: 'action',
+        icon: ActionIconsEnum.HISTORY,
+        label: 'inspection_history',
+        onClick: (item: ProposedInspection) => this._loadHistory(item)
+      },
   ];
 
   displayedColumns: string[] = [];
@@ -92,7 +103,8 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
     private dialogService: DialogService,
     private actualInspectionService: ActualInspectionService,
     private internalDepartmentService: InternalDepartmentService,
-    private toast: ToastService
+    private toast: ToastService,
+    private dialog:DialogService
   ) {
     super();
 
@@ -286,5 +298,12 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
         ).subscribe()
 
     }
+  }
+  private _loadHistory(item: ProposedInspection) {
+    this.dialog.show<IDialogData<InspectionActionLog[]>>(InspectionActionLogPopupComponent, {
+        model: item.inspectionLog,
+        operation: OperationTypes.VIEW
+      })
+    
   }
 }

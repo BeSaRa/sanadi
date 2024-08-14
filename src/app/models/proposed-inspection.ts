@@ -7,6 +7,7 @@ import { ISearchFieldsMap } from "@app/types/types";
 import { CustomValidators } from "@app/validators/custom-validators";
 import { AdminResult } from "./admin-result";
 import { BaseModel } from "./base-model";
+import { InspectionActionLog } from "./inspection-action-log";
 
 const { send, receive } = new ProposedInspectionInterceptor();
 
@@ -25,12 +26,15 @@ export class ProposedInspection extends BaseModel<ProposedInspection, ProposedIn
   proposedTaskType!: number;
   createdby!:number;
   creationDate!:string;
-  inspectionLog!: AdminResult;
+  // inspectionLog!: AdminResult;
   proposedTaskTypeInfo!: AdminResult;
   statusInfo!: AdminResult;
   departmentInfo!: AdminResult;
   priorityInfo!: AdminResult;
   userInfo!: AdminResult;
+
+  inspectionLog: InspectionActionLog[] = [];
+
   /**
    *
    */
