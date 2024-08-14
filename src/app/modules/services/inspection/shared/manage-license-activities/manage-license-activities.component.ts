@@ -17,6 +17,11 @@ import { GlobalSettings } from '@app/models/global-settings';
 import { FileNetDocument } from '@app/models/file-net-document';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { ChecklistItem } from '@app/models/checklist-item';
+import { InspectionOperationService } from '@app/services/inspection-operation.service';
+import { ChecklistService } from '@app/services/checklist.service';
+import { StepCheckListComponent } from '@app/shared/components/step-check-list/step-check-list.component';
 
 @Component({
   selector: 'manage-license-activities',
@@ -32,15 +37,21 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
 
   @Input() actualInspection!: ActualInspection
   destroy$ = new Subject<void>()
-  displayedColumns: string[] = ['licenseNumber','activityName', 'activityDescription', 'comment', 'status', 'actions'];
+  displayedColumns: string[] = ['licenseNumber', 'activityName', 'activityDescription', 'comment', 'status', 'actions'];
   addLicenseActivityDialog$: Subject<any> = new Subject<any>();
+  openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
+  checklist: ChecklistItem[] = []
 
 
   constructor(public lang: LangService,
     private dialog: DialogService,
     private licenseActivityService: LicenseActivityService,
     private toast: ToastService,
-    private globalSettingsService: GlobalSettingsService) {
+    private globalSettingsService: GlobalSettingsService,
+    private inspectionOperationService: InspectionOperationService,
+    // don't remove this its required for mapping to check list
+    private checkListService: ChecklistService,
+  ) {
 
 
   }
@@ -88,6 +99,20 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.listenToAdd()
+    this.loadCheckList();
+  }
+
+  loadCheckList() {
+
+    this.inspectionOperationService.getByIdComposite(this.actualInspection.subOperationType)
+      .pipe(
+        map(model => model.verificationListTemplate),
+        map(list => list.map(item => new ChecklistItem().clone({
+          arName: item.verification,
+          enName: item.verification
+        }))),
+        tap(list => this.checklist = list),
+      ).subscribe()
   }
 
   listenToAdd() {
@@ -113,10 +138,10 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
           // })
           value.inspectionDate = new Date().toISOString()
           value.isDefined = true;
-          return this.licenseActivityService.save(value,this.actualInspection.id)
-          .pipe(
-            map(_=> value)
-          )
+          return this.licenseActivityService.save(value, this.actualInspection.id)
+            .pipe(
+              map(_ => value)
+            )
         }), tap(() => {
           this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: this.lang.map.license_activity }));
         }),
@@ -180,10 +205,10 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
           // value.actualInspection = {
           //   id: this.actualInspection.id
           // } as ActualInspection
-          return this.licenseActivityService.updateLicense(value,this.actualInspection.id)
-          .pipe(
-            map(_=> value)
-          )
+          return this.licenseActivityService.updateLicense(value, this.actualInspection.id)
+            .pipe(
+              map(_ => value)
+            )
         }),
         tap(() => {
           this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: this.lang.map.license_activity }));
@@ -257,7 +282,7 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         switchMap(_ => {
-          if(this.selectedLicense?.uploadedDocId){
+          if (this.selectedLicense?.uploadedDocId) {
             return this._updateAttachmentFile(input.files!)
           }
           return this._createAttachmentFile(input.files!);
@@ -276,32 +301,36 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
       attachmentTypeId: 1,
       required: false,
       isPublished: false,
-      isInternal:true,
+      isInternal: true,
       files: filesList
     })
     return this.licenseActivityService.saveDocument(this.selectedLicense!.activityFolderId, this.actualInspection.id, document);
   }
   private _updateAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
     const document = (new FileNetDocument()).clone({
-      id:this.selectedLicense?.uploadedDocId,
+      id: this.selectedLicense?.uploadedDocId,
       documentTitle: this.lang.map.lbl_final_report,
       description: this.lang.map.lbl_final_report,
       attachmentTypeId: 1,
       required: false,
       isPublished: false,
-      isInternal:true,
+      isInternal: true,
       files: filesList
     })
 
     return this.licenseActivityService
-    .updateDocument(this.selectedLicense!.activityFolderId, this.actualInspection.id, document)
-   
+      .updateDocument(this.selectedLicense!.activityFolderId, this.actualInspection.id, document)
+
   }
   private _afterSaveAttachmentFile(attachment: FileNetDocument) {
     this.selectedLicense!.uploadedDocId = attachment.vsId;
   }
 
   complete(updatedItem: LicenseActivity, index: number): void {
+    this.runActionAfterCheck(() => this._approveRequest(updatedItem, index));
+
+  }
+  private _approveRequest(updatedItem: LicenseActivity, index: number) {
     this.licenseActivityService.openCompleteDialog(updatedItem).onAfterClose$
       .pipe(
         take(1),
@@ -313,5 +342,13 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
         })
       ).subscribe()
   }
+  @ViewChild(StepCheckListComponent)
+  checklistComponent!: StepCheckListComponent;
+  private runActionAfterCheck(callback: () => void) {
+    this.isValidCheckList() ? callback() : this.checklistComponent.openSlide(callback);
+  }
 
+  private isValidCheckList(): boolean {
+    return this.checklistComponent.isAllMarked();
+  }
 }

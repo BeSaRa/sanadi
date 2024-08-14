@@ -390,7 +390,8 @@ import { RestrictedAdvancedSearchButtonComponent } from './components/restricted
     NgxMaskPipe,
     NgxMaskDirective,
     HasAnyPermissionDirective,
-    RestrictedAdvancedSearchButtonComponent
+    RestrictedAdvancedSearchButtonComponent,
+    StepCheckListComponent
   ]
 })
 export class SharedModule {
