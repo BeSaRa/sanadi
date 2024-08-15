@@ -48,9 +48,9 @@ const routes: Routes = [
     path: 'terrorism-moi', component: TerrorismMoiComponent,
     canActivate: [PermissionGuard.canActivate],
     data: {
-      permissionKey: PermissionsEnum.MANAGE_BANNED_PERSON_MOI,
+      permissionKey: [PermissionsEnum.DECISION_BANNED_PERSON_MOI,PermissionsEnum.MANAGE_BANNED_PERSON_MOI],
       configPermissionGroup: null,
-      checkAnyPermission: false
+      checkAnyPermission: true
     },
   },
   {
