@@ -3187,7 +3187,7 @@ export const newNavigationMenuList = [
     path: '/home/restricted/terrorism-moi',
     icon: 'mdi-badge-account-horizontal-outline',
     isSvg: false,
-    permission: PermissionsEnum.MANAGE_BANNED_PERSON_MOI,
+    permission: [PermissionsEnum.DECISION_BANNED_PERSON_MOI,PermissionsEnum.MANAGE_BANNED_PERSON_MOI],
     permissionGroup: null,
     parent: 4000,
     group: GroupNames.RESTRICTED,
