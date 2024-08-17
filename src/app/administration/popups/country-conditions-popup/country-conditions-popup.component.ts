@@ -119,13 +119,5 @@ export class CountryConditionsPopupComponent extends AdminGenericDialog<Country>
   get riskLevelControl(): UntypedFormControl {
     return this.form.get('riskLevel') as UntypedFormControl;
   }
-  // private _listenToRiskLevel() {
-  //   this.riskLevelControl.valueChanges
-  //   .pipe(
-  //     tap(id=>{
-  //       this.selectedRiskLevel = this.riskLevels.find(item=>item.id ===id)
-  //     }),
-  //     takeUntil(this.destroy$)
-  //   ).subscribe()
-  // }
+  
 }

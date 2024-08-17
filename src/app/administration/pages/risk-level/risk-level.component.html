@@ -52,6 +52,7 @@
           </tr>
         </table>
       </app-table>
+      <uploader [upload$]="upload$" [allowedExtensions]="allowedExtensions" (fileChanged)="onFileChange($event)"></uploader>
       <app-paginator #paginator (pageChange)="pageChange($event)" [length]="count" [backend]="true"></app-paginator>
       <context-menu-item #menu [actions]="actions"></context-menu-item>
     </div>

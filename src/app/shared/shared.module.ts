@@ -156,6 +156,7 @@ import { AngularMyDatePickerModule } from '@nodro7/angular-mydatepicker';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { HasAnyPermissionDirective } from './directives/has-any-permission.directive';
 import { RestrictedAdvancedSearchButtonComponent } from './components/restricted-advanced-search-button/restricted-advanced-search-button.component';
+import { UploaderComponent } from './components/uploader/uploader.component';
 
 @NgModule({
   declarations: [
@@ -280,7 +281,8 @@ import { RestrictedAdvancedSearchButtonComponent } from './components/restricted
     UploadFilePopupComponent,
     CommentPopupComponent,
     HasAnyPermissionDirective,
-    RestrictedAdvancedSearchButtonComponent
+    RestrictedAdvancedSearchButtonComponent,
+    UploaderComponent
   ],
   imports: [
     CommonModule,
@@ -391,7 +393,8 @@ import { RestrictedAdvancedSearchButtonComponent } from './components/restricted
     NgxMaskDirective,
     HasAnyPermissionDirective,
     RestrictedAdvancedSearchButtonComponent,
-    StepCheckListComponent
+    StepCheckListComponent,
+    UploaderComponent
   ]
 })
 export class SharedModule {

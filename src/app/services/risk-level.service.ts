@@ -15,48 +15,60 @@ import { CastResponseContainer } from "@app/decorators/decorators/cast-response"
 import { Pagination } from "@app/models/pagination";
 
 @CastResponseContainer({
-    $default: {
-      model: () => RiskLevel
-    },
-    $pagination: {
-      model: () => Pagination,
-      shape: { 'rs.*': () => RiskLevel }
-    }
-  })
-@Injectable({
-    providedIn:'root'
-})
-export class RiskLevelService extends CrudWithDialogGenericService<RiskLevel>{
-    list: RiskLevel[] = [];
-
-    constructor(public http: HttpClient,
-      private urlService: UrlService,
-      public dialog: DialogService) {
-      super();
-      FactoryService.registerService('RiskLevelService', this);
-    }
-  
-    _getModel(): new () => RiskLevel {
-      return RiskLevel;
-    }
-  
-    _getDialogComponent(): ComponentType<any> {
-      return RiskLevelPopupComponent;
-    }
-  
-    _getServiceURL(): string {
-      return this.urlService.URLS.RISK_LEVEL;
-    }
-  
-    openViewDialog(modelId: number): Observable<DialogRef> {
-      return this.getByIdComposite(modelId).pipe(
-        switchMap((RiskLevel: RiskLevel) => {
-          return of(this.dialog.show<IDialogData<RiskLevel>>(RiskLevelPopupComponent, {
-            model: RiskLevel,
-            operation: OperationTypes.VIEW
-          }));
-        })
-      );
-    }
-  
+  $default: {
+    model: () => RiskLevel
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => RiskLevel }
   }
+})
+@Injectable({
+  providedIn: 'root'
+})
+export class RiskLevelService extends CrudWithDialogGenericService<RiskLevel> {
+  list: RiskLevel[] = [];
+
+  constructor(public http: HttpClient,
+    private urlService: UrlService,
+    public dialog: DialogService) {
+    super();
+    FactoryService.registerService('RiskLevelService', this);
+  }
+
+  _getModel(): new () => RiskLevel {
+    return RiskLevel;
+  }
+
+  _getDialogComponent(): ComponentType<any> {
+    return RiskLevelPopupComponent;
+  }
+
+  _getServiceURL(): string {
+    return this.urlService.URLS.RISK_LEVEL;
+  }
+
+
+  openViewDialog(modelId: number): Observable<DialogRef> {
+    return this.getByIdComposite(modelId).pipe(
+      switchMap((RiskLevel: RiskLevel) => {
+        return of(this.dialog.show<IDialogData<RiskLevel>>(RiskLevelPopupComponent, {
+          model: RiskLevel,
+          operation: OperationTypes.VIEW
+        }));
+      })
+    );
+  }
+
+  saveAttachment(id: number, attachment: File): Observable<string> {
+    const form = new FormData()
+    form.append('attachment', attachment || null);
+
+    return this.http.post<string>(this._getServiceURL() + `/${id}/attachment`, form)
+
+  }
+
+  loadByVsIdAsBlob(vsId: string): Observable<Blob> {
+    return this.http.get(this._getServiceURL() + '/content/' + vsId, { responseType: 'blob' });
+  }
+}
