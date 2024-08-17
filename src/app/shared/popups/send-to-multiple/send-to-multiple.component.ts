@@ -11,7 +11,7 @@ import { ToastService } from '@app/services/toast.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { TeamService } from '@app/services/team.service';
 import { InternalDepartmentService } from '@app/services/internal-department.service';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidatorFn } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
 import { InternalUser } from '@app/models/internal-user';
@@ -23,6 +23,8 @@ import { filter, switchMap, take, takeUntil, map } from 'rxjs/operators';
 import { ExpertsEnum } from '@app/enums/experts-enum';
 import { CaseModel } from '@app/models/case-model';
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import { SectorService } from '@app/services/sector.service';
+import { Sector } from '@app/models/sector';
 
 @Component({
   selector: 'send-to-multiple',
@@ -50,6 +52,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     private dialog: DialogService,
     private serviceDataService: ServiceDataService,
     public lang: LangService,
+    private sectorService:SectorService
   ) {
     if (this.isSendToDepartments() && this.twoDepartmentsWFResponses.includes(this.data.sendToResponse)) {
       this.maxSelectionCount = 2; // as per business doc
@@ -58,6 +61,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
 
   users: InternalUser[] = [];
   departments: InternalDepartment[] = [];
+  sectors: Sector[] = [];
   form!: UntypedFormGroup;
   done$: Subject<void> = new Subject<void>();
   private destroy$: Subject<void> = new Subject();
@@ -75,7 +79,6 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     WFResponseType.REVIEW_NPO_MANAGEMENT,
     WFResponseType.FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS,
-    WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS,
     WFResponseType.ORGANIZATION_ENTITIES_SUPPORT_TO_MULTI_DEPARTMENTS,
   ];
   multiSendToUserWFResponseList = [
@@ -86,6 +89,9 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
   ];
 
+  departmentsAndSectorsWFResponses = [
+    WFResponseType.PROJECT_COMPLETION_SEND_TO_SINGLE_DEPARTMENT
+  ]
   isSendToDepartments(): boolean {
     return this.multiSendToDepartmentWFResponseList.includes(this.data.sendToResponse);
   }
@@ -93,7 +99,9 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
   isSendToUsers(): boolean {
     return this.multiSendToUserWFResponseList.includes(this.data.sendToResponse);
   }
-
+  isSendToDepartmentsAndSectors(): boolean {
+    return this.departmentsAndSectorsWFResponses.includes(this.data.sendToResponse);
+  }
   private _loadByServiceData(caseType: CaseTypes) {
     const serviceData = this.serviceDataService.loadByCaseType(caseType)
       .pipe(
@@ -108,6 +116,10 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
       })
   }
   private _loadInitData(): void {
+    if(this.isSendToDepartmentsAndSectors()){
+      this._loadDepartmentsAndSectorsByCaseType(this.data.task.getCaseType())
+      return;
+    }
     if (this.isSendToDepartments()) {
       this.title = 'send_to_multi_departments';
       this._loadByServiceData(this.data.task.getCaseType());
@@ -153,12 +165,18 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
       departmentsValidators = null;
     }
 
+
     this.form = this.fb.group({
       taskName: [taskName, CustomValidators.required],
       departments: [[], departmentsValidators],
       users: [[], usersValidators],
-      comment: ['']
+      comment: [''],
+      sectors:[[]]
     });
+    // if(this.isSendToDepartmentsAndSectors()){
+
+    //   this.form.registerControl('sectors',this.fb.array([]))
+    // }
   }
 
   get taskNameControl(): AbstractControl {
@@ -233,5 +251,31 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
 
   searchNgSelect(term: string, item: any): boolean {
     return item.ngSelectSearch(term);
+  }
+
+  private _loadDepartmentsAndSectorsByCaseType(caseType: CaseTypes) {
+    const serviceData = this.serviceDataService.loadByCaseType(caseType)
+      .pipe(
+        map(result =>JSON.parse(result.customSettings) ?? {}),
+        map((customSettings:Record<number,number[]>) => {
+          return {
+            departments: customSettings[0]??[],
+            sectors: customSettings[1]??[],
+          }
+        } )
+      );
+
+    const internalDepartments = this.intDepService.loadAsLookups()
+
+    const sectors = this.sectorService.loadAsLookups();
+    forkJoin([serviceData, internalDepartments,sectors])
+      .subscribe(([customSettings, allDepartments,allSectors]) => {
+
+        let sectors = allSectors.filter(item=>customSettings.sectors.includes(item.id))
+       
+        const departments = allDepartments.filter(item=> customSettings.departments.includes(item.id))
+        this.departments =departments
+        this.sectors =sectors
+      })
   }
 }

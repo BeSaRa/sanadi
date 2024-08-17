@@ -1,18 +1,13 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
   <h1 class="h6 text-white">{{lang.map[title]}}</h1>
-  <button type="button" class="btn-close btn-close-white"
-          tabindex="-1" dialogClose aria-label="Close"></button>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
 <div [formGroup]="form" class="dialog-content no-fixed-height" style="width: 500px">
   <div *ngIf="isSendToUsers()" class="col-12 mb-4 position-relative">
     <label asteriskIfRequired="users" for="users" class="form-label">{{lang.map.select_user}}</label>
-    <ng-select appendTo="body" [selectOnTab]="true" [items]="users" labelForId="users"
-               bindValue="id" [clearable]="true"
-               [searchFn]="searchNgSelect"
-               placeholder="{{lang.map.select}}" id="users"
-               [notFoundText]="lang.map.msg_not_found"
-               [multiple]="true" [closeOnSelect]="false"
-               formControlName="users" validationClasses="users">
+    <ng-select appendTo="body" [selectOnTab]="true" [items]="users" labelForId="users" bindValue="id" [clearable]="true"
+      [searchFn]="searchNgSelect" placeholder="{{lang.map.select}}" id="users" [notFoundText]="lang.map.msg_not_found"
+      [multiple]="true" [closeOnSelect]="false" formControlName="users" validationClasses="users">
       <ng-template ng-option-tmp let-item="item">
         <span class="custom-option">{{item.getName()}}</span>
       </ng-template>
@@ -32,17 +27,13 @@
     </ng-select>
     <app-field-error-message controlName="users"></app-field-error-message>
   </div>
-  <div *ngIf="isSendToDepartments()"
-       class="col-12 mb-4 position-relative ng-select-wrapper">
+  <div *ngIf="isSendToDepartments() || isSendToDepartmentsAndSectors()"
+    class="col-12 mb-4 position-relative ng-select-wrapper">
     <label asteriskIfRequired="departments" for="departments" class="form-label">{{lang.map.select_department}}</label>
-    <ng-select [selectOnTab]="true" [items]="departments" labelForId="departments"
-               bindValue="id" [clearable]="true"
-               [maxSelectedItems]="maxSelectionCount"
-               [searchFn]="searchNgSelect" appendTo="body"
-               placeholder="{{lang.map.select}}" id="departments"
-               [notFoundText]="lang.map.msg_not_found"
-               [multiple]="true" [closeOnSelect]="false"
-               formControlName="departments" validationClasses="departments">
+    <ng-select [selectOnTab]="true" [items]="departments" labelForId="departments" bindValue="id" [clearable]="true"
+      [maxSelectedItems]="maxSelectionCount" [searchFn]="searchNgSelect" appendTo="body"
+      placeholder="{{lang.map.select}}" id="departments" [notFoundText]="lang.map.msg_not_found" [multiple]="true"
+      [closeOnSelect]="false" formControlName="departments" validationClasses="departments">
       <ng-template ng-option-tmp let-item="item">
         <span class="custom-option">{{item.getName()}}</span>
       </ng-template>
@@ -62,15 +53,42 @@
     </ng-select>
     <app-field-error-message controlName="departments"></app-field-error-message>
   </div>
+  <div *ngIf="isSendToDepartmentsAndSectors()" class="col-12 mb-4 position-relative ng-select-wrapper">
+    <label asteriskIfRequired="sectors" for="sectors" class="form-label">{{lang.map.menu_sectors}}</label>
+    <ng-select [selectOnTab]="true" [items]="sectors" labelForId="sectors" bindValue="id" [clearable]="true"
+      [maxSelectedItems]="maxSelectionCount" [searchFn]="searchNgSelect" appendTo="body"
+      placeholder="{{lang.map.select}}" id="sectors" [notFoundText]="lang.map.msg_not_found" [multiple]="true"
+      [closeOnSelect]="false" formControlName="sectors" validationClasses="sectors">
+      <ng-template ng-option-tmp let-item="item">
+        <span class="custom-option">{{item.getName()}}</span>
+      </ng-template>
+      <ng-template ng-label-tmp let-item="item" let-clear="clear">
+        <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
+        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+      </ng-template>
+      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+        <div class="ng-value" *ngFor="let item of (items ? items.slice(0,2): [])">
+          <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
+          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+        </div>
+        <div class="ng-value" *ngIf="items.length > 2">
+          <span class="ng-value-label">{{items.length - 2}} more...</span>
+        </div>
+      </ng-template>
+    </ng-select>
+    <app-field-error-message controlName="sectors"></app-field-error-message>
+  </div>
+
   <div class="col-sm-12 mb-4 position-relative">
-    <label class="form-label" asteriskIfRequired="comment"  for="comment">{{lang.map.comment}}</label>
+    <label class="form-label" asteriskIfRequired="comment" for="comment">{{lang.map.comment}}</label>
     <textarea name="comment" validationClasses="comment" formControlName="comment" id="comment" rows="4"
-              class="form-control"></textarea>
+      class="form-control"></textarea>
     <app-field-error-message controlName="comment"></app-field-error-message>
   </div>
 </div>
 <div class="dialog-actions">
   <div class="flex-grow-1"></div>
-  <button (click)="form.valid && done$.next()" class="btn btn-primary" [disabled]="!isValidForm()">{{lang.map.send}}</button>
+  <button (click)="form.valid && done$.next()" class="btn btn-primary"
+    [disabled]="!isValidForm()">{{lang.map.send}}</button>
   <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
 </div>

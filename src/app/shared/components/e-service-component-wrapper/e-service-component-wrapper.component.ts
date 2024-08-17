@@ -1,21 +1,17 @@
-import { OrganizationsEntitiesSupport } from './../../../models/organizations-entities-support';
-import { GeneralAssociationMeetingAttendance } from '@models/general-association-meeting-attendance';
-import {
-  AwarenessActivitySuggestionComponent
-} from '@modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
-import { AwarenessActivitySuggestion } from '@models/awareness-activity-suggestion';
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
-import {
-  IGeneralAssociationMeetingAttendanceSpecialActions
-} from '@contracts/i-general-association-meeting-attendance-special-actions';
 import { IGeneralAssociationMeetingAttendanceApprove } from '@contracts/i-general-association-meeting-attendance-approve';
+import {
+  IGeneralAssociationMeetingAttendanceComplete
+} from '@contracts/i-general-association-meeting-attendance-complete';
 import {
   IGeneralAssociationMeetingAttendanceComponent
 } from '@contracts/i-general-association-meeting-attendance-component';
 import {
-  IGeneralAssociationMeetingAttendanceComplete
-} from '@contracts/i-general-association-meeting-attendance-complete';
+  IGeneralAssociationMeetingAttendanceSpecialActions
+} from '@contracts/i-general-association-meeting-attendance-special-actions';
 import { ITransferIndividualFundsAbroadComplete } from '@contracts/i-transfer-individual-funds-abroad-complete';
+import { GeneralAssociationMeetingAttendance } from '@models/general-association-meeting-attendance';
+import { OrganizationsEntitiesSupport } from './../../../models/organizations-entities-support';
 
 import {
   AfterViewInit,
@@ -30,46 +26,46 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DynamicComponentService } from '@app/services/dynamic-component.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { LangService } from '@app/services/lang.service';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { CaseModel } from '@app/models/case-model';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { IOpenedInfo } from '@app/interfaces/i-opened-info';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { WFActions } from '@app/enums/wfactions.enum';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { CaseTypes } from '@app/enums/case-types.enum';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ToastService } from '@app/services/toast.service';
-import { InboxService } from '@app/services/inbox.service';
-import { isObservable, merge, Observable, of, Subject } from 'rxjs';
-import { filter, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { OpenFrom } from '@app/enums/open-from.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { WFActions } from '@app/enums/wfactions.enum';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { IOpenedInfo } from '@app/interfaces/i-opened-info';
 import { IESComponent } from '@app/interfaces/iescomponent';
+import { CaseModel } from '@app/models/case-model';
+import { ChecklistItem } from '@app/models/checklist-item';
 import { ExternalUser } from '@app/models/external-user';
 import { InternalUser } from '@app/models/internal-user';
-import { ChecklistItem } from '@app/models/checklist-item';
+import { OrganizationOfficer } from '@app/models/organization-officer';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { OrganizationsEntitiesSupportComponent } from '@app/modules/services/organization-entities-support/pages/organizations-entities-support/organizations-entities-support.component';
+import { DynamicComponentService } from '@app/services/dynamic-component.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { InboxService } from '@app/services/inbox.service';
+import { LangService } from '@app/services/lang.service';
+import { ToastService } from '@app/services/toast.service';
 import { StepCheckListComponent } from '@app/shared/components/step-check-list/step-check-list.component';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
 import {
   IGeneralAssociationMeetingAttendanceFinalApprove
 } from '@contracts/i-general-association-meeting-attendance-final-approve';
-import { ProjectImplementation } from '@models/project-implementation';
 import { WrapperButtonsGroupEnum } from '@enums/wrapper-buttons-group-enum';
+import { ActionRegistry } from "@models/action-registry";
+import { ProjectImplementation } from '@models/project-implementation';
 import { UrgentInterventionLicenseFollowup } from '@models/urgent-intervention-license-followup';
 import {
   TransferringIndividualFundsAbroadComponent
 } from "@modules/services/transferring-individual-funds-abroad/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component";
-import { ActionRegistry } from "@models/action-registry";
-import { OrganizationOfficer } from '@app/models/organization-officer';
-import { OrganizationsEntitiesSupportComponent } from '@app/modules/services/organization-entities-support/pages/organizations-entities-support/organizations-entities-support.component';
+import { isObservable, merge, Observable, of, Subject } from 'rxjs';
+import { filter, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -864,6 +860,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.ORGANIZATION_ENTITIES_SUPPORT_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS)
+            || item.getResponses().includes(WFResponseType.PROJECT_COMPLETION_SEND_TO_SINGLE_DEPARTMENT)
             || item.caseType === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT && this.employeeService.isLicensingUser();
         },
         onClick: (item: CaseModel<any, any>) => {
@@ -1540,7 +1537,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
       || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
       || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT)
-      || item.getResponses().includes(WFResponseType.PROJECT_COMPLETION_SEND_TO_SINGLE_DEPARTMENT)
+      // || item.getResponses().includes(WFResponseType.PROJECT_COMPLETION_SEND_TO_SINGLE_DEPARTMENT)
       || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
       || item.getResponses().includes(WFResponseType.PROJECT_IMPLEMENTATION_SEND_TO_SINGLE_DEPARTMENT)
       || item.getResponses().includes(WFResponseType.FINANCIAL_TRANSFER_SEND_TO_SINGLE_DEPARTMENT)
