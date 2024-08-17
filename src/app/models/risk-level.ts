@@ -9,6 +9,7 @@ import { ISearchFieldsMap } from "@app/types/types";
 import { CustomValidators } from "@app/validators/custom-validators";
 import { AdminResult } from "./admin-result";
 import { BaseModel } from "./base-model";
+import { printBlobData } from "@app/helpers/utils";
 
 const {send,receive} = new RiskLevelInterceptor();
 
@@ -19,6 +20,7 @@ export class RiskLevel extends BaseModel<RiskLevel, RiskLevelService> {
     publicConditionAr!: string;
     publicConditionEn!: string;
     requiredAttentionLevel!: number;
+    vsid!:string;
    
     requiredAttentionLevelInfo!: AdminResult;
 
@@ -73,5 +75,18 @@ export class RiskLevel extends BaseModel<RiskLevel, RiskLevelService> {
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+
+  get canDownLoadAttachment(){
+    return !!this.vsid
+  }
+  saveAttachment(file:File){
+    this.service.saveAttachment(this.id,file).subscribe()
+  }
+  downloadAttachment(){
+    this.service.loadByVsIdAsBlob(this.vsid)
+    .subscribe((data) => {
+      printBlobData(data, 'Attachment_' + this.getName());
+    });
   }
 }

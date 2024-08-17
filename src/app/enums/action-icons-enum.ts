@@ -68,5 +68,6 @@ export enum ActionIconsEnum {
   COMMENT = 'mdi-comment',
   CHANGE_DATE = 'mdi-calendar-edit',
   REASSIGN = 'mdi-account-convert',
-  REASSIGNED = 'mdi-account-check-outline'
+  REASSIGNED = 'mdi-account-check-outline',
+  UPLOAD = 'mdi-upload',
 }
