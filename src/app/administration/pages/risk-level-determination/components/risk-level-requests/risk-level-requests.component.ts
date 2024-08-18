@@ -119,14 +119,14 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       show: (_) => this.employeeService.isInternalUser(),
       onClick: (item: RiskLevelDetermination) => this.return(item)
     },
-    // // acknowledge
-    // {
-    //   type: 'action',
-    //   label: 'lbl_acknowledge',
-    //   icon: ActionIconsEnum.LAUNCH,
-    //   show: (_) => this.employeeService.isExternalUser(),
-    //   onClick: (item: RiskLevelDetermination) => this.acknowledge()
-    // },
+    // acknowledge
+    {
+      type: 'action',
+      label: 'lbl_acknowledge',
+      icon: ActionIconsEnum.LAUNCH,
+      show: (_) => this.employeeService.isExternalUser(),
+      onClick: (item: RiskLevelDetermination) => this.acknowledge(item)
+    },
     // logs
     {
       type: 'action',
@@ -189,6 +189,16 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       )
       .subscribe()
   }
+  acknowledge(item: RiskLevelDetermination) {
+    this.service.acknowledge(item.id)
+      .pipe(
+        tap(_ => {
+          this.toast.success(this.lang.map.msg_reject_success)
+        }),
+        tap(_ => this.reload$.next(null)),
+      )
+      .subscribe()
+  }
   return(item: RiskLevelDetermination) {
     this.dialogService.show(CommentPopupComponent)
       .onAfterClose$
@@ -206,7 +216,15 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
   }
   acknowledgeBulk($event: MouseEvent) {
     $event.preventDefault();
-    this.service.acknowledge()
+    if (!this.selectedRecords.length) {
+      return;
+    }
+    if (this.isInvalidSelection()) {
+      this.toast.error(this.lang.map.all_request_status_should_be_pending);
+      return;
+    }
+    const ids = this.selectedRecords.map(item => item.id);
+    this.service.acknowledgeBulk(ids)
       .pipe(
         tap(_ => {
           this.toast.success(this.lang.map.msg_acknowledge_successfully)
