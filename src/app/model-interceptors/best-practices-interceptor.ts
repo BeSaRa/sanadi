@@ -4,7 +4,7 @@ import {AdminResult} from '@app/models/admin-result';
 
 export class BestPracticesInterceptor implements IModelInterceptor<BestPractices> {
   receive(model: BestPractices): BestPractices {
-    model.bestPracticesInfo = model.bestPracticesInfo.map(x => {
+    model.bestPracticesInfo = model.bestPracticesInfo?.map(x => {
       return AdminResult.createInstance(x);
     });
     return model;

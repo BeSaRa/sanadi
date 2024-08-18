@@ -4,7 +4,7 @@ import {AdminResult} from '@app/models/admin-result';
 
 export class LessonsLearnedInterceptor implements IModelInterceptor<LessonsLearned> {
   receive(model: LessonsLearned): LessonsLearned {
-    model.lessonsLearnedInfo = model.lessonsLearnedInfo.map(x => {
+    model.lessonsLearnedInfo = model.lessonsLearnedInfo?.map(x => {
       return AdminResult.createInstance(x);
     });
     return model;
