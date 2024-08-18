@@ -15,7 +15,13 @@ const sanadiPermissionsGroup: PermissionsEnum[] = [
 ];
 const restrictedPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.WORLD_CHECK_SEARCH,
-  PermissionsEnum.SCREENING_SEARCH_AUDIT
+  PermissionsEnum.SCREENING_SEARCH_AUDIT,
+  PermissionsEnum.MANAGE_BANNED_PERSON_RACA,
+  PermissionsEnum.MANAGE_BANNED_PERSON_MOI,
+  PermissionsEnum.DECISION_BANNED_PERSON_MOI,
+  PermissionsEnum.DECISION_BANNED_PERSON_RACA,
+  PermissionsEnum.SEARCH_BANNED_PERSON_MOI,
+  PermissionsEnum.SEARCH_BANNED_PERSON_RACA
 ];
 const adminPermissionsGroup: PermissionsEnum[] = [
   // PermissionsEnum.ADD_ORG_USER,
