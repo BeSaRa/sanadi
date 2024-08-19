@@ -861,6 +861,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.ORGANIZATION_ENTITIES_SUPPORT_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.PROJECT_COMPLETION_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.PROJECT_COMPLETION_SEND_TO_MULTI_DEPARTMENT)
             || item.caseType === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT && this.employeeService.isLicensingUser();
         },
         onClick: (item: CaseModel<any, any>) => {
