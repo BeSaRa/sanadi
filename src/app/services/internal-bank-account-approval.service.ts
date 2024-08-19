@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
@@ -103,9 +103,29 @@ export class InternalBankAccountApprovalService extends BaseGenericEService<Inte
   private _loadBankAccountsBasedOnCurrencyAndBank(bankId: number, currencyId: number): Observable<BankAccount[]> {
     return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/criteria?bank-id=' + bankId + '&currency=' + currencyId);
   }
+  @CastResponse(() => BankAccount)
+  private _loadBankAccountsById(bankId: number): Observable<BankAccount[]> {
+    return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/criteria',{
+      params:new HttpParams({
+        fromObject:{
+          bankId
+        }
+      })
+    });
+  }
 
   loadBankAccountsBasedOnCurrencyAndBank(bankId: number, currencyId: number) {
     return this._loadBankAccountsBasedOnCurrencyAndBank(bankId, currencyId).pipe(map(response => {
+      let result: BankAccount[] = [];
+      response.forEach((r: BankAccount) => {
+        r.bankInfo = (new Bank()).clone(r.bankInfo);
+        result.push((new BankAccount()).clone(r));
+      });
+      return result;
+    }));
+  }
+  loadBankAccountsById(bankId: number) {
+    return this._loadBankAccountsById(bankId).pipe(map(response => {
       let result: BankAccount[] = [];
       response.forEach((r: BankAccount) => {
         r.bankInfo = (new Bank()).clone(r.bankInfo);

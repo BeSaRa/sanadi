@@ -198,7 +198,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   _afterBuildForm(): void {
     this.listenToBankCategoryChange();
     this.listenToBankIdChange();
-    this.listenToCurrencyChange();
+    //this.listenToCurrencyChange();
     this.listenToOperationTypeChanges();
     this.loadBanks();
     this.loadBankAccounts();
@@ -351,7 +351,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     }
     this.selectedLicenses = [model];
     this.model = (new InternalBankAccountApproval()).clone({...this.model, ...model});
-    this.loadBankAccountsBasedOnCurrencyAndBank(this.model.category, this.model.bankId, this.model.currency);
+    this.loadBankAccountById(this.model.category, this.model.bankId);
     this.form.patchValue({
       basicInfo: this.model?.buildBasicInfo(),
       explanation: this.model?.buildExplanation()
@@ -400,29 +400,39 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   listenToBankCategoryChange() {
     this.bankAccountCategory.valueChanges.subscribe(val => {
-      this.loadBankAccountsBasedOnCurrencyAndBank(this.bankAccountCategory.value, this.bankId.value, this.currency.value);
+      this.loadBankAccountById(this.bankAccountCategory.value, this.bankId.value);
       this.toggleAccountCategoryControl(val);
     });
   }
 
   listenToBankIdChange() {
     this.bankId.valueChanges.subscribe(_ => {
-      this.loadBankAccountsBasedOnCurrencyAndBank(this.bankAccountCategory.value, this.bankId.value, this.currency.value);
+      this.loadBankAccountById(this.bankAccountCategory.value, this.bankId.value);
     });
   }
 
-  listenToCurrencyChange() {
-    this.currency.valueChanges.subscribe(_ => {
-      if(this.mainAccount.valid){
-        return;
-      }
-      this.loadBankAccountsBasedOnCurrencyAndBank(this.bankAccountCategory.value, this.bankId.value, this.currency.value);
-    });
-  }
+  // listenToCurrencyChange() {
+  //   this.currency.valueChanges.subscribe(_ => {
+  //     if(this.mainAccount.valid){
+  //       return;
+  //     }
+  //     this.loadBankAccountsBasedOnCurrencyAndBank(this.bankAccountCategory.value, this.bankId.value, this.currency.value);
+  //   });
+  // }
 
-  loadBankAccountsBasedOnCurrencyAndBank(bankCategory: number, bankId: number, currencyId: number) {
-    if (bankCategory === InternalBankCategoryEnum.SUB && bankId && currencyId) {
-      this.service.loadBankAccountsBasedOnCurrencyAndBank(bankId, currencyId).subscribe(list => {
+  // loadBankAccountsBasedOnCurrencyAndBank(bankCategory: number, bankId: number, currencyId: number) {
+  //   if (bankCategory === InternalBankCategoryEnum.SUB && bankId && currencyId) {
+  //     this.service.loadBankAccountsBasedOnCurrencyAndBank(bankId, currencyId).subscribe(list => {
+  //       this.bankAccountsBasedOnCurrencyAndBank = list;
+  //     });
+  //   } else {
+  //     this.mainAccount.patchValue(null);
+  //     this.bankAccountsBasedOnCurrencyAndBank = [];
+  //   }
+  // }
+  loadBankAccountById(bankCategory: number, bankId: number) {
+    if (bankCategory === InternalBankCategoryEnum.SUB && bankId ) {
+      this.service.loadBankAccountsById(bankId).subscribe(list => {
         this.bankAccountsBasedOnCurrencyAndBank = list;
       });
     } else {
