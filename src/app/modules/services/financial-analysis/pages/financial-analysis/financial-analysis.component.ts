@@ -303,9 +303,9 @@ export class FinancialAnalysisComponent extends EServicesGenericComponent<
           if (userInteraction) {
             this.resetForm$.next(false);
             this.requestTypeField.setValue(requestTypeValue);
+            this.readonly = requestTypeValue === AllRequestTypesEnum.UPDATE;
           }
           this.requestType$.next(requestTypeValue);
-          this.readonly = requestTypeValue === AllRequestTypesEnum.UPDATE;
 
           this._handleLicenseValidationsByRequestType();
         } else {
