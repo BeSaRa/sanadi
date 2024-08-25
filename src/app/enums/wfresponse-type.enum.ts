@@ -57,5 +57,6 @@ export enum WFResponseType {
   SEEN = 'seen',
   TO_GM = 'toGM',
   PROJECT_COMPLETION_SEND_TO_SINGLE_DEPARTMENT = "askSingle:ReviewProjectCompletionRequest",
-  PROJECT_COMPLETION_SEND_TO_MULTI_DEPARTMENT = "ask:ReviewProjectCompletionRequest"
+  PROJECT_COMPLETION_SEND_TO_MULTI_DEPARTMENT = "ask:ReviewProjectCompletionRequest",
+  FINANCIAL_ANALYSIS_SEND_TO_MULTI_DEPARTMENT = "ask:ReviewFinancialAnalysisService"
 }
