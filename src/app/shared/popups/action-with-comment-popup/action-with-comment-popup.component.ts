@@ -55,7 +55,12 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.PARTNER_APPROVAL,
     CaseTypes.INTERNAL_PROJECT_LICENSE,
+    CaseTypes.FINANCIAL_ANALYSIS
     //CaseTypes.URGENT_INTERVENTION_LICENSING
+  ]
+
+  private excludeLicenseDateServices:number[] =[
+    CaseTypes.FINANCIAL_ANALYSIS
   ]
   form!: UntypedFormGroup;
 
@@ -149,6 +154,10 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       );
   }
 
+  get isExcludeDateCaseType(){
+    return this.data.task &&
+    this.excludeLicenseDateServices.includes(this.data.task.getCaseType()) 
+  }
   buildForm() {
     let controls: any = {
       licenseStartDate: [{ value: '', disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE }],
