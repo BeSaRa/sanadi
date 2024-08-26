@@ -108,7 +108,7 @@ export class InternalBankAccountApprovalService extends BaseGenericEService<Inte
     return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/criteria',{
       params:new HttpParams({
         fromObject:{
-          bankId
+          'bank-id':bankId
         }
       })
     });
