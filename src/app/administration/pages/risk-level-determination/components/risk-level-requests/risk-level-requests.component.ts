@@ -54,7 +54,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
   }
 
   @ViewChild('table') table!: TableComponent;
-  displayedColumns: string[] = ['rowSelection', 'countryId', 'applicantId', 'comment', 'requestStatus', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'requestFullSerial','countryId', 'applicantId', 'comment', 'requestStatus', 'actions'];
   searchColumns: string[] = [];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {
