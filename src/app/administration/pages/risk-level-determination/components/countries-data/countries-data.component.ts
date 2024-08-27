@@ -10,6 +10,7 @@ import { SortEvent } from '@app/interfaces/sort-event';
 import { Country } from '@app/models/country';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { CountryService } from '@app/services/country.service';
+import { EmployeeService } from '@app/services/employee.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
@@ -28,6 +29,7 @@ export class CountriesDataComponent extends AdminGenericComponent<Country, Count
     service = inject(CountryService);
     lookupService = inject(LookupService);
     fb = inject(FormBuilder);
+    employeeService = inject(EmployeeService);
     @Input()reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     @Output() riskLevelDeterminationCreated = new EventEmitter()
     constructor() {
@@ -140,6 +142,7 @@ export class CountriesDataComponent extends AdminGenericComponent<Country, Count
           type: 'action',
           icon: ActionIconsEnum.EDIT,
           label: 'btn_edit',
+          show:(_) => this.employeeService.isInternalUser(),
           onClick: (item: Country) => this.editConditions$.next(item),
         },
        
