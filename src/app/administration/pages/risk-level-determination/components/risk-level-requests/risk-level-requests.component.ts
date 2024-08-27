@@ -54,7 +54,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
   }
 
   @ViewChild('table') table!: TableComponent;
-  displayedColumns: string[] = ['rowSelection', 'countryId', 'applicantId', 'comment', 'requestStatus', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'requestFullSerial','countryId', 'applicantId', 'comment', 'requestStatus', 'actions'];
   searchColumns: string[] = [];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {
@@ -124,7 +124,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       type: 'action',
       label: 'lbl_acknowledge',
       icon: ActionIconsEnum.LAUNCH,
-      show: (_) => this.employeeService.isExternalUser(),
+      show: (item: RiskLevelDetermination) => this.employeeService.isExternalUser() && !item.isAcknowledged ,
       onClick: (item: RiskLevelDetermination) => this.acknowledge(item)
     },
     // logs
@@ -193,7 +193,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
     this.service.acknowledge(item.id)
       .pipe(
         tap(_ => {
-          this.toast.success(this.lang.map.msg_reject_success)
+          this.toast.success(this.lang.map.msg_acknowledge_successfully)
         }),
         tap(_ => this.reload$.next(null)),
       )

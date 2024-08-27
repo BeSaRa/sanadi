@@ -51,12 +51,16 @@
               <input type="checkbox" (click)="$event.stopPropagation()" [checked]="table.selection.isSelected(row)"
                      (change)="$event ? table.selection.toggle(row) : null" class="form-check-input"></td>
           </ng-container>
+          <ng-container cdkColumnDef="requestFullSerial">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.requestFullSerial}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="countryId">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.country}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="applicantId">
-            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.applicantInfo.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="comment">
