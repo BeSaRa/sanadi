@@ -288,6 +288,9 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   uploaderFileChange($event: Event): void {
     const input = ($event.target as HTMLInputElement);
     const file = input.files?.item(0);
+    if(!file){
+      return;
+    }
     const validFile = file ? (this.allowedExtensions.includes(file.name.getExtension())) : true;
     !validFile ? input.value = '' : null;
     if (!validFile) {
