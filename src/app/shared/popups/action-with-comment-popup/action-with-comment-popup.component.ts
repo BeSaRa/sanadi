@@ -158,10 +158,14 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     return this.data.task &&
     this.excludeLicenseDateServices.includes(this.data.task.getCaseType()) 
   }
+   isDisabledDateAndDuration(){
+    return this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE || 
+    this.isExcludeDateCaseType
+  }
   buildForm() {
     let controls: any = {
-      licenseStartDate: [{ value: '', disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE }],
-      licenseDuration: [{ value: null, disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE },
+      licenseStartDate: [{ value: '', disabled: this.isDisabledDateAndDuration()}],
+      licenseDuration: [{ value: null, disabled: this.isDisabledDateAndDuration()},
       [CustomValidators.required, CustomValidators.number]],
       publicTerms: [{ value: '', disabled: true }, [CustomValidators.required]],
       customTerms: ['', [CustomValidators.required]],
