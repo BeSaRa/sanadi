@@ -525,8 +525,8 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   get subUNOCHACategory(): UntypedFormControl {
     return this.projectLicenseInfo.get('subUNOCHACategory') as UntypedFormControl
   }
-  get fullSerial(): UntypedFormControl {
-    return this.projectLicenseInfo.get('fullSerial') as UntypedFormControl
+  get oldFullSerial(): UntypedFormControl {
+    return this.projectLicenseInfo.get('oldFullSerial') as UntypedFormControl
   }
 
   isUpdateRequestAllowed(): boolean {
@@ -537,7 +537,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
 
   requestSearch($event?: Event) {
     $event?.preventDefault();
-    this.service.getApprovedRequests(this.fullSerial.value)
+    this.service.getApprovedRequests(this.oldFullSerial.value)
       .pipe(
         tap(list => !list.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)),
         filter(list => list.length > 0),
@@ -551,7 +551,11 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
         map(projectCompletion=> new ProjectCompletion().clone({
           ...projectCompletion,
           requestType: this.requestType.value,
-          id:undefined
+          id:undefined,
+          oldFullSerial:projectCompletion!.fullSerial,
+          oldSerial:projectCompletion!.serial,
+          serial:undefined,
+          fullSerial:undefined
         })),
         tap(projectCompletion=>{ 
           this._updateForm(projectCompletion)
