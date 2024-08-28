@@ -2,6 +2,7 @@
     <tabs-list >
       <tab *ngIf="canCreateRequest" [name]="tabsData.data.name" [template]="dataTemplate" [title]="lang.map.lbl_data"></tab>
       <tab *ngIf="canMakeDecision" [name]="tabsData.requests.name" [template]="requestsTemplate" [title]="lang.map.lbl_requests"></tab>
+      <tab  [name]="tabsData.completed_requests.name" [template]="completedRequestsTemplate" [title]="lang.map.lbl_completed_requests"></tab>
     </tabs-list>
   </ng-container>
 
@@ -9,5 +10,11 @@
     <countries-data [reload$]="reloadCountries$" (riskLevelDeterminationCreated)="onRiskLevelDeterminationCreated()"></countries-data>
   </ng-template>
   <ng-template #requestsTemplate>
-    <risk-level-requests [reload$]="reloadRequests$" (decisionMade)="onDecisionMade()"></risk-level-requests>
+    <risk-level-requests [reload$]="reloadRequests$" (decisionMade)="onDecisionMade()"
+    [requestStatuses]="approvalRequestStatuses"></risk-level-requests>
+  </ng-template>
+  <ng-template #completedRequestsTemplate>
+    <risk-level-requests [reload$]="reloadRequests$" (decisionMade)="onDecisionMade()"
+    [requestStatuses]="completedRequestStatuses"
+    [title]="'lbl_completed_requests'"></risk-level-requests>
   </ng-template>

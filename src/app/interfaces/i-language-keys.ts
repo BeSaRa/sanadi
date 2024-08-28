@@ -2249,4 +2249,5 @@ export interface ILanguageKeys {
   lbl_acknowledge:string;
   msg_acknowledge_successfully:string;
   all_request_status_should_be_pending:string;
+  lbl_completed_requests:string;
 }
