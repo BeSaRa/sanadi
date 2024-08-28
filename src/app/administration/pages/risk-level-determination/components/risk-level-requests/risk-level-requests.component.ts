@@ -2,12 +2,16 @@ import { Component, EventEmitter, inject, Input, Output, ViewChild } from '@angu
 import { FormBuilder } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { approvalStatusEnum } from '@app/enums/approvalStatus.enum';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
+import { RiskLevelDeterminationRequestStatusEnum } from '@app/enums/risk-level-determination-request-status-enumts';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { IGridAction } from '@app/interfaces/i-grid-action';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { SortEvent } from '@app/interfaces/sort-event';
+import { Pagination } from '@app/models/pagination';
 import { RiskLevelDetermination } from '@app/models/risk-level-determination';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { DialogService } from '@app/services/dialog.service';
@@ -28,7 +32,6 @@ import { Subject, takeUntil, exhaustMap, catchError, of, filter, switchMap, Beha
   styleUrls: ['risk-level-requests.component.scss']
 })
 export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelDetermination, RiskLevelDeterminationService> {
-  usePagination = true;
 
   lang = inject(LangService);
   service = inject(RiskLevelDeterminationService);
@@ -37,6 +40,9 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
   dialogService = inject(DialogService);
   toast = inject(ToastService);
   employeeService = inject(EmployeeService);
+
+  @Input() requestStatuses:RiskLevelDeterminationRequestStatusEnum[]=[]
+  @Input() title:keyof ILanguageKeys = 'lbl_requests'
 
 
   @Input() reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -54,7 +60,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
   }
 
   @ViewChild('table') table!: TableComponent;
-  displayedColumns: string[] = ['rowSelection', 'requestFullSerial','countryId', 'applicantId', 'comment', 'requestStatus', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'requestFullSerial', 'countryId', 'applicantId', 'comment', 'requestStatus', 'actions'];
   searchColumns: string[] = [];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {
@@ -92,7 +98,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       type: 'action',
       label: 'btn_edit',
       icon: 'mdi-pen',
-      show: (_) => this.employeeService.isInternalUser(),
+      show: (item:RiskLevelDetermination) => this.canUpdate(item),
       onClick: (item: RiskLevelDetermination) => this.edit$.next(item)
     },
     // approve
@@ -100,7 +106,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       type: 'action',
       label: 'approve',
       icon: ActionIconsEnum.APPROVE,
-      show: (_) => this.employeeService.isInternalUser(),
+      show: (item) => this.canMakeDecision(item),
       onClick: (item: RiskLevelDetermination) => this.approve(item)
     },
     // reject
@@ -108,7 +114,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       type: 'action',
       label: 'lbl_reject',
       icon: ActionIconsEnum.BLOCK,
-      show: (_) => this.employeeService.isInternalUser(),
+      show: (item) => this.canMakeDecision(item),
       onClick: (item: RiskLevelDetermination) => this.reject(item)
     },
     // return
@@ -116,7 +122,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       type: 'action',
       label: 'lbl_return',
       icon: ActionIconsEnum.REASSIGN,
-      show: (_) => this.employeeService.isInternalUser(),
+      show: (item) => this.canMakeDecision(item),
       onClick: (item: RiskLevelDetermination) => this.return(item)
     },
     // acknowledge
@@ -124,7 +130,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       type: 'action',
       label: 'lbl_acknowledge',
       icon: ActionIconsEnum.LAUNCH,
-      show: (item: RiskLevelDetermination) => this.employeeService.isExternalUser() && !item.isAcknowledged ,
+      show: (item: RiskLevelDetermination) => this.employeeService.isExternalUser() && !item.isAcknowledged,
       onClick: (item: RiskLevelDetermination) => this.acknowledge(item)
     },
     // logs
@@ -145,6 +151,16 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
     }
   }
 
+   canMakeDecision(item:RiskLevelDetermination): boolean {
+    return this.employeeService.isInternalUser() &&
+      this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_RISK_LEVEL_DETERMINATION)
+      && item.requestStatus === RiskLevelDeterminationRequestStatusEnum.PENDING;
+  }
+   canUpdate(item:RiskLevelDetermination): boolean {
+    return this.employeeService.isInternalUser() &&
+      this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_COUNTRIES)
+      && item.requestStatus !== RiskLevelDeterminationRequestStatusEnum.APPROVED;
+  }
 
   afterReload(): void {
     this.table && this.table.clearSelection();
@@ -326,6 +342,33 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
 
   isInvalidSelection(): boolean {
     return this.selectedRecords.some(item => item.requestStatus !== approvalStatusEnum.Pending)
+  }
+
+  listenToReload() {
+    this.reload$
+      .pipe(takeUntil((this.destroy$)))
+      .pipe(
+        filter(() => {
+          if (this.columnFilterFormHasValue()) {
+            this.columnFilter$.next('filter');
+            return false;
+          }
+          return true;
+        })
+      )
+      .pipe(switchMap(() => {
+        const paginationOptions = {
+          limit: this.pageEvent.pageSize,
+          offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+        }
+      
+        return this.service.getByStatuses(paginationOptions,this.requestStatuses)
+      }))
+      .subscribe((result: Pagination<RiskLevelDetermination[]>) => {
+       
+        this.models = result.rs;
+        this.afterReload();
+      })
   }
 }
 

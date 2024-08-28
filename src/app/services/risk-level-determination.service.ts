@@ -3,19 +3,22 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { RiskLevelDeterminationLogPopupComponent } from "@app/administration/popups/risk-level-determination-log-popup/risk-level-determination-log-popup.component";
 import { RiskLevelDeterminationPopupComponent } from "@app/administration/popups/risk-level-determination-popup/risk-level-determination-popup.component";
+import { PaginationContract } from "@app/contracts/pagination-contract";
 import { CastResponse, CastResponseContainer } from "@app/decorators/decorators/cast-response";
 import { HasInterception, InterceptParam } from "@app/decorators/decorators/intercept-model";
 import { OperationTypes } from "@app/enums/operation-types.enum";
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 import { IDialogData } from "@app/interfaces/i-dialog-data";
-import { AuditLog } from "@app/models/audit-log";
 import { Pagination } from "@app/models/pagination";
 import { RiskLevelDetermination } from "@app/models/risk-level-determination";
 import { DialogRef } from "@app/shared/models/dialog-ref";
-import { Observable, of, switchMap } from "rxjs";
+import { Observable, of, switchMap, tap } from "rxjs";
 import { DialogService } from "./dialog.service";
+import { EmployeeService } from "./employee.service";
 import { FactoryService } from "./factory.service";
 import { UrlService } from "./url.service";
+import { PermissionsEnum } from "@app/enums/permissions-enum";
+import { RiskLevelDeterminationRequestStatusEnum } from "@app/enums/risk-level-determination-request-status-enumts";
 
 @CastResponseContainer({
   $default: {
@@ -34,7 +37,8 @@ export class RiskLevelDeterminationService extends CrudWithDialogGenericService<
 
   constructor(public http: HttpClient,
     private urlService: UrlService,
-    public dialog: DialogService) {
+    public dialog: DialogService,
+    private employeeService: EmployeeService) {
     super();
     FactoryService.registerService('RiskLevelDeterminationService', this);
   }
@@ -116,4 +120,22 @@ export class RiskLevelDeterminationService extends CrudWithDialogGenericService<
         })
       );
   }
+
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  getByStatuses(options: Partial<PaginationContract>,requestStatus:RiskLevelDeterminationRequestStatusEnum[]): Observable<Pagination<RiskLevelDetermination[]>> {
+    return this.http.post<Pagination<RiskLevelDetermination[]>>(this._getServiceURL() + '/request/request-status/pg',{
+      requestStatus
+    }, {
+      params: { ...options },
+  
+    }).pipe(
+      tap(result => this.list = result.rs),
+      tap(result => this._loadDone$.next(result.rs))
+        
+      // )
+    );
+  }
+
 }
