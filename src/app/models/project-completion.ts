@@ -75,11 +75,14 @@ export class ProjectCompletion
   effort!: number;
   impact!: number;
   nationalities:number[] =[];
+  oldFullSerial!:string;
+  oldSerial!:number;
 
   // For view only
   projectTotalCost!: number;
   projectDescription!: string;
   projectName!: string;
+  
 
   domainInfo!: AdminResult;
   workAreaInfo!: AdminResult;
@@ -176,7 +179,7 @@ export class ProjectCompletion
   getprojectLicenseInfoFormValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       requestType: { langKey: 'request_type', value: this.requestType },
-      fullSerial: { langKey: 'serial_number', value: this.fullSerial },
+      oldFullSerial: { langKey: 'serial_number', value: this.oldFullSerial },
       projectWorkArea: { langKey: 'project_work_area', value: this.projectWorkArea },
       domain: { langKey: 'domain', value: this.domain },
       beneficiaryCountry: { langKey: 'beneficiary_country', value: this.beneficiaryCountry },
@@ -230,7 +233,7 @@ export class ProjectCompletion
   formBuilder(controls?: boolean) {
     const {
       requestType,
-      fullSerial,
+      oldFullSerial,
       projectWorkArea,
       beneficiaryCountry,
       domain,
@@ -261,7 +264,7 @@ export class ProjectCompletion
     return {
       projectLicenseInfo: {
         requestType: controls ? [requestType, CustomValidators.required] : requestType,
-        fullSerial: controls ? [fullSerial ,CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)] : fullSerial,
+        oldFullSerial: controls ? [oldFullSerial ,CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)] : oldFullSerial,
         projectWorkArea: controls ? [projectWorkArea, CustomValidators.required] : projectWorkArea,
         beneficiaryCountry: controls ? [beneficiaryCountry, CustomValidators.required] : beneficiaryCountry,
         domain: controls ? [domain] : domain,

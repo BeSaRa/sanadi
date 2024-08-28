@@ -36,18 +36,18 @@
             <app-field-error-message controlName="requestType"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="fullSerial"
-                   for="fullSerial">{{lang.map.serial_number}}</label>
+            <label class="form-label" asteriskIfRequired="oldFullSerial"
+                   for="oldFullSerial">{{lang.map.serial_number}}</label>
             <div class="input-group">
               <input [readonly]="!isUpdateRequestAllowed()"
                      (keydown.enter)="isUpdateRequestAllowed() && requestSearch($event)"
-                     formControlName="fullSerial"
-                     type="text" validationClasses="fullSerial" class="form-control"
-                     id="fullSerial" trimInput>
+                     formControlName="oldFullSerial"
+                     type="text" validationClasses="oldFullSerial" class="form-control"
+                     id="oldFullSerial" trimInput>
               <button type="button" (click)="requestSearch($event)" *ngIf="isUpdateRequestAllowed()"
                       class="input-group-text">
                 <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
-              <app-field-error-message controlName="fullSerial"></app-field-error-message>
+              <app-field-error-message controlName="oldFullSerial"></app-field-error-message>
             </div>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
