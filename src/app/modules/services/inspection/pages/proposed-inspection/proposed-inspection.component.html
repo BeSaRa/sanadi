@@ -73,6 +73,10 @@
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.lbl_other_proposed_task }}</th>
           <td cdk-cell *cdkCellDef="let row">{{ row.enName }}</td>
         </ng-container>
+        <ng-container cdkColumnDef="rejectionReason">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.comment }}</th>
+          <td cdk-cell *cdkCellDef="let row">{{ row.rejectionReason }}</td>
+        </ng-container>
         <ng-container cdkColumnDef="status">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
           [sortCallback]="sortingCallbacks.status"  >{{ lang.map.status }}</th>
