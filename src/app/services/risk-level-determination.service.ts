@@ -37,8 +37,7 @@ export class RiskLevelDeterminationService extends CrudWithDialogGenericService<
 
   constructor(public http: HttpClient,
     private urlService: UrlService,
-    public dialog: DialogService,
-    private employeeService: EmployeeService) {
+    public dialog: DialogService) {
     super();
     FactoryService.registerService('RiskLevelDeterminationService', this);
   }
@@ -110,8 +109,25 @@ export class RiskLevelDeterminationService extends CrudWithDialogGenericService<
   getAudits(id: number): Observable<RiskLevelDetermination[]> {
     return this.http.get<RiskLevelDetermination[]>(this._getServiceURL() + '/request/request-audit/' + id)
   }
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  getCountryAudits(countryId: number): Observable<RiskLevelDetermination[]> {
+    return this.http.get<RiskLevelDetermination[]>(this._getServiceURL() + '/request/request-audit/' + countryId+'/approved')
+  }
   openAuditLogsDialog(id: number): Observable<DialogRef> {
     return this.getAudits(id)
+      .pipe(
+        switchMap((logList: RiskLevelDetermination[]) => {
+          return of(this.dialog.show(RiskLevelDeterminationLogPopupComponent, {
+            logList
+          }));
+        })
+      );
+  }
+  openCountryAuditLogsDialog(countryId: number): Observable<DialogRef> {
+    return this.getCountryAudits(countryId)
       .pipe(
         switchMap((logList: RiskLevelDetermination[]) => {
           return of(this.dialog.show(RiskLevelDeterminationLogPopupComponent, {

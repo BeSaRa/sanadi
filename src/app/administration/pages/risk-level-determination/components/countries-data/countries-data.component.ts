@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
@@ -13,6 +13,7 @@ import { CountryService } from '@app/services/country.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
+import { RiskLevelDeterminationService } from '@app/services/risk-level-determination.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CustomValidators } from '@app/validators/custom-validators';
@@ -27,6 +28,7 @@ export class CountriesDataComponent extends AdminGenericComponent<Country, Count
 
     lang = inject(LangService);
     service = inject(CountryService);
+    riskLevelDeterminationService= inject(RiskLevelDeterminationService);
     lookupService = inject(LookupService);
     fb = inject(FormBuilder);
     employeeService = inject(EmployeeService);
@@ -153,13 +155,13 @@ export class CountriesDataComponent extends AdminGenericComponent<Country, Count
           label: 'view',
           onClick: (item: Country) => this.view$.next(item),
         },
-        // // logs
-        // {
-        //   type: 'action',
-        //   icon: ActionIconsEnum.HISTORY,
-        //   label: 'show_logs',
-        //   onClick: (item: Country) => this.showAuditLogs(item)
-        // },
+        // logs
+        {
+          type: 'action',
+          icon: ActionIconsEnum.HISTORY,
+          label: 'show_logs',
+          onClick: (item: Country) => this.showAuditLogs(item)
+        },
         
        
       ];
@@ -171,6 +173,16 @@ export class CountriesDataComponent extends AdminGenericComponent<Country, Count
       this.columnFilterForm = this.fb.group({
         arName: [''], enName: [''], riskLevel: [null], requiredAttentionLevel: [null] 
       })
+    }
+    showAuditLogs(record: Country): void {
+      if (!this.adminAuditLogService) {
+        console.error('Kindly inject "AdminAuditLogService"');
+        return;
+      }
+      this.riskLevelDeterminationService.openCountryAuditLogsDialog(record.id)
+        .subscribe((dialog: DialogRef) => {
+          dialog.onAfterClose$.subscribe();
+        });
     }
   }
   
