@@ -251,6 +251,8 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       // evaluation: this.fb.group(model.formBuilder(true).evaluation),
       explanation: this.fb.group(model.formBuilder(true).explanation)
     })
+    this.listenToChangeExternalFields();
+    this.listenToChangeInternalFields();
   }
   _updateForm(model: ProjectCompletion | undefined): void {
     if (!model) {
@@ -275,8 +277,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   _afterBuildForm(): void {
     this.handleReadonly();
     this.listenToMainDacOchaChanges();
-    this.listenToChangeExternalFields();
-    this.listenToChangeInternalFields();
+ 
     // this._setDefaultValues();
   }
   _resetForm(): void {
