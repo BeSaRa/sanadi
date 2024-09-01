@@ -87,6 +87,45 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row">
+          <label for="aidLookupParentId"
+                 class="col-sm-12 col-md-4 col-form-label">{{ langService.map.requested_aid_category }}</label>
+          <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+            <ng-select [selectOnTab]="true" labelForId="aidLookupParentId" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="aidLookupParentId"
+                       [notFoundText]="langService.map.msg_not_found"
+                       (change)="handleAidsMainAidChange($event)"
+                       validationClasses="aidLookupParentId"
+                       formControlName="aidLookupParentId" appendTo="body">
+              <ng-option *ngFor="let option of mainAidLookupsList" [value]="option.id">
+                {{ option.getName() }}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="aidLookupParentId"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+          <div class="row">
+            <label for="aidLookupId"
+                   class="col-sm-12 col-md-4 col-form-label">{{ langService.map.requested_aid }}</label>
+            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+              <ng-select [selectOnTab]="true" labelForId="aidLookupId" [clearable]="false"
+                         placeholder="{{langService.map.select}}" id="aidLookupId"
+                         [notFoundText]="langService.map.msg_not_found"
+                         validationClasses="aidLookupId"
+                         formControlName="aidLookupId" appendTo="body">
+                <ng-option *ngFor="let option of aidsSubAidLookupsList" [value]="option.id">
+                  {{ option.getName() }}
+                </ng-option>
+              </ng-select>
+              <app-field-error-message controlName="aidLookupId"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+    </div>
     <hr/>
     <div class="row">
       <div class="col-12 d-flex flex-row align-items-center justify-content-center ">
