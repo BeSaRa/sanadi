@@ -1728,7 +1728,12 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     return (idType === BeneficiaryIdTypes.PASSPORT || idType === BeneficiaryIdTypes.GCC_ID);
   }
 
-  private _getIdTypeField(identification: 'primary' | 'secondary' | 'requester'): UntypedFormControl {
+  hasEmployerField() {
+    return (this.primaryIdTypeField?.value !== BeneficiaryIdTypes.GCC_ID);
+  }
+  private _getIdTypeField(
+    identification: 'primary' | 'secondary' | 'requester'
+  ): UntypedFormControl {
     if (identification === 'primary') {
       return this.primaryIdTypeField;
     } else if (identification === 'secondary') {
