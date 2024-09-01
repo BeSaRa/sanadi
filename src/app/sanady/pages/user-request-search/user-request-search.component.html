@@ -467,14 +467,6 @@
                 <span>{{ row.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator: inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
               </td>
             </ng-container>
-            <ng-container cdkColumnDef="leftAmount">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="sortingCallbacks.leftAmount"> {{ langService.map.left_amount }}
-              </th>
-              <td cdk-cell *cdkCellDef="let row">
-                <span>{{ row.aidSuggestedAmount - row.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator: inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
-              </td>
-            </ng-container>
             <ng-container cdkColumnDef="statusDateModified">
               <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
                   [sortCallback]="sortingCallbacks.statusDateModified"> {{ langService.map.lbl_status_date_modified }}
