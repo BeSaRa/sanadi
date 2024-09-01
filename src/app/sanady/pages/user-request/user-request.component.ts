@@ -277,7 +277,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       // checkTouchedDirty: true,
       validStatus: () => {
         return (!this.beneficiaryObligationComponentRef || (this.beneficiaryObligationsStatus === 'READY'))
-          && (!this.beneficiaryIncomeComponentRef || (this.beneficiaryIncomesStatus === 'READY'));
+          && (!this.beneficiaryIncomeComponentRef || (this.beneficiaryIncomesStatus === 'READY')) &&
+          (this.employmentStatusField.value !== BenOccupationStatusEnum.WORKING
+            || !!this.beneficiaryIncomeComponentRef.list.length);
       },
       isTouchedOrDirty: () => {
         return (this.beneficiaryObligationComponentRef && this.beneficiaryObligationComponentRef.isTouchedOrDirty())
@@ -656,6 +658,15 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
             return true;
           } else {
             this.displayRequestStatusMessage();
+            return false;
+          }
+        }),
+        filter(() => {
+          if (this.employmentStatusField.value !== BenOccupationStatusEnum.WORKING
+            || !!this.beneficiaryIncomeComponentRef.list.length) {
+            return true;
+          } else {
+            this.displayEmploymentStatusMessage();
             return false;
           }
         }),
@@ -1592,7 +1603,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
   private displayRequestStatusMessage(): void {
     this.dialogService.error(this.langService.map.msg_approved_request_without_one_aid_at_least);
   }
-
+  private displayEmploymentStatusMessage(): void {
+    this.dialogService.error(this.langService.map.msg_beneficiary_income_is_required);
+  }
   private validateBeneficiaryNDAResponse(value: Pair<BeneficiarySaveStatus, Beneficiary> | null): 'STOP' | 'CONTINUE' {
     if (!value) {
       return 'CONTINUE';
