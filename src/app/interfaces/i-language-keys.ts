@@ -2250,4 +2250,16 @@ export interface ILanguageKeys {
   msg_acknowledge_successfully:string;
   all_request_status_should_be_pending:string;
   lbl_completed_requests:string;
+  menu_external_charity:string;
+  menu_create_external_charity:string;
+  menu_update_external_charity:string;
+  suggested_charity_name:string;
+  suggested_activities:string;
+  lbl_founder_name:string;
+  lbl_founders_data:string;
+  lbl_position:string;
+  lbl_profession:string;
+  previous_request_number:string;
+  charity_name:string;
+  lbl_adjustment_reasons:string;
 }

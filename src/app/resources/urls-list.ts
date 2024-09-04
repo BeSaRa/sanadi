@@ -158,4 +158,7 @@ export const urlsList: Partial<IAppUrls> = {
   SCREENING: '/restricted/screening/',
   RISK_LEVEL: '/admin/risk-level',
   RISK_LEVEL_DETERMINATION: '/admin/risk-level-determination',
+  EXTERNAL_CHARITY_REQUEST: '/external-charity/request',
+  EXTERNAL_CHARITY_ADJUST: '/external-charity/request/adjust',
+  EXTERNAL_CHARITY_ATTACHMENT: '/external-charity/attachment',
 };

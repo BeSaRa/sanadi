@@ -94,7 +94,7 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next()
     this.destroy$.complete()
-    this.destroy$.subscribe()
+    this.destroy$.unsubscribe()
   }
 
   ngOnInit(): void {

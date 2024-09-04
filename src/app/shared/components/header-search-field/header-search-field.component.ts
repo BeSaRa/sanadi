@@ -1,15 +1,14 @@
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import {
   ISearchColumnConfig,
   SearchColumnConfigMap,
   SearchColumnEventType,
 } from '@app/interfaces/i-search-column-config';
-import {LangService} from '@app/services/lang.service';
-import {CommonUtils} from '@helpers/common-utils';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import { Observable, isObservable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { LangService } from '@app/services/lang.service';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { CommonUtils } from '@helpers/common-utils';
+import { Observable, filter, isObservable, take } from 'rxjs';
 
 
 @Component({
@@ -83,10 +82,13 @@ export class HeaderSearchFieldComponent implements OnInit {
       return;
     }
     if(this.field.selectOptions.options$){
-     const sub =   this.field.selectOptions.options$
+       this.field.selectOptions.options$
+       .pipe(
+        filter(value=>value.length>0),
+        take(1)
+      )
         .subscribe(value=>{
           this.options = value
-          sub.unsubscribe()
         })
         return;
     }

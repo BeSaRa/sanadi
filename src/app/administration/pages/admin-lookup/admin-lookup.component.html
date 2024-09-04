@@ -32,10 +32,13 @@
     *ngIf="canShowTab(tabsData.functionGroup)" [title]="getTabLabel(adminLookupTypeEnum.FUNCTIONAL_GROUP)"></tab>
   <tab [name]="tabsData.permissionGroup.name" [template]="permissionGroupTemplate"
     *ngIf="canShowTab(tabsData.permissionGroup)" [title]="getTabLabel(adminLookupTypeEnum.PERMISSION_GROUP)"></tab>
-  <tab [name]="tabsData.expensesType.name" [template]="expensesTypeTemplate"
-    *ngIf="canShowTab(tabsData.expensesType)" [title]="getTabLabel(adminLookupTypeEnum.EXPENSES_TYPE)"></tab>
+  <tab [name]="tabsData.expensesType.name" [template]="expensesTypeTemplate" *ngIf="canShowTab(tabsData.expensesType)"
+    [title]="getTabLabel(adminLookupTypeEnum.EXPENSES_TYPE)"></tab>
   <tab [name]="tabsData.serviceTypeWorkType.name" [template]="serviceTypeWorkTypeTemplate"
-    *ngIf="canShowTab(tabsData.serviceTypeWorkType)" [title]="getTabLabel(adminLookupTypeEnum.SERVICE_TYPE_WORK_TYPE)"></tab>
+    *ngIf="canShowTab(tabsData.serviceTypeWorkType)" [title]="getTabLabel(adminLookupTypeEnum.SERVICE_TYPE_WORK_TYPE)">
+  </tab>
+  <tab [name]="tabsData.externalCharityRequest.name" [template]="externalCharityRequestTemplate" *ngIf="canShowTab(tabsData.externalCharityRequest)"
+    [title]="getTabLabel(adminLookupTypeEnum.EXTERNAL_CHARITY_REQUEST)"></tab>
 </tabs-list>
 
 <ng-template #workFieldTemplate>
@@ -133,5 +136,10 @@
 <ng-template #serviceTypeWorkTypeTemplate>
   <admin-lookup-list #serviceTypeWorkTypeListComponent [adminLookupTypeId]="adminLookupTypeEnum.SERVICE_TYPE_WORK_TYPE"
     (onReady)="setLookupComponentMap($event, serviceTypeWorkTypeListComponent)">
+  </admin-lookup-list>
+</ng-template>
+<ng-template #externalCharityRequestTemplate>
+  <admin-lookup-list #externalCharityRequestListComponent [adminLookupTypeId]="adminLookupTypeEnum.EXTERNAL_CHARITY_REQUEST"
+    (onReady)="setLookupComponentMap($event, externalCharityRequestListComponent)">
   </admin-lookup-list>
 </ng-template>

@@ -152,5 +152,8 @@ export interface IAppUrls {
   SCREENING:string;
   RISK_LEVEL:string;
   RISK_LEVEL_DETERMINATION:string;
+  EXTERNAL_CHARITY_REQUEST:string;
+  EXTERNAL_CHARITY_ADJUST:string;
+  EXTERNAL_CHARITY_ATTACHMENT:string;
   [index: string]: string;
 }

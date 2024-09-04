@@ -98,6 +98,7 @@ enum DefaultItemOrder {
   SERVICE_PROJECT_COMPLETION = 39,
   SERVICE_FINANCIAL_ANALYSIS = 40,
   SERVICE_INSPECTION = 41,
+  EXTERNAL_CHARITY = 42,
 
   RESTRICTED,
   SERVICE_SEARCH,
@@ -148,6 +149,7 @@ const GroupNames = {
 
   TRAINING: 'training-services',
   RESTRICTED: 'restricted',
+  EXTERNAL_CHARITY: 'external-charity',
   ADMIN: 'administration'
 }
 
@@ -3257,6 +3259,49 @@ export const newNavigationMenuList = [
     parent: 4000,
     group: GroupNames.RESTRICTED,
     itemOrder: 8,
+    svg: null
+  },
+  {
+    id: 5000,
+    langKey: 'menu_external_charity',
+    path: '/home/external-charity',
+    icon: 'mdi-database-search',
+    isSvg: false,
+    permission: null,
+    menuKey: SystemMenuKeys.EXTERNAL_CHARITY,
+    permissionGroup: PermissionGroupsEnum.EXTERNAL_CHARITY_GROUP,
+    parent: null,
+    group: GroupNames.EXTERNAL_CHARITY,
+    itemOrder: DefaultItemOrder.EXTERNAL_CHARITY,
+    svg: null,
+    data: {
+      childrenGroupName: GroupNames.EXTERNAL_CHARITY
+    }
+  },
+  {
+    id: 5001,
+    langKey: 'menu_create_external_charity',
+    path: '/home/external-charity/create-charity',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.EXTERNAL_CHARITY_REQUEST_UPDATE,
+    permissionGroup: null,
+    parent: 5000,
+    group: GroupNames.EXTERNAL_CHARITY,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 5002,
+    langKey: 'menu_update_external_charity',
+    path: '/home/external-charity/update-charity',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.EXTERNAL_CHARITY_REQUEST_UPDATE,
+    permissionGroup: null,
+    parent: 5000,
+    group: GroupNames.EXTERNAL_CHARITY,
+    itemOrder: 1,
     svg: null
   },
 ];

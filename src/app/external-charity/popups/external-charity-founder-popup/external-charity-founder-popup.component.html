@@ -1,0 +1,56 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{lang.map.lbl_license_activities}}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content" #dialogContent>
+    <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+      <div class="row">
+       
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="founderName" for="founderName" class="form-label">{{lang.map.lbl_founder_name}}</label>
+          <input id="founderName" validationClasses="founderName" formControlName="founderName" class="form-control">
+          <app-field-error-message controlName="founderName"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="founderIdentifierId" for="founderIdentifierId" class="form-label">{{lang.map.personal_number}}</label>
+          <input id="founderIdentifierId" validationClasses="founderIdentifierId" formControlName="founderIdentifierId" class="form-control">
+          <app-field-error-message controlName="founderIdentifierId"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="founderPosition" for="founderPosition" class="form-label">{{lang.map.lbl_position}}</label>
+          <input id="founderPosition" validationClasses="founderPosition" formControlName="founderPosition" class="form-control">
+          <app-field-error-message controlName="founderPosition"></app-field-error-message>
+        </div>
+      
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="founderJob" for="founderJob"
+            class="form-label">{{lang.map.lbl_profession}}</label>
+            <input id="founderJob" validationClasses="founderJob" formControlName="founderJob" class="form-control">
+          <app-field-error-message controlName="founderJob"></app-field-error-message>
+        </div>
+      
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label for="founderNationality" asteriskIfRequired="founderNationality" class="form-label">
+            {{ lang.map.lbl_nationality}}
+          </label>
+          <ng-select [selectOnTab]="true" labelForId="founderNationality" [clearable]="true"
+            placeholder="{{ lang.map.select }}" id="founderNationality" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+            formControlName="founderNationality" validationClasses="founderNationality">
+            <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="founderNationality"></app-field-error-message>
+        </div>
+      </div>
+     
+  
+    </form>
+   
+  </div>
+<div class="dialog-actions">
+    <div class="flex-grow-1"></div>
+    <button *ngIf="saveVisible" (click)="form.valid && save()" [disabled]="form.invalid"
+        class="btn btn-primary">{{lang.map.btn_save}}</button>
+    <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>>

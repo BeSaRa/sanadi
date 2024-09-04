@@ -131,6 +131,9 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
       case AdminLookupTypeEnum.SERVICE_TYPE_WORK_TYPE:
         url += '/service-type-work-type';
         break;
+      case AdminLookupTypeEnum.EXTERNAL_CHARITY_REQUEST:
+        url += '/external-charity-request-status';
+        break;
     }
     return url;
   }

@@ -16,7 +16,7 @@ export interface ISearchColumnConfig {
     multiple?: boolean;
     labelProperty: string;
     optionValueKey: string;
-    options$?: Observable<Lookup[]>|Observable<AdminLookup[]>|Observable<any[]>;
+    options$?: Observable<any[]>;
   }
 }
 

@@ -459,6 +459,7 @@ const routes: Routes = [
       },
       {path: 'sanady', loadChildren: () => import('./sanady/sanady.module').then(m => m.SanadyModule)},
       {path: 'restricted', loadChildren: () => import('./restricted/restricted.module').then(m => m.RestrictedModule)},
+      {path: 'external-charity', loadChildren: () => import('./external-charity/external-charity.module').then(m => m.ExternalCharityModule)},
       /*{
         path: 'projects',
         canActivate: [ServicesGuard.canActivate],
