@@ -360,7 +360,10 @@ const urgentInterventionServicesPermissionsGroup: EServicePermissionsEnum[] = [
 const giveUsersPermissions: PermissionsEnum[] = [
   PermissionsEnum.NO_PERMISSION
 ];
-
+const externalCharityPermissionsGroup:PermissionsEnum[]=[
+  PermissionsEnum.EXTERNAL_CHARITY_REQUEST_UPDATE,
+  PermissionsEnum.EXTERNAL_CHARITY_REQUEST_SEARCH ,
+]
 const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.CONSULTATION_SERVICES_PERMISSION_GROUP]: consultationServicesPermissionGroup,
   [PermissionGroupsEnum.INQUIRY_SERVICES_PERMISSION_GROUP]: inquiryServicesPermissionGroup,
@@ -414,6 +417,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.FOLLOWUP_PERMISSIONS_GROUP]: followupPermissionsGroup,
   [PermissionGroupsEnum.GIVE_USERS_PERMISSIONS]: giveUsersPermissions,
   [PermissionGroupsEnum.RESTRICTED_PERMISSIONS_GROUP]: restrictedPermissionsGroup,
+  [PermissionGroupsEnum.EXTERNAL_CHARITY_GROUP]: externalCharityPermissionsGroup,
 };
 
 export {permissionGroups as PermissionsGroupMap};

@@ -1,0 +1,144 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
+      fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+      aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content w800px" #dialogContent>
+  <div class="row">
+    <tabs-list class="">
+      <tab [name]="tabsData.basicInfo.name" [template]="basicInfoTemplate"
+        [title]="lang.map[tabsData.basicInfo.langKey]"></tab>
+      <tab [name]="tabsData.attachment.name" [template]="attachmentTemplate"
+        [title]="lang.map[tabsData.attachment.langKey]"></tab>
+    </tabs-list>
+  </div>
+  <ng-template #basicInfoTemplate>
+    <ng-container [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label for="requestType" asteriskIfRequired="requestType" class="form-label">
+            {{ lang.map.request_type}}
+          </label>
+          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
+            placeholder="{{ lang.map.select }}" id="requestType" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+            formControlName="requestType" validationClasses="requestType">
+            <ng-option *ngFor="let option of requestTypes" [value]="option.lookupKey">
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requestType"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label for="serviceType" asteriskIfRequired="serviceType" class="form-label">
+            {{ lang.map.service_type}}
+          </label>
+          <ng-select [selectOnTab]="true" labelForId="serviceType" [clearable]="true"
+            placeholder="{{ lang.map.select }}" id="serviceType" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+            formControlName="serviceType" validationClasses="serviceType">
+            <ng-option *ngFor="let option of serviceTypes" [value]="option.lookupKey">
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="serviceType"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="previousRequestSerial" for="previousRequestSerial"
+            class="form-label">{{lang.map.previous_request_number}}</label>
+            <div class="input-group">
+              <input (keydown.enter)="isSearchAllowed() && licenseSearch($event)"
+                formControlName="previousRequestSerial" type="text" [readOnly]="!isSearchAllowed()"
+                validationClasses="previousRequestSerial"  class="form-control"
+                id="previousRequestSerial" trimInput>
+              <button *ngIf="isSearchAllowed()" type="button" (click)="licenseSearch($event)"
+                class="input-group-text"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+              <app-field-error-message controlName="previousRequestSerial"></app-field-error-message>
+            </div>
+          
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="suggestedCharityName" for="suggestedCharityName"
+            class="form-label">{{lang.map.suggested_charity_name}}</label>
+          <input id="suggestedCharityName" validationClasses="suggestedCharityName"
+            formControlName="suggestedCharityName" class="form-control">
+          <app-field-error-message controlName="suggestedCharityName"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="suggestedActivities" for="suggestedActivities"
+            class="form-label">{{lang.map.suggested_activities}}</label>
+          <input id="suggestedActivities" validationClasses="suggestedActivities" formControlName="suggestedActivities"
+            class="form-control">
+          <app-field-error-message controlName="suggestedActivities"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label for="workFieldId" asteriskIfRequired="workFieldId" class="form-label">
+            {{ lang.map.work_field}}
+          </label>
+          <ng-select [selectOnTab]="true" labelForId="workFieldId" [clearable]="true"
+            placeholder="{{ lang.map.select }}" id="workFieldId" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+            formControlName="workFieldId" validationClasses="workFieldId">
+            <ng-option *ngFor="let option of workFields" [value]="option.lookupKey">
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="workFieldId"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="requestorName" for="requestorName"
+            class="form-label">{{lang.map.lbl_requestor_name}}</label>
+          <input id="requestorName" validationClasses="requestorName" formControlName="requestorName"
+            class="form-control">
+          <app-field-error-message controlName="requestorName"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="requestorQID" for="requestorQID" class="form-label">{{lang.map.personal_number}}</label>
+          <input id="requestorQID" validationClasses="requestorQID" formControlName="requestorQID" class="form-control">
+          <app-field-error-message controlName="requestorQID"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="requestorAddress" for="requestorAddress"
+            class="form-label">{{lang.map.lbl_address}}</label>
+          <input id="requestorAddress" validationClasses="requestorAddress" formControlName="requestorAddress"
+            class="form-control">
+          <app-field-error-message controlName="requestorAddress"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="requestorEmail" for="requestorEmail"
+            class="form-label">{{lang.map.lbl_email}}</label>
+          <input id="requestorEmail" validationClasses="requestorEmail" formControlName="requestorEmail"
+            class="form-control">
+          <app-field-error-message controlName="requestorEmail"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="requestorMobileNo" for="requestorMobileNo"
+            class="form-label">{{lang.map.mobile_number}}</label>
+          <input id="requestorMobileNo" validationClasses="requestorMobileNo" formControlName="requestorMobileNo"
+            class="form-control">
+          <app-field-error-message controlName="requestorMobileNo"></app-field-error-message>
+        </div>
+      </div>
+      <founders formControlName="founderList" [disabled]="!saveVisible"></founders>
+
+    </ng-container>
+  </ng-template>
+
+  <ng-template #attachmentTemplate>
+    <external-charity-attachments [attachments]="model.requestDocumentList"
+    [requestId]="model.id"></external-charity-attachments>
+  </ng-template>
+
+
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next()"
+    class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

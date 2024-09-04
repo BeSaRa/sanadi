@@ -90,7 +90,7 @@ export class LicenseActivitiesComponent implements ControlValueAccessor, OnInit,
     ngOnDestroy(): void {
         this.destroy$.next()
         this.destroy$.complete()
-        this.destroy$.subscribe()
+        this.destroy$.unsubscribe()
     }
 
     ngOnInit(): void {

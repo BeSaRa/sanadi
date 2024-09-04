@@ -195,4 +195,8 @@ export interface ILookupMap {
   DocumentType: Lookup[];
   AdditionStatus: Lookup[];
   BannedSearch: Lookup[];
+  EXTERNAL_CHARITY_ATTACHMENT_TYPE: Lookup[];
+  EXTERNAL_CHARITY_REQUEST_TYPE: Lookup[];
+  EXTERNAL_CHARITY_SERVICE_TYPE: Lookup[];
+  EXTERNAL_CHARITY_WORK_FIELD: Lookup[];
 }

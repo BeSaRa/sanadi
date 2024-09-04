@@ -167,6 +167,14 @@ export class AdminLookupComponent {
       lookupType: AdminLookupTypeEnum.SERVICE_TYPE_WORK_TYPE,
       validStatus: () => true,
       isTouchedOrDirty: () => true
+    },
+    externalCharityRequest: {
+      name: 'externalCharityRequest',
+      index: 16,
+      langKey: 'lookup_service_type_work_type',
+      lookupType: AdminLookupTypeEnum.SERVICE_TYPE_WORK_TYPE,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     }
   };
   selectedWorkFieldTabIndex$: Subject<number> = new Subject<number>();

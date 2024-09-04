@@ -78,7 +78,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   ngOnDestroy(): void {
     this.destroy$.next()
     this.destroy$.complete()
-    this.destroy$.subscribe()
+    this.destroy$.unsubscribe()
   }
 
   ngOnInit(): void {
