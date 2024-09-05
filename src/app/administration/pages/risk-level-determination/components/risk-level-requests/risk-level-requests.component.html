@@ -90,7 +90,7 @@
           </tr>
         </table>
       </app-table>
-      <app-paginator #paginator (pageChange)="pageChange($event)" [length]="count" [backend]="true"></app-paginator>
+      <app-paginator #paginator (pageChange)="pageChange($event)" [backend]="true" [length]="count"></app-paginator>
       <context-menu-item #menu [actions]="actions"></context-menu-item>
     </div>
   </div>

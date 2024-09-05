@@ -69,7 +69,7 @@ export class RiskLevel extends BaseModel<RiskLevel, RiskLevelService> {
         CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
       ]] : publicConditionAr,
-      requiredAttentionLevel: controls ? [requiredAttentionLevel, [CustomValidators.required]] : requiredAttentionLevel
+      // requiredAttentionLevel: controls ? [requiredAttentionLevel, [CustomValidators.required]] : requiredAttentionLevel
     }
   }
 

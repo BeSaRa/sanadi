@@ -30,7 +30,7 @@ export class RiskLevelPopupComponent extends AdminGenericDialog<RiskLevel> {
     toast = inject(ToastService);
     lookupService = inject(LookupService);
 
-    requiredAttentionLevels = this.lookupService.listByCategory.RiskLevel;
+    requiredAttentionLevels = this.lookupService.listByCategory.RequiredAttentionLevel;
     
   
     constructor(

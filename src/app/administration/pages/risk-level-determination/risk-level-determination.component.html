@@ -14,7 +14,7 @@
     [requestStatuses]="approvalRequestStatuses"></risk-level-requests>
   </ng-template>
   <ng-template #completedRequestsTemplate>
-    <risk-level-requests [reload$]="reloadRequests$" (decisionMade)="onDecisionMade()"
+    <risk-level-requests [reload$]="reloadCompletedRequests$" (decisionMade)="onDecisionMade()"
     [requestStatuses]="completedRequestStatuses"
     [title]="'lbl_completed_requests'"></risk-level-requests>
   </ng-template>
