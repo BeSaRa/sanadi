@@ -33,6 +33,7 @@ import { Subject, takeUntil, exhaustMap, catchError, of, filter, switchMap, Beha
 })
 export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelDetermination, RiskLevelDeterminationService> {
 
+  usePagination: boolean = true;
   lang = inject(LangService);
   service = inject(RiskLevelDeterminationService);
   fb = inject(FormBuilder);
@@ -323,7 +324,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       return;
     }
     if (this.isInvalidSelection()) {
-      this.toast.error(this.lang.map.all_request_status_should_be_pending);
+      this.toast.error(this.lang.map.all_request_status_should_be_approved);
       return;
     }
     const ids = this.selectedRecords.map(item => item.id);
@@ -341,7 +342,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
   }
 
   isInvalidSelection(): boolean {
-    return this.selectedRecords.some(item => item.requestStatus !== approvalStatusEnum.Pending)
+    return this.selectedRecords.some(item => item.requestStatus !== approvalStatusEnum.Approved)
   }
 
   listenToReload() {
@@ -367,6 +368,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       .subscribe((result: Pagination<RiskLevelDetermination[]>) => {
        
         this.models = result.rs;
+        this.count = result.count;
         this.afterReload();
       })
   }
