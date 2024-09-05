@@ -14,7 +14,7 @@ import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { TabMap } from '@app/types/types';
-import { BehaviorSubject, catchError, exhaustMap, filter, iif, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, catchError, exhaustMap, filter, iif, Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { SelectExternalCharityPopupComponent } from '../select-external-charity-popup/select-external-charity-popup.component';
 import { ExternalCharityAttachmentsComponent } from '@app/external-charity/shared/external-charity-attachments/external-charity-attachments.component';
 
@@ -153,7 +153,7 @@ export class CreateCharityPopupComponent extends AdminGenericDialog<ExternalChar
           const criteria = !!previousRequestSerial ? {
             requestFullSerial: previousRequestSerial,
           } : {}
-          return this.service.loadByFilter(criteria).pipe(catchError(() => of(<ExternalCharity[]>[])));
+          return this.service.loadByCriteria(criteria).pipe(catchError(() => of(<ExternalCharity[]>[])));
         })
       )
       .pipe(
@@ -163,16 +163,23 @@ export class CreateCharityPopupComponent extends AdminGenericDialog<ExternalChar
         ),
         // allow only the collection if it has value
         filter((result) => !!result.length),
-        exhaustMap((list) => {
-          return iif(() => list.length === 1, of(list[0]),
+        switchMap((list) => {
+          return list.length === 1 ? of(list[0]):
             this.dialog.show<IDialogData<ExternalCharity[]>>(SelectExternalCharityPopupComponent, {
               model: list,
               operation: OperationTypes.CREATE
-            }).onAfterClose$)
+            }).onAfterClose$
         }),
         filter((model?: ExternalCharity) => !!model),
         tap((model) => {
-          this.form.patchValue(model!);
+         const updatedModel = new ExternalCharity().clone({
+            ...model!,
+            requestType:this.requestTypeControl.value,
+            previousRequestSerial: model?.requestFullSerial,
+            requestFullSerial : undefined
+          })
+          this.form.patchValue(updatedModel);
+        
         }),
         takeUntil(this.destroy$)
       )
