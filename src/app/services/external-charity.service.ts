@@ -2,7 +2,7 @@ import { ComponentType } from "@angular/cdk/portal";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { CastResponseContainer } from "@app/decorators/decorators/cast-response";
+import { CastResponse, CastResponseContainer } from "@app/decorators/decorators/cast-response";
 import { OperationTypes } from "@app/enums/operation-types.enum";
 import { CreateCharityPopupComponent } from "@app/external-charity/popups/create-charity-popup/create-charity-popup.component";
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
@@ -10,7 +10,7 @@ import { IDialogData } from "@app/interfaces/i-dialog-data";
 import { ExternalCharity } from "@app/models/external-charity";
 import { Pagination } from "@app/models/pagination";
 import { DialogRef } from "@app/shared/models/dialog-ref";
-import { Observable, of, switchMap } from "rxjs";
+import { Observable, of, switchMap, tap } from "rxjs";
 import { DialogService } from "./dialog.service";
 import { DocumentService } from "./document.service";
 import { FactoryService } from "./factory.service";
@@ -61,5 +61,19 @@ export class ExternalCharityService extends CrudWithDialogGenericService<Externa
       }
       updateStatus(model:{requestId:number,statusId:number,comments:string}) {
         return this.http.put(this._getServiceURL() + '/status', model);
+    }
+    @CastResponse(undefined, {
+      fallback: '$default',
+      unwrap: 'rs'
+    })
+    private _loadByCriteria(filter: Partial<ExternalCharity>): Observable<ExternalCharity[]> {
+      return this.http.post<ExternalCharity[]>(this._getServiceURL() + '/filter/criteria', { ...filter });
+    }
+  
+    loadByCriteria(filter: Partial<ExternalCharity>): Observable<ExternalCharity[]> {
+      return this._loadByCriteria(filter).pipe(
+        tap(result => this.list = result),
+        tap(result => this._loadDone$.next(result))
+      );
     }
 }

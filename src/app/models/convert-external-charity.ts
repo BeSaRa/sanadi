@@ -21,7 +21,7 @@ export class ConvertExternalCharity extends BaseModel<ConvertExternalCharity, Co
     caseType: CaseTypes = CaseTypes.ESTABLISHMENT_OF_CHARITY;
     requestType!: number;
     creationDate!: string;
-    requestFullSerial!: string;
+    requestFullSerial?: string;
     requestSerial!: number;
     suggestedCharityName!: string;
     previousRequestSerial!: string;

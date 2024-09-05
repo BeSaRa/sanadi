@@ -1,4 +1,5 @@
 import { Component, inject, Inject } from '@angular/core';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { ExternalCharity } from '@app/models/external-charity';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
@@ -32,7 +33,7 @@ export class SelectExternalCharityPopupComponent {
         {
           type: 'action',
           label: 'select',
-          icon: 'mdi-pen',
+          icon: ActionIconsEnum.APPROVED,
           onClick: (item: ExternalCharity) => this.dialogRef.close(item)
         },
      
