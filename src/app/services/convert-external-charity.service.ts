@@ -10,7 +10,7 @@ import { IDialogData } from "@app/interfaces/i-dialog-data";
 import { ConvertExternalCharity } from "@app/models/convert-external-charity";
 import { Pagination } from "@app/models/pagination";
 import { DialogRef } from "@app/shared/models/dialog-ref";
-import { Observable, of, switchMap } from "rxjs";
+import { Observable, of, switchMap, tap } from "rxjs";
 import { DialogService } from "./dialog.service";
 import { DocumentService } from "./document.service";
 import { FactoryService } from "./factory.service";
@@ -89,5 +89,19 @@ export class ConvertExternalCharityService extends CrudWithDialogGenericService<
 
   getByIdComposite(modelId: number): Observable<ConvertExternalCharity> {
     return this._getByCriteria(modelId)
+  }
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  private _loadByCriteria(filter: Partial<ConvertExternalCharity>): Observable<ConvertExternalCharity[]> {
+    return this.http.post<ConvertExternalCharity[]>(this._getServiceURL() + '/filter/criteria', { ...filter });
+  }
+
+  loadByCriteria(filter: Partial<ConvertExternalCharity>): Observable<ConvertExternalCharity[]> {
+    return this._loadByCriteria(filter).pipe(
+      tap(result => this.list = result),
+      tap(result => this._loadDone$.next(result))
+    );
   }
 }
