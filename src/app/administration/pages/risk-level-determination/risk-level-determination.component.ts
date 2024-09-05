@@ -56,6 +56,7 @@ export class RiskLevelDeterminationComponent {
   }
   get canMakeDecision():boolean{
     return this.employeeService.hasAnyPermissions([PermissionsEnum.MANAGE_RISK_LEVEL_DETERMINATION,PermissionsEnum.MANAGE_COUNTRIES])
+    && this.employeeService.isInternalUser()
   }
 
   get approvalRequestStatuses(){
