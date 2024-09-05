@@ -52,10 +52,10 @@ export class RiskLevelDeterminationComponent {
   }
 
   get canCreateRequest():boolean{
-    return this.employeeService.hasAnyPermissions([PermissionsEnum.MANAGE_COUNTRIES,PermissionsEnum.RISK_LEVEL_DETERMINATION_MANAGER])
+    return this.employeeService.hasAnyPermissions([PermissionsEnum.MANAGE_COUNTRIES])
   }
   get canMakeDecision():boolean{
-    return this.employeeService.hasAnyPermissions([PermissionsEnum.MANAGE_RISK_LEVEL_DETERMINATION,PermissionsEnum.RISK_LEVEL_DETERMINATION_MANAGER])
+    return this.employeeService.hasAnyPermissions([PermissionsEnum.MANAGE_RISK_LEVEL_DETERMINATION,PermissionsEnum.MANAGE_COUNTRIES])
   }
 
   get approvalRequestStatuses(){
