@@ -13,6 +13,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class RiskLevelDeterminationComponent {
   reloadRequests$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  reloadCompletedRequests$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   reloadCountries$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   onRiskLevelDeterminationCreated() {
     this.reloadRequests$.next(null);

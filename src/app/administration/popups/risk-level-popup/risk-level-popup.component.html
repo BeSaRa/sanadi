@@ -24,14 +24,8 @@
         <label for="requiredAttentionLevel" asteriskIfRequired="requiredAttentionLevel" class="form-label">
           {{ lang.map.lbl_required_attention_level}}
         </label>
-        <ng-select [selectOnTab]="true" labelForId="requiredAttentionLevel" [clearable]="true"
-          placeholder="{{ lang.map.select }}" id="requiredAttentionLevel" [notFoundText]="lang.map.msg_not_found"
-          appendTo="body" formControlName="requiredAttentionLevel" validationClasses="requiredAttentionLevel">
-          <ng-option *ngFor="let option of requiredAttentionLevels" [value]="option.lookupKey">
-            {{ option.getName() }}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="requiredAttentionLevel"></app-field-error-message>
+        <span id="requiredAttentionLevel" class="form-control input-disabled"
+         [innerHTML]="model && model.requiredAttentionLevelInfo.getName() || '&nbsp;' "></span>
       </div>
       <div class="col-sm-12 col-md-12 mb-3 position-relative">
         <label asteriskIfRequired="publicConditionEn" for="publicConditionEn"
