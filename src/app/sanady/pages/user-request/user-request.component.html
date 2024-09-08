@@ -727,65 +727,12 @@
             controlName="benDependentsCount"
           ></app-field-error-message>
         </div>
-        <div class="col-md-4 col-sm-12 mb-4 position-relative">
-          <label
-            for="familyCount"
-            class="form-label"
-            asteriskIfRequired="familyCount"
-            >{{ langService.map.family_member_count }}</label
-          >
-          <input
-            id="familyCount"
-            validationClasses="familyCount"
-            formControlName="familyCount"
-            [mask]="inputMaskPatterns.NUMBER_ONLY"
-            trimInput
-            class="form-control"
-            type="text"
-            [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
-          />
-          <app-field-error-message
-            controlName="familyCount"
-          ></app-field-error-message>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
-          <label
-            for="maritalStatus"
-            class="form-label"
-            asteriskIfRequired="maritalStatus"
-            >{{ langService.map.marital_status }}</label
-          >
-          <ng-select
-            [selectOnTab]="true"
-            labelForId="maritalStatus"
-            [clearable]="false"
-            placeholder="{{ langService.map.select }}"
-            id="maritalStatus"
-            [notFoundText]="langService.map.msg_not_found"
-            [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
-            appendTo="body"
-            formControlName="maritalStatus"
-            validationClasses="maritalStatus"
-          >
-            <ng-option
-              *ngFor="let option of lookup.listByCategory.BenMaritialStatus"
-              [value]="option.lookupKey"
-            >
-              {{ option.getName() }}
-            </ng-option>
-          </ng-select>
-          <app-field-error-message
-            controlName="maritalStatus"
-          ></app-field-error-message>
-        </div>
         <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
           <label
             for="educationLevel"
             class="form-label"
             asteriskIfRequired="educationLevel"
-            >{{ langService.map.educational_level }}</label
+          >{{ langService.map.educational_level }}</label
           >
           <ng-select
             [selectOnTab]="true"
@@ -810,6 +757,8 @@
             controlName="educationLevel"
           ></app-field-error-message>
         </div>
+      </div>
+      <div class="row">
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label
             for="employeer"
@@ -835,6 +784,54 @@
             controlName="employeer"
           ></app-field-error-message>
         </div>
+        <div
+          class="col-md-4 col-sm-12 mb-4 position-relative"
+          *ngIf="isBeneficiaryWorking()"
+        >
+          <label
+            for="occuption"
+            class="form-label"
+            asteriskIfRequired="occuption"
+          >{{ langService.map.occupation }}</label
+          >
+          <input
+            id="occuption"
+            validationClasses="occuption"
+            formControlName="occuption"
+            maxlength="100"
+            trimInput
+            class="form-control"
+            type="text"
+            [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
+          />
+          <app-field-error-message
+            controlName="occuption"
+          ></app-field-error-message>
+        </div>
+        <div
+          class="col-md-4 col-sm-12 mb-4 position-relative"
+          *ngIf="isBeneficiaryWorking()"
+        >
+          <label
+            for="employeerAddress"
+            class="form-label"
+            asteriskIfRequired="employeerAddress"
+          >{{ langService.map.workplace }}</label
+          >
+          <input
+            id="employeerAddress"
+            validationClasses="employeerAddress"
+            formControlName="employeerAddress"
+            maxlength="512"
+            trimInput
+            class="form-control"
+            type="text"
+            [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
+          />
+          <app-field-error-message
+            controlName="employeerAddress"
+          ></app-field-error-message>
+        </div>
       </div>
       <div class="row">
         <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
@@ -842,7 +839,7 @@
             for="occuptionStatus"
             class="form-label"
             asteriskIfRequired="occuptionStatus"
-            >{{ langService.map.employment_status }}</label
+          >{{ langService.map.employment_status }}</label
           >
           <ng-select
             [selectOnTab]="true"
@@ -868,55 +865,73 @@
             controlName="occuptionStatus"
           ></app-field-error-message>
         </div>
-        <div
-          class="col-md-4 col-sm-12 mb-4 position-relative"
-          *ngIf="isBeneficiaryWorking()"
-        >
+        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
           <label
-            for="occuption"
+            for="maritalStatus"
             class="form-label"
-            asteriskIfRequired="occuption"
-            >{{ langService.map.occupation }}</label
+            asteriskIfRequired="maritalStatus"
+          >{{ langService.map.marital_status }}</label
           >
-          <input
-            id="occuption"
-            validationClasses="occuption"
-            formControlName="occuption"
-            maxlength="100"
-            trimInput
-            class="form-control"
-            type="text"
-            [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
-          />
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="maritalStatus"
+            [clearable]="false"
+            placeholder="{{ langService.map.select }}"
+            id="maritalStatus"
+            [notFoundText]="langService.map.msg_not_found"
+            [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
+            appendTo="body"
+            formControlName="maritalStatus"
+            validationClasses="maritalStatus"
+          >
+            <ng-option
+              *ngFor="let option of lookup.listByCategory.BenMaritialStatus"
+              [value]="option.lookupKey"
+            >
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
           <app-field-error-message
-            controlName="occuption"
+            controlName="maritalStatus"
           ></app-field-error-message>
         </div>
-        <div
-          class="col-md-4 col-sm-12 mb-4 position-relative"
-          *ngIf="isBeneficiaryWorking()"
-        >
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label
-            for="employeerAddress"
+            for="familyCount"
             class="form-label"
-            asteriskIfRequired="employeerAddress"
-            >{{ langService.map.workplace }}</label
+            asteriskIfRequired="familyCount"
+          >{{ langService.map.family_member_count }}</label
           >
           <input
-            id="employeerAddress"
-            validationClasses="employeerAddress"
-            formControlName="employeerAddress"
-            maxlength="512"
+            id="familyCount"
+            validationClasses="familyCount"
+            formControlName="familyCount"
+            [mask]="inputMaskPatterns.NUMBER_ONLY"
             trimInput
             class="form-control"
             type="text"
             [readOnly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
           />
           <app-field-error-message
-            controlName="employeerAddress"
+            controlName="familyCount"
           ></app-field-error-message>
+        </div>
+        <h6 class="text-primary">{{ langService.map.beneficiary_family }}</h6>
+        <div class="col-12">
+          <hr class="mt-0"/>
+        </div>
+        <div>
+          <beneficiary-family-members
+            #beneficiaryFamily
+            [beneficiary]="currentBeneficiary"
+            [list]="!currentBeneficiary ? [] : currentBeneficiary.beneficiaryFamilyMemberSet"
+            [readonly]="readOnly || isPartialRequest"
+            (readyEvent)="beneficiaryFamilyStatus = $event"
+          >
+          </beneficiary-family-members>
         </div>
       </div>
+      <hr class="mt-0"/>
       <div class="row">
         <div class="col-sm-12 mb-4 position-relative">
           <label
@@ -971,18 +986,6 @@
         (readyEvent)="beneficiaryObligationsStatus = $event"
       >
       </beneficiary-income>
-    </div>
-    <h6 class="text-primary">{{ langService.map.beneficiary_family }}</h6>
-    <hr class="mt-0"/>
-    <div>
-      <beneficiary-family-members
-        #beneficiaryFamily
-        [beneficiary]="currentBeneficiary"
-        [list]="!currentBeneficiary ? [] : currentBeneficiary.beneficiaryFamilyMemberSet"
-        [readonly]="readOnly || isPartialRequest"
-        (readyEvent)="beneficiaryFamilyStatus = $event"
-      >
-      </beneficiary-family-members>
     </div>
   </ng-template>
   <!-- address Tab -->
