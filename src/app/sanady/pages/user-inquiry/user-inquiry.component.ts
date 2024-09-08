@@ -113,7 +113,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   searchByNamePermission: boolean = false;
 
   filterControl: UntypedFormControl = new UntypedFormControl('');
-  displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'organization', 'requestStatus', 'requestedAidAmount', 'totalApprovedAmount', 'actions'];
+  displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'organization', 'requestStatus', 'requestedAidAmount', 'totalApprovedAmount', 'aidLookupParent', 'actions'];
   headerColumn: string[] = ['extra-header'];
   fileIconsEnum = FileIconsEnum;
 
@@ -164,6 +164,11 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     requestStatus: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    aidLookupParent: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidLookupParentInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidLookupParentInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     totalApprovedAmount: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {

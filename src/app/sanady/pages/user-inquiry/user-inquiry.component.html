@@ -331,6 +331,14 @@
                   <span>{{row.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
                 </td>
               </ng-container>
+              <ng-container cdkColumnDef="aidLookupParent">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacks.aidLookupParent"> {{langService.map.requested_aid_category}}</th>
+                <td cdk-cell *cdkCellDef="let row">
+                  <span>{{row.aidLookupParentInfo && row.aidLookupParentInfo.getNames() }}</span>
+                </td>
+              </ng-container>
+
               <ng-container cdkColumnDef="actions">
                 <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
                 <td cdk-cell *cdkCellDef="let row" class="table-actions">
