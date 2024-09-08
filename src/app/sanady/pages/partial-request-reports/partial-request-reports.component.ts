@@ -25,10 +25,6 @@ import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {Profile} from '@app/models/profile';
 import {ProfileService} from '@services/profile.service';
-import {AidLookup} from '@models/aid-lookup';
-import {AidTypes} from '@enums/aid-types.enum';
-import {AidLookupStatusEnum} from '@enums/status.enum';
-import {AidLookupService} from '@services/aid-lookup.service';
 
 @Component({
   selector: 'app-partial-request-reports',
@@ -47,7 +43,6 @@ export class PartialRequestReportsComponent implements OnInit {
               private router: Router,
               private configService: ConfigurationService,
               private profileService: ProfileService,
-              private aidLookupService: AidLookupService,
               private externalUserService: ExternalUserService,
               private subventionRequestPartialLogService: SubventionRequestPartialLogService) {
   }
@@ -73,8 +68,6 @@ export class PartialRequestReportsComponent implements OnInit {
   headerColumn: string[] = ['extra-header'];
   displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'requestedAidCategory', 'requestedAid', 'requestSummary', 'actionType', 'actionDate', 'userOrganization', 'orgUser'];
 
-  mainAidLookupsList: AidLookup[] = [];
-  aidsSubAidLookupsList: AidLookup[] = [];
 
   sortingCallbacks = {
     requestDate: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
@@ -117,7 +110,6 @@ export class PartialRequestReportsComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    this.loadMainAidLookups();
     this.listenToReload();
     this.listenToSearch();
     this._buildDatepickerControlsMap();
@@ -135,38 +127,6 @@ export class PartialRequestReportsComponent implements OnInit {
     this.searchSubscription?.unsubscribe();
   }
 
-  handleAidsMainAidChange($event: number) {
-    this.aidsRequestedAidField.reset();
-    this.loadAidsSubAidLookups($event);
-  }
-
-  private loadMainAidLookups() {
-    this.mainAidLookupsList = [];
-    return this.aidLookupService.loadByCriteria({
-      aidType: AidTypes.MAIN_CATEGORY,
-      status: AidLookupStatusEnum.ACTIVE
-    }).pipe(
-      catchError(() => of([]))
-    ).subscribe((list) => {
-      this.mainAidLookupsList = list;
-    });
-  }
-
-  private loadAidsSubAidLookups(mainAidId: number) {
-    this.aidsSubAidLookupsList = [];
-    if (!mainAidId) {
-      return;
-    }
-    this.aidLookupService.loadByCriteria({
-      aidType: AidTypes.SUB_CATEGORY,
-      status: AidLookupStatusEnum.ACTIVE,
-      parent: mainAidId
-    }).pipe(
-      catchError(() => of([]))
-    ).subscribe(list => {
-      this.aidsSubAidLookupsList = list;
-    });
-  }
   private listenToReload() {
     this.reload$.pipe(
       takeUntil(this.destroy$),
@@ -199,8 +159,6 @@ export class PartialRequestReportsComponent implements OnInit {
       orgUserId: [],
       fromDate: [null, CustomValidators.required],
       toDate: [null, CustomValidators.required],
-      aidLookupParentId: [],
-      aidLookupId: [],
     });
 
     this.setInitValue();
@@ -306,9 +264,6 @@ export class PartialRequestReportsComponent implements OnInit {
       });
   }
 
-  get aidsRequestedAidField(): UntypedFormControl {
-    return this.form.get('aidLookupId') as UntypedFormControl;
-  }
   get orgUnitField(): UntypedFormControl {
     return this.form.get('orgId') as UntypedFormControl;
   }
