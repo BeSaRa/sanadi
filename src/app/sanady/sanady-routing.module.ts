@@ -14,6 +14,7 @@ import {RequestsUnderProcessComponent} from './pages/requests-under-process/requ
 import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {InquiryLogsComponent} from '@app/sanady/pages/inquiry-logs/inquiry-logs.component';
 import {CommonUtils} from '@helpers/common-utils';
+import {TrailAuditComponent} from '@app/sanady/pages/trail-audit/trail-audit.component';
 
 
 const routes: Routes = [
@@ -77,7 +78,17 @@ const routes: Routes = [
     path: 'inquiry-logs', component: InquiryLogsComponent,
     canActivate: [PermissionGuard.canActivate],
     data: {permissionKey: PermissionsEnum.SANADI_INQUIRY_LOGS, configPermissionGroup: null,  checkAnyPermission: false}
-  }
+  },
+  {
+    path: 'trail-audit-gdx-services', component: TrailAuditComponent,
+    canActivate: [PermissionGuard.canActivate],
+    data: {permissionKey: PermissionsEnum.GDX_SANADI_REPORT, configPermissionGroup: null,  checkAnyPermission: false, isBeneficiaryReport: false }
+  },
+  {
+    path: 'trail-audit-beneficiary', component: TrailAuditComponent,
+    canActivate: [PermissionGuard.canActivate],
+    data: {permissionKey: PermissionsEnum.GDX_SANADI_REPORT, configPermissionGroup: null,  checkAnyPermission: false, isBeneficiaryReport: true}
+  },
 ];
 
 @NgModule({
