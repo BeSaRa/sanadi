@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="col-12">
+    <app-table #table sortableTable [paginator]="paginator"
+               [data]="list"
+               [columns]="displayedColumns"
+               [filter]="filterControl.value" [useSearchToFilter]="true">
+      <table class="table table-striped table-bordered caption-top" cdk-table
+             [dataSource]="table.dataSource">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="bank_accounts" [headerClass]="'bg-secondary'"
+                          [sort]="table.dataSource.sort"
+                          (textChange)="filterControl.setValue($event)">
+            </table-header>
+          </th>
+        </ng-container>
+
+        <ng-container cdkColumnDef="accountStatus">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{ lang.map.status }}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{ row.accountStatus }}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="bankCode">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{ lang.map.code }}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{ row.bankCode }}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="bankNameArabic">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{ lang.map.english_name }}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{ row.bankNameArabic }}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="bankNameEnglish">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{ lang.map.arabic_name }}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{ row.bankNameEnglish }}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="customerIban">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{ lang.map.iban }}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{ row.customerIban }}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="customerId">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{ lang.map.identification_number }}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{ row.customerId }}</span></td>
+        </ng-container>
+        <ng-container cdkColumnDef="customerType">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{ lang.map.type }}</th>
+          <td cdk-cell *cdkCellDef="let row"><span>{{ row.customerType }}</span></td>
+        </ng-container>
+
+        <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+        <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
+        <tr *cdkNoDataRow>
+          <td colspan="100" class="text-center">{{ lang.map.no_records_to_display }}</td>
+        </tr>
+      </table>
+      <app-paginator #paginator></app-paginator>
+    </app-table>
+    <context-menu-item #menu
+                       [actions]="actions"></context-menu-item>
+  </div>
+</div>

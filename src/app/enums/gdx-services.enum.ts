@@ -18,4 +18,5 @@ export enum GdxServicesEnum {
   QCB = '17',
   MOI_ADDRESS_INFO = '18',
   MOI_PERSONAL_INFO = '19',
+  QCB_IBAN = '20',
 }

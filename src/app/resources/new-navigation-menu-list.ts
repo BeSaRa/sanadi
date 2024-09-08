@@ -2147,7 +2147,7 @@ export const newNavigationMenuList = [
     itemOrder: 3,
     svg: null
   },
-  
+
   {
     id: 3401,
     langKey: 'menu_inspection',

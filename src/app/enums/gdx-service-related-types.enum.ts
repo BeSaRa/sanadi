@@ -18,4 +18,5 @@ export enum GdxServiceRelatedTypesEnum {
   EID_CHARITABLE_FOUNDATION = 'eid_historical_data',
   HOUSING_BENEFICIARY_STATUS = 'hbs_related_data',
   SECURITY_BENEFICIARY_STATUS = 'sbs_related_data',
+  QCB_IBAN = 'qcb_iban_data',
 }

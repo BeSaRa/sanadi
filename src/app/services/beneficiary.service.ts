@@ -297,6 +297,13 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     return this.http.post<GdxQatarRedCrescentResponse[]>(this._getGDXServiceURL() + '/qrcs-historical-data', criteria);
   }
 
+  @CastResponse(() => GdxQcbIbanResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addQCBIbanInquiry(criteria: IGdxCriteria) {
+    return this.http.post<GdxQcbIbanResponse[]>(this._getGDXServiceURL() + '/qcb/iban', criteria);
+  }
   @CastResponse(() => GdxMsdfHousingResponse, {
     unwrap: 'rs',
     fallback: '$default'
@@ -329,10 +336,8 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   }
 
   addQCBInquiryReport(criteria: IGdxCriteria): Observable<GdxQCBResponse[]> {
-    return this.sharedService.openFileUploaderDialog({
+    return this.dialogService.show(QcbFilesPopupComponent, {
       title: 'file_uploader',
-      label: 'qcb_document',
-      required: true,
       extensions: [FileExtensionsEnum.PDF, FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG]
     }).onAfterClose$
       .pipe(

@@ -167,6 +167,9 @@ export class IntegrationInquiryLogListComponent {
       case GdxServicesEnum.QCB:
         request = this.beneficiaryService.addQCBInquiryReport(this._getGDXCriteria());
         break;
+      case GdxServicesEnum.QCB_IBAN:
+        request = this.beneficiaryService.addQCBIbanInquiry(this._getGDXCriteria());
+        break;
       default:
         request = null;
         break;
