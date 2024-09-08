@@ -33,6 +33,7 @@ import { EidCharitableFoundationRelatedDataComponent } from '@app/modules/gdx-in
 import { QatarRedCrescentRelatedDataComponent } from '@app/modules/gdx-integration/related-data/qatar-red-crescent-related-data/qatar-red-crescent-related-data.component';
 import { SecurityBSRelatedDataListComponent } from '@app/modules/gdx-integration/related-data/security-bs-related-data-list/security-bs-related-data-list.component';
 import { HousingBSRelatedDataListComponent } from '@app/modules/gdx-integration/related-data/housing-bs-related-data-list copy/housing-bs-related-data-list.component';
+import { QcbIbanRelatedDataComponent } from '@modules/gdx-integration/related-data/qcb-iban/qcb-iban-related-data.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { HousingBSRelatedDataListComponent } from '@app/modules/gdx-integration/
     QatarRedCrescentRelatedDataComponent,
     EidCharitableFoundationRelatedDataComponent,
     SecurityBSRelatedDataListComponent,
-    HousingBSRelatedDataListComponent
+    HousingBSRelatedDataListComponent,
+    QcbIbanRelatedDataComponent
   ],
   exports: [
     IntegrationInquiriesComponent

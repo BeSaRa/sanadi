@@ -198,6 +198,16 @@ export class IntegrationInquiriesComponent {
       serviceId: GdxServicesEnum.QCB,
       isLoaded: false
     },
+    qcbiban: {
+      name: 'qcb_iban',
+      index: 13,
+      langKey: 'integration_qcb_iban',
+      show: () => true,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.QCB_IBAN,
+      isLoaded: false
+    },
   };
   charityTabsData: TabMap = {
     qatarZakatFund: {
@@ -296,6 +306,7 @@ export class IntegrationInquiriesComponent {
     [GdxServiceRelatedTypesEnum.EID_CHARITABLE_FOUNDATION]: [],
     [GdxServiceRelatedTypesEnum.HOUSING_BENEFICIARY_STATUS]: [],
     [GdxServiceRelatedTypesEnum.SECURITY_BENEFICIARY_STATUS]: [],
+    [GdxServiceRelatedTypesEnum.QCB_IBAN]: [],
   };
 
   onMainTabChange(tab: TabComponent): void {
@@ -376,6 +387,9 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.SECURITY_BENEFICIARY_STATUS:
         this.relatedData[this.gdxServiceRelatedTypesEnum.SECURITY_BENEFICIARY_STATUS] = [log.gdxServiceResponseParsed];
+        break;
+      case GdxServicesEnum.QCB_IBAN:
+        this.relatedData[this.gdxServiceRelatedTypesEnum.QCB_IBAN] = log.gdxServiceResponseList;
         break;
       default:
         break;

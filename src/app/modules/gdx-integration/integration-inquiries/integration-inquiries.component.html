@@ -29,6 +29,8 @@
         [title]="lang.map[govTabsData.sbs.langKey]"></tab>
     <tab [name]="govTabsData.qcb.name" *ngIf="govTabsData.qcb.show?.()" [template]="QCBTemplate"
       [title]="lang.map[govTabsData.qcb.langKey]"></tab>
+    <tab [name]="govTabsData.qcbiban.name" *ngIf="govTabsData.qcbiban.show?.()" [template]="QCBIbanTemplate"
+         [title]="lang.map[govTabsData.qcbiban.langKey]"></tab>
   </tabs-list>
   <ng-template #MOJTemplate>
     <integration-inquiry-log-list #mojLogsComponent [gdxServiceId]="gdxServicesEnum.MOJ" [beneficiary]="beneficiary"
@@ -165,12 +167,19 @@
                                   (onDownload)="onDownloadQCBReport($event)" (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
                                   (onReady)="setLookupComponentMap($event, qcbLogsComponent)"></integration-inquiry-log-list>
   </ng-template>
-
-
+  <ng-template #QCBIbanTemplate>
+    <integration-inquiry-log-list #qcbIbanLogsComponent [gdxServiceId]="gdxServicesEnum.QCB_IBAN" [beneficiary]="beneficiary"
+                                  (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
+                                  (onReady)="setLookupComponentMap($event, qcbIbanLogsComponent)"></integration-inquiry-log-list>
+    <div id="qcbIban">
+      <hr class="mt-0">
+      <qcb-iban-related-data [list]="relatedData[gdxServiceRelatedTypesEnum.QCB_IBAN]"></qcb-iban-related-data>
+    </div>
+  </ng-template>
 </ng-template>
 
 <ng-template #CharitableEntitiesTemplate>
-  <tabs-list #charitableEntitiesTabsList [accordionView]="true" [collapse]="true" [tabByIndex$]="charityTabIndex$"
+    <tabs-list #charitableEntitiesTabsList [accordionView]="true" [collapse]="true" [tabByIndex$]="charityTabIndex$"
              [skipSetFirstAccordionItemActive]="true"
              (onTabChange)="onCharityTabChange($event)" accordionButtonClass="bg-accordion-raca-dune">
     <tab [name]="charityTabsData.qatarZakatFund.name" [template]="QatarZakatFundTemplate"
