@@ -23,6 +23,10 @@ import {InquiryLogsComponent} from './pages/inquiry-logs/inquiry-logs.component'
 import {AidListComponent} from './shared/aid-list/aid-list.component';
 import {GdxIntegrationModule} from '@app/modules/gdx-integration/gdx-integration.module';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import {
+  BeneficiaryFamilyMemberComponent,
+} from '@app/sanady/shared/beneficiary-family-members/beneficiary-family-members.component';
+import { QcbFilesPopupComponent } from '@app/sanady/popups/qcb-files-popup/qcb-files-popup.component';
 
 
 @NgModule({
@@ -44,7 +48,9 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
     BeneficiaryObligationComponent,
     BeneficiaryIncomeComponent,
     InquiryLogsComponent,
-    AidListComponent
+    AidListComponent,
+    BeneficiaryFamilyMemberComponent,
+    QcbFilesPopupComponent
   ],
   imports: [
     CommonModule,
@@ -52,7 +58,7 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
     SharedModule,
     GdxIntegrationModule,
     NgxMaskDirective,
-    NgxMaskPipe
+    NgxMaskPipe,
   ]
 })
 export class SanadyModule {

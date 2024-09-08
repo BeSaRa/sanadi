@@ -2265,4 +2265,16 @@ export interface ILanguageKeys {
   all_request_status_should_be_approved:string;
   lbl_arabic_header:string;
   lbl_english_header:string;
+  left_amount:string;
+  msg_beneficiary_income_is_required: string;
+  menu_trail_audit_gdx_services: string;
+  menu_trail_audit_beneficiary: string;
+  beneficiary_family: string;
+  qcb_consent_document: string;
+  gdx_service: string;
+  primary_id_type: string;
+  primary_id_number: string;
+  relative_type: string;
+  integration_qcb_iban: string;
+  lbl_age: string;
 }

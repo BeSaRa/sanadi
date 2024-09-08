@@ -81,8 +81,8 @@ import { DonorService } from '@services/donor.service';
 import { SharedService } from '@services/shared.service';
 import { BeneficiaryRequesterRelationTypes } from '@app/enums/beneficiary-requester-relation-types';
 import { CanComponentDeactivateContract } from "@contracts/can-component-deactivate-contract";
-import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
 import { IMyDateModel } from '@nodro7/angular-mydatepicker';
+import {BeneficiaryFamilyMemberComponent} from '@app/sanady/shared/beneficiary-family-members/beneficiary-family-members.component';
 
 @Component({
   selector: 'app-user-request',
@@ -258,8 +258,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
   @ViewChild('buildingPlate') buildingPlate!: BuildingPlateComponent;
   @ViewChild('beneficiaryObligations') beneficiaryObligationComponentRef!: BeneficiaryObligationComponent;
   @ViewChild('beneficiaryIncomes') beneficiaryIncomeComponentRef!: BeneficiaryIncomeComponent;
+  @ViewChild('beneficiaryFamily') beneficiaryFamilyComponentRef!: BeneficiaryFamilyMemberComponent;
   beneficiaryObligationsStatus: ReadinessStatus = 'READY';
   beneficiaryIncomesStatus: ReadinessStatus = 'READY';
+  beneficiaryFamilyStatus: ReadinessStatus = 'READY';
 
   tabsData: TabMap = {
     personal: {
@@ -277,8 +279,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       // checkTouchedDirty: true,
       validStatus: () => {
         return (!this.beneficiaryObligationComponentRef || (this.beneficiaryObligationsStatus === 'READY'))
-          && (!this.beneficiaryIncomeComponentRef || (this.beneficiaryIncomesStatus === 'READY')) &&
-          (this.employmentStatusField.value !== BenOccupationStatusEnum.WORKING
+          && (!this.beneficiaryIncomeComponentRef || (this.beneficiaryIncomesStatus === 'READY'))
+          && (!this.beneficiaryFamilyComponentRef || (this.beneficiaryFamilyStatus === 'READY'))
+          && (this.employmentStatusField.value !== BenOccupationStatusEnum.WORKING
             || !!this.beneficiaryIncomeComponentRef.list.length);
       },
       isTouchedOrDirty: () => {

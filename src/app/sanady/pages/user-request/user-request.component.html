@@ -973,6 +973,18 @@
       >
       </beneficiary-income>
     </div>
+    <h6 class="text-primary">{{ langService.map.beneficiary_family }}</h6>
+    <hr class="mt-0"/>
+    <div>
+      <beneficiary-family-members
+        #beneficiaryFamily
+        [beneficiary]="currentBeneficiary"
+        [list]="!currentBeneficiary ? [] : currentBeneficiary.beneficiaryFamilyMemberSet"
+        [readonly]="readOnly || isPartialRequest"
+        (readyEvent)="beneficiaryFamilyStatus = $event"
+      >
+      </beneficiary-family-members>
+    </div>
   </ng-template>
   <!-- address Tab -->
   <ng-template formGroupName="addressTab" #address>
