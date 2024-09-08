@@ -2,11 +2,11 @@ import { AdminResult } from './admin-result';
 import { SubventionApprovedAid } from './subvention-approved-aid';
 import { FactoryService } from '@services/factory.service';
 import { SubventionRequestService } from '@services/subvention-request.service';
-import { isValidValue, printBlobData } from '@helpers/utils';
+import { printBlobData } from '@helpers/utils';
 import { DialogRef } from '../shared/models/dialog-ref';
 import { ISearchFieldsMap } from '../types/types';
 import { Observable } from 'rxjs';
-import { UserClickOn } from '../enums/user-click-on.enum';
+import { UserClickOn } from '@enums/user-click-on.enum';
 import { take } from 'rxjs/operators';
 import { SubventionRequestStatus } from '@app/enums/status.enum';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
@@ -35,6 +35,8 @@ export class SubventionRequestAid extends SearchableCloneable<SubventionRequestA
   aids!: SubventionApprovedAid[];
   aidLookupId?: number;
   aidLookupInfo!: AdminResult;
+  aidLookupParentId?: number;
+  aidLookupParentInfo!: AdminResult;
   aidId?: number;
   orgUserId!: number;
   orgUserInfo!: AdminResult;
@@ -58,12 +60,12 @@ export class SubventionRequestAid extends SearchableCloneable<SubventionRequestA
   aidCount: any = 0;
 
   searchFieldsInquiry: ISearchFieldsMap<SubventionRequestAid> = {
-    ...infoSearchFields(['orgInfo', 'statusInfo']),
+    ...infoSearchFields(['orgInfo', 'statusInfo', 'aidLookupParentInfo']),
     ...normalSearchFields(['requestFullSerial', 'creationDateString', 'requestedAidAmount', 'aidTotalPayedAmount'])
   };
 
   searchFieldsSearch: ISearchFieldsMap<SubventionRequestAid> = {
-    ...infoSearchFields(['orgInfo', 'orgUserInfo', 'statusInfo']),
+    ...infoSearchFields(['orgInfo', 'orgUserInfo', 'statusInfo', 'aidLookupParentInfo']),
     ...normalSearchFields(['requestFullSerial', 'creationDateString', 'aidSuggestedAmount', 'requestedAidAmount', 'aidTotalPayedAmount', 'statusDateModifiedString'])
   };
 

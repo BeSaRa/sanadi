@@ -1,5 +1,5 @@
-import { SubventionRequestAid } from '../models/subvention-request-aid';
-import { AdminResult } from '../models/admin-result';
+import { SubventionRequestAid } from '@models/subvention-request-aid';
+import { AdminResult } from '@models/admin-result';
 import { DateUtils } from '@helpers/date-utils';
 import { ConfigurationService } from '@app/services/configuration.service';
 import { FactoryService } from '@app/services/factory.service';
@@ -9,11 +9,13 @@ export class SubventionRequestAidInterceptor {
     model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
+    model.aidLookupParentInfo = AdminResult.createInstance(model.aidLookupParentInfo);
     model.aids = model.aids.map((aid) => {
       aid.aidLookupInfo = AdminResult.createInstance(aid.aidLookupInfo);
       model.aidCount += 1;
       return aid;
     });
+
     model.creationDateString = model.creationDate ? DateUtils.getDateStringFromDate(model.creationDate, 'DEFAULT_DATE_FORMAT') : '';
     model.statusDateModifiedString = model.statusDateModified ? DateUtils.getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
 
