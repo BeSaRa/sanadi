@@ -542,7 +542,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     this.occupationField?.updateValueAndValidity();
     this.workPlaceField?.updateValueAndValidity();
   }
-
+  gulfAreaLookupKeys: number[] = [1, 2, 122, 191, 171, 24]
   private listenToNationalityChange() {
     this.benNationalityField?.valueChanges.pipe(
       takeUntil(this.destroy$),
@@ -550,7 +550,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       map(value => Number(value))
     ).subscribe((value) => {
       // 1 is Qatari
-      if (value !== 1) {
+      if (!this.gulfAreaLookupKeys.includes(value)) {
         this.employerField?.setValidators([CustomValidators.required, CustomValidators.pattern('ENG_AR_ONLY')]);
       } else {
         this.employerField?.setValidators([CustomValidators.pattern('ENG_AR_ONLY')]);
