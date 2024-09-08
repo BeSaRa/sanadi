@@ -6,6 +6,7 @@ import { BeneficiaryService } from '@app/services/beneficiary.service';
 import { BeneficiaryObligation } from '@app/models/beneficiary-obligation';
 import { BeneficiaryIncome } from '@app/models/beneficiary-income';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { BeneficiaryFamilyMember } from '@models/beneficiary-family-member';
 
 export class BeneficiaryInterceptor {
   receive(model: Beneficiary): Beneficiary {
@@ -33,6 +34,8 @@ export class BeneficiaryInterceptor {
     let beneficiaryService = FactoryService.getService<BeneficiaryService>('BeneficiaryService');
     model.beneficiaryObligationSet = model.beneficiaryObligationSet.map((x: any) => beneficiaryService.beneficiaryObligationInterceptor.receive(new BeneficiaryObligation().clone(x)));
     model.beneficiaryIncomeSet = model.beneficiaryIncomeSet.map((x: any) => beneficiaryService.beneficiaryIncomeInterceptor.receive(new BeneficiaryIncome().clone(x)));
+    model.beneficiaryFamilyMemberSet = model.beneficiaryFamilyMemberSet
+      .map((x: any) => beneficiaryService.beneficiaryFamilyMemberInterceptor.receive(new BeneficiaryFamilyMember().clone(x)));
 
     return model;
   }
@@ -61,6 +64,10 @@ export class BeneficiaryInterceptor {
     model.beneficiaryIncomeSet = model.beneficiaryIncomeSet.map((x: BeneficiaryIncome) => {
       return beneficiaryService.beneficiaryIncomeInterceptor.send(x) as BeneficiaryIncome;
     });
+    model.beneficiaryFamilyMemberSet = model.beneficiaryFamilyMemberSet.map((x: BeneficiaryFamilyMember) => {
+      return beneficiaryService.beneficiaryFamilyMemberInterceptor.send(x) as BeneficiaryFamilyMember;
+    });
+
     return model;
   }
 
