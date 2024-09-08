@@ -2,6 +2,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {InterceptModel} from '@decorators/intercept-model';
 import {ReportAuditInterceptor} from '@model-interceptors/report-audit-interceptor';
 import {IMyDateModel} from '@nodro7/angular-mydatepicker';
+import {AdminResult} from '@models/admin-result';
 
 const { send, receive } = new ReportAuditInterceptor();
 @InterceptModel({

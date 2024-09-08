@@ -4,9 +4,9 @@ import {INames} from '@contracts/i-names';
 import {LangService} from '@services/lang.service';
 import {FactoryService} from '@services/factory.service';
 import {InterceptModel} from '@decorators/intercept-model';
-import {ReportAuditInterceptor} from '@model-interceptors/report-audit-interceptor';
+import {ReportAuditResultInterceptor} from '@model-interceptors/report-audit-result-interceptor';
 
-const { receive } = new ReportAuditInterceptor();
+const { receive } = new ReportAuditResultInterceptor();
 @InterceptModel({receive})
 export class ReportAuditResult {
   protected langService: LangService;

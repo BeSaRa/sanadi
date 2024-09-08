@@ -140,7 +140,6 @@ export class TrailAuditComponent implements OnInit, OnDestroy {
       this.profileIdField.setValidators([CustomValidators.required]);
     }
     this.form.updateValueAndValidity()
-    console.log(this.form)
   }
 
   get title() {

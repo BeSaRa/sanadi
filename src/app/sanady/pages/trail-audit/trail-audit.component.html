@@ -130,44 +130,44 @@
           </ng-container>
           <ng-container cdkColumnDef="requestFullSerial">
             <th cdk-header-cell *cdkHeaderCellDef> {{ langService.map.serial_number }}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
+            <td cdk-cell *cdkCellDef="let row">
               {{ row.requestFullSerial }}
             </td>
           </ng-container>
           <ng-container cdkColumnDef="qId">
             <th cdk-header-cell *cdkHeaderCellDef> {{ langService.map.lbl_qid }}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
+            <td cdk-cell *cdkCellDef="let row">
               {{ row.qId }}
             </td>
           </ng-container>
           <ng-container cdkColumnDef="name">
             <th cdk-header-cell *cdkHeaderCellDef> {{ langService.map.name }}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
-              {{ row.getNames() }}
+            <td cdk-cell *cdkCellDef="let row">
+              {{ row.getName() }}
             </td>
           </ng-container>
           <ng-container cdkColumnDef="gdxServiceId">
             <th cdk-header-cell *cdkHeaderCellDef> {{ langService.map.gdx_service }}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
-              {{ row.gdxServiceInfo?.getNames() }}
+            <td cdk-cell *cdkCellDef="let row">
+              {{ row.gdxServiceInfo?.getName() }}
             </td>
           </ng-container>
           <ng-container cdkColumnDef="actionTime">
             <th cdk-header-cell *cdkHeaderCellDef> {{ langService.map.action_time }}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
-              {{ row.actionTime | date}}
+            <td cdk-cell *cdkCellDef="let row">
+              {{ row.actionTime | date }}
             </td>
           </ng-container>
           <ng-container cdkColumnDef="profileId">
             <th cdk-header-cell *cdkHeaderCellDef> {{ langService.map.lbl_profile }}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
-              {{ row.profileInfo?.getNames() }}
+            <td cdk-cell *cdkCellDef="let row">
+              {{ row.profileInfo?.getName() }}
             </td>
           </ng-container>
           <ng-container cdkColumnDef="benNationality">
             <th cdk-header-cell *cdkHeaderCellDef> {{ langService.map.lbl_nationality }}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
-              {{ row.nationalityInfo?.getNames() }}
+            <td cdk-cell *cdkCellDef="let row">
+              {{ row.benNationalityInfo?.getName() }}
             </td>
           </ng-container>
 
