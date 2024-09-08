@@ -78,7 +78,7 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
       }
     }
   ];
-  displayedColumns: string[] = ['arName', 'enName', 'profileType', 'status', 'actions'];
+  displayedColumns: string[] = ['name', 'shortName', 'profileType', 'status', 'actions'];
   searchColumns: string[] = ['search_arName', 'search_enName','search_profileType', 'search_status', 'search_actions'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {

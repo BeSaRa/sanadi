@@ -39,13 +39,13 @@
             </header-search-field>
           </th>
         </ng-container>
-        <ng-container cdkColumnDef="arName">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.arabic_name }}</th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.arName }}</td>
+        <ng-container cdkColumnDef="name">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.name }}</th>
+          <td cdk-cell *cdkCellDef="let row">{{ row.getName() }}</td>
         </ng-container>
-        <ng-container cdkColumnDef="enName">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.english_name }}</th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.enName }}</td>
+        <ng-container cdkColumnDef="shortName">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.short_name }}</th>
+          <td cdk-cell *cdkCellDef="let row">{{ row.getHeader() }}</td>
         </ng-container>
         <ng-container cdkColumnDef="profileType">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"

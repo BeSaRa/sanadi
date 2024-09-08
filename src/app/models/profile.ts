@@ -1,23 +1,23 @@
-import {InterceptModel} from '@app/decorators/decorators/intercept-model';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {INames} from '@app/interfaces/i-names';
-import {ProfileInterceptor} from '@app/model-interceptors/profile-interceptor';
-import {FactoryService} from '@app/services/factory.service';
-import {LangService} from '@app/services/lang.service';
-import {ProfileService} from '@app/services/profile.service';
-import {ISearchFieldsMap} from '@app/types/types';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {IMyDateModel} from '@nodro7/angular-mydatepicker';
-import {AdminResult} from './admin-result';
-import {BaseModel} from './base-model';
-import {ProfileDetails} from './profile-details';
-import {Observable, of} from 'rxjs';
-import {ProfileServiceRelation} from '@app/models/profile-service-relation';
-import {ProfileServiceRelationService} from '@services/profile-service-relation.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { INames } from '@app/interfaces/i-names';
+import { ProfileInterceptor } from '@app/model-interceptors/profile-interceptor';
+import { FactoryService } from '@app/services/factory.service';
+import { LangService } from '@app/services/lang.service';
+import { ProfileService } from '@app/services/profile.service';
+import { ISearchFieldsMap } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { IMyDateModel } from '@nodro7/angular-mydatepicker';
+import { AdminResult } from './admin-result';
+import { BaseModel } from './base-model';
+import { ProfileDetails } from './profile-details';
+import { Observable, of } from 'rxjs';
+import { ProfileServiceRelation } from '@app/models/profile-service-relation';
+import { ProfileServiceRelationService } from '@services/profile-service-relation.service';
+import { IProfileHeaders } from '@app/interfaces/i-profile-headers';
 
-const {receive, send} = new ProfileInterceptor();
+const { receive, send } = new ProfileInterceptor();
 
 @InterceptModel({
   receive,
@@ -44,15 +44,21 @@ export class Profile extends BaseModel<Profile, ProfileService> {
   email!: string;
   profileDetails!: ProfileDetails;
   permitTypeList: number[] = [];
-  submissionMechanism?: number
-
-  permitTypes!: string
+  submissionMechanism?: number;
+  arHeader!: string;
+  enHeader!: string;
+  permitTypes!: string;
 
   // not related to the model
-  permitTypesInfo: AdminResult[] = []
+  permitTypesInfo: AdminResult[] = [];
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+  getHeader(): string {
+    return this[
+      (this.langService.map.lang + 'Header') as keyof IProfileHeaders
+    ];
   }
 
   buildForm(controls = true) {
@@ -66,31 +72,109 @@ export class Profile extends BaseModel<Profile, ProfileService> {
       registrationAuthority,
       email,
       permitTypeList,
-      submissionMechanism
+      submissionMechanism,
+      arHeader,
+      enHeader,
     } = this;
     return {
-      arName: controls ? [arName, [CustomValidators.required,
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.pattern('AR_NUM_ONE_AR')
-      ]] : arName,
-      enName: controls ? [enName, [CustomValidators.required,
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        CustomValidators.pattern('ENG_NUM_ONE_ENG')
-      ]] : enName,
-      profileType: controls ? [profileType, [CustomValidators.required]] : profileType,
-      arDesc: controls ? [arDesc, [CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS),
-      ]] : arDesc,
-      profileCode: controls ? [profileCode, [CustomValidators.required], []] : profileCode,
-      registrationAuthority: controls ? [registrationAuthority] : registrationAuthority,
-      email: controls ? [email, [CustomValidators.required,
-        CustomValidators.pattern('EMAIL'),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX),
-      ]] : email,
+      arName: controls
+        ? [
+            arName,
+            [
+              CustomValidators.required,
+              CustomValidators.minLength(
+                CustomValidators.defaultLengths.MIN_LENGTH
+              ),
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ARABIC_NAME_MAX
+              ),
+              CustomValidators.pattern('AR_NUM_ONE_AR'),
+            ],
+          ]
+        : arName,
+      enName: controls
+        ? [
+            enName,
+            [
+              CustomValidators.required,
+              CustomValidators.minLength(
+                CustomValidators.defaultLengths.MIN_LENGTH
+              ),
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              ),
+              CustomValidators.pattern('ENG_NUM_ONE_ENG'),
+            ],
+          ]
+        : enName,
+      arHeader: controls
+        ? [
+          arHeader,
+          [
+            CustomValidators.required,
+            CustomValidators.minLength(
+              CustomValidators.defaultLengths.MIN_LENGTH
+            ),
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ARABIC_NAME_MAX
+            ),
+            CustomValidators.pattern('AR_NUM_ONE_AR'),
+          ],
+        ]
+        : arHeader,
+      enHeader: controls
+        ? [
+          enHeader,
+          [
+            CustomValidators.required,
+            CustomValidators.minLength(
+              CustomValidators.defaultLengths.MIN_LENGTH
+            ),
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+            CustomValidators.pattern('ENG_NUM_ONE_ENG'),
+          ],
+        ]
+        : enHeader,
+      profileType: controls
+        ? [profileType, [CustomValidators.required]]
+        : profileType,
+      arDesc: controls
+        ? [
+            arDesc,
+            [
+              CustomValidators.minLength(
+                CustomValidators.defaultLengths.MIN_LENGTH
+              ),
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.EXPLANATIONS
+              ),
+            ],
+          ]
+        : arDesc,
+      profileCode: controls
+        ? [profileCode, [CustomValidators.required], []]
+        : profileCode,
+      registrationAuthority: controls
+        ? [registrationAuthority]
+        : registrationAuthority,
+      email: controls
+        ? [
+            email,
+            [
+              CustomValidators.required,
+              CustomValidators.pattern('EMAIL'),
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.EMAIL_MAX
+              ),
+            ],
+          ]
+        : email,
       permitTypeList: controls ? [permitTypeList] : permitTypeList,
-      submissionMechanism: controls ? [submissionMechanism] : submissionMechanism
+      submissionMechanism: controls
+        ? [submissionMechanism]
+        : submissionMechanism,
     };
   }
 
@@ -109,13 +193,14 @@ export class Profile extends BaseModel<Profile, ProfileService> {
     if (!this.id) {
       return of([]);
     }
-    let profileServiceRelationService: ProfileServiceRelationService = FactoryService.getService('ProfileServiceRelationService');
+    let profileServiceRelationService: ProfileServiceRelationService =
+      FactoryService.getService('ProfileServiceRelationService');
     return profileServiceRelationService.getServicesByProfile(this.id);
   }
 
   getParsedPermitTypes(): number[] {
     let parsed: { ids: number[] };
-    parsed = JSON.parse(this.permitTypes || '{"ids": []}')
-    return parsed.hasOwnProperty('ids') ? parsed.ids : []
+    parsed = JSON.parse(this.permitTypes || '{"ids": []}');
+    return parsed.hasOwnProperty('ids') ? parsed.ids : [];
   }
 }
