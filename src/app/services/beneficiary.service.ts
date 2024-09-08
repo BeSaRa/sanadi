@@ -430,7 +430,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
 
   @HasInterception
   @CastResponse(undefined, {
-    fallback: '$pagination'
+    fallback: '$reportAuditPagination'
   })
   reportAudit(@InterceptParam(reportAuditCriteriaInterceptor.send) criteria: ReportAuditCriteria): Observable<Pagination<ReportAuditResult[]>> {
     return this.http.post<Pagination<ReportAuditResult[]>>(this._getGDXServiceURL() + '/report/audit', criteria);
