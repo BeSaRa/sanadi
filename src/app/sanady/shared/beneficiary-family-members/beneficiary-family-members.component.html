@@ -184,7 +184,7 @@
             <ng-container cdkColumnDef="primaryIdType">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true">
                 {{lang.map.primary_id_type}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.primaryIdType}} </td>
+              <td cdk-cell *cdkCellDef="let row"> {{row.primaryIdTypeInfo?.getName()}} </td>
             </ng-container>
             <ng-container cdkColumnDef="primaryIdNumber">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true">
@@ -199,7 +199,7 @@
             <ng-container cdkColumnDef="relativeType">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true">
                 {{lang.map.relative_type}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.relativeType}} </td>
+              <td cdk-cell *cdkCellDef="let row"> {{row.relativeTypeInfo?.getName()}} </td>
             </ng-container>
             <ng-container cdkColumnDef="occuption">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true">

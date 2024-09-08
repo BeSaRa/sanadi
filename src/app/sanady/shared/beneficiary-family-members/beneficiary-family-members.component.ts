@@ -229,11 +229,12 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
         return (new BeneficiaryFamilyMember()).clone({
           ...this.currentRecord, ...formValue,
 
-          // periodicTypeInfo: this.lookupService.listByCategory.BENEFICIARY_INCOME_PERODIC.find(x => x.lookupKey === formValue.periodicType) || new Lookup(),
-          // benIncomeTypeInfo: this.lookupService.listByCategory.BENEFICIARY_INCOME.find(x => x.lookupKey === formValue.benIncomeType) || new Lookup(),
+          primaryIdTypeInfo: this.lookupService.listByCategory.BenIdType.find(x => x.lookupKey === formValue.primaryIdType) || new Lookup(),
+          relativeTypeInfo: this.lookupService.listByCategory.BenRequestorRelationType.find(x => x.lookupKey === formValue.relativeType) || new Lookup(),
         });
       })
     ).subscribe(recordToSave => {
+      debugger
       this._updateList(recordToSave, (!!this.editItem ? 'UPDATE' : 'ADD'));
       this.toastService.success(this.lang.map.msg_save_success);
       this.recordChanged$.next(null);
