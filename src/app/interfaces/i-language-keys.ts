@@ -2263,4 +2263,6 @@ export interface ILanguageKeys {
   charity_name:string;
   lbl_adjustment_reasons:string;
   all_request_status_should_be_approved:string;
+  lbl_arabic_header:string;
+  lbl_english_header:string;
 }
