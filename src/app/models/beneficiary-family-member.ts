@@ -1,6 +1,7 @@
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {ISearchFieldsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {Lookup} from '@models/lookup';
 
 export class BeneficiaryFamilyMember extends SearchableCloneable<BeneficiaryFamilyMember> {
   id?: number;
@@ -14,6 +15,9 @@ export class BeneficiaryFamilyMember extends SearchableCloneable<BeneficiaryFami
   occuption!: string;
   aidLookupId!: number;
   aidLookupParentId!: number;
+
+  primaryIdTypeInfo!: Lookup;
+  relativeTypeInfo!: Lookup;
 
   updatedBy!: number;
   clientData!: string;
