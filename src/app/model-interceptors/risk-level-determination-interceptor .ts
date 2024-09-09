@@ -25,6 +25,8 @@ export class RiskLevelDeterminationInterceptor implements IModelInterceptor<Risk
       delete model.requestStatusInfo;
       delete model.countryInfo;
       delete model.applicantInfo;
+      delete model.requiredAttentionLevelInfo;
+      delete model.operationInfo;
       delete model.arName;
       delete model.enName;
 
