@@ -4,10 +4,18 @@ import { ExternalCharityFounderInterceptor } from "./external-charity-founder";
 import { ExternalCharityFounder } from "@app/models/external-charity-founder";
 import { FileNetDocument } from "@app/models/file-net-document";
 import { FileNetDocumentInterceptor } from "./file-net-document-interceptor";
+import { AuditLogInterceptor } from "./audit-log-interceptor";
+import { AuditLog } from "@app/models/audit-log";
+import { ExternalCharityLogInterceptor } from "./external-charity-log-interceptor";
+import { ExternalCharityLog } from "@app/models/external-charity-log";
 
 export class ConvertExternalCharityInterceptor implements IModelInterceptor<ConvertExternalCharity> {
     receive(model: ConvertExternalCharity): (ConvertExternalCharity) {
       model.requestDocumentList = model.requestDocumentList?.map(item=> new FileNetDocument().clone(item));
+      if(!!model.logList){
+        const auditInterceptor= new ExternalCharityLogInterceptor();
+        model.logList = model.logList?.map(item=> <ExternalCharityLog>auditInterceptor.receive(item));
+      }
       return model;
     }
   

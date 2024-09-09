@@ -1,5 +1,5 @@
 import { ComponentType } from "@angular/cdk/portal";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { CastResponse, CastResponseContainer } from "@app/decorators/decorators/cast-response";
@@ -48,6 +48,34 @@ export class ExternalCharityService extends CrudWithDialogGenericService<Externa
     constructor() {
         super();
         FactoryService.registerService('ExternalCharityService', this);
+    }
+    @CastResponse(undefined, {
+      fallback: '$default',
+      unwrap: 'rs'
+    })
+    private _getByCriteria(modelId: number, criteria?: any): Observable<ExternalCharity> {
+      return this.http.get<ExternalCharity>(this._getServiceURL() + '/details/' + modelId, {
+        params: new HttpParams({
+          fromObject: criteria
+        })
+      });
+    }
+  
+    //{
+    //   "includeRequestInfo": false,
+    //   "includeAttachment": true,
+    //   "includeLogs": false,
+    //   "includeAttachmentLog": true,
+    //   "includeRequestAttachment": true
+    // }
+    getByIdComposite(modelId: number): Observable<ExternalCharity> {
+      return this._getByCriteria(modelId, {
+        "includeRequestInfo": false,
+        "includeAttachment": true,
+        "includeLogs": true,
+        "includeAttachmentLog": true,
+        "includeRequestAttachment": true
+      })
     }
     openViewDialog(modelId: number): Observable<DialogRef> {
         return this.getByIdComposite(modelId).pipe(

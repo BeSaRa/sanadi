@@ -3,6 +3,7 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angul
 import { ExternalCharityRequestType } from '@app/enums/external-charity-request-type';
 import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
+import { ExternalCharityAttachmentsComponent } from '@app/external-charity/shared/external-charity-attachments/external-charity-attachments.component';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { ConvertExternalCharity } from '@app/models/convert-external-charity';
@@ -14,9 +15,8 @@ import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { TabMap } from '@app/types/types';
-import { BehaviorSubject, catchError, exhaustMap, filter, iif, Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, catchError, exhaustMap, filter, Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { SelectExternalCharityPopupComponent } from '../select-external-charity-popup/select-external-charity-popup.component';
-import { ExternalCharityAttachmentsComponent } from '@app/external-charity/shared/external-charity-attachments/external-charity-attachments.component';
 
 @Component({
     selector: 'update-charity-popup',
@@ -130,6 +130,14 @@ export class UpdateCharityPopupComponent extends AdminGenericDialog<ConvertExter
         index: 1,
         isTouchedOrDirty: () => false,
         show: () => true,
+        validStatus: () => true
+      },
+      logs: {
+        name: 'logsTab',
+        langKey: 'logs',
+        index: 2,
+        isTouchedOrDirty: () => false,
+        show: () => this.model.logList.length>0,
         validStatus: () => true
       },
   

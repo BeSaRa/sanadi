@@ -10,6 +10,7 @@ import { CommonCaseStatus } from "@app/enums/common-case-status.enum";
 import { ExternalCharityInterceptor } from "@app/model-interceptors/external-charity";
 import { InterceptModel } from "@app/decorators/decorators/intercept-model";
 import { FileNetDocument } from "./file-net-document";
+import { ExternalCharityLog } from "./external-charity-log";
 
 const { send, receive } = new ExternalCharityInterceptor();
 
@@ -34,7 +35,8 @@ export class ExternalCharity extends BaseModel<ExternalCharity, ExternalCharityS
     suggestedActivities!: string;
     serviceType!: number;
     founderList: ExternalCharityFounder[] = [];
-    requestDocumentList:FileNetDocument[] =[]
+    requestDocumentList:FileNetDocument[] =[];
+    logList:ExternalCharityLog[] =[];
 
 
 

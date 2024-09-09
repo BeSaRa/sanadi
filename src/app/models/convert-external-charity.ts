@@ -1,15 +1,16 @@
+import { InterceptModel } from "@app/decorators/decorators/intercept-model";
 import { CaseTypes } from "@app/enums/case-types.enum";
 import { CommonCaseStatus } from "@app/enums/common-case-status.enum";
 import { normalSearchFields } from "@app/helpers/normal-search-fields";
+import { ConvertExternalCharityInterceptor } from "@app/model-interceptors/convert-external-charity-interceptor";
 import { ConvertExternalCharityService } from "@app/services/convert-external-charity.service";
+import { EmployeeService } from "@app/services/employee.service";
 import { FactoryService } from "@app/services/factory.service";
 import { ISearchFieldsMap } from "@app/types/types";
 import { CustomValidators } from "@app/validators/custom-validators";
 import { BaseModel } from "./base-model";
-import { EmployeeService } from "@app/services/employee.service";
 import { ExternalCharityFounder } from "./external-charity-founder";
-import { ConvertExternalCharityInterceptor } from "@app/model-interceptors/convert-external-charity-interceptor";
-import { InterceptModel } from "@app/decorators/decorators/intercept-model";
+import { ExternalCharityLog } from "./external-charity-log";
 import { FileNetDocument } from "./file-net-document";
 
 const { send, receive } = new ConvertExternalCharityInterceptor();
@@ -36,7 +37,8 @@ export class ConvertExternalCharity extends BaseModel<ConvertExternalCharity, Co
     currentCharityName!: string;
     adjustmentReason!: number;
     founderList: ExternalCharityFounder[] = [];
-    requestDocumentList:FileNetDocument[] =[]
+    requestDocumentList:FileNetDocument[] =[];
+    logList:ExternalCharityLog[] =[];
 
     constructor() {
         super();

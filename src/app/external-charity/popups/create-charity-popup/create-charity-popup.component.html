@@ -130,7 +130,11 @@
     [requestId]="model.id"></external-charity-attachments>
   </ng-template>
 
-
+  <ng-template #attachmentTemplate>
+    <external-charity-attachments [attachments]="model.requestDocumentList"
+    [requestId]="model.id"
+    [isAllRequired$]="isAllAttachmentRequired$"></external-charity-attachments>
+   </ng-template>
 </div>
 <div class="dialog-actions">
   <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
