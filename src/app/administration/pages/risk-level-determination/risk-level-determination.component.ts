@@ -63,7 +63,6 @@ export class RiskLevelDeterminationComponent {
     const requestStatus:RiskLevelDeterminationRequestStatusEnum[] =[]
     if(this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_COUNTRIES)){
       requestStatus.push(RiskLevelDeterminationRequestStatusEnum.RETURNED)
-      requestStatus.push(RiskLevelDeterminationRequestStatusEnum.REJECTED)
     }
     if(this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_RISK_LEVEL_DETERMINATION)){
       requestStatus.push(RiskLevelDeterminationRequestStatusEnum.PENDING)
