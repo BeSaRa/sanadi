@@ -3,12 +3,17 @@ import { ExternalCharity } from '@app/models/external-charity';
 import { ExternalCharityFounder } from '@app/models/external-charity-founder';
 import { ExternalCharityFounderInterceptor } from './external-charity-founder';
 import { FileNetDocument } from '@app/models/file-net-document';
+import { ExternalCharityLog } from '@app/models/external-charity-log';
+import { ExternalCharityLogInterceptor } from './external-charity-log-interceptor';
 
 
 export class ExternalCharityInterceptor implements IModelInterceptor<ExternalCharity> {
   receive(model: ExternalCharity): (ExternalCharity) {
     model.requestDocumentList = model.requestDocumentList?.map(item=> new FileNetDocument().clone(item));
-
+    if(!!model.logList){
+      const auditInterceptor= new ExternalCharityLogInterceptor();
+      model.logList = model.logList?.map(item=> <ExternalCharityLog>auditInterceptor.receive(item));
+    }
     return model;
   }
 

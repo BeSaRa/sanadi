@@ -134,7 +134,14 @@ export class CreateCharityPopupComponent extends AdminGenericDialog<ExternalChar
       show: () => true,
       validStatus: () => true
     },
-
+    logs: {
+      name: 'logsTab',
+      langKey: 'logs',
+      index: 2,
+      isTouchedOrDirty: () => false,
+      show: () => this.model.logList.length>0,
+      validStatus: () => true
+    },
   };
   fileIconsEnum = FileIconsEnum
   isSearchAllowed() {

@@ -110,7 +110,7 @@ export class UpdateCharityComponent extends AdminGenericComponent<ConvertExterna
       icon: ActionIconsEnum.LAUNCH,
       show:(item)=>!item.requestStatus && this.employeeService.isInternalUser(),
       onClick: (item: ConvertExternalCharity) => this._updateStatus(item)
-    }
+    },
   ];
 
   sortingCallbacks = {
@@ -169,4 +169,6 @@ export class UpdateCharityComponent extends AdminGenericComponent<ConvertExterna
   getStatus(statusId: number) {
     return this.externalCharityStatus$.value.find(status => status.id === statusId)?.getName()??''
   }
+
+  
 }

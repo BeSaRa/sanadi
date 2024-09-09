@@ -14,6 +14,8 @@
           [title]="lang.map[tabsData.basicInfo.langKey]"></tab>
         <tab [name]="tabsData.attachment.name" [template]="attachmentTemplate"
           [title]="lang.map[tabsData.attachment.langKey]"></tab>
+        <tab *ngIf="tabsData.logs.show!()" [name]="tabsData.logs.name" [template]="logsTemplate"
+          [title]="lang.map[tabsData.logs.langKey]"></tab>
       </tabs-list>
     </div>
     <ng-template #basicInfoTemplate>
@@ -126,6 +128,9 @@
      [isAllRequired$]="isAllAttachmentRequired$"></external-charity-attachments>
     </ng-template>
   
+  <ng-template #logsTemplate>
+    <external-charity-logs [logList]="model.logList"></external-charity-logs>
+  </ng-template>
   
   </div>
   <div class="dialog-actions">

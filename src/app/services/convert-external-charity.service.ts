@@ -1,7 +1,7 @@
 import { ComponentType } from "@angular/cdk/portal";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { DomSanitizer } from "@angular/platform-browser";
+import { PaginationContract } from "@app/contracts/pagination-contract";
 import { CastResponse, CastResponseContainer } from "@app/decorators/decorators/cast-response";
 import { OperationTypes } from "@app/enums/operation-types.enum";
 import { UpdateCharityPopupComponent } from "@app/external-charity/popups/update-charity-popup/update-charity-popup.component";
@@ -12,7 +12,7 @@ import { Pagination } from "@app/models/pagination";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { Observable, of, switchMap, tap } from "rxjs";
 import { DialogService } from "./dialog.service";
-import { DocumentService } from "./document.service";
+import { EmployeeService } from "./employee.service";
 import { FactoryService } from "./factory.service";
 import { UrlService } from "./url.service";
 
@@ -39,13 +39,9 @@ export class ConvertExternalCharityService extends CrudWithDialogGenericService<
   http: HttpClient = inject(HttpClient);
   urlService: UrlService = inject(UrlService);
   dialog: DialogService = inject(DialogService);
-  documentService: DocumentService = new DocumentService({
-    http: this.http,
-    dialog: this.dialog,
-    _getURLSegment: () => this._getServiceURL(),
-    domSanitizer: inject(DomSanitizer)
-  });
 
+
+  employeeService = inject(EmployeeService);
   _getServiceURL(): string {
     return this.urlService.URLS.EXTERNAL_CHARITY_ADJUST;
   }
@@ -73,22 +69,29 @@ export class ConvertExternalCharityService extends CrudWithDialogGenericService<
     fallback: '$default',
     unwrap: 'rs'
   })
-  private _getByCriteria(modelId: number): Observable<ConvertExternalCharity> {
+  private _getByCriteria(modelId: number, criteria?: any): Observable<ConvertExternalCharity> {
     return this.http.get<ConvertExternalCharity>(this._getServiceURL() + '/details/' + modelId, {
       params: new HttpParams({
-        fromObject: {
-          "includeRequestInfo": false,
-          "includeAttachment": true,
-          "includeLogs": false,
-          "includeAttachmentLog": true,
-          "includeRequestAttachment": true
-        }
+        fromObject: criteria
       })
     });
   }
 
+  //{
+  //   "includeRequestInfo": false,
+  //   "includeAttachment": true,
+  //   "includeLogs": false,
+  //   "includeAttachmentLog": true,
+  //   "includeRequestAttachment": true
+  // }
   getByIdComposite(modelId: number): Observable<ConvertExternalCharity> {
-    return this._getByCriteria(modelId)
+    return this._getByCriteria(modelId, {
+      "includeRequestInfo": false,
+      "includeAttachment": true,
+      "includeLogs": true,
+      "includeAttachmentLog": true,
+      "includeRequestAttachment": true
+    })
   }
   @CastResponse(undefined, {
     fallback: '$default',
@@ -104,4 +107,35 @@ export class ConvertExternalCharityService extends CrudWithDialogGenericService<
       tap(result => this._loadDone$.next(result))
     );
   }
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  private _pagination(options: Partial<PaginationContract>): Observable<Pagination<ConvertExternalCharity[]>> {
+    return this.http.get<Pagination<ConvertExternalCharity[]>>(this._getServiceURL() + '/composite/pg', {
+      params: { ...options }
+    })
+  }
+  paginateComposite(options: Partial<PaginationContract>): Observable<Pagination<ConvertExternalCharity[]>> {
+    return this._getPaginationEndpoint(options).pipe(
+      tap(result => this.list = result.rs),
+      tap(result => this._loadDone$.next(result.rs))
+    );
+  }
+
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  private _getPaginationEndpoint(options: Partial<PaginationContract>) {
+    return this.employeeService.isInternalUser() ?
+      this.http.get<Pagination<ConvertExternalCharity[]>>(this._getServiceURL() + '/composite/pg', {
+        params: { ...options }
+      }) :
+
+      this.http.post<Pagination<ConvertExternalCharity[]>>(this._getServiceURL() + '/filter/criteria/pg',
+        { externalUserId: this.employeeService.getCurrentUser().id }, {
+        params: { ...options }
+      })
+  }
+
+
 }
