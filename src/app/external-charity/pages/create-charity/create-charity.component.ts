@@ -105,7 +105,7 @@ export class CreateCharityComponent extends AdminGenericComponent<ExternalCharit
     // update status
     {
       type: 'action',
-      label: 'view',
+      label: 'update_status',
       icon: ActionIconsEnum.LAUNCH,
       show:(item)=>!item.requestStatus && this.employeeService.isInternalUser(),
       onClick: (item: ExternalCharity) => this._updateStatus(item)
