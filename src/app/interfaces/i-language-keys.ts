@@ -2279,4 +2279,5 @@ export interface ILanguageKeys {
   lbl_age: string;
   update_status: string;
   msg_family_member_list_count_dose_not_match_family_member_count: string;
+  all_request_must_not_be_acknowledged: string;
 }
