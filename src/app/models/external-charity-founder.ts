@@ -21,10 +21,18 @@ export class ExternalCharityFounder extends SearchableCloneable<ExternalCharityF
         } = this;
         return {
 
-            founderName: controls ? [founderName, [CustomValidators.required]] : founderName,
-            founderIdentifierId: controls ? [founderIdentifierId, [CustomValidators.required]] : founderIdentifierId,
-            founderPosition: controls ? [founderPosition, [CustomValidators.required]] : founderPosition,
-            founderJob: controls ? [founderJob, [CustomValidators.required]] : founderJob,
+            founderName: controls ? [founderName, [CustomValidators.required,
+                CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)
+            ]] : founderName,
+            founderIdentifierId: controls ? [founderIdentifierId, [CustomValidators.required,
+                CustomValidators.maxLength(CustomValidators.defaultLengths.QID_MAX)
+            ]] : founderIdentifierId,
+            founderPosition: controls ? [founderPosition, [CustomValidators.required,
+                CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)
+            ]] : founderPosition,
+            founderJob: controls ? [founderJob, [CustomValidators.required,
+                CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)
+            ]] : founderJob,
             founderNationality: controls ? [founderNationality, [CustomValidators.required]] : founderNationality,
         }
     }
