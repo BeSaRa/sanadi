@@ -11,7 +11,6 @@ import { BeneficiarySaveStatus } from '../enums/beneficiary-save-status.enum';
 import { Pair } from '@contracts/pair';
 import { SubventionRequest } from './subvention-request';
 import { IMyDateModel } from '@nodro7/angular-mydatepicker';
-import { isValidValue } from '@helpers/utils';
 import { ISearchFieldsMap } from '@app/types/types';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { infoSearchFields } from '@app/helpers/info-search-fields';

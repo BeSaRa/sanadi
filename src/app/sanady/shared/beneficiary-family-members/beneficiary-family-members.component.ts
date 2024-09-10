@@ -19,6 +19,8 @@ import {AidTypes} from '@enums/aid-types.enum';
 import {AidLookupStatusEnum} from '@enums/status.enum';
 import {AidLookupService} from '@services/aid-lookup.service';
 import {Lookup} from '@models/lookup';
+import {CommonUtils} from '@helpers/common-utils';
+import {BeneficiaryIdTypes} from '@enums/beneficiary-id-types.enum';
 
 @Component({
   selector: 'beneficiary-family-members',
@@ -41,6 +43,7 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
+    this.listenToPrimaryIdTypeChange();
     this._setComponentReadiness('READY');
   }
 
@@ -107,6 +110,13 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
   private destroy$: Subject<void> = new Subject();
 
   showForm: boolean = false;
+
+  private idTypesValidationsMap: { [index: number]: any } = {
+    [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
+    [BeneficiaryIdTypes.VISA]: CustomValidators.commonValidations.visa,
+    [BeneficiaryIdTypes.QID]: CustomValidators.commonValidations.qId,
+    [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId,
+  };
 
   actions: IMenuItem<BeneficiaryFamilyMember>[] = [
     // edit
@@ -269,6 +279,32 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
     this.form.reset();
     this.form.markAsUntouched();
     this.form.markAsPristine();
+  }
+
+  private listenToPrimaryIdTypeChange() {
+    this.primaryIdTypeField?.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(value => {
+      let idValidators: any[] = [CustomValidators.required];
+
+      if (CommonUtils.isValidValue(value)) {
+        idValidators = idValidators.concat(this.idTypesValidationsMap[value]);
+      }
+      if(value !== (this.currentRecord as unknown as BeneficiaryFamilyMember).primaryIdType) {
+        this.primaryIdNumberField.setValue(null);
+      }
+      this.primaryIdNumberField.setValidators(idValidators);
+      this.primaryIdNumberField.updateValueAndValidity();
+    });
+  }
+
+
+  get primaryIdTypeField(): UntypedFormControl {
+    return this.form.get('primaryIdType') as UntypedFormControl;
+  }
+
+  get primaryIdNumberField(): UntypedFormControl {
+    return this.form.get('primaryIdNumber') as UntypedFormControl;
   }
 
   forceClearComponent() {
