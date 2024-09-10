@@ -64,6 +64,7 @@ import {ReportAuditResult} from '@models/report-audit-result';
 import {ReportAuditInterceptor} from '@model-interceptors/report-audit-interceptor';
 import {GdxQcbIbanResponse} from '@models/gdx-qcb-iban-response';
 import {QcbFilesPopupComponent} from '@app/sanady/popups/qcb-files-popup/qcb-files-popup.component';
+import {SubventionRequestAid} from '@models/subvention-request-aid';
 
 const beneficiarySearchLogCriteriaInterceptor = new BeneficiarySearchLogCriteriaInterceptor();
 const reportAuditCriteriaInterceptor = new ReportAuditInterceptor();
@@ -89,6 +90,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   beneficiaryIncomeInterceptor = new BeneficiaryIncomeInterceptor();
   beneficiaryObligationInterceptor = new BeneficiaryObligationInterceptor();
   beneficiaryFamilyMemberInterceptor = new BeneficiaryFamilyMemberInterceptor();
+
   constructor(public http: HttpClient,
               private urlService: UrlService,
               public domSanitizer: DomSanitizer,
@@ -198,6 +200,15 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   loadGDXMOPHMortality(criteria: IGdxCriteria) {
     return this.http.post<GdxMophResponse[]>(this._getGDXServiceURL() + '/moph/mortality', criteria);
   }
+
+  @HasInterception
+  @CastResponse(() => GdxMophResponse, {
+    fallback: '$pagination'
+  })
+  beneficiaryStatus(@InterceptParam() beneficiary: Partial<Beneficiary>): Observable<Pagination<SubventionRequestAid[]>> {
+    return this.http.post<Pagination<SubventionRequestAid[]>>(this._getServiceURL() + '/beneficiary-status', beneficiary);
+  }
+
 
   @CastResponse(() => GdxServiceLog, {
     unwrap: 'rs',
@@ -315,6 +326,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   addQCBIbanInquiry(criteria: IGdxCriteria) {
     return this.http.post<GdxQcbIbanResponse[]>(this._getGDXServiceURL() + '/qcb/iban', criteria);
   }
+
   @CastResponse(() => GdxMsdfHousingResponse, {
     unwrap: 'rs',
     fallback: '$default'

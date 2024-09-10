@@ -27,6 +27,7 @@ import {
   BeneficiaryFamilyMemberComponent,
 } from '@app/sanady/shared/beneficiary-family-members/beneficiary-family-members.component';
 import { QcbFilesPopupComponent } from '@app/sanady/popups/qcb-files-popup/qcb-files-popup.component';
+import {ConfirmNdaCasePopupComponent} from '@app/sanady/popups/confirm-nda-case-popup/confirm-nda-case-popup.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { QcbFilesPopupComponent } from '@app/sanady/popups/qcb-files-popup/qcb-f
     InquiryLogsComponent,
     AidListComponent,
     BeneficiaryFamilyMemberComponent,
-    QcbFilesPopupComponent
+    QcbFilesPopupComponent,
+    ConfirmNdaCasePopupComponent
   ],
   imports: [
     CommonModule,

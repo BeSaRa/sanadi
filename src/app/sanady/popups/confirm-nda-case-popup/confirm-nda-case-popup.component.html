@@ -1,0 +1,97 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{this.langService.map[title]}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="userClick.CLOSE" aria-label="Close"></button>
+</div>
+<div class="dialog-content w1000px">
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive">
+        <app-table #table sortableTable [paginator]="paginator" [data]="models" [columns]="displayedColumns"
+                   [filter]="filterControl.value" [useSearchToFilter]="true"
+                   [searchFieldsName]="'searchFieldsSearch'">
+          <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+            <ng-container cdkColumnDef="extra-header">
+              <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                <table-header tableTitle="requests"
+                              [sort]="table.dataSource.sort"
+                              (textChange)="filterControl.setValue($event)">
+                </table-header>
+              </th>
+            </ng-container>
+
+            <ng-container cdkColumnDef="requestFullSerial">
+              <th cdk-header-cell *cdkHeaderCellDef class="serial-column"
+                  sortable-header> {{langService.map.request_number}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="serial-column">
+                <div class="d-flex flex-row">
+                  <span>{{ row.requestFullSerial }}</span>
+                  <i class="mdi {{fileIconsEnum.HIDDEN}} text-primary" *ngIf="row.isPartial"
+                     tooltip="{{langService.map.partial_request}}"></i>
+                </div>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="requestDate">
+              <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header
+                  [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.requestDate"> {{langService.map.request_date}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="date-column"><span>{{row.creationDateString}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="organization">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.organization"> {{langService.map.lbl_organization}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.orgInfo.getName()}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="createdBy">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.createdBy"> {{langService.map.created_by}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.orgUserInfo.getName()}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="requestStatus">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.requestStatus"> {{langService.map.request_status}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.statusInfo.getName()}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="estimatedAmount">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.estimatedAmount"> {{langService.map.estimated_amount}}</th>
+              <td cdk-cell *cdkCellDef="let row">
+                <span>{{row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="requestedAidAmount">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.request_aid_amount}}</th>
+              <td cdk-cell *cdkCellDef="let row">
+                <span>{{row.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="totalApprovedAmount">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.totalApprovedAmount"> {{langService.map.total_approved_amount}}</th>
+              <td cdk-cell *cdkCellDef="let row">
+                <span>{{row.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:{thousandSeparator:inputMaskPatterns.THOUSAND_SEPARATOR} }}</span>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="statusDateModified">
+              <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.statusDateModified"> {{langService.map.lbl_status_date_modified}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="date-column"><span>{{row.statusDateModifiedString}}</span>
+              </td>
+            </ng-container>
+            <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+            <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
+            <tr *cdkNoDataRow>
+              <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
+            </tr>
+          </table>
+          <app-paginator #paginator [length]="(models.length || 0)"></app-paginator>
+        </app-table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button [dialogClose]="userClick.CLOSE" class="btn btn-secondary">{{langService.map.lbl_reject}}</button>
+  <button [dialogClose]="userClick.YES" class="btn btn-primary">{{langService.map.btn_continue}}</button>
+</div>

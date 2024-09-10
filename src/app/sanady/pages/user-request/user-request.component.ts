@@ -1,7 +1,7 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { DialogService } from '@app/services/dialog.service';
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {DialogService} from '@app/services/dialog.service';
 import {
   AbstractControl,
   UntypedFormArray,
@@ -10,7 +10,7 @@ import {
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
-import { BehaviorSubject, forkJoin, iif, merge, Observable, of, Subject } from 'rxjs';
+import {BehaviorSubject, iif, merge, Observable, of, Subject} from 'rxjs';
 import {
   catchError,
   delay,
@@ -25,26 +25,26 @@ import {
   takeUntil,
   tap
 } from 'rxjs/operators';
-import { BeneficiaryService } from '@app/services/beneficiary.service';
-import { Beneficiary } from '@app/models/beneficiary';
-import { ConfigurationService } from '@app/services/configuration.service';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { ToastService } from '@app/services/toast.service';
-import { SubventionRequest } from '@app/models/subvention-request';
-import { SubventionRequestService } from '@app/services/subvention-request.service';
-import { SubventionAid } from '@app/models/subvention-aid';
-import { AidLookupService } from '@app/services/aid-lookup.service';
-import { AidLookup } from '@app/models/aid-lookup';
-import { Lookup } from '@app/models/lookup';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { SubventionAidService } from '@app/services/subvention-aid.service';
-import { AidLookupStatusEnum, BenOccupationStatusEnum, SubventionRequestStatus } from '@app/enums/status.enum';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PeriodicPayment, SubAidPeriodicTypeEnum } from '@app/enums/periodic-payment.enum';
-import { Pair } from '@app/interfaces/pair';
-import { BeneficiarySaveStatus } from '@app/enums/beneficiary-save-status.enum';
-import { formatDate } from '@angular/common';
-import { ReadModeService } from '@app/services/read-mode.service';
+import {BeneficiaryService} from '@app/services/beneficiary.service';
+import {Beneficiary} from '@app/models/beneficiary';
+import {ConfigurationService} from '@app/services/configuration.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {ToastService} from '@app/services/toast.service';
+import {SubventionRequest} from '@app/models/subvention-request';
+import {SubventionRequestService} from '@app/services/subvention-request.service';
+import {SubventionAid} from '@app/models/subvention-aid';
+import {AidLookupService} from '@app/services/aid-lookup.service';
+import {AidLookup} from '@app/models/aid-lookup';
+import {Lookup} from '@app/models/lookup';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {SubventionAidService} from '@app/services/subvention-aid.service';
+import {AidLookupStatusEnum, BenOccupationStatusEnum, SubventionRequestStatus} from '@app/enums/status.enum';
+import {ActivatedRoute, Router} from '@angular/router';
+import {PeriodicPayment, SubAidPeriodicTypeEnum} from '@app/enums/periodic-payment.enum';
+import {Pair} from '@app/interfaces/pair';
+import {BeneficiarySaveStatus} from '@app/enums/beneficiary-save-status.enum';
+import {formatDate} from '@angular/common';
+import {ReadModeService} from '@app/services/read-mode.service';
 import {
   CanNavigateOptions,
   DatepickerControlsMap,
@@ -52,37 +52,38 @@ import {
   ReadinessStatus,
   TabMap
 } from '@app/types/types';
-import { NavigationService } from '@app/services/navigation.service';
-import { BeneficiaryIdTypes } from '@app/enums/beneficiary-id-types.enum';
-import { SubventionResponseService } from '@app/services/subvention-response.service';
-import { SubventionResponse } from '@app/models/subvention-response';
-import { SanadiAttachment } from '@app/models/sanadi-attachment';
-import { AttachmentService } from '@app/services/attachment.service';
-import { AidTypes } from '@app/enums/aid-types.enum';
-import { ECookieService } from '@app/services/e-cookie.service';
-import { DateUtils } from '@app/helpers/date-utils';
-import { EmployeeService } from '@app/services/employee.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { AdminResult } from '@app/models/admin-result';
-import { BuildingPlateComponent } from '@app/shared/components/building-plate/building-plate.component';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import {NavigationService} from '@app/services/navigation.service';
+import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
+import {SubventionResponseService} from '@app/services/subvention-response.service';
+import {SubventionResponse} from '@app/models/subvention-response';
+import {SanadiAttachment} from '@app/models/sanadi-attachment';
+import {AttachmentService} from '@app/services/attachment.service';
+import {AidTypes} from '@app/enums/aid-types.enum';
+import {ECookieService} from '@app/services/e-cookie.service';
+import {DateUtils} from '@app/helpers/date-utils';
+import {EmployeeService} from '@app/services/employee.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {AdminResult} from '@app/models/admin-result';
+import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {
   BeneficiaryObligationComponent
 } from '@app/sanady/shared/beneficiary-obligation/beneficiary-obligation.component';
-import { BeneficiaryIncomeComponent } from '@app/sanady/shared/beneficiary-income/beneficiary-income.component';
-import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
-import { AttachmentListComponent } from '@app/shared/components/attachment-list/attachment-list.component';
-import { AttachmentTypeEnum } from '@app/enums/attachment-type.enum';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { Donor } from '@app/models/donor';
-import { DonorService } from '@services/donor.service';
-import { SharedService } from '@services/shared.service';
-import { BeneficiaryRequesterRelationTypes } from '@app/enums/beneficiary-requester-relation-types';
-import { CanComponentDeactivateContract } from "@contracts/can-component-deactivate-contract";
-import { IMyDateModel } from '@nodro7/angular-mydatepicker';
+import {BeneficiaryIncomeComponent} from '@app/sanady/shared/beneficiary-income/beneficiary-income.component';
+import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {AttachmentListComponent} from '@app/shared/components/attachment-list/attachment-list.component';
+import {AttachmentTypeEnum} from '@app/enums/attachment-type.enum';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {Donor} from '@app/models/donor';
+import {DonorService} from '@services/donor.service';
+import {SharedService} from '@services/shared.service';
+import {BeneficiaryRequesterRelationTypes} from '@app/enums/beneficiary-requester-relation-types';
+import {CanComponentDeactivateContract} from '@contracts/can-component-deactivate-contract';
+import {IMyDateModel} from '@nodro7/angular-mydatepicker';
 import {BeneficiaryFamilyMemberComponent} from '@app/sanady/shared/beneficiary-family-members/beneficiary-family-members.component';
+import {ConfirmNdaCasePopupComponent} from '@app/sanady/popups/confirm-nda-case-popup/confirm-nda-case-popup.component';
 
 @Component({
   selector: 'app-user-request',
@@ -91,26 +92,26 @@ import {BeneficiaryFamilyMemberComponent} from '@app/sanady/shared/beneficiary-f
 })
 export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, CanComponentDeactivateContract {
   constructor(public langService: LangService,
-    public lookup: LookupService,
-    private beneficiaryService: BeneficiaryService,
-    private dialogService: DialogService,
-    private configurationService: ConfigurationService,
-    private toastService: ToastService,
-    private subventionRequestService: SubventionRequestService,
-    private subventionResponseService: SubventionResponseService,
-    private subventionAidService: SubventionAidService,
-    private aidLookupService: AidLookupService,
-    private donorService: DonorService,
-    private activeRoute: ActivatedRoute,
-    private router: Router,
-    private cd: ChangeDetectorRef,
-    private sharedService: SharedService,
-    private navigationService: NavigationService,
-    private readModeService: ReadModeService,
-    private attachmentService: AttachmentService, // to use in interceptor
-    private fb: UntypedFormBuilder,
-    private empService: EmployeeService,
-    private eCookieService: ECookieService) {
+              public lookup: LookupService,
+              private beneficiaryService: BeneficiaryService,
+              private dialogService: DialogService,
+              private configurationService: ConfigurationService,
+              private toastService: ToastService,
+              private subventionRequestService: SubventionRequestService,
+              private subventionResponseService: SubventionResponseService,
+              private subventionAidService: SubventionAidService,
+              private aidLookupService: AidLookupService,
+              private donorService: DonorService,
+              private activeRoute: ActivatedRoute,
+              private router: Router,
+              private cd: ChangeDetectorRef,
+              private sharedService: SharedService,
+              private navigationService: NavigationService,
+              private readModeService: ReadModeService,
+              private attachmentService: AttachmentService, // to use in interceptor
+              private fb: UntypedFormBuilder,
+              private empService: EmployeeService,
+              private eCookieService: ECookieService) {
 
   }
 
@@ -223,12 +224,12 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
 
   datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap: DatepickerOptionsMap = {
-    dateOfBirth: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    creationDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    statusDateModified: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
-    aidApprovalDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
-    aidPaymentDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
-    expiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' })
+    dateOfBirth: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
+    creationDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
+    statusDateModified: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    aidApprovalDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    aidPaymentDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    expiryDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
@@ -270,15 +271,15 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       index: 0,
       // checkTouchedDirty: true,
       validStatus: () => (this.personalInfoTab && this.personalInfoTab.valid
-        && (!this.beneficiaryFamilyComponentRef
-          || (this.beneficiaryFamilyStatus === 'READY')
-        && this.beneficiaryFamilyComponentRef.list.length == this.personalInfoTab.value.familyCount))
+          && (!this.beneficiaryFamilyComponentRef
+            || (this.beneficiaryFamilyStatus === 'READY')
+            && this.beneficiaryFamilyComponentRef.list.length == this.personalInfoTab.value.familyCount))
         || (this.personalInfoTab && this.personalInfoTab.disabled),
       isTouchedOrDirty: () => (this.personalInfoTab
-        && (this.personalInfoTab.touched
-          || this.personalInfoTab.dirty))
-          || (this.beneficiaryFamilyComponentRef
-            && this.beneficiaryFamilyComponentRef.isTouchedOrDirty())
+          && (this.personalInfoTab.touched
+            || this.personalInfoTab.dirty))
+        || (this.beneficiaryFamilyComponentRef
+          && this.beneficiaryFamilyComponentRef.isTouchedOrDirty())
     },
     income: {
       name: 'incomeTab',
@@ -405,7 +406,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
         this.updateBeneficiaryForm(this.currentBeneficiary);
         setTimeout(() => {
 
-          this.buildingPlate?.disableUpdateForExistingValues()
+          this.buildingPlate?.disableUpdateForExistingValues();
         }, 200);
 
       });
@@ -442,7 +443,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       } else {
         control.enable();
       }
-    })
+    });
     Object.values(this.addressTab.controls).forEach(control => {
       if (CommonUtils.isValidValue(control.value)) {
         control.disable();
@@ -450,15 +451,17 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
         control.enable();
       }
 
-    })
+    });
 
     // this.handleRequesterRelationTypeChange((selectedBeneficiary ? selectedBeneficiary.benRequestorRelationType : undefined), false);
     this.handleRequesterRelationTypeChange();
     this.handleEmploymentStatusChange((selectedBeneficiary ? selectedBeneficiary.occuptionStatus : undefined), false);
     setTimeout(() => this.toggleRequesterRelationTypeReadonly(), 100);
   }
-  searchInputs = ['benPrimaryIdType', 'benPrimaryIdNationality', 'expiryDate', 'benPrimaryIdNumber', 'benSecIdType', 'benSecIdNationality', 'benSecIdNumber']
-  personalInputs = ['arName', 'enName', 'gender', 'dateOfBirth']
+
+  searchInputs = ['benPrimaryIdType', 'benPrimaryIdNationality', 'expiryDate', 'benPrimaryIdNumber', 'benSecIdType', 'benSecIdNationality', 'benSecIdNumber'];
+  personalInputs = ['arName', 'enName', 'gender', 'dateOfBirth'];
+
   private updateRequestForm(request: undefined | SubventionRequest) {
     if (!request) {
       this.requestInfoTab?.reset();
@@ -549,7 +552,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     this.occupationField?.updateValueAndValidity();
     this.workPlaceField?.updateValueAndValidity();
   }
-  gulfAreaLookupKeys: number[] = [1, 2, 122, 191, 171, 24]
+
+  gulfAreaLookupKeys: number[] = [1, 2, 122, 191, 171, 24];
+
   private listenToNationalityChange() {
     this.benNationalityField?.valueChanges.pipe(
       takeUntil(this.destroy$),
@@ -607,7 +612,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     if (!this.isDisclosureFileRequired()) {
       return true;
     }
-    return !!this.disclosureFile
+    return !!this.disclosureFile;
   }
 
   private listenToSavePartialRequest() {
@@ -642,9 +647,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
         return;
       }
 
-      this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({ serial: response.request.requestFullSerial }));
+      this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: response.request.requestFullSerial}));
       this.currentParamType = 'normal';
-      this.form.markAsPristine({ onlySelf: true });
+      this.form.markAsPristine({onlySelf: true});
       this.skipConfirmUnsavedChanges = true;
       // keep the original path of partial request page to use in case of back
       const previousPath = this.navigationService.previousPath;
@@ -672,16 +677,15 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
           }
         }),
         filter(() => {
-          if (this.employmentStatusField.value !== BenOccupationStatusEnum.WORKING
-            || !!this.beneficiaryIncomeComponentRef.list.length) {
-            return true;
-          } else if (this.beneficiaryFamilyComponentRef.list.length !== this.form.value.familyCount) {
+          if (this.beneficiaryFamilyComponentRef.list.length !== this.personalInfoTab.value.familyCount) {
             this.displayFamilyMemberCountMessage();
             return false;
-          } else {
+          }
+          if (this.employmentStatusField.value === BenOccupationStatusEnum.WORKING && !this.beneficiaryIncomeComponentRef.list.length) {
             this.displayEmploymentStatusMessage();
             return false;
           }
+          return true;
         }),
         // validate form and filter invalid requests
         filter(() => {
@@ -715,14 +719,19 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
         // save beneficiary
         exhaustMap((requestAndBen) => {
           return requestAndBen.beneficiary.saveWithValidate(this.validateBeneficiary, this.currentRequest, this.validateMophBeneficiary)
-            .pipe(catchError(() => of(null)));
+            .pipe(catchError(() => of(null))).pipe(map((value) => {
+              return {
+                value,
+                beneficiary: requestAndBen.beneficiary
+              }
+            }));
         }),
-        filter((value) => this.validateBeneficiaryMOPHResponse(value) !== 'STOP'),
-        filter((value) => this.validateBeneficiaryNDAResponse(value) !== 'STOP'),
-        filter((value) => this.validateBeneficiaryExistenceResponse(value) !== 'STOP'),
+        filter((res) => this.validateBeneficiaryMOPHResponse(res.value) !== 'STOP'),
+        filter((res) => this.validateBeneficiaryNDAResponse(res.value, res.beneficiary) !== 'STOP'),
+        filter((res) => this.validateBeneficiaryExistenceResponse(res.value) !== 'STOP'),
         // check if BE returns beneficiary response
-        map(value => {
-          return value?.second ?? undefined;
+        map(res => {
+          return res.value?.second ?? undefined;
         }),
         filter(value => !!value),
         map((beneficiary) => {
@@ -730,19 +739,19 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
           return beneficiary!;
         }),
       ).pipe(
-        // set beneficiary id to request
-        map((value: Beneficiary) => {
-          let request = this.prepareRequest();
-          request.benId = value.id as number;
-          return request;
-        }),
-        // save request
-        exhaustMap((request: SubventionRequest) => {
-          return request.save().pipe(catchError(() => {
-            return of(null);
-          }));
-        })
-      )
+      // set beneficiary id to request
+      map((value: Beneficiary) => {
+        let request = this.prepareRequest();
+        request.benId = value.id as number;
+        return request;
+      }),
+      // save request
+      exhaustMap((request: SubventionRequest) => {
+        return request.save().pipe(catchError(() => {
+          return of(null);
+        }));
+      })
+    )
       .subscribe((request) => {
         if (!request) {
           return;
@@ -751,7 +760,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
         this.uploadDisclosureDocument(request)
           .subscribe((disclosureAttachmentStatus) => {
             if (disclosureAttachmentStatus === 'FAILED_DISCLOSURE_ATTACHMENT') {
-              this.dialogService.info(this.langService.map.msg_save_fail_x.change({ x: this.langService.map.disclosure_document }));
+              this.dialogService.info(this.langService.map.msg_save_fail_x.change({x: this.langService.map.disclosure_document}));
             } else if (disclosureAttachmentStatus !== 'NO_DISCLOSURE_ATTACHMENT_NEEDED') {
               this.disclosureAttachment.vsId = disclosureAttachmentStatus;
               this.attachmentList.push(this.disclosureAttachment);
@@ -760,7 +769,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
             if (this.editMode) {
               this.dialogService.success(this.langService.map.msg_request_has_been_updated_successfully);
             } else {
-              this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({ serial: request.requestFullSerial }));
+              this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: request.requestFullSerial}));
             }
             this.currentRequest = request.clone();
             this.editMode = true;
@@ -775,7 +784,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
             if (!this.requestStatusTab.value) {
               this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
             }
-            this.form.markAsPristine({ onlySelf: true });
+            this.form.markAsPristine({onlySelf: true});
 
             this.disclosureAttachment = undefined;
 
@@ -907,14 +916,14 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
 
   private listenToRouteParams() {
     const requestId$ = this.activeRoute.params
-      .pipe(
-        filter(params => params.hasOwnProperty('id')),
-        pluck('id'),
-        tap(_ => {
-          this.currentParamType = this.routeParamTypes.normal;
-          this.isUserRequestPage = false;
-        })
-      ),
+        .pipe(
+          filter(params => params.hasOwnProperty('id')),
+          pluck('id'),
+          tap(_ => {
+            this.currentParamType = this.routeParamTypes.normal;
+            this.isUserRequestPage = false;
+          })
+        ),
       partialRequestId$ = this.activeRoute.params
         .pipe(
           filter(params => params.hasOwnProperty('partial-id')),
@@ -995,13 +1004,15 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
 
   setExpiryDateForSanadyResult(list: Beneficiary[], expiryDate: IMyDateModel): Observable<Beneficiary[]> {
     list.forEach(x => {
-      x.expiryDate = expiryDate
-    })
+      x.expiryDate = expiryDate;
+    });
     return of(list);
   }
+
   get isQIDType(): boolean {
     return this.primaryIdTypeField?.value === BeneficiaryIdTypes.QID;
   }
+
   getBeneficiaryData($event?: Event) {
     $event?.preventDefault();
     $event?.stopPropagation();
@@ -1027,8 +1038,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       benPrimaryIdType: primaryNumber ? idType : undefined,
       benPrimaryIdNationality: nationality ? nationality : undefined,
 
-    }
-    this.beneficiaryService.getBeneficiaryFromMoiData({ ...criteria, expiryDate })
+    };
+    this.beneficiaryService.getBeneficiaryFromMoiData({...criteria, expiryDate})
       .pipe(
         switchMap((list) => {
           return iif(() => list.length > 0, of(list),
@@ -1036,7 +1047,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
               .pipe(
                 switchMap(list => this.setExpiryDateForSanadyResult(list, expiryDate))
               )
-          )
+          );
 
         }),
         takeUntil(this.destroy$)
@@ -1045,8 +1056,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
         if (!list.length) {
           this.dialogService.info(this.langService.map.no_result_for_your_search_criteria)
             .onAfterClose$.subscribe(() => {
-              this.isBeneficiaryEnquired = true;
-            });
+            this.isBeneficiaryEnquired = true;
+          });
           return;
         }
         if (list.length > 1) {
@@ -1103,7 +1114,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
 
   private preparePeriodicityLookups(): void {
     this.periodicityLookups = this.lookup.listByCategory.SubAidPeriodicType.reduce((acc, item) => {
-      return { ...acc, [item.lookupKey]: item };
+      return {...acc, [item.lookupKey]: item};
     }, {} as Record<number, Lookup>);
   }
 
@@ -1347,6 +1358,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
   get primaryNationalityField(): UntypedFormControl {
     return this.personalInfoTab.get('benPrimaryIdNationality') as UntypedFormControl;
   }
+
   get expiryDateField(): UntypedFormControl {
     return this.personalInfoTab.get('expiryDate') as UntypedFormControl;
   }
@@ -1472,7 +1484,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       takeUntil(this.destroy$),
       filter(val => val !== 'init' && !!this.currentRequest && !!this.currentRequest.id),
       switchMap(() => {
-        return this.subventionAidService.loadByCriteria({ requestId: this.currentRequest!.id });
+        return this.subventionAidService.loadByCriteria({requestId: this.currentRequest!.id});
       })
     ).subscribe((result) => {
       this.subventionAidList = result;
@@ -1616,13 +1628,16 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
   private displayRequestStatusMessage(): void {
     this.dialogService.error(this.langService.map.msg_approved_request_without_one_aid_at_least);
   }
+
   private displayEmploymentStatusMessage(): void {
     this.dialogService.error(this.langService.map.msg_beneficiary_income_is_required);
   }
+
   private displayFamilyMemberCountMessage(): void {
     this.dialogService.error(this.langService.map.msg_family_member_list_count_dose_not_match_family_member_count);
   }
-  private validateBeneficiaryNDAResponse(value: Pair<BeneficiarySaveStatus, Beneficiary> | null): 'STOP' | 'CONTINUE' {
+
+  private validateBeneficiaryNDAResponse(value: Pair<BeneficiarySaveStatus, Beneficiary> | null, ben: Beneficiary): 'STOP' | 'CONTINUE' {
     if (!value) {
       return 'CONTINUE';
     }
@@ -1633,7 +1648,29 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       BeneficiarySaveStatus.BENEFICIARY_IS_DEAD
     ];
     if (stopRequestStatus.includes(value.first)) {
-      this.dialogService.info(this.langService.map[value.first as keyof ILanguageKeys]);
+      this.dialogService.show(ConfirmNdaCasePopupComponent, {
+        value, beneficiary: ben
+      }).onAfterClose$.pipe(take(1))
+        .subscribe((click: UserClickOn) => {
+          if (!CommonUtils.isValidValue(click) || click === UserClickOn.CLOSE) {
+            return;
+          }
+          if (click === UserClickOn.YES) {
+            // continue
+            this.validateBeneficiary = false;
+            this.validateMophBeneficiary = false;
+            this.save$.next(this.saveActions.skipValidateAndSave);
+          } else if (click === UserClickOn.NO) {
+            // clear
+            if (this.currentParamType === this.routeParamTypes.normal) {
+              this.beneficiaryChanged$.next(null);
+              this.requestChanged$.next(null);
+
+              this.form.markAsUntouched();
+              this.form.markAsPristine();
+            }
+          }
+        })
       return 'STOP';
     }
     return 'CONTINUE';
