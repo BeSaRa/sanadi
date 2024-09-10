@@ -17,6 +17,7 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { TabMap } from '@app/types/types';
 import { BehaviorSubject, catchError, exhaustMap, filter, Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { SelectExternalCharityPopupComponent } from '../select-external-charity-popup/select-external-charity-popup.component';
+import { ExternalCharityFounder } from '@app/models/external-charity-founder';
 
 @Component({
     selector: 'update-charity-popup',
@@ -182,7 +183,11 @@ export class UpdateCharityPopupComponent extends AdminGenericDialog<ConvertExter
               ...model!,
               requestType:this.requestTypeControl.value,
               previousRequestSerial: model?.requestFullSerial,
-              requestFullSerial : undefined
+              requestFullSerial : undefined,
+              founderList : model!.founderList.map(item=>new ExternalCharityFounder().clone({...item,
+                id:undefined
+              }))
+              
             })
             this.form.patchValue(updatedModel);
           
