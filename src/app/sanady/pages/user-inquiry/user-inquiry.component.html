@@ -335,7 +335,7 @@
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                     [sortCallback]="sortingCallbacks.aidLookupParent"> {{langService.map.requested_aid_category}}</th>
                 <td cdk-cell *cdkCellDef="let row">
-                  <span>{{row.aidLookupParentInfo && row.aidLookupParentInfo.getNames() }}</span>
+                  <span>{{row.aidLookupParentInfo && row.aidLookupParentInfo.getName() }}</span>
                 </td>
               </ng-container>
 

@@ -269,8 +269,16 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       langKey: 'personal_info',
       index: 0,
       // checkTouchedDirty: true,
-      validStatus: () => this.personalInfoTab && this.personalInfoTab.valid || this.personalInfoTab.disabled,
-      isTouchedOrDirty: () => this.personalInfoTab && (this.personalInfoTab.touched || this.personalInfoTab.dirty)
+      validStatus: () => (this.personalInfoTab && this.personalInfoTab.valid
+        && (!this.beneficiaryFamilyComponentRef
+          || (this.beneficiaryFamilyStatus === 'READY')
+        && this.beneficiaryFamilyComponentRef.list.length == this.personalInfoTab.value.familyCount))
+        || (this.personalInfoTab && this.personalInfoTab.disabled),
+      isTouchedOrDirty: () => (this.personalInfoTab
+        && (this.personalInfoTab.touched
+          || this.personalInfoTab.dirty))
+          || (this.beneficiaryFamilyComponentRef
+            && this.beneficiaryFamilyComponentRef.isTouchedOrDirty())
     },
     income: {
       name: 'incomeTab',
@@ -280,7 +288,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       validStatus: () => {
         return (!this.beneficiaryObligationComponentRef || (this.beneficiaryObligationsStatus === 'READY'))
           && (!this.beneficiaryIncomeComponentRef || (this.beneficiaryIncomesStatus === 'READY'))
-          && (!this.beneficiaryFamilyComponentRef || (this.beneficiaryFamilyStatus === 'READY'))
           && (this.employmentStatusField.value !== BenOccupationStatusEnum.WORKING
             || !!this.beneficiaryIncomeComponentRef.list.length);
       },
@@ -668,6 +675,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
           if (this.employmentStatusField.value !== BenOccupationStatusEnum.WORKING
             || !!this.beneficiaryIncomeComponentRef.list.length) {
             return true;
+          } else if (this.beneficiaryFamilyComponentRef.list.length !== this.form.value.familyCount) {
+            this.displayFamilyMemberCountMessage();
+            return false;
           } else {
             this.displayEmploymentStatusMessage();
             return false;
@@ -1608,6 +1618,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
   }
   private displayEmploymentStatusMessage(): void {
     this.dialogService.error(this.langService.map.msg_beneficiary_income_is_required);
+  }
+  private displayFamilyMemberCountMessage(): void {
+    this.dialogService.error(this.langService.map.msg_family_member_list_count_dose_not_match_family_member_count);
   }
   private validateBeneficiaryNDAResponse(value: Pair<BeneficiarySaveStatus, Beneficiary> | null): 'STOP' | 'CONTINUE' {
     if (!value) {

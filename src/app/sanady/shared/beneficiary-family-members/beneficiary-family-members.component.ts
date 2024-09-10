@@ -234,7 +234,6 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
         });
       })
     ).subscribe(recordToSave => {
-      debugger
       this._updateList(recordToSave, (!!this.editItem ? 'UPDATE' : 'ADD'));
       this.toastService.success(this.lang.map.msg_save_success);
       this.recordChanged$.next(null);
