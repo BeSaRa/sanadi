@@ -75,12 +75,12 @@ export class CreateCharityPopupComponent extends AdminGenericDialog<ExternalChar
   @ViewChild(ExternalCharityAttachmentsComponent) externalCharityAttachmentRef!: ExternalCharityAttachmentsComponent;
 
   beforeSave(model: ExternalCharity, form: UntypedFormGroup): Observable<boolean> | boolean {
-    if(this.isAllAttachmentRequired$.value){
-      if(this.externalCharityAttachmentRef.attachments .some(item=>!item.vsId)){
-        this.service.dialog.info(this.lang.map.msg_launch_missing_mandatory_attachments);
-        return false;
-      }
-    }
+    // if(this.isAllAttachmentRequired$.value){
+    //   if(this.externalCharityAttachmentRef.attachments .some(item=>!item.vsId)){
+    //     this.service.dialog.info(this.lang.map.msg_launch_missing_mandatory_attachments);
+    //     return false;
+    //   }
+    // }
     return form.valid;
   }
 
