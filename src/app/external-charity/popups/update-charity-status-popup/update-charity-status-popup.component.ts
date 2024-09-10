@@ -16,7 +16,7 @@ import { filter, Subject, takeUntil, tap } from 'rxjs';
 })
 export class UpdateCharityStatusPopupComponent implements OnInit, OnDestroy {
 
-    popupTitle: keyof ILanguageKeys = 'reject_reason';
+    popupTitle: keyof ILanguageKeys = 'update_status';
     save$: Subject<void> = new Subject();
     destroy$: Subject<void> = new Subject();
 

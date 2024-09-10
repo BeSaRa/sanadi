@@ -2277,4 +2277,5 @@ export interface ILanguageKeys {
   relative_type: string;
   integration_qcb_iban: string;
   lbl_age: string;
+  update_status: string;
 }
