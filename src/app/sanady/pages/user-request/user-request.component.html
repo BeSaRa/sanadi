@@ -973,7 +973,11 @@
       >
       </beneficiary-obligation>
     </div>
-    <h6 class="text-primary">{{ langService.map.beneficiary_incomes }}</h6>
+    <h6 class="text-primary">{{ langService.map.beneficiary_incomes }}
+    @if(employmentStatusField.value === BenOccupationStatusEnum.WORKING) {
+      <small style="font-size: 12px">{{langService.map.lbl_required}} *</small>
+    }
+    </h6>
     <hr class="mt-0" />
     <div>
       <beneficiary-income

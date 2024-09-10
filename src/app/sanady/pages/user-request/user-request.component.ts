@@ -271,15 +271,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       index: 0,
       // checkTouchedDirty: true,
       validStatus: () => (this.personalInfoTab && this.personalInfoTab.valid
-          && (!this.beneficiaryFamilyComponentRef
-            || (this.beneficiaryFamilyStatus === 'READY')
-            && this.beneficiaryFamilyComponentRef.list.length == this.personalInfoTab.value.familyCount))
+          && (!this.beneficiaryFamilyComponentRef || this.beneficiaryFamilyStatus === 'READY'))
         || (this.personalInfoTab && this.personalInfoTab.disabled),
       isTouchedOrDirty: () => (this.personalInfoTab
-          && (this.personalInfoTab.touched
-            || this.personalInfoTab.dirty))
-        || (this.beneficiaryFamilyComponentRef
-          && this.beneficiaryFamilyComponentRef.isTouchedOrDirty())
+        && (this.personalInfoTab.touched || this.personalInfoTab.dirty))
     },
     income: {
       name: 'incomeTab',
@@ -677,10 +672,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
           }
         }),
         filter(() => {
-          if (this.beneficiaryFamilyComponentRef.list.length !== this.personalInfoTab.value.familyCount) {
-            this.displayFamilyMemberCountMessage();
-            return false;
-          }
           if (this.employmentStatusField.value === BenOccupationStatusEnum.WORKING && !this.beneficiaryIncomeComponentRef.list.length) {
             this.displayEmploymentStatusMessage();
             return false;
@@ -723,7 +714,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
               return {
                 value,
                 beneficiary: requestAndBen.beneficiary
-              }
+              };
             }));
         }),
         filter((res) => this.validateBeneficiaryMOPHResponse(res.value) !== 'STOP'),
@@ -1670,7 +1661,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
               this.form.markAsPristine();
             }
           }
-        })
+        });
       return 'STOP';
     }
     return 'CONTINUE';
@@ -2069,4 +2060,5 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     }
     return failedList;
   }
+  protected readonly BenOccupationStatusEnum = BenOccupationStatusEnum;
 }
