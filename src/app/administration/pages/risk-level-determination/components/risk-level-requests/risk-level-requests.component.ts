@@ -160,7 +160,8 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
    canUpdate(item:RiskLevelDetermination): boolean {
     return this.employeeService.isInternalUser() &&
       this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_COUNTRIES)
-      && item.requestStatus !== RiskLevelDeterminationRequestStatusEnum.APPROVED;
+      && ![RiskLevelDeterminationRequestStatusEnum.APPROVED,RiskLevelDeterminationRequestStatusEnum.REJECTED]
+      .includes(item.requestStatus )  ;
   }
 
   afterReload(): void {
@@ -237,7 +238,12 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       return;
     }
     if (this.isInvalidSelection()) {
-      this.toast.error(this.lang.map.all_request_status_should_be_pending);
+      this.toast.error(this.lang.map.all_request_status_should_be_approved);
+      return;
+    }
+
+    if (this.selectedRecords.some(item=>item.isAcknowledged)) {
+      this.toast.error(this.lang.map.all_request_must_not_be_acknowledged);
       return;
     }
     const ids = this.selectedRecords.map(item => item.id);
@@ -287,7 +293,10 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
         icon: ActionIconsEnum.LAUNCH,
         callback: ($event: MouseEvent) => {
           this.acknowledgeBulk($event);
+          
         },
+        show: (_) => this.employeeService.isExternalUser()
+
       },
 
 
