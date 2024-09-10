@@ -18,6 +18,9 @@ import { BehaviorSubject, catchError, exhaustMap, filter, iif, Observable, of, S
 import { SelectExternalCharityPopupComponent } from '../select-external-charity-popup/select-external-charity-popup.component';
 import { ExternalCharityAttachmentsComponent } from '@app/external-charity/shared/external-charity-attachments/external-charity-attachments.component';
 import { ExternalCharityFounder } from '@app/models/external-charity-founder';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { ConvertExternalCharity } from '@app/models/convert-external-charity';
+import { TabsListComponent } from '@app/shared/components/tabs/tabs-list.component';
 
 @Component({
   selector: 'create-charity-popup',
@@ -84,15 +87,34 @@ export class CreateCharityPopupComponent extends AdminGenericDialog<ExternalChar
   prepareModel(model: ExternalCharity, form: UntypedFormGroup): Observable<ExternalCharity> | ExternalCharity {
     return (new ExternalCharity()).clone({ ...model, ...form.value });
   }
+  @ViewChild(TabsListComponent, {static: true}) componentTabsListRef!: TabsListComponent;
 
   afterSave(model: ExternalCharity, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
     this.toast.success(message.change({ x: model.requestFullSerial }));
-    this.model = model;
+    this.model.id = model.id;
     this.operation = OperationTypes.UPDATE;
-    dialogRef.close(model);
+    this.goToNextActiveTab()
   }
 
+  goToNextActiveTab() {
+    if (!CommonUtils.isValidValue(this.componentTabsListRef) || this.componentTabsListRef.isLastActiveTab()) {
+      return;
+    }
+
+    const currentActiveTabIndex = this.componentTabsListRef.getActiveTabIndex();
+    let nextActiveTabIndex: number = 0;
+    if (!this.componentTabsListRef.isIndexOutOfBound(currentActiveTabIndex)) {
+      nextActiveTabIndex = this.componentTabsListRef.getNextActiveTabIndex();
+      if (this.componentTabsListRef.isIndexOutOfBound(nextActiveTabIndex)) {
+        nextActiveTabIndex = 0;
+      }
+    }
+
+    if (currentActiveTabIndex !== nextActiveTabIndex) {
+      this.componentTabsListRef.tabListService.selectTabByIndex(nextActiveTabIndex);
+    }
+  }
   saveFail(error: Error): void {
   }
 

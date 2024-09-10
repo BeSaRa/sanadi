@@ -47,7 +47,7 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
     }
 
     @Input({ required: true }) attachments: any[] = []
-    @Input({ required: true }) requestId!: number;
+    @Input() requestId?: number;
     @Input() isAllRequired$= new BehaviorSubject<boolean>(false);
 
     destroy$ = new Subject<void>();
@@ -166,7 +166,7 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
             attachmentTypeId: this.selectedFile?.attachmentTypeId,
             files: filesList,
         })
-        return this.externalCharityAttachmentsService.addDocument(this.requestId, document)
+        return this.externalCharityAttachmentsService.addDocument(this.requestId!, document)
     }
     private _updateAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
         const document = new FileNetDocument().clone({
@@ -176,7 +176,7 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
             id: this.selectedFile?.id,
             files: filesList,
         })
-        return this.externalCharityAttachmentsService.updateDocument(this.requestId, document)
+        return this.externalCharityAttachmentsService.updateDocument(this.requestId!, document)
     }
     private _afterSaveAttachmentFile(file: FileNetDocument) {
         this.toast.success(this.lang.map.files_have_been_uploaded_successfully);

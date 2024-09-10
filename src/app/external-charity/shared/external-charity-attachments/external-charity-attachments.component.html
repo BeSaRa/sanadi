@@ -23,7 +23,7 @@
         <ng-container cdkColumnDef="mandatory">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_mandatory}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.getRequiredTranslate()}} </td>
-          </ng-container>
+        </ng-container>
         <ng-container cdkColumnDef="date">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.creation_date}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.createdOn|date: 'mediumDate' }} </td>
@@ -32,7 +32,7 @@
             <th cdk-header-cell style="width: 200px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row; index as itemIndex">
                 <div class="d-flex gap-2">
-                    <button [tooltip]="row.id ? lang.map.update_file : lang.map.upload_file"
+                    <button [tooltip]="row.id ? lang.map.update_file : lang.map.upload_file" [disabled]="!requestId"
                         (click)="uploadAttachment(row , uploader)" [class.btn-success]="row.id"
                         class="btn btn-sm shadow-sm btn-secondary d-flex align-items-center justify-content-start">
                         <i [class.mdi-progress-upload]="row.id" [class.mdi-upload]="!row.id" class="mdi mdi-upload"></i>
