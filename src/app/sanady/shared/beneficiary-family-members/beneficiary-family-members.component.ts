@@ -290,7 +290,7 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
       if (CommonUtils.isValidValue(value)) {
         idValidators = idValidators.concat(this.idTypesValidationsMap[value]);
       }
-      if(value !== (this.currentRecord as unknown as BeneficiaryFamilyMember).primaryIdType) {
+      if(value !== (this.currentRecord as unknown as BeneficiaryFamilyMember)?.primaryIdType) {
         this.primaryIdNumberField.setValue(null);
       }
       this.primaryIdNumberField.setValidators(idValidators);

@@ -25,7 +25,6 @@ import {BeneficiaryIncomePeriodicEnum} from '@app/enums/periodic-payment.enum';
   styleUrls: ['./beneficiary-income.component.scss']
 })
 export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewInit {
-
   constructor(public lang: LangService,
               private lookupService: LookupService,
               private fb: UntypedFormBuilder,
