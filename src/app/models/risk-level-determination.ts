@@ -57,13 +57,21 @@ export class RiskLevelDetermination extends BaseModel<RiskLevelDetermination, Ri
         return {
             riskLevel: controls ? [riskLevel, CustomValidators.required] : riskLevel,
             privateConditionEn: controls ?
-                [privateConditionEn,
-                    [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]
-                ] : privateConditionEn,
-            privateConditionAr: controls ?
-                [privateConditionAr,
-                    [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]
-                ] : privateConditionAr,
+            [privateConditionEn,
+              [
+                CustomValidators.required,
+                 CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS),
+                 CustomValidators.pattern('ENG_NUM_ONE_ENG')
+                ]
+            ] : privateConditionEn,
+          privateConditionAr: controls ?
+            [privateConditionAr,
+              [
+                CustomValidators.required,
+                 CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS),
+                 CustomValidators.pattern('AR_NUM_ONE_AR')
+                ]
+            ] : privateConditionAr,
         }
     }
 
