@@ -2272,6 +2272,8 @@ export interface ILanguageKeys {
   beneficiary_family: string;
   qcb_consent_document: string;
   gdx_service: string;
+  the_party_being_inquired_about: string;
+  gdx_inquire_service: string;
   primary_id_type: string;
   primary_id_number: string;
   relative_type: string;

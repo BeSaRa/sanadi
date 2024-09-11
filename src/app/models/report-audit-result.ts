@@ -31,5 +31,7 @@ export class ReportAuditResult {
   getName(): string {
     return this[(this.langService?.map.lang + 'Name') as keyof INames] || '';
   }
-  searchFields: ISearchFieldsMap<ReportAuditResult> = {};
+  searchFields: ISearchFieldsMap<ReportAuditResult> = {
+
+  };
 }

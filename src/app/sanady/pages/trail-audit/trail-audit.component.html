@@ -55,7 +55,7 @@
       <div class="col-sm-12 col-md-6">
         <div class="row">
           <label for="gdxServiceId" class="col-sm-12 col-md-4 col-form-label"
-                 asteriskIfRequired="gdxServiceId">{{ langService.map.gdx_service }}</label>
+                 asteriskIfRequired="gdxServiceId">{{ langService.map.the_party_being_inquired_about }}</label>
           <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
             <ng-select [selectOnTab]="true" labelForId="gdxServiceId" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="gdxServiceId"
@@ -147,7 +147,7 @@
             </td>
           </ng-container>
           <ng-container cdkColumnDef="gdxServiceId">
-            <th cdk-header-cell *cdkHeaderCellDef> {{ langService.map.gdx_service }}</th>
+            <th cdk-header-cell *cdkHeaderCellDef> {{ isBeneficiaryReport ? langService.map.gdx_service : langService.map.gdx_inquire_service }}</th>
             <td cdk-cell *cdkCellDef="let row">
               {{ row.gdxServiceInfo?.getName() }}
             </td>
@@ -155,7 +155,7 @@
           <ng-container cdkColumnDef="actionTime">
             <th cdk-header-cell *cdkHeaderCellDef> {{ langService.map.action_time }}</th>
             <td cdk-cell *cdkCellDef="let row">
-              {{ row.actionTime | date }}
+              <pre>{{ row.actionTime | date: 'YYYY/MMM/d' }} - {{ row.actionTime | date: 'HH:mm'}}</pre>
             </td>
           </ng-container>
           <ng-container cdkColumnDef="profileId">
