@@ -21,6 +21,7 @@ import { ExternalCharityFounder } from '@app/models/external-charity-founder';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ConvertExternalCharity } from '@app/models/convert-external-charity';
 import { TabsListComponent } from '@app/shared/components/tabs/tabs-list.component';
+import { EmployeeService } from '@app/services/employee.service';
 
 @Component({
   selector: 'create-charity-popup',
@@ -43,6 +44,7 @@ export class CreateCharityPopupComponent extends AdminGenericDialog<ExternalChar
   service = inject(ExternalCharityService);
   dialog = inject(DialogService);
   formProperties: Record<string, () => Observable<any>> = {};
+  employeeService=inject(EmployeeService);
 
   requestTypes = this.lookupService.listByCategory.EXTERNAL_CHARITY_REQUEST_TYPE
   serviceTypes = this.lookupService.listByCategory.EXTERNAL_CHARITY_SERVICE_TYPE
@@ -92,7 +94,10 @@ export class CreateCharityPopupComponent extends AdminGenericDialog<ExternalChar
   afterSave(model: ExternalCharity, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
     this.toast.success(message.change({ x: model.requestFullSerial }));
-    this.model.id = model.id;
+    this.model = new ExternalCharity().clone({
+      ...model,
+      requestDocumentList: this.model.requestDocumentList
+    });
     this.operation = OperationTypes.UPDATE;
     this.goToNextActiveTab()
   }
@@ -180,9 +185,10 @@ export class CreateCharityPopupComponent extends AdminGenericDialog<ExternalChar
     this.licenseSearch$
       .pipe(
         exhaustMap((previousRequestSerial?) => {
-          const criteria = !!previousRequestSerial ? {
-            requestFullSerial: previousRequestSerial,
-          } : {}
+          const criteria = {
+            requestFullSerial: !!previousRequestSerial ? previousRequestSerial : undefined,
+            externalUserId: this.employeeService.getCurrentUser().id
+          }
           return this.service.loadByCriteria(criteria).pipe(catchError(() => of(<ExternalCharity[]>[])));
         })
       )

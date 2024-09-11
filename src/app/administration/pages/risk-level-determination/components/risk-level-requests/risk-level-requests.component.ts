@@ -42,8 +42,8 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
   toast = inject(ToastService);
   employeeService = inject(EmployeeService);
 
-  @Input() requestStatuses:RiskLevelDeterminationRequestStatusEnum[]=[]
-  @Input() title:keyof ILanguageKeys = 'lbl_requests'
+  @Input() requestStatuses: RiskLevelDeterminationRequestStatusEnum[] = []
+  @Input() title: keyof ILanguageKeys = 'lbl_requests'
 
 
   @Input() reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -99,7 +99,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       type: 'action',
       label: 'btn_edit',
       icon: 'mdi-pen',
-      show: (item:RiskLevelDetermination) => this.canUpdate(item),
+      show: (item: RiskLevelDetermination) => this.canUpdate(item),
       onClick: (item: RiskLevelDetermination) => this.edit$.next(item)
     },
     // approve
@@ -152,16 +152,16 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
     }
   }
 
-   canMakeDecision(item:RiskLevelDetermination): boolean {
+  canMakeDecision(item: RiskLevelDetermination): boolean {
     return this.employeeService.isInternalUser() &&
       this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_RISK_LEVEL_DETERMINATION)
       && item.requestStatus === RiskLevelDeterminationRequestStatusEnum.PENDING;
   }
-   canUpdate(item:RiskLevelDetermination): boolean {
+  canUpdate(item: RiskLevelDetermination): boolean {
     return this.employeeService.isInternalUser() &&
       this.employeeService.hasPermissionTo(PermissionsEnum.MANAGE_COUNTRIES)
-      && ![RiskLevelDeterminationRequestStatusEnum.APPROVED,RiskLevelDeterminationRequestStatusEnum.REJECTED]
-      .includes(item.requestStatus )  ;
+      && ![RiskLevelDeterminationRequestStatusEnum.APPROVED, RiskLevelDeterminationRequestStatusEnum.REJECTED]
+        .includes(item.requestStatus);
   }
 
   afterReload(): void {
@@ -242,7 +242,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
       return;
     }
 
-    if (this.selectedRecords.some(item=>item.isAcknowledged)) {
+    if (this.selectedRecords.some(item => item.isAcknowledged)) {
       this.toast.error(this.lang.map.all_request_must_not_be_acknowledged);
       return;
     }
@@ -278,6 +278,8 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
           this.approveBulk($event);
         },
         show: (_) => this.employeeService.isInternalUser()
+          &&
+          this.requestStatuses.includes(RiskLevelDeterminationRequestStatusEnum.PENDING)
       },
       {
         langKey: 'lbl_reject',
@@ -285,7 +287,8 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
         callback: ($event: MouseEvent) => {
           this.rejectBulk($event);
         },
-        show: (_) => this.employeeService.isInternalUser()
+        show: (_) => this.employeeService.isInternalUser() &&
+          this.requestStatuses.includes(RiskLevelDeterminationRequestStatusEnum.PENDING)
 
       },
       {
@@ -293,7 +296,7 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
         icon: ActionIconsEnum.LAUNCH,
         callback: ($event: MouseEvent) => {
           this.acknowledgeBulk($event);
-          
+
         },
         show: (_) => this.employeeService.isExternalUser()
 
@@ -371,11 +374,11 @@ export class RiskLevelRequestsComponent extends AdminGenericComponent<RiskLevelD
           limit: this.pageEvent.pageSize,
           offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
         }
-      
-        return this.service.getByStatuses(paginationOptions,this.requestStatuses)
+
+        return this.service.getByStatuses(paginationOptions, this.requestStatuses)
       }))
       .subscribe((result: Pagination<RiskLevelDetermination[]>) => {
-       
+
         this.models = result.rs;
         this.count = result.count;
         this.afterReload();
