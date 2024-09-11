@@ -59,9 +59,10 @@ export class FinancialAnalysisComponent extends EServicesGenericComponent<
   licenseSearch$: Subject<string> = new Subject<string>();
   loadAttachments: boolean = false;
   tabIndex$: Subject<number> = new Subject<number>();
-  requestTypesList: Lookup[] = this.lookupService.listByCategory.RequestTypeNewUpdate.sort(
-    (a, b) => a.lookupKey - b.lookupKey
-  );
+  // requestTypesList: Lookup[] = this.lookupService.listByCategory.RequestTypeNewUpdate.sort(
+  //   (a, b) => a.lookupKey - b.lookupKey
+  // );
+  requestTypesList: Lookup[] = this.lookupService.listByCategory.RequestTypeNewOnly;
   reportPeriodicityList: Lookup[] = this.lookupService.listByCategory.ReportPeriodicity.sort(
     (a, b) => a.lookupKey - b.lookupKey
   );
