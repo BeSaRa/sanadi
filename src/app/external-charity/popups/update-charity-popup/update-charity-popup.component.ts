@@ -88,7 +88,11 @@ export class UpdateCharityPopupComponent extends AdminGenericDialog<ConvertExter
     afterSave(model: ConvertExternalCharity, dialogRef: DialogRef): void {
       const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
       this.toast.success(message.change({ x: model.requestFullSerial }));
-      this.model.id = model.id;
+      
+      this.model = new ConvertExternalCharity().clone({
+        ...model,
+        requestDocumentList: this.model.requestDocumentList
+      });
       this.operation = OperationTypes.UPDATE;
       this.goToNextActiveTab()
     }
