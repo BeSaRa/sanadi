@@ -77,6 +77,10 @@ const reportAuditCriteriaInterceptor = new ReportAuditInterceptor();
     model: () => Pagination,
     shape: {'rs.*': () => ReportAuditResult}
   },
+  $beneficiaryStatus: {
+    model: () => Pagination,
+    shape: {'rs.*': () => SubventionRequestAid}
+  },
   $pagination: {
     model: () => Pagination,
     shape: {'rs.*': () => Beneficiary}
@@ -202,8 +206,8 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   }
 
   @HasInterception
-  @CastResponse(() => GdxMophResponse, {
-    fallback: '$pagination'
+  @CastResponse(undefined, {
+    fallback: '$beneficiaryStatus'
   })
   beneficiaryStatus(@InterceptParam() beneficiary: Partial<Beneficiary>): Observable<Pagination<SubventionRequestAid[]>> {
     return this.http.post<Pagination<SubventionRequestAid[]>>(this._getServiceURL() + '/beneficiary-status', beneficiary);
