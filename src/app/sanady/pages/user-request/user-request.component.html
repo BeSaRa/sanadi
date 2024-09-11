@@ -759,29 +759,35 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
           <label
-            for="employeer"
+            for="occuptionStatus"
             class="form-label"
-            asteriskIfRequired="employeer"
-            >{{ langService.map.employer }}</label
+            asteriskIfRequired="occuptionStatus"
+          >{{ langService.map.employment_status }}</label
           >
-          <input
-            id="employeer"
-            validationClasses="employeer"
-            formControlName="employeer"
-            maxlength="100"
-            trimInput
-            class="form-control"
-            type="text"
-            [readOnly]="
-              !isBeneficiaryEnquired ||
-              readOnly ||
-              isPartialRequest
-            "
-          />
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="occuptionStatus"
+            [clearable]="false"
+            placeholder="{{ langService.map.select }}"
+            id="occuptionStatus"
+            [notFoundText]="langService.map.msg_not_found"
+            [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
+            appendTo="body"
+            (change)="handleEmploymentStatusChange($event, true)"
+            formControlName="occuptionStatus"
+            validationClasses="occuptionStatus"
+          >
+            <ng-option
+              *ngFor="let option of lookup.listByCategory.BenOccuptionStatus"
+              [value]="option.lookupKey"
+            >
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
           <app-field-error-message
-            controlName="employeer"
+            controlName="occuptionStatus"
           ></app-field-error-message>
         </div>
         <div
@@ -834,35 +840,29 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label
-            for="occuptionStatus"
+            for="employeer"
             class="form-label"
-            asteriskIfRequired="occuptionStatus"
-          >{{ langService.map.employment_status }}</label
+            asteriskIfRequired="employeer"
+          >{{ langService.map.employer }}</label
           >
-          <ng-select
-            [selectOnTab]="true"
-            labelForId="occuptionStatus"
-            [clearable]="false"
-            placeholder="{{ langService.map.select }}"
-            id="occuptionStatus"
-            [notFoundText]="langService.map.msg_not_found"
-            [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
-            appendTo="body"
-            (change)="handleEmploymentStatusChange($event, true)"
-            formControlName="occuptionStatus"
-            validationClasses="occuptionStatus"
-          >
-            <ng-option
-              *ngFor="let option of lookup.listByCategory.BenOccuptionStatus"
-              [value]="option.lookupKey"
-            >
-              {{ option.getName() }}
-            </ng-option>
-          </ng-select>
+          <input
+            id="employeer"
+            validationClasses="employeer"
+            formControlName="employeer"
+            maxlength="100"
+            trimInput
+            class="form-control"
+            type="text"
+            [readOnly]="
+              !isBeneficiaryEnquired ||
+              readOnly ||
+              isPartialRequest
+            "
+          />
           <app-field-error-message
-            controlName="occuptionStatus"
+            controlName="employeer"
           ></app-field-error-message>
         </div>
         <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
