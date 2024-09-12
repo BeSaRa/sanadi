@@ -1078,6 +1078,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       delete item.id;
       return item;
     });
+    beneficiary.beneficiaryFamilyMemberSet.map((item) => {
+      delete item.id;
+      return item;
+    });
     return beneficiary;
   };
 
@@ -1622,10 +1626,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
 
   private displayEmploymentStatusMessage(): void {
     this.dialogService.error(this.langService.map.msg_beneficiary_income_is_required);
-  }
-
-  private displayFamilyMemberCountMessage(): void {
-    this.dialogService.error(this.langService.map.msg_family_member_list_count_dose_not_match_family_member_count);
   }
 
   private validateBeneficiaryNDAResponse(value: Pair<BeneficiarySaveStatus, Beneficiary> | null, ben: Beneficiary): 'STOP' | 'CONTINUE' {
