@@ -25,6 +25,7 @@ export class BeneficiaryFamilyMemberInterceptor implements IModelInterceptor<Ben
     delete model.beneficiaryService;
     delete model.primaryIdTypeInfo;
     delete model.relativeTypeInfo;
-
+    delete model.aidLookupInfo;
+    delete model.aidLookupParentInfo;
   }
 }
