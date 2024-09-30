@@ -349,6 +349,6 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
   }
 
   private isValidCheckList(): boolean {
-    return this.checklistComponent.isAllMarked();
+    return !this.checklistComponent?.checklist?.length? true : this.checklistComponent.isAllMarked();
   }
 }
