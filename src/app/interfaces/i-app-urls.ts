@@ -155,5 +155,9 @@ export interface IAppUrls {
   EXTERNAL_CHARITY_REQUEST:string;
   EXTERNAL_CHARITY_ADJUST:string;
   EXTERNAL_CHARITY_ATTACHMENT:string;
+  PENALTIES_AND_VIOLATIONS:string;
+  PENALTY:string;
+  LEGAL_BASIS:string;
+  LEGAL_ACTON:string;
   [index: string]: string;
 }

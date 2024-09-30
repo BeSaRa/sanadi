@@ -65,40 +65,43 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-sm-12 mb-3 position-relative">
-          <label asteriskIfRequired="publicTerms" for="publicTerms" class="form-label">{{ lang.map.public_terms
+      @if(!isExcludeTerms){
+        <div class="row">
+          <div class="col-sm-12 mb-3 position-relative">
+            <label asteriskIfRequired="publicTerms" for="publicTerms" class="form-label">{{ lang.map.public_terms
+              }}</label>
+            <textarea id="publicTerms" validationClasses="publicTerms" formControlName="publicTerms"
+              class="form-control"></textarea>
+            <app-field-error-message controlName="publicTerms"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <label for="userCustomTerms" class="col-form-label">{{
+            lang.map.lbl_user_custom_terms
             }}</label>
-          <textarea id="publicTerms" validationClasses="publicTerms" formControlName="publicTerms"
-            class="form-control"></textarea>
-          <app-field-error-message controlName="publicTerms"></app-field-error-message>
+          <div class="col-sm-12 mb-3 input-group d-flex">
+            <ng-select class="flex-grow-1" id="userCustomTerms" [notFoundText]="lang.map.msg_not_found"
+              (change)="onCustomTermsChange($event)">
+              <ng-option [value]="term" *ngFor="let term of customTerms">{{
+                term.terms
+                }}</ng-option>
+            </ng-select>
+            <button type="button" (click)="openAddCustomTermDialog()" class="input-group-text">
+              <i class="mdi mdi-plus text-primary" [tooltip]="lang.map.btn_add"></i>
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <label for="userCustomTerms" class="col-form-label">{{
-          lang.map.lbl_user_custom_terms
-          }}</label>
-        <div class="col-sm-12 mb-3 input-group d-flex">
-          <ng-select class="flex-grow-1" id="userCustomTerms" [notFoundText]="lang.map.msg_not_found"
-            (change)="onCustomTermsChange($event)">
-            <ng-option [value]="term" *ngFor="let term of customTerms">{{
-              term.terms
-              }}</ng-option>
-          </ng-select>
-          <button type="button" (click)="openAddCustomTermDialog()" class="input-group-text">
-            <i class="mdi mdi-plus text-primary" [tooltip]="lang.map.btn_add"></i>
-          </button>
+        <div class="row">
+          <div class="col-sm-12 mb-3 position-relative">
+            <label asteriskIfRequired="customTerms" for="customTerms" class="form-label">{{ lang.map.custom_terms
+              }}</label>
+            <textarea id="customTerms" validationClasses="customTerms" formControlName="customTerms"
+              class="form-control"></textarea>
+            <app-field-error-message controlName="customTerms"></app-field-error-message>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12 mb-3 position-relative">
-          <label asteriskIfRequired="customTerms" for="customTerms" class="form-label">{{ lang.map.custom_terms
-            }}</label>
-          <textarea id="customTerms" validationClasses="customTerms" formControlName="customTerms"
-            class="form-control"></textarea>
-          <app-field-error-message controlName="customTerms"></app-field-error-message>
-        </div>
-      </div>
+      }
+    
     </form>
   </div>
   <div class="row mb-4">

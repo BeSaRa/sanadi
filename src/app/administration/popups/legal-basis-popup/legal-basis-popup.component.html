@@ -1,0 +1,63 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
+      fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+      aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content" #dialogContent>
+  <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="titleAr" for="titleAr" class="form-label">{{lang.map.lbl_legal_basis_title_ar}}</label>
+        <input id="titleAr" validationClasses="titleAr" formControlName="titleAr" class="form-control">
+        <app-field-error-message controlName="titleAr"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="titleEn" for="titleEn" class="form-label">{{lang.map.lbl_legal_basis_document_title_en}}</label>
+        <input id="titleEn" validationClasses="titleEn" formControlName="titleEn" class="form-control">
+        <app-field-error-message controlName="titleEn"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="textAr" for="textAr" class="form-label">{{lang.map.lbl_legal_basis_text_ar}}</label>
+        <input id="textAr" validationClasses="textAr" formControlName="textAr" class="form-control">
+        <app-field-error-message controlName="textAr"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="textEn" for="textEn" class="form-label">{{lang.map.lbl_legal_basis_text_en}}</label>
+        <input id="textEn" validationClasses="textEn" formControlName="textEn" class="form-control">
+        <app-field-error-message controlName="textEn"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="legalDocumentTitleAr" for="legalDocumentTitleAr"
+          class="form-label">{{lang.map.lbl_legal_basis_document_title_ar}}</label>
+        <input id="legalDocumentTitleAr" validationClasses="legalDocumentTitleAr" formControlName="legalDocumentTitleAr"
+          class="form-control">
+        <app-field-error-message controlName="legalDocumentTitleAr"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="legalDocumentTitleEn" for="legalDocumentTitleEn"
+          class="form-label">{{lang.map.lbl_legal_basis_document_title_en}}</label>
+        <input id="legalDocumentTitleEn" validationClasses="legalDocumentTitleEn" formControlName="legalDocumentTitleEn"
+          class="form-control">
+        <app-field-error-message controlName="legalDocumentTitleEn"></app-field-error-message>
+      </div>
+
+
+    </div>
+
+
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next()"
+    class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

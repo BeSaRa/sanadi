@@ -135,7 +135,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
     CaseTypes.NPO_MANAGEMENT,
     CaseTypes.CHARITY_ORGANIZATION_UPDATE,
-    CaseTypes.PARTNER_APPROVAL
+    CaseTypes.PARTNER_APPROVAL,
+    CaseTypes.PENALTIES_AND_VIOLATIONS
   ];
   servicesWithNoSaveDraftLaunch: number[] = [
     CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP

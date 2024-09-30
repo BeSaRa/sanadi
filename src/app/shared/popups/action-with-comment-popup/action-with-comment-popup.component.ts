@@ -55,12 +55,16 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.PARTNER_APPROVAL,
     CaseTypes.INTERNAL_PROJECT_LICENSE,
-    CaseTypes.FINANCIAL_ANALYSIS
-    //CaseTypes.URGENT_INTERVENTION_LICENSING
+    CaseTypes.FINANCIAL_ANALYSIS,
+    // CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
 
   private excludeLicenseDateServices:number[] =[
-    CaseTypes.FINANCIAL_ANALYSIS
+    CaseTypes.FINANCIAL_ANALYSIS,
+    // CaseTypes.PENALTIES_AND_VIOLATIONS
+  ]
+  private excludeTerms:number[] =[
+    // CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
   form!: UntypedFormGroup;
 
@@ -158,9 +162,17 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     return this.data.task &&
     this.excludeLicenseDateServices.includes(this.data.task.getCaseType()) 
   }
+  get isExcludeTerms(){
+    return this.data.task &&
+    this.excludeLicenseDateServices.includes(this.data.task.getCaseType()) 
+  }
    isDisabledDateAndDuration(){
     return this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE || 
     this.isExcludeDateCaseType
+  }
+  isDisabledTerms(){
+    return this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE || 
+    this.isExcludeTerms
   }
   buildForm() {
     let controls: any = {
@@ -168,10 +180,10 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       licenseDuration: [{ value: null, disabled: this.isDisabledDateAndDuration()},
       [CustomValidators.required, CustomValidators.number]],
       publicTerms: [{ value: '', disabled: true }, [CustomValidators.required]],
-      customTerms: ['', [CustomValidators.required]],
+      customTerms: [{ value: '', disabled: this.isDisabledTerms()}, [CustomValidators.required]],
       conditionalLicenseIndicator: [false],
       followUpDate: ['', [CustomValidators.required, CustomValidators.minDate(new Date())]],
-      deductionPercent: ['', [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]]
+      deductionPercent: [{ value: '', disabled: this.isDisabledTerms()}, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]]
     };
 
     if (!this.canShowDeductionRatio) {

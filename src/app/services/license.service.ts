@@ -187,6 +187,9 @@ export class LicenseService {
       case CaseTypes.FINANCIAL_ANALYSIS:
         url = this.urlService.URLS.FINANCIAL_ANALYSIS;
         break;
+      case CaseTypes.PENALTIES_AND_VIOLATIONS:
+        url = this.urlService.URLS.PENALTIES_AND_VIOLATIONS;
+        break;
     }
     return url;
   }

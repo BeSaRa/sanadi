@@ -3,17 +3,17 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn }
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { LicenseActivity } from '@app/models/license-activity';
+import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { DialogService } from '@app/services/dialog.service';
+import { InboxService } from '@app/services/inbox.service';
 import { LangService } from '@app/services/lang.service';
 import { LicenseActivityService } from '@app/services/license-activity.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { Observable, Subject, observable } from 'rxjs';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Observable, Subject } from 'rxjs';
 import { filter, scan, startWith, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { SelectLicenseActivityPopupComponent } from '../select-license-activity-popup/select-license-activity-popup.component';
-import { InboxService } from '@app/services/inbox.service';
-import { ActualInspectionService } from '@app/services/actual-inspection.service';
-import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
     selector: 'license-activity-popup',
