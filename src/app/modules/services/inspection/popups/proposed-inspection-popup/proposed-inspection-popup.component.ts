@@ -32,7 +32,7 @@ export class ProposedInspectionPopupComponent extends AdminGenericDialog<Propose
   model!: ProposedInspection;
   operation: OperationTypes;
   saveVisible = true;
-  departmentsList$:Observable<InternalDepartment[]>=new Observable<InternalDepartment[]>;
+  departmentsList$:Observable<InternalDepartment[]> = new Observable<InternalDepartment[]>;
   proposedTaskTypes :Lookup[] = this.lookupService.listByCategory.ProposedInspectionTaskType
   priorities :Lookup[] = this.lookupService.listByCategory.PriorityType
   readonly :boolean = false;
@@ -58,9 +58,10 @@ export class ProposedInspectionPopupComponent extends AdminGenericDialog<Propose
     this.departmentsList$ = this.internalDepartmentService.loadAsLookups()
     .pipe(
         tap(list =>{
+          if(!this.model.departmentId){
             const department = list.find(item => item.id === this.employeeService.getInternalDepartment()!.id)
             department && (this.departmentIdControl.setValue(department.id) );
-         
+          }
         }),
         takeUntil(this.destroy$),
     )
