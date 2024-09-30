@@ -164,6 +164,12 @@ import { CountriesDataComponent } from './pages/risk-level-determination/compone
 import { RiskLevelRequestsComponent } from './pages/risk-level-determination/components/risk-level-requests/risk-level-requests.component';
 import { CountryConditionsPopupComponent } from './popups/country-conditions-popup/country-conditions-popup.component';
 import { RiskLevelDeterminationLogPopupComponent } from './popups/risk-level-determination-log-popup/risk-level-determination-log-popup.component';
+import { LegalActionComponent } from './pages/legal-action/legal-action.component';
+import { LegalActionPopupComponent } from './popups/legal-action-popup/legal-action-popup.component';
+import { LegalBasisComponent } from './pages/legal-basis/legal-basis.component';
+import { LegalBasisPopupComponent } from './popups/legal-basis-popup/legal-basis-popup.component';
+import { PenaltyComponent } from './pages/penalty/penalty.component';
+import { PenaltyPopupComponent } from './popups/penalty-popup/penalty-popup.component';
 
 @NgModule({
   declarations: [
@@ -286,7 +292,13 @@ import { RiskLevelDeterminationLogPopupComponent } from './popups/risk-level-det
     CountriesDataComponent,
     RiskLevelRequestsComponent,
     CountryConditionsPopupComponent,
-    RiskLevelDeterminationLogPopupComponent
+    RiskLevelDeterminationLogPopupComponent,
+    LegalActionComponent,
+    LegalActionPopupComponent,
+    LegalBasisComponent,
+    LegalBasisPopupComponent,
+    PenaltyComponent,
+    PenaltyPopupComponent
   ],
   imports: [
     SharedModule,

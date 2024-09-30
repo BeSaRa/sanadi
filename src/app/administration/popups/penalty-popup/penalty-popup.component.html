@@ -1,0 +1,53 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
+      fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+      aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content" #dialogContent>
+  <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="penaltyAr" for="penaltyAr" class="form-label">{{lang.map.lbl_penalty_ar}}</label>
+        <input id="penaltyAr" validationClasses="penaltyAr" formControlName="penaltyAr" class="form-control">
+        <app-field-error-message controlName="penaltyAr"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="penaltyEn" for="penaltyEn" class="form-label">{{lang.map.lbl_penalty_en}}</label>
+        <input id="penaltyEn" validationClasses="penaltyEn" formControlName="penaltyEn" class="form-control">
+        <app-field-error-message controlName="penaltyEn"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="penaltyClassificationAr" for="penaltyClassificationAr"
+          class="form-label">{{lang.map.lbl_penalty_classification_ar}}</label>
+        <input id="penaltyClassificationAr" validationClasses="penaltyClassificationAr"
+          formControlName="penaltyClassificationAr" class="form-control">
+        <app-field-error-message controlName="penaltyClassificationAr"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="penaltyClassificationEn" for="penaltyClassificationEn"
+          class="form-label">{{lang.map.lbl_penalty_classification_en}}</label>
+        <input id="penaltyClassificationEn" validationClasses="penaltyClassificationEn"
+          formControlName="penaltyClassificationEn" class="form-control">
+        <app-field-error-message controlName="penaltyClassificationEn"></app-field-error-message>
+      </div>
+
+
+    </div>
+
+
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next()"
+    class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

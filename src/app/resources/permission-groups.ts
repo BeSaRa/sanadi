@@ -59,7 +59,10 @@ const adminPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.MANAGE_CHARITY_PROFILE_DATA,
   PermissionsEnum.MANAGE_NPO_PROFILE_DATA,
   PermissionsEnum.MANAGE_RISK_LEVEL,
-  PermissionsEnum.MANAGE_RISK_LEVEL_DETERMINATION
+  PermissionsEnum.MANAGE_RISK_LEVEL_DETERMINATION,
+  PermissionsEnum.MANAGE_PENALTY,
+  PermissionsEnum.MANAGE_LEGAL_ACTION,
+  PermissionsEnum.MANAGE_LEGAL_BASIS
 ];
 
 const externalUserPermissionsGroup: PermissionsEnum[] = [
@@ -366,6 +369,11 @@ const externalCharityPermissionsGroup:PermissionsEnum[]=[
   PermissionsEnum.EXTERNAL_CHARITY_REQUEST_UPDATE,
   PermissionsEnum.EXTERNAL_CHARITY_REQUEST_SEARCH ,
 ]
+const penaltiesViolationsPermissionsGroup:EServicePermissionsEnum[]=[
+  EServicePermissionsEnum.PENALTIES_AND_VIOLATIONS,
+  EServicePermissionsEnum.SEARCH_SERVICE_PENALTIES_AND_VIOLATIONS,
+ 
+]
 const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.CONSULTATION_SERVICES_PERMISSION_GROUP]: consultationServicesPermissionGroup,
   [PermissionGroupsEnum.INQUIRY_SERVICES_PERMISSION_GROUP]: inquiryServicesPermissionGroup,
@@ -420,6 +428,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.GIVE_USERS_PERMISSIONS]: giveUsersPermissions,
   [PermissionGroupsEnum.RESTRICTED_PERMISSIONS_GROUP]: restrictedPermissionsGroup,
   [PermissionGroupsEnum.EXTERNAL_CHARITY_GROUP]: externalCharityPermissionsGroup,
+  [PermissionGroupsEnum.PENALTIES_VIOLATIONS_GROUP]: penaltiesViolationsPermissionsGroup,
 };
 
 export {permissionGroups as PermissionsGroupMap};

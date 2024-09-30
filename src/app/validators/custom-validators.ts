@@ -11,7 +11,8 @@ import {
   maxDateValidator as maxDate,
   minDateValidator as minDate,
   uniqueValidator as unique,
-  validationPatterns
+  validationPatterns,
+  requiredArrayAfterSave 
 } from './validate-fields-status';
 import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
 import {IKeyValue} from '@contracts/i-key-value';
@@ -230,5 +231,6 @@ export const CustomValidators = {
   validationPatterns,
   attachment,
   timeLaterThanOther,
-  timeEarlierThanOther
+  timeEarlierThanOther,
+  requiredArrayAfterSave
 };

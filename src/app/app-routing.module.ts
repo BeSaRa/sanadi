@@ -428,6 +428,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/penalties-and-violations',
+        canActivate: [NewServicePermissionGuard.canActivate],
+        loadChildren: () => import('./modules/services/penalties-and-violations/penalties-and-violations.module')
+          .then(m => m.PenaltiesAndViolationsModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.PENALTIES_VIOLATIONS_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.PENALTIES_AND_VIOLATIONS
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

@@ -52,6 +52,7 @@ enum SystemPathsEnum {
   URGENT_INTERVENTION_FINANCIAL_NOTIFICATION = '/home/services/urgent-intervention-financial-notification',
   URGENT_INTERVENTION_LICENSE_FOLLOWUP = '/home/services/urgent-intervention-license-followup',
   FINANCIAL_ANALYSIS = '/home/services/financial-analysis',
+  PENALTIES_AND_VIOLATIONS = '/home/services/penalties-and-violations',
   INSPECTION = '/home/services/inspection',
 }
 
@@ -100,7 +101,8 @@ enum DefaultItemOrder {
   SERVICE_INSPECTION = 41,
   EXTERNAL_CHARITY = 42,
 
-  RESTRICTED,
+  RESTRICTED=43,
+  PENALTIES_AND_VIOLATIONS=44,
   SERVICE_SEARCH,
   TRAINING,
   ADMIN
@@ -150,6 +152,7 @@ const GroupNames = {
   TRAINING: 'training-services',
   RESTRICTED: 'restricted',
   EXTERNAL_CHARITY: 'external-charity',
+  PENALTIES_AND_VIOLATIONS: 'penalties-and-violations',
   ADMIN: 'administration'
 }
 
@@ -2219,6 +2222,53 @@ export const newNavigationMenuList = [
     itemOrder: 4,
     svg: null
   },
+  {
+    id: 3501,
+    langKey: 'menu_penalties_and_violations',
+    path: SystemPathsEnum.PENALTIES_AND_VIOLATIONS,
+    icon: 'mdi-file-swap',
+    isSvg: false,
+    caseType: CaseTypes.PENALTIES_AND_VIOLATIONS,
+    menuKey: SystemMenuKeys.PENALTIES_AND_VIOLATIONS,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.PENALTIES_VIOLATIONS_GROUP,
+    parent: null,
+    group: GroupNames.MAIN,
+    itemOrder: DefaultItemOrder.PENALTIES_AND_VIOLATIONS,
+    svg: null,
+    data: {
+      childrenGroupName: GroupNames.PENALTIES_AND_VIOLATIONS,
+      servicePath: SystemPathsEnum.PENALTIES_AND_VIOLATIONS + '/service',
+      searchPath: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.PENALTIES_AND_VIOLATIONS),
+      outputPath: SystemPathsEnum.PENALTIES_AND_VIOLATIONS + '/outputs'
+    }
+  },
+  {
+    id: 3502,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.PENALTIES_AND_VIOLATIONS + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.PENALTIES_AND_VIOLATIONS,
+    permissionGroup: null,
+    parent: 3501,
+    group: GroupNames.PENALTIES_AND_VIOLATIONS,
+    itemOrder: 0,
+    svg: null
+  },
+  {
+    id: 3503,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.PENALTIES_AND_VIOLATIONS),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_PENALTIES_AND_VIOLATIONS,
+    permissionGroup: null,
+    parent: 3501,
+    group: GroupNames.PENALTIES_AND_VIOLATIONS,
+    itemOrder: 1,
+    svg: null
+  },
   /*{
     id: 100001,
     langKey: 'menu_internal_project_license',
@@ -3154,6 +3204,45 @@ export const newNavigationMenuList = [
     svg: null
   },
   {
+    id: 99,
+    langKey: 'menu_penalties',
+    path: '/home/administration/penalty',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_PENALTY,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 30,
+    svg: null
+  },
+  {
+    id: 100,
+    langKey: 'menu_legal_basis',
+    path: '/home/administration/legal-basis',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_LEGAL_BASIS,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 31,
+    svg: null
+  },
+  {
+    id: 10001,
+    langKey: 'menu_legal_action',
+    path: '/home/administration/legal-action',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_LEGAL_ACTION,
+    permissionGroup: null,
+    parent: 6,
+    group: GroupNames.ADMIN,
+    itemOrder: 32,
+    svg: null
+  },
+  {
     id: 4000,
     langKey: 'menu_restricted',
     path: '/home/restricted',
@@ -3330,4 +3419,5 @@ export const newNavigationMenuList = [
     itemOrder: 1,
     svg: null
   },
+ 
 ];

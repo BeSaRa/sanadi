@@ -1,0 +1,41 @@
+<ng-container [formGroup]="form">
+
+    <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="incidentType"
+                for="incidentType">{{lang.map.lbl_incidence_elements}}</label>
+            <ng-select [readonly]="readonly" validationClasses="incidentType" appendTo="body" [clearable]="false"
+                id="incidentType" formControlName="incidentType">
+                <ng-option [value]="option.lookupKey"
+                    *ngFor="let option of incidentsTypes">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="incidentType"></app-field-error-message>
+        </div>
+
+        @if(displayIncidentNumber()){
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="incidentNumber"
+                    for="incidentNumber">{{incidentNumberLabel()}}</label>
+                <input id="incidentNumber" validationClasses="incidentNumber" formControlName="incidentNumber"
+                    class="form-control" [readOnly]="readonly">
+                <app-field-error-message controlName="incidentNumber"></app-field-error-message>
+            </div>
+        }
+        
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="incidentTitle"
+                for="incidentTitle">{{lang.map.lbl_incidence_title}}</label>
+            <input id="incidentTitle" validationClasses="incidentTitle" formControlName="incidentTitle"
+                class="form-control" [readOnly]="readonly">
+            <app-field-error-message controlName="incidentTitle"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="incidentDetails"
+                for="incidentDetails">{{lang.map.lbl_incidence_details}}</label>
+            <textarea name="incidentDetails" validationClasses="incidentDetails" formControlName="incidentDetails"
+                id="incidentDetails" rows="5" class="form-control" [readOnly]="readonly"></textarea>
+            <app-field-error-message [ignoreTop]="true" controlName="incidentDetails"></app-field-error-message>
+        </div>
+
+    </div>
+</ng-container>

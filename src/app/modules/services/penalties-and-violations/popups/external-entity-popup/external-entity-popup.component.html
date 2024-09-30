@@ -1,0 +1,71 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{lang.map.lbl_external_entity}}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 600px">
+   
+    <ng-container [formGroup]="form">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="identificationNumber"
+                    for="identificationNumber">{{lang.map.identification_number}}</label>
+                <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber" class="form-control"
+                    [readOnly]="readonly">
+                <app-field-error-message controlName="identificationNumber"></app-field-error-message>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="arabicName"
+                    for="arabicName">{{lang.map.arabic_name}}</label>
+                <input id="arabicName" validationClasses="arabicName" formControlName="arabicName" class="form-control"
+                    [readOnly]="readonly">
+                <app-field-error-message controlName="arabicName"></app-field-error-message>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="englishName"
+                    for="englishName">{{lang.map.english_name}}</label>
+                <input id="englishName" validationClasses="englishName" formControlName="englishName"
+                    class="form-control" [readOnly]="readonly">
+                <app-field-error-message controlName="englishName"></app-field-error-message>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="residencyClassification"
+                    for="residencyClassification">{{lang.map.lbl_residency_classification}}</label>
+                <input id="residencyClassification" validationClasses="residencyClassification"
+                    formControlName="residencyClassification" class="form-control" [readOnly]="readonly">
+                <app-field-error-message controlName="residencyClassification"></app-field-error-message>
+            </div>
+
+            <div class="col-sm-12 col-md-6 mb-3 position-relative">
+                <label for="nationality" asteriskIfRequired="nationality" class="form-label">
+                  {{ lang.map.lbl_nationality}}
+                </label>
+                <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="true" placeholder="{{ lang.map.select }}"
+                  id="nationality" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="nationality"
+                  validationClasses="nationality">
+                  <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
+                    {{ option.getName() }}
+                  </ng-option>
+                </ng-select>
+                <app-field-error-message controlName="nationality"></app-field-error-message>
+              </div>
+          
+
+            <div class="col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="details"
+                    for="details">{{lang.map.lbl_other_details}}</label>
+                <textarea name="details" validationClasses="details" formControlName="details" id="details" rows="5"
+                    class="form-control"></textarea>
+                <app-field-error-message [ignoreTop]="true" controlName="details"></app-field-error-message>
+            </div>
+        </div>
+
+
+
+    </ng-container>
+</div>
+<div class="dialog-actions">
+    <div class="flex-grow-1"></div>
+    <button (click)="form.valid && save()" [disabled]="form.invalid"
+        class="btn btn-primary">{{lang.map.btn_save}}</button>
+    <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>
