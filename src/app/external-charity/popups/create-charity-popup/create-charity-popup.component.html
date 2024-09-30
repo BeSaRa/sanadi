@@ -14,6 +14,8 @@
         [title]="lang.map[tabsData.basicInfo.langKey]"></tab>
       <tab [name]="tabsData.attachment.name" [template]="attachmentTemplate"
         [title]="lang.map[tabsData.attachment.langKey]"></tab>
+      <tab *ngIf="tabsData.logs.show!()" [name]="tabsData.logs.name" [template]="logsTemplate"
+        [title]="lang.map[tabsData.logs.langKey]"></tab>
     </tabs-list>
   </div>
   <ng-template #basicInfoTemplate>
@@ -48,16 +50,15 @@
         <div class="col-sm-12 col-md-6 mb-3 position-relative">
           <label asteriskIfRequired="previousRequestSerial" for="previousRequestSerial"
             class="form-label">{{lang.map.previous_request_number}}</label>
-            <div class="input-group">
-              <input (keydown.enter)="isSearchAllowed() && licenseSearch($event)"
-                formControlName="previousRequestSerial" type="text" [readOnly]="!isSearchAllowed()"
-                validationClasses="previousRequestSerial"  class="form-control"
-                id="previousRequestSerial" trimInput>
-              <button *ngIf="isSearchAllowed()" type="button" (click)="licenseSearch($event)"
-                class="input-group-text"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
-              <app-field-error-message controlName="previousRequestSerial"></app-field-error-message>
-            </div>
-          
+          <div class="input-group">
+            <input (keydown.enter)="isSearchAllowed() && licenseSearch($event)" formControlName="previousRequestSerial"
+              type="text" [readOnly]="!isSearchAllowed()" validationClasses="previousRequestSerial" class="form-control"
+              id="previousRequestSerial" trimInput>
+            <button *ngIf="isSearchAllowed()" type="button" (click)="licenseSearch($event)" class="input-group-text"><i
+                class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <app-field-error-message controlName="previousRequestSerial"></app-field-error-message>
+          </div>
+
         </div>
         <div class="col-sm-12 col-md-6 mb-3 position-relative">
           <label asteriskIfRequired="suggestedCharityName" for="suggestedCharityName"
@@ -66,13 +67,7 @@
             formControlName="suggestedCharityName" class="form-control">
           <app-field-error-message controlName="suggestedCharityName"></app-field-error-message>
         </div>
-        <div class="col-sm-12 col-md-6 mb-3 position-relative">
-          <label asteriskIfRequired="suggestedActivities" for="suggestedActivities"
-            class="form-label">{{lang.map.suggested_activities}}</label>
-          <input id="suggestedActivities" validationClasses="suggestedActivities" formControlName="suggestedActivities"
-            class="form-control">
-          <app-field-error-message controlName="suggestedActivities"></app-field-error-message>
-        </div>
+       
         <div class="col-sm-12 col-md-6 mb-3 position-relative">
           <label for="workFieldId" asteriskIfRequired="workFieldId" class="form-label">
             {{ lang.map.work_field}}
@@ -86,6 +81,14 @@
           </ng-select>
           <app-field-error-message controlName="workFieldId"></app-field-error-message>
         </div>
+        <div class="col-sm-12 col-md-12 mb-3 position-relative">
+          <label asteriskIfRequired="suggestedActivities" for="suggestedActivities"
+            class="form-label">{{lang.map.suggested_activities}}</label>
+        
+            <textarea rows="5" id="suggestedActivities" validationClasses="suggestedActivities" formControlName="suggestedActivities"
+            class="form-control" trimInput></textarea>
+          <app-field-error-message controlName="suggestedActivities"></app-field-error-message>
+        </div>
         <div class="col-sm-12 col-md-12 mt-3 mb-3 position-relative">
           <founders formControlName="founderList" [disabled]="!saveVisible"></founders>
           <app-field-error-message controlName="founderList"></app-field-error-message>
@@ -98,7 +101,8 @@
           <app-field-error-message controlName="requestorName"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-6 mb-3 position-relative">
-          <label asteriskIfRequired="requestorQID" for="requestorQID" class="form-label">{{lang.map.personal_number}}</label>
+          <label asteriskIfRequired="requestorQID" for="requestorQID"
+            class="form-label">{{lang.map.personal_number}}</label>
           <input id="requestorQID" validationClasses="requestorQID" formControlName="requestorQID" class="form-control">
           <app-field-error-message controlName="requestorQID"></app-field-error-message>
         </div>
@@ -130,14 +134,14 @@
 
   <ng-template #attachmentTemplate>
     <external-charity-attachments [attachments]="model.requestDocumentList"
-    [requestId]="model.id"></external-charity-attachments>
-  </ng-template>
-
-  <ng-template #attachmentTemplate>
-    <external-charity-attachments [attachments]="model.requestDocumentList"
     [requestId]="model.id"
     [isAllRequired$]="isAllAttachmentRequired$"></external-charity-attachments>
    </ng-template>
+ 
+ <ng-template #logsTemplate>
+   <external-charity-logs [logList]="model.logList"></external-charity-logs>
+ </ng-template>
+ 
 </div>
 <div class="dialog-actions">
   <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
