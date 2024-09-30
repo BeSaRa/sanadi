@@ -161,4 +161,8 @@ export const urlsList: Partial<IAppUrls> = {
   EXTERNAL_CHARITY_REQUEST: '/external-charity/request',
   EXTERNAL_CHARITY_ADJUST: '/external-charity/request/adjust',
   EXTERNAL_CHARITY_ATTACHMENT: '/external-charity/attachment',
+  PENALTIES_AND_VIOLATIONS: '/penalties-violations',
+  PENALTY: '/admin/penalty',
+  LEGAL_BASIS: '/admin/legal-basis',
+  LEGAL_ACTION: '/admin/legal-action',
 };

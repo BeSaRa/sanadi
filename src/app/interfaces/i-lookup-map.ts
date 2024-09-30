@@ -200,4 +200,7 @@ export interface ILookupMap {
   EXTERNAL_CHARITY_SERVICE_TYPE: Lookup[];
   EXTERNAL_CHARITY_WORK_FIELD: Lookup[];
   RequiredAttentionLevel: Lookup[];
+  IncidentType: Lookup[];
+  LegalAction: Lookup[];
+  EntityType: Lookup[];
 }

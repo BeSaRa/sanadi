@@ -203,6 +203,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
           const result = this._beforeLaunch();
           return isObservable(result) ? result : of(result);
         }),
+        filter(success=> !!success),
         exhaustMap(_ => {
           const model = this.model as unknown as CaseModel<any, any>;
           return model.start().pipe(catchError(error => {

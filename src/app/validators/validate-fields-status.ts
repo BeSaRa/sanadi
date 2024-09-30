@@ -139,6 +139,15 @@ export function requiredArrayValidator(control: AbstractControl): ValidationErro
   return (!isValidValue(control.value) || control.value.length === 0) ? {requiredArray: true} : null;
 }
 
+export function requiredArrayAfterSave(model: {id: any}): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if(!model.id) return null;
+    if (!isValidValue(control.value) || control.value.length === 0) {
+      return {requiredArray: true};
+    }
+    return null;
+  }
+}
 export function patternValidator(patternName: customValidationTypes): ValidatorFn {
   if (!patternName || !validationPatterns.hasOwnProperty(patternName)) {
     return Validators.nullValidator;

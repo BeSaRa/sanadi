@@ -1,0 +1,43 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{lang.map.lbl_legal_basis}}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 600px">
+
+    <ng-container>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 mb-3 position-relative">
+                <label for="controlId" asteriskIfRequired [control]="control" class="form-label">
+                    {{ lang.map.lbl_legal_action}}
+                </label>
+                <ng-select [selectOnTab]="true" labelForId="controlId" [clearable]="true"
+                    placeholder="{{ lang.map.select }}" id="controlId" [notFoundText]="lang.map.msg_not_found"
+                    appendTo="body" validationClasses [control]="control" [formControl]="control">
+                    <ng-option *ngFor="let option of legalActionList" [value]="option.id">
+                        {{ option.getName() }}
+                    </ng-option>
+                </ng-select>
+                <app-field-error-message [control]="control"></app-field-error-message>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" for="subElement">{{lang.map.lbl_sub_element}}</label>
+                <span id="subElement" class="form-control input-disabled"
+                    [innerHTML]="selectedLegalAction() && selectedLegalAction()?.getName() || '&nbsp;'"></span>
+
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" for="text">{{lang.map.lbl_main_element}}</label>
+                <span id="text" class="form-control input-disabled"
+                    [innerHTML]="selectedLegalAction() && selectedLegalAction()?.mainAction || '&nbsp;'"></span>
+
+            </div>
+          
+        </div>
+    </ng-container>
+</div>
+<div class="dialog-actions">
+    <div class="flex-grow-1"></div>
+    <button (click)="control.valid && save()" [disabled]="control.invalid"
+        class="btn btn-primary">{{lang.map.btn_save}}</button>
+    <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

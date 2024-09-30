@@ -1,0 +1,47 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+    <h1 class="h6 text-white">{{lang.map.lbl_legal_basis}}</h1>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 600px">
+
+    <ng-container [formGroup]="form">
+        <div class="row">
+            <div class="col-sm-12 col-md-6 mb-3 position-relative">
+                <label for="id" asteriskIfRequired="id" class="form-label">
+                    {{ lang.map.lbl_penalty}} </label>
+                <ng-select [selectOnTab]="true" labelForId="id" [clearable]="true" placeholder="{{ lang.map.select }}"
+                    id="id" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="id"
+                    validationClasses="id" >
+                    <ng-option *ngFor="let option of penalties" [value]="option.id">
+                        {{ option.getName() }}
+                    </ng-option>
+                </ng-select>
+                <app-field-error-message controlName="id"></app-field-error-message>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" for="title">{{lang.map.name}}</label>
+                <span id="title" class="form-control input-disabled"
+                    [innerHTML]="selectedPenalty() && selectedPenalty()?.getName() || '&nbsp;'"></span>
+
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" for="text">{{lang.map.classification}}</label>
+                <span id="text" class="form-control input-disabled"
+                    [innerHTML]="selectedPenalty() && selectedPenalty()?.getClassification() || '&nbsp;'"></span>
+
+            </div>
+            <div class="col-sm-12 position-relative">
+                <label for="sanctionComment" asteriskIfRequired="sanctionComment" class="form-label">{{lang.map.comment}}</label>
+                <textarea name="sanctionComment" rows="4" id="sanctionComment" class="form-control"
+                    validationClasses="sanctionComment" formControlName="sanctionComment"></textarea>
+                <app-field-error-message controlName="sanctionComment"></app-field-error-message>
+            </div>
+        </div>
+    </ng-container>
+</div>
+<div class="dialog-actions">
+    <div class="flex-grow-1"></div>
+    <button (click)="form.valid && save()" [disabled]="form.invalid"
+        class="btn btn-primary">{{lang.map.btn_save}}</button>
+    <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

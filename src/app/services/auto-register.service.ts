@@ -94,6 +94,7 @@ import {
 } from '@app/modules/services/financial-transfer-licensing/pages/financial-transfers-licensing/financial-transfers-licensing.component';
 import { ProjectCompletionComponent } from '@app/modules/services/project-completion/pages/project-completion/project-completion.component';
 import { FinancialAnalysisComponent } from '@app/modules/services/financial-analysis/pages/financial-analysis/financial-analysis.component';
+import { PenaltiesAndViolationsComponent } from '@app/modules/services/penalties-and-violations/pages/penalties-and-violations/penalties-and-violations.component';
 
 @Injectable({
   providedIn: 'root'
@@ -144,6 +145,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('ProjectImplementationComponent', ProjectImplementationComponent);
       DynamicComponentService.registerComponent('ProjectCompletionComponent', ProjectCompletionComponent);
       DynamicComponentService.registerComponent('FinancialAnalysisComponent', FinancialAnalysisComponent);
+      DynamicComponentService.registerComponent('PenaltiesAndViolationsComponent', PenaltiesAndViolationsComponent);
     });// just to make sure that service constructed and register all dynamic components
 
 

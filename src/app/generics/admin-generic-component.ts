@@ -1,17 +1,19 @@
-import {CommonUtils} from '@app/helpers/common-utils';
-import {BehaviorSubject, Observable, of, Subject} from "rxjs";
-import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
-import {catchError, delay, exhaustMap, filter, map, switchMap, takeUntil} from "rxjs/operators";
-import {Directive, inject, OnDestroy, OnInit} from "@angular/core";
-import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import {DialogRef} from "@app/shared/models/dialog-ref";
-import {CrudWithDialogGenericService} from "@app/generics/crud-with-dialog-generic-service";
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {PageEvent} from "@contracts/page-event";
-import {CrudServiceInterface} from "@contracts/crud-service-interface";
-import {PermissionsEnum} from '@app/enums/permissions-enum';
-import {SearchColumnConfigMap, SearchColumnEventType} from '@contracts/i-search-column-config';
-import {AdminAuditLogService} from "@services/admin-audit-log.service";
+import { CommonUtils } from '@app/helpers/common-utils';
+import { BehaviorSubject, Observable, of, Subject } from "rxjs";
+import { IMenuItem } from "@app/modules/context-menu/interfaces/i-menu-item";
+import { catchError, delay, exhaustMap, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
+import { Directive, inject, OnDestroy, OnInit } from "@angular/core";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { PageEvent } from "@contracts/page-event";
+import { CrudServiceInterface } from "@contracts/crud-service-interface";
+import { PermissionsEnum } from '@app/enums/permissions-enum';
+import { SearchColumnConfigMap, SearchColumnEventType } from '@contracts/i-search-column-config';
+import { AdminAuditLogService } from "@services/admin-audit-log.service";
+import { LangService } from '@app/services/lang.service';
+import { ToastService } from '@app/services/toast.service';
 
 @Directive()
 export abstract class AdminGenericComponent<M extends { id: number }, S extends CrudWithDialogGenericService<M>> implements OnInit, OnDestroy {
@@ -59,7 +61,6 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   // permissions enum
   permissionsEnum = PermissionsEnum;
   adminAuditLogService = inject(AdminAuditLogService);
-
   usePagination: boolean = false;
   count: number = 0;
 
@@ -275,7 +276,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
    * Override in your component to return custom values or to add/remove properties
    */
   getColumnFilterValue(): Partial<M> {
-    return {...this.columnFilterForm.value};
+    return { ...this.columnFilterForm.value };
   }
 
   resetColumnFilterAndReload(): void {
@@ -306,4 +307,14 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
       });
   }
 
+  updateStatus(model: { status: number, updateStatus: (newStatus: CommonStatusEnum) => Observable<any> }) {
+    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ?
+      model.updateStatus(CommonStatusEnum.DEACTIVATED) :
+      model.updateStatus(CommonStatusEnum.ACTIVATED);
+    updateObservable
+      .pipe(
+        tap(_=>{this.reload$.next(null)}),
+        takeUntil(this.destroy$)
+      ).subscribe()
+  }
 }
