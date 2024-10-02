@@ -5,11 +5,15 @@ import { ExternalCharityFounderInterceptor } from './external-charity-founder';
 import { FileNetDocument } from '@app/models/file-net-document';
 import { ExternalCharityLog } from '@app/models/external-charity-log';
 import { ExternalCharityLogInterceptor } from './external-charity-log-interceptor';
+import { FileNetDocumentInterceptor } from './file-net-document-interceptor';
 
 
 export class ExternalCharityInterceptor implements IModelInterceptor<ExternalCharity> {
   receive(model: ExternalCharity): (ExternalCharity) {
-    model.requestDocumentList = model.requestDocumentList?.map(item=> new FileNetDocument().clone(item));
+    const fileNetInterceptor = new FileNetDocumentInterceptor();
+    model.requestDocumentList = model.requestDocumentList?.map(item=> new FileNetDocument().clone(
+      fileNetInterceptor.receive(item)
+    ));
     if(!!model.logList){
       const auditInterceptor= new ExternalCharityLogInterceptor();
       model.logList = model.logList?.map(item=> <ExternalCharityLog>auditInterceptor.receive(item));
