@@ -3,6 +3,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { FileIconsEnum, FileMimeTypesEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { AdminResult } from '@app/models/admin-result';
 import { FileNetDocument } from '@app/models/file-net-document';
 import { GlobalSettings } from '@app/models/global-settings';
 import { AttachmentTypeService } from '@app/services/attachment-type.service';
@@ -30,7 +31,7 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
     allowedExtensions: string[] = [];
 
 
-    displayedColumns: string[] = ['icon', 'documentTitle', 'description','mandatory', 'date', 'actions'];
+    displayedColumns: string[] = ['icon', 'attachmentTypeId', 'documentTitle','mandatory', 'date', 'actions'];
 
     filter: UntypedFormControl = new UntypedFormControl();
     allowedFileMaxSize: number = this.globalSettings.fileSize;
@@ -161,7 +162,7 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
 
     private _createAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
         const document = new FileNetDocument().clone({
-            documentTitle: this.selectedFile?.documentTitle,
+            documentTitle: filesList?.item(0)?.name??"",
             description: this.selectedFile?.description,
             attachmentTypeId: this.selectedFile?.attachmentTypeId,
             files: filesList,
@@ -170,7 +171,7 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
     }
     private _updateAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
         const document = new FileNetDocument().clone({
-            documentTitle: this.selectedFile?.documentTitle,
+            documentTitle: filesList?.item(0)?.name?? "",
             description: this.selectedFile?.description,
             attachmentTypeId: this.selectedFile?.attachmentTypeId,
             id: this.selectedFile?.id,
@@ -180,7 +181,9 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
     }
     private _afterSaveAttachmentFile(file: FileNetDocument) {
         this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
-       this.attachments[this.selectedIndex] = new FileNetDocument().clone(file);
+       this.attachments[this.selectedIndex] = new FileNetDocument().clone({...file,
+        attachmentTypeInfo : AdminResult.createInstance(this.selectedFile!.attachmentTypeInfo??{})
+       });
        this.attachments = this.attachments.slice()
 
     }
@@ -208,6 +211,7 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
                             documentTitle: file.documentTitle,
                             description: file.description,
                             attachmentTypeId: file.attachmentTypeId,
+                            attachmentTypeInfo: file.attachmentTypeInfo,
                         }));
                         this.attachments = this.attachments.slice();
                     });

@@ -12,13 +12,13 @@
             <th cdk-header-cell style="width: 20px;" *cdkHeaderCellDef></th>
             <td cdk-cell *cdkCellDef="let row"><i class="mdi text-primary {{getFileIcon(row)}}"></i></td>
         </ng-container>
-        <ng-container cdkColumnDef="documentTitle">
+        <ng-container cdkColumnDef="attachmentTypeId">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.document_title}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.documentTitle }} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.attachmentTypeInfo.getName() }} </td>
         </ng-container>
-        <ng-container cdkColumnDef="description">
+        <ng-container cdkColumnDef="documentTitle">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_description}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.classDescription}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{!!row.id ? row.documentTitle: ''}} </td>
         </ng-container>
         <ng-container cdkColumnDef="mandatory">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_mandatory}}</th>
