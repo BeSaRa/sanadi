@@ -10,8 +10,7 @@ import { AdminResult } from "@app/models/admin-result";
 
 export class ConvertExternalCharityInterceptor implements IModelInterceptor<ConvertExternalCharity> {
   receive(model: ConvertExternalCharity): (ConvertExternalCharity) {
-    model.requestDocumentList = model.requestDocumentList?.map(item => new FileNetDocument().clone(
-      {...item,
+    model.requestDocumentList = model.requestDocumentList?.map(item => new FileNetDocument().clone({...item,
         attachmentTypeInfo : AdminResult.createInstance(item.attachmentTypeInfo??{})
       }
     ));

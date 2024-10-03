@@ -1,4 +1,4 @@
-<app-table [selectable]="true" #table sortableTable [paginator]="paginator" [filter]="filter.value" [data]="attachments"
+<app-table [selectable]="true" #table sortableTable [paginator]="paginator" [filter]="filter.value" [data]="mergedAttachments"
     [columns]="displayedColumns">
     <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
         <ng-container cdkColumnDef="extra-header">
