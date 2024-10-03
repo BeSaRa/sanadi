@@ -4,6 +4,7 @@ import { CaseTypes } from '@app/enums/case-types.enum';
 import { FileIconsEnum, FileMimeTypesEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminResult } from '@app/models/admin-result';
+import { AttachmentTypeServiceData } from '@app/models/attachment-type-service-data';
 import { FileNetDocument } from '@app/models/file-net-document';
 import { GlobalSettings } from '@app/models/global-settings';
 import { AttachmentTypeService } from '@app/services/attachment-type.service';
@@ -47,9 +48,11 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
 
     }
 
-    @Input({ required: true }) attachments: any[] = []
+    @Input({ required: true }) attachments: FileNetDocument[] = []
     @Input() requestId?: number;
     @Input() isAllRequired$= new BehaviorSubject<boolean>(false);
+
+    mergedAttachments : FileNetDocument[] = []
 
     destroy$ = new Subject<void>();
     private _setAllowedFiles() {
@@ -84,24 +87,25 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
             .pipe(
                 switchMap(_ => this.attachmentTypeService.loadTypesByCaseType(CaseTypes.ESTABLISHMENT_OF_CHARITY)),
                 map((types) => types.map(type => type.convertToAttachment().setAttachmentTypeServiceData(type))),
-                map((types) => this._mergeAttachments(types)),
+                // map((types) => this._mergeAttachments(types)),
                 takeUntil(this.destroy$)
             )
             .subscribe((attachments) => {
-                this.attachments = attachments;
+                this.mergedAttachments = [...this.attachments,...attachments];
             });
     }
-    private _mergeAttachments(attachments: FileNetDocument[]) {
-        return attachments.map(attachment => {
+    // private _mergeAttachments(attachments: FileNetDocument[]) {
+    //     return attachments.map(attachment => {
            
-            const updatedAttachment: FileNetDocument =
-             this.attachments.find(item => item.attachmentTypeId === attachment.attachmentTypeId)?? attachment; 
+    //         const updatedAttachment: FileNetDocument =
+    //          this.attachments.find(item => item.attachmentTypeId === attachment.attachmentTypeId)?? attachment; 
              
              
-            updatedAttachment.required = this.isAllRequired$.value 
-            return updatedAttachment;
-        })
-    }
+    //         updatedAttachment.required = this.isAllRequired$.value 
+    //         return updatedAttachment;
+    //     })
+        
+    // }
     private _getFileIconsEnumKey(mimeType: string) {
         try {
             const fileTypeKey = Object.keys(FileMimeTypesEnum)[Object.values(FileMimeTypesEnum).indexOf(mimeType as FileMimeTypesEnum)];
@@ -124,7 +128,7 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
     uploadAttachment(row: FileNetDocument, uploader: HTMLInputElement): void {
         uploader.click();
         this.selectedFile = row;
-        this.selectedIndex = this.attachments.indexOf(row);
+        this.selectedIndex = this.mergedAttachments.indexOf(row);
     }
 
     uploaderFileChange($event: Event): void {
@@ -181,10 +185,10 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
     }
     private _afterSaveAttachmentFile(file: FileNetDocument) {
         this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
-       this.attachments[this.selectedIndex] = new FileNetDocument().clone({...file,
+       this.mergedAttachments[this.selectedIndex] = new FileNetDocument().clone({...file,
         attachmentTypeInfo : AdminResult.createInstance(this.selectedFile!.attachmentTypeInfo??{})
        });
-       this.attachments = this.attachments.slice()
+       this.mergedAttachments = this.mergedAttachments.slice()
 
     }
 
@@ -206,14 +210,19 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
                 this.externalCharityAttachmentsService.deleteDocument(file.vsId)
                     .subscribe(() => {
                         this.toast.success(this.lang.map.msg_delete_x_success.change({ x: file.documentTitle }));
-                        let deletedFileIndex = this.attachments.indexOf(file);
-                        this.attachments.splice(deletedFileIndex, 1, (new FileNetDocument()).clone({
+                        const isMoreThenOne = this.mergedAttachments.filter(x=>x.attachmentTypeId === file.attachmentTypeId).length > 1;
+                        if(isMoreThenOne){
+                            this.mergedAttachments = this.mergedAttachments.filter(x=>x.vsId !== file.vsId);
+                            return;
+                        }
+                        let deletedFileIndex = this.mergedAttachments.indexOf(file);
+                        this.mergedAttachments.splice(deletedFileIndex, 1, (new FileNetDocument()).clone({
                             documentTitle: file.documentTitle,
                             description: file.description,
                             attachmentTypeId: file.attachmentTypeId,
                             attachmentTypeInfo: file.attachmentTypeInfo,
                         }));
-                        this.attachments = this.attachments.slice();
+                        this.mergedAttachments = this.mergedAttachments.slice();
                     });
             });
 
