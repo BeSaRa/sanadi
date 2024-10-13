@@ -1,7 +1,7 @@
-import {SearchableCloneable} from '@app/models/searchable-cloneable';
-import {ISearchFieldsMap} from '@app/types/types';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Lookup} from '@models/lookup';
+import { SearchableCloneable } from '@app/models/searchable-cloneable';
+import { ISearchFieldsMap } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Lookup } from '@models/lookup';
 
 export class BeneficiaryFamilyMember extends SearchableCloneable<BeneficiaryFamilyMember> {
   id?: number;
@@ -13,8 +13,6 @@ export class BeneficiaryFamilyMember extends SearchableCloneable<BeneficiaryFami
   age!: number;
   relativeType!: number;
   occuption!: string;
-  aidLookupId!: number;
-  aidLookupParentId!: number;
 
   primaryIdTypeInfo!: Lookup;
   relativeTypeInfo!: Lookup;
@@ -22,8 +20,7 @@ export class BeneficiaryFamilyMember extends SearchableCloneable<BeneficiaryFami
   updatedBy!: number;
   clientData!: string;
 
-  searchFields: ISearchFieldsMap<BeneficiaryFamilyMember> = {
-  }
+  searchFields: ISearchFieldsMap<BeneficiaryFamilyMember> = {};
 
   buildForm(controls?: boolean): any {
     const {
@@ -34,19 +31,23 @@ export class BeneficiaryFamilyMember extends SearchableCloneable<BeneficiaryFami
       age,
       relativeType,
       occuption,
-      aidLookupId,
-      aidLookupParentId
     } = this;
     return {
-      primaryIdNumber: controls ? [primaryIdNumber, [CustomValidators.required]] : primaryIdNumber,
-      primaryIdType: controls ? [primaryIdType, [CustomValidators.required]] : primaryIdType,
+      primaryIdNumber: controls
+        ? [primaryIdNumber, [CustomValidators.required]]
+        : primaryIdNumber,
+      primaryIdType: controls
+        ? [primaryIdType, [CustomValidators.required]]
+        : primaryIdType,
       arName: controls ? [arName, [CustomValidators.required]] : arName,
       gender: controls ? [gender, [CustomValidators.required]] : gender,
       age: controls ? [age, [CustomValidators.required]] : age,
-      relativeType: controls ? [relativeType, [CustomValidators.required]] : relativeType,
-      occuption: controls ? [occuption, [CustomValidators.required]] : occuption,
-      aidLookupId: controls ? [aidLookupId, [CustomValidators.required]] : aidLookupId,
-      aidLookupParentId: controls ? [aidLookupParentId, [CustomValidators.required]] : aidLookupParentId,
-    }
+      relativeType: controls
+        ? [relativeType, [CustomValidators.required]]
+        : relativeType,
+      occuption: controls
+        ? [occuption, [CustomValidators.required]]
+        : occuption,
+    };
   }
 }
