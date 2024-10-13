@@ -1,45 +1,54 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
-import {ReadinessStatus} from '@app/types/types';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {catchError, filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {Beneficiary} from '@app/models/beneficiary';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {BeneficiaryFamilyMember} from '@models/beneficiary-family-member';
-import {AidLookup} from '@models/aid-lookup';
-import {AidTypes} from '@enums/aid-types.enum';
-import {AidLookupStatusEnum} from '@enums/status.enum';
-import {AidLookupService} from '@services/aid-lookup.service';
-import {Lookup} from '@models/lookup';
-import {CommonUtils} from '@helpers/common-utils';
-import {BeneficiaryIdTypes} from '@enums/beneficiary-id-types.enum';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+} from '@angular/forms';
+import { DialogService } from '@app/services/dialog.service';
+import { ToastService } from '@app/services/toast.service';
+import { ReadinessStatus } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { Beneficiary } from '@app/models/beneficiary';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { BeneficiaryFamilyMember } from '@models/beneficiary-family-member';
+import { Lookup } from '@models/lookup';
+import { CommonUtils } from '@helpers/common-utils';
+import { BeneficiaryIdTypes } from '@enums/beneficiary-id-types.enum';
 
 @Component({
   selector: 'beneficiary-family-members',
   templateUrl: './beneficiary-family-members.component.html',
-  styleUrls: ['./beneficiary-family-members.component.scss']
+  styleUrls: ['./beneficiary-family-members.component.scss'],
 })
-export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, AfterViewInit {
-
-  constructor(public lang: LangService,
-              private lookupService: LookupService,
-              private aidLookupService: AidLookupService,
-              private fb: UntypedFormBuilder,
-              private dialogService: DialogService,
-              private toastService: ToastService) {
-  }
+export class BeneficiaryFamilyMemberComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
+  constructor(
+    public lang: LangService,
+    private lookupService: LookupService,
+    private fb: UntypedFormBuilder,
+    private dialogService: DialogService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
-    this.loadMainAidLookups();
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
@@ -85,18 +94,17 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
     'arName',
     'relativeType',
     'occuption',
-    'actions'
+    'actions',
   ];
   footerLabelColSpan: number = 0;
   primaryIdTypeList: Lookup[] = this.lookupService.listByCategory.BenIdType;
   GenderList: Lookup[] = this.lookupService.listByCategory.Gender.slice().sort(
     (a, b) => a.lookupKey - b.lookupKey
   );
-  benRequestorRelationType: Lookup[] = this.lookupService.listByCategory.BenRequestorRelationType.slice().sort(
-    (a, b) => a.lookupKey - b.lookupKey
-  );
-  mainAidLookupsList: AidLookup[] = [];
-  subAidLookupsList: AidLookup[] = [];
+  benRequestorRelationType: Lookup[] =
+    this.lookupService.listByCategory.BenRequestorRelationType.slice().sort(
+      (a, b) => a.lookupKey - b.lookupKey
+    );
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   filterControl: UntypedFormControl = new UntypedFormControl('');
   viewOnly: boolean = false;
@@ -105,7 +113,8 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
   add$: Subject<any> = new Subject<any>();
   editItem?: BeneficiaryFamilyMember;
   private save$: Subject<void> = new Subject<void>();
-  private recordChanged$: Subject<BeneficiaryFamilyMember | null> = new Subject<BeneficiaryFamilyMember | null>();
+  private recordChanged$: Subject<BeneficiaryFamilyMember | null> =
+    new Subject<BeneficiaryFamilyMember | null>();
   private currentRecord?: BeneficiaryFamilyMember;
   private destroy$: Subject<void> = new Subject();
 
@@ -125,7 +134,7 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: BeneficiaryFamilyMember) => this.edit(item),
-      show: (_item: BeneficiaryFamilyMember) => !this.readonly
+      show: (_item: BeneficiaryFamilyMember) => !this.readonly,
     },
     // delete
     {
@@ -133,7 +142,7 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: BeneficiaryFamilyMember) => this.delete(item),
-      show: (_item: BeneficiaryFamilyMember) => !this.readonly
+      show: (_item: BeneficiaryFamilyMember) => !this.readonly,
     },
     // view
     {
@@ -141,8 +150,8 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: BeneficiaryFamilyMember) => this.view(item),
-      show: (_item: BeneficiaryFamilyMember) => this.readonly
-    }
+      show: (_item: BeneficiaryFamilyMember) => this.readonly,
+    },
   ];
 
   buildForm(): void {
@@ -158,52 +167,15 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
     }
   }
 
-  private loadMainAidLookups() {
-    this.mainAidLookupsList = [];
-    return this.aidLookupService.loadByCriteria({
-      aidType: AidTypes.MAIN_CATEGORY,
-      status: AidLookupStatusEnum.ACTIVE
-    }).pipe(
-      catchError(() => of([]))
-    ).subscribe((list) => {
-      this.mainAidLookupsList = list;
-    });
-  }
-  handleMainAidChange($event: number) {
-    this.requestedAidField.reset();
-    this.loadSubAidLookups($event);
-  }
-
-  private loadSubAidLookups(mainAidId: number) {
-    this.subAidLookupsList = [];
-
-    this.loadSubAidsByMainAidId(mainAidId).subscribe(list => {
-      this.subAidLookupsList = list;
-    });
-  }
-
-  private loadSubAidsByMainAidId(mainAidId: number): Observable<AidLookup[]> {
-    if (!mainAidId) {
-      return of([]);
-    }
-    return this.aidLookupService.loadByCriteria({
-      aidType: AidTypes.SUB_CATEGORY,
-      status: AidLookupStatusEnum.ACTIVE,
-      parent: mainAidId
-    }).pipe(
-      catchError(() => of([]))
-    );
-  }
   isTouchedOrDirty(): boolean {
     return this.form && (this.form.touched || this.form.dirty);
   }
 
   private listenToAdd() {
-    this.add$.pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.viewOnly = false;
-        this.recordChanged$.next(new BeneficiaryFamilyMember());
-      });
+    this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.viewOnly = false;
+      this.recordChanged$.next(new BeneficiaryFamilyMember());
+    });
   }
 
   private listenToRecordChange() {
@@ -222,33 +194,45 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
   }
 
   private displayRequiredFieldsMessage(): void {
-    this.dialogService.error(this.lang.map.msg_all_required_fields_are_filled).onAfterClose$
-      .pipe(take(1))
+    this.dialogService
+      .error(this.lang.map.msg_all_required_fields_are_filled)
+      .onAfterClose$.pipe(take(1))
       .subscribe(() => {
         this.form.markAllAsTouched();
       });
   }
 
   private listenToSave() {
-    this.save$.pipe(
-      takeUntil(this.destroy$),
-      tap(_ => this.form.invalid ? this.displayRequiredFieldsMessage() : true),
-      filter(() => this.form.valid),
-      map(() => {
-        let formValue = this.form.getRawValue();
-        return (new BeneficiaryFamilyMember()).clone({
-          ...this.currentRecord, ...formValue,
+    this.save$
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((_) =>
+          this.form.invalid ? this.displayRequiredFieldsMessage() : true
+        ),
+        filter(() => this.form.valid),
+        map(() => {
+          let formValue = this.form.getRawValue();
+          return new BeneficiaryFamilyMember().clone({
+            ...this.currentRecord,
+            ...formValue,
 
-          primaryIdTypeInfo: this.lookupService.listByCategory.BenIdType.find(x => x.lookupKey === formValue.primaryIdType) || new Lookup(),
-          relativeTypeInfo: this.lookupService.listByCategory.BenRequestorRelationType.find(x => x.lookupKey === formValue.relativeType) || new Lookup(),
-        });
-      })
-    ).subscribe(recordToSave => {
-      this._updateList(recordToSave, (!!this.editItem ? 'UPDATE' : 'ADD'));
-      this.toastService.success(this.lang.map.msg_save_success);
-      this.recordChanged$.next(null);
-      this.cancelForm();
-    });
+            primaryIdTypeInfo:
+              this.lookupService.listByCategory.BenIdType.find(
+                (x) => x.lookupKey === formValue.primaryIdType
+              ) || new Lookup(),
+            relativeTypeInfo:
+              this.lookupService.listByCategory.BenRequestorRelationType.find(
+                (x) => x.lookupKey === formValue.relativeType
+              ) || new Lookup(),
+          });
+        })
+      )
+      .subscribe((recordToSave) => {
+        this._updateList(recordToSave, !!this.editItem ? 'UPDATE' : 'ADD');
+        this.toastService.success(this.lang.map.msg_save_success);
+        this.recordChanged$.next(null);
+        this.cancelForm();
+      });
   }
 
   private updateForm(record: BeneficiaryFamilyMember | undefined) {
@@ -282,22 +266,25 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
   }
 
   private listenToPrimaryIdTypeChange() {
-    this.primaryIdTypeField?.valueChanges.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(value => {
-      let idValidators: any[] = [CustomValidators.required];
+    this.primaryIdTypeField?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
+        let idValidators: any[] = [CustomValidators.required];
 
-      if (CommonUtils.isValidValue(value)) {
-        idValidators = idValidators.concat(this.idTypesValidationsMap[value]);
-      }
-      if(value !== (this.currentRecord as unknown as BeneficiaryFamilyMember)?.primaryIdType) {
-        this.primaryIdNumberField.setValue(null);
-      }
-      this.primaryIdNumberField.setValidators(idValidators);
-      this.primaryIdNumberField.updateValueAndValidity();
-    });
+        if (CommonUtils.isValidValue(value)) {
+          idValidators = idValidators.concat(this.idTypesValidationsMap[value]);
+        }
+        if (
+          value !==
+          (this.currentRecord as unknown as BeneficiaryFamilyMember)
+            ?.primaryIdType
+        ) {
+          this.primaryIdNumberField.setValue(null);
+        }
+        this.primaryIdNumberField.setValidators(idValidators);
+        this.primaryIdNumberField.updateValueAndValidity();
+      });
   }
-
 
   get primaryIdTypeField(): UntypedFormControl {
     return this.form.get('primaryIdType') as UntypedFormControl;
@@ -335,9 +322,9 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
     if (this.readonly) {
       return;
     }
-    this.dialogService.confirm(this.lang.map.msg_confirm_delete_selected)
-      .onAfterClose$
-      .pipe(take(1))
+    this.dialogService
+      .confirm(this.lang.map.msg_confirm_delete_selected)
+      .onAfterClose$.pipe(take(1))
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           this.editItem = record;
@@ -348,13 +335,18 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
       });
   }
 
-  private _updateList(record: (BeneficiaryFamilyMember | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
+  private _updateList(
+    record: BeneficiaryFamilyMember | null,
+    operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE'
+  ) {
     if (record) {
-      let index = !this.editItem ? -1 : this.list.findIndex(x => x === this.editItem);
+      let index = !this.editItem
+        ? -1
+        : this.list.findIndex((x) => x === this.editItem);
       if (operation === 'ADD') {
         this.list.push(record);
       } else if (operation === 'UPDATE') {
-        let index = this.list.findIndex(x => x === this.editItem);
+        let index = this.list.findIndex((x) => x === this.editItem);
         this.list.splice(index, 1, record);
       } else if (operation === 'DELETE') {
         this.list.splice(index, 1);
@@ -363,12 +355,7 @@ export class BeneficiaryFamilyMemberComponent implements OnInit, OnDestroy, Afte
     this.list = this.list.slice();
   }
 
-
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
-  }
-
-  get requestedAidField(): UntypedFormControl {
-    return this.form.get('aidLookupId') as UntypedFormControl;
   }
 }
