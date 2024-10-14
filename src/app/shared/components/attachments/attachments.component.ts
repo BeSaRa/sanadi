@@ -29,6 +29,7 @@ import { ActionIconsEnum } from '@enums/action-icons-enum';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { AttachmentType } from '@app/models/attachment-type';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { SubmissionMechanisms } from '@app/enums/submission-mechanisms.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -109,7 +110,11 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   allAttachmentTypesByCase: AttachmentTypeServiceData[] = [];
 
   reportCases: CaseTypes[] = [
-    CaseTypes.FINANCIAL_ANALYSIS
+    CaseTypes.FINANCIAL_ANALYSIS,
+  ]
+  OpenedCases : CaseTypes[]=[
+    CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
+    CaseTypes.PROJECT_IMPLEMENTATION,
   ]
   constructor(public lang: LangService,
     private dialog: DialogService,
@@ -506,6 +511,9 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
             this.dialog.info(this.lang.map.this_action_cannot_be_performed_before_saving_the_request);
             return false;
           }
+          if(this.isOpenedForNotificationCaseType()){
+            return true;
+          }
           return !this.disabled;
         }),
         switchMap(() => this.dialog.show(OtherAttachmentDetailsPopupComponent, {
@@ -563,13 +571,20 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       if (this.isReportCaseType()) {
         return true;
       }
+      if(this.isOpenedForNotificationCaseType()){
+        return !attachment.id || !this._isCreatedByCurrentUser(attachment)
+      }
       if (this.model && this.model.caseType && (this.model.isFinalApproved() || this.model.isFinalNotification())) {
         return true;
       }
+    
       return this.disabled || !attachment.attachmentTypeStatus || !attachment.id || !this._isCreatedByCurrentUser(attachment);
     } else if (buttonType === 'upload') {
       if(this.isReportCaseType()){
         return !this.employeeService.isExternalUser() || this.disabled
+      }
+      if(this.isOpenedForNotificationCaseType()){
+        return  (!!attachment.id && !this._isCreatedByCurrentUser(attachment));
       }
       return this.disabled || !attachment.attachmentTypeStatus ||
        (!!attachment.id && !this._isCreatedByCurrentUser(attachment));
@@ -577,11 +592,11 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       if (this.isReportCaseType()) {
         return true;
       }
+      
       return this.disabled;
     }
     return true;
   }
-
   private _isCreatedByCurrentUser(attachment: FileNetDocument) {
     let user = this.employeeService.getCurrentUser();
     if (this.employeeService.isExternalUser()) {
@@ -623,5 +638,17 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
   isReportCaseType(): boolean {
     return this.reportCases.includes(this.caseType!)
+  }
+  isOpenedForNotificationCaseType(): boolean {
+    return this.OpenedCases.includes(this.caseType!) &&
+     this.model.submissionMechanism === SubmissionMechanisms.NOTIFICATION
+  }
+
+  get allowedToAddNewAttachment(){
+    if(this.isOpenedForNotificationCaseType()){
+      
+      return true;
+    }
+    return !this.disabled && !this.isReportCaseType()
   }
 }
