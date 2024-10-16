@@ -12,19 +12,20 @@ import { SubventionRequestStatus } from '@app/enums/status.enum';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { SearchableCloneable } from '@app/models/searchable-cloneable';
-import { SubventionRequestAidInterceptor } from "@app/model-interceptors/subvention-request-aid-interceptor";
-import { InterceptModel } from "@decorators/intercept-model";
+import { SubventionRequestAidInterceptor } from '@app/model-interceptors/subvention-request-aid-interceptor';
+import { InterceptModel } from '@decorators/intercept-model';
 
 const { send, receive } = new SubventionRequestAidInterceptor();
 
 @InterceptModel({ send, receive })
 export class SubventionRequestAid extends SearchableCloneable<SubventionRequestAid> {
-
   constructor() {
     super();
-    this.subventionRequestService = FactoryService.getService('SubventionRequestService');
+    this.subventionRequestService = FactoryService.getService(
+      'SubventionRequestService'
+    );
   }
-
+  allowDataSharing: boolean = false;
   requestId!: number;
   requestedAidAmount!: number;
   aidSuggestedAmount!: number;
@@ -61,16 +62,34 @@ export class SubventionRequestAid extends SearchableCloneable<SubventionRequestA
 
   searchFieldsInquiry: ISearchFieldsMap<SubventionRequestAid> = {
     ...infoSearchFields(['orgInfo', 'statusInfo', 'aidLookupParentInfo']),
-    ...normalSearchFields(['requestFullSerial', 'creationDateString', 'requestedAidAmount', 'aidTotalPayedAmount'])
+    ...normalSearchFields([
+      'requestFullSerial',
+      'creationDateString',
+      'requestedAidAmount',
+      'aidTotalPayedAmount',
+    ]),
   };
 
   searchFieldsSearch: ISearchFieldsMap<SubventionRequestAid> = {
-    ...infoSearchFields(['orgInfo', 'orgUserInfo', 'statusInfo', 'aidLookupParentInfo']),
-    ...normalSearchFields(['requestFullSerial', 'creationDateString', 'aidSuggestedAmount', 'requestedAidAmount', 'aidTotalPayedAmount', 'statusDateModifiedString'])
+    ...infoSearchFields([
+      'orgInfo',
+      'orgUserInfo',
+      'statusInfo',
+      'aidLookupParentInfo',
+    ]),
+    ...normalSearchFields([
+      'requestFullSerial',
+      'creationDateString',
+      'aidSuggestedAmount',
+      'requestedAidAmount',
+      'aidTotalPayedAmount',
+      'statusDateModifiedString',
+    ]),
   };
 
   printRequest(fileName: string): void {
-    this.subventionRequestService.loadByRequestIdAsBlob(this.requestId)
+    this.subventionRequestService
+      .loadByRequestIdAsBlob(this.requestId)
       .subscribe((data) => {
         printBlobData(data, fileName);
       });
@@ -78,7 +97,8 @@ export class SubventionRequestAid extends SearchableCloneable<SubventionRequestA
 
   showLogs($event?: MouseEvent): void {
     $event?.preventDefault();
-    this.subventionRequestService.openLogDialog(this.requestId)
+    this.subventionRequestService
+      .openLogDialog(this.requestId)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });
@@ -86,7 +106,8 @@ export class SubventionRequestAid extends SearchableCloneable<SubventionRequestA
 
   showAids($event?: MouseEvent): void {
     $event?.preventDefault();
-    this.subventionRequestService.openAidDialog(this.requestId, this.isPartial)
+    this.subventionRequestService
+      .openAidDialog(this.requestId, this.isPartial)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });
@@ -96,16 +117,13 @@ export class SubventionRequestAid extends SearchableCloneable<SubventionRequestA
     return new Observable((subscriber) => {
       const sub = this.subventionRequestService
         .openCancelDialog(this)
-        .onAfterClose$
-        .subscribe((result: UserClickOn | string) => {
+        .onAfterClose$.subscribe((result: UserClickOn | string) => {
           if (typeof result !== 'string') {
             return subscriber.next(false);
           }
           this.subventionRequestService
             .cancelRequest(this.requestId, result)
-            .pipe(
-              take(1)
-            )
+            .pipe(take(1))
             .subscribe(subscriber);
         });
       return () => {
@@ -118,16 +136,13 @@ export class SubventionRequestAid extends SearchableCloneable<SubventionRequestA
     return new Observable((subscriber) => {
       const sub = this.subventionRequestService
         .openDeleteDialog(this)
-        .onAfterClose$
-        .subscribe((result: UserClickOn | string) => {
+        .onAfterClose$.subscribe((result: UserClickOn | string) => {
           if (typeof result !== 'string') {
             return subscriber.next(false);
           }
           this.subventionRequestService
             .deleteRequest(this.requestId, result)
-            .pipe(
-              take(1)
-            )
+            .pipe(take(1))
             .subscribe(subscriber);
         });
       return () => {
@@ -137,6 +152,8 @@ export class SubventionRequestAid extends SearchableCloneable<SubventionRequestA
   }
 
   notUnderProcess(): boolean {
-    return this.statusInfo.lookupKey !== SubventionRequestStatus.UNDER_PROCESSING;
+    return (
+      this.statusInfo.lookupKey !== SubventionRequestStatus.UNDER_PROCESSING
+    );
   }
 }
