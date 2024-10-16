@@ -1,23 +1,32 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
-  <h1 class="h6 text-white">{{lang.map[titleKey]}}</h1>
-  <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="false"
-          aria-label="Close"></button>
+  <h1 class="h6 text-white">{{ lang.map[titleKey] }}</h1>
+  <button
+    type="button"
+    class="btn-close btn-close-white"
+    tabindex="-1"
+    [dialogClose]="false"
+    aria-label="Close"
+  ></button>
 </div>
 <div class="dialog-content no-fixed-height">
   <div class="col-12">
-    <file-uploader [labelKey]="'qcb_document'" fileInputKey="upload_file" [allowedExtensions]="extensions"
-                   [allowRemoveLoadedFile]="false" [isRequired]="true" [allowedFileSize]="allowedFileMaxSize"
-                   (fileUploadEvent)="setFile($event)">
-    </file-uploader>
-  </div>
-  <div class="col-12">
-    <file-uploader [labelKey]="'qcb_consent_document'" fileInputKey="upload_file" [allowedExtensions]="extensions"
-                   [allowRemoveLoadedFile]="false" [isRequired]="true" [allowedFileSize]="allowedFileMaxSize"
-                   (fileUploadEvent)="setConsentFile($event)">
+    <file-uploader
+      [labelKey]="'qcb_document'"
+      fileInputKey="upload_file"
+      [allowedExtensions]="extensions"
+      [allowRemoveLoadedFile]="false"
+      [isRequired]="true"
+      [allowedFileSize]="allowedFileMaxSize"
+      (fileUploadEvent)="setFile($event)"
+    >
     </file-uploader>
   </div>
 </div>
 <div class="dialog-actions">
-  <button (click)="uploadFile()" class="btn btn-primary">{{lang.map.upload}}</button>
-  <button (click)="closeDialog()" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+  <button (click)="uploadFile()" class="btn btn-primary">
+    {{ lang.map.upload }}
+  </button>
+  <button (click)="closeDialog()" class="btn btn-secondary">
+    {{ lang.map.btn_cancel }}
+  </button>
 </div>

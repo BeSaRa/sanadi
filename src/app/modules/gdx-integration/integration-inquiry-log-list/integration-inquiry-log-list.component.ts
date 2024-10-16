@@ -1,34 +1,36 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {BehaviorSubject, of, Subject} from 'rxjs';
-import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
-import {LangService} from '@services/lang.service';
-import {BeneficiaryService} from '@services/beneficiary.service';
-import {EmployeeService} from '@services/employee.service';
-import {ToastService} from '@services/toast.service';
-import {Beneficiary} from '@app/models/beneficiary';
-import {GdxServiceLog} from '@app/models/gdx-service-log';
-import {UntypedFormControl} from '@angular/forms';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {SortEvent} from '@contracts/sort-event';
-import {CommonUtils} from '@helpers/common-utils';
-import {DateUtils} from '@helpers/date-utils';
-import {exhaustMap, filter, takeUntil} from 'rxjs/operators';
-import {IGdxCriteria} from '@contracts/i-gdx-criteria';
-import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { BehaviorSubject, of, Subject } from 'rxjs';
+import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
+import { LangService } from '@services/lang.service';
+import { BeneficiaryService } from '@services/beneficiary.service';
+import { EmployeeService } from '@services/employee.service';
+import { ToastService } from '@services/toast.service';
+import { Beneficiary } from '@app/models/beneficiary';
+import { GdxServiceLog } from '@app/models/gdx-service-log';
+import { UntypedFormControl } from '@angular/forms';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { SortEvent } from '@contracts/sort-event';
+import { CommonUtils } from '@helpers/common-utils';
+import { DateUtils } from '@helpers/date-utils';
+import { exhaustMap, filter, takeUntil } from 'rxjs/operators';
+import { IGdxCriteria } from '@contracts/i-gdx-criteria';
+import { BeneficiaryIdTypes } from '@app/enums/beneficiary-id-types.enum';
+import { SubventionRequestAid } from '@app/models/subvention-request-aid';
 
 @Component({
   selector: 'integration-inquiry-log-list',
   templateUrl: './integration-inquiry-log-list.component.html',
-  styleUrls: ['./integration-inquiry-log-list.component.scss']
+  styleUrls: ['./integration-inquiry-log-list.component.scss'],
 })
 export class IntegrationInquiryLogListComponent {
   private destroy$: Subject<void> = new Subject();
 
-  constructor(public lang: LangService,
-              private beneficiaryService: BeneficiaryService,
-              private employeeService: EmployeeService,
-              private toast: ToastService) {
-  }
+  constructor(
+    public lang: LangService,
+    private beneficiaryService: BeneficiaryService,
+    private employeeService: EmployeeService,
+    private toast: ToastService
+  ) {}
 
   ngOnInit(): void {
     this._listenToAddInquiry();
@@ -49,17 +51,34 @@ export class IntegrationInquiryLogListComponent {
 
   @Input() gdxServiceId!: GdxServicesEnum;
   @Input() beneficiary!: Beneficiary;
-  @Output() onSelect: EventEmitter<GdxServiceLog> = new EventEmitter<GdxServiceLog>();
-  @Output() onDownload: EventEmitter<GdxServiceLog> = new EventEmitter<GdxServiceLog>();
-  @Output() onLoadDone: EventEmitter<GdxServicesEnum> = new EventEmitter<GdxServicesEnum>();
-  @Output() onReady: EventEmitter<GdxServicesEnum> = new EventEmitter<GdxServicesEnum>();
+  @Input() requests: SubventionRequestAid[] = [];
+  @Output() onSelect: EventEmitter<GdxServiceLog> =
+    new EventEmitter<GdxServiceLog>();
+  @Output() onDownload: EventEmitter<GdxServiceLog> =
+    new EventEmitter<GdxServiceLog>();
+  @Output() onLoadDone: EventEmitter<GdxServicesEnum> =
+    new EventEmitter<GdxServicesEnum>();
+  @Output() onReady: EventEmitter<GdxServicesEnum> =
+    new EventEmitter<GdxServicesEnum>();
 
   headerColumn: string[] = ['extra-header'];
-  private _displayedColumns: string[] = ['workItemStatus', 'organization', 'user', 'actionTime', 'actions'];
+  private _displayedColumns: string[] = [
+    'workItemStatus',
+    'organization',
+    'user',
+    'actionTime',
+    'actions',
+  ];
 
   get displayedColumns(): string[] {
     if (this.gdxServiceId === GdxServicesEnum.IZZAB) {
-      return ['workItemStatus', 'izzabEstateStatus', 'organization', 'user', 'actionTime'];
+      return [
+        'workItemStatus',
+        'izzabEstateStatus',
+        'organization',
+        'user',
+        'actionTime',
+      ];
     }
     return this._displayedColumns;
   }
@@ -77,7 +96,7 @@ export class IntegrationInquiryLogListComponent {
       label: 'select',
       show: () => GdxServicesEnum.QCB !== this.gdxServiceId,
       disabled: (item) => !item.viewable,
-      onClick: (item: GdxServiceLog) => this.selectLog(item)
+      onClick: (item: GdxServiceLog) => this.selectLog(item),
     },
     // download
     {
@@ -85,26 +104,46 @@ export class IntegrationInquiryLogListComponent {
       label: 'view_report',
       show: () => this.hasDownloadGdx.includes(this.gdxServiceId),
       // disabled: (item) => !item.viewable,
-      onClick: (item: GdxServiceLog) => this.downloadDoc(item)
-    }
+      onClick: (item: GdxServiceLog) => this.downloadDoc(item),
+    },
   ];
 
   sortingCallbacks = {
-    organization: (a: GdxServiceLog, b: GdxServiceLog, dir: SortEvent): number => {
-      const value1 = !CommonUtils.isValidValue(a) ? '' : a.orgInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgInfo?.getName().toLowerCase();
+    organization: (
+      a: GdxServiceLog,
+      b: GdxServiceLog,
+      dir: SortEvent
+    ): number => {
+      const value1 = !CommonUtils.isValidValue(a)
+          ? ''
+          : a.orgInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b)
+          ? ''
+          : b.orgInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     user: (a: GdxServiceLog, b: GdxServiceLog, dir: SortEvent): number => {
-      const value1 = !CommonUtils.isValidValue(a) ? '' : a.orgUserInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgUserInfo?.getName().toLowerCase();
+      const value1 = !CommonUtils.isValidValue(a)
+          ? ''
+          : a.orgUserInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b)
+          ? ''
+          : b.orgUserInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    actionTime: (a: GdxServiceLog, b: GdxServiceLog, dir: SortEvent): number => {
-      const value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.actionTime),
-        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.actionTime);
+    actionTime: (
+      a: GdxServiceLog,
+      b: GdxServiceLog,
+      dir: SortEvent
+    ): number => {
+      const value1 = !CommonUtils.isValidValue(a)
+          ? ''
+          : DateUtils.getTimeStampFromDate(a.actionTime),
+        value2 = !CommonUtils.isValidValue(b)
+          ? ''
+          : DateUtils.getTimeStampFromDate(b.actionTime);
       return CommonUtils.getSortValue(value1, value2, dir.direction);
-    }
+    },
   };
 
   private selectLog(record: GdxServiceLog): void {
@@ -123,19 +162,29 @@ export class IntegrationInquiryLogListComponent {
         request = this.beneficiaryService.addMOJInquiry(this._getGDXCriteria());
         break;
       case GdxServicesEnum.MOCI:
-        request = this.beneficiaryService.addMOCIInquiry(this._getGDXCriteria());
+        request = this.beneficiaryService.addMOCIInquiry(
+          this._getGDXCriteria()
+        );
         break;
       case GdxServicesEnum.MAWARED:
-        request = this.beneficiaryService.addMAWAREDInquiry(this._getGDXCriteria());
+        request = this.beneficiaryService.addMAWAREDInquiry(
+          this._getGDXCriteria()
+        );
         break;
       case GdxServicesEnum.GARSIA:
-        request = this.beneficiaryService.addGarsiaInquiry(this._getGDXCriteria());
+        request = this.beneficiaryService.addGarsiaInquiry(
+          this._getGDXCriteria()
+        );
         break;
       case GdxServicesEnum.IZZAB:
-        request = this.beneficiaryService.addIzzabInquiry(this._getGDXCriteria());
+        request = this.beneficiaryService.addIzzabInquiry(
+          this._getGDXCriteria()
+        );
         break;
       case GdxServicesEnum.KAHRAMAA:
-        request = this.beneficiaryService.addKahramaaInquiry(this._getGDXCriteria());
+        request = this.beneficiaryService.addKahramaaInquiry(
+          this._getGDXCriteria()
+        );
         break;
       case GdxServicesEnum.MOL:
         request = this.beneficiaryService.addMOLInquiry(this._getGDXCriteria());
@@ -144,31 +193,50 @@ export class IntegrationInquiryLogListComponent {
         request = this.beneficiaryService.addSJCInquiry(this._getGDXCriteria());
         break;
       case GdxServicesEnum.MOE:
-        request = this.beneficiaryService.addMOEPendingInstallments(this._getGDXCriteria());
+        request = this.beneficiaryService.addMOEPendingInstallments(
+          this._getGDXCriteria()
+        );
         break;
       case GdxServicesEnum.MME:
-        request = this.beneficiaryService.addMMELeasedContract(this._getGDXCriteria());
+        request = this.beneficiaryService.addMMELeasedContract(
+          this._getGDXCriteria()
+        );
         break;
       case GdxServicesEnum.QATAR_CHARITY:
-        request = this.beneficiaryService.addQatarCharityInquiry(this._getGDXCriteria());
+        request = this.beneficiaryService.addQatarCharityInquiry(
+          this._getGDXCriteria()
+        );
         break;
       case GdxServicesEnum.EID_CHARITABLE_FOUNDATION:
-        request = this.beneficiaryService.addEidCharitableFoundationInquiry(this._getGDXCriteria());
+        request = this.beneficiaryService.addEidCharitableFoundationInquiry(
+          this._getGDXCriteria()
+        );
         break;
       case GdxServicesEnum.QATAR_RED_CRESCENT:
-        request = this.beneficiaryService.addQatarRedCrescentInquiry(this._getGDXCriteria());
+        request = this.beneficiaryService.addQatarRedCrescentInquiry(
+          this._getGDXCriteria()
+        );
         break;
       case GdxServicesEnum.HOUSING_BENEFICIARY_STATUS:
-        request = this.beneficiaryService.addHousingBenStatusInquiry(this._getGDXCriteria());
+        request = this.beneficiaryService.addHousingBenStatusInquiry(
+          this._getGDXCriteria()
+        );
         break;
       case GdxServicesEnum.SECURITY_BENEFICIARY_STATUS:
-        request = this.beneficiaryService.addSecurityBenStatusInquiry(this._getGDXCriteria());
+        request = this.beneficiaryService.addSecurityBenStatusInquiry(
+          this._getGDXCriteria()
+        );
         break;
       case GdxServicesEnum.QCB:
-        request = this.beneficiaryService.addQCBInquiryReport(this._getGDXCriteria());
+        request = this.beneficiaryService.addQCBInquiryReport(
+          this._getGDXCriteria(),
+          this.requests
+        );
         break;
       case GdxServicesEnum.QCB_IBAN:
-        request = this.beneficiaryService.addQCBIbanInquiry(this._getGDXCriteria());
+        request = this.beneficiaryService.addQCBIbanInquiry(
+          this._getGDXCriteria()
+        );
         break;
       default:
         request = null;
@@ -196,7 +264,7 @@ export class IntegrationInquiryLogListComponent {
     this.reload$
       .pipe(
         takeUntil(this.destroy$),
-        filter(val => val !== 'init')
+        filter((val) => val !== 'init')
       )
       .subscribe(() => {
         this._loadGDXIntegrationData();
@@ -207,7 +275,7 @@ export class IntegrationInquiryLogListComponent {
     return {
       qId: this.getBeneficiaryQID(),
       gdxServiceId: this.gdxServiceId,
-      benId: this.beneficiary.id
+      benId: this.beneficiary.id,
     };
   }
 
@@ -217,7 +285,10 @@ export class IntegrationInquiryLogListComponent {
     }
     if (this.beneficiary.benPrimaryIdType === BeneficiaryIdTypes.QID) {
       return this.beneficiary.benPrimaryIdNumber;
-    } else if (this.beneficiary.benSecIdNumber && Number(this.beneficiary.benSecIdType) === BeneficiaryIdTypes.QID) {
+    } else if (
+      this.beneficiary.benSecIdNumber &&
+      Number(this.beneficiary.benSecIdType) === BeneficiaryIdTypes.QID
+    ) {
       return this.beneficiary.benSecIdNumber;
     } else {
       return '';
@@ -230,7 +301,8 @@ export class IntegrationInquiryLogListComponent {
     }
     const criteria = this._getGDXCriteria();
     criteria.orgUserId = this.employeeService.getExternalUser()?.id;
-    this.beneficiaryService.loadGDXIntegrationData(criteria)
+    this.beneficiaryService
+      .loadGDXIntegrationData(criteria)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result) => {
         this.logsList = result;
@@ -240,6 +312,9 @@ export class IntegrationInquiryLogListComponent {
   }
 
   izzabHasEstate(record: GdxServiceLog): boolean {
-    return this.gdxServiceId === GdxServicesEnum.IZZAB && record.gdxServiceResponseParsed.hasIzzab;
+    return (
+      this.gdxServiceId === GdxServicesEnum.IZZAB &&
+      record.gdxServiceResponseParsed.hasIzzab
+    );
   }
 }
