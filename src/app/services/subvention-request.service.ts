@@ -23,41 +23,45 @@ import { Beneficiary } from '@app/models/beneficiary';
 import { HasInterception, InterceptParam } from '@decorators/intercept-model';
 import { BlobModel } from '@app/models/blob-model';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CrudGenericService } from "@app/generics/crud-generic-service";
-import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
-import { Pagination } from "@app/models/pagination";
+import { CrudGenericService } from '@app/generics/crud-generic-service';
+import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
+import { Pagination } from '@app/models/pagination';
 
 @CastResponseContainer({
   $default: {
-    model: () => SubventionRequest
+    model: () => SubventionRequest,
   },
   _loadSubventionRequestAuditData: {
-    model: () => SanadiAuditResult
+    model: () => SanadiAuditResult,
   },
   $pagination: {
     model: () => Pagination,
-    shape: { 'rs.*': () => SubventionRequest }
-  }
+    shape: { 'rs.*': () => SubventionRequest },
+  },
 })
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SubventionRequestService extends CrudGenericService<SubventionRequest> {
   list!: SubventionRequest[];
 
-  constructor(private urlService: UrlService,
-              public http: HttpClient,
-              private domSanitizer: DomSanitizer,
-              private langService: LangService,
-              private subventionAidService: SubventionAidService,
-              private subventionRequestAidService: SubventionRequestAidService,
-              private subventionLogService: SubventionLogService,
-              private dialogService: DialogService) {
+  constructor(
+    private urlService: UrlService,
+    public http: HttpClient,
+    private domSanitizer: DomSanitizer,
+    private langService: LangService,
+    private subventionAidService: SubventionAidService,
+    private subventionRequestAidService: SubventionRequestAidService,
+    private subventionLogService: SubventionLogService,
+    private dialogService: DialogService
+  ) {
     super();
     FactoryService.registerService('SubventionRequestService', this);
   }
 
-  loadSubventionRequestAidByBeneficiaryId(beneficiaryId: number): Observable<SubventionRequestAid[]> {
+  loadSubventionRequestAidByBeneficiaryId(
+    beneficiaryId: number
+  ): Observable<SubventionRequestAid[]> {
     return this.subventionRequestAidService.loadByBeneficiaryId(beneficiaryId);
   }
 
@@ -74,69 +78,100 @@ export class SubventionRequestService extends CrudGenericService<SubventionReque
   }
 
   loadByBeneficiaryIdAsBlob(beneficiaryId: number): Observable<Blob> {
-    return this.http.get(this._getServiceURL() + '/sub-aids/beneficiary/' + beneficiaryId + '/export?lang=' + this.langService.getPrintingLanguage(), { responseType: 'blob' });
+    return this.http.get(
+      this._getServiceURL() +
+        '/sub-aids/beneficiary/' +
+        beneficiaryId +
+        '/export?lang=' +
+        this.langService.getPrintingLanguage(),
+      { responseType: 'blob' }
+    );
   }
 
   loadByRequestIdAsBlob(requestId: number): Observable<Blob> {
-    return this.http.get(this._getServiceURL() + '/' + requestId + '/export?lang=' + this.langService.getPrintingLanguage(), { responseType: 'blob' });
+    return this.http.get(
+      this._getServiceURL() +
+        '/' +
+        requestId +
+        '/export?lang=' +
+        this.langService.getPrintingLanguage(),
+      { responseType: 'blob' }
+    );
   }
 
-  loadSubventionAidByCriteria(criteria: { benId?: any, requestId?: any }): Observable<SubventionAid[]> {
+  loadSubventionAidByCriteria(criteria: {
+    benId?: any;
+    requestId?: any;
+  }): Observable<SubventionAid[]> {
     return this.subventionAidService.loadByCriteria(criteria);
   }
 
-  loadByCriteria(criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
+  loadByCriteria(
+    criteria: Partial<ISubventionRequestCriteria>
+  ): Observable<SubventionRequestAid[]> {
     return this.subventionRequestAidService.loadByCriteria(criteria);
   }
 
-  loadByCriteriaAsBlob(criteria: Partial<ISubventionRequestCriteria>): Observable<Blob> {
+  loadByCriteriaAsBlob(
+    criteria: Partial<ISubventionRequestCriteria>
+  ): Observable<Blob> {
     criteria.lang = this.langService.getPrintingLanguage();
     return this.subventionRequestAidService.loadByCriteriaAsBlob(criteria);
   }
 
   @CastResponse(undefined)
   loadUnderProcess(): Observable<SubventionRequest[]> {
-    return this.http.get<SubventionRequest[]>(this._getServiceURL() + '/active-requests');
+    return this.http.get<SubventionRequest[]>(
+      this._getServiceURL() + '/active-requests'
+    );
   }
 
   openLogDialog(requestId: number): Observable<DialogRef> {
-    return this.subventionLogService.loadByRequestId(requestId)
-      .pipe(
-        switchMap((logList: SubventionLog[]) => {
-          return of(this.dialogService.show(SubventionLogPopupComponent, {
+    return this.subventionLogService.loadByRequestId(requestId).pipe(
+      switchMap((logList: SubventionLog[]) => {
+        return of(
+          this.dialogService.show(SubventionLogPopupComponent, {
             requestId,
-            logList
-          }));
-        })
-      );
+            logList,
+          })
+        );
+      })
+    );
   }
 
   openAidDialog(requestId: number, isPartial: boolean): Observable<DialogRef> {
-    return this.loadSubventionAidByCriteria({ requestId })
-      .pipe(
-        switchMap((aidList: SubventionAid[]) => {
-          return of(this.dialogService.show<{ aidList: SubventionAid[], isPartial: boolean }>(SubventionAidPopupComponent, {
-              aidList,
-              isPartial
-            })
-          );
-        })
-      );
+    return this.loadSubventionAidByCriteria({ requestId }).pipe(
+      switchMap((aidList: SubventionAid[]) => {
+        return of(
+          this.dialogService.show<{
+            aidList: SubventionAid[];
+            isPartial: boolean;
+          }>(SubventionAidPopupComponent, {
+            aidList,
+            isPartial,
+          })
+        );
+      })
+    );
   }
 
-  openCancelDialog(request: SubventionRequest | SubventionRequestAid): DialogRef {
+  openCancelDialog(
+    request: SubventionRequest | SubventionRequestAid
+  ): DialogRef {
     return this.dialogService.show(ReasonPopupComponent, {
       record: request,
       titleText: request.requestFullSerial,
-      submitButtonKey: 'btn_cancel'
+      submitButtonKey: 'btn_cancel',
     });
   }
 
-  openDeleteDialog(request: SubventionRequest | SubventionRequestAid): DialogRef {
+  openDeleteDialog(
+    request: SubventionRequest | SubventionRequestAid
+  ): DialogRef {
     return this.dialogService.show(ReasonPopupComponent, {
       record: request,
       titleText: request.requestFullSerial,
-      submitButtonKey: 'btn_delete'
+      submitButtonKey: 'btn_delete',
     });
   }
 
@@ -144,7 +179,7 @@ export class SubventionRequestService extends CrudGenericService<SubventionReque
   cancelRequest(requestId: number, reason: string): Observable<boolean> {
     return this.http.put<boolean>(this._getServiceURL() + '/cancel', {
       requestId: requestId,
-      reason
+      reason,
     });
   }
 
@@ -152,7 +187,7 @@ export class SubventionRequestService extends CrudGenericService<SubventionReque
   deleteRequest(requestId: number, reason: string): Observable<boolean> {
     return this.http.put<boolean>(this._getServiceURL() + '/delete', {
       requestId: requestId,
-      reason
+      reason,
     });
   }
 
@@ -161,37 +196,65 @@ export class SubventionRequestService extends CrudGenericService<SubventionReque
    * @param requestId
    */
   @CastResponse(() => SanadiAuditResult)
-  private _loadSubventionRequestAuditData(requestId: number): Observable<SanadiAuditResult[]> {
-    return this.http.get<SanadiAuditResult[]>(this._getServiceURL() + '/audit/' + requestId)
+  private _loadSubventionRequestAuditData(
+    requestId: number
+  ): Observable<SanadiAuditResult[]> {
+    return this.http.get<SanadiAuditResult[]>(
+      this._getServiceURL() + '/audit/' + requestId
+    );
   }
 
   /**
    * @description Loads the subvention request audit data by request id
    * @param requestId
    */
-  loadSubventionRequestAuditData(requestId: number): Observable<SanadiAuditResult[]> {
-    return this._loadSubventionRequestAuditData(requestId).pipe(map(result => result.map(item => {
-      item.auditEntity = 'SUBVENTION_REQUEST';
-      return item
-    })))
+  loadSubventionRequestAuditData(
+    requestId: number
+  ): Observable<SanadiAuditResult[]> {
+    return this._loadSubventionRequestAuditData(requestId).pipe(
+      map((result) =>
+        result.map((item) => {
+          item.auditEntity = 'SUBVENTION_REQUEST';
+          return item;
+        })
+      )
+    );
   }
 
   @CastResponse(undefined)
-  private _loadSubventionRequestAuditDetails(auditId: number): Observable<SubventionRequest> {
-    return this.http.get<SubventionRequest>(this._getServiceURL() + '/audit/updates/' + auditId)
+  private _loadSubventionRequestAuditDetails(
+    auditId: number
+  ): Observable<SubventionRequest> {
+    return this.http.get<SubventionRequest>(
+      this._getServiceURL() + '/audit/updates/' + auditId
+    );
   }
 
-  loadSubventionRequestAuditDetails(auditId: number): Observable<SubventionRequest> {
+  loadSubventionRequestAuditDetails(
+    auditId: number
+  ): Observable<SubventionRequest> {
     return this._loadSubventionRequestAuditDetails(auditId);
   }
 
   @HasInterception
-  loadDisclosureFormAsBlob(@InterceptParam() beneficiary: Beneficiary): Observable<BlobModel> {
-    return this.http.post(this._getServiceURL() + '/beneficiary/nda-form/export', beneficiary, { responseType: 'blob' })
+  loadDisclosureFormAsBlob(
+    @InterceptParam() beneficiary: Beneficiary
+  ): Observable<BlobModel> {
+    return this.http
+      .post(
+        this._getServiceURL() + '/beneficiary/nda-form/export',
+        beneficiary,
+        { responseType: 'blob' }
+      )
       .pipe(
-        map(blob => new BlobModel(blob, this.domSanitizer),
-          catchError(_ => {
-            return of(new BlobModel(new Blob([], { type: 'error' }), this.domSanitizer));
-          })))
+        map(
+          (blob) => new BlobModel(blob, this.domSanitizer),
+          catchError((_) => {
+            return of(
+              new BlobModel(new Blob([], { type: 'error' }), this.domSanitizer)
+            );
+          })
+        )
+      );
   }
 }
