@@ -43,6 +43,7 @@ export class QcbFilesPopupComponent {
   ) {
     this.titleKey = data.title ?? 'file_uploader';
     this.extensions = data.extensions ?? [FileExtensionsEnum.PDF];
+    this.requests = data.requests ?? [];
   }
 
   uploadFile(): void {
@@ -66,11 +67,11 @@ export class QcbFilesPopupComponent {
               vsid: disclosureFormDoc.vsId,
             });
           } else {
-            this.dialog.error(this.lang.map.non_disclosure);
+            this.dialog.error(this.lang.map.no_disclosure_existed);
           }
         });
     } else {
-      this.dialog.error(this.lang.map.non_disclosure);
+      this.dialog.error(this.lang.map.no_disclosure_existed);
     }
   }
 
