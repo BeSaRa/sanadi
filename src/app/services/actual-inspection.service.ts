@@ -36,7 +36,7 @@ import { InspectionDocumentService } from "./Inspection-document.service";
   }
 })
 @Injectable({
-  providedIn:'root'
+  providedIn: 'root'
 })
 export class ActualInspectionService extends CrudWithDialogGenericService<ActualInspection> {
 
@@ -44,10 +44,10 @@ export class ActualInspectionService extends CrudWithDialogGenericService<Actual
   documentService = new InspectionDocumentService(this);
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              public dialog: DialogService,
-              public domSanitizer: DomSanitizer,
-            ) {
+    private urlService: UrlService,
+    public dialog: DialogService,
+    public domSanitizer: DomSanitizer,
+  ) {
     super();
     FactoryService.registerService('ActualInspectionService', this);
   }
@@ -63,9 +63,9 @@ export class ActualInspectionService extends CrudWithDialogGenericService<Actual
   _getServiceURL(): string {
     return this.urlService.URLS.ACTUAL_INSPECTION;
   }
- 
 
-  
+
+
   openViewDialog(modelId: number): Observable<DialogRef> {
     return this.getByIdComposite(modelId).pipe(
       switchMap((ActualInspection: ActualInspection) => {
@@ -76,117 +76,118 @@ export class ActualInspectionService extends CrudWithDialogGenericService<Actual
       })
     );
   }
-  
+
   @HasInterception
   @CastResponse(undefined)
   create(@InterceptParam() model: ActualInspection): Observable<ActualInspection> {
-    return this.http.post<ActualInspection>(this._getServiceURL() , model);
+    return this.http.post<ActualInspection>(this._getServiceURL(), model);
   }
 
   @HasInterception
   @CastResponse(undefined)
   start(@InterceptParam() model: ActualInspection): Observable<ActualInspection> {
-    return this.http.post<ActualInspection>(this._getServiceURL()+`/start/${model.id}` ,{});
+    return this.http.post<ActualInspection>(this._getServiceURL() + `/start/${model.id}`, {});
   }
   @HasInterception
   @CastResponse(undefined)
   complete(@InterceptParam() model: ActualInspection): Observable<ActualInspection> {
-    return this.http.post<ActualInspection>(this._getServiceURL() +`/complete/${model.id}` , {});
+    return this.http.post<ActualInspection>(this._getServiceURL() + `/complete/${model.id}`, {});
   }
   @HasInterception
   @CastResponse(undefined)
-  reject(@InterceptParam() model: ActualInspection,rejectReason:string): Observable<ActualInspection> {
-    return this.http.delete<ActualInspection>(this._getServiceURL() +`/${model.id}/reason` , 
-    {
-      params: new HttpParams({
-        fromObject:{
-          rejectReason
-        }
-      })
-    });
+  reject(@InterceptParam() model: ActualInspection, rejectReason: string): Observable<ActualInspection> {
+    return this.http.delete<ActualInspection>(this._getServiceURL() + `/${model.id}/reason`,
+      {
+        params: new HttpParams({
+          fromObject: {
+            rejectReason
+          }
+        })
+      });
   }
   @HasInterception
   @CastResponse(undefined)
-  rejectBulk(ids:number[],rejectReason:string): Observable<ActualInspection> {
-    return this.http.delete<ActualInspection>(this._getServiceURL() +`/bulk/reason` , 
-    {
-      body:ids,
-      params: new HttpParams({
-        fromObject:{
-          rejectReason
-        }
-      })
-    });
+  rejectBulk(ids: number[], rejectReason: string): Observable<ActualInspection> {
+    return this.http.delete<ActualInspection>(this._getServiceURL() + `/bulk/reason`,
+      {
+        body: ids,
+        params: new HttpParams({
+          fromObject: {
+            rejectReason
+          }
+        })
+      });
   }
   @CastResponse(undefined, {
     fallback: '$default',
     unwrap: 'rs'
   })
-   loadByInspector(): Observable<ActualInspection[]> {
+  loadByInspector(): Observable<ActualInspection[]> {
     return this.http.get<ActualInspection[]>(this._getServiceURL() + `/inspector`);
   }
   @CastResponse(undefined, {
     fallback: '$default',
     unwrap: 'rs'
   })
-   licenseActivitiesSearch(caseType:number,fullSerial?:string): Observable<LicenseActivity[]> {
-    return this.http.get<LicenseActivity[]>(this._getServiceURL() + `/license-activity/search`,{
+  licenseActivitiesSearch(caseType: number, fullSerialNumber?: string): Observable<LicenseActivity[]> {
+    return this.http.get<LicenseActivity[]>(this._getServiceURL() + `/license-activity/search`, {
       params: new HttpParams({
-        fromObject:{
-          caseType
-        }
+        fromObject: !!fullSerialNumber ? {
+          caseType,
+          fullSerialNumber
+        } : { caseType }
       })
     });
   }
-  
-  showCreateActualInspectionPopup(creationSource:ActualInspectionCreationSource,model:ActualInspection){
-   return this.dialog.show<IDialogData<ActualInspection>>(ActualInspectionPopupComponent, {
+
+  showCreateActualInspectionPopup(creationSource: ActualInspectionCreationSource, model: ActualInspection) {
+    return this.dialog.show<IDialogData<ActualInspection>>(ActualInspectionPopupComponent, {
       model,
       operation: OperationTypes.CREATE,
       creationSource: creationSource
     }).onAfterClose$
   }
-  showViewActualInspectionPopup(model:ActualInspection){
+  showViewActualInspectionPopup(model: ActualInspection) {
     return this.dialog.show<IDialogData<ActualInspection>>(ManageInspectionPopupComponent, {
-       model,
-       operation: OperationTypes.VIEW,
-       readonly:true
-      
-     })
-   }
-  showUpdateActualInspectionPopup(model:ActualInspection){
-   return this.dialog.show<IDialogData<ActualInspection>>(ManageInspectionPopupComponent, {
       model,
-      operation: OperationTypes.UPDATE,
-      readonly:false
-     
+      operation: OperationTypes.VIEW,
+      readonly: true
+
     })
   }
- 
-  @HasInterception
-    AddSpecialist( @InterceptParam()model: InspectionSpecialist,parent:ActualInspection) {
-    model.actualInspection = {id:parent.id} as ActualInspection
-    return this.http.post<{sc:number,rs:number}>(this._getServiceURL()+'/specialist' , model)
-    .pipe(map(result => result.rs));
+  showUpdateActualInspectionPopup(model: ActualInspection) {
+    return this.dialog.show<IDialogData<ActualInspection>>(ManageInspectionPopupComponent, {
+      model,
+      operation: OperationTypes.UPDATE,
+      readonly: false
+
+    })
   }
- 
+
   @HasInterception
-  updateSpecialist(@InterceptParam() model: InspectionSpecialist,parent:ActualInspection) {
+  AddSpecialist(@InterceptParam() model: InspectionSpecialist, parent: ActualInspection) {
+    model.actualInspection = { id: parent.id } as ActualInspection
+    return this.http.post<{ sc: number, rs: number }>(this._getServiceURL() + '/specialist', model)
+      .pipe(map(result => result.rs));
+  }
+
+  @HasInterception
+  updateSpecialist(@InterceptParam() model: InspectionSpecialist, parent: ActualInspection) {
     model.actualInspection = new ActualInspectionInterceptor().send(parent) as ActualInspection
-    return this.http.put<InspectionSpecialist>(this._getServiceURL()+'/specialist' , model);
+    return this.http.put<InspectionSpecialist>(this._getServiceURL() + '/specialist', model);
   }
- 
-  deleteSpecialist(id:number) {
-    return this.http.delete<InspectionSpecialist>(this._getServiceURL()+`/specialist/${id}`);
+
+  deleteSpecialist(id: number) {
+    return this.http.delete<InspectionSpecialist>(this._getServiceURL() + `/specialist/${id}`);
   }
   @HasInterception
   @CastResponse(undefined)
-  changeInspector(@InterceptParam() model: ActualInspection,inspectorId: string): Observable<ActualInspection> {
-    return this.http.post<ActualInspection>(this._getServiceURL() +`/change-inspector` , {},{
+  changeInspector(@InterceptParam() model: ActualInspection, inspectorId: string): Observable<ActualInspection> {
+    return this.http.post<ActualInspection>(this._getServiceURL() + `/change-inspector`, {}, {
       params: new HttpParams({
-        fromObject:{
+        fromObject: {
           inspectorId,
-          actualId:model.id
+          actualId: model.id
         }
       })
     });
