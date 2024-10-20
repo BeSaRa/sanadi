@@ -1,18 +1,14 @@
-import { AfterViewInit, Component, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { ActualInspectionCreationSource } from '@app/enums/actual-inspection-creation-source.enum';
 import { LinkedProjectTypes } from '@app/enums/linked-project-type.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { TaskAreas } from '@app/enums/task-areas.enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { DateUtils } from '@app/helpers/date-utils';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { ActualInspection } from '@app/models/actual-inspection';
-import { BaseModel } from '@app/models/base-model';
 import { Country } from '@app/models/country';
-import { ExternalUser } from '@app/models/external-user';
 import { InspectionOperation } from '@app/models/inspection-operation';
 import { InspectionSpecialist } from '@app/models/inspection-specialist';
 import { InternalDepartment } from '@app/models/internal-department';
@@ -20,7 +16,6 @@ import { InternalUser } from '@app/models/internal-user';
 import { Lookup } from '@app/models/lookup';
 import { Profile } from '@app/models/profile';
 import { ProposedInspection } from '@app/models/proposed-inspection';
-import { InspectionDocumentService } from '@app/services/Inspection-document.service';
 import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { CountryService } from '@app/services/country.service';
 import { DialogService } from '@app/services/dialog.service';
@@ -39,7 +34,7 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { DatepickerControlsMap, DatepickerOptionsMap, TabMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { filter, map, scan, startWith, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
@@ -135,10 +130,13 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         this.departmentsList$ = this.internalDepartmentService.loadAsLookups()
         .pipe(
             tap(list =>{
-                const department = list.find(item => item.id === this.employeeService.getInternalDepartment()!.id)
-                department && (this.departmentIdControl.setValue(department.id) );
-                this.mainOperationTypeControl.setValue(this.model.mainOperationType)
-                this.subOperationTypeControl.setValue(this.model.subOperationType)
+                if(!this.model.proposedTaskSerial){
+                    const department = list.find(item => item.id === this.employeeService.getInternalDepartment()!.id)
+                    department && (this.departmentIdControl.setValue(department.id) );
+                    this.mainOperationTypeControl.setValue(this.model.mainOperationType)
+                    this.subOperationTypeControl.setValue(this.model.subOperationType)
+                }
+            
             }),
             takeUntil(this.destroy$),
         )
