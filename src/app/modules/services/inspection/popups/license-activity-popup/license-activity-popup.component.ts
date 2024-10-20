@@ -28,10 +28,10 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
     readonly = false
     serviceNumbers: number[] = []
     serviceControl!: UntypedFormControl;
-    unknownActivityControls:UntypedFormControl[]= [];
-    knownActivityControls:UntypedFormControl[]=[];
+    unknownActivityControls: UntypedFormControl[] = [];
+    knownActivityControls: UntypedFormControl[] = [];
     knownToggle$: Subject<void> = new Subject()
-    knownState$:Observable<boolean> = new Observable<boolean>()
+    knownState$: Observable<boolean> = new Observable<boolean>()
     constructor(
         public lang: LangService,
         private dialogRef: DialogRef,
@@ -62,24 +62,24 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
 
     private buildForm() {
         this.form = this.fb.group(this.model.buildForm(true))
-        this.unknownActivityControls=[this.activityNameControl, this.activityDescriptionControl];
-        this.knownActivityControls=[this.licenseNumberControl, this.licenseTypeControl];
+        this.unknownActivityControls = [this.activityNameControl, this.activityDescriptionControl];
+        this.knownActivityControls = [this.licenseNumberControl, this.licenseTypeControl];
         this.knownState$ = this.knownToggle$.pipe(
             scan((state, _) => !state, this.model.id ? !!this.model.licenseNumber : !this.model.activityName),
             startWith(this.model.id ? !!this.model.licenseNumber : !this.model.activityName),
             tap((state) => {
                 if (!state) {
-                    this.addValidators(this.unknownActivityControls,[CustomValidators.required]);
-                    this.removeValidators(this.knownActivityControls,[CustomValidators.required]);
-                 
-    
+                    this.addValidators(this.unknownActivityControls, [CustomValidators.required]);
+                    this.removeValidators(this.knownActivityControls, [CustomValidators.required]);
+
+
                 } else {
-                    this.addValidators(this.knownActivityControls,[CustomValidators.required]);
-                    this.removeValidators(this.unknownActivityControls,[CustomValidators.required]);
-                 
+                    this.addValidators(this.knownActivityControls, [CustomValidators.required]);
+                    this.removeValidators(this.unknownActivityControls, [CustomValidators.required]);
+
                 }
             })
-    
+
         )
         if (!this.model.licenseNumber) {
             this.knownToggle$.next()
@@ -95,10 +95,17 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
     }
 
     searchForLicense() {
-        this.actualInspectionService.licenseActivitiesSearch(this.serviceControl.value,)
+        this.actualInspectionService.licenseActivitiesSearch(this.serviceControl.value, this.licenseNumberControl.value)
             .pipe(
                 take(1),
+                tap((list) => {
+                    if (list.length === 1) {
+                        this._setLicense(list[0])
+                    }
+                }),
+                filter((list) => list.length > 1),
                 switchMap((list) => {
+
                     return this.dialog.show<IDialogData<LicenseActivity[]>>(SelectLicenseActivityPopupComponent, {
                         model: list,
                         operation: OperationTypes.VIEW
@@ -106,16 +113,20 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
                         .pipe(takeUntil(this.destroy$))
                         .pipe(filter((value: LicenseActivity): value is LicenseActivity => !!value))
                         .pipe(tap(item => {
-                            // this.model.licenseNumber = item.licenseNumber;
-                            this.licenseNumberControl.setValue(item.licenseNumber);
-                            this.licenseTypeControl.setValue(item.licenseType);
-                            // this.model.licenseType = item.licenseType;
-                            this.model.caseType = item.licenseType
+                            this._setLicense(item)
                         }))
                 }),
 
             )
             .subscribe()
+    }
+
+    private _setLicense(item: LicenseActivity) {
+        // this.model.licenseNumber = item.licenseNumber;
+        // this.model.licenseType = item.licenseType;
+        this.licenseNumberControl.setValue(item.licenseNumber);
+        this.licenseTypeControl.setValue(item.licenseType);
+        this.model.caseType = item.licenseType
     }
     get activityNameControl(): UntypedFormControl {
         return this.form.get('activityName') as UntypedFormControl;
@@ -131,13 +142,13 @@ export class LicenseActivityPopupComponent implements OnInit, OnDestroy {
     }
 
     private addValidators(controls: UntypedFormControl[], validators: ValidatorFn[]) {
-        controls.forEach(control=>{
+        controls.forEach(control => {
             control.addValidators(validators)
             control.updateValueAndValidity();
         })
     }
     private removeValidators(controls: UntypedFormControl[], validators: ValidatorFn[]) {
-        controls.forEach(control=>{
+        controls.forEach(control => {
             control.removeValidators(validators);
             control.reset();
             control.updateValueAndValidity();

@@ -57,7 +57,7 @@
                     for="licenseNumber">{{lang.map.license_number}}</label>
                 <div class="input-group">
                     <input id="licenseNumber" validationClasses="licenseNumber" formControlName="licenseNumber"
-                        class="form-control" readonly trimInput>
+                        class="form-control" [readOnly]="readonly" trimInput>
                     <button (click)="searchForLicense()" type="button" [disabled]="readonly || !serviceControl.value"
                         class="input-group-text">
                         <i class="mdi mdi-magnify text-primary"></i>
