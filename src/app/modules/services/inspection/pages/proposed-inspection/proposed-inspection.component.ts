@@ -171,7 +171,7 @@ export class ProposedInspectionComponent extends AdminGenericComponent<ProposedI
       ['rowSelection','taskSerialNumber', 'proposedTaskType', 'priority', 'departmentId','rejectionReason', 'status', 'actions'];
     this.searchColumns = this.isApproval ?
       ['_','search_proposedTaskType', 'search_priority', 'search_departments','____', 'search_status', 'search_actions'] :
-      ['_', 'search_proposedTaskType', 'search_priority', '__', '____','search_status', 'search_actions'];
+      ['_','_____', 'search_proposedTaskType', 'search_priority', '__', '____','search_status', 'search_actions'];
     this.buildFilterForm();
 
   }
