@@ -128,7 +128,7 @@
       </div>
 
       <div class="row">
-        <div class="col-sm-12 mt-2 form-check form-switch" *ngIf="!readonly">
+        <div class="col-sm-3 mt-2 form-check form-switch" *ngIf="!readonly">
           <div class="ms-3">
             <label class="form-check-label" for="unKnown">{{lang.map.lbl_unKnown}}</label>
             <input id="unKnown" class="form-check-input" type="checkbox" [checked]="unKnownState$ | async" tooltip="{{
@@ -139,9 +139,17 @@
 
           </div>
         </div>
+        <div class="col-9 mb-4 position-relative">
+          <label asteriskIfRequired="taskSubject" for="taskSubject" class="form-label">{{lang.map.lbl_task_subject
+            }}</label>
+          <textarea rows="5" id="taskSubject" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+            validationClasses="taskSubject" formControlName="taskSubject" class="form-control" trimInput></textarea>
+          <app-field-error-message controlName="taskSubject"></app-field-error-message>
+        </div>
         <span afterTemplate class="form-check form-switch switch-action" *ngIf="!readonly">
         </span>
       </div>
+
       <div class="row">
         <div class="col-sm-12 col-md-6 mb-3 position-relative">
           <label for="unknownOrgType" asteriskIfRequired="unknownOrgType" class="form-label">
@@ -293,15 +301,7 @@
       <div class="row">
         <license-activities formControlName="licenseActivities"></license-activities>
       </div>
-      <div class="row">
-        <div class="col-12 mb-4 position-relative">
-          <label asteriskIfRequired="taskSubject" for="taskSubject" class="form-label">{{lang.map.lbl_task_subject
-            }}</label>
-          <textarea rows="5" id="taskSubject" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-            validationClasses="taskSubject" formControlName="taskSubject" class="form-control" trimInput></textarea>
-          <app-field-error-message controlName="taskSubject"></app-field-error-message>
-        </div>
-      </div>
+    
     </form>
   </ng-template>
   <ng-template #attachmentsTabTemplate>
