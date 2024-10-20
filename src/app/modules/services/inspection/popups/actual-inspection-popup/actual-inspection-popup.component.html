@@ -17,13 +17,14 @@
   </div>
   <ng-template #basicInfoTabTemplate>
 
-    <form  novalidate autocomplete="off" [formGroup]="form">
+    <form novalidate autocomplete="off" [formGroup]="form">
       <div class="row" *ngIf="model.proposedInspectionTask">
         <div class="col-sm-6 mb-4 position-relative">
           <label for="proposedTaskType" class="form-label">
             {{lang.map.lbl_proposed_task}}
           </label>
-          <span id="proposedTaskType" class="form-control cursor-pointer text-decoration-underline input-disabled" (click)="showProposedTask()"
+          <span id="proposedTaskType" class="form-control cursor-pointer text-decoration-underline input-disabled"
+            (click)="showProposedTask()"
             [innerHTML]="  model.proposedInspectionTask?.proposedTaskTypeInfo?.getName() || '&nbsp;'"></span>
         </div>
       </div>
@@ -111,25 +112,19 @@
             validationClasses="operationDescription" class="form-control" trimInput id="operationDescription" />
           <app-field-error-message controlName="operationDescription"></app-field-error-message>
         </div>
-
-        <div class="col-sm-12 col-md-6 mb-3 position-relative">
-          <label for="knownOrgId" asteriskIfRequired="knownOrgId" class="form-label">{{
-            lang.map.lbl_organization_known_entities
+        <div class="col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="taskSubject" for="taskSubject" class="form-label">{{lang.map.lbl_task_subject
             }}</label>
-          <ng-select [selectOnTab]="true" labelForId="knownOrgId" [clearable]="true" placeholder="{{ lang.map.select }}"
-            id="knownOrgId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
-            formControlName="knownOrgId" validationClasses="knownOrgId">
-            <ng-option *ngFor="let option of profiles$ | async" [value]="option.id">
-              {{ option.getName() }}
-            </ng-option>
-          </ng-select>
-          <app-field-error-message controlName="knownOrgId"></app-field-error-message>
+          <textarea rows="5" id="taskSubject" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+            validationClasses="taskSubject" formControlName="taskSubject" class="form-control" trimInput></textarea>
+          <app-field-error-message controlName="taskSubject"></app-field-error-message>
         </div>
+
       </div>
 
       <div class="row">
-        <div class="col-sm-3 mt-2 form-check form-switch" *ngIf="!readonly">
-          <div class="ms-3">
+        <div class="col-sm-6 mt-2 ">
+          <div class="ms-3 form-check form-switch" *ngIf="!readonly">
             <label class="form-check-label" for="unKnown">{{lang.map.lbl_unKnown}}</label>
             <input id="unKnown" class="form-check-input" type="checkbox" [checked]="unKnownState$ | async" tooltip="{{
               (unKnownState$ | async)
@@ -138,13 +133,21 @@
             }}" (click)="!readonly && unKnownToggle$.next()" />
 
           </div>
+
         </div>
-        <div class="col-9 mb-4 position-relative">
-          <label asteriskIfRequired="taskSubject" for="taskSubject" class="form-label">{{lang.map.lbl_task_subject
+
+        <div class="col-sm-6">
+          <label for="knownOrgId" asteriskIfRequired="knownOrgId" class="form-label">{{
+            lang.map.lbl_organization_known_entities
             }}</label>
-          <textarea rows="5" id="taskSubject" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-            validationClasses="taskSubject" formControlName="taskSubject" class="form-control" trimInput></textarea>
-          <app-field-error-message controlName="taskSubject"></app-field-error-message>
+          <ng-select [selectOnTab]="true" labelForId="knownOrgId" [clearable]="true" placeholder="{{ lang.map.select }}"
+            id="knownOrgId" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly || (unKnownState$ | async)"
+            appendTo="body" formControlName="knownOrgId" validationClasses="knownOrgId">
+            <ng-option *ngFor="let option of profiles$ | async" [value]="option.id">
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="knownOrgId"></app-field-error-message>
         </div>
         <span afterTemplate class="form-check form-switch switch-action" *ngIf="!readonly">
         </span>
@@ -301,14 +304,14 @@
       <div class="row">
         <license-activities formControlName="licenseActivities"></license-activities>
       </div>
-    
+
     </form>
   </ng-template>
   <ng-template #attachmentsTabTemplate>
     <attachments [caseId]="model?.id?.toString()" [model]="model" [service]="model.service.documentService"
-    [disabled]="readonly"></attachments>
-</ng-template>
- 
+      [disabled]="readonly"></attachments>
+  </ng-template>
+
 
 </div>
 <div class="dialog-actions">
