@@ -1,4 +1,5 @@
 import { Component, Inject } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { InspectionSpecialist } from '@app/models/inspection-specialist';
@@ -15,6 +16,7 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 })
 export class InspectionSpecialistsPopupComponent {
     label: keyof ILanguageKeys = 'lbl_inspection_specialists';
+    filterControl: UntypedFormControl = new UntypedFormControl('');
 
     list: InternalUser[] = [
           ];
