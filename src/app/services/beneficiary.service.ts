@@ -449,10 +449,10 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     unwrap: 'rs',
     fallback: '$default',
   })
-  private addQCBInquiry(criteria: IGdxCriteria, file: File, consentFile: File) {
+  private addQCBInquiry(criteria: IGdxCriteria, file: File, vsId: string) {
     const formData = new FormData();
     file ? formData.append('content', file) : null;
-    file ? formData.append('consentFile', consentFile) : null;
+    // file ? formData.append('consentFile', consentFile) : null;
     formData.append(
       'entity',
       JSON.stringify({
@@ -461,6 +461,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
         qId: criteria.qId,
       })
     );
+    formData.append('vsid', vsId);
     return this.http.post<GdxQCBResponse[]>(
       this._getGDXServiceURL() + '/qcb/create-report',
       formData
@@ -484,8 +485,8 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
       })
       .onAfterClose$.pipe(
         filter(({ file }) => !!file),
-        switchMap(({ file, consentFile }) => {
-          return this.addQCBInquiry(criteria, file, consentFile);
+        switchMap(({ file, vsId }) => {
+          return this.addQCBInquiry(criteria, file, vsId);
         })
       );
   }
