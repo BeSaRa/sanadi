@@ -52,7 +52,6 @@ export class QcbFilesPopupComponent {
       return;
     }
     const allowedNDARequests = this.requests
-      .reverse()
       .find((request) => request.allowDataSharing);
     if (allowedNDARequests) {
       this.attachmentService
@@ -64,7 +63,7 @@ export class QcbFilesPopupComponent {
           if (disclosureFormDoc) {
             this.dialogRef.close({
               file: this.document,
-              vsid: disclosureFormDoc.vsId,
+              vsId: disclosureFormDoc.vsId,
             });
           } else {
             this.dialog.error(this.lang.map.no_disclosure_existed);
