@@ -11,6 +11,7 @@ import { InspectionOperationService } from '@app/services/inspection-operation.s
 import { LangService } from '@app/services/lang.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
+import { TabMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { Subject, of } from 'rxjs';
 import { catchError, exhaustMap, filter, map, switchMap, takeUntil } from 'rxjs/operators';
@@ -169,4 +170,32 @@ export class InspectionOperationComponent extends AdminGenericComponent<Inspecti
         this.afterReload();
       })
   }
+
+  get mainOperations() {
+    return this.models.filter(model => !model.parentId);
+  }
+  get supOperations() {
+    return this.models.filter(model => !!model.parentId);
+  }
+  tabsData: TabMap = {
+    mainOperations: {
+      name: 'mainOperationsTab',
+      langKey: 'lbl_main_operations',
+      index: 0,
+      checkTouchedDirty: false,
+      isTouchedOrDirty: () => false,
+      show: () => true,
+      validStatus: () => true
+    },
+    subOperations: {
+      name: 'subOperationsTab',
+      langKey: 'lbl_sub_operations',
+      index: 0,
+      checkTouchedDirty: false,
+      isTouchedOrDirty: () => false,
+      show: () => true,
+      validStatus: () => true
+    },
+  
+  };
 }
