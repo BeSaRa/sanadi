@@ -2324,4 +2324,6 @@ export interface ILanguageKeys {
   msg_please_add_legal_basis: string;
   msg_please_add_penalties: string;
   no_disclosure_existed: string;
+  lbl_main_operations: string;
+  lbl_sub_operations: string;
 }
