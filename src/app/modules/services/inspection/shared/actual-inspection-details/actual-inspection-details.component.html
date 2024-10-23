@@ -1,0 +1,117 @@
+<div class="row" *ngIf="model.proposedInspectionTask">
+    <div class="col-sm-6 mb-4 position-relative">
+      <label for="proposedTaskType" class="form-label">
+        {{lang.map.lbl_proposed_task}}
+      </label>
+      <span id="proposedTaskType" class="form-control cursor-pointer text-decoration-underline input-disabled"
+        [innerHTML]="  model.proposedInspectionTask?.proposedTaskTypeInfo?.getName() || '&nbsp;'"></span>
+    </div>
+  </div>
+<div class="row">
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="departmentId" class="form-label">{{ lang.map.department
+        }}</label>
+      <span id="departmentId" class="form-control input-disabled"
+        [innerHTML]="model?.departmentInfo?.getName() || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label  for="proposedTaskSerial" class="form-label">
+        {{ lang.map.lbl_proposed_task_serial}}</label>
+      <span id="proposedTaskSerial" class="form-control input-disabled"
+        [innerHTML]="model?.proposedTaskSerial || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="actualTaskType" class="form-label">
+        {{ lang.map.lbl_task_type}}</label>
+      <span id="actualTaskType" class="form-control input-disabled"
+        [innerHTML]="model?.actualTaskInfo?.getName() || '&nbsp;'"></span>
+
+    </div>
+
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="mainOperationType" class="form-label">{{
+        lang.map.lbl_main_operation }}</label>
+      <span id="mainOperationType" class="form-control input-disabled"
+        [innerHTML]="model?.mainOperationInfo?.getName() || '&nbsp;'"></span>
+    </div>
+
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="subOperationType" class="form-label">{{
+        lang.map.lbl_sub_operation }}</label>
+      <span id="subOperationType" class="form-control input-disabled"
+        [innerHTML]="model?.subOperationInfo?.getName() || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="priority" class="form-label">{{ lang.map.lbl_priority }}</label>
+      <span id="priority" class="form-control input-disabled"
+        [innerHTML]="model?.priorityInfo?.getName() || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="operationDescription" class="form-label">{{
+        lang.map.lbl_operation_description }}</label>
+      <span id="operationDescription" class="form-control input-disabled"
+        [innerHTML]="model?.operationDescription || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="taskSubject" class="form-label">
+        {{ lang.map.lbl_task_subject}}</label>
+      <span id="taskSubject" class="form-control input-disabled" [innerHTML]="model?.taskSubject || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="knownOrgId" class="form-label">
+        {{ lang.map.lbl_organization_known_entities }}</label>
+      <span id="knownOrgId" class="form-control input-disabled"
+        [innerHTML]="model?.knownOrgInfo?.getName() || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="unknownOrgType" class="form-label">
+        {{ lang.map.lbl_unknown_org_type }}</label>
+      <span id="unknownOrgType" class="form-control input-disabled"
+        [innerHTML]="model?.unknownOrgTypeInfo?.getName() || '&nbsp;'"></span>
+    </div>
+
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="unknownOrgName" class="form-label">
+        {{ lang.map.lbl_unknown_org_name }}</label>
+      <span id="unknownOrgName" class="form-control input-disabled"
+        [innerHTML]="model?.unknownOrgName || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="unknownOrgOtherData" class="form-label">
+        {{ lang.map.lbl_unknown_org_other_data }}</label>
+      <span id="unknownOrgOtherData" class="form-control input-disabled"
+        [innerHTML]="model?.unknownOrgOtherData || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="unknownOrgEmail" class="form-label">
+        {{ lang.map.lbl_unknown_org_email }}</label>
+      <span id="unknownOrgEmail" class="form-control input-disabled"
+        [innerHTML]="model?.unknownOrgEmail || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="taskNature" class="form-label">{{ lang.map.lbl_task_nature }}</label>
+      <span id="taskNature" class="form-control input-disabled"
+        [innerHTML]="model?.taskNatureInfo?.getName() || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="taskArea" class="form-label">{{ lang.map.lbl_task_area }}</label>
+      <span id="taskArea" class="form-control input-disabled"
+        [innerHTML]="model?.taskAreaInfo?.getName() || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="countryId" class="form-label">{{ lang.map.country }}</label>
+      <span id="countryId" class="form-control input-disabled"
+        [innerHTML]="model?.countryInfo?.getName() || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="moneyLaundryOrTerrorism" class="form-label">{{ lang.map.lbl_money_laundry_or_terrorism }}</label>
+      <span id="moneyLaundryOrTerrorism" class="form-control input-disabled"
+        [innerHTML]="moneyLaundryLabel"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="relation" class="form-label">{{ lang.map.lbl_relation }}</label>
+      <span id="relation" class="form-control input-disabled"
+        [innerHTML]="model?.relationInfo?.getName() || '&nbsp;'"></span>
+    </div>
+    
+  </div>

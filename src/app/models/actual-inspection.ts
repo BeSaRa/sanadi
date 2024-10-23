@@ -57,6 +57,15 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
   subOperationInfo!: AdminResult;
   inspectorInfo!: AdminResult;
   statusInfo!: AdminResult;
+  departmentInfo!: AdminResult;
+  actualTaskInfo!: AdminResult;
+  priorityInfo!: AdminResult;
+  knownOrgInfo!: AdminResult;
+  unknownOrgTypeInfo!: AdminResult;
+  taskNatureInfo!: AdminResult;
+  taskAreaInfo!: AdminResult;
+  countryInfo!: AdminResult;
+  relationInfo!: AdminResult;
 
   searchFields: ISearchFieldsMap<ActualInspection> = {
     // ...dateSearchFields(['createdOn']),

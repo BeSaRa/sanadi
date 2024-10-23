@@ -45,6 +45,17 @@ export class ActualInspectionInterceptor implements IModelInterceptor<ActualInsp
     model.subOperationInfo = AdminResult.createInstance(model.subOperationInfo);
     model.inspectorInfo = AdminResult.createInstance(model.inspectorInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
+    model.departmentInfo = AdminResult.createInstance(model.departmentInfo);
+    model.actualTaskInfo = AdminResult.createInstance(model.actualTaskInfo);
+    model.priorityInfo = AdminResult.createInstance(model.priorityInfo);
+    model.knownOrgInfo = AdminResult.createInstance(model.knownOrgInfo);
+    model.unknownOrgTypeInfo = AdminResult.createInstance(model.unknownOrgTypeInfo);
+    model.taskNatureInfo = AdminResult.createInstance(model.taskNatureInfo);
+    model.taskAreaInfo = AdminResult.createInstance(model.taskAreaInfo);
+    model.countryInfo = AdminResult.createInstance(model.countryInfo);
+    model.relationInfo = AdminResult.createInstance(model.relationInfo);
+    
+
     model.inspectionLogs && (model.inspectionLogs = model.inspectionLogs.map(item => inspectionActionLogInterceptor.receive(item)))
     model.proposedInspectionTask && (model.proposedInspectionTask = proposedInspectionInterceptor.receive(model.proposedInspectionTask))
     model.dateFrom = DateUtils.changeDateToDatepicker(model.dateFrom);
