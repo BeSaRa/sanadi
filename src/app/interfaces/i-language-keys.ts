@@ -2326,4 +2326,6 @@ export interface ILanguageKeys {
   no_disclosure_existed: string;
   lbl_main_operations: string;
   lbl_sub_operations: string;
+  lbl_element_name: string;
+  lbl_check_list: string;
 }
