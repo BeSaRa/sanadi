@@ -1,13 +1,12 @@
+import { LookupService } from './../../../../../services/lookup.service';
 import { Component, Inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { ActualInspectionCreationSource } from '@app/enums/actual-inspection-creation-source.enum';
-import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { LinkedProjectTypes } from '@app/enums/linked-project-type.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { ActualInspection } from '@app/models/actual-inspection';
-import { FileNetDocument } from '@app/models/file-net-document';
-import { GlobalSettings } from '@app/models/global-settings';
 import { InternalUser } from '@app/models/internal-user';
+import { Lookup } from '@app/models/lookup';
 import { ActualInspectionService } from '@app/services/actual-inspection.service';
 import { DialogService } from '@app/services/dialog.service';
 import { InternalUserService } from '@app/services/internal-user.service';
@@ -25,7 +24,7 @@ import { Observable } from 'rxjs';
 export class ManageInspectionPopupComponent {
   model: ActualInspection;
   inspectors$: Observable<InternalUser[]> = new Observable<InternalUser[]>
-
+  
   tabsData: TabMap = {
     activities: {
       name: 'activitiesTab',
@@ -60,41 +59,49 @@ export class ManageInspectionPopupComponent {
       show: () => true,
       validStatus: () => true
     },
+    details: {
+      name: 'detailsTab',
+      langKey: 'details',
+      index: 4,
+      isTouchedOrDirty: () => false,
+      show: () => true,
+      validStatus: () => true
+    },
   };
   inspectorControl!: UntypedFormControl;
 
-  readonly:boolean = false;
+  readonly: boolean = false;
 
   constructor(public lang: LangService,
-    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<ActualInspection>&{readonly:boolean},
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<ActualInspection> & { readonly: boolean },
     private internalUserService: InternalUserService,
     private actualInspectionService: ActualInspectionService,
-    private dialog:DialogService,
-    private toast:ToastService
+    private dialog: DialogService,
+    private toast: ToastService,
   ) {
 
     this.model = data.model;
     this.readonly = data.readonly;
     this.inspectors$ = this.internalUserService.getInspectors();
     this.inspectorControl = new UntypedFormControl(this.model.inspectorId)
-    if(this.readonly){
+    if (this.readonly) {
       this.inspectorControl.disable();
     }
     this.model.service.documentService.setModel(this.model)
 
   }
 
-  changeInspector($event:MouseEvent){
+  changeInspector($event: MouseEvent) {
     $event.preventDefault();
     const message = this.lang.map.msg_confirm_change_inspector;
     this.dialog.confirm(message)
-    .onAfterClose$.subscribe((click: UserClickOn) => {
-    if (click === UserClickOn.YES) {
-      const sub = this.actualInspectionService.changeInspector(this.model,this.inspectorControl.value).subscribe(() => {
-        this.toast.success(this.lang.map.inspectorChangedSuccess);
-        sub.unsubscribe();
+      .onAfterClose$.subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          const sub = this.actualInspectionService.changeInspector(this.model, this.inspectorControl.value).subscribe(() => {
+            this.toast.success(this.lang.map.inspectorChangedSuccess);
+            sub.unsubscribe();
+          });
+        }
       });
-    }
-  });
   }
 }

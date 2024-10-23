@@ -30,6 +30,7 @@ import { InspectionSpecialistsComponent } from './shared/inspection-specialists/
 import { LicenseActivitiesComponent } from './shared/license-activities/license-activities.component';
 import { ManageInspectionSpecialistsComponent } from './shared/manage-inspection-specialists/manage-inspection-specialists.component';
 import { ManageLicenseActivitiesComponent } from './shared/manage-license-activities/manage-license-activities.component';
+import { ActualInspectionDetailsComponent } from './shared/actual-inspection-details/actual-inspection-details.component';
 
 @NgModule({
   imports: [
@@ -73,7 +74,8 @@ import { ManageLicenseActivitiesComponent } from './shared/manage-license-activi
     LicenseActivityCompletePopupComponent,
     InspectionLogsPopupComponent,
     InspectionHomeComponent,
-    InspectionActionLogPopupComponent
+    InspectionActionLogPopupComponent,
+    ActualInspectionDetailsComponent
   ],
 
 })
