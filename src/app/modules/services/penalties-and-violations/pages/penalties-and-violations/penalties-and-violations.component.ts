@@ -19,7 +19,7 @@ import { ProfileService } from '@app/services/profile.service';
 import { ToastService } from '@app/services/toast.service';
 import { TabMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { Observable } from 'rxjs';
+import { Observable, takeUntil, tap } from 'rxjs';
 import { IncidentElementsComponent } from '../../shared/incident-elements/incident-elements.component';
 import { PenaltyService } from '@app/services/penalty.service';
 
@@ -38,7 +38,7 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
   fb = inject(UntypedFormBuilder);
   profileService = inject(ProfileService);
   injector = inject(Injector);
-  teams = this.employeeService.teams.filter(item=>item.id >0)
+  teams = this.employeeService.teams.filter(item => item.id > 0)
 
 
   constructor() {
@@ -81,13 +81,13 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
   }
 
   entityTypeChanged!: Signal<number>
-  
+
   get isIncidentRelationValid() {
     return this.entityTypeControl.valid && this.organizationIdControl.valid && this.externalEntityDTOControl.valid
   }
-get isOtherEntitiesEntityType(){
-  return  this.entityTypeControl.value === EntityType.INDIVIDUALS_AND_OTHER_ENTITIES
-}
+  get isOtherEntitiesEntityType() {
+    return this.entityTypeControl.value === EntityType.INDIVIDUALS_AND_OTHER_ENTITIES
+  }
   _getNewInstance(): PenaltiesAndViolations {
     return new PenaltiesAndViolations();
 
@@ -105,11 +105,7 @@ get isOtherEntitiesEntityType(){
     this.setDefaultValues();
     this.handleReadonly();
 
-    this.entityTypeChanged = toSignal(this.entityTypeControl.valueChanges, { injector: this.injector });
-    effect(() => {
-      this.handleEntityTypeChanged()
-
-    }, { injector: this.injector })
+    this._listenToEntityTypeChanged();
   }
 
 
@@ -119,12 +115,12 @@ get isOtherEntitiesEntityType(){
 
   _beforeLaunch(): boolean | Observable<boolean> {
 
-    if(!this.model?.canLaunch()){
+    if (!this.model?.canLaunch()) {
       this.dialog.error(this.model?.invalidLaunchMessage());
       return false
     }
-    
-  
+
+
     return true;
   }
 
@@ -226,7 +222,7 @@ get isOtherEntitiesEntityType(){
 
   }
 
-  
+
 
   tabsData: TabMap = {
     incidents: {
@@ -298,16 +294,23 @@ get isOtherEntitiesEntityType(){
     }
     return !tab.validStatus() && tab.isTouchedOrDirty();
   }
-  handleEntityTypeChanged() {
-    if (this.entityTypeControl.value === EntityType.CHARITIES_AND_KNOWLEDGEABLE_ENTITIES) {
-      this.organizationIdControl.setValidators([CustomValidators.required]);
-      this.externalEntityDTOControl.clearValidators();
-    } else {
-      this.organizationIdControl.clearValidators();
-      this.externalEntityDTOControl.setValidators([CustomValidators.requiredArray]);
-    }
-    this.organizationIdControl.updateValueAndValidity();
-    this.externalEntityDTOControl.updateValueAndValidity();
+  _listenToEntityTypeChanged() {
+    this.entityTypeControl.valueChanges.pipe(
+      tap((type) => {
+        if (type === EntityType.CHARITIES_AND_KNOWLEDGEABLE_ENTITIES) {
+          this.organizationIdControl.setValidators([CustomValidators.required]);
+          this.externalEntityDTOControl.clearValidators();
+        } else {
+          this.organizationIdControl.clearValidators();
+          this.externalEntityDTOControl.setValidators([CustomValidators.requiredArray]);
+        }
+        this.organizationIdControl.updateValueAndValidity();
+        this.externalEntityDTOControl.updateValueAndValidity();
+      }),
+      takeUntil(this.destroy$)
+      
+    ).subscribe();
+
   }
   makeRequiredIfHasId(controls: AbstractControl<[]>[]): void {
     controls.forEach(control => {
@@ -319,5 +322,5 @@ get isOtherEntitiesEntityType(){
       control.updateValueAndValidity();
     });
   }
-  
+
 }
