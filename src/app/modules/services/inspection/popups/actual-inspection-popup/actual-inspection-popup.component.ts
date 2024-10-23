@@ -395,7 +395,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     private _buildDatePickerMap() {
         this.datepickerOptionsMap = {
             dateFrom: DateUtils.getDatepickerOptions({
-                disablePeriod: 'past',
+                disablePeriod: 'none',
             }),
             dateTo: DateUtils.getDatepickerOptions({
                 disablePeriod: 'past',
