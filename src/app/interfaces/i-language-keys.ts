@@ -2328,4 +2328,6 @@ export interface ILanguageKeys {
   lbl_sub_operations: string;
   lbl_element_name: string;
   lbl_check_list: string;
+  lbl_basis_text: string;
+  lbl_legal_basis_title: string;
 }
