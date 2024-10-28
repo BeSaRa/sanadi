@@ -20,13 +20,13 @@
                 <app-field-error-message [control]="control"></app-field-error-message>
             </div>
             <div class="col-md-6 col-sm-12 mb-4 position-relative">
-                <label class="form-label" for="title">{{lang.map.title}}</label>
+                <label class="form-label" for="title">{{lang.map.lbl_legal_basis_title}}</label>
                 <span id="title" class="form-control input-disabled"
                     [innerHTML]="selectedLegalBasis() && selectedLegalBasis()?.getName() || '&nbsp;'"></span>
 
             </div>
             <div class="col-md-6 col-sm-12 mb-4 position-relative">
-                <label class="form-label" for="text">{{lang.map.lbl_text}}</label>
+                <label class="form-label" for="text">{{lang.map.lbl_basis_text}}</label>
                 <span id="text" class="form-control input-disabled"
                     [innerHTML]="selectedLegalBasis() && selectedLegalBasis()?.getText() || '&nbsp;'"></span>
 
@@ -34,7 +34,7 @@
             <div class="col-md-6 col-sm-12 mb-4 position-relative">
                 <label class="form-label" for="documentTitle">{{lang.map.document_title}}</label>
                 <span id="documentTitle" class="form-control input-disabled"
-                    [innerHTML]="selectedLegalBasis() && selectedLegalBasis()?.getText() || '&nbsp;'"></span>
+                    [innerHTML]="selectedLegalBasis() && selectedLegalBasis()?.getDocumentTitle() || '&nbsp;'"></span>
 
             </div>
         </div>
