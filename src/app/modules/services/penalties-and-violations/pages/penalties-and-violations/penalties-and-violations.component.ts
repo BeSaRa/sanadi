@@ -19,9 +19,12 @@ import { ProfileService } from '@app/services/profile.service';
 import { ToastService } from '@app/services/toast.service';
 import { TabMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { Observable, takeUntil, tap } from 'rxjs';
+import { map, Observable, of, switchMap, takeUntil, tap } from 'rxjs';
 import { IncidentElementsComponent } from '../../shared/incident-elements/incident-elements.component';
 import { PenaltyService } from '@app/services/penalty.service';
+import { AttachmentTypeService } from '@app/services/attachment-type.service';
+import { FactoryService } from '@app/services/factory.service';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 
 @Component({
   selector: 'penalties-and-violations',
@@ -118,10 +121,10 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
 
   _beforeLaunch(): boolean | Observable<boolean> {
 
-    if (!this.model?.canLaunch()) {
-      this.dialog.error(this.model?.invalidLaunchMessage());
-      return false
-    }
+    // if (!this.model?.canLaunch()) {
+    //   this.dialog.error(this.model?.invalidLaunchMessage());
+    //   return false
+    // }
 
 
     return true;
@@ -311,7 +314,7 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
         this.externalEntityDTOControl.updateValueAndValidity();
       }),
       takeUntil(this.destroy$)
-      
+
     ).subscribe();
 
   }
@@ -325,5 +328,33 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
       control.updateValueAndValidity();
     });
   }
-
+  isFinalApprove() {
+    return this.model?.getResponses().includes(WFResponseType.FINAL_APPROVE) && this.model?.getCaseStatus() != CommonCaseStatus.CANCELLED
+  }
+  checkIfHasMissingRequiredAttachments(): Observable<boolean> {
+    this.model?.getResponses()
+    if (this.isFinalApprove()) {
+      if (!this.model?.canLaunch()) {
+        this.dialog.error(this.model?.invalidLaunchMessage());
+        return of(false)
+      }
+    }
+    let service = FactoryService.getService<AttachmentTypeService>('AttachmentTypeService');
+    return of(service.attachmentsComponent)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(_ => {
+          if (!service.attachmentsComponent) {
+            return of(true);
+          }
+          return this.hasMissingRequiredAttachments();
+        }),
+        map((isMissingRequiredAttachments) => {
+          if (isMissingRequiredAttachments) {
+            this.displayMissingRequiredAttachmentsDialog();
+          }
+          return !isMissingRequiredAttachments
+        })
+      );
+  }
 }
