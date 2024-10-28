@@ -88,6 +88,9 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
   get isOtherEntitiesEntityType() {
     return this.entityTypeControl.value === EntityType.INDIVIDUALS_AND_OTHER_ENTITIES
   }
+  get isCharitiesEntityType() {
+    return this.entityTypeControl.value === EntityType.CHARITIES_AND_KNOWLEDGEABLE_ENTITIES
+  }
   _getNewInstance(): PenaltiesAndViolations {
     return new PenaltiesAndViolations();
 
