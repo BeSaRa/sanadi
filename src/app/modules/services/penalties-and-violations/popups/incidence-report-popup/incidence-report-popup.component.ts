@@ -5,8 +5,8 @@ import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { CustomValidators } from '@app/validators/custom-validators';
 import { Subject } from 'rxjs';
+import { CustomValidators } from './../../../../../validators/custom-validators';
 
 @Component({
     selector: 'incidence-report-popup',
@@ -18,7 +18,7 @@ export class IncidenceReportPopupComponent implements OnInit, OnDestroy {
     private destroy$ = new Subject<void>()
     model: string
     readonly = false
-    
+    customValidator = CustomValidators
     lang = inject(LangService);
     dialogRef = inject(DialogRef);
     fb = inject(UntypedFormBuilder);
