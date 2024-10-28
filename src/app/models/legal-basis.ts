@@ -51,37 +51,37 @@ export class LegalBasis extends BaseModel<LegalBasis, LegalBasisService> {
               CustomValidators.required,
               CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
               CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-              CustomValidators.pattern('AR_NUM_ONE_AR')
+              CustomValidators.pattern('AR_NUM_CHARTERS')
           ]] : titleAr,
           titleEn: controls ? [titleEn, [
               CustomValidators.required,
               CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
               CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-              CustomValidators.pattern('ENG_NUM_ONE_ENG')
+              CustomValidators.pattern('ENG_NUM_CHARTERS')
           ]] : titleEn,
           textAr: controls ? [textAr, [
               CustomValidators.required,
               CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
               CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-              CustomValidators.pattern('AR_NUM_ONE_AR')
+              CustomValidators.pattern('AR_NUM_CHARTERS')
           ]] : textAr,
           textEn: controls ? [textEn, [
               CustomValidators.required,
               CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
               CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-              CustomValidators.pattern('ENG_NUM_ONE_ENG')
+              CustomValidators.pattern('ENG_NUM_CHARTERS')
           ]] : textEn,
           legalDocumentTitleAr: controls ? [legalDocumentTitleAr, [
               CustomValidators.required,
               CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
               CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-              CustomValidators.pattern('AR_NUM_ONE_AR')
+              CustomValidators.pattern('AR_NUM_CHARTERS')
           ]] : legalDocumentTitleAr,
           legalDocumentTitleEn: controls ? [legalDocumentTitleEn, [
               CustomValidators.required,
               CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
               CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-              CustomValidators.pattern('ENG_NUM_ONE_ENG')
+              CustomValidators.pattern('ENG_NUM_CHARTERS')
           ]] : legalDocumentTitleEn,
        
       }

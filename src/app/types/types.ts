@@ -38,6 +38,8 @@ export type customValidationTypes =
   | 'WEBSITE'
   | 'URL'
   | 'HAS_LETTERS'
+  | 'ENG_NUM_CHARTERS'
+  | 'AR_NUM_CHARTERS'
   ;
 
 export type searchFunctionType<T = any> = (text: string, model: T) => boolean;
