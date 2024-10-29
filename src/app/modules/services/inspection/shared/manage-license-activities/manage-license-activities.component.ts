@@ -69,7 +69,7 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
       type: 'action',
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
-      onClick: (item: LicenseActivity, index) => this.editItem(item, index),
+      onClick: (item: LicenseActivity, index) => this._proceedWithActionAfterCheck(item, () => this.editItem(item, index!)),
       show: () => !this.disabled
     },
     // delete
@@ -77,7 +77,7 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
       type: 'action',
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
-      onClick: (item: LicenseActivity, index) => this.deleteItem(item, index),
+      onClick: (item: LicenseActivity, index) =>  this._proceedWithActionAfterCheck(item, () => this.deleteItem(item, index!)),
       show: () => !this.disabled
     },
     // complete
@@ -85,7 +85,7 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
       type: 'action',
       label: 'btn_complete',
       icon: ActionIconsEnum.ACCEPT,
-      onClick: (item: LicenseActivity, index) => this.complete(item, index),
+      onClick: (item: LicenseActivity, index) => this._proceedWithActionAfterCheck(item, () => this.complete(item, index)),
       show: (item: LicenseActivity) => !item.status && !this.disabled,
 
     },
@@ -351,4 +351,11 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
   private isValidCheckList(): boolean {
     return !this.checklistComponent?.checklist?.length? true : this.checklistComponent.isAllMarked();
   }
+private _proceedWithActionAfterCheck(item: LicenseActivity ,action:() => void){
+  if(!item.id){
+    this.dialog.info(this.lang.map.this_action_cannot_be_performed_before_saving_the_request)
+    return ;
+  }
+  action();
+}
 }
