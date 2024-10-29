@@ -9,6 +9,8 @@ export class ExternalCharityLogInterceptor implements IModelInterceptor<External
     model.actionStatusInfo = AdminResult.createInstance(model.actionStatusInfo ?? {});
     model.internalUserInfo = AdminResult.createInstance(model.internalUserInfo ?? {});
     model.updatedOnString = DateUtils.getDateStringFromDate(model.updatedOn);
+    model.actionTypeInfo = AdminResult.createInstance(model.actionTypeInfo ?? {});
+    model.generalUserInfo = AdminResult.createInstance(model.generalUserInfo ?? {});
     return model;
   }
 
