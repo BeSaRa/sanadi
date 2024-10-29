@@ -2330,4 +2330,5 @@ export interface ILanguageKeys {
   lbl_check_list: string;
   lbl_basis_text: string;
   lbl_legal_basis_title: string;
+  lbl_estimated_financial_allocation: string;
 }

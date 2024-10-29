@@ -95,12 +95,12 @@ export class ParticipantOrg extends SearchableCloneable<ParticipantOrg> implemen
     const {organizationOfficerName, value} = this;
     return {
       organizationOfficerName: controls ? [organizationOfficerName, [Validators.required]] : organizationOfficerName,
-      value: controls ? [value, [Validators.required].concat(CustomValidators.decimal(
+      value: controls ? [value, [CustomValidators.decimal(
           CustomValidators.defaultLengths.DECIMAL_PLACES
         ),
         CustomValidators.maxLength(
           CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
-        ))] : value,
+        )]] : value,
 
     };
   }
