@@ -25,6 +25,7 @@ import { PenaltyService } from '@app/services/penalty.service';
 import { AttachmentTypeService } from '@app/services/attachment-type.service';
 import { FactoryService } from '@app/services/factory.service';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { LegalActionsComponent } from '../../shared/legal-actions/legal-actions.component';
 
 @Component({
   selector: 'penalties-and-violations',
@@ -182,16 +183,18 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
       this.proposedSanctionControl
     ]);
   }
-
+@ViewChild(IncidentElementsComponent) incidentElementsRef?: IncidentElementsComponent;
+@ViewChild(LegalActionsComponent) legalActionsRef?: LegalActionsComponent;
   _resetForm(): void {
     this.form.reset();
+    this.incidentElementsRef?.form.reset();
+    this.legalActionsRef?.control.reset();
     this.operation = OperationTypes.CREATE;
     this.setDefaultValues();
   }
 
   private setDefaultValues(): void {
     if (this.operation === OperationTypes.CREATE) {
-
     }
   }
 
