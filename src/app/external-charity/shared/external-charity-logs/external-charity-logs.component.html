@@ -13,7 +13,11 @@
           </ng-container>
           <ng-container cdkColumnDef="internalUserInfo">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.user}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.internalUserInfo ? row.internalUserInfo.getName() : ''}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.generalUserInfo ? row.generalUserInfo.getName() : ''}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="actionTypeInfo">
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.decision}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.actionTypeInfo ? row.actionTypeInfo.getName() : ''}} </td>
           </ng-container>
           <ng-container cdkColumnDef="actionStatusInfo">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.status}}</th>
@@ -27,6 +31,10 @@
           <ng-container cdkColumnDef="updatedOnString">
             <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.action_date}}</th>
             <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.updatedOnString}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="actionTime">
+            <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.action_time}}</th>
+            <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.actionTime}} </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
           <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>

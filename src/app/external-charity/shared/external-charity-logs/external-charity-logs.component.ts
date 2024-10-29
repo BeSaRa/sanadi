@@ -12,7 +12,7 @@ import { LangService } from '@app/services/lang.service';
 export class ExternalCharityLogsComponent {
 
     userClick: typeof UserClickOn = UserClickOn;
-    displayedColumns: (keyof ExternalCharityLog)[] = ['internalUserInfo', 'actionStatusInfo', 'comments', 'updatedOnString'];
+    displayedColumns: (keyof ExternalCharityLog)[] = ['internalUserInfo','actionTypeInfo' ,'actionStatusInfo', 'comments', 'updatedOnString' ,'actionTime'];
     @Input({required:true})logList: ExternalCharityLog[] = [];
     filterControl: UntypedFormControl = new UntypedFormControl('');
     langService=inject(LangService);

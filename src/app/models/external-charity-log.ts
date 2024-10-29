@@ -17,6 +17,9 @@ export class ExternalCharityLog extends SearchableCloneable<ExternalCharityLog> 
   comments!:string;
   internalUserId!:string;
   internalUserInfo!:AdminResult;
+  actionTypeInfo!:AdminResult;
+  generalUserInfo!:AdminResult;
+  actionTime!:string;
   id!: number;
   updatedOn!: string;
   
