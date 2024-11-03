@@ -186,7 +186,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
       .pipe(map(value => Number(value)))
       .subscribe((value) => {
         const remaining = this.calculateAllExcept(index)
-        const cValue = currency(value).value > currency(remaining).value ? currency(remaining).value : currency(value).value
+        const cValue = currency(value).value > currency(remaining).value ?  currency(value).value: currency(remaining).value
         ctrl.setValue(cValue, {emitEvent: false})
         this.value[index].totalCost = cValue
         this.onChange(this.value)
@@ -226,8 +226,12 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   calculateAllExcept(index: number): number {
-    return currency(this.projectCollectedValue).subtract((this.inputs.controls as FormControl<number>[]).reduce((acc, item, currentIndex) => {
-      return acc + (index === currentIndex ? 0 : Number(item.getRawValue()))
+    return currency(this.projectCollectedValue)
+    .subtract((this.inputs.controls as FormControl<number>[])
+    .reduce((acc, item, currentIndex) => {
+      return this.inputs.controls.length === 1 ? 
+        acc + Number(item.getRawValue())
+      : acc + (index === currentIndex ? 0 : Number(item.getRawValue()))
     }, 0)).value
   }
 
