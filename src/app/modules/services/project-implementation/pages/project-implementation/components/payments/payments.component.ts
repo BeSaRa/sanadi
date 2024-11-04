@@ -1,4 +1,4 @@
-import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
+import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -7,16 +7,16 @@ import {
   UntypedFormControl,
   UntypedFormGroup
 } from "@angular/forms";
-import {Payment} from "@models/payment";
-import {LangService} from "@services/lang.service";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {DialogService} from "@services/dialog.service";
-import {PaymentPopupComponent} from "@modules/services/project-implementation/popups/payment-popup/payment-popup.component";
-import {IDialogData} from "@contracts/i-dialog-data";
-import {OperationTypes} from "@enums/operation-types.enum";
-import {debounceTime, filter, map, takeUntil} from "rxjs/operators";
-import {Subject} from "rxjs";
-import {UserClickOn} from "@enums/user-click-on.enum";
+import { Payment } from "@models/payment";
+import { LangService } from "@services/lang.service";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { DialogService } from "@services/dialog.service";
+import { PaymentPopupComponent } from "@modules/services/project-implementation/popups/payment-popup/payment-popup.component";
+import { IDialogData } from "@contracts/i-dialog-data";
+import { OperationTypes } from "@enums/operation-types.enum";
+import { debounceTime, filter, map, skip, takeUntil } from "rxjs/operators";
+import { Subject } from "rxjs";
+import { UserClickOn } from "@enums/user-click-on.enum";
 import currency from "currency.js";
 
 @Component({
@@ -43,7 +43,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   get projectTotalCost(): number {
     return this._projectTotalCost
   }
-  
+
   private _projectCollectedValue!: number
   @Input()
   set projectCollectedValue(val: number) {
@@ -57,7 +57,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   remainingAmount!: number;
 
   destroy$ = new Subject<void>()
-  addPaymentDialog$ : Subject<any> = new Subject<any>();
+  addPaymentDialog$: Subject<any> = new Subject<any>();
   value: Payment[] = []
   onChange!: (value: Payment[]) => void
   onTouch!: () => void
@@ -85,12 +85,12 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
     this.listenToAdd()
   }
 
-  listenToAdd(){
+  listenToAdd() {
     this.addPaymentDialog$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(()=>this.openAddPaymentDialog())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.openAddPaymentDialog())
   }
-  
+
   writeValue(value: Payment[]): void {
     this.value = []
     this.createInputs(value)
@@ -164,7 +164,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
       .pipe(takeUntil(this.destroy$))
       .pipe(filter((value: Payment): value is Payment => !!value))
       .subscribe((payment) => {
-        this.inputs.at(index).setValue(payment.totalCost, {emitEvent: false})
+        this.inputs.at(index).setValue(payment.totalCost, { emitEvent: false })
         this.value = this.value.map((item, i) => {
           return i === index ? new Payment().clone(payment) : item
         })
@@ -182,12 +182,17 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
     ctrl
       .valueChanges
       .pipe(takeUntil(this.destroy$))
+      .pipe(skip(1))
       .pipe(debounceTime(250))
       .pipe(map(value => Number(value)))
       .subscribe((value) => {
-        const remaining = this.calculateAllExcept(index)
-        const cValue = currency(value).value > currency(remaining).value ?  currency(value).value: currency(remaining).value
-        ctrl.setValue(cValue, {emitEvent: false})
+         const remaining = this.calculateAllExcept(index)
+        // const cValue = currency(value).value > currency(remaining).value ?  currency(value).value: currency(remaining).value
+        if (value > remaining) {
+          value = remaining
+        }
+        const cValue = currency(value).value
+        ctrl.setValue(cValue, { emitEvent: false })
         this.value[index].totalCost = cValue
         this.onChange(this.value)
         this.calculateRemaining()
@@ -226,13 +231,17 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   calculateAllExcept(index: number): number {
-    return currency(this.projectCollectedValue)
-    .subtract((this.inputs.controls as FormControl<number>[])
-    .reduce((acc, item, currentIndex) => {
-      return this.inputs.controls.length === 1 ? 
-        acc + Number(item.getRawValue())
-      : acc + (index === currentIndex ? 0 : Number(item.getRawValue()))
-    }, 0)).value
+    const otherPayments = this.inputs.controls.filter((_, i) => i !== index)
+    .map(item => item.getRawValue())
+    .reduce((acc, item) => acc + item, 0)
+    return otherPayments >this._projectCollectedValue ? 0 : this._projectCollectedValue - otherPayments
+    // return currency(this._projectCollectedValue)
+    //   .subtract((this.inputs.controls as FormControl<number>[])
+    //     .reduce((acc, item, currentIndex) => {
+    //       return this.inputs.controls.length === 1 ?
+    //         acc + Number(item.getRawValue())
+    //         : acc + (index === currentIndex ? 0 : Number(item.getRawValue()))
+    //     }, 0)).value
   }
 
   distributeRemaining() {
@@ -248,7 +257,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
     this.inputs.controls.forEach((item, index) => {
       const oldValue = item.getRawValue()
       const value = currency(amount).add(oldValue).value
-      item.setValue(value, {emitEvent: false})
+      item.setValue(value, { emitEvent: false })
       this.value[index].totalCost = value
     })
     this.onChange(this.value)
@@ -256,7 +265,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
   takeRemaining(index: number): void {
     const value = currency(this.value[index].totalCost).add(this.remainingAmount).value
-    this.inputs.at(index).setValue(value, {emitEvent: false})
+    this.inputs.at(index).setValue(value, { emitEvent: false })
     this.value[index].totalCost = value;
     this.onChange(this.value)
     this.calculateRemaining()
