@@ -17,6 +17,12 @@ export class ExternalCharityLogInterceptor implements IModelInterceptor<External
   send(model: Partial<ExternalCharityLog>): Partial<ExternalCharityLog> {
     delete model.updatedOnString;
     delete model.searchFields;
+    delete model.actionStatusInfo
+    delete model.internalUserInfo
+    delete model.updatedOnString
+    delete model.actionTypeInfo
+    delete model.generalUserInfo
+    delete model.updatedOn
     return model;
   }
 }

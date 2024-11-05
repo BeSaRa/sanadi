@@ -6,6 +6,7 @@ import { ExternalCharityLog } from '@app/models/external-charity-log';
 import { FileNetDocument } from '@app/models/file-net-document';
 import { ExternalCharityFounderInterceptor } from './external-charity-founder';
 import { ExternalCharityLogInterceptor } from './external-charity-log-interceptor';
+import { FileNetDocumentInterceptor } from './file-net-document-interceptor';
 
 
 export class ExternalCharityInterceptor implements IModelInterceptor<ExternalCharity> {
@@ -23,6 +24,11 @@ export class ExternalCharityInterceptor implements IModelInterceptor<ExternalCha
 
   send(model: Partial<ExternalCharity>): Partial<ExternalCharity> {
     const externalCharityFounderInterceptor = new ExternalCharityFounderInterceptor();
+    const externalCharityLogInterceptor= new ExternalCharityLogInterceptor();
+    const fileNetDocumentInterceptor = new FileNetDocumentInterceptor();
+
+    model.requestDocumentList = model.requestDocumentList?.map(item => <FileNetDocument>fileNetDocumentInterceptor.send(item));
+    model.logList = model.logList?.map(item=> <ExternalCharityLog>externalCharityLogInterceptor.send(item));
 
     model.founderList = model.founderList?.
       map(item => <ExternalCharityFounder>externalCharityFounderInterceptor.send(item));

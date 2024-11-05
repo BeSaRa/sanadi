@@ -23,6 +23,12 @@ export class ConvertExternalCharityInterceptor implements IModelInterceptor<Conv
 
   send(model: Partial<ConvertExternalCharity>): Partial<ConvertExternalCharity> {
     const externalCharityFounderInterceptor = new ExternalCharityFounderInterceptor();
+    const externalCharityLogInterceptor= new ExternalCharityLogInterceptor();
+    const fileNetDocumentInterceptor = new FileNetDocumentInterceptor();
+
+    model.requestDocumentList = model.requestDocumentList?.map(item => <FileNetDocument>fileNetDocumentInterceptor.send(item));
+    model.logList = model.logList?.map(item=> <ExternalCharityLog>externalCharityLogInterceptor.send(item));
+
     model.founderList = model.founderList?.
       map(item => <ExternalCharityFounder>externalCharityFounderInterceptor.send(item));
 
