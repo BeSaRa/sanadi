@@ -16,8 +16,12 @@ export class FileNetDocumentInterceptor implements IModelInterceptor<FileNetDocu
     delete model.searchFields;
     delete model.attachmentTypeInfo;
     delete model.employeeService;
+    delete model.langService;
     delete model.attachmentTypeStatus;
+    delete model.attachmentTypeServiceData;
     delete model.employeeService;
+    delete model.creatorInfo;
+    delete model.ouInfo;
     return model;
   }
 }
