@@ -13,8 +13,7 @@ import { InternalUserInterceptor } from "./internal-user-interceptor";
 import { LicenseActivityInterceptor } from "./license-activity-interceptor";
 import { ProposedInspectionInterceptor } from "./proposed_inspection-interceptor";
 
-export class ActualInspectionInterceptor implements IModelInterceptor<ActualInspection>
-{
+export class ActualInspectionInterceptor implements IModelInterceptor<ActualInspection> {
   send(model: Partial<ActualInspection>): Partial<ActualInspection> {
     const licenseActivityInterceptor = new LicenseActivityInterceptor();
     const internalUserInterceptor = new InternalUserInterceptor();
@@ -32,7 +31,7 @@ export class ActualInspectionInterceptor implements IModelInterceptor<ActualInsp
       return item
     })
     model.proposedInspectionTask && (model.proposedInspectionTask = proposedInspectionInterceptor.send(model.proposedInspectionTask) as ProposedInspection)
-    model.inspectionLogs && (model.inspectionLogs = model.inspectionLogs.map(item => inspectionActionLogInterceptor.send(item) as InspectionActionLog) )
+    model.inspectionLogs && (model.inspectionLogs = model.inspectionLogs.map(item => inspectionActionLogInterceptor.send(item) as InspectionActionLog))
     ActualInspectionInterceptor._deleteBeforeSend(model);
     return model;
   }
@@ -54,7 +53,7 @@ export class ActualInspectionInterceptor implements IModelInterceptor<ActualInsp
     model.taskAreaInfo = AdminResult.createInstance(model.taskAreaInfo);
     model.countryInfo = AdminResult.createInstance(model.countryInfo);
     model.relationInfo = AdminResult.createInstance(model.relationInfo);
-    
+
 
     model.inspectionLogs && (model.inspectionLogs = model.inspectionLogs.map(item => inspectionActionLogInterceptor.receive(item)))
     model.proposedInspectionTask && (model.proposedInspectionTask = proposedInspectionInterceptor.receive(model.proposedInspectionTask))
@@ -72,6 +71,15 @@ export class ActualInspectionInterceptor implements IModelInterceptor<ActualInsp
     delete model.subOperationInfo
     delete model.inspectorInfo
     delete model.statusInfo
+    delete model.departmentInfo
+    delete model.actualTaskInfo
+    delete model.priorityInfo
+    delete model.knownOrgInfo
+    delete model.unknownOrgTypeInfo
+    delete model.taskNatureInfo
+    delete model.taskAreaInfo
+    delete model.countryInfo
+    delete model.relationInfo
 
   }
 }
