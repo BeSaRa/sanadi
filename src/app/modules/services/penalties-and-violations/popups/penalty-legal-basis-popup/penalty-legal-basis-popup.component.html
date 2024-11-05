@@ -12,7 +12,8 @@
                 </label>
                 <ng-select [selectOnTab]="true" labelForId="controlId" [clearable]="true"
                     placeholder="{{ lang.map.select }}" id="controlId" [notFoundText]="lang.map.msg_not_found"
-                    appendTo="body" validationClasses [control]="control" [formControl]="control">
+                    appendTo="body" validationClasses [control]="control" [formControl]="control"
+                    [searchable]="true">
                     <ng-option *ngFor="let option of legalBasisList" [value]="option.id">
                         {{ option.getName() }}
                     </ng-option>
