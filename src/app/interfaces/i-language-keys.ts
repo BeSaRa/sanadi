@@ -2331,4 +2331,5 @@ export interface ILanguageKeys {
   lbl_basis_text: string;
   lbl_legal_basis_title: string;
   lbl_estimated_financial_allocation: string;
+  lbl_source_name: string;
 }
