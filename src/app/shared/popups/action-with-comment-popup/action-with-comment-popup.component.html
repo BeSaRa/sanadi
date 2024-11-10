@@ -52,18 +52,21 @@
             <app-field-error-message controlName="followUpDate"></app-field-error-message>
           </div>
         </div>
-        <div class="col-sm-12 col-md-6 mb-3 position-relative">
-          <div class="form-check form-switch pt-4">
-            <input type="checkbox" id="conditionalLicenseIndicator" formControlName="conditionalLicenseIndicator"
-              class="form-check-input cursor-pointer" />
-            <label for="conditionalLicenseIndicator" class="cursor-pointer">{{ lang.map.conditional_license }} :
-              {{
-              conditionalLicenseField?.value
-              ? lang.map.lbl_yes
-              : lang.map.lbl_no
-              }}</label>
+        @if(!isExcludeConditionalLicense){
+          <div class="col-sm-12 col-md-6 mb-3 position-relative">
+            <div class="form-check form-switch pt-4">
+              <input type="checkbox" id="conditionalLicenseIndicator" formControlName="conditionalLicenseIndicator"
+                class="form-check-input cursor-pointer" />
+              <label for="conditionalLicenseIndicator" class="cursor-pointer">{{ lang.map.conditional_license }} :
+                {{
+                conditionalLicenseField?.value
+                ? lang.map.lbl_yes
+                : lang.map.lbl_no
+                }}</label>
+            </div>
           </div>
-        </div>
+        }
+       
       </div>
       @if(!isExcludeTerms){
         <div class="row">
