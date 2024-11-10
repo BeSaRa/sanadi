@@ -2332,4 +2332,10 @@ export interface ILanguageKeys {
   lbl_legal_basis_title: string;
   lbl_estimated_financial_allocation: string;
   lbl_source_name: string;
+  lbl_incidence_number: string;
+  lbl_penalty_number: string;
+  lbl_incidence_Date: string;
+  lbl_penalty_date: string;
+  lbl_save_with_comment: string;
+  menu_penalties_violation_logs: string;
 }

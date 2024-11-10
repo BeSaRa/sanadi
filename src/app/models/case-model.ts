@@ -444,6 +444,9 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_FINAL_REJECT, false, this);
   }
 
+  saveWithComment(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.SAVE, false, this);
+  }
   isClaimed(): boolean {
     return this.taskDetails && this.taskDetails.isClaimed();
   }
