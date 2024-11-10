@@ -109,7 +109,10 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       this.label = 'organization_final_reject'
     } else if (this.data.actionType === WFResponseType.KNEW) {
       this.label = 'approve'
-    } else {
+    }else if (this.data.actionType === WFResponseType.SAVE) {
+      this.label = 'lbl_save_with_comment';
+    }
+     else {
       this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.actionType) + '_task') as unknown as keyof ILanguageKeys);
     }
     this.action = this.data.actionType;

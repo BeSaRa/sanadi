@@ -62,7 +62,7 @@ const adminPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.MANAGE_RISK_LEVEL_DETERMINATION,
   PermissionsEnum.MANAGE_PENALTY,
   PermissionsEnum.MANAGE_LEGAL_ACTION,
-  PermissionsEnum.MANAGE_LEGAL_BASIS
+  PermissionsEnum.MANAGE_LEGAL_BASIS,
 ];
 
 const externalUserPermissionsGroup: PermissionsEnum[] = [

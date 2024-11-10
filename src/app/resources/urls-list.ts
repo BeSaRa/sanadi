@@ -165,4 +165,5 @@ export const urlsList: Partial<IAppUrls> = {
   PENALTY: '/admin/penalty',
   LEGAL_BASIS: '/admin/legal-basis',
   LEGAL_ACTION: '/admin/legal-action',
+  PENALTIES_VIOLATION_LOGS: '/admin/penaltiesviolationslog',
 };

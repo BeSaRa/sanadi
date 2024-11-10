@@ -159,5 +159,6 @@ export interface IAppUrls {
   PENALTY:string;
   LEGAL_BASIS:string;
   LEGAL_ACTON:string;
+  PENALTIES_VIOLATION_LOGS:string;
   [index: string]: string;
 }

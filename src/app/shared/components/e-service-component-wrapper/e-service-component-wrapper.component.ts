@@ -1245,6 +1245,23 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         tooltip: 'btn_info_task_seen'
       },
+      // save with comment
+      {
+        type: 'action',
+        label: 'lbl_save_with_comment',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return !!(item.getResponses().length && item.getResponses().includes(WFResponseType.SAVE));
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.saveWithCommentAction(item);
+        },
+        data: {
+          buttonGroup: WrapperButtonsGroupEnum.TWO,
+          groupOrder: 4
+        },
+        tooltip: 'btn_info_task_seen'
+      },
       // final approve
       {
         type: 'action',
@@ -1897,7 +1914,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
-
+  private saveWithCommentAction(item: CaseModel<any, any>) {
+    item.saveWithComment().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    })
+  }
   private validateApproveAction(item: CaseModel<any, any>) {
     item.validateApprove().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();

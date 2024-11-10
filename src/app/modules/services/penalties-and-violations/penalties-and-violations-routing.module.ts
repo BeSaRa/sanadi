@@ -5,6 +5,7 @@ import { NewServicePermissionGuard } from "@app/guards/new-service-permission.gu
 import { ServiceItemResolver } from "@app/resolvers/service-item.resolver";
 import { EServiceComponentWrapperComponent } from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
 import { ErrorPageComponent } from "@app/shared/components/error-page/error-page.component";
+import { PenaltyViolationLogsComponent } from "./penalty-violation-logs/penalty-violation-logs.component";
 
 const routes: Routes = [
     {
@@ -16,6 +17,16 @@ const routes: Routes = [
         permissionGroup: null,
         checkAnyPermission: false,
         render: 'PenaltiesAndViolationsComponent'
+      }
+    },
+    {
+      path: 'logs', component: PenaltyViolationLogsComponent,
+      canActivate: [NewServicePermissionGuard.canActivate],
+      resolve: {info: ServiceItemResolver.resolve},
+      data: {
+        permissionKey: EServicePermissionsEnum.PENALTIES_AND_VIOLATIONS,
+        permissionGroup: null,
+        checkAnyPermission: false,
       }
     },
     

@@ -2269,6 +2269,20 @@ export const newNavigationMenuList = [
     itemOrder: 1,
     svg: null
   },
+  {
+    id: 3504,
+    langKey: 'menu_penalties_violation_logs',
+    path: SystemPathsEnum.PENALTIES_AND_VIOLATIONS + '/logs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.PENALTIES_AND_VIOLATIONS,
+    permissionGroup: null,
+    parent: 3501,
+    group: GroupNames.PENALTIES_AND_VIOLATIONS,
+    itemOrder: 1,
+    svg: null
+  },
+ 
   /*{
     id: 100001,
     langKey: 'menu_internal_project_license',
