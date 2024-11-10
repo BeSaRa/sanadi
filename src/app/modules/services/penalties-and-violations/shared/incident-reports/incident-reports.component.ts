@@ -120,7 +120,7 @@ export class IncidentReportsComponent implements ControlValueAccessor, OnInit, O
             .pipe(takeUntil(this.destroy$))
             .pipe(filter((value): value is UserClickOn.YES => value === UserClickOn.YES))
             .subscribe(() => {
-                this.value = this.value.filter(x => x !== item)
+                this.value = this.value.filter((_,i) => i !== index)
                 this.onChange(this.value)
                 this.onTouch()
             })
