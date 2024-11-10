@@ -56,15 +56,18 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     CaseTypes.PARTNER_APPROVAL,
     CaseTypes.INTERNAL_PROJECT_LICENSE,
     CaseTypes.FINANCIAL_ANALYSIS,
-    // CaseTypes.PENALTIES_AND_VIOLATIONS
+    CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
 
   private excludeLicenseDateServices:number[] =[
     CaseTypes.FINANCIAL_ANALYSIS,
-    // CaseTypes.PENALTIES_AND_VIOLATIONS
+     CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
   private excludeTerms:number[] =[
-    // CaseTypes.PENALTIES_AND_VIOLATIONS
+     CaseTypes.PENALTIES_AND_VIOLATIONS
+  ]
+  private excludeConditionalLicense:number[] =[
+     CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
   form!: UntypedFormGroup;
 
@@ -168,6 +171,10 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   get isExcludeTerms(){
     return this.data.task &&
     this.excludeLicenseDateServices.includes(this.data.task.getCaseType()) 
+  }
+  get isExcludeConditionalLicense(){
+    return this.data.task &&
+    this.excludeConditionalLicense.includes(this.data.task.getCaseType()) 
   }
    isDisabledDateAndDuration(){
     return this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE || 
