@@ -15,6 +15,9 @@ import { Incident } from "./inceident";
 import { ProposedSanction } from "./proposed-sanction";
 import { CustomValidators } from "@app/validators/custom-validators";
 import { LangService } from "@app/services/lang.service";
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { of } from "rxjs";
+import { DialogService } from "@app/services/dialog.service";
 
 const { send, receive } = new PenaltiesAndViolationsInterceptor();
 
@@ -33,6 +36,7 @@ export class PenaltiesAndViolations extends LicenseApprovalModel<PenaltiesAndVio
   description: string = '';
   service!: PenaltiesAndViolationsService;
   lang!:LangService; 
+  dialog!:DialogService
 
 
   searchFields: ISearchFieldsMap<PenaltiesAndViolations> = {
@@ -45,6 +49,7 @@ export class PenaltiesAndViolations extends LicenseApprovalModel<PenaltiesAndVio
     super();
     this.service = FactoryService.getService('PenaltiesAndViolationsService');
     this.lang = FactoryService.getService('LangService');
+    this.dialog = FactoryService.getService('DialogService');
     this.finalizeSearchFields();
   }
 
@@ -113,5 +118,12 @@ export class PenaltiesAndViolations extends LicenseApprovalModel<PenaltiesAndVio
       return this.lang.map.msg_please_add_penalties;
     }
     return '';
+  }
+  
+  finalApprove(): DialogRef {
+    if (!this.canLaunch()) {
+      return this.dialog.error(this.invalidLaunchMessage());
+    }
+    return super.finalApprove();
   }
 }
