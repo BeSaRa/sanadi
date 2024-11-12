@@ -6,6 +6,8 @@ import { BaseModel } from "./base-model";
 import { InterceptModel } from "@app/decorators/decorators/intercept-model";
 import { PenaltyViolationLogInterceptor } from "@app/model-interceptors/penalty-violation-log-interceptor";
 import { PenaltiesAndViolations } from "./penalties-and-violations";
+import { AdminResult } from "./admin-result";
+import { infoSearchFields } from "@app/helpers/info-search-fields";
 const { send, receive } = new PenaltyViolationLogInterceptor();
 @InterceptModel({send,receive})
 export class PenaltyViolationLog extends BaseModel<PenaltyViolationLog,PenaltyViolationLogService>{
@@ -14,14 +16,20 @@ export class PenaltyViolationLog extends BaseModel<PenaltyViolationLog,PenaltyVi
     caseId!: string;
     caseObject!: string;
     orgId!: number;
+    penalty!:number;
+    organizationInfo!: AdminResult;
+    penaltyInfo!:AdminResult;
+    penaltyDate!:string;
     identificationNumber!: string;
     statusDateModified!: string;
     service!: PenaltyViolationLogService;
     case?:PenaltiesAndViolations
     searchFields: ISearchFieldsMap<PenaltyViolationLog> = {
-        ...normalSearchFields(['incidentNumber', 'caseId', 'caseObject', 'orgId', 'identificationNumber']),
-        // ...infoSearchFields(['statusInfo'])
+        ...normalSearchFields(['incidentNumber', 'updatedOnString','penaltyDateString']),
+        ...infoSearchFields(['penaltyInfo', 'organizationInfo'])
     };
+    updatedOnString! :string;
+    penaltyDateString! :string;
 
     constructor() {
         super();

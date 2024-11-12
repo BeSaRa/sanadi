@@ -15,7 +15,7 @@ import { PenaltyLegalBasisComponent } from './shared/penalty-legal-basis/penalty
 import { PenaltyLegalBasisPopupComponent } from './popups/penalty-legal-basis-popup/penalty-legal-basis-popup.component';
 import { ProposedSanctionsComponent } from './shared/proposed-sanctions/proposed-sanctions.component';
 import { ProposedSanctionsPopupComponent } from './popups/proposed-sanctions-popup/proposed-sanctions-popup.component';
-import { PenaltyViolationLogsComponent } from './penalty-violation-logs/penalty-violation-logs.component';
+import { PenaltyViolationLogsComponent } from './pages/penalty-violation-logs/penalty-violation-logs.component';
 
 
 
