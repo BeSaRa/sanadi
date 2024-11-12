@@ -19,6 +19,7 @@ export class LegalActionInterceptor implements IModelInterceptor<LegalAction> {
       delete model.langService;
       delete model.searchFields;
       delete model.statusInfo;
+      delete model.mainActionInfo;
     }
   
   }
