@@ -19,28 +19,24 @@
                 </ng-container>
                 <ng-container cdkColumnDef="incidentNumber">
                     <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_incidence_number}}</th>
-                    <td cdk-cell *cdkCellDef="let row"> {{row.case?.incidents[0]?.incidentNumber}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="penaltyNumber">
-                    <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_penalty_number}}</th>
                     <td cdk-cell *cdkCellDef="let row"> {{row.incidentNumber}} </td>
                 </ng-container>
-
                 <ng-container cdkColumnDef="penalty">
-                    <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_incidence_number}}</th>
+                    <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_penalty}}</th>
                     <td cdk-cell *cdkCellDef="let row"> {{row.case?.proposedSanction[0]?.penaltyInfo?.getName()}}
                     </td>
                 </ng-container>
-
-                <ng-container cdkColumnDef="statusDateModified">
-                    <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_incidence_Date}}</th>
-                    <td cdk-cell *cdkCellDef="let row"> {{row.statusDateModified | date}} </td>
-                </ng-container>
                 <ng-container cdkColumnDef="penaltyDate">
                     <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_penalty_date}}</th>
-                    <td cdk-cell *cdkCellDef="let row">
-                        {{getDate(row.case?.proposedSanction[0]?.penaltyInfo.statusDateModified)|date}}
-                    </td>
+                    <td cdk-cell *cdkCellDef="let row">  {{row.penaltyDateString}}</td>
+                </ng-container>
+                <ng-container cdkColumnDef="orgId">
+                    <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_the_organization}}</th>
+                    <td cdk-cell *cdkCellDef="let row"> {{row.organizationInfo.getName()}} </td>
+                </ng-container>
+                <ng-container cdkColumnDef="updatedOn">
+                    <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_incidence_Date}}</th>
+                    <td cdk-cell *cdkCellDef="let row">  {{row.updatedOnString }}</td>
                 </ng-container>
                 <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
                 <tr cdk-header-row *cdkHeaderRowDef="searchColumns"></tr>

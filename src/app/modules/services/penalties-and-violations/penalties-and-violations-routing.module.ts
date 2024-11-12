@@ -5,7 +5,7 @@ import { NewServicePermissionGuard } from "@app/guards/new-service-permission.gu
 import { ServiceItemResolver } from "@app/resolvers/service-item.resolver";
 import { EServiceComponentWrapperComponent } from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
 import { ErrorPageComponent } from "@app/shared/components/error-page/error-page.component";
-import { PenaltyViolationLogsComponent } from "./penalty-violation-logs/penalty-violation-logs.component";
+import { PenaltyViolationLogsComponent } from "./pages/penalty-violation-logs/penalty-violation-logs.component";
 
 const routes: Routes = [
     {
