@@ -22,6 +22,7 @@ export class PenaltiesAndViolationsInterceptor implements IModelInterceptor<Pena
         delete model.service;
         delete model.lang;
         delete model.searchFields;
+        delete model.dialog;
        
       }
   }

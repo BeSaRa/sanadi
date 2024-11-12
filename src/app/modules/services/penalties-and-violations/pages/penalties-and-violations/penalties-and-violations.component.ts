@@ -331,33 +331,4 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
       control.updateValueAndValidity();
     });
   }
-  isFinalApprove() {
-    return this.model?.getResponses().includes(WFResponseType.FINAL_APPROVE) && this.model?.getCaseStatus() != CommonCaseStatus.CANCELLED
-  }
-  checkIfHasMissingRequiredAttachments(): Observable<boolean> {
-    this.model?.getResponses()
-    if (this.isFinalApprove()) {
-      if (!this.model?.canLaunch()) {
-        this.dialog.error(this.model?.invalidLaunchMessage());
-        return of(false)
-      }
-    }
-    let service = FactoryService.getService<AttachmentTypeService>('AttachmentTypeService');
-    return of(service.attachmentsComponent)
-      .pipe(
-        takeUntil(this.destroy$),
-        switchMap(_ => {
-          if (!service.attachmentsComponent) {
-            return of(true);
-          }
-          return this.hasMissingRequiredAttachments();
-        }),
-        map((isMissingRequiredAttachments) => {
-          if (isMissingRequiredAttachments) {
-            this.displayMissingRequiredAttachmentsDialog();
-          }
-          return !isMissingRequiredAttachments
-        })
-      );
-  }
 }
