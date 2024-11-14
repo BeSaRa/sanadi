@@ -2275,7 +2275,7 @@ export const newNavigationMenuList = [
     path: SystemPathsEnum.PENALTIES_AND_VIOLATIONS + '/logs',
     icon: serviceOutputIcon,
     isSvg: false,
-    permission: EServicePermissionsEnum.PENALTIES_AND_VIOLATIONS,
+    permission: EServicePermissionsEnum.MANAGE_PENALTIES_VIOLATIONS_LOGS,
     permissionGroup: null,
     parent: 3501,
     group: GroupNames.PENALTIES_AND_VIOLATIONS,

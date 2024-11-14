@@ -24,7 +24,7 @@ const routes: Routes = [
       canActivate: [NewServicePermissionGuard.canActivate],
       resolve: {info: ServiceItemResolver.resolve},
       data: {
-        permissionKey: EServicePermissionsEnum.PENALTIES_AND_VIOLATIONS,
+        permissionKey: EServicePermissionsEnum.MANAGE_PENALTIES_VIOLATIONS_LOGS,
         permissionGroup: null,
         checkAnyPermission: false,
       }

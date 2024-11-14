@@ -372,6 +372,7 @@ const externalCharityPermissionsGroup:PermissionsEnum[]=[
 const penaltiesViolationsPermissionsGroup:EServicePermissionsEnum[]=[
   EServicePermissionsEnum.PENALTIES_AND_VIOLATIONS,
   EServicePermissionsEnum.SEARCH_SERVICE_PENALTIES_AND_VIOLATIONS,
+  EServicePermissionsEnum.MANAGE_PENALTIES_VIOLATIONS_LOGS
  
 ]
 const permissionGroups: PermissionGroupsMapType = {
