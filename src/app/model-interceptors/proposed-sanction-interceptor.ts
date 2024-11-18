@@ -1,5 +1,4 @@
 import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
-import { AdminResult } from "@app/models/admin-result";
 import { Penalty } from "@app/models/penalty";
 import { ProposedSanction } from "@app/models/proposed-sanction";
 
@@ -10,9 +9,8 @@ export class ProposedSanctionInterceptor implements IModelInterceptor<ProposedSa
       return model;
     }
   
-    receive(model: ProposedSanction): ProposedSanction {
-    
-      model.penaltyInfo = new Penalty().clone(model.penaltyInfo);
+    receive(model: ProposedSanction): ProposedSanction {      
+      model.penaltyInfo = new Penalty().clone(model.penaltyInfo);      
       return model;
     }
 
