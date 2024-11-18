@@ -174,11 +174,11 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
     this.model = model;
     this.form.patchValue({ ...this.model });
 
-    this.makeRequiredIfHasId([
-      this.legalBasisControl,
-      this.legalActionControl,
-      this.proposedSanctionControl
-    ]);
+    // this.makeRequiredIfHasId([
+    //   this.legalBasisControl,
+    //   this.legalActionControl,
+    //   this.proposedSanctionControl
+    // ]);
   }
 @ViewChild(IncidentElementsComponent) incidentElementsRef?: IncidentElementsComponent;
 @ViewChild(LegalActionsComponent) legalActionsRef?: LegalActionsComponent;

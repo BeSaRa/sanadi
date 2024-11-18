@@ -98,10 +98,10 @@ export class PenaltiesAndViolations extends LicenseApprovalModel<PenaltiesAndVio
       entityType: controls ? [values.entityType, [CustomValidators.required]] : values.entityType,
       competentTeamID: controls ? [values.competentTeamID, [CustomValidators.required]] : values.competentTeamID,
       legalAction: controls ? [values.legalAction, [CustomValidators.required]] : values.legalAction,
-      legalBasis: controls ? [values.legalBasis, [CustomValidators.requiredArrayAfterSave(this)]] : values.legalBasis,
+      legalBasis: controls ? [values.legalBasis, []] : values.legalBasis,
       externalEntityDTO: controls ? [values.externalEntityDTO, []] : values.externalEntityDTO,
       incidents: controls ? [values.incidents, []] : values.incidents,
-      proposedSanction: controls ? [values.proposedSanction, [CustomValidators.requiredArrayAfterSave(this)]] : values.proposedSanction,
+      proposedSanction: controls ? [values.proposedSanction, []] : values.proposedSanction,
       incidentReport: controls ? [values.incidentReport, [CustomValidators.requiredArray]] : values.incidentReport,
       description: controls ? [values.description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.description,
     }
