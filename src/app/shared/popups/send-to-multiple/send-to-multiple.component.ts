@@ -94,6 +94,9 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
   departmentsAndSectorsWFResponses = [
     WFResponseType.PROJECT_COMPLETION_SEND_TO_SINGLE_DEPARTMENT
   ]
+  includeAllDepartmentsWFResponseList = [
+    WFResponseType.PENALTIES_VIOLATIONS_SEND_TO_MULTI_DEPARTMENT
+  ]
   isSendToDepartments(): boolean {
     return this.multiSendToDepartmentWFResponseList.includes(this.data.sendToResponse);
   }
@@ -114,6 +117,10 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
 
     forkJoin([serviceData, internalDepartments])
       .subscribe(([relatedDepartments, allDepartments]) => {
+        if(this.includeAllDepartmentsWFResponseList.includes(this.data.sendToResponse)){
+          this.departments = allDepartments.filter(dep => relatedDepartments.includes(dep.id));
+          return;
+        }
         this.departments = allDepartments.filter(dep => relatedDepartments.includes(dep.id) && dep.id !== this.employee.getInternalDepartment()?.id);
       })
   }
