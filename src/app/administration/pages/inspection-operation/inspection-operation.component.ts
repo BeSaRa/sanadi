@@ -119,7 +119,7 @@ export class InspectionOperationComponent extends AdminGenericComponent<Inspecti
   showChildren(item: InspectionOperation, $event?: Event): void {
     $event?.preventDefault();
 
-    this.service.openChildrenDialog(item)
+    this.service.openChildrenDialog(this.models.filter(model => model.parentId === item.id))
     .pipe(filter((dialog): dialog is DialogRef => !!dialog))
     .pipe(switchMap(dialog => dialog.onAfterClose$))
     .subscribe(() => this.reload$.next(null))

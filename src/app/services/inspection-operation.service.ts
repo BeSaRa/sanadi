@@ -61,9 +61,9 @@ export class InspectionOperationService extends CrudWithDialogGenericService<Ins
       })
     );
   }
-  openChildrenDialog(model: InspectionOperation): Observable<DialogRef> {
-    return of(this.dialog.show<IDialogData<InspectionOperation>>(InspectionOperationChildrenPopupComponent, {
-      model: model,
+  openChildrenDialog(models: InspectionOperation[]): Observable<DialogRef> {
+    return of(this.dialog.show<IDialogData<InspectionOperation[]>>(InspectionOperationChildrenPopupComponent, {
+      model: models,
       operation: OperationTypes.UPDATE
     }));
   }
