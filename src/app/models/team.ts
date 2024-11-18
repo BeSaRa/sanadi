@@ -28,7 +28,7 @@ export class Team extends BaseModel<Team, TeamService> {
   parentSectorId!:number;
   statusDateModified: string | null = '';
   isInternal!:boolean;
-
+  category!:number;
   createdByInfo!: AdminResult;
   updatedByInfo!: AdminResult;
   statusInfo!: AdminResult;
