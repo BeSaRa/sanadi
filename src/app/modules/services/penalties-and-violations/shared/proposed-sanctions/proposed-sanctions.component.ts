@@ -73,7 +73,7 @@ export class ProposedSanctionsComponent implements ControlValueAccessor, OnInit,
 
     onChange!: (value: ProposedSanction[]) => void
     onTouch!: () => void
-    writeValue(value: ProposedSanction[]): void {
+    writeValue(value: ProposedSanction[]): void {        
         this.value.set(value??[])
 
     }

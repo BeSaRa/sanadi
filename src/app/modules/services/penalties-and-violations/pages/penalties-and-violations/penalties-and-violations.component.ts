@@ -1,4 +1,4 @@
-import { Component, effect, inject, Injector, Signal, ViewChild } from '@angular/core';
+import { Component, inject, Injector, Signal, ViewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
@@ -19,12 +19,8 @@ import { ProfileService } from '@app/services/profile.service';
 import { ToastService } from '@app/services/toast.service';
 import { TabMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { map, Observable, of, switchMap, takeUntil, tap } from 'rxjs';
+import { Observable, takeUntil, tap } from 'rxjs';
 import { IncidentElementsComponent } from '../../shared/incident-elements/incident-elements.component';
-import { PenaltyService } from '@app/services/penalty.service';
-import { AttachmentTypeService } from '@app/services/attachment-type.service';
-import { FactoryService } from '@app/services/factory.service';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { LegalActionsComponent } from '../../shared/legal-actions/legal-actions.component';
 
 @Component({
@@ -147,6 +143,7 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
 
   _afterSave(model: PenaltiesAndViolations, saveType: SaveTypes, operation: OperationTypes): void {
     this.model = model;
+    this.form.patchValue({ ...this.model });    
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
