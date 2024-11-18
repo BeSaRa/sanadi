@@ -42,7 +42,7 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
   fb = inject(UntypedFormBuilder);
   profileService = inject(ProfileService);
   injector = inject(Injector);
-  teams = this.employeeService.teams.filter(item => item.id > 0)
+  teams = this.employeeService.teams.filter(item => item.category === 1)
 
 
   constructor() {
