@@ -19,9 +19,10 @@ import { ProfileService } from '@app/services/profile.service';
 import { ToastService } from '@app/services/toast.service';
 import { TabMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { Observable, takeUntil, tap } from 'rxjs';
+import { map, Observable, takeUntil, tap } from 'rxjs';
 import { IncidentElementsComponent } from '../../shared/incident-elements/incident-elements.component';
 import { LegalActionsComponent } from '../../shared/legal-actions/legal-actions.component';
+import { TeamService } from '@app/services/team.service';
 
 @Component({
   selector: 'penalties-and-violations',
@@ -38,7 +39,11 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
   fb = inject(UntypedFormBuilder);
   profileService = inject(ProfileService);
   injector = inject(Injector);
-  teams = this.employeeService.teams.filter(item => item.category === 1)
+  teamsService = inject(TeamService);
+  teams$ = this.teamsService.loadActive()
+  .pipe(
+    map(teams => teams.filter(team => team.category === 1))
+  );
 
 
   constructor() {
