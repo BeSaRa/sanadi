@@ -41,9 +41,9 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
   injector = inject(Injector);
   teamsService = inject(TeamService);
   teams$ = this.teamsService.loadActive()
-  .pipe(
-    map(teams => teams.filter(team => team.category === 1))
-  );
+    .pipe(
+      map(teams => teams.filter(team => team.category === 1))
+    );
 
 
   constructor() {
@@ -148,7 +148,7 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
 
   _afterSave(model: PenaltiesAndViolations, saveType: SaveTypes, operation: OperationTypes): void {
     this.model = model;
-    this.form.patchValue({ ...this.model });    
+    this.form.patchValue({ ...this.model });
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
@@ -185,8 +185,8 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
     //   this.proposedSanctionControl
     // ]);
   }
-@ViewChild(IncidentElementsComponent) incidentElementsRef?: IncidentElementsComponent;
-@ViewChild(LegalActionsComponent) legalActionsRef?: LegalActionsComponent;
+  @ViewChild(IncidentElementsComponent) incidentElementsRef?: IncidentElementsComponent;
+  @ViewChild(LegalActionsComponent) legalActionsRef?: LegalActionsComponent;
   _resetForm(): void {
     this.form.reset();
     this.incidentElementsRef?.form.reset();
@@ -230,6 +230,8 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
       }
     }
     this.readonly ? this.form.disable() : this.form.enable()
+    this.model.id ? this.legalActionControl.disable() : this.legalActionControl.enable();
+
 
   }
 
