@@ -4,6 +4,7 @@ import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { PenaltyViolationLog } from '@app/models/penalty-violation-log';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { EmployeeService } from '@app/services/employee.service';
 import { LangService } from '@app/services/lang.service';
 import { PenaltyViolationLogService } from '@app/services/penalty-violation-log.service';
 import { PenaltyService } from '@app/services/penalty.service';
@@ -25,6 +26,7 @@ export class PenaltyViolationLogsComponent extends AdminGenericComponent<Penalty
   service = inject(PenaltyViolationLogService);
   penaltyService = inject(PenaltyService);
   profileService = inject(ProfileService); 
+  employeeService = inject(EmployeeService);
   constructor() {
     super();
   }
@@ -35,7 +37,8 @@ export class PenaltyViolationLogsComponent extends AdminGenericComponent<Penalty
 
   @ViewChild('table') table!: TableComponent;
   displayedColumns: (keyof PenaltyViolationLog)[] = ['incidentNumber', 'penalty','orgId' , 'updatedOn','penaltyDate'];
-  searchColumns: string[] = ['search_incident_number', 'search_penalty', 'search_organization'];
+  searchColumns: string[] = this.employeeService.isInternalUser() ?
+  ['search_incident_number', 'search_penalty', 'search_organization'] : ['search_incident_number', 'search_penalty'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_incident_number: {
       key: 'incidentNumber',
