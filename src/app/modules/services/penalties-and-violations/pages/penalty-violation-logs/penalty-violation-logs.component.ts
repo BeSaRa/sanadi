@@ -1,8 +1,6 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { DateUtils } from '@app/helpers/date-utils';
-import { CrudServiceInterface } from '@app/interfaces/crud-service-interface';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { PenaltyViolationLog } from '@app/models/penalty-violation-log';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
@@ -12,7 +10,6 @@ import { PenaltyService } from '@app/services/penalty.service';
 import { ProfileService } from '@app/services/profile.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { takeUntil, filter, switchMap, Observable, map, catchError, of } from 'rxjs';
 
 @Component({
   selector: 'penalty-violation-logs',
@@ -110,7 +107,10 @@ export class PenaltyViolationLogsComponent extends AdminGenericComponent<Penalty
       orgId:[null],
     })
   }
-  
+  getColumnFilterValue(): Partial<PenaltyViolationLog> {
+    const filter = {... this.columnFilterForm.getRawValue() , penalty: [this.columnFilterForm.get('penalty')?.value]};
+    return filter;
+  }
   getDate(timeStamp?: number) {
     if (!timeStamp) return;
 
