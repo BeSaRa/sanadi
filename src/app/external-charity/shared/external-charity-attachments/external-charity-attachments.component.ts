@@ -94,18 +94,7 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
                 this.mergedAttachments = [...this.attachments,...attachments];
             });
     }
-    // private _mergeAttachments(attachments: FileNetDocument[]) {
-    //     return attachments.map(attachment => {
-           
-    //         const updatedAttachment: FileNetDocument =
-    //          this.attachments.find(item => item.attachmentTypeId === attachment.attachmentTypeId)?? attachment; 
-             
-             
-    //         updatedAttachment.required = this.isAllRequired$.value 
-    //         return updatedAttachment;
-    //     })
-        
-    // }
+   
     private _getFileIconsEnumKey(mimeType: string) {
         try {
             const fileTypeKey = Object.keys(FileMimeTypesEnum)[Object.values(FileMimeTypesEnum).indexOf(mimeType as FileMimeTypesEnum)];
@@ -179,6 +168,7 @@ export class ExternalCharityAttachmentsComponent implements OnInit, OnDestroy {
             description: this.selectedFile?.description,
             attachmentTypeId: this.selectedFile?.attachmentTypeId,
             id: this.selectedFile?.id,
+            vsId :this.selectedFile?.vsId,
             files: filesList,
         })
         return this.externalCharityAttachmentsService.updateDocument(this.requestId!, document)
