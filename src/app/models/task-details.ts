@@ -47,6 +47,9 @@ export class TaskDetails extends Cloneable<TaskDetails> {
     return this.actions?.includes(WFActions.ACTION_CANCEL_CLAIM);
   }
 
+  isReview(): boolean {
+    return this.name === 'DEP_REV'
+  }
   isNotClaimed(): boolean {
     return this.actions.includes(WFActions.ACTION_CLAIM);
   }
