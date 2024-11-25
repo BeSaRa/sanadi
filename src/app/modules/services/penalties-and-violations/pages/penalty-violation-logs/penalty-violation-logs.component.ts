@@ -11,6 +11,7 @@ import { PenaltyService } from '@app/services/penalty.service';
 import { ProfileService } from '@app/services/profile.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { filter, take, tap, timer } from 'rxjs';
 
 @Component({
   selector: 'penalty-violation-logs',
@@ -69,35 +70,9 @@ export class PenaltyViolationLogsComponent extends AdminGenericComponent<Penalty
         optionValueKey: 'id',
       }
     },
-    //   search_penaltyEn: {
-    //     key: 'penaltyEn',
-    //     controlType: 'text',
-    //     property: 'penaltyEn',
-    //     label: 'english_name',
-    //     maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-    //   },
-    //   search_status: {
-    //     key: 'status',
-    //     controlType: 'select',
-    //     property: 'status',
-    //     label: 'lbl_status',
-    //     selectOptions: {
-    //       options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
-    //       labelProperty: 'getName',
-    //       optionValueKey: 'lookupKey'
-    //     }
-    //   }
-
+   
   }
 
-
-  sortingCallbacks = {
-    //   statusInfo: (a: PenaltyViolationLog, b: PenaltyViolationLog, dir: SortEvent): number => {
-    //     let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
-    //       value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
-    //     return CommonUtils.getSortValue(value1, value2, dir.direction);
-    //   }
-  }
   afterReload(): void {
     this.table && this.table.clearSelection();
   }
@@ -109,6 +84,13 @@ export class PenaltyViolationLogsComponent extends AdminGenericComponent<Penalty
       penalty: [null],
       orgId:[null],
     })
+    timer(0)
+    .pipe(
+      filter(_=>this.employeeService.isExternalUser()),
+      tap(_=>this.columnFilterForm.get('orgId')?.setValue(this.employeeService.getProfile()?.id)),
+      take(1)
+    )
+    .subscribe()
   }
   getColumnFilterValue(): Partial<PenaltyViolationLog> {
     const filter = {... this.columnFilterForm.getRawValue() , penalty: [this.columnFilterForm.get('penalty')?.value]};
