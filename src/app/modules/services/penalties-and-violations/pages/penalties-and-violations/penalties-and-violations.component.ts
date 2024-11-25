@@ -208,7 +208,7 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
 
     let caseStatus = this.model.getCaseStatus();
     if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION 
-      || caseStatus === CommonCaseStatus.SAVED
+      || caseStatus === CommonCaseStatus.SAVED || this.model.isReview()
     ) {
       this.readonly = true;
       this.form.disable();

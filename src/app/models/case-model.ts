@@ -475,6 +475,9 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
     return !!(this.taskDetails && this.taskDetails.tkiid)
   }
 
+  isReview(): boolean {
+    return this.taskDetails && this.taskDetails.isReview();
+  }
   setItemRoute(): void {
     this.itemRoute = '/' + this.service.getMenuItem().path + '/service';
     this.itemDetails = this.encrypt.encrypt<INavigatedItem>({
