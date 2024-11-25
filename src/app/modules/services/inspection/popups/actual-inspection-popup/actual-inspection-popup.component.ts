@@ -68,10 +68,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     priorities: Lookup[] = this.lookupService.listByCategory.PriorityType
     readonly: boolean = false;
     unKnownToggle$: Subject<void> = new Subject()
-    unKnownState$ = this.unKnownToggle$.pipe(
-        scan((state, _) => !state, false),
-        startWith(false)
-    )
+    unKnownState$!: Observable<boolean> ; 
     constructor(public dialogRef: DialogRef,
         public fb: UntypedFormBuilder,
         public lang: LangService,
@@ -93,6 +90,10 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         this.model = data.model;
         this.operation = data.operation;
         data.creationSource && (this.creationSource = data.creationSource);
+       this.unKnownState$ = this.unKnownToggle$.pipe(
+            scan((state, _) => !state, !this.model.knownOrgId),
+            startWith(!this.model.knownOrgId)
+        )
     }
     datepickerOptionsMap: DatepickerOptionsMap = {};
     datepickerControlsMap: DatepickerControlsMap = {};
@@ -326,7 +327,8 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
                 const knownOrgFields = [this.knownOrgIdControl];
                 const unKnownOrgFields = [this.unknownOrgTypeControl, this.unknownOrgNameControl,
                 this.unknownOrgEmailControl, this.unknownOrgOtherDataControl];
-                if (state) {
+                if (state === true) {
+                    this._clearFieldsValues(knownOrgFields)
                     this._clearFieldsValidators(knownOrgFields)
                     this._setUnKnownFieldsValidators();
                 } else {
@@ -343,7 +345,6 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     private _clearFieldsValidators(fields: UntypedFormControl[]) {
         fields.forEach(field => {
             field.clearValidators();
-
             field.updateValueAndValidity();
         })
     }
