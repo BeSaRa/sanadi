@@ -68,8 +68,8 @@ export class LicenseActivityCompletePopupComponent implements OnInit {
         .pipe(
             take(1),
           
-        ).subscribe(()=>{
-            this.dialogRef.close(model);
+        ).subscribe((updatedModel)=>{
+            this.dialogRef.close(updatedModel);
         })
     }
 
