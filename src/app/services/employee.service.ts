@@ -98,7 +98,11 @@ export class EmployeeService {
     internationalCooperation: {
       authName: 'International Cooperation',
       ldapGroupName: '"International_Cooperation_STG"'
-    }
+    },
+    legalAffairs: {
+      authName: 'Legal Affairs',
+      ldapGroupName: '"LA1_DEPT"'
+    },
   };
   private customMenuInterceptor = new CustomMenuInterceptor();
   private profileInterceptor = new ProfileInterceptor();
@@ -376,6 +380,9 @@ export class EmployeeService {
 
   isRiskAndComplianceUser(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
     return this._isInTeam(this.userTeamsMap.riskAndComplianceUser, compareBy);
+  }
+  isLegalAffairsUser(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.legalAffairs, compareBy);
   }
 
   isConstructionExpert(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {

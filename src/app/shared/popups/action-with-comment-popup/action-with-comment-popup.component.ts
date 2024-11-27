@@ -59,15 +59,15 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
 
-  private excludeLicenseDateServices:number[] =[
+  private excludeLicenseDateServices: number[] = [
     CaseTypes.FINANCIAL_ANALYSIS,
-     CaseTypes.PENALTIES_AND_VIOLATIONS
+    CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
-  private excludeTerms:number[] =[
-     CaseTypes.PENALTIES_AND_VIOLATIONS
+  private excludeTerms: number[] = [
+    CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
-  private excludeConditionalLicense:number[] =[
-     CaseTypes.PENALTIES_AND_VIOLATIONS
+  private excludeConditionalLicense: number[] = [
+    CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
   form!: UntypedFormGroup;
 
@@ -112,10 +112,10 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       this.label = 'organization_final_reject'
     } else if (this.data.actionType === WFResponseType.KNEW) {
       this.label = 'approve'
-    }else if (this.data.actionType === WFResponseType.SAVE) {
+    } else if (this.data.actionType === WFResponseType.SAVE) {
       this.label = 'lbl_save_with_comment';
     }
-     else {
+    else {
       this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.actionType) + '_task') as unknown as keyof ILanguageKeys);
     }
     this.action = this.data.actionType;
@@ -164,36 +164,36 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       );
   }
 
-  get isExcludeDateCaseType(){
+  get isExcludeDateCaseType() {
     return this.data.task &&
-    this.excludeLicenseDateServices.includes(this.data.task.getCaseType()) 
+      this.excludeLicenseDateServices.includes(this.data.task.getCaseType())
   }
-  get isExcludeTerms(){
+  get isExcludeTerms() {
     return this.data.task &&
-    this.excludeLicenseDateServices.includes(this.data.task.getCaseType()) 
+      this.excludeLicenseDateServices.includes(this.data.task.getCaseType())
   }
-  get isExcludeConditionalLicense(){
+  get isExcludeConditionalLicense() {
     return this.data.task &&
-    this.excludeConditionalLicense.includes(this.data.task.getCaseType()) 
+      this.excludeConditionalLicense.includes(this.data.task.getCaseType())
   }
-   isDisabledDateAndDuration(){
-    return this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE || 
-    this.isExcludeDateCaseType
+  isDisabledDateAndDuration() {
+    return this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE ||
+      this.isExcludeDateCaseType
   }
-  isDisabledTerms(){
-    return this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE || 
-    this.isExcludeTerms
+  isDisabledTerms() {
+    return this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE ||
+      this.isExcludeTerms
   }
   buildForm() {
     let controls: any = {
-      licenseStartDate: [{ value: '', disabled: this.isDisabledDateAndDuration()}],
-      licenseDuration: [{ value: null, disabled: this.isDisabledDateAndDuration()},
+      licenseStartDate: [{ value: '', disabled: this.isDisabledDateAndDuration() }],
+      licenseDuration: [{ value: null, disabled: this.isDisabledDateAndDuration() },
       [CustomValidators.required, CustomValidators.number]],
       publicTerms: [{ value: '', disabled: true }, [CustomValidators.required]],
-      customTerms: [{ value: '', disabled: this.isDisabledTerms()}, [CustomValidators.required]],
+      customTerms: [{ value: '', disabled: this.isDisabledTerms() }, [CustomValidators.required]],
       conditionalLicenseIndicator: [false],
       followUpDate: ['', [CustomValidators.required, CustomValidators.minDate(new Date())]],
-      deductionPercent: [{ value: '', disabled: this.isDisabledTerms()}, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]]
+      deductionPercent: [{ value: '', disabled: this.isDisabledTerms() }, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]]
     };
 
     if (!this.canShowDeductionRatio) {
@@ -201,6 +201,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     }
     if (!this.hasLicenseDuration)
       delete controls.licenseDuration;
+
     this.form = this.fb.group(controls);
   }
 
@@ -211,11 +212,11 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     if (this.isRenewAndEmptyFollowupDate) {
       this.licenseStartDateField.reset();
     }
-  
+
     let toFieldDateOptions: IAngularMyDpOptions = JSON.parse(JSON.stringify(this.datepickerOptionsMap.licenseStartDate));
     const disableDate = new Date();
     disableDate.setMonth(disableDate.getMonth() - value)
-    disableDate.setDate(disableDate.getDate()-1);
+    disableDate.setDate(disableDate.getDate() - 1);
     toFieldDateOptions.disableUntil = {
       year: disableDate.getFullYear(),
       month: disableDate.getMonth() + 1,
@@ -251,8 +252,19 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     if (CommonUtils.isValidValue(serviceData.licenseMaxTime)) {
       licenseDurationValidations.push(Validators.max(serviceData.licenseMaxTime));
     }
+
     this.licenseDurationField?.setValidators(licenseDurationValidations);
     this.licenseDurationField?.updateValueAndValidity();
+
+    if (this.data.task.getCaseType() === CaseTypes.PARTNER_APPROVAL && this.employeeService.isLegalAffairsUser()) {
+      this.licenseDurationField?.removeValidators([CustomValidators.required]);
+      this.licenseDurationField?.updateValueAndValidity();
+      this.customTermsField?.removeValidators([CustomValidators.required]);
+      this.customTermsField?.updateValueAndValidity();
+      this.followUpDateField?.removeValidators([CustomValidators.required]);
+      this.followUpDateField?.updateValueAndValidity();
+
+    }
   }
 
   proceed(): Observable<boolean> {
@@ -328,6 +340,9 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
 
   get customTermsField(): UntypedFormControl {
     return this.form.get('customTerms') as UntypedFormControl;
+  }
+  get followUpDateField(): UntypedFormControl {
+    return this.form.get('followUpDate') as UntypedFormControl;
   }
 
   updateCase(): Observable<any> {
