@@ -43,7 +43,7 @@
                <div class="col-md-4 col-sm-12 mb-4 position-relative">
                     <label class="form-label" asteriskIfRequired="entityType"
                          for="entityType">{{lang.map.lbl_incident_relation}}</label>
-                    <ng-select [readonly]="readonly" validationClasses="entityType" appendTo="body" [clearable]="false"
+                    <ng-select [readonly]="readonly || model?.id" validationClasses="entityType" appendTo="body" [clearable]="false"
                          id="entityType" formControlName="entityType">
                          <ng-option [value]="option.lookupKey"
                               *ngFor="let option of entityTypes">{{option.getName()}}</ng-option>
@@ -57,7 +57,7 @@
                          class="form-label">{{lang.map.lbl_organization_slash_association}}</label>
                     <ng-select [selectOnTab]="true" labelForId="organizationId" [clearable]="true"
                          placeholder="{{lang.map.select}}" id="organizationId" [notFoundText]="lang.map.msg_not_found"
-                         [readonly]="readonly" appendTo="body" formControlName="organizationId"
+                         [readonly]="readonly || model?.id" appendTo="body" formControlName="organizationId"
                          validationClasses="organizationId">
                          <ng-option [value]="org.id" [disabled]="!org.isActive()"
                               *ngFor="let org of organizations()">{{org.getName()}}</ng-option>
