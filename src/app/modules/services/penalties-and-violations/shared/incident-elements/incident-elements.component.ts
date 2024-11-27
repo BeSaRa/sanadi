@@ -95,7 +95,8 @@ export class IncidentElementsComponent implements ControlValueAccessor, OnInit, 
         IncidentTypeEnum.INSPECTION_AND_AUDIT_TASKS,
         IncidentTypeEnum.FOLLOW_UPS,
         IncidentTypeEnum.LICENSES,
-        IncidentTypeEnum.OTHER_SOURCES
+        IncidentTypeEnum.OTHER_SOURCES,
+        IncidentTypeEnum.SUSPECTED_CASES
     ]
      displayIncidentNumber(): boolean {
         return this.incidentNumberDisplayKeys.includes(this.incidentTypeChange())
@@ -112,6 +113,8 @@ export class IncidentElementsComponent implements ControlValueAccessor, OnInit, 
                 return this.lang.map.lbl_inspection_task_number
             case IncidentTypeEnum.OTHER_SOURCES:
                 return this.lang.map.lbl_source_name
+            case IncidentTypeEnum.SUSPECTED_CASES:
+                return this.lang.map.lbl_case_file_number
 
             default:
                 return "";
