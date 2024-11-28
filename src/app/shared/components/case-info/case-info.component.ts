@@ -1,6 +1,6 @@
 import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
 import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { CaseModel } from '@app/models/case-model';
 import { LangService } from '@app/services/lang.service';
 import { CaseTypes } from '@app/enums/case-types.enum';
@@ -26,6 +26,8 @@ import { ActionRegistry } from "@models/action-registry";
 import { ServiceActionTypesEnum } from "@enums/service-action-type.enum";
 import { BehaviorSubject, merge } from "rxjs";
 import { delay } from "rxjs/operators";
+import { PenaltiesAndViolationsService } from '@app/services/penalties-and-violations.service';
+import { PenaltiesAndViolations } from '@app/models/penalties-and-violations';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -40,6 +42,7 @@ export class CaseInfoComponent implements OnInit {
     private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
     private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
     private financialTransferLicensingService: FinancialTransferLicensingService,
+    private penaltiesAndViolationsService: PenaltiesAndViolationsService,
     private sharedService: SharedService) {
   }
 
@@ -99,7 +102,9 @@ export class CaseInfoComponent implements OnInit {
   // this should be updated when ever you will add a new document service
   private documentCaseList: number[] = [
     CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
-    CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
+    CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    CaseTypes.PENALTIES_AND_VIOLATIONS
+
   ];
 
   get fullSerial(): string {
@@ -141,6 +146,8 @@ export class CaseInfoComponent implements OnInit {
       return (this.model as GeneralAssociationMeetingAttendance).fullSerial || '';
     } else if (this.model.getCaseType() === CaseTypes.FINANCIAL_TRANSFERS_LICENSING) {
       return (this.model as FinancialTransferLicensing).exportedLicenseFullSerial || '';
+    } else if (this.model.getCaseType() === CaseTypes.PENALTIES_AND_VIOLATIONS) {
+      return (this.model as PenaltiesAndViolations).exportedLicenseFullSerial || '';
     } else {
       return '';
     }
@@ -153,6 +160,8 @@ export class CaseInfoComponent implements OnInit {
       return (this.model as CustomsExemptionRemittance).bookId;
     } else if (this.model.getCaseType() === CaseTypes.FINANCIAL_TRANSFERS_LICENSING) {
       return (this.model as FinancialTransferLicensing).exportedLicenseId;
+    } else if (this.model.getCaseType() === CaseTypes.PENALTIES_AND_VIOLATIONS) {
+      return (this.model as PenaltiesAndViolations).exportedLicenseId;
     } else {
       return '';
     }
@@ -183,14 +192,24 @@ export class CaseInfoComponent implements OnInit {
       return caseStatus === CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION;
     } else if (this.model.caseType === CaseTypes.FINANCIAL_TRANSFERS_LICENSING && this.model.submissionMechanism === SubmissionMechanisms.NOTIFICATION) {
       return caseStatus >= CommonCaseStatus.UNDER_PROCESSING;
-    } else {
+    }
+    else {
       return caseStatus === CommonCaseStatus.FINAL_APPROVE;
     }
   }
 
   isDocumentCase(): boolean {
-    return this.documentCaseList.includes(this.model.getCaseType()) &&
-    this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE && (this.model.getCaseType() !== CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE || this.employeeService.isInternalUser());
+
+    if (!this.documentCaseList.includes(this.model.getCaseType())) {
+      return false;
+    }
+    const caseStatus = this.model.getCaseStatus();
+
+    if (this.model.caseType === CaseTypes.PENALTIES_AND_VIOLATIONS) {
+      return caseStatus >= CommonCaseStatus.UNDER_PROCESSING &&
+        !!(this.model as PenaltiesAndViolations).exportedLicenseId
+    }
+    return this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE && (this.model.getCaseType() !== CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE || this.employeeService.isInternalUser());
   }
 
   isGeneralAssociationMeetingAttendanceInitApproveCase() {
@@ -210,7 +229,7 @@ export class CaseInfoComponent implements OnInit {
     CaseTypes.COLLECTION_APPROVAL,
     CaseTypes.COLLECTOR_LICENSING,
   ]
- get isRestrictedAdvancedSearchCase(){
+  get isRestrictedAdvancedSearchCase() {
     return this.restrictedAdvancedSearchCases.includes(this.model.caseType)
   }
 
@@ -260,6 +279,12 @@ export class CaseInfoComponent implements OnInit {
     if (this.model.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
       (this.generalAssociationMeetingAttendanceService)
         .downloadFinalReport(this.generatedDocumentId)
+        .subscribe((file) => {
+          return this.sharedService.openViewContentDialog(file, document);
+        });
+    }
+    if (this.model.getCaseType() === CaseTypes.PENALTIES_AND_VIOLATIONS) {
+      this.penaltiesAndViolationsService.documentService.downloadDocument((this.model as PenaltiesAndViolations).exportedLicenseId)
         .subscribe((file) => {
           return this.sharedService.openViewContentDialog(file, document);
         });

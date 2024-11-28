@@ -19,10 +19,15 @@ import { ProfileService } from '@app/services/profile.service';
 import { ToastService } from '@app/services/toast.service';
 import { TabMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { map, Observable, takeUntil, tap } from 'rxjs';
+import { map, Observable, of, switchMap, takeUntil, tap } from 'rxjs';
 import { IncidentElementsComponent } from '../../shared/incident-elements/incident-elements.component';
 import { LegalActionsComponent } from '../../shared/legal-actions/legal-actions.component';
 import { TeamService } from '@app/services/team.service';
+import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { GlobalSettingsService } from '@app/services/global-settings.service';
+import { GlobalSettings } from '@app/models/global-settings';
+import { FileNetDocument } from '@app/models/file-net-document';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 
 @Component({
   selector: 'penalties-and-violations',
@@ -207,7 +212,7 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
     }
 
     let caseStatus = this.model.getCaseStatus();
-    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION 
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION
       || caseStatus === CommonCaseStatus.SAVED || this.model.isReview()
     ) {
       this.readonly = true;
@@ -336,5 +341,70 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
       }
       control.updateValueAndValidity();
     });
+  }
+
+  uploadAttachment(uploader: HTMLInputElement): void {
+    if (!this.model!.id) {
+      this.dialog.info(
+        this.lang.map.this_action_cannot_be_performed_before_saving_the_request
+      );
+      return;
+    }
+    uploader.click();
+  }
+  allowedExtensions: string[] = [FileExtensionsEnum.DOCX, FileExtensionsEnum.DOC];
+
+  globalSettingsService = inject(GlobalSettingsService)
+  globalSettings: GlobalSettings = this.globalSettingsService.getGlobalSettings();
+  allowedFileMaxSize: number = this.globalSettings.fileSize
+
+  uploaderFileChange($event: Event): void {
+    const input = ($event.target as HTMLInputElement);
+    const file = input.files?.item(0);
+    const validFile = file ? (this.allowedExtensions.includes(file.name.getExtension())) : true;
+    !validFile ? input.value = '' : null;
+    if (!validFile) {
+      this.dialog.error(this.lang.map.msg_only_those_files_allowed_to_upload.change({ files: this.allowedExtensions.join(', ') }));
+      input.value = '';
+      return;
+    }
+    const validFileSize = file ? (file.size <= this.allowedFileMaxSize * 1000 * 1024) : true;
+    !validFileSize ? input.value = '' : null;
+    if (!validFileSize) {
+      this.dialog.error(this.lang.map.msg_only_this_file_size_or_less_allowed_to_upload.change({ size: this.allowedFileMaxSize }));
+      input.value = '';
+      return;
+    }
+    of(null)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(_ => {
+          return this._createAttachmentFile(input.files!);
+
+        })
+      ).subscribe((model) => {
+        input.value = '';
+        this._afterSaveAttachmentFile(model);
+      });
+
+
+  }
+  private _createAttachmentFile(filesList: FileList | undefined) {
+    return this.service.uploadPenaltyBook(this.model!, (new FileNetDocument()).clone({
+      documentTitle: this.lang.map.lbl_final_report,
+      description: this.lang.map.lbl_final_report,
+      attachmentTypeId: -1,
+      required: false,
+      isPublished: false,
+      files: filesList
+    }));
+  }
+  private _afterSaveAttachmentFile(model: PenaltiesAndViolations) {
+    this.model!.exportedLicenseId = model.exportedLicenseId;
+    this.model!.exportedLicenseFullSerial = model.exportedLicenseFullSerial;
+    this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
+  }
+  get isUploadPenaltyBookStage() {
+    return this.model?.getResponses().includes(WFResponseType.FINAL_APPROVE)
   }
 }

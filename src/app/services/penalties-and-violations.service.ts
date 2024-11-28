@@ -1,7 +1,7 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpEventType, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { CastResponseContainer } from "@app/decorators/decorators/cast-response";
+import { CastResponse, CastResponseContainer } from "@app/decorators/decorators/cast-response";
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
@@ -12,6 +12,8 @@ import { DynamicOptionsService } from "./dynamic-options.service";
 import { FactoryService } from "./factory.service";
 import { UrlService } from "./url.service";
 import { PenaltiesAndViolationsSearchCriteria } from "@app/models/penalties-and-violations-search-criteria";
+import { FileNetDocument } from "@app/models/file-net-document";
+import { catchError, filter, map, of } from "rxjs";
 
 @CastResponseContainer({
     $default: {
@@ -72,6 +74,24 @@ import { PenaltiesAndViolationsSearchCriteria } from "@app/models/penalties-and-
     getSearchCriteriaModel<S extends PenaltiesAndViolations>(): PenaltiesAndViolations {
       return new PenaltiesAndViolationsSearchCriteria();
     }
-
+    @CastResponse(undefined, {
+      fallback: '$default',
+      unwrap: 'rs'
+    })
+     uploadPenaltyBook(model: PenaltiesAndViolations, document: FileNetDocument) {
+      const content = document.files?.item(0);
+      const formData = new FormData();
+      content ? formData.append('content', content) : null;
+      let params:any = {
+        caseId:model.getCaseId()
+      }
+      model.exportedLicenseId  && (params = {...params , docId:model.exportedLicenseId});
+     
+      return this.http.post<PenaltiesAndViolations>(this._getURLSegment() + '/report', formData, {
+        params: new HttpParams({fromObject: params}),
+      
+      })
+      .pipe(catchError(_ => of(model)));
+    }
   }
   

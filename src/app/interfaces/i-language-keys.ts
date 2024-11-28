@@ -2339,4 +2339,6 @@ export interface ILanguageKeys {
   lbl_save_with_comment: string;
   menu_penalties_violation_logs: string;
   lbl_case_file_number: string;
+  lbl_upload_penalty_book: string;
+  msg_please_add_penalty_book: string;
 }

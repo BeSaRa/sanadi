@@ -34,6 +34,7 @@ export class PenaltiesAndViolations extends LicenseApprovalModel<PenaltiesAndVio
   proposedSanction: ProposedSanction[] = []
   incidentReport!: string[];
   description: string = '';
+  exportedLicenseId!:string;
   service!: PenaltiesAndViolationsService;
   lang!:LangService; 
   dialog!:DialogService
@@ -107,7 +108,7 @@ export class PenaltiesAndViolations extends LicenseApprovalModel<PenaltiesAndVio
     }
   }
   canLaunch() {
-    return this.legalBasis.length > 0 && this.proposedSanction.length > 0
+    return this.legalBasis.length > 0 && this.proposedSanction.length > 0 && !!this.exportedLicenseId
   }
    invalidLaunchMessage(){
     if(this.legalBasis.length<1){
@@ -116,6 +117,9 @@ export class PenaltiesAndViolations extends LicenseApprovalModel<PenaltiesAndVio
     }
     if(this.proposedSanction.length<1){
       return this.lang.map.msg_please_add_penalties;
+    }
+    if(!this.exportedLicenseId){
+      return this.lang.map.msg_please_add_penalty_book;
     }
     return '';
   }
