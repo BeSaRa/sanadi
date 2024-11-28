@@ -34,7 +34,8 @@
                          for="competentTeamID">{{lang.map.lbl_team}}</label>
                     <ng-select [readonly]="readonly" validationClasses="competentTeamID" appendTo="body"
                          [clearable]="false" id="competentTeamID" formControlName="competentTeamID">
-                         <ng-option [value]="option.id" *ngFor="let option of (teams$ | async)">{{option.getName()}}</ng-option>
+                         <ng-option [value]="option.id"
+                              *ngFor="let option of (teams$ | async)">{{option.getName()}}</ng-option>
                     </ng-select>
                     <app-field-error-message controlName="competentTeamID"></app-field-error-message>
                </div>
@@ -43,8 +44,8 @@
                <div class="col-md-4 col-sm-12 mb-4 position-relative">
                     <label class="form-label" asteriskIfRequired="entityType"
                          for="entityType">{{lang.map.lbl_incident_relation}}</label>
-                    <ng-select [readonly]="readonly || model?.id" validationClasses="entityType" appendTo="body" [clearable]="false"
-                         id="entityType" formControlName="entityType">
+                    <ng-select [readonly]="readonly || model?.id" validationClasses="entityType" appendTo="body"
+                         [clearable]="false" id="entityType" formControlName="entityType">
                          <ng-option [value]="option.lookupKey"
                               *ngFor="let option of entityTypes">{{option.getName()}}</ng-option>
                     </ng-select>
@@ -95,6 +96,19 @@
                </div>
           </div>
      </ng-template>
+    @if(isUploadPenaltyBookStage){
+     <ng-container>
+          <button  [tooltip]="lang.map.upload_file" style="margin-inline-end: 1rem;"
+               class="btn btn-primary" (click)="uploadAttachment(uploader)">
+               {{lang.map.lbl_upload_penalty_book}}
+               <i [class.mdi-progress-upload]="model!.exportedLicenseId"
+                    [class.mdi-upload]="!model!.exportedLicenseId" class="mdi mdi-upload"></i>
+          </button>
+
+          <input type="file" (change)="uploaderFileChange($event)" #uploader id="attachmentUploader"
+               class="visually-hidden" [accept]="allowedExtensions.join(',')">
+     </ng-container>
+    }
 
 
 </ng-container>
