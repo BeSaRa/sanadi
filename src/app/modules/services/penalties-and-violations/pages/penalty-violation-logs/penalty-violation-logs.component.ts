@@ -92,8 +92,13 @@ export class PenaltyViolationLogsComponent extends AdminGenericComponent<Penalty
     )
     .subscribe()
   }
+  getPenaltyControl(){
+    return this.columnFilterForm.get('penalty')
+  };
   getColumnFilterValue(): Partial<PenaltyViolationLog> {
-    const filter = {... this.columnFilterForm.getRawValue() , penalty: [this.columnFilterForm.get('penalty')?.value]};
+    const penaltyValue = this.columnFilterForm.get('penalty')?.value
+    const filter = {... this.columnFilterForm.getRawValue() ,
+       penalty: !penaltyValue ? null: [penaltyValue]};
     return filter;
   }
   getDate(timeStamp?: number) {
