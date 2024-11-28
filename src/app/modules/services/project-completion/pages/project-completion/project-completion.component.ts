@@ -433,8 +433,8 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     return this.countries.find(item => item.enName.toLowerCase() === 'qatar')!
   }
   private separateDacFromOcha(list: AdminLookup[]) {
-    this.mainDacCategories = list.filter(item => item.type === DomainTypes.DEVELOPMENT)
-    this.mainUNOCHACategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN)
+    this.mainDacCategories = list.filter(item => !item.parentId &&  item.type === DomainTypes.DEVELOPMENT)
+    this.mainUNOCHACategories = list.filter(item => !item.parentId && item.type === DomainTypes.HUMANITARIAN)
   }
   private resetFieldsValidation(fields: AbstractControl[]): void {
     fields.forEach(field => field.setValidators([]))
