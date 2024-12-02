@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { SearchColumnConfigMap } from '@app/interfaces/i-search-column-config';
 import { PenaltyViolationLog } from '@app/models/penalty-violation-log';
+import { ProposedSanction } from '@app/models/proposed-sanction';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { EmployeeService } from '@app/services/employee.service';
 import { LangService } from '@app/services/lang.service';
@@ -26,7 +27,7 @@ export class PenaltyViolationLogsComponent extends AdminGenericComponent<Penalty
   fb = inject(FormBuilder);
   service = inject(PenaltyViolationLogService);
   penaltyService = inject(PenaltyService);
-  profileService = inject(ProfileService); 
+  profileService = inject(ProfileService);
   employeeService = inject(EmployeeService);
   constructor() {
     super();
@@ -37,9 +38,9 @@ export class PenaltyViolationLogsComponent extends AdminGenericComponent<Penalty
   }
 
   @ViewChild('table') table!: TableComponent;
-  displayedColumns: (keyof PenaltyViolationLog)[] = ['incidentNumber', 'penalty','orgId' , 'updatedOn','penaltyDate'];
+  displayedColumns: (keyof PenaltyViolationLog)[] = ['incidentNumber', 'penalty', 'orgId', 'updatedOn', 'penaltyDate'];
   searchColumns: string[] = this.employeeService.isInternalUser() ?
-  ['search_incident_number', 'search_penalty', 'search_organization'] : ['search_incident_number', 'search_penalty'];
+    ['search_incident_number', 'search_penalty', 'search_organization'] : ['search_incident_number', 'search_penalty'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_incident_number: {
       key: 'incidentNumber',
@@ -70,7 +71,7 @@ export class PenaltyViolationLogsComponent extends AdminGenericComponent<Penalty
         optionValueKey: 'id',
       }
     },
-   
+
   }
 
   afterReload(): void {
@@ -82,23 +83,25 @@ export class PenaltyViolationLogsComponent extends AdminGenericComponent<Penalty
     this.columnFilterForm = this.fb.group({
       incidentNumber: [''],
       penalty: [null],
-      orgId:[null],
+      orgId: [null],
     })
     timer(0)
-    .pipe(
-      filter(_=>this.employeeService.isExternalUser()),
-      tap(_=>this.columnFilterForm.get('orgId')?.setValue(this.employeeService.getProfile()?.id)),
-      take(1)
-    )
-    .subscribe()
+      .pipe(
+        filter(_ => this.employeeService.isExternalUser()),
+        tap(_ => this.columnFilterForm.get('orgId')?.setValue(this.employeeService.getProfile()?.id)),
+        take(1)
+      )
+      .subscribe()
   }
-  getPenaltyControl(){
+  getPenaltyControl() {
     return this.columnFilterForm.get('penalty')
   };
   getColumnFilterValue(): Partial<PenaltyViolationLog> {
     const penaltyValue = this.columnFilterForm.get('penalty')?.value
-    const filter = {... this.columnFilterForm.getRawValue() ,
-       penalty: !penaltyValue ? null: [penaltyValue]};
+    const filter = {
+      ... this.columnFilterForm.getRawValue(),
+      penalty: !penaltyValue ? null : [penaltyValue]
+    };
     return filter;
   }
   getDate(timeStamp?: number) {
@@ -106,5 +109,6 @@ export class PenaltyViolationLogsComponent extends AdminGenericComponent<Penalty
 
     return new Date(timeStamp)
   }
+
 }
 
