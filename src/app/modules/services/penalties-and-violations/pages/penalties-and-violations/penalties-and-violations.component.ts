@@ -45,14 +45,18 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
   profileService = inject(ProfileService);
   injector = inject(Injector);
   teamsService = inject(TeamService);
+  
+  
   teams$ = this.teamsService.loadActive()
     .pipe(
-      map(teams => teams.filter(team => team.category === 1))
+      map(teams => teams.filter(team =>
+        team.parentDeptId === this.employeeService.getInternalDepartment()?.id &&
+        team.category === 1))
     );
 
 
   constructor() {
-    super();
+    super();    
   }
   organizations = toSignal(this.profileService.getProfilesByProfileType([ProfileTypes.CHARITY, ProfileTypes.INSTITUTION]));
 
