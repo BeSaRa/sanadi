@@ -69,6 +69,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   private excludeConditionalLicense: number[] = [
     CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
+  
   form!: UntypedFormGroup;
 
   private readonly action: WFResponseType;
@@ -184,6 +185,9 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     return this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE ||
       this.isExcludeTerms
   }
+  get isFollowUpDateRequired() {
+    return this.data.task.getCaseType() !== CaseTypes.PENALTIES_AND_VIOLATIONS
+  }
   buildForm() {
     let controls: any = {
       licenseStartDate: [{ value: '', disabled: this.isDisabledDateAndDuration() }],
@@ -192,7 +196,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       publicTerms: [{ value: '', disabled: true }, [CustomValidators.required]],
       customTerms: [{ value: '', disabled: this.isDisabledTerms() }, [CustomValidators.required]],
       conditionalLicenseIndicator: [false],
-      followUpDate: ['', [CustomValidators.required, CustomValidators.minDate(new Date())]],
+      followUpDate: ['', [this.isFollowUpDateRequired, CustomValidators.minDate(new Date())]],
       deductionPercent: [{ value: '', disabled: this.isDisabledTerms() }, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]]
     };
 
