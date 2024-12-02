@@ -1,13 +1,14 @@
+import { InterceptModel } from "@app/decorators/decorators/intercept-model";
+import { infoSearchFields } from "@app/helpers/info-search-fields";
 import { normalSearchFields } from "@app/helpers/normal-search-fields";
+import { PenaltyViolationLogInterceptor } from "@app/model-interceptors/penalty-violation-log-interceptor";
 import { FactoryService } from "@app/services/factory.service";
 import { PenaltyViolationLogService } from "@app/services/penalty-violation-log.service";
 import { ISearchFieldsMap } from "@app/types/types";
-import { BaseModel } from "./base-model";
-import { InterceptModel } from "@app/decorators/decorators/intercept-model";
-import { PenaltyViolationLogInterceptor } from "@app/model-interceptors/penalty-violation-log-interceptor";
-import { PenaltiesAndViolations } from "./penalties-and-violations";
 import { AdminResult } from "./admin-result";
-import { infoSearchFields } from "@app/helpers/info-search-fields";
+import { BaseModel } from "./base-model";
+import { PenaltiesAndViolations } from "./penalties-and-violations";
+import { Penalty } from "./penalty";
 const { send, receive } = new PenaltyViolationLogInterceptor();
 @InterceptModel({send,receive})
 export class PenaltyViolationLog extends BaseModel<PenaltyViolationLog,PenaltyViolationLogService>{
@@ -18,15 +19,16 @@ export class PenaltyViolationLog extends BaseModel<PenaltyViolationLog,PenaltyVi
     orgId!: number;
     penalty!:number;
     organizationInfo!: AdminResult;
-    penaltyInfo!:AdminResult;
+    penaltiesInfo!:Penalty[];
     penaltyDate!:string;
     identificationNumber!: string;
     statusDateModified!: string;
     service!: PenaltyViolationLogService;
     case?:PenaltiesAndViolations
+    penaltiesInfoString! :string
     searchFields: ISearchFieldsMap<PenaltyViolationLog> = {
-        ...normalSearchFields(['incidentNumber', 'updatedOnString','penaltyDateString']),
-        ...infoSearchFields(['penaltyInfo', 'organizationInfo'])
+        ...normalSearchFields(['incidentNumber', 'updatedOnString','penaltyDateString','penaltiesInfoString']),
+        ...infoSearchFields([ 'organizationInfo'])
     };
     updatedOnString! :string;
     penaltyDateString! :string;
