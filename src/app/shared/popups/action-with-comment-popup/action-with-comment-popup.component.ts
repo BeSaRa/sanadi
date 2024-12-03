@@ -1,38 +1,36 @@
-import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
-import { CoordinationWithOrganizationsRequestService } from '@services/coordination-with-organizations-request.service';
-import { IAngularMyDpOptions } from '@nodro7/angular-mydatepicker';
-import { FinalExternalOfficeApproval } from '@app/models/final-external-office-approval';
-import { LicenseDurationType } from '@app/enums/license-duration-type';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { DIALOG_DATA_TOKEN } from '../../tokens/tokens';
-import { InboxService } from '@app/services/inbox.service';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { DialogRef } from '../../models/dialog-ref';
-import { ToastService } from '@app/services/toast.service';
-import { IWFResponse } from '@app/interfaces/i-w-f-response';
-import { QueryResult } from '@app/models/query-result';
-import { isObservable, Observable, of, Subject } from 'rxjs';
-import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { AllRequestTypesEnum } from '@app/enums/all-request-types-enum';
 import { CaseTypes } from '@app/enums/case-types.enum';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { DateUtils } from '@app/helpers/date-utils';
-import { LicenseApprovalModel } from '@app/models/license-approval-model';
-import { ServiceDataService } from '@app/services/service-data.service';
-import { ServiceData } from '@app/models/service-data';
-import { CommonUtils } from '@app/helpers/common-utils';
+import { LicenseDurationType } from '@app/enums/license-duration-type';
 import { ServiceRequestTypes } from '@app/enums/service-request-types';
-import { EmployeeService } from '@app/services/employee.service';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { DateUtils } from '@app/helpers/date-utils';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { IWFResponse } from '@app/interfaces/i-w-f-response';
+import { CaseModel } from '@app/models/case-model';
 import { CustomTerm } from '@app/models/custom-term';
+import { FinalExternalOfficeApproval } from '@app/models/final-external-office-approval';
+import { LicenseApprovalModel } from '@app/models/license-approval-model';
+import { QueryResult } from '@app/models/query-result';
+import { ServiceData } from '@app/models/service-data';
 import { CustomTermService } from '@app/services/custom-term.service';
 import { DialogService } from '@app/services/dialog.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { InboxService } from '@app/services/inbox.service';
+import { LangService } from '@app/services/lang.service';
+import { ServiceDataService } from '@app/services/service-data.service';
+import { ToastService } from '@app/services/toast.service';
 import { CustomTermPopupComponent } from '@app/shared/popups/custom-term-popup/custom-term-popup.component';
-import { CaseModel } from '@app/models/case-model';
 import { DatepickerOptionsMap } from '@app/types/types';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { AllRequestTypesEnum } from '@app/enums/all-request-types-enum';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { IAngularMyDpOptions } from '@nodro7/angular-mydatepicker';
+import { isObservable, Observable, of, Subject } from 'rxjs';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { DialogRef } from '../../models/dialog-ref';
+import { DIALOG_DATA_TOKEN } from '../../tokens/tokens';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -64,13 +62,12 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
   private onlyCommentWhenConsultationServices: number[] = [
-    CaseTypes.PENALTIES_AND_VIOLATIONS,
     CaseTypes.PARTNER_APPROVAL
   ]
   private excludeConditionalLicense: number[] = [
     CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
-  
+
   form!: UntypedFormGroup;
 
   private readonly action: WFResponseType;
@@ -125,12 +122,15 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       this.commentLabel = data.commentLabel;
     }
   }
-private _skipSpacialCases(caseType: number): boolean {
-  if(this.onlyCommentWhenConsultationServices.includes(caseType) ) {
-    return this.data?.task?.isMain();
+  private _skipSpacialCases(caseType: number): boolean {
+    if (this.onlyCommentWhenConsultationServices.includes(caseType)) {
+      return this.data?.task?.isMain();
+    }
+    if(this.data.task.getCaseType() === CaseTypes.PENALTIES_AND_VIOLATIONS){
+      return this.data?.task?.getResponses().includes(WFResponseType.FINAL_APPROVE);
+    }
+    return true;
   }
-  return true;
-}
   ngOnInit(): void {
     this.listenToTakeAction();
     of(this.data.task.getCaseType())
@@ -192,9 +192,7 @@ private _skipSpacialCases(caseType: number): boolean {
     return this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE ||
       this.isExcludeTerms
   }
-  get isFollowUpDateRequired() {
-    return this.data.task.getCaseType() !== CaseTypes.PENALTIES_AND_VIOLATIONS
-  }
+
   buildForm() {
     let controls: any = {
       licenseStartDate: [{ value: '', disabled: this.isDisabledDateAndDuration() }],
@@ -203,7 +201,7 @@ private _skipSpacialCases(caseType: number): boolean {
       publicTerms: [{ value: '', disabled: true }, [CustomValidators.required]],
       customTerms: [{ value: '', disabled: this.isDisabledTerms() }, [CustomValidators.required]],
       conditionalLicenseIndicator: [false],
-      followUpDate: ['', [this.isFollowUpDateRequired, CustomValidators.minDate(new Date())]],
+      followUpDate: ['', [this.customValidators.required, CustomValidators.minDate(new Date())]],
       deductionPercent: [{ value: '', disabled: this.isDisabledTerms() }, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]]
     };
 
@@ -237,6 +235,9 @@ private _skipSpacialCases(caseType: number): boolean {
 
     // if (new Date(this.licenseStartDateField.value.singleDate.jsDate).getMonth() < disableDate.getMonth())
     //   this.licenseStartDateField.reset()
+    if (this.data.task.getCaseType() === CaseTypes.PENALTIES_AND_VIOLATIONS) {
+      this.followUpDateField.removeValidators([this.customValidators.required]);
+    }
 
   }
 
@@ -267,7 +268,7 @@ private _skipSpacialCases(caseType: number): boolean {
     this.licenseDurationField?.setValidators(licenseDurationValidations);
     this.licenseDurationField?.updateValueAndValidity();
 
-   
+
   }
 
   proceed(): Observable<boolean> {

@@ -2341,4 +2341,5 @@ export interface ILanguageKeys {
   lbl_case_file_number: string;
   lbl_upload_penalty_book: string;
   msg_please_add_penalty_book: string;
+  lbl_penalty_book: string;
 }
