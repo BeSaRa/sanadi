@@ -28,6 +28,7 @@ import { GlobalSettingsService } from '@app/services/global-settings.service';
 import { GlobalSettings } from '@app/models/global-settings';
 import { FileNetDocument } from '@app/models/file-net-document';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 @Component({
   selector: 'penalties-and-violations',
@@ -124,9 +125,30 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
 
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    return saveType === SaveTypes.DRAFT ? true : this.form.valid;
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
+    const invalidTabs = this._getInvalidTabs();
+    if (invalidTabs.length > 0) {
+      const listHtml = CommonUtils.generateHtmlList(
+        this.lang.map.msg_following_tabs_valid,
+        invalidTabs
+      );
+      this.dialog.error(listHtml.outerHTML);
+      return false;
+    }
+    return true;
   }
-
+  private _getInvalidTabs(): any {
+    let failedList: string[] = [];
+    for (const key in this.tabsData) {
+      if (!this.tabsData[key].validStatus()) {
+        // @ts-ignore
+        failedList.push(this.lang.map[this.tabsData[key].langKey]);
+      }
+    }
+    return failedList;
+  }
   _beforeLaunch(): boolean | Observable<boolean> {
 
     // if (!this.model?.canLaunch()) {
