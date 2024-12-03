@@ -38,6 +38,15 @@
                     <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_incidence_Date}}</th>
                     <td cdk-cell *cdkCellDef="let row"> {{row.updatedOnString }}</td>
                 </ng-container>
+                <ng-container cdkColumnDef="actions">
+                    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+                    <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+                        <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">     
+                          <i class="mdi mdi-check-decagram text-primary me-2" *ngIf="!!row.licenseNumber"
+                          tooltip="{{lang.map.lbl_known}}"></i>         
+                        </grid-actions>
+                    </td>
+                </ng-container>
                 <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
                 <tr cdk-header-row *cdkHeaderRowDef="searchColumns"></tr>
                 <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
