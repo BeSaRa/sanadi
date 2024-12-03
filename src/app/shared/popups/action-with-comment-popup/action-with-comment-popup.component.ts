@@ -63,8 +63,9 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     CaseTypes.FINANCIAL_ANALYSIS,
     CaseTypes.PENALTIES_AND_VIOLATIONS
   ]
-  private excludeTerms: number[] = [
-    CaseTypes.PENALTIES_AND_VIOLATIONS
+  private onlyCommentWhenConsultationServices: number[] = [
+    CaseTypes.PENALTIES_AND_VIOLATIONS,
+    CaseTypes.PARTNER_APPROVAL
   ]
   private excludeConditionalLicense: number[] = [
     CaseTypes.PENALTIES_AND_VIOLATIONS
@@ -124,11 +125,17 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       this.commentLabel = data.commentLabel;
     }
   }
-
+private _skipSpacialCases(caseType: number): boolean {
+  if(this.onlyCommentWhenConsultationServices.includes(caseType) ) {
+    return this.data?.task?.isMain();
+  }
+  return true;
+}
   ngOnInit(): void {
     this.listenToTakeAction();
     of(this.data.task.getCaseType())
       .pipe(filter(caseType => this.specialApproveServices.includes(caseType)))
+      .pipe(filter(caseType => this._skipSpacialCases(caseType)))
       .pipe(switchMap(_ => this.data.task.loadLicenseModel()))
       .pipe(switchMap(license => this.serviceDataService.loadByCaseType(this.data.task.getCaseType()).pipe(map(service => ({
         service,
@@ -260,15 +267,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     this.licenseDurationField?.setValidators(licenseDurationValidations);
     this.licenseDurationField?.updateValueAndValidity();
 
-    if (this.data.task.getCaseType() === CaseTypes.PARTNER_APPROVAL && this.employeeService.isLegalAffairsUser()) {
-      this.licenseDurationField?.removeValidators([CustomValidators.required]);
-      this.licenseDurationField?.updateValueAndValidity();
-      this.customTermsField?.removeValidators([CustomValidators.required]);
-      this.customTermsField?.updateValueAndValidity();
-      this.followUpDateField?.removeValidators([CustomValidators.required]);
-      this.followUpDateField?.updateValueAndValidity();
-
-    }
+   
   }
 
   proceed(): Observable<boolean> {
