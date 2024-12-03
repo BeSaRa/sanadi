@@ -35,7 +35,7 @@
                     <ng-select [readonly]="readonly" validationClasses="competentTeamID" appendTo="body"
                          [clearable]="false" id="competentTeamID" formControlName="competentTeamID">
                          <ng-option [value]="option.id"
-                              *ngFor="let option of (teams$ | async)">{{option.getName()}}</ng-option>
+                              *ngFor="let option of (teams)">{{option.getName()}}</ng-option>
                     </ng-select>
                     <app-field-error-message controlName="competentTeamID"></app-field-error-message>
                </div>
