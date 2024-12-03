@@ -44,15 +44,12 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
   fb = inject(UntypedFormBuilder);
   profileService = inject(ProfileService);
   injector = inject(Injector);
-  teamsService = inject(TeamService);
   
   
-  teams$ = this.teamsService.loadActive()
-    .pipe(
-      map(teams => teams.filter(team =>
-        team.parentDeptId === this.employeeService.getInternalDepartment()?.id &&
-        team.category === 1))
-    );
+  teams = this.employeeService.teams
+  .filter(team => team.parentDeptId === this.employeeService.getInternalDepartment()?.id &&
+                  team.category === 1);
+    
 
 
   constructor() {
