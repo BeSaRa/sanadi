@@ -300,7 +300,7 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
       name: 'legalActions',
       langKey: 'menu_legal_action',
       index: 4,
-      validStatus: () => this.legalActionControl.valid,
+      validStatus: () => this.legalActionControl.valid || this.legalActionControl.disabled,
       isTouchedOrDirty: () => true
     },
     proposedSanctions: {
