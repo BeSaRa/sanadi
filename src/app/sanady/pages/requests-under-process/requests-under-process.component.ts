@@ -156,42 +156,60 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   }
 
   cancelRequest(request: SubventionRequest) {
-    this.subventionResponseService.loadById(request.id)
-      .pipe(
-        take(1),
-        filter(response => {
-          if (response.aidList.length > 0) {
-            this.dialogService.error(this.langService.map.remove_provided_aid_first_to_change_request_status);
-            return false;
-          }
-          return true;
-        }),
-        switchMap(_ => request.cancel()),
-        catchError(() => of(null))
-      ).subscribe((status) => {
-        status ? this.toastService.success(this.langService.map.request_cancelled_successfully) : null;
-        this.reload$.next(null);
-      });
-    
+    if (request.isPartial) {
+      request.cancel()
+        .pipe(take(1))
+        .subscribe((status) => {
+          status ? this.toastService.success(this.langService.map.request_cancelled_successfully) : null;
+          this.reload$.next(null);
+        })
+    } else {
+      this.subventionResponseService.loadById(request.id)
+        .pipe(
+          take(1),
+          filter(response => {
+            if (response.aidList.length > 0) {
+              this.dialogService.error(this.langService.map.remove_provided_aid_first_to_change_request_status);
+              return false;
+            }
+            return true;
+          }),
+          switchMap(_ => request.cancel()),
+          catchError(() => of(null))
+        ).subscribe((status) => {
+          status ? this.toastService.success(this.langService.map.request_cancelled_successfully) : null;
+          this.reload$.next(null);
+        });
+    }
   }
 
   deleteRequest(request: SubventionRequest) {
-    this.subventionResponseService.loadById(request.id)
-      .pipe(
-        take(1),
-        filter(response => {
-          if (response.aidList.length > 0) {
-            this.dialogService.error(this.langService.map.remove_provided_aid_first_to_change_request_status);
-            return false;
-          }
-          return true;
-        }),
-        switchMap(_ => request.deleteRequest()),
-        catchError(() => of(null))
-      ).subscribe((status) => {
-        status ? this.toastService.success(this.langService.map.msg_delete_success) : null;
-        this.reload$.next(null);
-      });
+    if (request.isPartial) {
+      request.deleteRequest()
+        .pipe(take(1))
+        .subscribe((status) => {
+          status ? this.toastService.success(this.langService.map.msg_delete_success) : null;
+          this.reload$.next(null);
+        })
+    } else {
+      this.subventionResponseService.loadById(request.id)
+        .pipe(
+          take(1),
+          filter(response => {
+            if (response.aidList.length > 0) {
+              this.dialogService.error(this.langService.map.remove_provided_aid_first_to_change_request_status);
+              return false;
+            }
+            return true;
+          }),
+          switchMap(_ => request.deleteRequest()),
+          catchError(() => of(null))
+        ).subscribe((status) => {
+          status ? this.toastService.success(this.langService.map.msg_delete_success) : null;
+          this.reload$.next(null);
+        });
+    }
+
     // request.deleteRequest()
     //   .pipe(take(1))
     //   .subscribe((status) => {

@@ -1,38 +1,41 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {SubventionRequestService} from '@app/services/subvention-request.service';
-import {LangService} from '@app/services/lang.service';
-import {SubventionRequestAid} from '@app/models/subvention-request-aid';
-import {ConfigurationService} from '@app/services/configuration.service';
-import {Lookup} from '@app/models/lookup';
-import {LookupService} from '@app/services/lookup.service';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {StringOperator} from '@app/enums/string-operator.enum';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {BehaviorSubject, of, Subject} from 'rxjs';
-import {catchError, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
-import {ISubventionRequestCriteria} from '@app/interfaces/i-subvention-request-criteria';
-import {IBeneficiaryCriteria} from '@app/interfaces/i-beneficiary-criteria';
+import { AfterViewInit, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { SubventionRequestService } from '@app/services/subvention-request.service';
+import { LangService } from '@app/services/lang.service';
+import { SubventionRequestAid } from '@app/models/subvention-request-aid';
+import { ConfigurationService } from '@app/services/configuration.service';
+import { Lookup } from '@app/models/lookup';
+import { LookupService } from '@app/services/lookup.service';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { StringOperator } from '@app/enums/string-operator.enum';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { BehaviorSubject, of, Subject } from 'rxjs';
+import { catchError, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { ISubventionRequestCriteria } from '@app/interfaces/i-subvention-request-criteria';
+import { IBeneficiaryCriteria } from '@app/interfaces/i-beneficiary-criteria';
 import * as dayjs from 'dayjs';
-import {DialogService} from '@app/services/dialog.service';
-import {printBlobData} from '@app/helpers/utils';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ToastService} from '@app/services/toast.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
-import {ReadModeService} from '@app/services/read-mode.service';
-import {IMyInputFieldChanged} from '@nodro7/angular-mydatepicker';
-import {AidTypes} from '@app/enums/aid-types.enum';
-import {AidLookupStatusEnum} from '@app/enums/status.enum';
-import {AidLookup} from '@app/models/aid-lookup';
-import {AidLookupService} from '@app/services/aid-lookup.service';
-import {ECookieService} from '@app/services/e-cookie.service';
-import {DateUtils} from '@app/helpers/date-utils';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import { DialogService } from '@app/services/dialog.service';
+import { printBlobData } from '@app/helpers/utils';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastService } from '@app/services/toast.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { BeneficiaryIdTypes } from '@app/enums/beneficiary-id-types.enum';
+import { ReadModeService } from '@app/services/read-mode.service';
+import { IMyInputFieldChanged } from '@nodro7/angular-mydatepicker';
+import { AidTypes } from '@app/enums/aid-types.enum';
+import { AidLookupStatusEnum } from '@app/enums/status.enum';
+import { AidLookup } from '@app/models/aid-lookup';
+import { AidLookupService } from '@app/services/aid-lookup.service';
+import { ECookieService } from '@app/services/e-cookie.service';
+import { DateUtils } from '@app/helpers/date-utils';
+import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { DatepickerControlsMap, DatepickerOptionsMap } from '@app/types/types';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { SubventionResponseService } from '@app/services/subvention-response.service';
+import { SubventionResponse } from '@app/models/subvention-response';
+import { BeneficiaryService } from '@app/services/beneficiary.service';
 
 @Component({
   selector: 'app-user-request-search',
@@ -42,20 +45,21 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
 
-
+  beneficiaryService = inject(BeneficiaryService);
   constructor(public langService: LangService,
-              private toastService: ToastService,
-              private fb: UntypedFormBuilder,
-              private lookupService: LookupService,
-              private configurationService: ConfigurationService,
-              private dialogService: DialogService,
-              private router: Router,
-              private activatedRoute: ActivatedRoute,
-              private readModeService: ReadModeService,
-              private subventionRequestService: SubventionRequestService,
-              public empService: EmployeeService,
-              private aidLookupService: AidLookupService,
-              private eCookieService: ECookieService) {
+    private toastService: ToastService,
+    private fb: UntypedFormBuilder,
+    private lookupService: LookupService,
+    private configurationService: ConfigurationService,
+    private dialogService: DialogService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private readModeService: ReadModeService,
+    private subventionRequestService: SubventionRequestService,
+    public empService: EmployeeService,
+    private aidLookupService: AidLookupService,
+    private subventionResponseService: SubventionResponseService,
+    private eCookieService: ECookieService) {
   }
 
   ngOnDestroy(): void {
@@ -109,12 +113,12 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
 
   datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap: DatepickerOptionsMap = {
-    creationDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    creationDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateModifiedFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateModifiedTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
+    creationDateFrom: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
+    creationDateTo: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
+    statusDateFrom: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
+    statusDateTo: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
+    statusDateModifiedFrom: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
+    statusDateModifiedTo: DateUtils.getDatepickerOptions({ disablePeriod: 'none' })
   };
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
@@ -442,7 +446,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
             }));
       }),
       tap((result: SubventionRequestAid[]) => {
-        this.latestCriteriaString = this.subventionRequestService._parseObjectToQueryString({...this.latestCriteria});
+        this.latestCriteriaString = this.subventionRequestService._parseObjectToQueryString({ ...this.latestCriteria });
         return result.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
       }),
       takeUntil(this.destroy$),
@@ -495,7 +499,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private getSimpleSearchValues(): Partial<ISubventionRequestCriteria> {
-    let request = {...this.form.get('simpleSearch.request')?.value};
+    let request = { ...this.form.get('simpleSearch.request')?.value };
     const year = this.yearField?.value;
     const date = dayjs().set('year', year);
     this.latestCriteria = {
@@ -504,11 +508,11 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
       creationDateFrom: date.startOf('year').format(this.configurationService.CONFIG.TIMESTAMP),
       creationDateTo: date.endOf('year').format(this.configurationService.CONFIG.TIMESTAMP),
     };
-    return {...this.latestCriteria};
+    return { ...this.latestCriteria };
   }
 
   private getBeneficiarySimpleValues(): Partial<IBeneficiaryCriteria> {
-    let beneficiary = {...this.form.get('simpleSearch.beneficiary')?.value};
+    let beneficiary = { ...this.form.get('simpleSearch.beneficiary')?.value };
 
     if (!beneficiary.benPrimaryIdNumber) {
       delete beneficiary.benPrimaryIdType;
@@ -531,7 +535,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
         delete beneficiary[key];
       }
     }
-    return {...beneficiary};
+    return { ...beneficiary };
   }
 
   private setInitialValues(): void {
@@ -555,7 +559,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
       ...simple,
       ...request,
       ...aids,
-      beneficiary: {...simple.beneficiary, ...beneficiary},
+      beneficiary: { ...simple.beneficiary, ...beneficiary },
     };
 
     if (request.creationDateFrom || request.creationDateTo) {
@@ -577,7 +581,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
       this.latestCriteria.statusDateModifiedTo = !request.statusDateModifiedTo ? '' : request.statusDateModifiedTo;
     }
 
-    return {...this.latestCriteria};
+    return { ...this.latestCriteria };
   }
 
   printResult(): void {
@@ -595,24 +599,70 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
   editRequest(request: SubventionRequestAid): any {
     return this.router.navigate(['/home/sanady/request', request.requestId]);
   }
-
   cancelRequest(request: SubventionRequestAid) {
-    request.cancel()
-      .pipe(take(1))
-      .subscribe((status) => {
-        status ? this.toastService.success(this.langService.map.request_cancelled_successfully) : null;
-        this.reload$.next(null);
-      });
+    if (request.isPartial) {
+      request.cancel()
+        .pipe(take(1))
+        .subscribe((status) => {
+          status ? this.toastService.success(this.langService.map.request_cancelled_successfully) : null;
+          this.reload$.next(null);
+        })
+    } else {
+      this.subventionResponseService.loadById(request.requestId)
+        .pipe(
+          take(1),
+          filter((response: SubventionResponse) => {
+            if (response.aidList.length > 0) {
+              this.dialogService.error(this.langService.map.remove_provided_aid_first_to_change_request_status);
+              return false;
+            }
+            return true;
+          }),
+          switchMap(_ => request.cancel()),
+          catchError(() => of(null))
+        ).subscribe((status) => {
+          status ? this.toastService.success(this.langService.map.request_cancelled_successfully) : null;
+          this.reload$.next(null);
+        });
+    }
   }
 
   deleteRequest(request: SubventionRequestAid) {
-    request.deleteRequest()
-      .pipe(take(1))
-      .subscribe((status) => {
-        status ? this.toastService.success(this.langService.map.msg_delete_success) : null;
-        this.reload$.next(null);
-      });
+    if (request.isPartial) {
+      request.deleteRequest()
+        .pipe(take(1))
+        .subscribe((status) => {
+          status ? this.toastService.success(this.langService.map.msg_delete_success) : null;
+          this.reload$.next(null);
+        })
+    } else {
+      this.subventionResponseService.loadById(request.requestId)
+        .pipe(
+          take(1),
+          filter(response => {
+            if (response.aidList.length > 0) {
+              this.dialogService.error(this.langService.map.remove_provided_aid_first_to_change_request_status);
+              return false;
+            }
+            return true;
+          }),
+          switchMap(_ => request.deleteRequest()),
+          catchError(() => of(null))
+        ).subscribe((status) => {
+          status ? this.toastService.success(this.langService.map.msg_delete_success) : null;
+          this.reload$.next(null);
+        });
+    }
+
+    // request.deleteRequest()
+    //   .pipe(take(1))
+    //   .subscribe((status) => {
+    //     status ? this.toastService.success(this.langService.map.msg_delete_success) : null;
+    //     this.reload$.next(null);
+    //   });
   }
+
+
 
   inquireBeneficiary(request: SubventionRequestAid) {
     this.eCookieService.putEObject('b_i_d', {
