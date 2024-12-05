@@ -428,6 +428,6 @@ export class PenaltiesAndViolationsComponent extends EServicesGenericComponent<P
     this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
   }
   get isUploadPenaltyBookStage() {
-    return this.model?.getResponses().includes(WFResponseType.FINAL_APPROVE)
+    return this.model?.getResponses().includes(WFResponseType.FINAL_APPROVE) && this.openFrom === OpenFrom.USER_INBOX
   }
 }
