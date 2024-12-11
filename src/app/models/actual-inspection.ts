@@ -47,6 +47,7 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
   status!: number;
   creationSource!: number;
   taskFolderId!:string;
+  inspectionTitle!:string;
 
   licenseActivities: LicenseActivity[] = [];
   inspectionSpecialists: InspectionSpecialist[] = [];
@@ -98,6 +99,7 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
       mainOperationType: { langKey: 'lbl_main_operation', value: this.mainOperationType },
       subOperationType: { langKey: 'lbl_sub_operation', value: this.subOperationType },
       operationDescription: { langKey: 'lbl_operation_description', value: this.operationDescription },
+      inspectionTitle: { langKey: 'lbl_inspection_title', value: this.inspectionTitle },
       knownOrgId: { langKey: 'lbl_operation_description', value: this.knownOrgId },
       unknownOrgType: { langKey: 'lbl_unknown_org_type', value: this.unknownOrgType },
       unknownOrgName: { langKey: 'lbl_unknown_org_name', value: this.unknownOrgName },
@@ -128,7 +130,8 @@ export class ActualInspection extends BaseModel<ActualInspection, ActualInspecti
       actualTaskType: controls ? [values.actualTaskType, [CustomValidators.required]] : values.actualTaskType,
       mainOperationType: controls ? [values.mainOperationType, [CustomValidators.required]] : values.mainOperationType,
       subOperationType: controls ? [values.subOperationType, [CustomValidators.required]] : values.subOperationType,
-      operationDescription: controls ? [values.operationDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.operationDescription,
+      operationDescription: controls ? [values.operationDescription, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : values.operationDescription,
+      inspectionTitle: controls ? [values.inspectionTitle, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.inspectionTitle,
       knownOrgId: controls ? [values.knownOrgId, [CustomValidators.required]] : values.knownOrgId,
       unknownOrgType: controls ? [values.unknownOrgType, []] : values.unknownOrgType,
       unknownOrgName: controls ? [values.unknownOrgName, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : values.unknownOrgName,

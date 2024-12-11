@@ -108,9 +108,16 @@
         <div class="col-sm-12 col-md-6 mb-3 position-relative">
           <label asteriskIfRequired="operationDescription" for="operationDescription" class="form-label">{{
             lang.map.lbl_operation_description }}</label>
-          <input formControlName="operationDescription" type="text" [readOnly]="readonly"
+          <input formControlName="operationDescription" type="text" [readOnly]="readonly ||isProposedInspection()"
             validationClasses="operationDescription" class="form-control" trimInput id="operationDescription" />
           <app-field-error-message controlName="operationDescription"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="inspectionTitle" for="inspectionTitle" class="form-label">{{
+            lang.map.lbl_inspection_title }}</label>
+          <input formControlName="inspectionTitle" type="text" [readOnly]="readonly"
+            validationClasses="inspectionTitle" class="form-control" trimInput id="inspectionTitle" />
+          <app-field-error-message controlName="inspectionTitle"></app-field-error-message>
         </div>
         <div class="col-sm-12 mb-4 position-relative">
           <label asteriskIfRequired="taskSubject" for="taskSubject" class="form-label">{{lang.map.lbl_task_subject

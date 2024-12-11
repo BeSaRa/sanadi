@@ -66,10 +66,10 @@
             >{{ lang.map.serial_number }}</th>
             <td cdk-cell *cdkCellDef="let row">{{ row.taskSerialNumber }}</td>
           </ng-container>
-          <ng-container cdkColumnDef="operationDescription">
+          <ng-container cdkColumnDef="inspectionTitle">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
-            >{{ lang.map.lbl_operation_description }}</th>
-            <td cdk-cell *cdkCellDef="let row">{{ row.operationDescription }}</td>
+            >{{ lang.map.lbl_inspection_title }}</th>
+            <td cdk-cell *cdkCellDef="let row">{{ row.inspectionTitle }}</td>
           </ng-container>
           <ng-container cdkColumnDef="mainOperationType">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
