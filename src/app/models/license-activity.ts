@@ -28,6 +28,7 @@ export class LicenseActivity extends BaseModel<LicenseActivity, LicenseActivityS
   comment!:string;
   actualInspection?:ActualInspection;
   uploadedDocId!:string;
+  licenseVSID!:string;
   
   licenseTypeInfo!:AdminResult
   statusInfo!:AdminResult;

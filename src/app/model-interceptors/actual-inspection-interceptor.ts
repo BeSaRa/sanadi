@@ -39,6 +39,7 @@ export class ActualInspectionInterceptor implements IModelInterceptor<ActualInsp
 
     const inspectionActionLogInterceptor = new InspectionActionLogInterceptor();
     const proposedInspectionInterceptor = new ProposedInspectionInterceptor();
+    const licenseActivityInterceptor = new LicenseActivityInterceptor();
     model.moneyLaundryOrTerrorism = model.moneyLaundryOrTerrorism ? LinkedProjectTypes.YES : LinkedProjectTypes.NO;
     model.mainOperationInfo = AdminResult.createInstance(model.mainOperationInfo);
     model.subOperationInfo = AdminResult.createInstance(model.subOperationInfo);
@@ -59,6 +60,8 @@ export class ActualInspectionInterceptor implements IModelInterceptor<ActualInsp
     model.proposedInspectionTask && (model.proposedInspectionTask = proposedInspectionInterceptor.receive(model.proposedInspectionTask))
     model.dateFrom = DateUtils.changeDateToDatepicker(model.dateFrom);
     model.dateTo = DateUtils.changeDateToDatepicker(model.dateTo);
+    model.licenseActivities = model.licenseActivities?.map(item => licenseActivityInterceptor.receive(item) as LicenseActivity);
+
     return model
   }
   private static _deleteBeforeSend(model: Partial<ActualInspection>): void {
