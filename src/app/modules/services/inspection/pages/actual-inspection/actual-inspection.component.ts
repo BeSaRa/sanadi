@@ -76,8 +76,8 @@ export class ActualInspectionComponent extends AdminGenericComponent<ActualInspe
     },
   ];
 
-  displayedColumns: string[] = ['rowSelection', 'taskSerialNumber', 'operationDescription', 'mainOperationType', 'subOperationType', 'status', 'inspectorId', 'actions'];
-  searchColumns: string[] = ['_', 'search_taskSerialNumber', 'search_operationDescription', 'search_main_operation', 'search_sub_operation', 'search_status', '___', 'search_actions'];
+  displayedColumns: string[] = ['rowSelection', 'taskSerialNumber', 'inspectionTitle', 'mainOperationType', 'subOperationType', 'status', 'inspectorId', 'actions'];
+  searchColumns: string[] = ['_', 'search_taskSerialNumber', 'search_inspectionTitle', 'search_main_operation', 'search_sub_operation', 'search_status', '___', 'search_actions'];
 
   onTabChange($event: TabComponent) {
   }
@@ -125,11 +125,11 @@ export class ActualInspectionComponent extends AdminGenericComponent<ActualInspe
       label: 'serial_number',
       maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
     },
-    search_operationDescription: {
-      key: 'operationDescription',
+    search_inspectionTitle: {
+      key: 'inspectionTitle',
       controlType: 'text',
-      property: 'operationDescription',
-      label: 'lbl_operation_description',
+      property: 'inspectionTitle',
+      label: 'lbl_inspection_title',
       maxLength: CustomValidators.defaultLengths.ENGLISH_NAME_MAX
 
     },
@@ -238,7 +238,7 @@ export class ActualInspectionComponent extends AdminGenericComponent<ActualInspe
     this.columnFilterForm = this.fb.group({
       mainOperationType: [null],
       subOperationType: [null],
-      taskSerialNumber: [null], operationDescription: [null], inspectorId: [null], status: [],
+      taskSerialNumber: [null], inspectionTitle: [null], inspectorId: [null], status: [],
       // departmentId: [this.employeeService.getInternalDepartment()?.id]
     })
     // timer(0)
