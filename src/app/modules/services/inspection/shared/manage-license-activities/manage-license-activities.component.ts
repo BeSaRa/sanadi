@@ -309,6 +309,7 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
   private _updateAttachmentFile(filesList: FileList | undefined): Observable<FileNetDocument> {
     const document = (new FileNetDocument()).clone({
       id: this.selectedLicense?.uploadedDocId,
+      vsId :this.selectedLicense?.licenseVSID,
       documentTitle: this.lang.map.lbl_final_report,
       description: this.lang.map.lbl_final_report,
       attachmentTypeId: 1,
@@ -323,7 +324,8 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
 
   }
   private _afterSaveAttachmentFile(attachment: FileNetDocument) {
-    this.selectedLicense!.uploadedDocId = attachment.vsId;
+    this.selectedLicense!.uploadedDocId = attachment.id;
+    this.selectedLicense!.licenseVSID = attachment.vsId;
   }
 
   complete(updatedItem: LicenseActivity, index: number): void {
