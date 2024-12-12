@@ -67,9 +67,11 @@ export class InspectionOperationService extends CrudWithDialogGenericService<Ins
       operation: OperationTypes.UPDATE
     }));
   }
-  openCreateDialog(parentId?: number): DialogRef {
-    return this.dialog.show<IDialogData<InspectionOperation>>(this._getDialogComponent(), {
-      model: new InspectionOperation().clone({ parentId: parentId }),
+  openCreateDialog(mainOperations:InspectionOperation[]=[]): DialogRef {
+    return this.dialog.show<IDialogData<InspectionOperation> & {mainOperations:InspectionOperation[]}>
+    (this._getDialogComponent(), {
+      model: new InspectionOperation(),
+      mainOperations,
       operation: OperationTypes.CREATE,
     });
   }

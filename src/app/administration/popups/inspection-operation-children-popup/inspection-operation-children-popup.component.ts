@@ -10,27 +10,27 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Observable } from 'rxjs';
 
 @Component({
-    selector: 'inspection-operation-children-popup',
-    templateUrl: 'inspection-operation-children-popup.component.html',
-    styleUrls: ['inspection-operation-children-popup.component.scss']
+  selector: 'inspection-operation-children-popup',
+  templateUrl: 'inspection-operation-children-popup.component.html',
+  styleUrls: ['inspection-operation-children-popup.component.scss']
 })
-export class InspectionOperationChildrenPopupComponent  {
+export class InspectionOperationChildrenPopupComponent {
   models!: InspectionOperation[];
   displayedColumns: string[] = ['arName', 'egName', 'department'];
 
 
-constructor(public lang:LangService,
-  public dialogRef: DialogRef,
-  @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InspectionOperation[]>,) {    
-    this.models = data.model??[];
-  
-}
-get popupTitle(): string {
-  
-   return '';
- };
- filterControl: UntypedFormControl = new UntypedFormControl('');
- get supOperations() {
-  return this.models;
-}
+  constructor(public lang: LangService,
+    public dialogRef: DialogRef,
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InspectionOperation[]>,) {
+    this.models = data.model ?? [];
+
+  }
+  get popupTitle(): string {
+
+    return '';
+  };
+  filterControl: UntypedFormControl = new UntypedFormControl('');
+  get supOperations() {
+    return this.models;
+  }
 }

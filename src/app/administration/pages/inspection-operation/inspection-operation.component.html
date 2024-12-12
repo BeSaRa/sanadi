@@ -87,7 +87,7 @@
               <table-header tableTitle="menu_inspection_operation"
                             [reload$]="reload$"
                             [allowAdd]="true"
-                            [add$]="add$"
+                            [add$]="addChild$"
                             (textChange)="filterControl.setValue($event)"
                             [sort]="table.dataSource.sort"
               >
