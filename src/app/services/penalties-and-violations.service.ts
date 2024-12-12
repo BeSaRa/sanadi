@@ -14,6 +14,8 @@ import { UrlService } from "./url.service";
 import { PenaltiesAndViolationsSearchCriteria } from "@app/models/penalties-and-violations-search-criteria";
 import { FileNetDocument } from "@app/models/file-net-document";
 import { catchError, filter, map, of } from "rxjs";
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { PenaltyFinalApprovePopupComponent } from "@app/modules/services/penalties-and-violations/popups/penalty-final-approve-popup/penalty-final-approve-popup.component";
 
 @CastResponseContainer({
     $default: {
@@ -92,6 +94,13 @@ import { catchError, filter, map, of } from "rxjs";
       
       })
       .pipe(catchError(_ => of(model)));
+    }
+    finalApprove(taskId: string,  task?:PenaltiesAndViolations): DialogRef {
+      return this.dialog.show(PenaltyFinalApprovePopupComponent, {
+        service: this,
+        taskId,
+        task,
+      });
     }
   }
   
