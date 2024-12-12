@@ -16,6 +16,7 @@ import { PenaltyLegalBasisPopupComponent } from './popups/penalty-legal-basis-po
 import { ProposedSanctionsComponent } from './shared/proposed-sanctions/proposed-sanctions.component';
 import { ProposedSanctionsPopupComponent } from './popups/proposed-sanctions-popup/proposed-sanctions-popup.component';
 import { PenaltyViolationLogsComponent } from './pages/penalty-violation-logs/penalty-violation-logs.component';
+import { PenaltyFinalApprovePopupComponent } from './popups/penalty-final-approve-popup/penalty-final-approve-popup.component';
 
 
 
@@ -33,7 +34,8 @@ import { PenaltyViolationLogsComponent } from './pages/penalty-violation-logs/pe
     LegalActionsPopupComponent,
     ProposedSanctionsComponent,
     ProposedSanctionsPopupComponent,
-    PenaltyViolationLogsComponent
+    PenaltyViolationLogsComponent,
+    PenaltyFinalApprovePopupComponent
   ],
   imports: [
     CommonModule,

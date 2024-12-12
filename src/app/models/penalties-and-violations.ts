@@ -5,19 +5,18 @@ import { CommonUtils } from "@app/helpers/common-utils";
 import { ObjectUtils } from "@app/helpers/object-utils";
 import { IAuditModelProperties } from "@app/interfaces/i-audit-model-properties";
 import { PenaltiesAndViolationsInterceptor } from "@app/model-interceptors/penalties-and-violations-interceptor";
+import { DialogService } from "@app/services/dialog.service";
 import { FactoryService } from "@app/services/factory.service";
+import { LangService } from "@app/services/lang.service";
 import { PenaltiesAndViolationsService } from "@app/services/penalties-and-violations.service";
+import { DialogRef } from "@app/shared/models/dialog-ref";
 import { ControlValueLabelLangKey, ISearchFieldsMap } from "@app/types/types";
+import { CustomValidators } from "@app/validators/custom-validators";
 import { AdminResult } from "./admin-result";
-import { LicenseApprovalModel } from "./license-approval-model";
 import { ExternalEntity } from "./external-entity";
 import { Incident } from "./inceident";
+import { LicenseApprovalModel } from "./license-approval-model";
 import { ProposedSanction } from "./proposed-sanction";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { LangService } from "@app/services/lang.service";
-import { DialogRef } from "@app/shared/models/dialog-ref";
-import { of } from "rxjs";
-import { DialogService } from "@app/services/dialog.service";
 
 const { send, receive } = new PenaltiesAndViolationsInterceptor();
 
@@ -108,7 +107,7 @@ export class PenaltiesAndViolations extends LicenseApprovalModel<PenaltiesAndVio
     }
   }
   canLaunch() {
-    return this.legalBasis.length > 0 && this.proposedSanction.length > 0 && !!this.exportedLicenseId
+    return this.legalBasis.length > 0 && this.proposedSanction.length > 0 
   }
    invalidLaunchMessage(){
     if(this.legalBasis.length<1){
@@ -128,6 +127,6 @@ export class PenaltiesAndViolations extends LicenseApprovalModel<PenaltiesAndVio
     if (!this.canLaunch()) {
       return this.dialog.error(this.invalidLaunchMessage());
     }
-    return super.finalApprove();
+    return this.service.finalApprove(this.taskDetails.tkiid,this);
   }
 }

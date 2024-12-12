@@ -288,8 +288,6 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       switchMap(_ => this.displayLicenseForm ? this.updateCase() : of(null)),
       // filter(_ => false),
       switchMap(() => {
-        console.log(responseInfo);
-
         if (this.data.task.getCaseType() === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST && this.displayLicenseForm) {
           return (this.data.task as CaseModel<any, any>).save();
         }
