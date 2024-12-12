@@ -6,6 +6,7 @@ import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { InspectionOperation } from '@app/models/inspection-operation';
 import { InternalDepartment } from '@app/models/internal-department';
 import { EmployeeService } from '@app/services/employee.service';
+import { InspectionOperationService } from '@app/services/inspection-operation.service';
 import { InternalDepartmentService } from '@app/services/internal-department.service';
 import { LangService } from '@app/services/lang.service';
 import { ToastService } from '@app/services/toast.service';
@@ -14,9 +15,9 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { Observable } from 'rxjs';
 
 @Component({
-    selector: 'inspection-operation-popup',
-    templateUrl: 'inspection-operation-popup.component.html',
-    styleUrls: ['inspection-operation-popup.component.scss'],
+  selector: 'inspection-operation-popup',
+  templateUrl: 'inspection-operation-popup.component.html',
+  styleUrls: ['inspection-operation-popup.component.scss'],
 })
 export class InspectionOperationPopupComponent extends AdminGenericDialog<InspectionOperation> {
 
@@ -24,23 +25,24 @@ export class InspectionOperationPopupComponent extends AdminGenericDialog<Inspec
   model!: InspectionOperation;
   operation: OperationTypes;
   saveVisible = true;
-  departmentsList$:Observable<InternalDepartment[]>=new Observable<InternalDepartment[]>;
-
+  departmentsList$: Observable<InternalDepartment[]> = new Observable<InternalDepartment[]>;
+  mainOperations: InspectionOperation[] = [];
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
     public lang: LangService,
-    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InspectionOperation>,
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InspectionOperation> & {mainOperations:InspectionOperation[]},
     private toast: ToastService,
-    private internalDepartmentService:InternalDepartmentService,
-    private employeeService:EmployeeService) {
+    private internalDepartmentService: InternalDepartmentService,
+    private employeeService: EmployeeService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
+    data.mainOperations && (this.mainOperations = data.mainOperations)
   }
 
   initPopup(): void {
-   this.departmentsList$ = this.internalDepartmentService.loadAsLookups()
-   
+    this.departmentsList$ = this.internalDepartmentService.loadAsLookups()
+
   }
 
   buildForm(): void {
@@ -57,8 +59,9 @@ export class InspectionOperationPopupComponent extends AdminGenericDialog<Inspec
   }
 
   prepareModel(model: InspectionOperation, form: UntypedFormGroup): Observable<InspectionOperation> | InspectionOperation {
-    return (new InspectionOperation()).clone({ ...model, ...form.value,
-      clientData : `${this.employeeService.getCurrentUser().id}`
+    return (new InspectionOperation()).clone({
+      ...model, ...form.value,
+      clientData: `${this.employeeService.getCurrentUser().id}`
     });
   }
 
@@ -74,7 +77,7 @@ export class InspectionOperationPopupComponent extends AdminGenericDialog<Inspec
   }
 
   get popupTitle(): string {
-   if (this.operation === OperationTypes.UPDATE) {
+    if (this.operation === OperationTypes.UPDATE) {
       return this.lang.map.lbl_edit_Inspection_Operation;
     } else if (this.operation === OperationTypes.VIEW) {
       return this.lang.map.view;

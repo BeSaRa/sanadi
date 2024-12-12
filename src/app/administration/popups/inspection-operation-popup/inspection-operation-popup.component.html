@@ -1,15 +1,29 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
   <div>
-    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
-            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
-    <button type="button" class="btn-close btn-close-white"
-            tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
+      fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+      aria-label="Close"></button>
   </div>
 </div>
 <div class="dialog-content" #dialogContent>
   <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
     <div class="row">
+      @if(mainOperations.length > 0){
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label for="parentId" asteriskIfRequired="parentId" class="form-label">{{lang.map.lbl_main_operation}}</label>
+        <ng-select [selectOnTab]="true" labelForId="parentId" [clearable]="true" placeholder="{{lang.map.select}}"
+          id="parentId" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="parentId"
+          validationClasses="parentId">
+          <ng-option *ngFor="let option of mainOperations" [value]="option.id">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="parentId"></app-field-error-message>
+
+      </div>
+      }
       <div class="col-sm-12 col-md-6 mb-3 position-relative">
         <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
         <input id="arName" validationClasses="arName" formControlName="arName" class="form-control">
@@ -20,14 +34,11 @@
         <input id="egName" validationClasses="egName" formControlName="egName" class="form-control">
         <app-field-error-message controlName="egName"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
       <div class="col-sm-12 col-md-6 mb-3 position-relative">
-        <label for="departmentId" asteriskIfRequired="departmentId"
-          class="form-label">{{lang.map.department}}</label>
+        <label for="departmentId" asteriskIfRequired="departmentId" class="form-label">{{lang.map.department}}</label>
         <ng-select [selectOnTab]="true" labelForId="departmentId" [clearable]="true" placeholder="{{lang.map.select}}"
-          id="departmentId" [notFoundText]="lang.map.msg_not_found"  appendTo="body"
-          formControlName="departmentId" validationClasses="departmentId">
+          id="departmentId" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="departmentId"
+          validationClasses="departmentId">
           <ng-option *ngFor="let option of departmentsList$ |async" [value]="option.id">
             {{option.getName()}}
           </ng-option>
@@ -37,17 +48,17 @@
       </div>
     </div>
     <div class="row" *ngIf="!!model.parentId">
-      <verification-templates formControlName="verificationListTemplate" ></verification-templates>
+      <verification-templates formControlName="verificationListTemplate"></verification-templates>
     </div>
   </form>
 </div>
 <div class="dialog-actions">
   <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
-          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
   <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next()"
-          class="btn btn-primary">{{lang.map.btn_save}}</button>
+    class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

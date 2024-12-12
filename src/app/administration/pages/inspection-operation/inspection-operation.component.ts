@@ -22,10 +22,10 @@ import { catchError, exhaustMap, filter, map, switchMap, takeUntil } from 'rxjs/
     styleUrls: ['inspection-operation.component.scss']
 })
 export class InspectionOperationComponent extends AdminGenericComponent<InspectionOperation, InspectionOperationService> {
-  usePagination = true;
-  @Input() parentId?: number;
+  // usePagination = true;
   @Input() readonly: boolean = false;
-  
+  addChild$: Subject<any> = new Subject<any>();
+
   constructor(public lang: LangService,
               public service: InspectionOperationService,
               private fb:FormBuilder) {
@@ -34,7 +34,8 @@ export class InspectionOperationComponent extends AdminGenericComponent<Inspecti
 
   protected _init(): void {
     this.listenToView();
-    this.buildFilterForm()
+    this.buildFilterForm();
+    this.listenToAddChild();
   }
 
   @ViewChild('table') table!: TableComponent;
@@ -113,7 +114,7 @@ export class InspectionOperationComponent extends AdminGenericComponent<Inspecti
   }
   buildFilterForm() {
     this.columnFilterForm = this.fb.group({
-      arName: [''], egName: [''],parentId:[this.parentId]
+      arName: [''], egName: [''],
     })
   }
   showChildren(item: InspectionOperation, $event?: Event): void {
@@ -129,46 +130,15 @@ export class InspectionOperationComponent extends AdminGenericComponent<Inspecti
     this.add$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter(() => !this.readonly))
-      .pipe(exhaustMap(() => this.service.openCreateDialog(this.parentId).onAfterClose$))
+      .pipe(exhaustMap(() => this.service.openCreateDialog([]).onAfterClose$))
       .subscribe(() => this.reload$.next(null));
   }
-  listenToReload() {
-    this.reload$
-      .pipe(takeUntil((this.destroy$)))
-      .pipe(
-        map(() => {
-          const paginationOptions = {
-            limit: this.pageEvent.pageSize,
-            offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
-          }
-          const criteria = !!this.parentId ? {parentId : this.parentId}:{parentId : null}
-          if (this.usePagination) {
-            return this.service.loadByFilterPaginate(paginationOptions,criteria).pipe(
-              map((res) => {
-                this.count = res.count;
-                return res.rs;
-              }));
-          } else {
-          
-            return (this.useCompositeToLoad ? this.service.paginateComposite(paginationOptions) : this.service.paginate(paginationOptions))
-            .pipe(map((res) => {
-              this.count = res.count;
-              return res.rs;
-            }))
-          }
-        }),
-        switchMap((finalRequest) => {
-          return finalRequest.pipe(
-            catchError(() => {
-              this.count = 0;
-              return of([]);
-            })
-          );
-        }))
-      .subscribe((list: InspectionOperation[]) => {
-        this.models = list;
-        this.afterReload();
-      })
+  listenToAddChild(): void {
+    this.addChild$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter(() => !this.readonly))
+      .pipe(exhaustMap(() => this.service.openCreateDialog([...this.mainOperations]).onAfterClose$))
+      .subscribe(() => this.reload$.next(null));
   }
 
   get mainOperations() {
