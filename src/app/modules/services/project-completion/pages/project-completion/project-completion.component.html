@@ -149,7 +149,8 @@
           <heading-row labelKey="menu_project_implementation"></heading-row>
           <selected-license-table [caseType]="caseTypes.PROJECT_IMPLEMENTATION" [ignoreDelete]="true"
             [caseTypeViewLicense]="caseTypes.PROJECT_IMPLEMENTATION" [licenseList]="projectImplementationLicenses"
-            [columns]="displayedColumns" [allowSelect]="!readonly" (selectCallback)="selectProject($event)">
+            [columns]="displayedColumns" [allowSelect]="!readonly" (selectCallback)="selectProject($event)"
+            [viewAction]="viewAction">
           </selected-license-table>
         </ng-container>
         <div class="row">
@@ -233,6 +234,7 @@
       </ng-container>
     </ng-template>
     <ng-template #beneficiaryAnalyticsByLicenseTemplate>
+      <project-model-summary [model]="projectModel"></project-model-summary>
       <div formGroupName="beneficiaryAnalyticsByLicense" class="position-relative mb-4">
         <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">

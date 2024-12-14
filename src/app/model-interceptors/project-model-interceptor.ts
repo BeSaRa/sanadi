@@ -84,13 +84,13 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.sanadiMainClassificationInfo = AdminResult.createInstance(model.sanadiMainClassificationInfo);
     model.exitMechanismInfo = AdminResult.createInstance(model.exitMechanismInfo);
     model.beneficiaryPercentageInHostCommunity = model.beneficiaryPercentageInHostCommunity ?? 0;
-    model.evaluationIndicatorList = model.evaluationIndicatorList.map(item => {
+    model.evaluationIndicatorList = model.evaluationIndicatorList?.map(item => {
       return new EvaluationIndicator().clone(item);
     });
-    model.foreignCountriesProjectList = model.foreignCountriesProjectList.map(item => {
+    model.foreignCountriesProjectList = model.foreignCountriesProjectList?.map(item => {
       return new ProjectModelForeignCountriesProject().clone(item);
     });
-    model.projectAddressList = model.projectAddressList.map(item => {
+    model.projectAddressList = model.projectAddressList?.map(item => {
       return new ProjectAddress().clone(item);
     });
     model.componentList = (model.componentList || []).map(item => {

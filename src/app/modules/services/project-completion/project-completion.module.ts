@@ -8,19 +8,23 @@ import { ProjectCompletionComponent } from './pages/project-completion/project-c
 import { AuditProjectCompletionComponent } from './audit/audit-project-completion/audit-project-completion.component';
 import { ProjectCompletionApprovalFormComponent } from './popups/project-completion-approval-form/project-completion-approval-form.component';
 import { SelectProjectCompletionPopupComponent } from './popups/select-project-completion-popup/select-project-completion-popup.component';
+import { ProjectModelSummaryComponent } from './pages/shared/project-model-summary/project-model-summary.component';
+import { ProjectModelsModule } from '../project-models/project-models.module';
 
 @NgModule({
   declarations: [
     ProjectCompletionComponent,
     AuditProjectCompletionComponent,
     ProjectCompletionApprovalFormComponent,
-    SelectProjectCompletionPopupComponent
+    SelectProjectCompletionPopupComponent,
+    ProjectModelSummaryComponent
   ],
   imports: [
     CommonModule,
     EServicesMainModule,
     SharedServicesModule,
-    ProjectCompletionRoutingModule
+    ProjectCompletionRoutingModule,
+    ProjectModelsModule
   ]
 })
 export class ProjectCompletionModule {

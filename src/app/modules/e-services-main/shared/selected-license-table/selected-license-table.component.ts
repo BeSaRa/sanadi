@@ -44,9 +44,18 @@ export class SelectedLicenseTableComponent implements OnInit {
   @Input() isNotLicense: boolean = false;
   @Output() selectCallback: EventEmitter<any> = new EventEmitter<any>();
   @Output() clearLicense: EventEmitter<any> = new EventEmitter<any>();
+  @Input() viewAction?:(item:any)=> void;
 
   fileIconsEnum = FileIconsEnum;
   actions: IMenuItem<any>[] = [
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: (item: any) =>  {this.viewAction!(item)},
+      show:(item:any) => !!this.viewAction
+    },
     // select license/document
     {
       type: 'action',
@@ -77,7 +86,8 @@ export class SelectedLicenseTableComponent implements OnInit {
       icon: ActionIconsEnum.DELETE_TRASH,
       show: (_item: any) => !this.ignoreDelete,
       onClick: (_item: any) => this.removeSelectedLicense()
-    }
+    },
+    
   ];
 
   selectLicense(license: any) {

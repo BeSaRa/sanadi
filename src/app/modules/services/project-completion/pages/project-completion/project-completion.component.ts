@@ -21,7 +21,7 @@ import { LookupService } from '@app/services/lookup.service';
 import { AdminLookup } from '@app/models/admin-lookup';
 import { ProjectWorkArea } from "@app/enums/project-work-area";
 import { DomainTypes } from '@app/enums/domain-types';
-import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { OpenFrom } from '@app/enums/open-from.enum';
@@ -37,6 +37,11 @@ import { CommonUtils } from '@app/helpers/common-utils';
 import { SelectProjectCompletionPopupComponent } from '../../popups/select-project-completion-popup/select-project-completion-popup.component';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { ProjectModel } from '@app/models/project-model';
+import { ProjectModelService } from '@app/services/project-model.service';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { ProjectModelPreviewComponent } from '@app/modules/services/project-models/popups/project-model-preview/project-model-preview.component';
 
 @Component({
   selector: 'app-project-completion',
@@ -65,11 +70,13 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     projectEvaluationSLADate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
     actualEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
   };
+  
   formProperties = {
     requestType: () => {
       return this.getObservableField('requestType', 'requestType');
     }
   }
+  projectModel?:ProjectModel
   constructor(
     public service: ProjectCompletionService,
     public lang: LangService,
@@ -82,6 +89,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     private dialog: DialogService,
     private toastService: ToastService,
     private projectImplementationService: ProjectImplementationService,
+    private projectModelService:ProjectModelService
   ) {
     super();
   }
@@ -428,6 +436,15 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     value.projectLicenseFullSerial = isReset ? '' : licenseDetails.fullSerial;
     value.projectLicenseSerial = isReset ? 0 : licenseDetails.serial;
     this.model = value;
+
+   if(licenseDetails){
+    this.projectModelService.getTemplateById(licenseDetails.implementationTemplate[0].templateId).pipe(
+      tap(model => {
+        this.projectModel = model
+      }),
+      take(1),
+    ).subscribe();
+   }
   }
   private getQatarCountry(): Country {
     return this.countries.find(item => item.enName.toLowerCase() === 'qatar')!
@@ -570,4 +587,6 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     // allow edit if new record or saved as draft
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }
+  viewAction =  (item:ProjectImplementation) => this.dialog.show(ProjectModelPreviewComponent, {
+    id: item.implementationTemplate[0]?.requestCaseId})
 }
