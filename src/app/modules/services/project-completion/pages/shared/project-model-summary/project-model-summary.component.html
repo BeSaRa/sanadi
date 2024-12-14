@@ -1,0 +1,73 @@
+@if(model){
+    <ng-container>
+        <div class="row">
+            <div class="col-sm-12 mb-4 position-relative">
+                <label class="form-label" for="goals">{{lang.map.project_goals}}</label>
+                <span id="goals" class="form-control input-disabled" 
+                style="min-height: 20vh;"
+                [innerHTML]="model?.goals"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h2 class="h6 text-primary">{{lang.map.number_of_beneficiaries}}</h2>
+                <hr>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                <label class="form-label" for="directBeneficiaryNumber">{{lang.map.direct_beneficiary_count}}</label>
+                <span id="directBeneficiaryNumber" class="form-control input-disabled">
+                    {{model?.directBeneficiaryNumber || '&nbsp;'}}</span>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                <label class="form-label" for="indirectBeneficiaryNumber">{{lang.map.indirect_beneficiary_count}}</label>
+                <span id="indirectBeneficiaryNumber" class="form-control input-disabled">
+                    {{model?.indirectBeneficiaryNumber || '&nbsp;'}}</span>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" for="beneficiaryFamiliesNumber">{{lang.map.beneficiary_families_count}}</label>
+            <span id="beneficiaryFamiliesNumber" class="form-control input-disabled">
+                {{model?.beneficiaryFamiliesNumber || '&nbsp;'}}</span>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h2 class="h6 text-primary">{{lang.map.percentage_of_direct_beneficiaries_by_age_group}}</h2>
+                <hr>
+            </div>
+        </div>
+        <div class="position-relative mb-4">
+            <div class="row">
+                <div class="col-md-3 col-sm-12 mb-4 position-relative">
+                    <label class="form-label" for="beneficiaries0to5">{{lang.map.number_of_0_to_5}}</label>
+                    <span id="beneficiaries0to5" class="form-control input-disabled">
+                        {{model?.beneficiaries0to5 || '&nbsp;'}}</span>
+                </div>
+                <div class="col-md-3 col-sm-12 mb-4 position-relative">
+                    <label class="form-label" for="beneficiaries5to18">{{lang.map.number_of_5_to_18}}</label>
+                    <span id="beneficiaries5to18" class="form-control input-disabled">
+                        {{model?.beneficiaries5to18 || '&nbsp;'}}</span>
+                </div>
+                <div class="col-md-3 col-sm-12 mb-4 position-relative">
+                    <label class="form-label" for="beneficiaries19to60">{{lang.map.number_of_19_to_60}}</label>
+                    <span id="beneficiaries19to60" class="form-control input-disabled">
+                        {{model?.beneficiaries19to60 || '&nbsp;'}}</span>
+                </div>
+                <div class="col-md-3 col-sm-12 mb-4 position-relative">
+                    <label class="form-label" for="beneficiariesOver60">{{lang.map.number_of_above_60}}</label>
+                    <span id="beneficiariesOver60" class="form-control input-disabled">
+                        {{model?.beneficiariesOver60 || '&nbsp;'}}</span>
+                </div>
+            </div>
+            <group-error-message></group-error-message>
+        </div>
+        <hr class="mt-0">
+        <div class="row">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+                <label class="form-label"
+                    for="beneficiaryPercentageInHostCommunity">{{lang.map.beneficiary_percent_in_host_community}}</label>
+                <span id="beneficiaryPercentageInHostCommunity" class="form-control input-disabled">
+                    {{model?.beneficiaryPercentageInHostCommunity || '&nbsp;'}}</span>
+            </div>
+        </div>
+    </ng-container>
+}
