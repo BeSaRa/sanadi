@@ -7,9 +7,12 @@ import { ProjectCompletion } from '@app/models/project-completion';
 import { IMyDateModel } from '@nodro7/angular-mydatepicker';
 import { BestPracticesInterceptor } from './best-practices-interceptor';
 import { LessonsLearnedInterceptor } from './lessons-learned-interceptor';
+import { EvaluationAxisInterceptor } from './evaluationAxisInterceptor';
+import { EvaluationAxis } from '@app/models/evaluationAxis';
 
 const bestPracticesInterceptor: IModelInterceptor<BestPractices> = new BestPracticesInterceptor();
 const lessonsLearnedInterceptor: IModelInterceptor<LessonsLearned> = new LessonsLearnedInterceptor();
+const evaluationAxisInterceptor = new EvaluationAxisInterceptor();
 export class ProjectCompletionInterceptor implements IModelInterceptor<ProjectCompletion> {
   send(model: Partial<ProjectCompletion>): Partial<ProjectCompletion> {
     model.followUpDate && (model.followUpDate = DateUtils.changeDateFromDatepicker(model.followUpDate as unknown as IMyDateModel)?.toISOString());
@@ -26,6 +29,7 @@ export class ProjectCompletionInterceptor implements IModelInterceptor<ProjectCo
     if (model.lessonsLearnedList && model.lessonsLearnedList.length > 0) {
       model.lessonsLearnedList = model.lessonsLearnedList.map(x => lessonsLearnedInterceptor.send(x) as LessonsLearned);
     }
+    model.evaluationAxisDTO = model.evaluationAxisDTO?.map(x => evaluationAxisInterceptor.send(x) as EvaluationAxis);
     ProjectCompletionInterceptor._deleteBeforeSend(model);
     return model;
   }
@@ -43,6 +47,8 @@ export class ProjectCompletionInterceptor implements IModelInterceptor<ProjectCo
     model.subUNOCHACategoryInfo = AdminResult.createInstance(model.subUNOCHACategoryInfo);
     model.internalProjectClassificationInfo = AdminResult.createInstance(model.internalProjectClassificationInfo);
     model.beneficiaryCountryInfo = AdminResult.createInstance(model.beneficiaryCountryInfo);
+
+    model.evaluationAxisDTO = model.evaluationAxisDTO?.map(x => evaluationAxisInterceptor.receive(new EvaluationAxis().clone(x)));
 
     if (model.bestPracticesList && model.bestPracticesList.length > 0) {
       model.bestPracticesList = model.bestPracticesList.map(x => bestPracticesInterceptor.receive(new BestPractices().clone(x)));

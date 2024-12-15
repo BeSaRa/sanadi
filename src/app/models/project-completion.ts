@@ -88,6 +88,11 @@ export class ProjectCompletion
   recommendStopContractor!: boolean;
   evaluationAxisDTO: EvaluationAxis[] = [];
 
+
+  interventionCountry!: number;
+  region!:string;
+  locationDescription!:string;
+
   // For view only
   projectTotalCost!: number;
   projectDescription!: string;
@@ -245,6 +250,13 @@ export class ProjectCompletion
       recommendStopContractor: { langKey: 'lbl_recommend_stop_contractor', value: this.recommendStopContractor },
     }
   }
+  getInterventionLocationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      interventionCountry : { langKey: 'country', value: this.interventionCountry },
+      region: { langKey: 'region', value: this.region },
+      locationDescription: { langKey: 'lbl_description', value: this.locationDescription }
+    }
+  }
   getSpecialExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       description: { langKey: 'special_explanations', value: this.description },
@@ -288,6 +300,8 @@ export class ProjectCompletion
       contractorLongitude,
       recommendContractor,
       recommendStopContractor } = ObjectUtils.getControlValues<ProjectCompletion>(this.getDataEvaluationValuesWithLabels())
+
+      const {interventionCountry, region, locationDescription} = ObjectUtils.getControlValues<ProjectCompletion>(this.getInterventionLocationValuesWithLabels())
     return {
       projectLicenseInfo: {
         requestType: controls ? [requestType, CustomValidators.required] : requestType,
@@ -334,6 +348,11 @@ export class ProjectCompletion
         recommendStopContractor: controls ? [recommendStopContractor] : recommendStopContractor,
 
 
+      },
+      interventionLocations: {
+        interventionCountry: controls ? [interventionCountry] : interventionCountry,
+        region: controls ? [region, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : region,
+        locationDescription: controls ? [locationDescription,[CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : locationDescription
       },
       // evaluation: {
       //   impact: controls ? [impact, [CustomValidators.required]] : impact,

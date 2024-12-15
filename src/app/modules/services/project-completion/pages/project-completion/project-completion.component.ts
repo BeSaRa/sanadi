@@ -203,6 +203,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       ...this.projectBasicInfo.getRawValue(),
       ...this.beneficiaryAnalyticsByLicense.getRawValue(),
       ... this.dataEvaluation.getRawValue(),
+      ...this.interventionLocations.getRawValue(),
       //...this.evaluation.getRawValue(),
       evaluationAxisDTO:  this.evaluationAxisDTO.getRawValue(),
       ...this.specialExplanation.getRawValue(),
@@ -265,7 +266,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
         ...model.formBuilder(true).dataEvaluation
       }),
       evaluationAxisDTO: this.fb.array([]),
-
+      interventionLocations: this.fb.group(model.formBuilder(true).interventionLocations),
       explanation: this.fb.group(model.formBuilder(true).explanation)
     })
     this.listenToChangeExternalFields();
@@ -291,6 +292,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       beneficiaryAnalyticsByLicense: model.formBuilder(false).beneficiaryAnalyticsByLicense,
       dataEvaluation:model.formBuilder(false).dataEvaluation,
       evaluationAxisDTO:model.evaluationAxisDTO,
+      interventionLocations:model.formBuilder(false).interventionLocations,
       //evaluation: model.formBuilder(false).evaluation,
       explanation: model.formBuilder(false).explanation
     });
@@ -535,6 +537,9 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   get dataEvaluation(): UntypedFormGroup {
     return this.form.get('dataEvaluation') as UntypedFormGroup;
   }
+  get interventionLocations(): UntypedFormGroup {
+    return this.form.get('interventionLocations') as UntypedFormGroup;
+  }
   get evaluationAxisDTO(): UntypedFormArray {
     return this.form.get('evaluationAxisDTO') as UntypedFormArray;
   }
@@ -612,6 +617,9 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   isEditRequestTypeAllowed(): boolean {
     // allow edit if new record or saved as draft
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+  }
+  get isLicenseUser(): boolean {
+    return this.employeeService.isLicensingUser();
   }
   viewAction = (item: ProjectImplementation) => this.dialog.show(ProjectModelPreviewComponent, {
     id: item.implementationTemplate[0]?.requestCaseId
