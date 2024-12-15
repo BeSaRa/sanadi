@@ -125,4 +125,14 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
   licenseSearch(criteria: Partial<ProjectFundraising>): Observable<ProjectFundraising[]> {
     return this.licenseService.projectFundraisingLicenseSearch(criteria);
   }
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  getValidLicenses(permitType: number): Observable<ProjectFundraising[]> {
+    return this.http.post<ProjectFundraising[]>(this._getURLSegment() + '/valid-licenses',
+      {},
+      {params:new HttpParams({fromObject:{permitType}})}
+    );
+  }
 }
