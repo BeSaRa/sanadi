@@ -27,6 +27,7 @@ import { DateUtils } from '@app/helpers/date-utils';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { EvaluationAxis } from './evaluationAxis';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new ProjectCompletionInterceptor();
@@ -74,15 +75,24 @@ export class ProjectCompletion
   description!: string;
   effort!: number;
   impact!: number;
-  nationalities:number[] =[];
-  oldFullSerial!:string;
-  oldSerial!:number;
+  nationalities: number[] = [];
+  oldFullSerial!: string;
+  oldSerial!: number;
+
+  implementingAgencyAr!: string;
+  implementingAgencyEn!: string;
+  additionalNotes!: string;
+  contractorLatitude!: string;
+  contractorLongitude!: string;
+  recommendContractor!: boolean;
+  recommendStopContractor!: boolean;
+  evaluationAxisDTO: EvaluationAxis[] = [];
 
   // For view only
   projectTotalCost!: number;
   projectDescription!: string;
   projectName!: string;
-  
+
 
   domainInfo!: AdminResult;
   workAreaInfo!: AdminResult;
@@ -224,6 +234,17 @@ export class ProjectCompletion
       effort: { langKey: 'effort', value: this.effort },
     }
   }
+  getDataEvaluationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
+    return {
+      implementingAgencyAr: { langKey: 'lbl_implementing_agency_ar', value: this.implementingAgencyAr },
+      implementingAgencyEn: { langKey: 'lbl_implementing_agency_en', value: this.implementingAgencyEn },
+      additionalNotes: { langKey: 'lbl_additional_notes', value: this.additionalNotes },
+      contractorLatitude: { langKey: 'lbl_contractor_latitude', value: this.contractorLatitude },
+      contractorLongitude: { langKey: 'lbl_contractor_longitude', value: this.contractorLongitude },
+      recommendContractor: { langKey: 'lbl_recommend_contractor', value: this.recommendContractor },
+      recommendStopContractor: { langKey: 'lbl_recommend_stop_contractor', value: this.recommendStopContractor },
+    }
+  }
   getSpecialExplanationValuesWithLabels(): { [key: string]: ControlValueLabelLangKey } {
     return {
       description: { langKey: 'special_explanations', value: this.description },
@@ -259,12 +280,18 @@ export class ProjectCompletion
       nationalities
     } = ObjectUtils.getControlValues<ProjectCompletion>(this.getBeneficiaryAnalyticsByLicenseFormValuesWithLabels());
     const { description } = ObjectUtils.getControlValues<ProjectCompletion>(this.getSpecialExplanationValuesWithLabels());
-    const { impact, effort } = ObjectUtils.getControlValues<ProjectCompletion>(this.getEvaluationValuesWithLabels());
-
+    const {
+      implementingAgencyAr,
+      implementingAgencyEn,
+      additionalNotes,
+      contractorLatitude,
+      contractorLongitude,
+      recommendContractor,
+      recommendStopContractor } = ObjectUtils.getControlValues<ProjectCompletion>(this.getDataEvaluationValuesWithLabels())
     return {
       projectLicenseInfo: {
         requestType: controls ? [requestType, CustomValidators.required] : requestType,
-        oldFullSerial: controls ? [oldFullSerial ,CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)] : oldFullSerial,
+        oldFullSerial: controls ? [oldFullSerial, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)] : oldFullSerial,
         projectWorkArea: controls ? [projectWorkArea, CustomValidators.required] : projectWorkArea,
         beneficiaryCountry: controls ? [beneficiaryCountry, CustomValidators.required] : beneficiaryCountry,
         domain: controls ? [domain] : domain,
@@ -287,7 +314,26 @@ export class ProjectCompletion
         beneficiaries5to18: controls ? [beneficiaries5to18, [CustomValidators.required, CustomValidators.decimal(2)]] : beneficiaries5to18,
         beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.decimal(2)]] : beneficiaries19to60,
         beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.decimal(2)]] : beneficiariesOver60,
-        nationalities: controls?[nationalities]:nationalities
+        nationalities: controls ? [nationalities] : nationalities
+      },
+      dataEvaluation: {
+        implementingAgencyAr: controls ? [implementingAgencyAr,
+          [
+            CustomValidators.pattern('AR_NUM_CHARTERS'),
+            CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)
+          ]] : implementingAgencyAr,
+        implementingAgencyEn: controls ? [implementingAgencyEn,
+          [
+            CustomValidators.pattern('ENG_NUM_CHARTERS'),
+            CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)
+          ]] : implementingAgencyEn,
+        additionalNotes: controls ? [additionalNotes,[CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : additionalNotes,
+        contractorLatitude: controls ? [contractorLatitude, [CustomValidators.pattern('NUM_HYPHEN_COMMA'),]] : contractorLatitude,
+        contractorLongitude: controls ? [contractorLongitude, [CustomValidators.pattern('NUM_HYPHEN_COMMA'),]] : contractorLongitude,
+        recommendContractor: controls ? [recommendContractor] : recommendContractor,
+        recommendStopContractor: controls ? [recommendStopContractor] : recommendStopContractor,
+
+
       },
       // evaluation: {
       //   impact: controls ? [impact, [CustomValidators.required]] : impact,
