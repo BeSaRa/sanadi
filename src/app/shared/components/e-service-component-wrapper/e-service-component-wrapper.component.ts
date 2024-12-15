@@ -136,7 +136,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.NPO_MANAGEMENT,
     CaseTypes.CHARITY_ORGANIZATION_UPDATE,
     CaseTypes.PARTNER_APPROVAL,
-    CaseTypes.PENALTIES_AND_VIOLATIONS
+    CaseTypes.PENALTIES_AND_VIOLATIONS,
+    CaseTypes.PROJECT_COMPLETION
   ];
   servicesWithNoSaveDraftLaunch: number[] = [
     CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP
@@ -648,12 +649,18 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     if (this.model?.isCancelled()) {
       return false;
     }
+    if(this.model?.caseType === CaseTypes.PROJECT_COMPLETION && this.employeeService.isInternalUser()){
+      return this.employeeService.isLicensingUser();
+    }
     if (this.model?.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
       const model = this.model as CoordinationWithOrganizationsRequest;
       return model.participatingOrganizaionList.length > 0;
     }
     const isServiceAllow = this.model?.caseType == CaseTypes.EMPLOYMENT;
-    return (isServiceAllow && this.employeeService.isCharityManager()) || !!((this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) && this.model?.isReturned());
+    return (isServiceAllow && this.employeeService.isCharityManager()) ||
+     !!((this.employeeService.isCharityManager() ||
+      this.employeeService.isCharityUser()) 
+     && this.model?.isReturned());
   }
 
   canOrganizationApprove(): boolean {

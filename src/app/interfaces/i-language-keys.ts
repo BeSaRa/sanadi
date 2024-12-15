@@ -2355,4 +2355,5 @@ export interface ILanguageKeys {
   lbl_evaluation_axis: string;
   lbl_recommendations_and_notes: string;
   lbl_contractor_axis: string;
+  lbl_intervention_locations: string;
 }

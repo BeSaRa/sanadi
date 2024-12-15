@@ -103,6 +103,10 @@ export class EmployeeService {
       authName: 'Legal Affairs',
       ldapGroupName: '"LA1_DEPT"'
     },
+    projectSpecialist:{
+      authName: 'Project Specialist',
+      ldapGroupName: '"ES_Projects_Specialist"'
+    }
   };
   private customMenuInterceptor = new CustomMenuInterceptor();
   private profileInterceptor = new ProfileInterceptor();
@@ -373,7 +377,9 @@ export class EmployeeService {
   isLicensingChiefManager(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
     return this._isInTeam(this.userTeamsMap.licenseChiefManager, compareBy);
   }
-
+  isProjectSpecialistUser(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.projectSpecialist, compareBy);
+  }
   isInternationalCooperationUser(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
     return this._isInTeam(this.userTeamsMap.internationalCooperation, compareBy);
   }
