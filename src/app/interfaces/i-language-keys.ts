@@ -2343,4 +2343,16 @@ export interface ILanguageKeys {
   msg_please_add_penalty_book: string;
   lbl_penalty_book: string;
   lbl_inspection_title: string;
+  lbl_data_evaluation: string;
+  lbl_implementing_agency_ar: string;
+  lbl_implementing_agency_en: string;
+  lbl_additional_notes: string;
+  lbl_contractor_latitude: string;
+  lbl_contractor_longitude: string;
+  lbl_recommend_contractor: string;
+  lbl_recommend_stop_contractor: string;
+  lbl_contractor_evaluation: string;
+  lbl_evaluation_axis: string;
+  lbl_recommendations_and_notes: string;
+  lbl_contractor_axis: string;
 }

@@ -203,4 +203,5 @@ export interface ILookupMap {
   IncidentType: Lookup[];
   LegalAction: Lookup[];
   EntityType: Lookup[];
+  EvaluationAxis: Lookup[];
 }

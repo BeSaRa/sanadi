@@ -1,6 +1,6 @@
 import { DialogService } from '@app/services/dialog.service';
 import { ProjectImplementation } from '@models/project-implementation';
-import { Validators } from '@angular/forms';
+import { UntypedFormArray, Validators } from '@angular/forms';
 import { EmployeeService } from '@app/services/employee.service';
 import { DacOchaService } from '@app/services/dac-ocha.service';
 import { AbstractControl, UntypedFormControl } from '@angular/forms';
@@ -42,6 +42,8 @@ import { ProjectModelService } from '@app/services/project-model.service';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { ProjectModelPreviewComponent } from '@app/modules/services/project-models/popups/project-model-preview/project-model-preview.component';
+import { EvaluationAxis } from '@app/models/evaluationAxis';
+import { AdminResult } from '@app/models/admin-result';
 
 @Component({
   selector: 'app-project-completion',
@@ -70,13 +72,14 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     projectEvaluationSLADate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
     actualEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
   };
-  
+  evaluationAxis = this.lookupService.listByCategory.EvaluationAxis
+  evaluationAxisColumns = ['index', 'evaluationAxis', '5', '4', '3', '2', '1', 'notes']
   formProperties = {
     requestType: () => {
       return this.getObservableField('requestType', 'requestType');
     }
   }
-  projectModel?:ProjectModel
+  projectModel?: ProjectModel
   constructor(
     public service: ProjectCompletionService,
     public lang: LangService,
@@ -89,7 +92,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     private dialog: DialogService,
     private toastService: ToastService,
     private projectImplementationService: ProjectImplementationService,
-    private projectModelService:ProjectModelService
+    private projectModelService: ProjectModelService
   ) {
     super();
   }
@@ -199,10 +202,12 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       ...this.projectLicenseInfo.getRawValue(),
       ...this.projectBasicInfo.getRawValue(),
       ...this.beneficiaryAnalyticsByLicense.getRawValue(),
+      ... this.dataEvaluation.getRawValue(),
       //...this.evaluation.getRawValue(),
+      evaluationAxisDTO:  this.evaluationAxisDTO.getRawValue(),
       ...this.specialExplanation.getRawValue(),
-       bestPracticesList: this.bestPracticesListComponentRef.list,
-       lessonsLearnedList: this.lessonsLearntListComponentRef.list,
+      bestPracticesList: this.bestPracticesListComponentRef.list,
+      lessonsLearnedList: this.lessonsLearntListComponentRef.list,
     })
   }
   private _updateModelAfterSave(model: ProjectCompletion): void {
@@ -256,11 +261,24 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
         //   ]
         // )
       }),
-      // evaluation: this.fb.group(model.formBuilder(true).evaluation),
+      dataEvaluation: this.fb.group({
+        ...model.formBuilder(true).dataEvaluation
+      }),
+      evaluationAxisDTO: this.fb.array([]),
+
       explanation: this.fb.group(model.formBuilder(true).explanation)
     })
     this.listenToChangeExternalFields();
     this.listenToChangeInternalFields();
+    this.evaluationAxis.forEach((item) => {
+      this.evaluationAxisDTO.controls.push(this.fb.group(new EvaluationAxis().clone({
+        evaluationAxisId: item.lookupKey,
+        evaluationAxisInfo: AdminResult.createInstance({
+          arName: item.arName,
+          enName: item.enName
+        })
+      }).buildForm(true)));
+    })
   }
   _updateForm(model: ProjectCompletion | undefined): void {
     if (!model) {
@@ -271,6 +289,8 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       projectLicenseInfo: model.formBuilder(false).projectLicenseInfo,
       projectBasicInfo: model.formBuilder(false).projectBasicInfo,
       beneficiaryAnalyticsByLicense: model.formBuilder(false).beneficiaryAnalyticsByLicense,
+      dataEvaluation:model.formBuilder(false).dataEvaluation,
+      evaluationAxisDTO:model.evaluationAxisDTO,
       //evaluation: model.formBuilder(false).evaluation,
       explanation: model.formBuilder(false).explanation
     });
@@ -285,7 +305,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   _afterBuildForm(): void {
     this.handleReadonly();
     this.listenToMainDacOchaChanges();
- 
+
     // this._setDefaultValues();
   }
   _resetForm(): void {
@@ -437,20 +457,20 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     value.projectLicenseSerial = isReset ? 0 : licenseDetails.serial;
     this.model = value;
 
-   if(licenseDetails){
-    this.projectModelService.getTemplateById(licenseDetails.implementationTemplate[0].templateId).pipe(
-      tap(model => {
-        this.projectModel = model
-      }),
-      take(1),
-    ).subscribe();
-   }
+    if (licenseDetails) {
+      this.projectModelService.getTemplateById(licenseDetails.implementationTemplate[0].templateId).pipe(
+        tap(model => {
+          this.projectModel = model
+        }),
+        take(1),
+      ).subscribe();
+    }
   }
   private getQatarCountry(): Country {
     return this.countries.find(item => item.enName.toLowerCase() === 'qatar')!
   }
   private separateDacFromOcha(list: AdminLookup[]) {
-    this.mainDacCategories = list.filter(item => !item.parentId &&  item.type === DomainTypes.DEVELOPMENT)
+    this.mainDacCategories = list.filter(item => !item.parentId && item.type === DomainTypes.DEVELOPMENT)
     this.mainUNOCHACategories = list.filter(item => !item.parentId && item.type === DomainTypes.HUMANITARIAN)
   }
   private resetFieldsValidation(fields: AbstractControl[]): void {
@@ -512,6 +532,12 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   get evaluation(): UntypedFormGroup {
     return this.form.get('evaluation') as UntypedFormGroup;
   }
+  get dataEvaluation(): UntypedFormGroup {
+    return this.form.get('dataEvaluation') as UntypedFormGroup;
+  }
+  get evaluationAxisDTO(): UntypedFormArray {
+    return this.form.get('evaluationAxisDTO') as UntypedFormArray;
+  }
   get specialExplanation(): UntypedFormGroup {
     return this.form.get('explanation') as UntypedFormGroup;
   }
@@ -559,23 +585,23 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       .pipe(
         tap(list => !list.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)),
         filter(list => list.length > 0),
-        switchMap(list=>
-           list.length === 1 ? of(list[0]):
-                               this.dialog.show<IDialogData<ProjectCompletion[]>>(SelectProjectCompletionPopupComponent,{
-                                model:list,
-                                operation:this.operationTypes.VIEW
-                               }).onAfterClose$),
-        filter((projectCompletion?:ProjectCompletion)=> !!projectCompletion),
-        map(projectCompletion=> new ProjectCompletion().clone({
+        switchMap(list =>
+          list.length === 1 ? of(list[0]) :
+            this.dialog.show<IDialogData<ProjectCompletion[]>>(SelectProjectCompletionPopupComponent, {
+              model: list,
+              operation: this.operationTypes.VIEW
+            }).onAfterClose$),
+        filter((projectCompletion?: ProjectCompletion) => !!projectCompletion),
+        map(projectCompletion => new ProjectCompletion().clone({
           ...projectCompletion,
           requestType: this.requestType.value,
-          id:undefined,
-          oldFullSerial:projectCompletion!.fullSerial,
-          oldSerial:projectCompletion!.serial,
-          serial:undefined,
-          fullSerial:undefined
+          id: undefined,
+          oldFullSerial: projectCompletion!.fullSerial,
+          oldSerial: projectCompletion!.serial,
+          serial: undefined,
+          fullSerial: undefined
         })),
-        tap(projectCompletion=>{ 
+        tap(projectCompletion => {
           this._updateForm(projectCompletion)
           this.handleDomainChange(projectCompletion.domain)
         })
@@ -587,6 +613,9 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     // allow edit if new record or saved as draft
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }
-  viewAction =  (item:ProjectImplementation) => this.dialog.show(ProjectModelPreviewComponent, {
-    id: item.implementationTemplate[0]?.requestCaseId})
+  viewAction = (item: ProjectImplementation) => this.dialog.show(ProjectModelPreviewComponent, {
+    id: item.implementationTemplate[0]?.requestCaseId
+  })
+
+  evaluationAxisList: EvaluationAxis[] = []
 }

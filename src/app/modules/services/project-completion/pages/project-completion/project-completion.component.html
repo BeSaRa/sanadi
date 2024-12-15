@@ -3,14 +3,17 @@
     <tab name="project_license_info" [hasError]="projectLicenseInfo.invalid" [template]="project_license_info"
       [title]="lang.map.project_license_information">
     </tab>
-    <tab name="project_basic_info" [hasError]="projectBasicInfo.invalid "
-      [template]="project_basic_info" [title]="lang.map.project_basic_info">
+    <tab name="project_basic_info" [hasError]="projectBasicInfo.invalid " [template]="project_basic_info"
+      [title]="lang.map.project_basic_info">
     </tab>
     <tab name="beneficiary_analytics_by_license" [hasError]="beneficiaryAnalyticsByLicense.invalid"
       [template]="beneficiaryAnalyticsByLicenseTemplate" [title]="lang.map.beneficiary_analytics">
     </tab>
     <tab name="best_practices_and_lessons_learnt" [hasError]="!isHasErrorLessonsLearnt_BestPracticesTab"
       [template]="bestPracticesAndLessonsLearnt" [title]="lang.map.best_practices + ' & ' + lang.map.lessons_learnt">
+    </tab>
+    <tab name="data_evaluation" [hasError]="dataEvaluation && dataEvaluation.invalid"
+      [template]="dataEvaluationTemplate" [title]="lang.map.lbl_contractor_evaluation">
     </tab>
     <!-- <tab [hasError]="evaluation.invalid" name="evaluation_impact_cost_effort" [template]="evaluation_impact_cost_effort"
       [title]="lang.map.evaluation_impact_cost_effort"></tab> -->
@@ -28,8 +31,8 @@
               for="requestType">{{lang.map.request_type}}</label>
             <ng-select [selectOnTab]="true" labelForId="requestType" placeholder="{{lang.map.select}}" id="requestType"
               [clearable]="false" (change)="handleRequestTypeChange($event, true)"
-              [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditRequestTypeAllowed()" formControlName="requestType"
-              validationClasses="requestType">
+              [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditRequestTypeAllowed()"
+              formControlName="requestType" validationClasses="requestType">
               <ng-option [value]="option.lookupKey" *ngFor="let option of requestTypesList">{{option.getName()}}
               </ng-option>
             </ng-select>
@@ -37,15 +40,13 @@
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="oldFullSerial"
-                   for="oldFullSerial">{{lang.map.serial_number}}</label>
+              for="oldFullSerial">{{lang.map.serial_number}}</label>
             <div class="input-group">
               <input [readonly]="!isUpdateRequestAllowed()"
-                     (keydown.enter)="isUpdateRequestAllowed() && requestSearch($event)"
-                     formControlName="oldFullSerial"
-                     type="text" validationClasses="oldFullSerial" class="form-control"
-                     id="oldFullSerial" trimInput>
+                (keydown.enter)="isUpdateRequestAllowed() && requestSearch($event)" formControlName="oldFullSerial"
+                type="text" validationClasses="oldFullSerial" class="form-control" id="oldFullSerial" trimInput>
               <button type="button" (click)="requestSearch($event)" *ngIf="isUpdateRequestAllowed()"
-                      class="input-group-text">
+                class="input-group-text">
                 <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
               <app-field-error-message controlName="oldFullSerial"></app-field-error-message>
             </div>
@@ -242,9 +243,9 @@
               for="nationalities">{{lang.map.lbl_analysis_beneficiaries_nationalities}}</label>
             <ng-select validationClasses="nationalities" appendTo="body" [clearable]="false" id="nationalities"
               formControlName="nationalities" labelForId="nationalities" placeholder="{{lang.map.select}}"
-              [multiple]="true"
-              [notFoundText]="lang.map.msg_not_found" [readonly]="readonly">
-              <ng-option [value]="option.lookupKey" *ngFor="let option of nationalities">{{option.getName()}}</ng-option>
+              [multiple]="true" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly">
+              <ng-option [value]="option.lookupKey"
+                *ngFor="let option of nationalities">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="nationalities"></app-field-error-message>
           </div>
@@ -314,6 +315,173 @@
       <lessons-learnt-list #lessonsLearntListComponent [list]="(!model ? [] : model.lessonsLearnedList)"
         [readonly]="readonly"></lessons-learnt-list>
     </ng-template>
+    <ng-template #dataEvaluationTemplate>
+      <ng-container formGroupName="dataEvaluation">
+        <app-table #table [useSearchToFilter]="true" [data]="evaluationAxisDTO.controls"
+          [columns]="evaluationAxisColumns">
+          <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+            <ng-container cdkColumnDef="implementationAgencyAr">
+              <th colspan="1" cdk-header-cell *cdkHeaderCellDef>
+                {{lang.map.lbl_implementing_agency_ar}}
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="implementationAgencyArValue">
+              <th colspan="1" cdk-header-cell *cdkHeaderCellDef>
+                <input formControlName="implementingAgencyAr" type="text" [readOnly]="readonly"
+                  validationClasses="implementingAgencyAr" class="form-control" trimInput id="implementingAgencyAr">
+                <app-field-error-message controlName="implementingAgencyAr"></app-field-error-message>
+
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="implementationAgencyEn">
+              <th colspan="1" cdk-header-cell *cdkHeaderCellDef style="width: 120px;">
+                {{lang.map.lbl_implementing_agency_en}}
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="implementationAgencyEnValue">
+              <th colspan="2" cdk-header-cell *cdkHeaderCellDef>
+                <input formControlName="implementingAgencyEn" type="text" [readOnly]="readonly"
+                  validationClasses="implementingAgencyEn" class="form-control" trimInput id="implementingAgencyEn">
+                <app-field-error-message controlName="implementingAgencyEn"></app-field-error-message>
+
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="contractorAxis">
+              <th colspan="1" cdk-header-cell *cdkHeaderCellDef>
+                {{lang.map.lbl_contractor_axis}}
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="contractorLatitude">
+              <th colspan="1" cdk-header-cell *cdkHeaderCellDef>
+                <label class="form-label" asteriskIfRequired="contractorLatitude"
+                  for="contractorLatitude">{{lang.map.latitude}}</label>
+                <input formControlName="contractorLatitude" type="text" [readOnly]="readonly"
+                  validationClasses="contractorLatitude" class="form-control" trimInput id="contractorLatitude ">
+                <app-field-error-message controlName="contractorLatitude"></app-field-error-message>
+
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="contractorLongitude">
+              <th colspan="1" cdk-header-cell *cdkHeaderCellDef>
+                <label class="form-label" asteriskIfRequired="contractorLongitude"
+                  for="contractorLongitude">{{lang.map.longitude}}</label>
+                <input formControlName="contractorLongitude" type="text" [readOnly]="readonly"
+                  validationClasses="contractorLongitude" class="form-control" trimInput id="contractorLongitude ">
+                <app-field-error-message controlName="contractorLongitude"></app-field-error-message>
+
+              </th>
+            </ng-container>
+
+
+
+            <ng-container cdkColumnDef="index">
+              <th cdk-header-cell *cdkHeaderCellDef> #</th>
+              <td cdk-cell *cdkCellDef="let row ; let i = index"> {{i+1}} </td>
+            </ng-container>
+            <ng-container cdkColumnDef="evaluationAxis">
+              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_evaluation_axis}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.controls.evaluationAxisInfo.value?.getName()}} </td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="5">
+              <th cdk-header-cell *cdkHeaderCellDef> 5</th>
+              <td cdk-cell *cdkCellDef="let row;let i = index">
+                <input type="radio" [id]="i+'-5'" [name]="i" [attr.disabled]="readonly" [formControl]="row.controls.evaluationValue" value="5">
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="4">
+              <th cdk-header-cell *cdkHeaderCellDef> 4</th>
+              <td cdk-cell *cdkCellDef="let row;let i = index">
+                <input type="radio" [id]="i+'-4'" [name]="i" [attr.disabled]="readonly" [formControl]="row.controls.evaluationValue" value="4">
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="3">
+              <th cdk-header-cell *cdkHeaderCellDef> 3</th>
+              <td cdk-cell *cdkCellDef="let row;let i = index">
+                <input type="radio" [id]="i+'-3'" [name]="i" [attr.disabled]="readonly" [formControl]="row.controls.evaluationValue" value="3">
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="2">
+              <th cdk-header-cell *cdkHeaderCellDef> 2</th>
+              <td cdk-cell *cdkCellDef="let row;let i = index">
+                <input type="radio" [id]="i+'-2'" [name]="i" [attr.disabled]="readonly" [formControl]="row.controls.evaluationValue" value="2">
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="1">
+              <th cdk-header-cell *cdkHeaderCellDef> 1</th>
+              <td cdk-cell *cdkCellDef="let row;let i = index">
+                <input type="radio" [id]="i+'-1'" [name]="i" [attr.disabled]="readonly" [formControl]="row.controls.evaluationValue" value="1">
+              </td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="notes">
+              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.notes}}</th>
+              <td cdk-cell *cdkCellDef="let row;let i = index">
+                <input type="text" [formControl]="row.controls.notes" [readOnly]="readonly" class="form-control">
+              </td>
+            </ng-container>
+
+
+
+            <ng-container cdkColumnDef="recommendation">
+              <th colspan="1" cdk-header-cell *cdkFooterCellDef>
+                {{lang.map.lbl_recommendations_and_notes}}
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="recommendContractor">
+              <th colspan="1" cdk-header-cell *cdkFooterCellDef>
+                <div class="d-flex align-items-center gap-2">
+                  <input id="recommendContractor" style="width: 23px;" [readonly]="readonly"
+                    formControlName="recommendContractor" class="form-check-input mb-2" 
+                    type="checkbox" [attr.disabled]="readonly">
+                  <label for="recommendContractor" asteriskIfRequired="recommendContractor"
+                    class="form-label">{{lang.map.lbl_recommend_contractor}}</label>
+                  <app-field-error-message controlName="recommendContractor"></app-field-error-message>
+                </div>
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="recommendStopContractor">
+              <th colspan="2" cdk-header-cell *cdkFooterCellDef>
+                <div class="d-flex align-items-center gap-2 ">
+                  <input id="recommendStopContractor" [attr.disabled]="readonly" formControlName="recommendStopContractor"
+                    class="form-check-input  mb-2" type="checkbox">
+                  <label for="recommendStopContractor" asteriskIfRequired="recommendStopContractor"
+                    class="form-label">{{lang.map.lbl_recommend_stop_contractor}}</label>
+                  <app-field-error-message controlName="recommendStopContractor"></app-field-error-message>
+                </div>
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="additionalNotes">
+              <th style="width: 120px;" cdk-header-cell *cdkFooterCellDef>
+                {{lang.map.lbl_additional_notes}}
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="additionalNotesValue">
+              <th colspan="5" cdk-header-cell *cdkFooterCellDef>
+                <app-field-error-message controlName="additionalNotes"></app-field-error-message>
+                <input formControlName="additionalNotes" type="text" [readOnly]="readonly"
+                  validationClasses="additionalNotes" class="form-control" trimInput id="additionalNotes">
+
+              </th>
+            </ng-container>
+
+            <tr cdk-header-row
+              *cdkHeaderRowDef="['implementationAgencyAr','implementationAgencyArValue','implementationAgencyEn','implementationAgencyEnValue','contractorAxis','contractorLatitude','contractorLongitude']">
+            </tr>
+            <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="evaluationAxisColumns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: evaluationAxisColumns;"></tr>
+
+            <tr cdk-footer-row class="table-row-header"
+              *cdkFooterRowDef="['recommendation','recommendContractor','recommendStopContractor','additionalNotes','additionalNotesValue']">
+            </tr>
+            <tr *cdkNoDataRow>
+              <td colspan="20">{{lang.map.no_records_to_display}}</td>
+            </tr>
+          </table>
+        </app-table>
+      </ng-container>
+    </ng-template>
+
     <!-- <ng-template #evaluation_impact_cost_effort>
       <div class="row">
         <p>1) {{ lang.map.effort_impact_description_step_1}}</p>
