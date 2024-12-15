@@ -87,7 +87,10 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   requestorPhoneNumber!: string;
   status!: number;
   statusDateModified!: string;
-  expiryDate!: string|IMyDateModel;
+  expiryDate!: string | IMyDateModel;
+
+  permitType!: number;
+  licenseId!: string;
 
   // not belong to the model
   service: BeneficiaryService;
@@ -196,7 +199,9 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       requestorIdType,
       requestorIdNumber,
       requestorIdNationality,
-      requestorPhoneNumber
+      requestorPhoneNumber,
+      permitType,
+      licenseId
     } = this;
 
     return {
@@ -211,18 +216,18 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       dateOfBirth: controls ? [dateOfBirth, [CustomValidators.required, CustomValidators.maxDate(new Date())]] : dateOfBirth,
       gender: controls ? [gender, CustomValidators.required] : gender,
       enName: controls ? [enName, [CustomValidators.required,
-        CustomValidators.pattern('ENG_ONLY'),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
+      CustomValidators.pattern('ENG_ONLY'),
+      CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+      CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
       arName: controls ? [arName, [CustomValidators.required,
-        CustomValidators.pattern('AR_ONLY'),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
+      CustomValidators.pattern('AR_ONLY'),
+      CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+      CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : arName,
       phoneNumber1: controls ? [phoneNumber1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phoneNumber1,
       employeer: controls ? [employeer, [CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)]] : employeer,
       benDependentsCount: controls ? [benDependentsCount, [CustomValidators.required,
-        CustomValidators.number, Validators.min(0), CustomValidators.maxLength(2)]] : benDependentsCount,
+      CustomValidators.number, Validators.min(0), CustomValidators.maxLength(2)]] : benDependentsCount,
       educationLevel: controls ? [educationLevel, CustomValidators.required] : educationLevel,
       maritalStatus: controls ? [maritalStatus, CustomValidators.required] : maritalStatus,
       benNotes: controls ? [benNotes, [Validators.maxLength(3000)]] : benNotes,
@@ -236,7 +241,9 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       requestorIdType: controls ? [requestorIdType, [CustomValidators.required]] : requestorIdType,
       requestorIdNumber: controls ? [requestorIdNumber, CustomValidators.required] : requestorIdNumber,
       requestorIdNationality: controls ? [requestorIdNationality, CustomValidators.required] : requestorIdNationality,
-      requestorPhoneNumber: controls ? [requestorPhoneNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : requestorPhoneNumber
+      requestorPhoneNumber: controls ? [requestorPhoneNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : requestorPhoneNumber,
+      permitType: controls ? [permitType] : permitType,
+      licenseId: controls ? [licenseId] : licenseId
     };
   }
 
