@@ -5,10 +5,12 @@ import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { InspectionOperation } from '@app/models/inspection-operation';
 import { InternalDepartment } from '@app/models/internal-department';
+import { Lookup } from '@app/models/lookup';
 import { EmployeeService } from '@app/services/employee.service';
 import { InspectionOperationService } from '@app/services/inspection-operation.service';
 import { InternalDepartmentService } from '@app/services/internal-department.service';
 import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
 import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
@@ -25,15 +27,16 @@ export class InspectionOperationPopupComponent extends AdminGenericDialog<Inspec
   model!: InspectionOperation;
   operation: OperationTypes;
   saveVisible = true;
-  departmentsList$: Observable<InternalDepartment[]> = new Observable<InternalDepartment[]>;
   mainOperations: InspectionOperation[] = [];
+  ActualInspectionTaskTypes: Lookup[] = this.lookupService.listByCategory.ActualInspectionTaskType;
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
     public lang: LangService,
-    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InspectionOperation> & {mainOperations:InspectionOperation[]},
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InspectionOperation> & { mainOperations: InspectionOperation[] },
     private toast: ToastService,
     private internalDepartmentService: InternalDepartmentService,
-    private employeeService: EmployeeService) {
+    private employeeService: EmployeeService,
+    private lookupService: LookupService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -41,7 +44,6 @@ export class InspectionOperationPopupComponent extends AdminGenericDialog<Inspec
   }
 
   initPopup(): void {
-    this.departmentsList$ = this.internalDepartmentService.loadAsLookups()
 
   }
 

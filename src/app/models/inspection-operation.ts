@@ -23,11 +23,11 @@ export class InspectionOperation extends BaseModel<InspectionOperation, Inspecti
   id!: number;
   arName!: string;
   egName!: string;
-  departmentId!: number;
+  actualTaskType!: number;
   parentId!: number|null;
   clientData!: string;
 
-  departmentInfo!: AdminResult;
+  actualTaskInfo!: AdminResult;
   parentInfo!: AdminResult;
   verificationListTemplate: VerificationTemplate[] = [];
 
@@ -43,16 +43,16 @@ export class InspectionOperation extends BaseModel<InspectionOperation, Inspecti
 
   searchFields: ISearchFieldsMap<InspectionOperation> = {
     ...normalSearchFields(['arName', 'enName']),
-    ...infoSearchFields(['departmentInfo'])
+    ...infoSearchFields(['actualTaskInfo'])
   };
 
   buildForm(controls?: boolean): any {
     const {
       arName,
       egName,
-      departmentId,
       parentId,
-      verificationListTemplate
+      verificationListTemplate,
+      actualTaskType
     } = this;
     return {
       arName: controls ? [arName, [
@@ -67,7 +67,7 @@ export class InspectionOperation extends BaseModel<InspectionOperation, Inspecti
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : egName,
-      departmentId: controls ? [departmentId, [CustomValidators.required]] : departmentId,
+      actualTaskType: controls ? [actualTaskType, [CustomValidators.required]] : actualTaskType,
       parentId: controls ? [parentId, []] : parentId,
       verificationListTemplate:controls?[verificationListTemplate,[]]:verificationListTemplate
     }

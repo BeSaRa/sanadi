@@ -39,7 +39,7 @@ export class InspectionOperationComponent extends AdminGenericComponent<Inspecti
   }
 
   @ViewChild('table') table!: TableComponent;
-  displayedColumns: string[] = ['arName', 'egName', 'department',  'actions'];
+  displayedColumns: string[] = ['arName', 'egName', 'actualTaskType',  'actions'];
   searchColumns: string[] = [ 'search_arName', 'search_egName'];
   searchColumnsConfig: SearchColumnConfigMap = {
     search_arName: {
@@ -90,9 +90,9 @@ export class InspectionOperationComponent extends AdminGenericComponent<Inspecti
   ];
 
   sortingCallbacks = {
-    department: (a: InspectionOperation, b: InspectionOperation, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.departmentInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.departmentInfo?.getName().toLowerCase();
+    actualTaskInfo: (a: InspectionOperation, b: InspectionOperation, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.actualTaskInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.actualTaskInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   }

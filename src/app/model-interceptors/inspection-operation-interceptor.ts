@@ -4,7 +4,7 @@ import { InspectionOperation } from "@app/models/inspection-operation";
 
 export class InspectionOperationInterceptor implements IModelInterceptor<InspectionOperation> {
   receive(model: InspectionOperation): InspectionOperation {
-    model.departmentInfo && (model.departmentInfo = AdminResult.createInstance(model.departmentInfo??{}));
+    model.actualTaskInfo && (model.actualTaskInfo = AdminResult.createInstance(model.actualTaskInfo??{}));
     model.parentInfo && (model.parentInfo = AdminResult.createInstance(model.parentInfo??{}));
     return model;
   }
@@ -18,7 +18,7 @@ export class InspectionOperationInterceptor implements IModelInterceptor<Inspect
     delete model.service;
     delete model.langService;
     delete model.searchFields;
-    delete model.departmentInfo;
+    delete model.actualTaskInfo;
     delete model.parentInfo;
   }
 

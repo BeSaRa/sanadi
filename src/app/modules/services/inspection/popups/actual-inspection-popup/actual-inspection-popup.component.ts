@@ -68,7 +68,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     priorities: Lookup[] = this.lookupService.listByCategory.PriorityType
     readonly: boolean = false;
     unKnownToggle$: Subject<void> = new Subject()
-    unKnownState$!: Observable<boolean> ; 
+    unKnownState$!: Observable<boolean>;
     constructor(public dialogRef: DialogRef,
         public fb: UntypedFormBuilder,
         public lang: LangService,
@@ -83,14 +83,14 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         private internalUserService: InternalUserService,
         private actualInspectionService: ActualInspectionService,
         private proposedInspectionService: ProposedInspectionService,
-        private dialog:DialogService,
+        private dialog: DialogService,
         // don't remove this because its required for DI registration
         private licenseActivityService: LicenseActivityService) {
         super();
         this.model = data.model;
         this.operation = data.operation;
         data.creationSource && (this.creationSource = data.creationSource);
-       this.unKnownState$ = this.unKnownToggle$.pipe(
+        this.unKnownState$ = this.unKnownToggle$.pipe(
             scan((state, _) => !state, !this.model.knownOrgId),
             startWith(!this.model.knownOrgId)
         )
@@ -104,11 +104,11 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
                 tap((operations) => {
                     this.inspectionOperations = operations;
                     this.mainInspectionOperations = operations
-                    .filter(item => item.parentId === null && (!!this.departmentIdControl.value ? item.departmentId === this.departmentIdControl.value : true))
+                        .filter(item => item.parentId === null && item.actualTaskType === this.actualTaskTypeControl.value);
                     this.model.mainOperationType &&
-                    (
-                        this.subInspectionOperations = this.inspectionOperations.filter(item => item.parentId === this.model.mainOperationType)
-                    )
+                        (
+                            this.subInspectionOperations = this.inspectionOperations.filter(item => item.parentId === this.model.mainOperationType)
+                        )
                 })
             )
             .subscribe();
@@ -129,18 +129,18 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
         this.form = this.fb.group(this.model.buildForm(true));
         this._listenToMainOperationTypeChange();
         this.departmentsList$ = this.internalDepartmentService.loadAsLookups()
-        .pipe(
-            tap(list =>{
-                if(!this.model.proposedTaskSerial){
-                    const department = list.find(item => item.id === this.employeeService.getInternalDepartment()!.id)
-                    department && (this.departmentIdControl.setValue(department.id) );
-                    this.mainOperationTypeControl.setValue(this.model.mainOperationType)
-                    this.subOperationTypeControl.setValue(this.model.subOperationType)
-                }
-            
-            }),
-            takeUntil(this.destroy$),
-        )
+            .pipe(
+                tap(list => {
+                    if (!this.model.proposedTaskSerial) {
+                        const department = list.find(item => item.id === this.employeeService.getInternalDepartment()!.id)
+                        department && (this.departmentIdControl.setValue(department.id));
+                        this.mainOperationTypeControl.setValue(this.model.mainOperationType)
+                        this.subOperationTypeControl.setValue(this.model.subOperationType)
+                    }
+
+                }),
+                takeUntil(this.destroy$),
+            )
 
         if (this.operation === OperationTypes.VIEW) {
             this.form.disable();
@@ -148,40 +148,40 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
             this.validateFieldsVisible = false;
             this.readonly = true;
         }
-        this._listenToDepartmentIdChange();
+        this._listenToActualTaskTypeChange();
         this._listenToUnknownState();
         this._listenToTaskAreaChange();
         this._moneyLaundryOrTerrorismChange();
         this._setDefaultValues();
-        if(this.readonly){
+        if (this.readonly) {
             this.inspectionSpecialistsArray.disable();
             this.licenseActivitiesArray.disable();
-        }else{
+        } else {
             this.inspectionSpecialistsArray.enable();
             this.licenseActivitiesArray.enable();
         }
     }
     private _setDefaultValues() {
-       
-        if(this.moneyLaundryOrTerrorismControl.value !== LinkedProjectTypes.YES ){
+
+        if (this.moneyLaundryOrTerrorismControl.value !== LinkedProjectTypes.YES) {
 
             this.relationControl.disable();
         }
-     
+
     }
 
-    private _listenToDepartmentIdChange(){
-        this.departmentIdControl.valueChanges
-        .pipe(
-            filter(departmentId =>!!departmentId),
-            tap(departmentId => {
-                this.mainOperationTypeControl.reset();
-                this.subOperationTypeControl.reset();
-                this.mainInspectionOperations = this.inspectionOperations.filter(item =>item.parentId === null && item.departmentId === departmentId);
-                this.subInspectionOperations= [];
-            }),
-            takeUntil(this.destroy$)
-        ).subscribe()
+    private _listenToActualTaskTypeChange() {
+        this.actualTaskTypeControl.valueChanges
+            .pipe(
+                filter(actualTaskType => !!actualTaskType),
+                tap(actualTaskType => {
+                    this.mainOperationTypeControl.reset();
+                    this.subOperationTypeControl.reset();
+                    this.mainInspectionOperations = this.inspectionOperations.filter(item => item.parentId === null && item.actualTaskType === actualTaskType);
+                    this.subInspectionOperations = [];
+                }),
+                takeUntil(this.destroy$)
+            ).subscribe()
     }
     private _moneyLaundryOrTerrorismChange() {
         this.moneyLaundryOrTerrorismControl.valueChanges
@@ -200,11 +200,11 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     }
 
     beforeSave(model: ActualInspection, form: UntypedFormGroup): Observable<boolean> | boolean {
-        if(!this.inspectionSpecialistsArray.value.some((item:InspectionSpecialist) => item.internalSpecialist)){
+        if (!this.inspectionSpecialistsArray.value.some((item: InspectionSpecialist) => item.internalSpecialist)) {
             this.dialog.error(this.lang.map.msg_internal_specialist_required)
             return false
         }
-        if(!this.licenseActivitiesArray.value.length){
+        if (!this.licenseActivitiesArray.value.length) {
             this.dialog.error(this.lang.map.msg_activity_required)
             return false
         }
@@ -254,6 +254,9 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
 
     get departmentIdControl(): UntypedFormControl {
         return this.form.get('departmentId') as UntypedFormControl;
+    }
+    get actualTaskTypeControl(): UntypedFormControl {
+        return this.form.get('actualTaskType') as UntypedFormControl;
     }
     get mainOperationTypeControl(): UntypedFormControl {
         return this.form.get('mainOperationType') as UntypedFormControl;
@@ -378,7 +381,7 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
     private _listenToMainOperationTypeChange() {
         this.mainOperationTypeControl.valueChanges
             .pipe(
-                filter(type=>!!type),
+                filter(type => !!type),
                 tap((type: number) => {
                     this.subInspectionOperations = this.inspectionOperations.filter(item => item.parentId === type);
                     this.subOperationTypeControl.reset();
@@ -403,37 +406,37 @@ export class ActualInspectionPopupComponent extends AdminGenericDialog<ActualIns
             }),
         };
     }
-    resetForm(){
+    resetForm() {
         this.form.reset()
         this.departmentIdControl.setValue(this.employeeService.getInternalDepartment()?.id)
-      }
-      tabsData: TabMap = {
+    }
+    tabsData: TabMap = {
         basicInfo: {
-          name: 'basicInfoTab',
-          langKey: 'lbl_basic_info',
-          index: 0,
-          checkTouchedDirty: false,
-          isTouchedOrDirty: () => false,
-          show: () => true,
-          validStatus: () => true
+            name: 'basicInfoTab',
+            langKey: 'lbl_basic_info',
+            index: 0,
+            checkTouchedDirty: false,
+            isTouchedOrDirty: () => false,
+            show: () => true,
+            validStatus: () => true
         },
         attachments: {
-          name: 'attachmentsTab',
-          langKey: 'attachments',
-          index: 1,
-          isTouchedOrDirty: () => false,
-          show: () => true,
-          validStatus: () => true
+            name: 'attachmentsTab',
+            langKey: 'attachments',
+            index: 1,
+            isTouchedOrDirty: () => false,
+            show: () => true,
+            validStatus: () => true
         },
-    
-      };
 
-      showProposedTask(){
-        if(!this.model.proposedInspectionTask) return;
+    };
+
+    showProposedTask() {
+        if (!this.model.proposedInspectionTask) return;
         this.proposedInspectionService.openProposedInspectionDialog(new ProposedInspection().clone(
             this.model.proposedInspectionTask
         ))
-      }
+    }
 }
 
 
