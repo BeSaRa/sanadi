@@ -34,6 +34,9 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
   orgUserId!: number;
   aidLookupParentId!: number;
   donorId!: number;
+
+  permitType!: number;
+  licenseId!: string;
   // not belong to the model
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
@@ -96,7 +99,9 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
       aidLookupParentId,
       aidLookupId,
       installmentsCount,
-      donorId
+      donorId,
+      permitType,
+      licenseId
     } = this;
 
     return {
@@ -110,7 +115,9 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
       aidLookupParentId: control ? [aidLookupParentId, CustomValidators.required] : aidLookupParentId,
       aidLookupId: control ? [aidLookupId, CustomValidators.required] : aidLookupId,
       donorId: control ? [donorId, CustomValidators.required] : donorId,
-      installmentsCount: control ? [installmentsCount, [CustomValidators.number, Validators.min(1), CustomValidators.maxLength(20)]] : installmentsCount
+      installmentsCount: control ? [installmentsCount, [CustomValidators.number, Validators.min(1), CustomValidators.maxLength(20)]] : installmentsCount,
+      permitType: control ? [permitType] : permitType,
+      licenseId: control ? [licenseId] : licenseId
     };
   }
 }

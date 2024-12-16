@@ -89,8 +89,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   statusDateModified!: string;
   expiryDate!: string | IMyDateModel;
 
-  permitType!: number;
-  licenseId!: string;
+
 
   // not belong to the model
   service: BeneficiaryService;
@@ -200,8 +199,6 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       requestorIdNumber,
       requestorIdNationality,
       requestorPhoneNumber,
-      permitType,
-      licenseId
     } = this;
 
     return {
@@ -242,8 +239,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       requestorIdNumber: controls ? [requestorIdNumber, CustomValidators.required] : requestorIdNumber,
       requestorIdNationality: controls ? [requestorIdNationality, CustomValidators.required] : requestorIdNationality,
       requestorPhoneNumber: controls ? [requestorPhoneNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : requestorPhoneNumber,
-      permitType: controls ? [permitType] : permitType,
-      licenseId: controls ? [licenseId] : licenseId
+     
     };
   }
 

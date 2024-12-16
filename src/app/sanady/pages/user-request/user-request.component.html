@@ -917,67 +917,7 @@
           ></app-field-error-message>
         </div>
 
-        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
-          <label
-            for="permitType"
-            class="form-label"
-            asteriskIfRequired="permitType"
-          >{{ langService.map.funding_resources }}</label
-          >
-          <ng-select
-            [selectOnTab]="true"
-            labelForId="permitType"
-            [clearable]="false"
-            placeholder="{{ langService.map.select }}"
-            id="permitType"
-            [notFoundText]="langService.map.msg_not_found"
-            [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
-            appendTo="body"
-            formControlName="permitType"
-            validationClasses="permitType"
-          >
-            <ng-option
-              *ngFor="let option of projectPermitTypes"
-              [value]="option.lookupKey"
-            >
-              {{ option.getName() }}
-            </ng-option>
-          </ng-select>
-          <app-field-error-message
-            controlName="permitType"
-          ></app-field-error-message>
-        </div>
-
-        <div class="col-md-4 col-sm-12 mb-4 position-relative">
-          <label
-            for="licenseId"
-            class="form-label"
-            asteriskIfRequired="licenseId"
-          >{{ langService.map.license }}</label
-          >
-          <ng-select
-          [selectOnTab]="true"
-          labelForId="licenseId"
-          [clearable]="false"
-          placeholder="{{ langService.map.select }}"
-          id="licenseId"
-          [notFoundText]="langService.map.msg_not_found"
-          [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
-          appendTo="body"
-          formControlName="licenseId"
-          validationClasses="licenseId"
-        >
-          <ng-option
-            *ngFor="let option of licenses"
-            [value]="option.id"
-          >
-            {{ option.fullSerial }}
-          </ng-option>
-        </ng-select>
-          <app-field-error-message
-            controlName="licenseId"
-          ></app-field-error-message>
-        </div>
+        
 
         <h6 class="text-primary">{{ langService.map.beneficiary_family }}</h6>
         <div class="col-12">
@@ -1675,6 +1615,67 @@
             />
             <app-field-error-message
               controlName="aidAmount"
+            ></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+            <label
+              for="permitType"
+              class="form-label"
+              asteriskIfRequired="permitType"
+            >{{ langService.map.funding_resources }}</label
+            >
+            <ng-select
+              [selectOnTab]="true"
+              labelForId="permitType"
+              [clearable]="false"
+              placeholder="{{ langService.map.select }}"
+              id="permitType"
+              [notFoundText]="langService.map.msg_not_found"
+              [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
+              appendTo="body"
+              formControlName="permitType"
+              validationClasses="permitType"
+            >
+              <ng-option
+                *ngFor="let option of projectPermitTypes"
+                [value]="option.lookupKey"
+              >
+                {{ option.getName() }}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message
+              controlName="permitType"
+            ></app-field-error-message>
+          </div>
+  
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label
+              for="licenseId"
+              class="form-label"
+              asteriskIfRequired="licenseId"
+            >{{ langService.map.license }}</label
+            >
+            <ng-select
+            [selectOnTab]="true"
+            labelForId="licenseId"
+            [clearable]="false"
+            placeholder="{{ langService.map.select }}"
+            id="licenseId"
+            [notFoundText]="langService.map.msg_not_found"
+            [readonly]="!isBeneficiaryEnquired || readOnly || isPartialRequest"
+            appendTo="body"
+            formControlName="licenseId"
+            validationClasses="licenseId"
+          >
+            <ng-option
+              *ngFor="let option of licenses"
+              [value]="option.id"
+            >
+              {{ option.fullSerial }}
+            </ng-option>
+          </ng-select>
+            <app-field-error-message
+              controlName="licenseId"
             ></app-field-error-message>
           </div>
         </div>

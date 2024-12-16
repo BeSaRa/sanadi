@@ -138,7 +138,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
     this.listenToNationalityChange();
     this.listenToPrimaryIdTypeChange();
     this.listenToSecondaryIdTypeChange();
-    this.listenToPermitTypeChange();
     this.preparePeriodicityLookups();
     this.loadMainAidLookups();
     this.loadDonors();
@@ -1251,6 +1250,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
 
     if (aid) {
       this.aidFormArray.push(this.fb.group(aid.getAidFields(true)));
+      this.listenToPermitTypeChange();
       this._buildDatepickerControlsMap();
       this.loadAidsSubAidLookups(aid.aidLookupParentId);
       this.aidsPeriodicTypeChange(aid.periodicType);
@@ -1299,12 +1299,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
   get dateOfBirthField(): UntypedFormControl {
     return this.personalInfoTab.get('dateOfBirth') as UntypedFormControl;
   }
-  get permitTypeField(): UntypedFormControl {
-    return this.personalInfoTab.get('permitType') as UntypedFormControl;
-  }
-  get licenseIdField(): UntypedFormControl {
-    return this.personalInfoTab.get('licenseId') as UntypedFormControl;
-  }
+  
 
   get creationDateField(): UntypedFormControl {
     return this.requestInfoTab.get('creationDate') as UntypedFormControl;
@@ -1349,7 +1344,12 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
   get aidsRequestedAidField(): UntypedFormControl {
     return this.aidFormArray.get('0.aidLookupId') as UntypedFormControl;
   }
-
+  get permitTypeField(): UntypedFormControl {
+    return this.aidFormArray.get('0.permitType') as UntypedFormControl;
+  }
+  get licenseIdField(): UntypedFormControl {
+    return this.aidFormArray.get('0.licenseId') as UntypedFormControl;
+  }
   get benNationalityField(): UntypedFormControl {
     return this.personalInfoTab.get('benNationality') as UntypedFormControl;
   }
