@@ -383,42 +383,72 @@
             </ng-container>
             <ng-container cdkColumnDef="evaluationAxis">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_evaluation_axis}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.controls.evaluationAxisInfo.value?.getName()}} </td>
+              <td cdk-cell *cdkCellDef="let row ; let i = index"> {{evaluationAxis[i]?.getName()}} </td>
             </ng-container>
 
             <ng-container cdkColumnDef="5">
               <th cdk-header-cell *cdkHeaderCellDef> 5</th>
               <td cdk-cell *cdkCellDef="let row;let i = index">
-                <input type="radio" [id]="i+'-5'" [name]="i" [attr.disabled]="readonly"
-                  [formControl]="row.controls.evaluationValue" value="5">
+                <label [for]="i+'-5'">
+                  <i class="mdi" [ngClass]="{
+                  'text-success mdi-checkbox-marked-circle-outline':row.controls.evaluationValue.value == 5,
+                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 5}"
+                    ></i>
+                </label>
+                <input type="radio" [id]="i+'-5'" [name]="i" [attr.disabled]="readonly ? 'disabled':null"
+                  [formControl]="row.controls.evaluationValue" value="5"  class="d-none" /> 
               </td>
             </ng-container>
             <ng-container cdkColumnDef="4">
               <th cdk-header-cell *cdkHeaderCellDef> 4</th>
               <td cdk-cell *cdkCellDef="let row;let i = index">
-                <input type="radio" [id]="i+'-4'" [name]="i" [attr.disabled]="readonly"
-                  [formControl]="row.controls.evaluationValue" value="4">
+                <label [for]="i+'-4'">
+                  <i class="mdi" [ngClass]="{
+                  'text-success mdi-checkbox-marked-circle-outline':row.controls.evaluationValue.value == 4,
+                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 4}"
+                    ></i>
+                </label>
+                <input type="radio" [id]="i+'-4'" [name]="i" [attr.disabled]="readonly ? 'disabled':null"
+                  [formControl]="row.controls.evaluationValue" value="4"  class="d-none" /> 
               </td>
             </ng-container>
             <ng-container cdkColumnDef="3">
               <th cdk-header-cell *cdkHeaderCellDef> 3</th>
               <td cdk-cell *cdkCellDef="let row;let i = index">
-                <input type="radio" [id]="i+'-3'" [name]="i" [attr.disabled]="readonly"
-                  [formControl]="row.controls.evaluationValue" value="3">
+                <label [for]="i+'-3'">
+                  <i class="mdi" [ngClass]="{
+                  'text-success mdi-checkbox-marked-circle-outline':row.controls.evaluationValue.value == 3,
+                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 3}"
+                    ></i>
+                </label>
+                <input type="radio" [id]="i+'-3'" [name]="i" [attr.disabled]="readonly ? 'disabled':null"
+                  [formControl]="row.controls.evaluationValue" value="3"  class="d-none" /> 
               </td>
             </ng-container>
             <ng-container cdkColumnDef="2">
               <th cdk-header-cell *cdkHeaderCellDef> 2</th>
               <td cdk-cell *cdkCellDef="let row;let i = index">
-                <input type="radio" [id]="i+'-2'" [name]="i" [attr.disabled]="readonly"
-                  [formControl]="row.controls.evaluationValue" value="2">
+                <label [for]="i+'-2'">
+                  <i class="mdi" [ngClass]="{
+                  'text-success mdi-checkbox-marked-circle-outline':row.controls.evaluationValue.value == 2,
+                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 2}"
+                    ></i>
+                </label>
+                <input type="radio" [id]="i+'-2'" [name]="i" [attr.disabled]="readonly ? 'disabled':null"
+                  [formControl]="row.controls.evaluationValue" value="2"  class="d-none" /> 
               </td>
             </ng-container>
             <ng-container cdkColumnDef="1">
               <th cdk-header-cell *cdkHeaderCellDef> 1</th>
               <td cdk-cell *cdkCellDef="let row;let i = index">
-                <input type="radio" [id]="i+'-1'" [name]="i" [attr.disabled]="readonly"
-                  [formControl]="row.controls.evaluationValue" value="1">
+                <label [for]="i+'-1'">
+                  <i class="mdi" [ngClass]="{
+                  'text-success mdi-checkbox-marked-circle-outline':row.controls.evaluationValue.value == 1,
+                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 1}"
+                    ></i>
+                </label>
+                <input type="radio" [id]="i+'-1'" [name]="i" [attr.disabled]="readonly ? 'disabled':null"
+                  [formControl]="row.controls.evaluationValue" value="1"  class="d-none" /> 
               </td>
             </ng-container>
 

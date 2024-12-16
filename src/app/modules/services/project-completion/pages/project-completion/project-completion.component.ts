@@ -73,7 +73,7 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
     actualEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
   };
   evaluationAxis = this.lookupService.listByCategory.EvaluationAxis
-  evaluationAxisColumns = ['index', 'evaluationAxis', '5', '4', '3', '2', '1', 'notes']
+  evaluationAxisColumns = ['index', 'evaluationAxis','1','2','3','4','5', 'notes']
   formProperties = {
     requestType: () => {
       return this.getObservableField('requestType', 'requestType');
@@ -296,6 +296,8 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
       //evaluation: model.formBuilder(false).evaluation,
       explanation: model.formBuilder(false).explanation
     });
+
+    
     this.handleRequestTypeChange(model.requestType, false);
     if (!this.model.projectLicenseFullSerial) {
       this._lestenToExternalProjectImplementation();
