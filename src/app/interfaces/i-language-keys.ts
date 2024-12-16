@@ -2356,4 +2356,6 @@ export interface ILanguageKeys {
   lbl_recommendations_and_notes: string;
   lbl_contractor_axis: string;
   lbl_intervention_locations: string;
+  lbl_previous_beneficiaries: string;
+  lbl_current_beneficiaries: string;
 }

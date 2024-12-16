@@ -1,17 +1,10 @@
 @if(model){
     <ng-container>
-        <div class="row">
-            <div class="col-sm-12 mb-4 position-relative">
-                <label class="form-label" for="goals">{{lang.map.project_goals}}</label>
-                <span id="goals" class="form-control input-disabled" 
-                style="min-height: 20vh;"
-                [innerHTML]="model?.goals"></span>
-            </div>
-        </div>
+        <h2 class="h5">{{lang.map.lbl_previous_beneficiaries}}</h2>
+        <hr>
         <div class="row">
             <div class="col-sm-12">
                 <h2 class="h6 text-primary">{{lang.map.number_of_beneficiaries}}</h2>
-                <hr>
             </div>
             <div class="col-md-4 col-sm-12 mb-4 position-relative">
                 <label class="form-label" for="directBeneficiaryNumber">{{lang.map.direct_beneficiary_count}}</label>
@@ -32,7 +25,6 @@
         <div class="row">
             <div class="col-sm-12">
                 <h2 class="h6 text-primary">{{lang.map.percentage_of_direct_beneficiaries_by_age_group}}</h2>
-                <hr>
             </div>
         </div>
         <div class="position-relative mb-4">
