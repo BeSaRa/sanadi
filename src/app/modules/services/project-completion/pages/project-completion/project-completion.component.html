@@ -331,7 +331,7 @@
               </th>
             </ng-container>
             <ng-container cdkColumnDef="implementationAgencyArValue">
-              <th colspan="1" cdk-header-cell *cdkHeaderCellDef>
+              <th colspan="1" cdk-header-cell *cdkHeaderCellDef width="20%">
                 <input formControlName="implementingAgencyAr" type="text" [readOnly]="readonly"
                   validationClasses="implementingAgencyAr" class="form-control" trimInput id="implementingAgencyAr">
                 <app-field-error-message controlName="implementingAgencyAr"></app-field-error-message>
@@ -343,7 +343,7 @@
                 {{lang.map.lbl_implementing_agency_en}}
               </th>
             </ng-container>
-            <ng-container cdkColumnDef="implementationAgencyEnValue">
+            <ng-container cdkColumnDef="implementationAgencyEnValue" width="20%">
               <th colspan="2" cdk-header-cell *cdkHeaderCellDef>
                 <input formControlName="implementingAgencyEn" type="text" [readOnly]="readonly"
                   validationClasses="implementingAgencyEn" class="form-control" trimInput id="implementingAgencyEn">
@@ -367,7 +367,7 @@
               </th>
             </ng-container>
             <ng-container cdkColumnDef="contractorLongitude">
-              <th colspan="1" cdk-header-cell *cdkHeaderCellDef>
+              <th colspan="1" cdk-header-cell *cdkHeaderCellDef width="10%">
                 <label class="form-label" asteriskIfRequired="contractorLongitude"
                   for="contractorLongitude">{{lang.map.longitude}}</label>
                 <input formControlName="contractorLongitude" type="text" [readOnly]="readonly"
@@ -380,7 +380,7 @@
 
 
             <ng-container cdkColumnDef="index">
-              <th cdk-header-cell *cdkHeaderCellDef> #</th>
+              <th cdk-header-cell *cdkHeaderCellDef width="10%"> #</th>
               <td cdk-cell *cdkCellDef="let row ; let i = index"> {{i+1}} </td>
             </ng-container>
             <ng-container cdkColumnDef="evaluationAxis">
@@ -389,68 +389,63 @@
             </ng-container>
 
             <ng-container cdkColumnDef="5">
-              <th cdk-header-cell *cdkHeaderCellDef> 5</th>
-              <td cdk-cell *cdkCellDef="let row;let i = index">
+              <th cdk-header-cell *cdkHeaderCellDef width="10%" class="text-center"> 5</th>
+              <td cdk-cell *cdkCellDef="let row;let i = index" class="text-center">
                 <label [for]="i+'-5'">
                   <i class="mdi" [ngClass]="{
                   'text-success mdi-checkbox-marked-circle-outline':row.controls.evaluationValue.value == 5,
-                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 5}"
-                    ></i>
+                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 5}"></i>
                 </label>
                 <input type="radio" [id]="i+'-5'" [name]="i" [attr.disabled]="readonly ? 'disabled':null"
-                  [formControl]="row.controls.evaluationValue" value="5"  class="d-none" /> 
+                  [formControl]="row.controls.evaluationValue" value="5" class="d-none" />
               </td>
             </ng-container>
             <ng-container cdkColumnDef="4">
-              <th cdk-header-cell *cdkHeaderCellDef> 4</th>
-              <td cdk-cell *cdkCellDef="let row;let i = index">
+              <th cdk-header-cell *cdkHeaderCellDef  width="10%" class="text-center"> 4</th>
+              <td cdk-cell *cdkCellDef="let row;let i = index" class="text-center">
                 <label [for]="i+'-4'">
                   <i class="mdi" [ngClass]="{
                   'text-success mdi-checkbox-marked-circle-outline':row.controls.evaluationValue.value == 4,
-                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 4}"
-                    ></i>
+                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 4}"></i>
                 </label>
                 <input type="radio" [id]="i+'-4'" [name]="i" [attr.disabled]="readonly ? 'disabled':null"
-                  [formControl]="row.controls.evaluationValue" value="4"  class="d-none" /> 
+                  [formControl]="row.controls.evaluationValue" value="4" class="d-none" />
               </td>
             </ng-container>
             <ng-container cdkColumnDef="3">
-              <th cdk-header-cell *cdkHeaderCellDef> 3</th>
-              <td cdk-cell *cdkCellDef="let row;let i = index">
+              <th cdk-header-cell *cdkHeaderCellDef  width="10%" class="text-center"> 3</th>
+              <td cdk-cell *cdkCellDef="let row;let i = index" class="text-center">
                 <label [for]="i+'-3'">
                   <i class="mdi" [ngClass]="{
                   'text-success mdi-checkbox-marked-circle-outline':row.controls.evaluationValue.value == 3,
-                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 3}"
-                    ></i>
+                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 3}"></i>
                 </label>
                 <input type="radio" [id]="i+'-3'" [name]="i" [attr.disabled]="readonly ? 'disabled':null"
-                  [formControl]="row.controls.evaluationValue" value="3"  class="d-none" /> 
+                  [formControl]="row.controls.evaluationValue" value="3" class="d-none" />
               </td>
             </ng-container>
             <ng-container cdkColumnDef="2">
-              <th cdk-header-cell *cdkHeaderCellDef> 2</th>
-              <td cdk-cell *cdkCellDef="let row;let i = index">
+              <th cdk-header-cell *cdkHeaderCellDef  width="10%" class="text-center"> 2</th>
+              <td cdk-cell *cdkCellDef="let row;let i = index" class="text-center">
                 <label [for]="i+'-2'">
                   <i class="mdi" [ngClass]="{
                   'text-success mdi-checkbox-marked-circle-outline':row.controls.evaluationValue.value == 2,
-                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 2}"
-                    ></i>
+                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 2}"></i>
                 </label>
                 <input type="radio" [id]="i+'-2'" [name]="i" [attr.disabled]="readonly ? 'disabled':null"
-                  [formControl]="row.controls.evaluationValue" value="2"  class="d-none" /> 
+                  [formControl]="row.controls.evaluationValue" value="2" class="d-none" />
               </td>
             </ng-container>
             <ng-container cdkColumnDef="1">
-              <th cdk-header-cell *cdkHeaderCellDef> 1</th>
-              <td cdk-cell *cdkCellDef="let row;let i = index">
+              <th cdk-header-cell *cdkHeaderCellDef  width="10%" class="text-center"> 1</th>
+              <td cdk-cell *cdkCellDef="let row;let i = index" class="text-center">
                 <label [for]="i+'-1'">
                   <i class="mdi" [ngClass]="{
                   'text-success mdi-checkbox-marked-circle-outline':row.controls.evaluationValue.value == 1,
-                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 1}"
-                    ></i>
+                  'text-danger mdi-close-circle-outline':row.controls.evaluationValue.value != 1}"></i>
                 </label>
                 <input type="radio" [id]="i+'-1'" [name]="i" [attr.disabled]="readonly ? 'disabled':null"
-                  [formControl]="row.controls.evaluationValue" value="1"  class="d-none" /> 
+                  [formControl]="row.controls.evaluationValue" value="1" class="d-none" />
               </td>
             </ng-container>
 
@@ -471,23 +466,40 @@
             <ng-container cdkColumnDef="recommendContractor">
               <th colspan="1" cdk-header-cell *cdkFooterCellDef>
                 <div class="d-flex align-items-center gap-2">
-                  <input id="recommendContractor" style="width: 23px;" [readonly]="readonly"
+                  <label for="recommendContractor">
+                    <i class="mdi" [ngClass]="{
+                    'text-success mdi-checkbox-marked-circle-outline':recommendContractor.value === true,
+                    'text-danger mdi-close-circle-outline':recommendContractor.value !== true}"></i>
+                  </label>
+                  <input type="checkbox" id="recommendContractor" name="recommendContractor"
+                    [attr.disabled]="readonly ? 'disabled':null" formControlName="recommendContractor" 
+                    class="d-none"
+                     />
+                  {{lang.map.lbl_recommend_contractor}}
+                  <!-- <input id="recommendContractor" style="width: 23px;" [readonly]="readonly"
                     formControlName="recommendContractor" class="form-check-input mb-2" type="checkbox"
                     [attr.disabled]="readonly">
                   <label for="recommendContractor" asteriskIfRequired="recommendContractor"
                     class="form-label">{{lang.map.lbl_recommend_contractor}}</label>
-                  <app-field-error-message controlName="recommendContractor"></app-field-error-message>
+                  <app-field-error-message controlName="recommendContractor"></app-field-error-message> -->
                 </div>
               </th>
             </ng-container>
             <ng-container cdkColumnDef="recommendStopContractor">
               <th colspan="2" cdk-header-cell *cdkFooterCellDef>
                 <div class="d-flex align-items-center gap-2 ">
-                  <input id="recommendStopContractor" [attr.disabled]="readonly"
+                  <label for="recommendContractor">
+                    <i class="mdi" [ngClass]="{
+                    'text-success mdi-checkbox-marked-circle-outline':recommendContractor.value === false,
+                    'text-danger mdi-close-circle-outline':recommendContractor.value !== false}"></i>
+                  </label>
+
+                  {{lang.map.lbl_recommend_stop_contractor}}
+                  <!-- <input id="recommendStopContractor" [attr.disabled]="readonly"
                     formControlName="recommendStopContractor" class="form-check-input  mb-2" type="checkbox">
                   <label for="recommendStopContractor" asteriskIfRequired="recommendStopContractor"
                     class="form-label">{{lang.map.lbl_recommend_stop_contractor}}</label>
-                  <app-field-error-message controlName="recommendStopContractor"></app-field-error-message>
+                  <app-field-error-message controlName="recommendStopContractor"></app-field-error-message> -->
                 </div>
               </th>
             </ng-container>

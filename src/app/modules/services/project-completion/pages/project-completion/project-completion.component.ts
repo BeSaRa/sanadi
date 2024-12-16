@@ -539,6 +539,9 @@ export class ProjectCompletionComponent extends EServicesGenericComponent<Projec
   get dataEvaluation(): UntypedFormGroup {
     return this.form.get('dataEvaluation') as UntypedFormGroup;
   }
+  get recommendContractor(): UntypedFormControl {
+    return this.dataEvaluation.get('recommendContractor') as UntypedFormControl;
+  }
   get interventionLocations(): UntypedFormGroup {
     return this.form.get('interventionLocations') as UntypedFormGroup;
   }

@@ -84,7 +84,7 @@ export class ProjectCompletion
   additionalNotes!: string;
   contractorLatitude!: string;
   contractorLongitude!: string;
-  recommendContractor!: boolean;
+  recommendContractor: boolean = true;
   recommendStopContractor!: boolean;
   evaluationAxisDTO: EvaluationAxis[] = [];
 
