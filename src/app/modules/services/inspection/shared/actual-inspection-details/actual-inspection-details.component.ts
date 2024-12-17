@@ -18,7 +18,8 @@ export class ActualInspectionDetailsComponent {
 
     YesNo: Lookup[] = this.lookupService.listByCategory.LinkedProject;
   get moneyLaundryLabel(): string {
-    return this.model.moneyLaundryOrTerrorism ? this.YesNo.find(x => x.lookupKey === LinkedProjectTypes.YES)?.getName() ?? '' :
+    return this.model.moneyLaundryOrTerrorism === true ? 
+    this.YesNo.find(x => x.lookupKey === LinkedProjectTypes.YES)?.getName() ?? '' :
       this.YesNo.find(x => x.lookupKey === LinkedProjectTypes.NO)?.getName() ?? ''
   }
 }

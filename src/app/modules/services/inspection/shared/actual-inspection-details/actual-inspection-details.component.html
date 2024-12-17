@@ -53,6 +53,12 @@
         [innerHTML]="model?.operationDescription || '&nbsp;'"></span>
     </div>
     <div class="col-sm-12 col-md-6 mb-3 position-relative">
+      <label for="inspectionTitle" class="form-label">{{
+        lang.map.lbl_inspection_title }}</label>
+      <span id="inspectionTitle" class="form-control input-disabled"
+        [innerHTML]="model?.inspectionTitle || '&nbsp;'"></span>
+    </div>
+    <div class="col-sm-12 col-md-6 mb-3 position-relative">
       <label for="taskSubject" class="form-label">
         {{ lang.map.lbl_task_subject}}</label>
       <span id="taskSubject" class="form-control input-disabled" [innerHTML]="model?.taskSubject || '&nbsp;'"></span>
