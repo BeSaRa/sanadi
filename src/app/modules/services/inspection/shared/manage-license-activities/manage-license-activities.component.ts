@@ -241,7 +241,7 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
   }
 
   viewFile(item: LicenseActivity): void {
-    if (!item.uploadedDocId) {
+    if (!item.licenseVSID) {
       return;
     }
     const file = new FileNetDocument().clone({
@@ -249,7 +249,7 @@ export class ManageLicenseActivitiesComponent implements OnInit, OnDestroy {
       description: this.lang.map.lbl_final_report,
     });
     this.licenseActivityService
-      .downloadDocument(item.uploadedDocId)
+      .downloadDocument(item.licenseVSID)
       .pipe(
         take(1),
         map((model) => this.licenseActivityService.viewDocument(model, file)),
