@@ -52,10 +52,12 @@ export class PenaltyFinalApprovePopupComponent implements OnInit {
             .pipe(
                 // emit only if the beforeSave returned true
                 filter(_ => this.comment.valid),
-                switchMap(() => this.proceed())
+                switchMap(() => this.proceed()),
+                tap(_=>{
+                    this.toast.success(this.lang.map.process_has_been_done_successfully);
+                })
             )
             .subscribe(() => {
-                this.toast.success(this.lang.map.process_has_been_done_successfully);
                 this.dialogRef.close(true);
             });
     }
@@ -72,7 +74,6 @@ export class PenaltyFinalApprovePopupComponent implements OnInit {
             filter(_ => !!this.fileList),
             switchMap(_=>this._createAttachmentFile(this.fileList!)),
             tap(_=>this._afterSaveAttachmentFile(this.model!)),
-            filter(_=>!!this.model.exportedLicenseId),
             switchMap(_ => {
                 return this.inboxService.takeActionOnTask(this.data.taskId, responseInfo, this.data.service)
             })
