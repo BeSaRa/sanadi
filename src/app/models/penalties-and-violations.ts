@@ -123,10 +123,10 @@ export class PenaltiesAndViolations extends LicenseApprovalModel<PenaltiesAndVio
     return '';
   }
   
-  finalApprove(): DialogRef {
-    if (!this.canLaunch()) {
-      return this.dialog.error(this.invalidLaunchMessage());
-    }
-    return this.service.finalApprove(this.taskDetails.tkiid,this);
-  }
+  // finalApprove(): DialogRef {
+  //   if (!this.canLaunch()) {
+  //     return this.dialog.error(this.invalidLaunchMessage());
+  //   }
+  //   return this.service.finalApprove(this.taskDetails.tkiid,this);
+  // }
 }
