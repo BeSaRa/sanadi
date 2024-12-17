@@ -97,19 +97,6 @@
           </div>
      </ng-template>
 
-     @if(isUploadPenaltyBookStage){
-          <ng-container>
-               <button  [tooltip]="lang.map.upload_file" style="margin-inline-end: 1rem;"
-                    class="btn btn-primary" (click)="uploadAttachment(uploader)">
-                    {{lang.map.lbl_upload_penalty_book}}
-                    <i [class.mdi-progress-upload]="model!.exportedLicenseId"
-                         [class.mdi-upload]="!model!.exportedLicenseId" class="mdi mdi-upload"></i>
-               </button>
-     
-               <input type="file" (change)="uploaderFileChange($event)" #uploader id="attachmentUploader"
-                    class="visually-hidden" [accept]="allowedExtensions.join(',')">
-          </ng-container>
-         }
-     
+
 
 </ng-container>
