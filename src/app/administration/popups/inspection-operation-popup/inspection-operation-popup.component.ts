@@ -49,6 +49,9 @@ export class InspectionOperationPopupComponent extends AdminGenericDialog<Inspec
 
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
+    if(this.mainOperations.length > 0){
+      this.form.get('actualTaskType')?.disable()
+    }
     if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
       this.saveVisible = false;
