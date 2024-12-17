@@ -1255,10 +1255,13 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy, C
       this.loadAidsSubAidLookups(aid.aidLookupParentId);
       this.aidsPeriodicTypeChange(aid.periodicType);
       this.aidPeriodicType.updateValueAndValidity();
-      this.projectFundraisingService.getValidLicenses(aid.permitType)
+      if(!!aid.permitType){
+        this.projectFundraisingService.getValidLicenses(aid.permitType)
         .pipe(take(1)).subscribe(licenses => {
         this.licenses = licenses;
       })
+      }
+     
       const requestCreationDateValue = DateUtils.changeDateFromDatepicker(this.creationDateField?.value);
       if (this.creationDateField && requestCreationDateValue) {
         this.setRelatedMinDate('creationDate', 'aidApprovalDate');
