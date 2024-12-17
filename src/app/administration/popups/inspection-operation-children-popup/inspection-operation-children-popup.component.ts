@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
 })
 export class InspectionOperationChildrenPopupComponent {
   models!: InspectionOperation[];
-  displayedColumns: string[] = ['arName', 'egName', 'department'];
+  displayedColumns: string[] = ['arName', 'egName', 'actualTaskType'];
 
 
   constructor(public lang: LangService,

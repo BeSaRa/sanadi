@@ -26,10 +26,9 @@
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.egName}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="department">
-            <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
-               > {{lang.map.department}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.departmentInfo ? row.departmentInfo.getName() : ''}} </td>
+          <ng-container cdkColumnDef="actualTaskType">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_task_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.actualTaskInfo ? row.actualTaskInfo.getName() : ''}} </td>
           </ng-container>
   
           
