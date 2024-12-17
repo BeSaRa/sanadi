@@ -34,7 +34,7 @@ export class ActivityImplementationComponent implements OnInit, OnDestroy {
     reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     manage$: Subject<ActualInspection> = new Subject();
     destroy$: Subject<void> = new Subject();
-    displayedColumns: string[] = ['taskSerialNumber', 'operationDescription', 'mainOperationType', 'subOperationType', 'status', 'inspectorId', 'actions'];
+    displayedColumns: string[] = ['taskSerialNumber', 'inspectionTitle', 'mainOperationType', 'subOperationType', 'status', 'inspectorId', 'actions'];
     actions: IMenuItem<ActualInspection>[] = [
 
         // view
